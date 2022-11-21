@@ -8,7 +8,7 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class FeignMessageProcessScheduler {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignProductSkuStockService feignProductSkuStockService;
+    private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
 
     /**
@@ -64,7 +64,7 @@ public class FeignMessageProcessScheduler {
                 //恢复库存
                 if(eventProcess.getType().equals(StockMessageTopicConstant.restore_stock.name())) {
                     logger.info("远程服务重新调用 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
-                    ResultObjectVO resultObjectVO = feignProductSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
+                    ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
                     if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
                     {
                         eventProcess.setStatus((short)1);
@@ -73,7 +73,7 @@ public class FeignMessageProcessScheduler {
                 }else if(eventProcess.getType().equals(StockMessageTopicConstant.restore_redis_stock.name())) {  //恢复预扣库存
                     try {
                         RequestJsonVO requestJsonVO = JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class);
-                        ResultObjectVO resultObjectVO = feignProductSkuStockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                        ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                         if (resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                             eventProcess.setStatus((short) 1);
                             eventProcessService.updateStatus(eventProcess);

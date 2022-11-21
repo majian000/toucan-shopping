@@ -11,7 +11,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class OrderPayTimeOutScheduler {
 
 
     @Autowired
-    private FeignProductSkuStockService feignProductSkuStockService;
+    private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
     /**
      * 每1分钟重新扫描一次本地看有没有执行失败的事件
@@ -83,7 +83,7 @@ public class OrderPayTimeOutScheduler {
                             {
                                 List<ProductSku> productSkus = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
                                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), productSkus);
-                                resultObjectVO = feignProductSkuStockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                                resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                                 if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
                                 {
                                     logger.warn("查询订单的商品sku失败 order :{}",JSONObject.toJSONString(faildOrder));

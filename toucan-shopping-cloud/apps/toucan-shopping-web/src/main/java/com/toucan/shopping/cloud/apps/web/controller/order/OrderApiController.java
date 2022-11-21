@@ -8,7 +8,7 @@ import com.toucan.shopping.cloud.apps.web.vo.BuyVo;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -62,7 +62,7 @@ public class OrderApiController {
     private FeignOrderService feignOrderService;
 
     @Autowired
-    private FeignProductSkuStockService feignProductSkuStockService;
+    private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -295,7 +295,7 @@ public class OrderApiController {
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,realInventoryReductions);
             logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
-//            resultObjectVO = feignProductSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+//            resultObjectVO = feignProductSkuStockLockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
 //
 //
 //
@@ -324,7 +324,7 @@ public class OrderApiController {
 //            if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
 //
 //                for (EventProcess eventProcess : restoreStock) {
-//                    ResultObjectVO restoreStockResultObjectVO = feignProductSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
+//                    ResultObjectVO restoreStockResultObjectVO = feignProductSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
 //                    if (restoreStockResultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
 //                        eventProcess.setStatus((short) 1);
 //                        eventProcessService.updateStatus(eventProcess);
@@ -502,7 +502,7 @@ public class OrderApiController {
 //                    inventoryReductionVo.setProductSkuList(productSkus);
 
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payVo.getUserId(), inventoryReductionVo);
-                    resultObjectVO = feignProductSkuStockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+                    resultObjectVO = feignProductSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 
                     resultObjectVO.setMsg("支付完成!");
                 }

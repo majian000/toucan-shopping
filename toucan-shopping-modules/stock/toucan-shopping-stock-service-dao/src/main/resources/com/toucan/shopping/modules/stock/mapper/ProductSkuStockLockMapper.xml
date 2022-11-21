@@ -5,6 +5,10 @@
     <resultMap id="productSkuStockLockMap" type="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
+        <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="type" jdbcType="INTEGER" property="type" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -13,19 +17,19 @@
     </resultMap>
 
     <select id="queryList" resultMap="productSkuStockLockMap" parameterType="java.util.Map">
-        select sps.* from t_product_sku_stock_lock sps
+        select t.* from t_product_sku_stock_lock t
         <where>
             1=1
 
             <if test="id!=null">
-                and sps.id = #{id}
+                and t.id = #{id}
             </if>
 
             <if test="appCode!=null">
-                and sps.app_code = #{appCode}
+                and t.app_code = #{appCode}
             </if>
 
-            and sps.delete_status = 0
+            and t.delete_status = 0
 
         </where>
     </select>
@@ -49,6 +53,18 @@
 
     <update id="restoreStock" parameterType="java.lang.String">
         update t_product_sku_stock_lock set stock_num=stock_num+1 where sku_uuid=#{skuUuid}  and delete_status=0
+    </update>
+
+    <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
+          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,order_no,stock_num,app_code,delete_status,create_date)
+          values(#{id},#{productSkuId},#{userMainId},#{orderNo},#{stockNum},#{appCode},#{deleteStatus},#{createDate})
+    </insert>
+
+    <update id="deletes">
+        update t_product_sku_stock_lock set delete_status = 1 where id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
     </update>
 
 </mapper>

@@ -17,7 +17,7 @@ public class ProductSkuStockLock {
     private Long userMainId; //用户ID
     private String orderNo; //订单编号
     private Integer stockNum; //锁定库存数量
-    private Short buckleInventoryMethod; //库存计数 1:买家拍下减库存 2:买家付款减库存
+    private Short type; //库存计数 1:买家拍下减库存 2:买家付款减库存
     private String remark; //备注
     private String appCode; //所属应用
 

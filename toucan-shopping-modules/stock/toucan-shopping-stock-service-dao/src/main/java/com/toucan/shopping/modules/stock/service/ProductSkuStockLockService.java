@@ -3,6 +3,9 @@ package com.toucan.shopping.modules.stock.service;
 
 
 import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
+import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
+
+import java.util.List;
 
 
 /**
@@ -29,5 +32,9 @@ public interface ProductSkuStockLockService {
 
 
     ProductSkuStockLock queryBySkuUuid(String skuUuid);
+
+    int save(ProductSkuStockLock productSkuStockLock);
+
+    int deletes(List<Long> idList);
 
 }
