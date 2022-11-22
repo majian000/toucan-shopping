@@ -223,6 +223,8 @@ public class OrderApiController {
                         productSkuStockLockVO.setAppCode(toucan.getAppCode());
                         productSkuStockLockVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
                         productSkuStockLockVO.setUserMainId(Long.parseLong(userId));
+                        productSkuStockLockVO.setOrderCreateDate(new Date());
+                        productSkuStockLockVO.setPayStatus((short)0);
                         productSkuStockLockVO.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
                         productSkuStockLockVO.setRemark(productSku.getName()+" 锁库存数量:"+userBuyCarItemVO.getBuyCount());
                         productSkuStockLockVO.setCreateDate(new Date());

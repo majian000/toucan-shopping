@@ -20,6 +20,8 @@ public class ProductSkuStockLock {
     private Short type; //库存计数 1:买家拍下减库存 2:买家付款减库存
     private String remark; //备注
     private String appCode; //所属应用
+    private Short payStatus; //支付状态 0未支付 1已支付
+    private Date orderCreateDate; //订单创建时间
 
     /**
      * 删除状态 0未删除 1已删除
