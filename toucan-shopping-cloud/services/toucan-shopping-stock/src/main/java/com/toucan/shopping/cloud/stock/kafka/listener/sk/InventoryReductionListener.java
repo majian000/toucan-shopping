@@ -72,7 +72,7 @@ public class InventoryReductionListener {
             eventProcessService.insert(eventProcess);
 
             //扣库存
-            productSkuStockLockService.inventoryReduction(skuUuid);
+//            productSkuStockLockService.inventoryReduction(skuUuid);
 
             //修改为已处理
             eventProcess.setStatus((short)1); //已处理

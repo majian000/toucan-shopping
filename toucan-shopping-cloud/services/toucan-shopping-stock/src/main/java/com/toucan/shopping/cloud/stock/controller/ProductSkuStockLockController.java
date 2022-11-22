@@ -98,6 +98,54 @@ public class ProductSkuStockLockController {
 
         return resultObjectVO;
     }
+
+
+    /**
+     * 根据SKUID查询锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/lock/stock/num",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findLockStockNumByProductSkuIds(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuStockLockVO productSkuStockLockVO = requestJsonVO.formatEntity(ProductSkuStockLockVO.class);
+            if(CollectionUtils.isEmpty(productSkuStockLockVO.getProductSkuIdList()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("SKU ID不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(productSkuStockLockService.queryStockNumByProductSkuIdList(productSkuStockLockVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询锁定库存出现异常!");
+        }
+
+        return resultObjectVO;
+    }
+
 //
 //    /**
 //     * 还原库存

@@ -13,28 +13,16 @@ import java.util.List;
  */
 public interface ProductSkuStockLockService {
 
-    /**
-     * 删减库存
-     * @param skuUuid
-     * @return
-     */
-    int inventoryReduction(String skuUuid);
-
-
-
-    /**
-     * 恢复库存
-     * @param skuUuid
-     * @return
-     */
-    int restoreStock(String skuUuid);
-
-
-
-    ProductSkuStockLock queryBySkuUuid(String skuUuid);
 
     int save(ProductSkuStockLock productSkuStockLock);
 
     int deletes(List<Long> idList);
+
+    /**
+     * 查询商品锁定库存
+     * @param productSkuStockLockVO
+     * @return
+     */
+    List<ProductSkuStockLockVO> queryStockNumByProductSkuIdList(ProductSkuStockLockVO productSkuStockLockVO);
 
 }

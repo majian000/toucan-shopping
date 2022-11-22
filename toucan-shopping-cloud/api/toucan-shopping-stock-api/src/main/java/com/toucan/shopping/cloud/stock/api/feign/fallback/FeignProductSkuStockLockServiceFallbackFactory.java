@@ -30,7 +30,22 @@ public class FeignProductSkuStockLockServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("锁定库存服务  params {}", JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignProductSkuStockLockService.create  params {}", JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("锁定失败,请重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findLockStockNumByProductSkuIds(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuStockLockService.findLockStockNumByProductSkuIds  params {}", JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("锁定失败,请重试!");
                 return resultObjectVO;

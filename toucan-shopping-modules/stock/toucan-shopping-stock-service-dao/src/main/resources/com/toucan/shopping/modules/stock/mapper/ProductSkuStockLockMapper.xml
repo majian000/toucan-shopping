@@ -18,49 +18,39 @@
         <result column="order_create_date" jdbcType="TIMESTAMP" property="orderCreateDate" />
     </resultMap>
 
-    <select id="queryList" resultMap="productSkuStockLockMap" parameterType="java.util.Map">
-        select t.* from t_product_sku_stock_lock t
-        <where>
-            1=1
+    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO">
 
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
+    </resultMap>
 
-            <if test="appCode!=null">
-                and t.app_code = #{appCode}
-            </if>
-
-            and t.delete_status = 0
-
-        </where>
-    </select>
+    <sql id="queryVOListWhere">
 
 
-    <select id="queryBySkuUuidForUpdate" resultMap="productSkuStockLockMap" parameterType="java.lang.String">
-        select * from t_product_sku_stock_lock where sku_uuid=#{skuUuid}  and delete_status=0 for update
-    </select>
+        <if test="productSkuIdList!=null and productSkuIdList.size>0 ">
+            and t.product_sku_id in
+            <foreach item="item" index="index" collection="productSkuIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
 
-    <update id="inventoryReduction" parameterType="java.lang.String">
-        update t_product_sku_stock_lock set stock_num=stock_num-1 where sku_uuid=#{skuUuid} and delete_status=0
-    </update>
 
-    <update id="modifyStockNum" parameterType="java.lang.Integer">
-        update t_product_sku_stock_lock set stock_num=#{stockNum} where sku_uuid=#{skuUuid} and delete_status=0
-    </update>
+        and t.delete_status = 0
 
-    <select id="queryBySkuUuid" resultMap="productSkuStockLockMap" parameterType="java.lang.String">
-        select * from t_product_sku_stock_lock where sku_uuid=#{skuUuid} and delete_status=0
-    </select>
+    </sql>
 
-    <update id="restoreStock" parameterType="java.lang.String">
-        update t_product_sku_stock_lock set stock_num=stock_num+1 where sku_uuid=#{skuUuid}  and delete_status=0
-    </update>
+
 
     <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
           insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,order_no,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date)
           values(#{id},#{productSkuId},#{userMainId},#{orderNo},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate})
     </insert>
+
+    <select id="queryStockNumByProductSkuIdList" resultMap="productSkuStockLockVOMap">
+        select product_sku_id,sum(stock_num) as stock_num from t_product_sku_stock_lock t
+        where 1=1
+        <include refid="queryVOListWhere" />
+        and ( t.type=1 or (t.type=2 and t.pay_status=1))
+        group by t.product_sku_id
+    </select>
 
     <update id="deletes">
         update t_product_sku_stock_lock set delete_status = 1 where id in

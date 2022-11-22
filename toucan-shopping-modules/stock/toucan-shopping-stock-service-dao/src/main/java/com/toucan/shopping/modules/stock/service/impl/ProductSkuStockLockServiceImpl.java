@@ -22,35 +22,6 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
 
 
 
-
-
-    @Transactional
-    @Override
-    public int inventoryReduction(String skuUuid) {
-        //锁住这条记录
-        ProductSkuStockLock productSkuStockLock = productSkuStockLockMapper.queryBySkuUuidForUpdate(skuUuid);
-        if(productSkuStockLock.getStockNum()>0) {
-            return productSkuStockLockMapper.inventoryReduction(skuUuid);
-        }
-        return 0;
-    }
-
-
-
-
-    @Transactional
-    @Override
-    public int restoreStock(String skuUuid) {
-        //锁住这条记录
-        ProductSkuStockLock productSkuStockLock = productSkuStockLockMapper.queryBySkuUuidForUpdate(skuUuid);
-        return productSkuStockLockMapper.restoreStock(skuUuid);
-    }
-
-    @Override
-    public ProductSkuStockLock queryBySkuUuid(String skuUuid) {
-        return productSkuStockLockMapper.queryBySkuUuid(skuUuid);
-    }
-
     @Override
     public int save(ProductSkuStockLock productSkuStockLock) {
         return productSkuStockLockMapper.save(productSkuStockLock);
@@ -59,6 +30,11 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
     @Override
     public int deletes(List<Long> idList) {
         return productSkuStockLockMapper.deletes(idList);
+    }
+
+    @Override
+    public List<ProductSkuStockLockVO> queryStockNumByProductSkuIdList(ProductSkuStockLockVO productSkuStockLockVO) {
+        return productSkuStockLockMapper.queryStockNumByProductSkuIdList(productSkuStockLockVO);
     }
 
 

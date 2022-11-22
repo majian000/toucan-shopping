@@ -63,4 +63,7 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
     private UBCIFreightTemplateVO freightTemplateVO;
 
     private String selectTransportModel; //选择的运送方式
+
+    private Integer lockStockNum = 0; //锁定商品库存数量
+
 }

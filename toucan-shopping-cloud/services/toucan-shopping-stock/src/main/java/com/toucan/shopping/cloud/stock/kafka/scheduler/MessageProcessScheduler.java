@@ -58,7 +58,7 @@ public class MessageProcessScheduler {
                 if(eventProcess.getType().equals(StockMessageTopicConstant.sk_inventory_reduction.name())) {
                     try {
                         InventoryReductionMessage inventoryReductionMessage = JSONObject.parseObject(eventProcess.getPayload(), InventoryReductionMessage.class);
-                        productSkuStockLockService.inventoryReduction(inventoryReductionMessage.getSkuUuid());
+//                        productSkuStockLockService.inventoryReduction(inventoryReductionMessage.getSkuUuid());
                         eventProcess.setStatus((short)1); //已处理
                         eventProcessService.updateStatus(eventProcess);
                     }catch(Exception e)
