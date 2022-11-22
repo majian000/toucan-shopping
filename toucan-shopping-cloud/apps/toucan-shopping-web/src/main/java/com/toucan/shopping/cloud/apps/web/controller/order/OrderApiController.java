@@ -248,7 +248,7 @@ public class OrderApiController {
                     if(productSku.getId().longValue()==userBuyCarItemVO.getShopProductSkuId().longValue())
                     {
                         //可购买数量=当前库存数-锁定库存数
-                        if(userBuyCarItemVO.getBuyCount().intValue()-userBuyCarItemVO.getLockStockNum().intValue()>=productSku.getStockNum().intValue()) {
+                        if(productSku.getStockNum().intValue()-userBuyCarItemVO.getLockStockNum().intValue()<userBuyCarItemVO.getBuyCount().intValue()) {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg(productSku.getName()+" 库存不足");
                             return resultObjectVO;
