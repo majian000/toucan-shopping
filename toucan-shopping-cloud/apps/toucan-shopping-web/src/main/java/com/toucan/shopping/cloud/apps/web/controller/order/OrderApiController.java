@@ -24,6 +24,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
@@ -199,6 +200,7 @@ public class OrderApiController {
                 }
             }
 
+            Date orderCreateDate = new Date();
             //判断商品数量
             for (ProductSkuVO productSku : queryProductSkuList) {
                 if (productSku.getStockNum().intValue() <= 0) {
@@ -223,7 +225,7 @@ public class OrderApiController {
                         productSkuStockLockVO.setAppCode(toucan.getAppCode());
                         productSkuStockLockVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
                         productSkuStockLockVO.setUserMainId(Long.parseLong(userId));
-                        productSkuStockLockVO.setOrderCreateDate(new Date());
+                        productSkuStockLockVO.setOrderCreateDate(orderCreateDate);
                         productSkuStockLockVO.setPayStatus((short)0);
                         productSkuStockLockVO.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
                         productSkuStockLockVO.setRemark(productSku.getName()+" 锁库存数量:"+userBuyCarItemVO.getBuyCount());
@@ -255,10 +257,10 @@ public class OrderApiController {
             {
 
             }
-//
-//
-//
-//            //扣库存成功后创建订单
+
+
+
+            //扣库存成功后创建订单
 //            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
 //            CreateOrderVo createOrderVo = new CreateOrderVo();
 //            createOrderVo.setAppCode(appCode);
