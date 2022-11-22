@@ -1,7 +1,5 @@
-package com.toucan.shopping.cloud.apps.web.vo;
+package com.toucan.shopping.modules.order.vo;
 
-import com.toucan.shopping.modules.product.entity.ProductBuy;
-import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -17,10 +15,7 @@ import java.util.Map;
  * @author majian
  */
 @Data
-public class BuyVo {
-
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class BuyVO {
 
     private List<UserBuyCarItemVO> buyCarItems;
 

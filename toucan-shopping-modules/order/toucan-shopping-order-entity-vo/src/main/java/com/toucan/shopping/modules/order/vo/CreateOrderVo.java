@@ -15,7 +15,6 @@ public class CreateOrderVo {
     private String orderNo;
     private Integer payMethod; //支付方式 1线上支付 2线下支付
 
-    private List<ProductSku> productSkuList;
-    private Map<String, ProductBuy> buyMap;
+    private BuyVO buyVo; //下单对象
 
 }

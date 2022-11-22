@@ -62,4 +62,5 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
      */
     private UBCIFreightTemplateVO freightTemplateVO;
 
+    private String selectTransportModel; //选择的运送方式
 }

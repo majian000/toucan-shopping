@@ -109,22 +109,6 @@ public class OrderController {
             Integer payMethod = createOrderVo.getPayMethod();
 
             try {
-                Order order = orderService.createOrder(userId, orderNo, appCode,payMethod, createOrderVo.getProductSkuList(), createOrderVo.getBuyMap());
-                if (order.getId() == null) {
-                    logger.warn("订单创建失败 param:" + JSONObject.toJSONString(createOrderVo));
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("订单创建失败");
-                    return resultObjectVO;
-                }
-                logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
-                List<OrderItem> orderItems = orderItemService.createOrderItem(createOrderVo.getProductSkuList(), createOrderVo.getBuyMap(), order);
-                if (CollectionUtils.isEmpty(orderItems)) {
-                    logger.warn("子订单创建失败 param:" + JSONObject.toJSONString(createOrderVo));
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("订单创建失败");
-                    return resultObjectVO;
-                }
-                logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
 
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                 resultObjectVO.setMsg("订单创建完成");

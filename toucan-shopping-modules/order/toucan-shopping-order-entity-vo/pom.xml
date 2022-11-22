@@ -30,6 +30,10 @@
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-entity-vo</artifactId>
+        </dependency>
     </dependencies>
 
 

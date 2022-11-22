@@ -1209,6 +1209,10 @@ function paymentEvent()
         tip:"提交中..."
     });
 
+    g_cache_buy_items.forEach(function (item) {
+        item.selectTransportModel = item.transportModel;
+    });
+
     $.ajax({
         type: "POST",
         url: basePath + "/api/order/create",
