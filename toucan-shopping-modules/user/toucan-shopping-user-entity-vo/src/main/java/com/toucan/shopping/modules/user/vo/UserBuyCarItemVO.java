@@ -6,6 +6,8 @@ import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 /**
  * 购物车
@@ -28,7 +30,7 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
     /**
      * 商品价格
      */
-    private Double productPrice;
+    private BigDecimal productPrice;
 
     /**
      * 属性预览

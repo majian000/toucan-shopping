@@ -24,6 +24,7 @@
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="freight_template_id" jdbcType="BIGINT" property="freightTemplateId" />
+        <result column="delivery_money" jdbcType="DECIMAL" property="deliveryMoney" />
 
     </resultMap>
 

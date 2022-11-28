@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,7 +37,7 @@ public class ShopProductApproveSku {
 
     private String uuid; //SKU的UUID
 
-    private Double price; //价格
+    private BigDecimal price; //价格
 
     private String remark; //备注
 
