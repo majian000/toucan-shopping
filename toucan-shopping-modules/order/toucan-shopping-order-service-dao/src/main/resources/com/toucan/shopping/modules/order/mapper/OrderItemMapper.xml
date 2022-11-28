@@ -23,6 +23,7 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="freight_template_id" jdbcType="BIGINT" property="freightTemplateId" />
 
     </resultMap>
 
@@ -31,11 +32,11 @@
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_item(user_id,order_no,order_id,sku_uuid,delivery_status,seller_status,buyer_status,
         product_num,product_price,order_item_amount,delivery_money,delivery_receive_time,delivery_finish_time,
-        seller_finish_time,buyer_finish_time,remark,create_date,app_code,create_user_id,delete_status)
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,create_user_id,delete_status,freight_template_id)
 
          values(#{userId},#{orderNo},#{orderId},#{skuUuid},#{deliveryStatus},#{sellerStatus},#{buyerStatus},
          #{productNum},#{productPrice},#{orderItemAmount},#{deliveryMoney},#{deliveryReceiveTime},#{deliveryFinishTime},
-         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{createUserId},#{deleteStatus})
+         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{createUserId},#{deleteStatus},#{freightTemplateId})
 
     </insert>
 

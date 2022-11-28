@@ -199,7 +199,7 @@ public class ProductApiController {
 //
 //                        //扣库存成功后创建订单
 //                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
-//                        CreateOrderVo createOrderVo = new CreateOrderVo();
+//                        CreateOrderVO createOrderVo = new CreateOrderVO();
 //                        createOrderVo.setAppCode(appCode);
 //                        createOrderVo.setUserId(userId);
 //                        createOrderVo.setOrderNo(orderNo);

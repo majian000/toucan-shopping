@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.order.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,9 +14,14 @@ import java.util.Date;
  */
 @Data
 public class OrderItem {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private String orderNo; //订单编号
     private String userId; //用户ID
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long orderId; //订单主表ID
     private String skuUuid; //商品SKU UUID
     private Integer deliveryStatus; //配送状态 0未收货 1送货中 2已收货
@@ -31,6 +39,10 @@ public class OrderItem {
     private Date createDate; //创建时间
     private String appCode; //所属应用
     private String createUserId; //创建人ID,可以由后台管理员创建
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long freightTemplateId; //运费模板ID
 
     /**
      * 删除状态 0未删除 1已删除

@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
-import com.toucan.shopping.modules.order.vo.BuyVO;
+import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
@@ -25,7 +25,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.no.OrderNoService;
-import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
@@ -98,18 +97,18 @@ public class OrderApiController {
     /**
      * 创建订单
      * TODO:订单30分钟未支付 恢复预扣库存数量,支付宝回调刷新订单状态 如果失败创建本地事件以便事务补偿回滚
-     * @param buyVo
+     * @param payVo
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO create(HttpServletRequest request, @RequestBody BuyVO buyVo){
+    public ResultObjectVO create(HttpServletRequest request, @RequestBody CreateOrderVO payVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        logger.info("购买商品: param:"+ JSONObject.toJSONString(buyVo));
-        if(buyVo==null)
+        logger.info("购买商品: param:"+ JSONObject.toJSONString(payVo));
+        if(payVo ==null)
         {
-            logger.info("没有找到要购买的商品: param:"+ JSONObject.toJSONString(buyVo));
+            logger.info("没有找到要购买的商品: param:"+ JSONObject.toJSONString(payVo));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到要购买的商品!");
             return resultObjectVO;
@@ -127,7 +126,7 @@ public class OrderApiController {
             String orderNo= orderNoService.generateOrderNo();
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
             String appCode = toucan.getAppCode();
-            for(UserBuyCarItemVO buyCarItemVO : buyVo.getBuyCarItems())
+            for(UserBuyCarItemVO buyCarItemVO : payVo.getBuyCarItems())
             {
                 if(buyCarItemVO!=null) {
                     if (buyCarItemVO.getShopProductSkuId()==null) {
@@ -155,7 +154,7 @@ public class OrderApiController {
 
 
             //===================================查询当前库中的所有购物车项
-            resultObjectVO = this.queryBuyCarItems(buyVo,Long.parseLong(userId));
+            resultObjectVO = this.queryBuyCarItems(payVo,Long.parseLong(userId));
             if(!resultObjectVO.isSuccess())
             {
                 return resultObjectVO;
@@ -166,7 +165,7 @@ public class OrderApiController {
 
             //==============================查询商品
             List<ProductSkuVO> productSkuVOS = new LinkedList<>();
-            for(UserBuyCarItemVO userBuyCarItemVO:buyVo.getBuyCarItems())
+            for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
             {
                 ProductSkuVO productSkuVO = new ProductSkuVO();
                 productSkuVO.setId(userBuyCarItemVO.getShopProductSkuId());
@@ -206,7 +205,7 @@ public class OrderApiController {
 
             //======================查询商品锁定库存
             ProductSkuStockLockVO queryProductSkuStockLockVO = new ProductSkuStockLockVO();
-            queryProductSkuStockLockVO.setProductSkuIdList(buyVo.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
+            queryProductSkuStockLockVO.setProductSkuIdList(payVo.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuStockLockVO);
             resultObjectVO = feignProductSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
             if(!resultObjectVO.isSuccess())
@@ -221,7 +220,7 @@ public class OrderApiController {
             {
                 for(ProductSkuStockLockVO productSkuStockLockVO:productSkuStockLockVOS)
                 {
-                    for(UserBuyCarItemVO userBuyCarItemVO:buyVo.getBuyCarItems())
+                    for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
                     {
                         if(productSkuStockLockVO.getProductSkuId().longValue()==userBuyCarItemVO.getShopProductSkuId().longValue())
                         {
@@ -243,7 +242,7 @@ public class OrderApiController {
                     return resultObjectVO;
                 }
                 freightTemplateIdList.add(productSku.getFreightTemplateId());
-                for(UserBuyCarItemVO userBuyCarItemVO:buyVo.getBuyCarItems())
+                for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
                 {
                     if(productSku.getId().longValue()==userBuyCarItemVO.getShopProductSkuId().longValue())
                     {
@@ -305,7 +304,7 @@ public class OrderApiController {
             }
 
             for (UBCIFreightTemplateVO freightTemplateVO : freightTemplateVOS) {
-                for (UserBuyCarItemVO userBuyCarItemVO : buyVo.getBuyCarItems()) {
+                for (UserBuyCarItemVO userBuyCarItemVO : payVo.getBuyCarItems()) {
                     if(userBuyCarItemVO.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
                     {
                         userBuyCarItemVO.setFreightTemplateVO(freightTemplateVO);
@@ -315,7 +314,7 @@ public class OrderApiController {
             }
 
 
-            this.recalculateProductPrice(buyVo);
+            this.recalculateProductPrice(payVo);
 
 
             //预扣库存
@@ -329,16 +328,11 @@ public class OrderApiController {
 
             logger.info("锁定库存结束.....");
             //扣库存成功后创建订单
-            CreateOrderVo createOrderVo = new CreateOrderVo();
-            createOrderVo.setAppCode(appCode);
-            createOrderVo.setUserId(userId);
-            createOrderVo.setOrderNo(orderNo);
-            createOrderVo.setPayMethod(1);
-            createOrderVo.setBuyVo(buyVo);
-            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVo);
-            requestJsonVO.setEntityJson(JSONObject.toJSONString(createOrderVo));
-
-            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+//            CreateOrderVO createOrderVo = new CreateOrderVO();
+//            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVo);
+//            requestJsonVO.setEntityJson(JSONObject.toJSONString(createOrderVo));
+//
+//            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 
 
 //
@@ -381,10 +375,10 @@ public class OrderApiController {
 
     /**
      * 查询库中所有购物车项
-     * @param buyVo
+     * @param createOrderVo
      * @return
      */
-    private ResultObjectVO queryBuyCarItems(BuyVO buyVo, Long userId)
+    private ResultObjectVO queryBuyCarItems(CreateOrderVO createOrderVo, Long userId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
@@ -409,7 +403,7 @@ public class OrderApiController {
             //以前端的购买数量为准
             for(UserBuyCarItemVO userBuyCarItemVO:userBuyCarVOList)
             {
-                for(UserBuyCarItemVO frontBuyCarItem : buyVo.getBuyCarItems())
+                for(UserBuyCarItemVO frontBuyCarItem : createOrderVo.getBuyCarItems())
                 {
                     if(userBuyCarItemVO.getId().longValue()==frontBuyCarItem.getId().longValue())
                     {
@@ -419,7 +413,7 @@ public class OrderApiController {
                 }
             }
             //将数据库中的购物车项设置进去
-            buyVo.setBuyCarItems(userBuyCarVOList);
+            createOrderVo.setBuyCarItems(userBuyCarVOList);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试!");
@@ -431,12 +425,22 @@ public class OrderApiController {
     /**
      * 重新计算商品价格(可能存在APP端加入了购物车,这时候在PC端进行了支付)
      */
-    private void recalculateProductPrice(BuyVO buyVo)
+    private void recalculateProductPrice(CreateOrderVO createOrderVo) throws Exception
     {
         //按照店铺排序,相邻商品在一起
-        buyVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getShopId).reversed());
+        createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getShopId).reversed());
         //按照运费模板排序,用于合并运送方式
-        buyVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
+        createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
+
+        for(int i = 0; i< createOrderVo.getBuyCarItems().size(); i++)
+        {
+            UserBuyCarItemVO currentUserBuyCarItem = createOrderVo.getBuyCarItems().get(i);
+            for(int j = i+1; j< createOrderVo.getBuyCarItems().size(); j++)
+            {
+                UserBuyCarItemVO nextUserBuyCarItem = createOrderVo.getBuyCarItems().get(j);
+
+            }
+        }
 
     }
 

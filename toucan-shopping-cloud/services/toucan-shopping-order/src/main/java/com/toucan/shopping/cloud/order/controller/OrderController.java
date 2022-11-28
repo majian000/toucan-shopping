@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.order.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -13,7 +12,7 @@ import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.order.vo.CreateOrderVo;
+import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -21,12 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -96,17 +93,17 @@ public class OrderController {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
-            CreateOrderVo createOrderVo = JSON.parseObject(requestJsonVO.getEntityJson(),CreateOrderVo.class);
-            if(createOrderVo.getUserId()==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户");
-                return resultObjectVO;
-            }
-            String orderNo=createOrderVo.getOrderNo();
-            String userId=createOrderVo.getUserId();
-            String appCode=createOrderVo.getAppCode();
-            Integer payMethod = createOrderVo.getPayMethod();
+            CreateOrderVO createOrderVo = JSON.parseObject(requestJsonVO.getEntityJson(), CreateOrderVO.class);
+//            if(createOrderVo.getUserId()==null)
+//            {
+//                resultObjectVO.setCode(ResultObjectVO.FAILD);
+//                resultObjectVO.setMsg("没有找到用户");
+//                return resultObjectVO;
+//            }
+//            String orderNo=createOrderVo.getOrderNo();
+//            String userId=createOrderVo.getUserId();
+//            String appCode=createOrderVo.getAppCode();
+//            Integer payMethod = createOrderVo.getPayMethod();
 
             try {
 
@@ -114,8 +111,8 @@ public class OrderController {
                 resultObjectVO.setMsg("订单创建完成");
             }catch(Exception e)
             {
-                orderService.deleteByOrderNo(orderNo);
-                orderItemService.deleteByOrderNo(orderNo);
+//                orderService.deleteByOrderNo(orderNo);
+//                orderItemService.deleteByOrderNo(orderNo);
 
                 logger.warn(e.getMessage(),e);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
