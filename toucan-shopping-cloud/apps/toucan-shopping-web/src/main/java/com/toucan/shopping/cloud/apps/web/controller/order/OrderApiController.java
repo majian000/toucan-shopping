@@ -272,9 +272,9 @@ public class OrderApiController {
 
                         //拍下减库存
                         if(productSku.getBuckleInventoryMethod().intValue()==1) {
-                            productSkuStockLockVO.setType((short)2); //实扣库存
+                            productSkuStockLockVO.setType((short)1); //实扣库存
                         }else{ //支付减库存
-                            productSkuStockLockVO.setType((short)1); //预扣库存
+                            productSkuStockLockVO.setType((short)2); //预扣库存
                         }
                         productSkuStockLocks.add(productSkuStockLockVO);
                         break;

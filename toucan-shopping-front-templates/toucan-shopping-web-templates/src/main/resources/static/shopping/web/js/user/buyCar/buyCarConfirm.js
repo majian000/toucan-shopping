@@ -1220,7 +1220,14 @@ function paymentEvent()
         data: JSON.stringify({buyCarItems:g_cache_buy_items}),
         dataType: "json",
         success: function (result) {
-
+            if(result.code!=1)
+            {
+                $.message({
+                    message:result.msg,
+                    type: 'error'
+                });
+                return;
+            }
         },
         error: function (result) {
         },
