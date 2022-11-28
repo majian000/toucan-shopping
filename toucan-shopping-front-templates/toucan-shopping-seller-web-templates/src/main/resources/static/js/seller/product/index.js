@@ -55,7 +55,7 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
-        "                            <td style=\"width:75px;\" >库存</td>\n" +
+        // "                            <td style=\"width:75px;\" >库存</td>\n" +
         "                            <td style=\"width:75px;\" >商品分类</td>\n" +
         "                            <td style=\"width:75px;\" >上架状态</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
@@ -70,7 +70,7 @@ function drawTable(pageResult)
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpMainPhotoFilePath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.stockNum+"</div></td>\n" ;
+            // tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.stockNum+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.status==1?"<a style='color:green'>已上架</a>":"<a style='color:red'>已下架</a>")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
@@ -82,8 +82,8 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
-            tableHtml+=     "                                &nbsp;&nbsp;\n" ;
+            // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
+            // tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
