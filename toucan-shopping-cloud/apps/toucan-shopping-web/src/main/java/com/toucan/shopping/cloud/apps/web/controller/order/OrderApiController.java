@@ -428,34 +428,36 @@ public class OrderApiController {
      */
     private void recalculateProductPrice(CreateOrderVO createOrderVo) throws Exception
     {
-        createOrderVo.setOrders(new LinkedList<>());
+        List<OrderVO> orders = new LinkedList<>();
         //按照店铺排序,相邻商品在一起
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getShopId).reversed());
         //按照运费模板排序,用于合并运送方式
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
 
-        OrderVO orderVO = new OrderVO();
-        createOrderVo.getOrders().add(orderVO);
-        for(int i = 0; i< createOrderVo.getBuyCarItems().size(); i++)
+        OrderVO orderVO = new OrderVO(new LinkedList<>());
+        orders.add(orderVO);
+        for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
             UserBuyCarItemVO currentUserBuyCarItem = createOrderVo.getBuyCarItems().get(i);
             orderVO.getBuyCarItems().add(currentUserBuyCarItem);
             for(int j = i+1; j< createOrderVo.getBuyCarItems().size(); j++)
             {
-                i = j;
                 UserBuyCarItemVO nextUserBuyCarItem = createOrderVo.getBuyCarItems().get(j);
                 //将同一个运费模板的商品,放到同一个订单里
                 if(currentUserBuyCarItem.getFreightTemplateId().longValue()!=nextUserBuyCarItem.getFreightTemplateId().longValue())
                 {
-                    orderVO = new OrderVO();
-                    createOrderVo.getOrders().add(orderVO);
+                    i = j-1; //将运费模板ID不相等的设为下一个分组起始位置
+                    orderVO = new OrderVO(new LinkedList<>());
+                    orders.add(orderVO);
                     break;
                 }else{
+                    i = j; //将运费模板ID不相等的设为下一个分组起始位置
                     orderVO.getBuyCarItems().add(nextUserBuyCarItem);
                 }
             }
         }
 
+        createOrderVo.setOrders(orders);
     }
 
 
