@@ -1204,20 +1204,37 @@ function selectCityEvent()
 
 function paymentEvent()
 {
+
+    var macAttr = $(".mac_modify").attr("attr-opt");
+    if(macAttr=="2")
+    {
+        $.message({
+            message:"请先保存收货信息",
+            type: 'error'
+        });
+        return;
+    }
+
     loading.showLoading({
         type:1,
         tip:"提交中..."
     });
 
+
     g_cache_buy_items.forEach(function (item) {
         item.selectTransportModel = item.transportModel;
     });
+
+    var params = {
+        buyCarItems:g_cache_buy_items,
+        consigneeAddress:g_consigneeAddress
+    };
 
     $.ajax({
         type: "POST",
         url: basePath + "/api/order/create",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({buyCarItems:g_cache_buy_items}),
+        data: JSON.stringify(params),
         dataType: "json",
         success: function (result) {
             if(result.code!=1)

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,11 +69,11 @@ public class OrderController {
                 order.setCreateDate(DateUtils.parse(dateString,DateUtils.FORMATTER_SS.get()));
                 order.setOrderNo(orderNoService.generateOrderNo());
                 order.setUserId("-1");
-                order.setOrderAmount(0.0D);
-                order.setPayAmount(0.0D);
+                order.setOrderAmount(new BigDecimal(0.0D));
+                order.setPayAmount(new BigDecimal(0.0D));
                 order.setPayStatus(0);
                 order.setTradeStatus(0);
-                order.setTotalAmount(0.0D);
+                order.setTotalAmount(new BigDecimal(0.0D));
                 order.setPayType(0);
                 order.setCreateUserId("-1L");
                 order.setDeleteStatus((short) 0);

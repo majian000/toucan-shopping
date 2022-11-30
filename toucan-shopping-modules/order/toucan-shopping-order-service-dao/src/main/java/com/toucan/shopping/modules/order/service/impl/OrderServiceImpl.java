@@ -88,10 +88,10 @@ public class OrderServiceImpl implements OrderService {
             order.setPayType(-1);
             order.setOrderNo(orderNo);
             order.setPayStatus(0);  //支付状态
-            order.setOrderAmount(productPriceTotal.doubleValue()); //商品总金额
-            order.setTotalAmount(productPriceTotal.doubleValue()); //商品最终金额(折扣算完)
+            order.setOrderAmount(productPriceTotal); //商品总金额
+            order.setTotalAmount(productPriceTotal); //商品最终金额(折扣算完)
             order.setTradeStatus(0); //交易状态
-            order.setPayAmount(0D);
+            order.setPayAmount(new BigDecimal(0D));
             order.setPayMethod(payMethod);
             order.setCreateUserId(userId);
             order.setDeleteStatus((short)0);

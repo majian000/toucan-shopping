@@ -24,7 +24,7 @@ public class CreateOrderVO {
 
     private BigDecimal moneyTotal;  //总金额
 
-    private ConsigneeAddressVO consigneeAddressVO; //收货地址
+    private ConsigneeAddressVO consigneeAddress; //收货地址
 
 
     private List<OrderVO> orders; //所有拆分后的订单(根据店铺、运费模板拆分订单)

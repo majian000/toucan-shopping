@@ -44,6 +44,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,18 +99,17 @@ public class OrderApiController {
     /**
      * 创建订单
      * TODO:订单30分钟未支付 恢复预扣库存数量,支付宝回调刷新订单状态 如果失败创建本地事件以便事务补偿回滚
-     * @param payVo
+     * @param createOrderVO
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO create(HttpServletRequest request, @RequestBody CreateOrderVO payVo){
+    public ResultObjectVO create(HttpServletRequest request, @RequestBody CreateOrderVO createOrderVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        logger.info("购买商品: param:"+ JSONObject.toJSONString(payVo));
-        if(payVo ==null)
+        if(createOrderVO ==null)
         {
-            logger.info("没有找到要购买的商品: param:"+ JSONObject.toJSONString(payVo));
+            logger.info("没有找到要购买的商品: param:"+ JSONObject.toJSONString(createOrderVO));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到要购买的商品!");
             return resultObjectVO;
@@ -127,7 +127,7 @@ public class OrderApiController {
             String orderNo= orderNoService.generateOrderNo();
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
             String appCode = toucan.getAppCode();
-            for(UserBuyCarItemVO buyCarItemVO : payVo.getBuyCarItems())
+            for(UserBuyCarItemVO buyCarItemVO : createOrderVO.getBuyCarItems())
             {
                 if(buyCarItemVO!=null) {
                     if (buyCarItemVO.getShopProductSkuId()==null) {
@@ -155,7 +155,7 @@ public class OrderApiController {
 
 
             //===================================查询当前库中的所有购物车项
-            resultObjectVO = this.queryBuyCarItems(payVo,Long.parseLong(userId));
+            resultObjectVO = this.queryBuyCarItems(createOrderVO,Long.parseLong(userId));
             if(!resultObjectVO.isSuccess())
             {
                 return resultObjectVO;
@@ -166,7 +166,7 @@ public class OrderApiController {
 
             //==============================查询商品
             List<ProductSkuVO> productSkuVOS = new LinkedList<>();
-            for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
+            for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
             {
                 ProductSkuVO productSkuVO = new ProductSkuVO();
                 productSkuVO.setId(userBuyCarItemVO.getShopProductSkuId());
@@ -206,7 +206,7 @@ public class OrderApiController {
 
             //======================查询商品锁定库存
             ProductSkuStockLockVO queryProductSkuStockLockVO = new ProductSkuStockLockVO();
-            queryProductSkuStockLockVO.setProductSkuIdList(payVo.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
+            queryProductSkuStockLockVO.setProductSkuIdList(createOrderVO.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuStockLockVO);
             resultObjectVO = feignProductSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
             if(!resultObjectVO.isSuccess())
@@ -221,7 +221,7 @@ public class OrderApiController {
             {
                 for(ProductSkuStockLockVO productSkuStockLockVO:productSkuStockLockVOS)
                 {
-                    for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
+                    for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
                     {
                         if(productSkuStockLockVO.getProductSkuId().longValue()==userBuyCarItemVO.getShopProductSkuId().longValue())
                         {
@@ -243,7 +243,7 @@ public class OrderApiController {
                     return resultObjectVO;
                 }
                 freightTemplateIdList.add(productSku.getFreightTemplateId());
-                for(UserBuyCarItemVO userBuyCarItemVO: payVo.getBuyCarItems())
+                for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
                 {
                     if(productSku.getId().longValue()==userBuyCarItemVO.getShopProductSkuId().longValue())
                     {
@@ -253,6 +253,9 @@ public class OrderApiController {
                             resultObjectVO.setMsg(productSku.getName()+" 库存不足");
                             return resultObjectVO;
                         }
+
+                        //设置商品单价
+                        userBuyCarItemVO.setProductPrice(productSku.getPrice());
 
                         //设置运费模板
                         userBuyCarItemVO.setFreightTemplateId(productSku.getFreightTemplateId());
@@ -305,7 +308,7 @@ public class OrderApiController {
             }
 
             for (UBCIFreightTemplateVO freightTemplateVO : freightTemplateVOS) {
-                for (UserBuyCarItemVO userBuyCarItemVO : payVo.getBuyCarItems()) {
+                for (UserBuyCarItemVO userBuyCarItemVO : createOrderVO.getBuyCarItems()) {
                     if(userBuyCarItemVO.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
                     {
                         userBuyCarItemVO.setFreightTemplateVO(freightTemplateVO);
@@ -315,7 +318,7 @@ public class OrderApiController {
             }
 
 
-            this.recalculateProductPrice(payVo);
+            this.recalculateProductPrice(createOrderVO);
 
 
             //预扣库存
@@ -428,18 +431,21 @@ public class OrderApiController {
      */
     private void recalculateProductPrice(CreateOrderVO createOrderVo) throws Exception
     {
+        logger.info("计算订单价格: param {} ",JSONObject.toJSONString(createOrderVo));
         List<OrderVO> orders = new LinkedList<>();
         //按照店铺排序,相邻商品在一起
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getShopId).reversed());
         //按照运费模板排序,用于合并运送方式
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
 
-        OrderVO orderVO = new OrderVO(new LinkedList<>());
+        //开始拆分订单
+        OrderVO orderVO = new OrderVO(new LinkedList<>(),null);
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
             UserBuyCarItemVO currentUserBuyCarItem = createOrderVo.getBuyCarItems().get(i);
             orderVO.getBuyCarItems().add(currentUserBuyCarItem);
+            orderVO.setFreightTemplate(currentUserBuyCarItem.getFreightTemplateVO());
             for(int j = i+1; j< createOrderVo.getBuyCarItems().size(); j++)
             {
                 UserBuyCarItemVO nextUserBuyCarItem = createOrderVo.getBuyCarItems().get(j);
@@ -447,7 +453,7 @@ public class OrderApiController {
                 if(currentUserBuyCarItem.getFreightTemplateId().longValue()!=nextUserBuyCarItem.getFreightTemplateId().longValue())
                 {
                     i = j-1; //将运费模板ID不相等的设为下一个分组起始位置
-                    orderVO = new OrderVO(new LinkedList<>());
+                    orderVO = new OrderVO(new LinkedList<>(),null);
                     orders.add(orderVO);
                     break;
                 }else{
@@ -455,6 +461,21 @@ public class OrderApiController {
                     orderVO.getBuyCarItems().add(nextUserBuyCarItem);
                 }
             }
+        }
+
+        //计算每个订单的金额
+        for(OrderVO ovo:orders)
+        {
+            //订单总金额
+            BigDecimal orderAmount=new BigDecimal(0.0D);
+            //拿到运费模板
+            UBCIFreightTemplateVO freightTemplateVO = ovo.getFreightTemplate();
+            for(UserBuyCarItemVO ubc:ovo.getBuyCarItems())
+            {
+                BigDecimal orderItemAmount = ubc.getProductPrice().multiply(new BigDecimal(ubc.getBuyCount()));
+                orderAmount.add(orderItemAmount);
+            }
+            ovo.setOrderAmount(orderAmount);
         }
 
         createOrderVo.setOrders(orders);
