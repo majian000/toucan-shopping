@@ -473,7 +473,7 @@ public class OrderApiController {
             for(UserBuyCarItemVO ubc:ovo.getBuyCarItems())
             {
                 BigDecimal orderItemAmount = ubc.getProductPrice().multiply(new BigDecimal(ubc.getBuyCount()));
-                orderAmount.add(orderItemAmount);
+                orderAmount = orderAmount.add(orderItemAmount);
             }
             ovo.setOrderAmount(orderAmount);
         }
