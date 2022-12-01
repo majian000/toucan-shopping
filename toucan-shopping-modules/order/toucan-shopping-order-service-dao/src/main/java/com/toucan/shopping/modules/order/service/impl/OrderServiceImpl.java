@@ -83,7 +83,6 @@ public class OrderServiceImpl implements OrderService {
             Order order = new Order();
             order.setCreateDate(new Date());
             order.setUserId(userId);
-            order.setCreateUserId(userId);
             order.setAppCode(appCode);
             order.setPayType(-1);
             order.setOrderNo(orderNo);
@@ -93,7 +92,6 @@ public class OrderServiceImpl implements OrderService {
             order.setTradeStatus(0); //交易状态
             order.setPayAmount(new BigDecimal(0D));
             order.setPayMethod(payMethod);
-            order.setCreateUserId(userId);
             order.setDeleteStatus((short)0);
 
             this.create(order);

@@ -21,12 +21,10 @@ public class CreateOrderVO {
 
     private List<UserBuyCarItemVO> buyCarItems; //购物车中的所有项
 
-
     private BigDecimal moneyTotal;  //总金额
 
     private ConsigneeAddressVO consigneeAddress; //收货地址
 
-
-    private List<OrderVO> orders; //所有拆分后的订单(根据店铺、运费模板拆分订单)
+    private MainOrderVO mainOrder; //主订单,包含了所有拆分订单后的总金额
 
 }

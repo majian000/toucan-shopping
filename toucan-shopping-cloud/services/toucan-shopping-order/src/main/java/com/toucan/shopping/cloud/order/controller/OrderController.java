@@ -75,7 +75,6 @@ public class OrderController {
                 order.setTradeStatus(0);
                 order.setTotalAmount(new BigDecimal(0.0D));
                 order.setPayType(0);
-                order.setCreateUserId("-1L");
                 order.setDeleteStatus((short) 0);
                 orderService.create(order);
             }

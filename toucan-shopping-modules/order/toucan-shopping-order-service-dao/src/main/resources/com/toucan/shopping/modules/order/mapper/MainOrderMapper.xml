@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.order.mapper.OrderMapper">
+<mapper namespace="com.toucan.shopping.modules.order.mapper.MainOrderMapper">
 
-    <resultMap id="orderMap" type="com.toucan.shopping.modules.order.entity.Order" >
+    <resultMap id="orderMap" type="com.toucan.shopping.modules.order.entity.MainOrder" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
-        <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
         <result column="user_id" jdbcType="VARCHAR" property="userId" />
         <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
         <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
@@ -15,7 +14,6 @@
         <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
         <result column="pay_type" jdbcType="SMALLINT" property="payType" />
         <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
-        <result column="best_date" jdbcType="TIMESTAMP" property="bestDate" />
         <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -25,27 +23,27 @@
 
 
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,
-        pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.MainOrder"  >
+        insert into t_main_order(order_no,user_id,order_amount,pay_amount,total_amount,
+        pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{payStatus},
-         #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
+         values(#{orderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{payStatus},
+         #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>
 
-    <update id="finishOrder" parameterType="com.toucan.shopping.modules.order.entity.Order">
-        update t_order set pay_status=1 , outer_trade_no=#{outerTradeNo} , pay_date=#{payDate}  where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
+    <update id="finishMainOrder" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
+        update t_main_order set pay_status=1 , outer_trade_no=#{outerTradeNo} , pay_date=#{payDate}  where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
     </update>
 
 
-    <update id="cancelOrder" parameterType="com.toucan.shopping.modules.order.entity.Order">
-        update t_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
+    <update id="cancelMainOrder" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
+        update t_main_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
     </update>
 
 
-    <select id="queryOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.Order">
-        select bo.* from t_order bo
+    <select id="queryMainOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
+        select bo.* from t_main_order bo
         where 1=1 and bo.delete_status=0 and bo.pay_method=1 and bo.app_code=#{appCode} and pay_status=0 and trade_status=0
          <![CDATA[
             and bo.create_date<#{createDate}

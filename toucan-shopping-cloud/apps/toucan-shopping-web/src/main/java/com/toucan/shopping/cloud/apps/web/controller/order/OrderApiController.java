@@ -25,6 +25,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
@@ -123,8 +124,11 @@ public class OrderApiController {
             {
                 throw new IllegalArgumentException("登录认证失败");
             }
-            //订单号
+            //主订单号
             String orderNo= orderNoService.generateOrderNo();
+            MainOrderVO mainOrderVO = new MainOrderVO();
+            mainOrderVO.setOrderNo(orderNo);
+            createOrderVO.setMainOrder(mainOrderVO);
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
             String appCode = toucan.getAppCode();
             for(UserBuyCarItemVO buyCarItemVO : createOrderVO.getBuyCarItems())
@@ -440,6 +444,7 @@ public class OrderApiController {
 
         //开始拆分订单
         OrderVO orderVO = new OrderVO(new LinkedList<>(),null);
+        orderVO.setOrderNo(orderNoService.generateOrderNo());
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -454,6 +459,7 @@ public class OrderApiController {
                 {
                     i = j-1; //将运费模板ID不相等的设为下一个分组起始位置
                     orderVO = new OrderVO(new LinkedList<>(),null);
+                    orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orders.add(orderVO);
                     break;
                 }else{
@@ -478,7 +484,7 @@ public class OrderApiController {
             ovo.setOrderAmount(orderAmount);
         }
 
-        createOrderVo.setOrders(orders);
+        createOrderVo.getMainOrder().setOrders(orders);
     }
 
 

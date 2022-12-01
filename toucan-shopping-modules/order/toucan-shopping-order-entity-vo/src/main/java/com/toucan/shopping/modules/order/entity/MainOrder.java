@@ -6,15 +6,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 子订单
- *
+ * 主订单
+ * 主订单是所有子订单的主表 子订单是购物车拆单后产生的
  * @author majian
  */
 @Data
-public class Order {
+public class MainOrder {
     private Long id; //主键
     private String orderNo; //订单编号
-    private String mainOrderNo; //主订单编号
     private String userId; //用户ID
     private BigDecimal orderAmount; //订单金额
     private BigDecimal payAmount; //付款金额
@@ -24,7 +23,6 @@ public class Order {
     private Integer payMethod;  //支付方式 1线上支付 2线下支付
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)
-    private Date bestDate; //最佳送货时间
     private Date payDate; //订单支付时间
     private String remark; //订单备注 买家填写
     private Date createDate; //创建时间
