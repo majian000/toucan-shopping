@@ -92,14 +92,13 @@ function loadBuyCarConfirmPage() {
     });
 
 
-    $(".buy_item_pey").click(function(){
-        var buyItemPays = $(".buy_item_pey");
+    $(".buy_item_pay").click(function(){
+        var buyItemPays = $(".buy_item_pay");
         for(var i=0;i<buyItemPays.length;i++)
         {
             $(buyItemPays[i]).removeClass("checked")
         }
         $(this).addClass("checked");
-        console.log($(this).attr("attr-type"));
     });
 
     $(".confirm_payment_btn").click(function(){
@@ -1229,6 +1228,15 @@ function paymentEvent()
         buyCarItems:g_cache_buy_items,
         consigneeAddress:g_consigneeAddress
     };
+
+    var buyItemPays = $(".buy_item_pay");
+    for(var i=0;i<buyItemPays.length;i++)
+    {
+        if($(buyItemPays[i]).hasClass("checked"))
+        {
+            params.payType = $(buyItemPays[i]).attr("attr-type");
+        }
+    }
 
     $.ajax({
         type: "POST",

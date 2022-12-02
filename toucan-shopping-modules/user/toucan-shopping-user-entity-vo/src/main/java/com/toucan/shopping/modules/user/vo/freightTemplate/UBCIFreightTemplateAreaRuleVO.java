@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -54,13 +55,13 @@ public class UBCIFreightTemplateAreaRuleVO {
 
     private String transportModel; //运送方式 1:快递 2:EMS 3:平邮
 
-    private Double firstWeight; //首重量 单位KG/件
+    private BigDecimal firstWeight; //首重量 单位KG/件
 
-    private Double firstWeightMoney; //首重金额
+    private BigDecimal firstWeightMoney; //首重金额
 
-    private Double appendWeight; //续重量 单位KG/件
+    private BigDecimal appendWeight; //续重量 单位KG/件
 
-    private Double appendWeightMoney; //续重金额
+    private BigDecimal appendWeightMoney; //续重金额
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

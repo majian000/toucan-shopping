@@ -7,7 +7,7 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
-import com.toucan.shopping.modules.order.vo.CreateOrderVO;
+import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
@@ -26,9 +26,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.no.OrderNoService;
-import com.toucan.shopping.modules.order.vo.MainOrderVO;
-import com.toucan.shopping.modules.order.vo.OrderVO;
-import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
@@ -36,7 +33,11 @@ import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
+import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -356,6 +357,17 @@ public class OrderApiController {
                 }
             }
 
+            //查询传过来的收货人信息
+            ConsigneeAddress queryConsingeeAddress = new ConsigneeAddress();
+            queryConsingeeAddress.setAppCode(toucan.getAppCode());
+            queryConsingeeAddress.setUserMainId(Long.parseLong(userId));
+            queryConsingeeAddress.setId(createOrderVO.getConsigneeAddress().getId());
+            resultObjectVO = feignConsigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryConsingeeAddress));
+            if(!resultObjectVO.isSuccess())
+            {
+                throw new CreateOrderException("没有找到收货人信息");
+            }
+            createOrderVO.setConsigneeAddress(resultObjectVO.formatData(ConsigneeAddressVO.class));
 
             this.recalculateProductPrice(createOrderVO);
 
@@ -465,6 +477,123 @@ public class OrderApiController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询改收货信息对应的运费价格规则
+     * @param userBuyCarItemVO
+     * @param createOrderVO
+     */
+    private OrderFreightVO findOrderFreight(UserBuyCarItemVO userBuyCarItemVO,CreateOrderVO createOrderVO)
+    {
+        OrderFreightVO orderFreightVO = new OrderFreightVO();
+        orderFreightVO.setTransportModel(userBuyCarItemVO.getSelectTransportModel());
+        if("1".equals(userBuyCarItemVO.getSelectTransportModel())) //快递
+        {
+            List<UBCIFreightTemplateAreaRuleVO> areaRules = userBuyCarItemVO.getFreightTemplateVO().getExpressAreaRules();
+            if(!CollectionUtils.isEmpty(areaRules))
+            {
+                //查询地区规则
+                for(int i=0;i<areaRules.size();i++){
+                    UBCIFreightTemplateAreaRuleVO rowAreaRule = areaRules.get(i);
+                    if(!CollectionUtils.isEmpty(rowAreaRule.getSelectItems()))
+                    {
+                        for(int j=0;j<rowAreaRule.getSelectItems().size();j++)
+                        {
+                            UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
+                            //判断等于该城市编码
+                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            {
+                                //设置首重/续重/首重价格/续重价格
+                                orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
+                                orderFreightVO.setFirstWeightMoney(areaRule.getFirstWeightMoney());
+                                orderFreightVO.setAppendWeight(areaRule.getAppendWeight());
+                                orderFreightVO.setAppendWeightMoney(areaRule.getAppendWeightMoney());
+                                return orderFreightVO;
+                            }
+                        }
+                    }
+                }
+            }
+            UBCIFreightTemplateDefaultRuleVO defaultRuleVO = userBuyCarItemVO.getFreightTemplateVO().getExpressDefaultRule();
+            //设置首重/续重/首重价格/续重价格
+            orderFreightVO.setFirstWeight(defaultRuleVO.getDefaultWeight());
+            orderFreightVO.setFirstWeightMoney(defaultRuleVO.getDefaultWeightMoney());
+            orderFreightVO.setAppendWeight(defaultRuleVO.getDefaultAppendWeight());
+            orderFreightVO.setAppendWeightMoney(defaultRuleVO.getDefaultAppendWeightMoney());
+            return orderFreightVO;
+        }else if("2".equals(userBuyCarItemVO.getSelectTransportModel())) //EMS
+        {
+            List<UBCIFreightTemplateAreaRuleVO> areaRules = userBuyCarItemVO.getFreightTemplateVO().getEmsAreaRules();
+            if(!CollectionUtils.isEmpty(areaRules))
+            {
+                //查询地区规则
+                for(int i=0;i<areaRules.size();i++){
+                    UBCIFreightTemplateAreaRuleVO rowAreaRule = areaRules.get(i);
+                    if(!CollectionUtils.isEmpty(rowAreaRule.getSelectItems()))
+                    {
+                        for(int j=0;j<rowAreaRule.getSelectItems().size();j++)
+                        {
+                            UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
+                            //判断等于该城市编码
+                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            {
+                                //设置首重/续重/首重价格/续重价格
+                                orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
+                                orderFreightVO.setFirstWeightMoney(areaRule.getFirstWeightMoney());
+                                orderFreightVO.setAppendWeight(areaRule.getAppendWeight());
+                                orderFreightVO.setAppendWeightMoney(areaRule.getAppendWeightMoney());
+                                return orderFreightVO;
+                            }
+                        }
+                    }
+                }
+            }
+            UBCIFreightTemplateDefaultRuleVO defaultRuleVO = userBuyCarItemVO.getFreightTemplateVO().getEmsDefaultRule();
+            //设置首重/续重/首重价格/续重价格
+            orderFreightVO.setFirstWeight(defaultRuleVO.getDefaultWeight());
+            orderFreightVO.setFirstWeightMoney(defaultRuleVO.getDefaultWeightMoney());
+            orderFreightVO.setAppendWeight(defaultRuleVO.getDefaultAppendWeight());
+            orderFreightVO.setAppendWeightMoney(defaultRuleVO.getDefaultAppendWeightMoney());
+            return orderFreightVO;
+
+        }else if("3".equals(userBuyCarItemVO.getSelectTransportModel())) //平邮
+        {
+            List<UBCIFreightTemplateAreaRuleVO> areaRules = userBuyCarItemVO.getFreightTemplateVO().getOrdinaryMailAreaRules();
+            if(!CollectionUtils.isEmpty(areaRules))
+            {
+                //查询地区规则
+                for(int i=0;i<areaRules.size();i++){
+                    UBCIFreightTemplateAreaRuleVO rowAreaRule = areaRules.get(i);
+                    if(!CollectionUtils.isEmpty(rowAreaRule.getSelectItems()))
+                    {
+                        for(int j=0;j<rowAreaRule.getSelectItems().size();j++)
+                        {
+                            UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
+                            //判断等于该城市编码
+                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            {
+                                //设置首重/续重/首重价格/续重价格
+                                orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
+                                orderFreightVO.setFirstWeightMoney(areaRule.getFirstWeightMoney());
+                                orderFreightVO.setAppendWeight(areaRule.getAppendWeight());
+                                orderFreightVO.setAppendWeightMoney(areaRule.getAppendWeightMoney());
+                                return orderFreightVO;
+                            }
+                        }
+                    }
+                }
+            }
+            UBCIFreightTemplateDefaultRuleVO defaultRuleVO = userBuyCarItemVO.getFreightTemplateVO().getOrdinaryMailDefaultRule();
+            //设置首重/续重/首重价格/续重价格
+            orderFreightVO.setFirstWeight(defaultRuleVO.getDefaultWeight());
+            orderFreightVO.setFirstWeightMoney(defaultRuleVO.getDefaultWeightMoney());
+            orderFreightVO.setAppendWeight(defaultRuleVO.getDefaultAppendWeight());
+            orderFreightVO.setAppendWeightMoney(defaultRuleVO.getDefaultAppendWeightMoney());
+            return orderFreightVO;
+        }
+        return orderFreightVO;
+    }
+
     /**
      * 重新计算商品价格(可能存在APP端加入了购物车,这时候在PC端进行了支付)
      */
@@ -485,7 +614,11 @@ public class OrderApiController {
         {
             UserBuyCarItemVO currentUserBuyCarItem = createOrderVo.getBuyCarItems().get(i);
             orderVO.getBuyCarItems().add(currentUserBuyCarItem);
-            orderVO.setFreightTemplate(currentUserBuyCarItem.getFreightTemplateVO());
+            if(orderVO.getOrderFreight()==null)
+            {
+                //查询匹配收货人信息的运费规则
+                orderVO.setOrderFreight(this.findOrderFreight(currentUserBuyCarItem,createOrderVo));
+            }
             for(int j = i+1; j< createOrderVo.getBuyCarItems().size(); j++)
             {
                 UserBuyCarItemVO nextUserBuyCarItem = createOrderVo.getBuyCarItems().get(j);
@@ -496,6 +629,8 @@ public class OrderApiController {
                     orderVO = new OrderVO(new LinkedList<>(),null);
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orders.add(orderVO);
+                    //查询匹配收货人信息的运费规则
+                    orderVO.setOrderFreight(this.findOrderFreight(nextUserBuyCarItem,createOrderVo));
                     break;
                 }else{
                     i = j; //将运费模板ID不相等的设为下一个分组起始位置
@@ -509,8 +644,8 @@ public class OrderApiController {
         {
             //订单总金额
             BigDecimal orderAmount=new BigDecimal(0.0D);
-            //拿到运费模板
-            UBCIFreightTemplateVO freightTemplateVO = ovo.getFreightTemplate();
+            //订单运费规则
+            OrderFreightVO orderFreight = ovo.getOrderFreight();
             for(UserBuyCarItemVO ubc:ovo.getBuyCarItems())
             {
                 BigDecimal orderItemAmount = ubc.getProductPrice().multiply(new BigDecimal(ubc.getBuyCount()));
