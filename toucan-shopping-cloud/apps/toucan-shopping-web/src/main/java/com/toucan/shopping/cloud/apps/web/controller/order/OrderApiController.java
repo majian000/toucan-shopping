@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
 import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
@@ -97,6 +98,9 @@ public class OrderApiController {
     @Autowired
     private FeignFreightTemplateService feignFreightTemplateService;
 
+    @Autowired
+    private FeignConsigneeAddressService feignConsigneeAddressService;
+
     /**
      * 创建订单
      * TODO:订单30分钟未支付 恢复预扣库存数量,支付宝回调刷新订单状态 如果失败创建本地事件以便事务补偿回滚
@@ -115,6 +119,14 @@ public class OrderApiController {
             resultObjectVO.setMsg("没有找到要购买的商品!");
             return resultObjectVO;
         }
+        if(createOrderVO.getConsigneeAddress()==null||createOrderVO.getConsigneeAddress().getId()==null)
+        {
+            logger.info("收货人信息不能为空: param:"+ JSONObject.toJSONString(createOrderVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("收货人信息不能为空!");
+            return resultObjectVO;
+
+        }
         //锁住当前购买所有商品
         List<String> lockKeys= new ArrayList<String>();
         String userId = "-1";
@@ -131,6 +143,7 @@ public class OrderApiController {
             createOrderVO.setMainOrder(mainOrderVO);
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
             String appCode = toucan.getAppCode();
+            //商品加锁
             for(UserBuyCarItemVO buyCarItemVO : createOrderVO.getBuyCarItems())
             {
                 if(buyCarItemVO!=null) {
@@ -207,6 +220,26 @@ public class OrderApiController {
                     return resultObjectVO;
                 }
             }
+            //判断购物车中的商品是否被删除了
+            boolean isProductIsDel = true;
+            for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
+            {
+                isProductIsDel = true;
+                for (ProductSkuVO productSku : queryProductSkuList) {
+                    if(userBuyCarItemVO.getShopProductSkuId().longValue()==productSku.getId().longValue())
+                    {
+                        isProductIsDel = false;
+                        break;
+                    }
+                }
+                if(isProductIsDel)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(userBuyCarItemVO.getProductSkuName() + " 已下架");
+                    return resultObjectVO;
+                }
+            }
+
 
             //======================查询商品锁定库存
             ProductSkuStockLockVO queryProductSkuStockLockVO = new ProductSkuStockLockVO();
@@ -310,6 +343,8 @@ public class OrderApiController {
             {
                 throw new CreateOrderException("没有找到运费模板");
             }
+
+
 
             for (UBCIFreightTemplateVO freightTemplateVO : freightTemplateVOS) {
                 for (UserBuyCarItemVO userBuyCarItemVO : createOrderVO.getBuyCarItems()) {

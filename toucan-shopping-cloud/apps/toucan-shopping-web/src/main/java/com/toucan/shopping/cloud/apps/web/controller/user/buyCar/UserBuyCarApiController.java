@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -86,16 +87,41 @@ public class UserBuyCarApiController {
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
 
                     ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
-                    if(ResultProductSkuObjectVO.isSuccess())
+                    if(!ResultProductSkuObjectVO.isSuccess())
                     {
+                        for(UserBuyCarItemVO ubc:userBuyCarVOList) {
+                            ubc.setProductSkuName("商品已下架");
+                            ubc.setAllowedBuy(false);
+                            ubc.setShopId(-1L);
+                            ubc.setAttributePreview("");
+                            ubc.setProductPrice(new BigDecimal(0.0D));
+                            ubc.setFreightTemplateId(-1L);
+                            ubc.setNoAllowedBuyStatus((short) 1);
+                        }
+                    }else{
                         List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
-                        if(CollectionUtils.isNotEmpty(productSkuList))
+                        if(CollectionUtils.isEmpty(productSkuList))
                         {
-                            for(ProductSku productSku:productSkuList)
+                            for(UserBuyCarItemVO ubc:userBuyCarVOList) {
+                                ubc.setProductSkuName("商品");
+                                ubc.setNoAllowedBuyDesc("已下架");
+                                ubc.setAllowedBuy(false);
+                                ubc.setShopId(-1L);
+                                ubc.setAttributePreview("");
+                                ubc.setProductPrice(new BigDecimal(0.0D));
+                                ubc.setFreightTemplateId(-1L);
+                                ubc.setNoAllowedBuyStatus((short) 1);
+                            }
+                        }else{
+                            boolean isFind=false;
+                            for(UserBuyCarItemVO ubc:userBuyCarVOList)
                             {
-                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
+                                isFind = false;
+                                for(ProductSku productSku:productSkuList)
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
+
+                                        isFind = true;
                                         ubc.setProductSkuName(productSku.getName());
                                         if(productSku.getStatus().intValue()==0)
                                         {
@@ -116,8 +142,30 @@ public class UserBuyCarApiController {
                                         continue;
                                     }
                                 }
+                                if(!isFind)
+                                {
+                                    ubc.setProductSkuName("商品");
+                                    ubc.setNoAllowedBuyDesc("已下架");
+                                    ubc.setAllowedBuy(false);
+                                    ubc.setShopId(-1L);
+                                    ubc.setProductPrice(new BigDecimal(0.0D));
+                                    ubc.setAttributePreview("");
+                                    ubc.setFreightTemplateId(-1L);
+                                    ubc.setNoAllowedBuyStatus((short) 1);
+                                }
                             }
                         }
+                    }
+                }else{
+                    for(UserBuyCarItemVO ubc:userBuyCarVOList) {
+                        ubc.setProductSkuName("商品");
+                        ubc.setNoAllowedBuyDesc("已下架");
+                        ubc.setAllowedBuy(false);
+                        ubc.setShopId(-1L);
+                        ubc.setAttributePreview("");
+                        ubc.setProductPrice(new BigDecimal(0.0D));
+                        ubc.setFreightTemplateId(-1L);
+                        ubc.setNoAllowedBuyStatus((short) 1);
                     }
                 }
                 resultObjectVO.setData(userBuyCarVOList);
@@ -164,50 +212,73 @@ public class UserBuyCarApiController {
                     {
                         List<Long> freightTemplateIdList = new LinkedList<>();
                         List<ProductSkuVO> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSkuVO.class);
-                        if(CollectionUtils.isNotEmpty(productSkuList))
-                        {
-                            for(ProductSkuVO productSku:productSkuList)
-                            {
+                        if(CollectionUtils.isEmpty(productSkuList)) {
+                            for(UserBuyCarItemVO ubc:userBuyCarVOList) {
+                                ubc.setProductSkuName("商品");
+                                ubc.setNoAllowedBuyDesc("已下架");
+                                ubc.setAllowedBuy(false);
+                                ubc.setShopId(-1L);
+                                ubc.setAttributePreview("");
+                                ubc.setProductPrice(new BigDecimal(0.0D));
+                                ubc.setFreightTemplateId(-1L);
+                                ubc.setNoAllowedBuyStatus((short) 1);
+                            }
+                        }else{
+                            boolean isFind=false;
+
+                            for (ProductSkuVO productSku : productSkuList) {
                                 freightTemplateIdList.add(productSku.getFreightTemplateId());
-                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
-                                {
-                                    if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
+                            }
+                            for(UserBuyCarItemVO ubc:userBuyCarVOList) {
+                                isFind = false;
+                                for (ProductSkuVO productSku : productSkuList) {
+                                    if (productSku.getId().longValue() == ubc.getShopProductSkuId().longValue()) {
+                                        isFind = true;
                                         ubc.setProductSkuName(productSku.getName());
-                                        if(productSku.getStatus().intValue()==0)
-                                        {
+                                        if (productSku.getStatus().intValue() == 0) {
                                             ubc.setProductSkuName(ubc.getProductSkuName());
                                             ubc.setNoAllowedBuyDesc("已下架");
                                             ubc.setAllowedBuy(false);
-                                            ubc.setNoAllowedBuyStatus((short)1);
+                                            ubc.setNoAllowedBuyStatus((short) 1);
                                         }
-                                        if(productSku.getStockNum().longValue()<=0)
-                                        {
+                                        if (productSku.getStockNum().longValue() <= 0) {
                                             ubc.setProductSkuName(ubc.getProductSkuName());
                                             ubc.setNoAllowedBuyDesc("已售罄");
                                             ubc.setAllowedBuy(false);
-                                            ubc.setNoAllowedBuyStatus((short)2);
+                                            ubc.setNoAllowedBuyStatus((short) 2);
                                         }
                                         ubc.setProductPrice(productSku.getPrice());
                                         ubc.setSuttle(productSku.getSuttle()); //净重
                                         ubc.setRoughWeight(productSku.getRoughWeight()); //毛重
-                                        ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
-                                        if(productSku.getFreightTemplateId()!=null) {
+                                        ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix() + productSku.getProductPreviewPath());
+                                        if (productSku.getFreightTemplateId() != null) {
                                             ubc.setFreightTemplateId(productSku.getFreightTemplateId());
                                         }
                                         ubc.setShopId(productSku.getShopId());
 
                                         StringBuilder attributePreview = new StringBuilder();
-                                        HashMap<String,String> attributeMap = JSONObject.parseObject(productSku.getAttributes(), HashMap.class);
+                                        HashMap<String, String> attributeMap = JSONObject.parseObject(productSku.getAttributes(), HashMap.class);
                                         Set<String> attributeKeys = attributeMap.keySet();
-                                        for(String attributeKey:attributeKeys)
-                                        {
+                                        for (String attributeKey : attributeKeys) {
                                             String attributeValue = attributeMap.get(attributeKey);
-                                            attributePreview.append(attributeKey+":"+attributeValue);
+                                            attributePreview.append(attributeKey + ":" + attributeValue);
                                             attributePreview.append(" ");
                                         }
                                         ubc.setAttributePreview(attributePreview.toString());
                                         continue;
                                     }
+                                }
+
+                                if(!isFind)
+                                {
+                                    ubc.setProductSkuName("商品");
+                                    ubc.setNoAllowedBuyDesc("已下架");
+                                    ubc.setAllowedBuy(false);
+                                    ubc.setShopId(-1L);
+                                    ubc.setProductPrice(new BigDecimal(0.0D));
+                                    ubc.setAttributePreview("");
+                                    ubc.setFreightTemplateId(-1L);
+                                    ubc.setNoAllowedBuyStatus((short) 1);
                                 }
                             }
 
@@ -241,8 +312,6 @@ public class UserBuyCarApiController {
                                     }
                                 }
                             }
-
-
                         }
                     }
                     //按照店铺排序,相邻商品在一起
