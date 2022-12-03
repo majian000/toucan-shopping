@@ -37,9 +37,9 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
      */
     private String attributePreview;
 
-    private Double roughWeight; //毛重
+    private BigDecimal roughWeight; //毛重
 
-    private Double suttle; //净重
+    private BigDecimal suttle; //净重
 
 
     @JsonProperty("isAllowedBuy")

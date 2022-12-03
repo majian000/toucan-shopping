@@ -100,9 +100,9 @@ public class ProductSku {
 
     private String productNo; //商品编号
 
-    private Double roughWeight; //毛重
+    private BigDecimal roughWeight; //毛重
 
-    private Double suttle; //净重
+    private BigDecimal suttle; //净重
 
     private String lastRestoreTransactionId; //最后恢复库存的事务ID
 

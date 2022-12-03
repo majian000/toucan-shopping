@@ -71,7 +71,6 @@ public class OrderItemServiceImpl implements OrderItemService {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setCreateDate(new Date());
                 orderItem.setUserId(order.getUserId());
-                orderItem.setCreateUserId(order.getUserId());
                 orderItem.setAppCode(order.getAppCode());
                 orderItem.setOrderId(order.getId());
                 orderItem.setOrderNo(order.getOrderNo());

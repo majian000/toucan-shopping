@@ -299,6 +299,9 @@ public class OrderApiController {
 
                         //设置商品单价
                         userBuyCarItemVO.setProductPrice(productSku.getPrice());
+                        //设置商品重量
+                        userBuyCarItemVO.setRoughWeight(productSku.getRoughWeight());
+                        userBuyCarItemVO.setSuttle(productSku.getSuttle());
 
                         //设置运费模板
                         userBuyCarItemVO.setFreightTemplateId(productSku.getFreightTemplateId());
@@ -659,6 +662,10 @@ public class OrderApiController {
         {
             //订单总金额
             BigDecimal orderAmount=new BigDecimal(0.0D);
+            //购买总数量
+            BigDecimal buyCountTotal = new BigDecimal(0.0D);
+            //子订单毛重总数
+            BigDecimal roughWeightTotal = new BigDecimal(0.0D);
             //订单运费规则
             OrderFreightVO orderFreight = ovo.getOrderFreight();
             for(UserBuyCarItemVO ubc:ovo.getBuyCarItems())
@@ -670,14 +677,22 @@ public class OrderApiController {
                 orderItemVO.setOrderId(ovo.getId());
                 orderItemVO.setOrderNo(ovo.getOrderNo());
                 orderItemVO.setProductNum(ubc.getBuyCount()); //购买数量
-                orderItemVO.setProductPrice(ubc.getProductPrice()); //购买价格
+                orderItemVO.setProductPrice(ubc.getProductPrice()); //购买时商品价格
+                orderItemVO.setProductRoughWeight(ubc.getRoughWeight()); //购买时商品毛重
                 orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
+                orderItemVO.setDeliveryStatus(0); //未收货
+                orderItemVO.setSellerStatus(1); //备货完成
+
                 orderItemVO.setAppCode(toucan.getAppCode());
 
 
                 BigDecimal orderItemAmount = ubc.getProductPrice().multiply(new BigDecimal(ubc.getBuyCount()));
                 orderItemVO.setOrderItemAmount(orderItemAmount);
 
+                //子订单中购买项总数量
+                buyCountTotal = buyCountTotal.add(new BigDecimal(ubc.getBuyCount()));
+                //子订单毛重总数量 = 订单项购买数量*商品毛重
+                roughWeightTotal = roughWeightTotal.add(new BigDecimal(ubc.getBuyCount()).multiply(ubc.getRoughWeight()));
                 orderAmount = orderAmount.add(orderItemAmount);
 
                 ovo.getOrderItems().add(orderItemVO);

@@ -30,6 +30,7 @@ public class OrderItem {
     private Integer buyerStatus; //买家状态 0待收货 1已收货 2换货 3退货
     private Integer productNum; //购买商品数量
     private BigDecimal productPrice; //商品单价
+    private BigDecimal productRoughWeight; //商品毛重
     private BigDecimal orderItemAmount; //订单单项总金额
     private Date deliveryReceiveTime; //收货时间
     private Date deliveryFinishTime; //配送人员完成时间
@@ -38,7 +39,6 @@ public class OrderItem {
     private String remark; //订单备注 买家填写
     private Date createDate; //创建时间
     private String appCode; //所属应用
-    private String createUserId; //创建人ID,可以由后台管理员创建
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
