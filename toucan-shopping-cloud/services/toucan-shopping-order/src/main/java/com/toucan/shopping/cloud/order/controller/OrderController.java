@@ -153,7 +153,7 @@ public class OrderController {
                     for(OrderItem orderItem:orderItems)
                     {
                         ProductSku productSku = new ProductSku();
-                        productSku.setUuid(orderItem.getSkuUuid());
+                        productSku.setId(orderItem.getSkuId());
                         productSkus.add(productSku);
                     }
                 }
