@@ -10,6 +10,7 @@
         <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
         <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
         <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+        <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount" />
         <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
         <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
         <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
@@ -26,10 +27,10 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,
+        insert into t_order(order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{payStatus},
+         values(#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>

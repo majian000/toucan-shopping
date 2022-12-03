@@ -137,10 +137,15 @@ public class OrderApiController {
             {
                 throw new IllegalArgumentException("登录认证失败");
             }
-            //主订单号
+            createOrderVO.setUserId(userId);
+            //主订单
             String orderNo= orderNoService.generateOrderNo();
             MainOrderVO mainOrderVO = new MainOrderVO();
+            mainOrderVO.setId(idGenerator.id());
             mainOrderVO.setOrderNo(orderNo);
+            mainOrderVO.setUserId(userId);
+            mainOrderVO.setAppCode(toucan.getAppCode());
+            mainOrderVO.setCreateDate(new Date());
             createOrderVO.setMainOrder(mainOrderVO);
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
             String appCode = toucan.getAppCode();
@@ -607,8 +612,13 @@ public class OrderApiController {
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
 
         //开始拆分订单
-        OrderVO orderVO = new OrderVO(new LinkedList<>(),null);
+        OrderVO orderVO = new OrderVO(new LinkedList<>(),null,new LinkedList<>());
+        orderVO.setId(idGenerator.id());
         orderVO.setOrderNo(orderNoService.generateOrderNo());
+        orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
+        orderVO.setUserId(String.valueOf(createOrderVo.getUserId()));
+        orderVO.setAppCode(toucan.getAppCode());
+        orderVO.setCreateDate(new Date());
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -626,8 +636,13 @@ public class OrderApiController {
                 if(currentUserBuyCarItem.getFreightTemplateId().longValue()!=nextUserBuyCarItem.getFreightTemplateId().longValue())
                 {
                     i = j-1; //将运费模板ID不相等的设为下一个分组起始位置
-                    orderVO = new OrderVO(new LinkedList<>(),null);
+                    orderVO = new OrderVO(new LinkedList<>(),null,new LinkedList<>());
+                    orderVO.setId(idGenerator.id());
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
+                    orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
+                    orderVO.setUserId(String.valueOf(createOrderVo.getUserId()));
+                    orderVO.setAppCode(toucan.getAppCode());
+                    orderVO.setCreateDate(new Date());
                     orders.add(orderVO);
                     //查询匹配收货人信息的运费规则
                     orderVO.setOrderFreight(this.findOrderFreight(nextUserBuyCarItem,createOrderVo));
@@ -648,8 +663,24 @@ public class OrderApiController {
             OrderFreightVO orderFreight = ovo.getOrderFreight();
             for(UserBuyCarItemVO ubc:ovo.getBuyCarItems())
             {
+                //订单项 订单项里不保存运费,因为运费会把所有订单项中购买商品的数量加到一起计算
+                OrderItemVO orderItemVO = new OrderItemVO();
+                orderItemVO.setId(idGenerator.id());
+                orderItemVO.setUserId(ovo.getUserId());
+                orderItemVO.setOrderId(ovo.getId());
+                orderItemVO.setOrderNo(ovo.getOrderNo());
+                orderItemVO.setProductNum(ubc.getBuyCount()); //购买数量
+                orderItemVO.setProductPrice(ubc.getProductPrice()); //购买价格
+                orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
+                orderItemVO.setAppCode(toucan.getAppCode());
+
+
                 BigDecimal orderItemAmount = ubc.getProductPrice().multiply(new BigDecimal(ubc.getBuyCount()));
+                orderItemVO.setOrderItemAmount(orderItemAmount);
+
                 orderAmount = orderAmount.add(orderItemAmount);
+
+                ovo.getOrderItems().add(orderItemVO);
             }
             ovo.setOrderAmount(orderAmount);
         }

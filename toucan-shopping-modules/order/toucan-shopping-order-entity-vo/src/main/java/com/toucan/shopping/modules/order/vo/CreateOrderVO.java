@@ -27,4 +27,6 @@ public class CreateOrderVO {
 
     private Integer payType; //支付类型 1:微信 2:支付宝
 
+    private String userId; //买家
+
 }

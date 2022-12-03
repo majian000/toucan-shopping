@@ -22,4 +22,6 @@ public class OrderVO extends Order {
     List<UserBuyCarItemVO> buyCarItems; //这个订单购买的商品
 
     OrderFreightVO orderFreight; //订单运费规则
+
+    List<OrderItemVO> orderItems; //订单项
 }

@@ -23,15 +23,14 @@ public class OrderItem {
     private String userId; //用户ID
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long orderId; //订单主表ID
-    private String skuUuid; //商品SKU UUID
+    private Long orderId; //订单表ID
+    private Long skuId; //商品SKUID
     private Integer deliveryStatus; //配送状态 0未收货 1送货中 2已收货
     private Integer sellerStatus; //卖家备货状态 0备货中 1备货完成 2缺货
     private Integer buyerStatus; //买家状态 0待收货 1已收货 2换货 3退货
     private Integer productNum; //购买商品数量
     private BigDecimal productPrice; //商品单价
     private BigDecimal orderItemAmount; //订单单项总金额
-    private BigDecimal deliveryMoney; //配送费用
     private Date deliveryReceiveTime; //收货时间
     private Date deliveryFinishTime; //配送人员完成时间
     private Date sellerFinishTime; //卖家完成时间
