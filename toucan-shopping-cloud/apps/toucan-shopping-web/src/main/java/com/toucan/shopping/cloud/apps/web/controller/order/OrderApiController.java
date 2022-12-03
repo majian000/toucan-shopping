@@ -501,7 +501,7 @@ public class OrderApiController {
                         {
                             UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
                             //判断等于该城市编码
-                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            if(areaRule.getCityCode().equals(createOrderVO.getConsigneeAddress().getCityCode()))
                             {
                                 //设置首重/续重/首重价格/续重价格
                                 orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
@@ -535,7 +535,7 @@ public class OrderApiController {
                         {
                             UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
                             //判断等于该城市编码
-                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            if(areaRule.getCityCode().equals(createOrderVO.getConsigneeAddress().getCityCode()))
                             {
                                 //设置首重/续重/首重价格/续重价格
                                 orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
@@ -570,7 +570,7 @@ public class OrderApiController {
                         {
                             UBCIFreightTemplateAreaRuleVO areaRule = rowAreaRule.getSelectItems().get(j);
                             //判断等于该城市编码
-                            if(areaRule.getCityCode()==createOrderVO.getConsigneeAddress().getCityCode())
+                            if(areaRule.getCityCode().equals(createOrderVO.getConsigneeAddress().getCityCode()))
                             {
                                 //设置首重/续重/首重价格/续重价格
                                 orderFreightVO.setFirstWeight(areaRule.getFirstWeight());
