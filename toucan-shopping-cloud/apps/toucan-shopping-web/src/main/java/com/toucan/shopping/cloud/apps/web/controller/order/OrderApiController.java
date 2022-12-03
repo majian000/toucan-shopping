@@ -39,6 +39,7 @@ import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,6 +361,15 @@ public class OrderApiController {
                     if(userBuyCarItemVO.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
                     {
                         userBuyCarItemVO.setFreightTemplateVO(freightTemplateVO);
+                        //校验是否选择了运送方式,如果不为包邮的话,选择运送方式不能为空,那么就设置一个默认的运送方式
+                        if(freightTemplateVO.getFreightStatus().intValue()==1)
+                        {
+                            String[] transportModels = freightTemplateVO.getTransportModel().split(",");
+                            if(StringUtils.isEmpty(userBuyCarItemVO.getSelectTransportModel()))
+                            {
+                                userBuyCarItemVO.setSelectTransportModel(transportModels[0]);
+                            }
+                        }
                         break;
                     }
                 }
@@ -629,8 +639,11 @@ public class OrderApiController {
             orderVO.getBuyCarItems().add(currentUserBuyCarItem);
             if(orderVO.getOrderFreight()==null)
             {
-                //查询匹配收货人信息的运费规则
-                orderVO.setOrderFreight(this.findOrderFreight(currentUserBuyCarItem,createOrderVo));
+                //如果为空默认为包邮
+                if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {
+                    //查询匹配收货人信息的运费规则
+                    orderVO.setOrderFreight(this.findOrderFreight(currentUserBuyCarItem, createOrderVo));
+                }
             }
             for(int j = i+1; j< createOrderVo.getBuyCarItems().size(); j++)
             {
@@ -647,8 +660,11 @@ public class OrderApiController {
                     orderVO.setAppCode(toucan.getAppCode());
                     orderVO.setCreateDate(new Date());
                     orders.add(orderVO);
-                    //查询匹配收货人信息的运费规则
-                    orderVO.setOrderFreight(this.findOrderFreight(nextUserBuyCarItem,createOrderVo));
+                    //如果为空默认为包邮
+                    if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {
+                        //查询匹配收货人信息的运费规则
+                        orderVO.setOrderFreight(this.findOrderFreight(nextUserBuyCarItem, createOrderVo));
+                    }
                     break;
                 }else{
                     i = j; //将运费模板ID不相等的设为下一个分组起始位置
@@ -696,6 +712,10 @@ public class OrderApiController {
                 orderAmount = orderAmount.add(orderItemAmount);
 
                 ovo.getOrderItems().add(orderItemVO);
+            }
+            //如果不为包邮
+            if(orderFreight!=null)
+            {
             }
             ovo.setOrderAmount(orderAmount);
         }
