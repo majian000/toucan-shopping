@@ -75,13 +75,12 @@ public class OrderItemServiceImpl implements OrderItemService {
                 orderItem.setAppCode(order.getAppCode());
                 orderItem.setOrderId(order.getId());
                 orderItem.setOrderNo(order.getOrderNo());
-                orderItem.setSkuUuid(productSku.getUuid());
+                orderItem.setSkuId(productSku.getId());
                 orderItem.setDeliveryStatus(0);
                 //购买商品数量
                 orderItem.setProductNum(productBuy.getBuyNum().intValue());
                 //订单子项总金额
                 orderItem.setOrderItemAmount(productPriceBD.multiply(productNumBD));
-                orderItem.setDeliveryMoney(new BigDecimal(0D));
                 orderItem.setProductPrice(productSku.getPrice());
                 orderItem.setSellerStatus(0);
                 orderItem.setBuyerStatus(0);

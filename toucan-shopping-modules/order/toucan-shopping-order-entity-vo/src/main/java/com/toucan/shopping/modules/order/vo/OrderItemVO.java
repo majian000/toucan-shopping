@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class OrderItemVO extends OrderItem {
 
 }
