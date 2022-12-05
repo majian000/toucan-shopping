@@ -59,4 +59,26 @@ public interface ProductSkuService {
     int deleteByShopProductId(Long shopProductId);
 
 
+
+    /**
+     * 删减库存
+     * @param skuId
+     * @param stockNum
+     * @return
+     */
+    int inventoryReduction(Long skuId,Integer stockNum);
+
+    /**
+     * 还原库存
+     * @param skuId
+     * @return
+     */
+    int restoreStock(Long skuId,Integer stockNum);
+
+    /**
+     * 查询所有上架中的商品
+     * @param idList
+     * @return
+     */
+    List<ProductSku> queryShelvesListByIdList(List<Long> idList);
 }

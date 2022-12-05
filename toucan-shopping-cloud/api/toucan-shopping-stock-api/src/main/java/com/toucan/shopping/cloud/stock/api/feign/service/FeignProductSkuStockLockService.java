@@ -29,6 +29,15 @@ public interface FeignProductSkuStockLockService {
     @RequestMapping(value="/find/lock/stock/num",produces = "application/json;charset=UTF-8")
     ResultObjectVO findLockStockNumByProductSkuIds(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 删除锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/lock/stock",produces = "application/json;charset=UTF-8")
+    ResultObjectVO deleteLockStock(@RequestBody RequestJsonVO requestJsonVO);
+
 //    @RequestMapping(value = "/inventoryReduction",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
 //    ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 //

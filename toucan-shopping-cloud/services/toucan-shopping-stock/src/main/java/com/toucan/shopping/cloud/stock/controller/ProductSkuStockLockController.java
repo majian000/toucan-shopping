@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,6 +85,8 @@ public class ProductSkuStockLockController {
                     throw new IllegalArgumentException("保存失败");
                 }
             }
+            resultObjectVO.setData(productSkuStockLocks);
+            return resultObjectVO;
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -99,6 +102,60 @@ public class ProductSkuStockLockController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 删除锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/lock/stock",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteLockStock(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        List<ProductSkuStockLockVO> productSkuStockLocks = requestJsonVO.formatEntityList(ProductSkuStockLockVO.class);
+        if(CollectionUtils.isEmpty(productSkuStockLocks))
+        {
+            logger.info("没有找到请求参数: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到要锁定库存的商品!");
+            return resultObjectVO;
+        }
+
+        try {
+            int ret = productSkuStockLockService.deletes(productSkuStockLocks.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
+            if(ret<=0||ret!=productSkuStockLocks.size())
+            {
+                throw new IllegalArgumentException("删除锁定库存出现异常");
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("删除锁定库存出现异常");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 根据SKUID查询锁定库存

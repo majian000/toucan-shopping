@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/productSku")
@@ -416,6 +417,129 @@ public class ProductSkuController {
 
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 扣库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(method= RequestMethod.POST,value="/inventoryReduction",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        List<InventoryReductionVO> inventoryReductions = requestJsonVO.formatEntityList(InventoryReductionVO.class);
+
+        logger.info("扣库存: param: {} ",requestJsonVO.getEntityJson());
+        if(CollectionUtils.isEmpty(inventoryReductions))
+        {
+            logger.info("没有找到扣除库存的商品: param:{} " , requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到商品!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param: {} ",requestJsonVO.getAppCode());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
+            if (StringUtils.isEmpty(inventoryReductionVO.getUserId())) {
+                logger.info("没有找到用户: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户");
+                return resultObjectVO;
+            }
+            if (inventoryReductionVO.getProductSkuId()==null) {
+                logger.info("没有找到商品ID: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到商品ID");
+                return resultObjectVO;
+            }
+            if (inventoryReductionVO.getStockNum()==null||inventoryReductionVO.getStockNum().intValue()<=0) {
+                logger.info("扣库存数量不能为0: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("扣库存数量不能为0");
+                return resultObjectVO;
+            }
+        }
+
+        List<InventoryReductionVO> restoreInventoryReductions = new LinkedList<>();
+        try {
+            //校验库存数量是否足够
+            List<Long> productSkuIds = inventoryReductions.stream().map(InventoryReductionVO::getProductSkuId).distinct().collect(Collectors.toList());
+            List<ProductSku> productSkus = productSkuService.queryShelvesListByIdList(productSkuIds);
+            boolean isFind = false;
+            for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
+                isFind = false;
+                for(ProductSku productSku:productSkus)
+                {
+                    if(productSku.getId().longValue()==inventoryReductionVO.getProductSkuId().longValue())
+                    {
+                        if(productSku.getStockNum().intValue()<inventoryReductionVO.getStockNum().intValue())
+                        {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("没有库存了");
+                            resultObjectVO.setData(inventoryReductionVO);
+                            return resultObjectVO;
+                        }
+                        isFind = true;
+                        break;
+                    }
+                }
+                if(!isFind)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("商品已下架");
+                    resultObjectVO.setData(inventoryReductionVO);
+                    return resultObjectVO;
+                }
+            }
+
+            for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
+                logger.info("扣库存: skuId:{} stockNum:{} userId:{} " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum(),inventoryReductionVO.getUserId());
+                int row = productSkuService.inventoryReduction(inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum());
+                if (row <= 0) {
+                    logger.warn("没有库存了 skuId:{} stockNum:{} userId:{} " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum(),inventoryReductionVO.getUserId());
+                    throw new IllegalArgumentException("没有库存了");
+                }else{ //清空商品缓存
+                    restoreInventoryReductions.add(inventoryReductionVO);
+                    productSkuRedisService.deleteCache(String.valueOf(inventoryReductionVO.getProductSkuId()));
+                }
+            }
+        }catch(Exception e)
+        {
+            //还原库存
+            if(!CollectionUtils.isEmpty(restoreInventoryReductions))
+            {
+                for(InventoryReductionVO inventoryReductionVO:restoreInventoryReductions) {
+                    int row = productSkuService.restoreStock(inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum());
+                    if (row <= 0) {
+                        logger.warn("还原扣库存失败 skuId:{} stockNum:{} userId:{} " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum(),inventoryReductionVO.getUserId());
+                    }
+                }
+            }
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("扣库存失败!");
+        }
+        return resultObjectVO;
+    }
+
 
 
 

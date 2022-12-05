@@ -344,7 +344,7 @@ public class UserBuyCarApiController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
             resultObjectVO  = feignUserBuyCarService.save(requestJsonVO);
 
-            //已存在改商品或者保存成功
+            //已存在该商品或者保存成功
             if(resultObjectVO.isSuccess()||resultObjectVO.getCode().intValue()==201)
             {
                 List<UserBuyCarItemVO> userBuyCarVOList = resultObjectVO.formatDataList(UserBuyCarItemVO.class);

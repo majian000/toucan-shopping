@@ -113,6 +113,21 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("查询失败,请重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO inventoryReduction(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuService inventoryReduction faild   params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("扣库存失败,请重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

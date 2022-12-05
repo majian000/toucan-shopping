@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -90,5 +92,34 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     public int deleteByShopProductId(Long shopProductId) {
         return productSkuMapper.deleteByShopProductId(shopProductId);
+    }
+
+    @Transactional
+    @Override
+    public int inventoryReduction(Long skuId,Integer stockNum) {
+        //锁住这条记录
+        ProductSku productSku = productSkuMapper.queryBySkuIdForUpdate(skuId);
+        if(productSku.getStockNum()>0) {
+            return productSkuMapper.inventoryReduction(skuId,stockNum);
+        }
+        return 0;
+    }
+
+
+    @Transactional
+    @Override
+    public int restoreStock(Long skuId,Integer stockNum) {
+        //锁住这条记录
+        ProductSku productSku = productSkuMapper.queryBySkuIdForUpdate(skuId);
+        return productSkuMapper.restoreStock(skuId,stockNum);
+    }
+
+    @Override
+    public List<ProductSku> queryShelvesListByIdList(List<Long> idList) {
+        if(CollectionUtils.isEmpty(idList))
+        {
+            return new ArrayList();
+        }
+        return productSkuMapper.queryShelvesListByIdList(idList);
     }
 }

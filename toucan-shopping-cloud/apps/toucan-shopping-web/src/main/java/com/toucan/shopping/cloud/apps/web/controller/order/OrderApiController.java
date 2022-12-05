@@ -187,6 +187,8 @@ public class OrderApiController {
 
             //商品库存锁定对象
             List<ProductSkuStockLockVO> productSkuStockLocks = new LinkedList<>();
+            //商品扣库存对象
+            List<InventoryReductionVO> inventoryReductions= new LinkedList<>();
 
             //==============================查询商品
             List<ProductSkuVO> productSkuVOS = new LinkedList<>();
@@ -320,13 +322,22 @@ public class OrderApiController {
                         productSkuStockLockVO.setRemark(productSku.getName()+" 锁库存数量:"+userBuyCarItemVO.getBuyCount());
                         productSkuStockLockVO.setCreateDate(new Date());
 
-                        //拍下减库存
-                        if(productSku.getBuckleInventoryMethod().intValue()==1) {
+                        if(productSku.getBuckleInventoryMethod().intValue()==1) { //拍下减库存
                             productSkuStockLockVO.setType((short)1); //实扣库存
+
+                            //扣库存对象
+                            InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
+                            inventoryReductionVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
+                            inventoryReductionVO.setStockNum(userBuyCarItemVO.getBuyCount());
+                            inventoryReductionVO.setUserId(userId);
+                            inventoryReductions.add(inventoryReductionVO);
+
                         }else{ //支付减库存
                             productSkuStockLockVO.setType((short)2); //预扣库存
                         }
                         productSkuStockLocks.add(productSkuStockLockVO);
+
+
                         break;
                     }
 
@@ -392,14 +403,35 @@ public class OrderApiController {
 
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
-            logger.info("开始锁定库存 {}",JSONObject.toJSONString(requestJsonVO));
+            logger.info("开始锁定库存 {}",requestJsonVO.getEntityJson());
             resultObjectVO = feignProductSkuStockLockService.lockStock(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 throw new CreateOrderException("锁定库存失败");
             }
-
+            //保存锁定库存的ID
+            productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
             logger.info("锁定库存结束.....");
+
+            if(!CollectionUtils.isEmpty(inventoryReductions))
+            {
+                //将拍下扣库存的那些商品 进行扣库存
+                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
+                logger.info("开始扣库存 {} ",requestJsonVO.getEntityJson());
+                resultObjectVO = feignProductSkuService.inventoryReduction(requestJsonVO.sign(), requestJsonVO);
+                if(!resultObjectVO.isSuccess())
+                {
+                    logger.warn("扣库存失败 {} ",requestJsonVO.getEntityJson());
+                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
+                    resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                    if(!resultObjectVO.isSuccess())
+                    {
+                        resultObjectVO.setMsg("创建订单失败,请稍后重试");
+                    }
+                    logger.info("开始删除锁定库存数据 {} ");
+                }
+                logger.info("扣库存结束.....");
+            }
             //扣库存成功后创建订单
 //            CreateOrderVO createOrderVo = new CreateOrderVO();
 //            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVo);

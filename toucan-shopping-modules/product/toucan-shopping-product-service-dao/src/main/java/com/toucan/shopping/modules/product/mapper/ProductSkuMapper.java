@@ -52,4 +52,23 @@ public interface ProductSkuMapper {
     Long queryListPageCount(ProductSkuPageInfo pageInfo);
 
     List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
+
+    List<ProductSku> queryShelvesListByIdList(List<Long> idList);
+
+    /**
+     * 扣库存
+     * @param skuId
+     * @param stockNum
+     * @return
+     */
+    int inventoryReduction(Long skuId,Integer stockNum);
+
+    /**
+     * 还原扣的库存
+     * @param skuId
+     * @param stockNum
+     * @return
+     */
+    int restoreStock(Long skuId,Integer stockNum);
+
 }

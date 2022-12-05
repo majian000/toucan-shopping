@@ -135,7 +135,7 @@
 
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
-        select * from t_product_sku where id=#{skuId} for update
+        select * from t_product_sku where id=#{skuId} and delete_status = 0  for update
     </select>
 
 
@@ -181,6 +181,25 @@
 
     <update id="updateStatusByShopProductId" >
         update t_product_sku  set status=#{status} where shop_product_id=#{shopProductId} and shop_id=#{shopId} and delete_status=0
+    </update>
+
+
+    <select id="queryShelvesListByIdList" resultMap="productSkuMap">
+        select * from t_product_sku t
+         where
+          t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+           and t.delete_status=0 and t.status = 1
+    </select>
+
+    <update id="inventoryReduction" >
+        update t_product_sku set stock_num=stock_num-#{stockNum} where id=#{skuId} and delete_status=0 and status=1 and stock_num>0
+    </update>
+
+    <update id="restoreStock" >
+        update t_product_sku set stock_num=stock_num+#{stockNum} where id=#{skuId} and delete_status=0
     </update>
 
 

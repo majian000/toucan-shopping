@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.product.redis;
 
 /**
- * 商品审核SKU Redis相关
+ * 商品SKU Redis相关
  * @author majian
  */
 public class ProductSkuRedisKey {
