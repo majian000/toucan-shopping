@@ -397,6 +397,11 @@ public class OrderApiController {
                 throw new CreateOrderException("没有找到收货人信息");
             }
             createOrderVO.setConsigneeAddress(resultObjectVO.formatData(ConsigneeAddressVO.class));
+            //如果是直辖市的话,地市编码就为省份编码
+            if(StringUtils.isEmpty(createOrderVO.getConsigneeAddress().getCityCode()))
+            {
+                createOrderVO.getConsigneeAddress().setCityCode(createOrderVO.getConsigneeAddress().getProvinceCode());
+            }
 
             this.recalculateProductPrice(createOrderVO);
 
@@ -538,6 +543,7 @@ public class OrderApiController {
     {
         OrderFreightVO orderFreightVO = new OrderFreightVO();
         orderFreightVO.setTransportModel(userBuyCarItemVO.getSelectTransportModel());
+        orderFreightVO.setValuationMethod(userBuyCarItemVO.getFreightTemplateVO().getValuationMethod());
         if("1".equals(userBuyCarItemVO.getSelectTransportModel())) //快递
         {
             List<UBCIFreightTemplateAreaRuleVO> areaRules = userBuyCarItemVO.getFreightTemplateVO().getExpressAreaRules();
@@ -749,6 +755,40 @@ public class OrderApiController {
             //如果不为包邮
             if(orderFreight!=null)
             {
+                if(orderFreight.getValuationMethod().intValue()==1) //按件数
+                {
+                    int ret = buyCountTotal.compareTo(orderFreight.getFirstWeight());
+                    if(ret==-1||ret==0) //如果购买数量<=首件数
+                    {
+                        ovo.setFreightAmount(orderFreight.getFirstWeightMoney()); //首件价格
+                    }else{ //购买数量>首件数
+                        //运费金额=(续件/(购买数-首件数))*续件金额
+                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((buyCountTotal.subtract(orderFreight.getFirstWeight())))).multiply(orderFreight.getAppendWeightMoney());
+                        ret = freightAmount.compareTo(new BigDecimal(0));
+                        if(ret==-1||ret==0) //如果购买数量<=首件数
+                        {
+                            freightAmount = new BigDecimal(0);
+                        }
+                        ovo.setFreightAmount(freightAmount.add(orderFreight.getFirstWeightMoney())); //加上首件金额
+                    }
+                }else if(orderFreight.getValuationMethod().intValue()==2) //按体积
+                {
+                    int ret = roughWeightTotal.compareTo(orderFreight.getFirstWeight());
+                    if(ret==-1||ret==0) //如果购买毛重<=首重
+                    {
+                        ovo.setFreightAmount(orderFreight.getFirstWeightMoney()); //首重
+                    }else{ //购买数量>首件数
+                        //运费金额=(续重/(购买毛重-首重))*续重金额
+                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((roughWeightTotal.subtract(orderFreight.getFirstWeight())))).multiply(orderFreight.getAppendWeightMoney());
+                        ret = freightAmount.compareTo(new BigDecimal(0));
+                        if(ret==-1||ret==0) //如果购买毛重<=首件数
+                        {
+                            freightAmount = new BigDecimal(0);
+                        }
+                        ovo.setFreightAmount(freightAmount.add(orderFreight.getFirstWeightMoney())); //加上首重金额
+                    }
+                }
+
             }
             ovo.setOrderAmount(orderAmount);
         }

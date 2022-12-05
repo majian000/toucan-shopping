@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Data
 public class OrderFreightVO {
 
+    private Short valuationMethod; //计价方式 1:按件数 2:按重量 3:按体积
 
     private String transportModel; //运送方式 1:快递 2:EMS 3:平邮
 
