@@ -64,5 +64,5 @@ public interface FeignProductSkuService {
      * @return
      */
     @RequestMapping(method= RequestMethod.POST,value="/inventoryReduction",produces = "application/json;charset=UTF-8")
-    ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO inventoryReduction(@RequestBody RequestJsonVO requestJsonVO);
 }

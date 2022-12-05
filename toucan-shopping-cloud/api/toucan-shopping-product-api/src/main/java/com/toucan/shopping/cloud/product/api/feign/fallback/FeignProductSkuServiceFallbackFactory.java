@@ -115,7 +115,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
             }
 
             @Override
-            public ResultObjectVO inventoryReduction(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO inventoryReduction(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

@@ -418,17 +418,18 @@ public class OrderApiController {
                 //将拍下扣库存的那些商品 进行扣库存
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
                 logger.info("开始扣库存 {} ",requestJsonVO.getEntityJson());
-                resultObjectVO = feignProductSkuService.inventoryReduction(requestJsonVO.sign(), requestJsonVO);
+                resultObjectVO = feignProductSkuService.inventoryReduction(requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     logger.warn("扣库存失败 {} ",requestJsonVO.getEntityJson());
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
+                    logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
                     resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
                     if(!resultObjectVO.isSuccess())
                     {
                         resultObjectVO.setMsg("创建订单失败,请稍后重试");
                     }
-                    logger.info("开始删除锁定库存数据 {} ");
+                    logger.info("删除锁定库存数据结束.... ");
                 }
                 logger.info("扣库存结束.....");
             }
