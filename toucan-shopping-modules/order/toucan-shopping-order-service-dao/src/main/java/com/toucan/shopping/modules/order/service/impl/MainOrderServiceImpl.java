@@ -67,7 +67,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         for(OrderVO orderVO:mainOrderVO.getOrders())
         {
             ret = orderItemMapper.insertByVoList(orderVO.getOrderItems());
-            if(ret!=mainOrderVO.getOrders().size())
+            if(ret!=orderVO.getOrderItems().size())
             {
                 throw new IllegalArgumentException("保存子订单项失败");
             }

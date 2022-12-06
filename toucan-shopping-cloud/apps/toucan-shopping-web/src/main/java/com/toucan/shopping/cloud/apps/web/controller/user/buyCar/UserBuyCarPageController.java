@@ -48,4 +48,10 @@ public class UserBuyCarPageController {
         return "user/buyCar/user_buy_confirm";
     }
 
+    @UserAuth(requestType =UserAuth.REQUEST_FORM)
+    @RequestMapping("/pay")
+    public String payPage(HttpServletRequest request)
+    {
+        return "user/buyCar/user_buy_pay";
+    }
 }

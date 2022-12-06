@@ -457,17 +457,11 @@ public class OrderApiController {
                 resultObjectVO = feignProductSkuService.restoreStock(requestJsonVO);
             }
 
-//            //订单创建失败 将回滚库存
-//            if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
-//
-//                for (EventProcess eventProcess : restoreStock) {
-//                    ResultObjectVO restoreStockResultObjectVO = feignProductSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
-//                    if (restoreStockResultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
-//                        eventProcess.setStatus((short) 1);
-//                        eventProcessService.updateStatus(eventProcess);
-//                    }
-//                }
-//            }
+            //清空购物车
+            UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
+            userBuyCarVO.setUserMainId(Long.parseLong(userId));
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
+            resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -729,7 +723,6 @@ public class OrderApiController {
                 //订单项 订单项里不保存运费,因为运费会把所有订单项中购买商品的数量加到一起计算
                 OrderItemVO orderItemVO = new OrderItemVO();
                 orderItemVO.setId(idGenerator.id());
-                orderItemVO.setUserId(ovo.getUserId());
                 orderItemVO.setOrderId(ovo.getId());
                 orderItemVO.setOrderNo(ovo.getOrderNo());
                 orderItemVO.setProductNum(ubc.getBuyCount()); //购买数量
@@ -737,8 +730,11 @@ public class OrderApiController {
                 orderItemVO.setProductRoughWeight(ubc.getRoughWeight()); //购买时商品毛重
                 orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
                 orderItemVO.setDeliveryStatus(0); //未收货
+                orderItemVO.setBuyerStatus(0); //待收货
                 orderItemVO.setSellerStatus(1); //备货完成
-
+                orderItemVO.setUserId(createOrderVo.getUserId());
+                orderItemVO.setCreateDate(new Date());
+                orderItemVO.setDeleteStatus((short)0);
                 orderItemVO.setAppCode(toucan.getAppCode());
 
 
@@ -791,6 +787,7 @@ public class OrderApiController {
                 }
 
             }
+            ovo.setPayAmount(new BigDecimal(0)); //已支付金额
             ovo.setOrderAmount(orderAmount);
             ovo.setTotalAmount(ovo.getOrderAmount().add(ovo.getFreightAmount())); //订单最终金额
             ovo.setTradeStatus(0); //交易进行中
@@ -799,6 +796,7 @@ public class OrderApiController {
             ovo.setCreateDate(new Date());
             ovo.setAppCode(toucan.getAppCode());
             ovo.setUserId(createOrderVo.getUserId());
+            ovo.setDeleteStatus((short)0);
             if(createOrderVo.getPayType().intValue()==1) { //微信支付
                 ovo.setPayType(0);
             }else if(createOrderVo.getPayType().intValue()==2){ //支付宝
@@ -812,12 +810,21 @@ public class OrderApiController {
             mainOrder.setTotalAmount(mainOrder.getTotalAmount().add(ovo.getTotalAmount()));  //订单最终金额
         }
 
+        if(createOrderVo.getPayType().intValue()==1) { //微信支付
+            mainOrder.setPayType(0);
+        }else if(createOrderVo.getPayType().intValue()==2){ //支付宝
+            mainOrder.setPayType(1);
+        }else{
+            mainOrder.setPayType(-1); //支付方式未确定
+        }
+        mainOrder.setPayAmount(new BigDecimal(0)); //已支付金额
         mainOrder.setTradeStatus(0); //交易进行中
         mainOrder.setPayStatus(0); //待支付
         mainOrder.setPayMethod(1); //线上支付
         mainOrder.setCreateDate(new Date());
         mainOrder.setAppCode(toucan.getAppCode());
         mainOrder.setUserId(createOrderVo.getUserId());
+        mainOrder.setDeleteStatus((short)0);
 
         createOrderVo.getMainOrder().setOrders(orders);
     }
