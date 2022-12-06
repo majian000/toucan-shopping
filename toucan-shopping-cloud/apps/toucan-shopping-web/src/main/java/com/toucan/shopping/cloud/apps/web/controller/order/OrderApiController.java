@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
 import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
@@ -433,27 +434,28 @@ public class OrderApiController {
                     if(!resultObjectVO.isSuccess())
                     {
                         resultObjectVO.setMsg("创建订单失败,请稍后重试");
+                        return resultObjectVO;
                     }
                     logger.info("删除锁定库存数据结束.... ");
                 }
                 logger.info("扣库存结束.....");
             }
             //扣库存成功后创建订单
-//            CreateOrderVO createOrderVo = new CreateOrderVO();
-//            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVo);
-//            requestJsonVO.setEntityJson(JSONObject.toJSONString(createOrderVo));
-//
-//            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
-
-
-//
-//            //如果订单创建成功 将上面回滚事件取消掉
-//            if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
-//                for (EventProcess eventProcess : restoreStock) {
-//                    eventProcess.setStatus((short) 1);
-//                    eventProcessService.updateStatus(eventProcess);
-//                }
-//            }
+            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVO);
+            logger.info("生成订单.... {} ",requestJsonVO.getEntityJson());
+            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+            if(!resultObjectVO.isSuccess())
+            {
+                //删除锁定的库存
+                logger.info("创建订单失败.....");
+                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
+                logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
+                resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                //恢复商品库存数量
+                logger.info("开始恢复库存 {} ",requestJsonVO.getEntityJson());
+                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
+                resultObjectVO = feignProductSkuService.restoreStock(requestJsonVO);
+            }
 
 //            //订单创建失败 将回滚库存
 //            if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
@@ -668,9 +670,6 @@ public class OrderApiController {
         orderVO.setId(idGenerator.id());
         orderVO.setOrderNo(orderNoService.generateOrderNo());
         orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
-        orderVO.setUserId(String.valueOf(createOrderVo.getUserId()));
-        orderVO.setAppCode(toucan.getAppCode());
-        orderVO.setCreateDate(new Date());
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -695,9 +694,6 @@ public class OrderApiController {
                     orderVO.setId(idGenerator.id());
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
-                    orderVO.setUserId(String.valueOf(createOrderVo.getUserId()));
-                    orderVO.setAppCode(toucan.getAppCode());
-                    orderVO.setCreateDate(new Date());
                     orders.add(orderVO);
                     //如果为空默认为包邮
                     if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {
@@ -711,6 +707,11 @@ public class OrderApiController {
                 }
             }
         }
+
+        MainOrder mainOrder = createOrderVo.getMainOrder();
+        mainOrder.setOrderAmount(new BigDecimal(0)); //订单总金额
+        mainOrder.setTotalAmount(new BigDecimal(0)); //商品最终金额(折扣算完)
+        mainOrder.setFreightAmount(new BigDecimal(0)); //运费总金额
 
         //计算每个订单的金额
         for(OrderVO ovo:orders)
@@ -791,7 +792,32 @@ public class OrderApiController {
 
             }
             ovo.setOrderAmount(orderAmount);
+            ovo.setTotalAmount(ovo.getOrderAmount().add(ovo.getFreightAmount())); //订单最终金额
+            ovo.setTradeStatus(0); //交易进行中
+            ovo.setPayStatus(0); //待支付
+            ovo.setPayMethod(1); //线上支付
+            ovo.setCreateDate(new Date());
+            ovo.setAppCode(toucan.getAppCode());
+            ovo.setUserId(createOrderVo.getUserId());
+            if(createOrderVo.getPayType().intValue()==1) { //微信支付
+                ovo.setPayType(0);
+            }else if(createOrderVo.getPayType().intValue()==2){ //支付宝
+                ovo.setPayType(1);
+            }else{
+                ovo.setPayType(-1); //支付方式未确定
+            }
+            //累加子订单金额到主订单中
+            mainOrder.setOrderAmount(mainOrder.getOrderAmount().add(ovo.getOrderAmount())); //订单金额
+            mainOrder.setFreightAmount(mainOrder.getFreightAmount().add(ovo.getFreightAmount())); //运费总金额
+            mainOrder.setTotalAmount(mainOrder.getTotalAmount().add(ovo.getTotalAmount()));  //订单最终金额
         }
+
+        mainOrder.setTradeStatus(0); //交易进行中
+        mainOrder.setPayStatus(0); //待支付
+        mainOrder.setPayMethod(1); //线上支付
+        mainOrder.setCreateDate(new Date());
+        mainOrder.setAppCode(toucan.getAppCode());
+        mainOrder.setUserId(createOrderVo.getUserId());
 
         createOrderVo.getMainOrder().setOrders(orders);
     }

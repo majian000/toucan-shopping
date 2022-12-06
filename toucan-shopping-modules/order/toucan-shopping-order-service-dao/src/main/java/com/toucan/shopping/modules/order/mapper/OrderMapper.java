@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.mapper;
 
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.vo.OrderVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -14,6 +15,7 @@ public interface OrderMapper {
 
     int insert(Order order);
 
+    int insertByVoList(List<OrderVO> entitys);
 
     @Select("select * from bbs_order where order_no=#{orderNo}")
     Order findByOrderNo(String orderNo);

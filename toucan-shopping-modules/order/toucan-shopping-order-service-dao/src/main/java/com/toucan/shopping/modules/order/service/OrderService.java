@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.service;
 
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 
@@ -13,14 +14,15 @@ public interface OrderService {
 
     int deleteByOrderNo(String orderNo);
 
-    Order createOrder(String userId, String orderNo, String appCode, Integer payMethod, List<ProductSku> productSkuList, Map<String, ProductBuy> buyMap);
+//    Order createOrder(String userId, String orderNo, String appCode, Integer payMethod, List<ProductSku> productSkuList, Map<String, ProductBuy> buyMap);
 
     Order findByOrderNo(String orderNo);
 
-    int finishOrder(Order order);
-
-    int cancelOrder(Order order);
+//    int finishOrder(Order order);
+//
+//    int cancelOrder(Order order);
 
     List<Order> queryOrderListByPayTimeout(Order order);
 
+    int saveByVos(List<OrderVO> orders);
 }

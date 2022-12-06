@@ -27,10 +27,10 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
+         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>
@@ -54,5 +54,16 @@
     </select>
 
 
+
+    <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderVO"  >
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
+        pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.payStatus},
+            #{entity.tradeStatus},#{entity.payType},#{entity.payMethod},#{entity.outerTradeNo},#{entity.bestDate},#{entity.payDate},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus})
+        </foreach>
+
+    </insert>
 
 </mapper>

@@ -543,4 +543,87 @@ public class ProductSkuController {
 
 
 
+    /**
+     * 恢复扣库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(method= RequestMethod.POST,value="/restoreStock",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO restoreStock(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        List<InventoryReductionVO> inventoryReductions = requestJsonVO.formatEntityList(InventoryReductionVO.class);
+
+        logger.info("扣库存: param: {} ",requestJsonVO.getEntityJson());
+        if(CollectionUtils.isEmpty(inventoryReductions))
+        {
+            logger.info("没有找到扣除库存的商品: param:{} " , requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到商品!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param: {} ",requestJsonVO.getAppCode());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
+            if (StringUtils.isEmpty(inventoryReductionVO.getUserId())) {
+                logger.info("没有找到用户: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户");
+                return resultObjectVO;
+            }
+            if (inventoryReductionVO.getProductSkuId()==null) {
+                logger.info("没有找到商品ID: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到商品ID");
+                return resultObjectVO;
+            }
+            if (inventoryReductionVO.getStockNum()==null||inventoryReductionVO.getStockNum().intValue()<=0) {
+                logger.info("扣库存数量不能为0: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("扣库存数量不能为0");
+                return resultObjectVO;
+            }
+        }
+
+        List<InventoryReductionVO> restoreInventoryReductionFailds = new LinkedList<>();
+        try {
+            //还原库存
+            if(!CollectionUtils.isEmpty(inventoryReductions))
+            {
+                for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
+                    int row = productSkuService.restoreStock(inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum());
+                    if (row <= 0) {
+                        restoreInventoryReductionFailds.add(inventoryReductionVO);
+                        logger.warn("还原扣库存失败 skuId:{} stockNum:{} userId:{} " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum(),inventoryReductionVO.getUserId());
+                        throw new IllegalArgumentException("还原扣库存失败");
+                    }else{
+                        productSkuRedisService.deleteCache(String.valueOf(inventoryReductionVO.getProductSkuId()));
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("还原扣库存失败!");
+        }
+        resultObjectVO.setData(restoreInventoryReductionFailds);
+        return resultObjectVO;
+    }
+
 }

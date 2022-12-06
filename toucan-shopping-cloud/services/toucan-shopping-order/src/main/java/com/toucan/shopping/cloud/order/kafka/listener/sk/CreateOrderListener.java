@@ -93,22 +93,22 @@ public class CreateOrderListener {
                 }
             }
 
-            Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
-            if(order.getId()==null)
-            {
-                throw new IllegalArgumentException("订单创建失败");
-            }
-            logger.info("保存订单 提交本地事务{}",JSONObject.toJSONString(order));
-            List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap,order);
-            if(CollectionUtils.isEmpty(orderItems))
-            {
-                throw new IllegalArgumentException("子订单创建失败");
-            }
-            logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//            Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
+//            if(order.getId()==null)
+//            {
+//                throw new IllegalArgumentException("订单创建失败");
+//            }
+//            logger.info("保存订单 提交本地事务{}",JSONObject.toJSONString(order));
+//            List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap,order);
+//            if(CollectionUtils.isEmpty(orderItems))
+//            {
+//                throw new IllegalArgumentException("子订单创建失败");
+//            }
+//            logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
 
             //修改为已处理
-            eventProcess.setStatus((short)1); //已处理
-            eventProcessService.updateStatus(eventProcess);
+//            eventProcess.setStatus((short)1); //已处理
+//            eventProcessService.updateStatus(eventProcess);
 
 
         }catch(Exception e)

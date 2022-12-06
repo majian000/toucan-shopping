@@ -92,10 +92,10 @@ public class MessageProcessScheduler {
                             }
                         }
 
-                        Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
-                        logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
-                        List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap, order);
-                        logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//                        Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
+//                        logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
+//                        List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap, order);
+//                        logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
 
                         eventProcess.setStatus((short)1); //已处理
                         eventProcessService.updateStatus(eventProcess);

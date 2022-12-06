@@ -25,10 +25,10 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.MainOrder"  >
-        insert into t_main_order(order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
+        insert into t_main_order(id,order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{orderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
+         values(#{id},#{orderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>
