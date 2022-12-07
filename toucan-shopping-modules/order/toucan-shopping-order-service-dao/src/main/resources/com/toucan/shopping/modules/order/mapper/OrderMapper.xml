@@ -11,6 +11,8 @@
         <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
         <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
         <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount" />
+        <result column="red_package_amount" jdbcType="DECIMAL" property="redPackageAmount" />
+        <result column="coupon_amount" jdbcType="DECIMAL" property="couponAmount" />
         <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
         <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
         <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
@@ -27,10 +29,10 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{payStatus},
+         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>
@@ -56,11 +58,11 @@
 
 
     <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderVO"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.payStatus},
+            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.redPackageAmount},#{entity.couponAmount},#{entity.payStatus},
             #{entity.tradeStatus},#{entity.payType},#{entity.payMethod},#{entity.outerTradeNo},#{entity.bestDate},#{entity.payDate},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus})
         </foreach>
 

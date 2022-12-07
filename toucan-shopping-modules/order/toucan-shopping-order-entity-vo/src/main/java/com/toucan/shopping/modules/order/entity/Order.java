@@ -19,6 +19,8 @@ public class Order {
     private BigDecimal orderAmount; //订单金额
     private BigDecimal payAmount; //付款金额
     private BigDecimal freightAmount; //运费总金额
+    private BigDecimal redPackageAmount; //红包金额
+    private BigDecimal couponAmount; //优惠券金额
     private BigDecimal totalAmount; //商品最终金额(折扣算完)
     private Integer payStatus; //支付状态 0未支付 1已支付 3线下支付已到账 4取消支付
     private Integer tradeStatus; //交易状态 0进行中 1已完成 2已取消交易 3已结算
