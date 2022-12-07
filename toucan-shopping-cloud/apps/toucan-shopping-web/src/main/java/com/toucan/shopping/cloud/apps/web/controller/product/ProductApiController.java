@@ -38,7 +38,6 @@ public class ProductApiController {
     private FeignProductSpuService feignProductSpuService;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
     public ResultObjectVO detail(@RequestBody ProductSkuVO shopProductSkuVO)
     {
@@ -96,7 +95,6 @@ public class ProductApiController {
      * @param shopProductVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/detail/pid",method = RequestMethod.POST)
     public ResultObjectVO detailByProductId(@RequestBody ShopProductVO shopProductVO)
     {
@@ -152,11 +150,10 @@ public class ProductApiController {
 
 
     /**
-     * 根据商品审核主表ID查询1个预览的SKU
+     * 根据商品主表ID查询1个预览的SKU
      * @param shopProductVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/spu/info",method = RequestMethod.POST)
     public ResultObjectVO querySpuAttributeList(@RequestBody ShopProductVO shopProductVO)
     {

@@ -455,6 +455,8 @@ public class OrderApiController {
                 logger.info("开始恢复库存 {} ",requestJsonVO.getEntityJson());
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
                 resultObjectVO = feignProductSkuService.restoreStock(requestJsonVO);
+
+                throw new CreateOrderException("订单创建失败,请稍后重试");
             }
 
             //清空购物车
