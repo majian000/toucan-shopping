@@ -792,6 +792,8 @@ public class OrderApiController {
             ovo.setPayAmount(new BigDecimal(0)); //已支付金额
             ovo.setOrderAmount(orderAmount);
             ovo.setTotalAmount(ovo.getOrderAmount().add(ovo.getFreightAmount())); //订单最终金额
+            ovo.setRedPackageAmount(new BigDecimal(0)); //红包金额
+            ovo.setCouponAmount(new BigDecimal(0)); //优惠券金额
             ovo.setTradeStatus(0); //交易进行中
             ovo.setPayStatus(0); //待支付
             ovo.setPayMethod(1); //线上支付
@@ -820,6 +822,8 @@ public class OrderApiController {
             mainOrder.setPayType(-1); //支付方式未确定
         }
         mainOrder.setPayAmount(new BigDecimal(0)); //已支付金额
+        mainOrder.setRedPackageAmount(new BigDecimal(0)); //红包金额
+        mainOrder.setCouponAmount(new BigDecimal(0)); //优惠券金额
         mainOrder.setTradeStatus(0); //交易进行中
         mainOrder.setPayStatus(0); //待支付
         mainOrder.setPayMethod(1); //线上支付
