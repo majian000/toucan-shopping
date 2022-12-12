@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
 import com.toucan.shopping.modules.order.vo.*;
@@ -978,6 +979,20 @@ public class OrderApiController {
             mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
             resultObjectVO = feignOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                mainOrderVO = resultObjectVO.formatData(MainOrderVO.class);
+                mainOrderVO.setCreateDateLong(mainOrderVO.getCreateDate().getTime());
+                mainOrderVO.setSystemDateLong(new Date().getTime());
+                Long timeRemaing = mainOrderVO.getSystemDateLong().longValue()-mainOrderVO.getCreateDateLong();
+                if(timeRemaing>(30*60*1000))
+                {
+                    timeRemaing=0L;
+                }
+                mainOrderVO.setTimeRemaining(timeRemaing);
+                mainOrderVO.setMaxPayTime(OrderConstant.MAX_PAY_TIME);
+                resultObjectVO.setData(mainOrderVO);
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -51,14 +51,14 @@
             <div class="payfo_tips"><i></i>订单已提交成功，现在就去付款吧</div>
             <div class="oder_me">
                 <div class="o_n_t1">
-                    <div class="o_n_l">您的订单号<span>310517395876931757</span></div>
-                    <div class="o_n_m">应付金额：<span>￥199.00</span></div>
+                    <div class="o_n_l">您的订单号<span>${orderNo!''}</span></div>
+                    <div class="o_n_m">应付金额：<span class="pay_amount">￥0.00</span></div>
                     <div class="o_n_r">支付方式：在线支付</div>
                 </div>
                 <div class="o_n_t2">
                     <span class="s_fs_12">请于</span>
                     <span class="s_fs_14" data="3060">
-                        	<span class="s_fs_18" id="t_h">00</span>时 <span class="s_fs_18" id="t_m">34</span>分 <span class="s_fs_18" id="t_s">26</span>
+                        	<span class="s_fs_18" id="t_m">0</span>分 <span class="s_fs_18" id="t_s">0</span>
                         	秒 内完成付款,否则系统会将您的订单取消
                         </span>
                 </div>
@@ -83,7 +83,7 @@
         <table border="0" style="width:900px; margin-top:20px;" cellspacing="0" cellpadding="0">
             <tr height="70">
                 <td align="right">
-                    <b style="font-size:14px;">请支付：<span style="font-size:22px; color:#ff4e00;" class="order_price_total">xxxxxxx</span></b>
+                    <b style="font-size:14px;" class="p_pay">请支付：<span style="font-size:22px; color:#ff4e00;" class="order_price_total pay_amount"></span></b>
                 </td>
             </tr>
             <tr height="70">
