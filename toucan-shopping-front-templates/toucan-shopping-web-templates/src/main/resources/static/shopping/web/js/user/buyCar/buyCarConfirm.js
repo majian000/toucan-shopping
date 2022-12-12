@@ -1239,6 +1239,7 @@ function paymentEvent()
                 });
                 return;
             }
+
         },
         error: function (result) {
         },
