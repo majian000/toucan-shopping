@@ -19,4 +19,11 @@ public interface MainOrderService {
      */
     int createOrder(MainOrderVO mainOrderVO);
 
+    /**
+     * 查询一个主订单对象
+     * @param mainOrderVO
+     * @return
+     */
+    MainOrder queryOneByVO(MainOrderVO mainOrderVO);
+
 }

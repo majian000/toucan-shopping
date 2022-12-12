@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.mapper;
 
 import com.toucan.shopping.modules.order.entity.MainOrder;
+import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -26,5 +27,7 @@ public interface MainOrderMapper {
     List<MainOrder> queryMainOrderListByPayTimeout(MainOrder order);
 
     int cancelMainOrder(MainOrder order);
+
+    MainOrder queryOneByVO(MainOrderVO mainOrderVO);
 
 }

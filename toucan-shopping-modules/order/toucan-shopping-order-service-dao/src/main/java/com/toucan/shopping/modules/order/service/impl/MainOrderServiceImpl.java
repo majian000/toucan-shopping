@@ -74,4 +74,9 @@ public class MainOrderServiceImpl implements MainOrderService {
         }
         return 0;
     }
+
+    @Override
+    public MainOrder queryOneByVO(MainOrderVO mainOrderVO) {
+        return mainOrderMapper.queryOneByVO(mainOrderVO);
+    }
 }

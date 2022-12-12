@@ -97,6 +97,21 @@ public class FeignOrderServiceFallbackFactory implements FallbackFactory<FeignOr
                 resultObjectVO.setMsg("查询支付超时订单失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryMainOrderByOrderNoAndUserId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignOrderServiceFallbackFactory queryMainOrderByOrderNoAndUserId  params{}:",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询支付超时订单失败");
+                return resultObjectVO;
+            }
         };
     }
 }

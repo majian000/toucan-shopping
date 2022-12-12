@@ -465,10 +465,11 @@ public class OrderApiController {
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
             resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
 
+            resultObjectVO.setData(createOrderVO);
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            //TODO:回滚数据
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("购买失败,请重试!");
@@ -958,6 +959,31 @@ public class OrderApiController {
             resultObjectVO.setMsg("支付失败,请重试!");
         }
 
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询主订单
+     * @param request
+     * @param mainOrderVO
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/main/order/detail",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryMainOrderDetail(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
+            resultObjectVO = feignOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
         return resultObjectVO;
     }
 

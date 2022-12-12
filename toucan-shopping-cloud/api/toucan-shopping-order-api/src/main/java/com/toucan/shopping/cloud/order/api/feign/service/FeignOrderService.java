@@ -53,4 +53,12 @@ public interface FeignOrderService {
      */
     @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOrderByPayTimeOut(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 查询主订单
+     */
+    @RequestMapping(value="/queryMainOrderByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryMainOrderByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

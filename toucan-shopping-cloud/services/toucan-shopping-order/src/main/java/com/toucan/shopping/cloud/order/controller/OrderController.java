@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.CreateOrderVO;
+import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
@@ -282,6 +283,33 @@ public class OrderController {
 //                    return resultObjectVO;
 //                }
 
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询主订单
+     */
+    @RequestMapping(value="/queryMainOrderByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryMainOrderByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                MainOrderVO mainOrderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderVO.class);
+                resultObjectVO.setData(mainOrderService.queryOneByVO(mainOrderVO));
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                 resultObjectVO.setMsg("请求完成");
             }catch(Exception e)

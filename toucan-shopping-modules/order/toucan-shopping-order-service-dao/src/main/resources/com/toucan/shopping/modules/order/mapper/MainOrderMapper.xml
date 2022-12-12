@@ -26,6 +26,20 @@
 
 
 
+
+    <sql id="queryByVOWhere">
+        and delete_status = 0
+        <if test="orderNo!=null and orderNo!='' ">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="userId!=null and userId!='' ">
+            and t.user_id = #{userId}
+        </if>
+
+    </sql>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.MainOrder"  >
         insert into t_main_order(id,order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status)
@@ -46,13 +60,20 @@
 
 
     <select id="queryMainOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
-        select bo.* from t_main_order bo
-        where 1=1 and bo.delete_status=0 and bo.pay_method=1 and bo.app_code=#{appCode} and pay_status=0 and trade_status=0
+        select t.* from t_main_order t
+        where 1=1 and t.delete_status=0 and t.pay_method=1 and t.app_code=#{appCode} and t.pay_status=0 and t.trade_status=0
          <![CDATA[
-            and bo.create_date<#{createDate}
+            and t.create_date<#{createDate}
          ]]>
     </select>
 
+    <select id="queryOneByVO" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.vo.MainOrderVO" >
+        select t.* from t_main_order t
+        where 1=1
+        <include refid="queryByVOWhere" />
+
+        limit 0,1
+    </select>
 
 
 </mapper>
