@@ -138,15 +138,29 @@
     background-color: #ff4e00;
     color: #fff;
     display: block;
-    font-size: 20px;
-    height: 38px;
+    font-size: 22px;
+    height: 45px;
     line-height: 38px;
     text-align: center;
     width: 177px;
+    float: right;
 }
 
 .btn_sure:hover {
     background-color: #ff4e00;
+    color: #fff;
+    display: block;
+    font-size: 22px;
+    height: 45px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+    float: right;
+}
+
+
+.btn_cancel {
+    background-color: #f2f2f2;
     color: #fff;
     display: block;
     font-size: 20px;
@@ -155,6 +169,18 @@
     text-align: center;
     width: 177px;
 }
+
+.btn_cancel:hover {
+    background-color: #f2f2f2;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+}
+
 .fwxh_30 {
     font-family: "华文细黑";
     font-size: 30px;

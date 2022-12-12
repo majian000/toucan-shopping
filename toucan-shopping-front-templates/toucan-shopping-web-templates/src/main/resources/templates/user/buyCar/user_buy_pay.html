@@ -80,7 +80,7 @@
 
         <input type="hidden" id="orderNo" value="${orderNo!''}"/>
 
-        <table border="0" style="width:900px; margin-top:20px;" cellspacing="0" cellpadding="0">
+        <table border="0" style="width:90%; margin-top:20px;" cellspacing="0" cellpadding="0">
             <tr height="70">
                 <td align="right">
                     <b style="font-size:14px;" class="p_pay">请支付：<span style="font-size:22px; color:#ff4e00;" class="order_price_total pay_amount"></span></b>
@@ -88,6 +88,7 @@
             </tr>
             <tr height="70">
                 <td align="right">
+                    <a style="cursor:pointer;" class="cancel_order"><img src="${basePath}/static/images/buy4.gif" /></a>&nbsp; &nbsp;
                     <a class="btn_sure confirm_payment_btn" href="javascript:;" >去付款</a>
                 </td>
             </tr>
