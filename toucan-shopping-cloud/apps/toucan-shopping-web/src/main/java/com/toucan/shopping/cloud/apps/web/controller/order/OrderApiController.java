@@ -792,7 +792,7 @@ public class OrderApiController {
 
             }
             ovo.setPayAmount(new BigDecimal(0)); //已支付金额
-            ovo.setOrderAmount(orderAmount);
+            ovo.setOrderAmount(ovo.getOrderAmount().add(ovo.getFreightAmount()));
             ovo.setTotalAmount(ovo.getOrderAmount().add(ovo.getFreightAmount())); //订单最终金额
             ovo.setRedPackageAmount(new BigDecimal(0)); //红包金额
             ovo.setCouponAmount(new BigDecimal(0)); //优惠券金额
