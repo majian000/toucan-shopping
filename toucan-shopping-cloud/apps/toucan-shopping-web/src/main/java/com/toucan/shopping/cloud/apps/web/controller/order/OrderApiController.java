@@ -764,7 +764,7 @@ public class OrderApiController {
                         ovo.setFreightAmount(orderFreight.getFirstWeightMoney()); //首件价格
                     }else{ //购买数量>首件数
                         //运费金额=(续件/(购买数-首件数))*续件金额
-                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((buyCountTotal.subtract(orderFreight.getFirstWeight())))).multiply(orderFreight.getAppendWeightMoney());
+                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((buyCountTotal.subtract(orderFreight.getFirstWeight())),1, BigDecimal.ROUND_HALF_UP)).multiply(orderFreight.getAppendWeightMoney());
                         ret = freightAmount.compareTo(new BigDecimal(0));
                         if(ret==-1||ret==0) //如果购买数量<=首件数
                         {
@@ -780,7 +780,7 @@ public class OrderApiController {
                         ovo.setFreightAmount(orderFreight.getFirstWeightMoney()); //首重
                     }else{ //购买数量>首件数
                         //运费金额=(续重/(购买毛重-首重))*续重金额
-                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((roughWeightTotal.subtract(orderFreight.getFirstWeight())))).multiply(orderFreight.getAppendWeightMoney());
+                        BigDecimal freightAmount = (orderFreight.getAppendWeight().divide((roughWeightTotal.subtract(orderFreight.getFirstWeight())),1, BigDecimal.ROUND_HALF_UP)).multiply(orderFreight.getAppendWeightMoney());
                         ret = freightAmount.compareTo(new BigDecimal(0));
                         if(ret==-1||ret==0) //如果购买毛重<=首件数
                         {
@@ -792,8 +792,8 @@ public class OrderApiController {
 
             }
             ovo.setPayAmount(new BigDecimal(0)); //已支付金额
-            ovo.setOrderAmount(ovo.getOrderAmount().add(ovo.getFreightAmount()));
-            ovo.setTotalAmount(ovo.getOrderAmount().add(ovo.getFreightAmount())); //订单最终金额
+            ovo.setOrderAmount(orderAmount.add(ovo.getFreightAmount())); //订单最终金额(算完折扣)
+            ovo.setTotalAmount(orderAmount.add(ovo.getFreightAmount())); //订单最终金额(不算折扣)
             ovo.setRedPackageAmount(new BigDecimal(0)); //红包金额
             ovo.setCouponAmount(new BigDecimal(0)); //优惠券金额
             ovo.setTradeStatus(0); //交易进行中
