@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,18 @@ public class UserBuyCarPageController {
 
     @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/pay")
-    public String payPage(HttpServletRequest request, @RequestParam String orderNo)
+    public String payPage(HttpServletRequest request,@RequestParam String mainOrderNo,@RequestParam String orderNo)
     {
-        request.setAttribute("orderNo",orderNo);
+        //主订单支付
+        if(StringUtils.isNotEmpty(mainOrderNo))
+        {
+            request.setAttribute("orderNo",mainOrderNo);
+            request.setAttribute("orderType",1);
+        }else if(StringUtils.isNotEmpty(orderNo)) //子订单支付
+        {
+            request.setAttribute("orderNo",orderNo);
+            request.setAttribute("orderType",2);
+        }
         return "user/buyCar/user_buy_pay";
     }
 }

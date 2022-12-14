@@ -26,4 +26,5 @@ public interface MainOrderService {
      */
     MainOrder queryOneByVO(MainOrderVO mainOrderVO);
 
+    int cancelMainOrder(String orderNo,String userId);
 }

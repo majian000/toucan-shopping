@@ -985,7 +985,7 @@ public class OrderApiController {
                 mainOrderVO.setCreateDateLong(mainOrderVO.getCreateDate().getTime());
                 mainOrderVO.setSystemDateLong(new Date().getTime());
                 Long timeRemaing = mainOrderVO.getSystemDateLong().longValue()-mainOrderVO.getCreateDateLong();
-                if(timeRemaing>(30*60*1000))
+                if(timeRemaing>(OrderConstant.MAX_PAY_TIME))
                 {
                     timeRemaing=0L;
                 }
@@ -1001,5 +1001,32 @@ public class OrderApiController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 取消订单
+     * @param request
+     * @param mainOrderVO
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/main/order/cancel",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO cancelMainOrder(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
+            resultObjectVO = feignOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
 }

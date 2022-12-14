@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.order.service;
 
+import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -20,10 +21,17 @@ public interface OrderService {
 
 //    int finishOrder(Order order);
 //
-//    int cancelOrder(Order order);
 
     List<Order> queryOrderListByPayTimeout(Order order);
 
     int saveByVos(List<OrderVO> orders);
+
+    /**
+     * 取消所有未支付的订单
+     * @param mainOrderNo
+     * @param userId
+     * @return
+     */
+    int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId);
 
 }

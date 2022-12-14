@@ -30,6 +30,14 @@ public class Order {
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)
 
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date cancelDate; //取消订单时间
+
+    private String cancelRemark; //取消订单备注
+
+
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date bestDate; //最佳送货时间

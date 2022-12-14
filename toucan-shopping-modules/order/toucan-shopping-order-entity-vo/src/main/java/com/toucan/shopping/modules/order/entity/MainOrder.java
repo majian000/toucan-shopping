@@ -41,8 +41,16 @@ public class MainOrder {
 
     private String appCode; //所属应用
 
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date cancelDate; //取消订单时间
+
+    private String cancelRemark; //取消订单备注
+
     /**
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
+
 }

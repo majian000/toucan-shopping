@@ -19,6 +19,8 @@
         <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
         <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
+        <result column="cancel_remark" jdbcType="VARCHAR" property="cancelRemark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
@@ -54,8 +56,8 @@
     </update>
 
 
-    <update id="cancelMainOrder" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
-        update t_main_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
+    <update id="cancelMainOrder" >
+        update t_main_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where order_no=#{orderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
     </update>
 
 

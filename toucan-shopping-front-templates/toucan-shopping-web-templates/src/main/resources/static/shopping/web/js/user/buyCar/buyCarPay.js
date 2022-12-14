@@ -11,10 +11,75 @@ $(function () {
     });
     queryMainOrder();
 
+
+    $(".cancel_order").click(function(){
+        ShowDiv('cancelOrder','fade');
+    });
+
+
+    $(".cancel_order_sure").click(function(){
+        cancelOrder();
+    });
 });
 
 
+function cancelOrder()
+{
+    CloseDiv_1('cancelOrder','fade');
+    loading.showLoading({
+        type:1,
+        tip:"加载中..."
+    });
+    var orderNo = $("#orderNo").val();
+    var orderType=$("#orderType").val();
 
+    var params = {
+        orderNo:orderNo
+    };
+    var requestUrl = basePath + "/api/order/main/order/cancel";
+    if(orderType=="2") //子订单取消
+    {
+        requestUrl = basePath + "/api/order/cancel";
+    }
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/order/main/order/cancel",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(params),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                $(".payfo_tips").html("订单已取消");
+                hideView();
+
+                return;
+            }else{
+                $.message({
+                    message: "取消失败,请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
+function hideView()
+{
+
+    $(".payfo_tips").css("padding-left","30%");
+    $(".oder_me").hide();
+    $(".two_bg").hide();
+    $(".btn_sure").hide();
+    $(".pay_amount").hide();
+    $(".p_pay").hide();
+    $(".cancel_order").hide();
+}
 
 function queryMainOrder() {
     loading.showLoading({
@@ -22,12 +87,18 @@ function queryMainOrder() {
         tip: "加载中..."
     });
 
+    var orderType=$("#orderType").val();
     var params = {
         orderNo:$("#orderNo").val()
     };
+    var requestUrl = basePath + "/api/order/main/order/detail";
+    if(orderType=="2") //子订单支付
+    {
+        requestUrl = basePath + "/api/order/order/detail";
+    }
     $.ajax({
         type: "POST",
-        url: basePath + "/api/order/main/order/detail",
+        url: requestUrl,
         contentType: "application/json;charset=utf-8",
         data: JSON.stringify(params),
         dataType: "json",
@@ -44,16 +115,20 @@ function queryMainOrder() {
             var timeRemaining = result.data.timeRemaining; //剩余时间
             var maxPayTime = result.data.maxPayTime;
             //30分钟超时了
+            var isHide = false;
+            if(result.data.payStatus==4)
+            {
+                $(".payfo_tips").html("订单已取消");
+                isHide = true;
+            }
             if(timeRemaining<=0)
             {
                 $(".payfo_tips").html("支付时间已超时");
-                $(".payfo_tips").css("padding-left","30%");
-                $(".oder_me").hide();
-                $(".two_bg").hide();
-                $(".btn_sure").hide();
-                $(".pay_amount").hide();
-                $(".p_pay").hide();
-
+                isHide = true;
+            }
+            if(isHide)
+            {
+                hideView();
                 return;
             }
 

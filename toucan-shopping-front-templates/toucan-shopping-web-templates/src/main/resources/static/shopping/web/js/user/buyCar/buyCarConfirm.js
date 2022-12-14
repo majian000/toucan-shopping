@@ -1240,7 +1240,7 @@ function paymentEvent()
                 return;
             }
 
-            window.location.href =basePath+"/page/user/buyCar/pay?orderNo="+ result.data.mainOrder.orderNo;
+            window.location.href =basePath+"/page/user/buyCar/pay?mainOrderNo="+ result.data.mainOrder.orderNo;
         },
         error: function (result) {
         },

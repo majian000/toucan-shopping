@@ -79,4 +79,13 @@ public class MainOrderServiceImpl implements MainOrderService {
     public MainOrder queryOneByVO(MainOrderVO mainOrderVO) {
         return mainOrderMapper.queryOneByVO(mainOrderVO);
     }
+
+
+
+    @Transactional
+    @Override
+    public int cancelMainOrder(String orderNo,String userId) {
+        return mainOrderMapper.cancelMainOrder(orderNo,userId);
+    }
+
 }

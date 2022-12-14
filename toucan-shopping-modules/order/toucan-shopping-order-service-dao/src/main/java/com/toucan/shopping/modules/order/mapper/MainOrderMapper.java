@@ -26,7 +26,7 @@ public interface MainOrderMapper {
 
     List<MainOrder> queryMainOrderListByPayTimeout(MainOrder order);
 
-    int cancelMainOrder(MainOrder order);
+    int cancelMainOrder(String orderNo,String userId);
 
     MainOrder queryOneByVO(MainOrderVO mainOrderVO);
 

@@ -30,4 +30,6 @@ public interface OrderMapper {
 
     int cancelOrder(Order order);
 
+    int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId);
+
 }

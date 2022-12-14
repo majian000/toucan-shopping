@@ -21,6 +21,8 @@
         <result column="best_date" jdbcType="TIMESTAMP" property="bestDate" />
         <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
+        <result column="cancel_remark" jdbcType="VARCHAR" property="cancelRemark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
@@ -43,7 +45,7 @@
 
 
     <update id="cancelOrder" parameterType="com.toucan.shopping.modules.order.entity.Order">
-        update t_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
+        update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
     </update>
 
 
@@ -67,5 +69,11 @@
         </foreach>
 
     </insert>
+
+
+
+    <update id="cancelNoPayOrderByMainOrderNo" >
+        update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where main_order_no=#{mainOrderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
+    </update>
 
 </mapper>

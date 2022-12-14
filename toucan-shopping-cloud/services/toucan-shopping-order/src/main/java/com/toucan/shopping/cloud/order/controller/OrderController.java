@@ -261,30 +261,35 @@ public class OrderController {
     @ResponseBody
     public ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
-            QueryOrderVo queryOrderVo = JSON.parseObject(requestJsonVO.getEntityJson(), QueryOrderVo.class);
-            if(queryOrderVo.getUserId()==null)
+            MainOrderVO mainOrderVO = JSON.parseObject(requestJsonVO.getEntityJson(), MainOrderVO.class);
+            if(mainOrderVO.getUserId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("没有找到用户");
                 return resultObjectVO;
             }
+            if(StringUtils.isEmpty(mainOrderVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到订单编号");
+                return resultObjectVO;
+            }
 
             try {
                 logger.info("取消订单 params {}",requestJsonVO.getEntityJson());
-                Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
-//                int row = orderService.cancelOrder(order);
-//                if(row<1)
-//                {
-//                    resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-//                    resultObjectVO.setMsg("请求失败");
-//                    return resultObjectVO;
-//                }
+                int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                if(row<1)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                    resultObjectVO.setMsg("取消主订单失败");
+                    return resultObjectVO;
+                }
 
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
+                orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);

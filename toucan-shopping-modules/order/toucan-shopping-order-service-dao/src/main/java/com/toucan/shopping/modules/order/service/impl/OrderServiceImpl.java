@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.service.OrderItemService;
@@ -33,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderItemService orderItemService;
+
 
 
 
@@ -119,11 +121,6 @@ public class OrderServiceImpl implements OrderService {
 //        return orderMapper.finishOrder(order);
 //    }
 //
-//    @Transactional
-//    @Override
-//    public int cancelOrder(Order order) {
-//        return orderMapper.cancelOrder(order);
-//    }
 
     @Override
     public List<Order> queryOrderListByPayTimeout(Order order) {
@@ -134,5 +131,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public int saveByVos(List<OrderVO> orders) {
         return orderMapper.insertByVoList(orders);
+    }
+
+    @Transactional
+    @Override
+    public int cancelNoPayOrderByMainOrderNo(String mainOrderNo, String userId) {
+        return orderMapper.cancelNoPayOrderByMainOrderNo(mainOrderNo,userId);
     }
 }
