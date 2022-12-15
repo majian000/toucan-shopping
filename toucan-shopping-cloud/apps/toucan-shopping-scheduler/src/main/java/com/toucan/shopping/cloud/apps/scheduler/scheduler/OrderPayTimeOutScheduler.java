@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -36,6 +37,9 @@ public class OrderPayTimeOutScheduler {
 
     @Autowired
     private FeignOrderService feignOrderService;
+
+    @Autowired
+    private FeignMainOrderService feignMainOrderService;
 
 
     @Autowired
@@ -73,7 +77,7 @@ public class OrderPayTimeOutScheduler {
                         faildOrder.setAppCode(toucan.getAppCode());
                         requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), null, faildOrder);
                         //取消订单
-                        resultObjectVO = feignOrderService.cancel(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
+                        resultObjectVO = feignMainOrderService.cancel(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
                         if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
                         {
                             //恢复预扣库存

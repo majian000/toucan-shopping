@@ -4,15 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
-import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
@@ -20,7 +20,6 @@ import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
-public class OrderController {
+@RequestMapping("/main/order")
+public class MainOrderController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -89,112 +88,94 @@ public class OrderController {
     }
 
 
-
-
-
-
     /**
-     * 根据订单编号查询所有skuid
+     * 创建订单
      */
-    @RequestMapping(value="/querySkuUuids/orderNo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/create",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO querySkuUuidsByOrderNo(@RequestBody RequestJsonVO requestJsonVO){
-
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
-
-            QueryOrderVo queryOrderVo = JSON.parseObject(requestJsonVO.getEntityJson(), QueryOrderVo.class);
-            if(queryOrderVo.getUserId()==null)
+    public ResultObjectVO create(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("订单创建失败");
+            return resultObjectVO;
+        }
+        logger.info("创建订单 {} ",requestJsonVO.getEntityJson());
+        CreateOrderVO createOrder = JSON.parseObject(requestJsonVO.getEntityJson(), CreateOrderVO.class);
+        try {
+            if(createOrder.getMainOrder()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户");
+                resultObjectVO.setMsg("主订单不能为空");
                 return resultObjectVO;
             }
-            String orderNo=queryOrderVo.getOrderNo();
-            String userId=queryOrderVo.getUserId();
-
-            try {
-                List<OrderItem> orderItems = orderItemService.findByOrderNo(orderNo,userId);
-                List<ProductSku> productSkus = new ArrayList<ProductSku>();
-                if(!CollectionUtils.isEmpty(orderItems))
+            if(CollectionUtils.isEmpty(createOrder.getMainOrder().getOrders()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("子订单不能为空");
+                return resultObjectVO;
+            }
+            for(OrderVO orderVO:createOrder.getMainOrder().getOrders())
+            {
+                if(CollectionUtils.isEmpty(orderVO.getBuyCarItems()))
                 {
-                    for(OrderItem orderItem:orderItems)
-                    {
-                        ProductSku productSku = new ProductSku();
-                        productSku.setId(orderItem.getSkuId());
-                        productSkus.add(productSku);
-                    }
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("子订单项不能为空");
+                    return resultObjectVO;
                 }
-                resultObjectVO.setData(productSkus);
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
             }
+            mainOrderService.createOrder(createOrder.getMainOrder());
+            resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+            resultObjectVO.setMsg("订单创建完成");
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("订单创建失败");
         }
         return resultObjectVO;
     }
 
 
-    /**
-     * 查询支付超时订单
-     */
-    @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO queryOrderByPayTimeOut(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
-
-            try {
-                Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
-                resultObjectVO.setData(orderService.queryOrderListByPayTimeout(order));
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-            }
-        }
-        return resultObjectVO;
-    }
 
     /**
-     * 完成订单
+     * 取消订单
      */
-    @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO){
+    public ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
-            QueryOrderVo queryOrderVo = JSON.parseObject(requestJsonVO.getEntityJson(), QueryOrderVo.class);
-            if(queryOrderVo.getUserId()==null)
+            MainOrderVO mainOrderVO = JSON.parseObject(requestJsonVO.getEntityJson(), MainOrderVO.class);
+            if(mainOrderVO.getUserId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("没有找到用户");
                 return resultObjectVO;
             }
+            if(StringUtils.isEmpty(mainOrderVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到订单编号");
+                return resultObjectVO;
+            }
 
             try {
-                logger.info("完成订单 params {}",requestJsonVO.getEntityJson());
-                Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
-//                int row = orderService.finishOrder(order);
-//                if(row<1)
-//                {
-//                    resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-//                    resultObjectVO.setMsg("请求失败");
-//                    return resultObjectVO;
-//                }
+                logger.info("取消订单 params {}",requestJsonVO.getEntityJson());
+                int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                if(row<1)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                    resultObjectVO.setMsg("取消主订单失败");
+                    return resultObjectVO;
+                }
 
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
+                orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
@@ -207,7 +188,29 @@ public class OrderController {
 
 
 
+    /**
+     * 查询主订单
+     */
+    @RequestMapping(value="/queryMainOrderByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryMainOrderByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO){
 
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
+            try {
+                MainOrderVO mainOrderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderVO.class);
+                resultObjectVO.setData(mainOrderService.queryOneByVO(mainOrderVO));
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
 
 }

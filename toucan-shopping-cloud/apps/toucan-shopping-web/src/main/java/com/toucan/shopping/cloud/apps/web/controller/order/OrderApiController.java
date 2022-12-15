@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
@@ -104,6 +105,9 @@ public class OrderApiController {
 
     @Autowired
     private FeignConsigneeAddressService feignConsigneeAddressService;
+
+    @Autowired
+    private FeignMainOrderService feignMainOrderService;
 
     /**
      * 创建订单
@@ -444,7 +448,7 @@ public class OrderApiController {
             //扣库存成功后创建订单
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVO);
             logger.info("生成订单.... {} ",requestJsonVO.getEntityJson());
-            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+            resultObjectVO = feignMainOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 //删除锁定的库存
@@ -978,7 +982,7 @@ public class OrderApiController {
         try{
             mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-            resultObjectVO = feignOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+            resultObjectVO = feignMainOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 mainOrderVO = resultObjectVO.formatData(MainOrderVO.class);
@@ -1017,7 +1021,7 @@ public class OrderApiController {
         try{
             mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-            resultObjectVO = feignOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignMainOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1027,6 +1031,45 @@ public class OrderApiController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 查询订单
+     * @param request
+     * @param mainOrderVO
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/detail",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOrderDetail(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
+            resultObjectVO = feignMainOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                mainOrderVO = resultObjectVO.formatData(MainOrderVO.class);
+                mainOrderVO.setCreateDateLong(mainOrderVO.getCreateDate().getTime());
+                mainOrderVO.setSystemDateLong(new Date().getTime());
+                Long timeRemaing = mainOrderVO.getSystemDateLong().longValue()-mainOrderVO.getCreateDateLong();
+                if(timeRemaing>(OrderConstant.MAX_PAY_TIME))
+                {
+                    timeRemaing=0L;
+                }
+                mainOrderVO.setTimeRemaining(timeRemaing);
+                mainOrderVO.setMaxPayTime(OrderConstant.MAX_PAY_TIME);
+                resultObjectVO.setData(mainOrderVO);
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }
