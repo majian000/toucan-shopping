@@ -94,12 +94,12 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-entity-vo</artifactId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-log</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence</artifactId>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-entity-vo</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -136,10 +136,6 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.stock</groupId>
             <artifactId>toucan-shopping-stock-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence-event</artifactId>
         </dependency>
 
         <dependency>

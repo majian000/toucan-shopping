@@ -11,6 +11,7 @@
         <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_scheduler" />
     </springProfile>
 
+
     <springProfile name="prod">
         <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_scheduler" />
     </springProfile>
@@ -20,27 +21,6 @@
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</Pattern>
             <charset>UTF-8</charset>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>info</level>
-        </filter>
-    </appender>
-
-
-
-    <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/log_console.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/console/log_console-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>15</maxHistory>
-        </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>info</level>
         </filter>
@@ -69,6 +49,24 @@
     </appender>
 
 
+    <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/log_console.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/console/log_console-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+    </appender>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/log_info.log</file>
@@ -138,11 +136,26 @@
     </appender>
 
 
+    <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>warn</level>
+        </filter>
+    </appender>
+
+    <appender name="ERROR_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+        </filter>
+    </appender>
+
 
     <springProfile name="dev">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
+            <!--日志邮件 -->
+            <appender-ref ref="WARN_EMAIL" />
+            <appender-ref ref="ERROR_EMAIL" />
         </root>
     </springProfile>
 
@@ -160,6 +173,9 @@
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="WARN_FILE" />
+            <!--日志邮件 -->
+            <appender-ref ref="WARN_EMAIL" />
+            <appender-ref ref="ERROR_EMAIL" />
         </root>
     </springProfile>
 

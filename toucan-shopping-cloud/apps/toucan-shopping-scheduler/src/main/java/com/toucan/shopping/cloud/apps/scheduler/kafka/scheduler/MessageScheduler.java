@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.scheduler.kafka.scheduler;
 
-import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
+//import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class MessageScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private EventPublishService eventPublishService;
+//    @Autowired
+//    private EventPublishService eventPublishService;
 
     @Autowired
     private KafkaTemplate kafkaTemplate;

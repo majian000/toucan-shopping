@@ -258,7 +258,10 @@ public class MainOrderController {
                 List<MainOrderVO> mainOrders = pageResult.getList();
                 if(!CollectionUtils.isEmpty(mainOrders)) {
                     for(MainOrderVO mainOrderVO:mainOrders) {
-
+                        //取消主订单
+                        mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                        //取消所有子订单
+                        orderService.cancelByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getAppCode(),"支付超时,自动取消订单");
                     }
                 }
             }catch(Exception e)

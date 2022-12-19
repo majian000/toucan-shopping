@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
-import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
+//import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
+//import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -33,8 +33,8 @@ public class FeignMessageProcessScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private EventProcessService eventProcessService;
+//    @Autowired
+//    private EventProcessService eventProcessService;
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
@@ -56,9 +56,9 @@ public class FeignMessageProcessScheduler {
     public void rerun()
     {
         logger.info("处理远程调用失败的消息 开始=====================");
-        List<EventProcess> eventProcesses =  eventProcessService.queryFaildListByBefore(DateUtils.advanceSecond(new Date(),60*5));
-        if(!CollectionUtils.isEmpty(eventProcesses))
-        {
+//        List<EventProcess> eventProcesses =  eventProcessService.queryFaildListByBefore(DateUtils.advanceSecond(new Date(),60*5));
+//        if(!CollectionUtils.isEmpty(eventProcesses))
+//        {
 //            for(EventProcess eventProcess : eventProcesses)
 //            {
 //                //恢复库存
@@ -86,7 +86,7 @@ public class FeignMessageProcessScheduler {
 //
 //            }
 
-        }
+//        }
         logger.info("处理远程失败的消息 结束=====================");
     }
 
