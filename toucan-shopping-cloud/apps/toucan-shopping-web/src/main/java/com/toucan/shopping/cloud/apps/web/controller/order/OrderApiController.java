@@ -128,6 +128,12 @@ public class OrderApiController {
             resultObjectVO.setMsg("没有找到要购买的商品!");
             return resultObjectVO;
         }
+        if(CollectionUtils.isEmpty(createOrderVO.getBuyCarItems()))
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到要购买的商品!");
+            return resultObjectVO;
+        }
         if(createOrderVO.getConsigneeAddress()==null||createOrderVO.getConsigneeAddress().getId()==null)
         {
             logger.info("收货人信息不能为空: param:"+ JSONObject.toJSONString(createOrderVO));

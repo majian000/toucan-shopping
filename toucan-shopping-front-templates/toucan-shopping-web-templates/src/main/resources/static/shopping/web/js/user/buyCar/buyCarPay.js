@@ -148,6 +148,7 @@ function queryMainOrder() {
         },
         complete:function(data,status){
             loading.hideLoading();
+            $(".pay_btns").show();
         }
     });
 

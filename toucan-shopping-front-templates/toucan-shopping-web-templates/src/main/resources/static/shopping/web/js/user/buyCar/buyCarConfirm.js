@@ -141,6 +141,7 @@ function startLoadding()
         type:1,
         tip:"查询中..."
     });
+    $(".confirm_btns").hide();
 }
 
 function hideLoadding()
@@ -150,6 +151,7 @@ function hideLoadding()
     {
         requestCompleted=0;
         loading.hideLoading();
+        $(".confirm_btns").show();
     }
 }
 
