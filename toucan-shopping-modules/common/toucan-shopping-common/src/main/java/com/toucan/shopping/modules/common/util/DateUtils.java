@@ -82,6 +82,25 @@ public final class DateUtils {
     }
 
     /**
+     * 增加指定秒
+     * @param date   基准时间
+     * @return
+     */
+    public static Date addSeconds(Date date, long seconds) {
+        long resultDate = date.getTime() + (seconds * 1000);
+        return new Date(resultDate);
+    }
+
+    /**
+     * 增加指定毫秒
+     * @param date   基准时间
+     * @return
+     */
+    public static Date addMillisecond(Date date, long millisecond) {
+        long resultDate = date.getTime() + millisecond;
+        return new Date(resultDate);
+    }
+    /**
      * 根据格式化对象 解析时间
      * @param date
      * @param dateFormat

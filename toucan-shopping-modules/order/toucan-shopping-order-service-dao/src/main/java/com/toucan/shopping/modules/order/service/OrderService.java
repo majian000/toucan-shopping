@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.order.service;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
@@ -23,6 +25,14 @@ public interface OrderService {
 //
 
     List<Order> queryOrderListByPayTimeout(Order order);
+
+
+    /**
+     * 查询支付超时列表
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<OrderVO> queryOrderListByPayTimeoutPage(OrderPageInfo pageInfo);
 
     int saveByVos(List<OrderVO> orders);
 

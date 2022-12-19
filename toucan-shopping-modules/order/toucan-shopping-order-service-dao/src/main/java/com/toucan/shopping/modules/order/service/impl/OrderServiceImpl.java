@@ -1,9 +1,11 @@
 package com.toucan.shopping.modules.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
+import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.order.vo.OrderVO;
@@ -125,6 +127,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> queryOrderListByPayTimeout(Order order) {
         return orderMapper.queryOrderListByPayTimeout(order);
+    }
+
+    @Override
+    public PageInfo<OrderVO> queryOrderListByPayTimeoutPage(OrderPageInfo pageInfo) {
+        PageInfo<OrderVO> pageResult = new PageInfo();
+        pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
+        pageResult.setList(orderMapper.queryOrderListByPayTimeoutPage(pageInfo));
+        pageResult.setTotal(orderMapper.queryOrderListByPayTimeoutPageCount(pageInfo));
+        return pageResult;
     }
 
     @Transactional

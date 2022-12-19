@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.scheduler.scheduler;
+package com.toucan.shopping.cloud.apps.scheduler.scheduler.order;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -53,7 +53,7 @@ public class OrderPayTimeOutScheduler {
     private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
     /**
-     * 每1分钟重新扫描一次本地看有没有执行失败的事件
+     * 每1分钟重新扫描
      */
     @Scheduled(cron = "0 0/1 * * * ? ")
     public void rerun()

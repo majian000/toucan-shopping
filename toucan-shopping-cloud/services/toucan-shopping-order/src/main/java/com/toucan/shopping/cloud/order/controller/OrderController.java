@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
@@ -151,7 +152,35 @@ public class OrderController {
 
             try {
                 Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
+                order.setAppCode(requestJsonVO.getAppCode());
                 resultObjectVO.setData(orderService.queryOrderListByPayTimeout(order));
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询支付超时订单页
+     */
+    @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderPageInfo orderPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderPageInfo.class);
+                orderPageInfo.setAppCode(requestJsonVO.getAppCode());
+                resultObjectVO.setData(orderService.queryOrderListByPayTimeoutPage(orderPageInfo));
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                 resultObjectVO.setMsg("请求完成");
             }catch(Exception e)

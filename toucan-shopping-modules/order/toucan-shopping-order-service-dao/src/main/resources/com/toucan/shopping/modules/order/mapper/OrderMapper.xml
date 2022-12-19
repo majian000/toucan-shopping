@@ -20,6 +20,7 @@
         <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
         <result column="best_date" jdbcType="TIMESTAMP" property="bestDate" />
         <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+        <result column="payment_deadline_time" jdbcType="TIMESTAMP" property="paymentDeadlineTime" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
         <result column="cancel_remark" jdbcType="VARCHAR" property="cancelRemark" />
@@ -29,12 +30,27 @@
     </resultMap>
 
 
+    <resultMap id="orderVOMap" type="com.toucan.shopping.modules.order.vo.OrderVO" extends="orderMap">
+
+    </resultMap>
+
+
+    <sql id="queryOrderListByPayTimeoutPageWhere">
+         and t.delete_status=0
+         and t.pay_method=1
+         and t.app_code=#{appCode}
+         and t.pay_status=0
+         and t.trade_status=0
+         <![CDATA[
+            and t.create_date<#{createDate}
+         ]]>
+    </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
 
-         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
+         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{paymentDeadlineTime},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
 
     </insert>
@@ -50,21 +66,21 @@
 
 
     <select id="queryOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.Order">
-        select bo.* from t_order bo
-        where 1=1 and bo.delete_status=0 and bo.pay_method=1 and bo.app_code=#{appCode} and pay_status=0 and trade_status=0
+        select t.* from t_order t
+        where 1=1 and t.delete_status=0 and t.pay_method=1 and t.app_code=#{appCode} and t.pay_status=0 and t.trade_status=0
          <![CDATA[
-            and bo.create_date<#{createDate}
+            and t.create_date<#{createDate}
          ]]>
     </select>
 
 
 
     <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderVO"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.redPackageAmount},#{entity.couponAmount},#{entity.payStatus},
+            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.paymentDeadlineTime},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.redPackageAmount},#{entity.couponAmount},#{entity.payStatus},
             #{entity.tradeStatus},#{entity.payType},#{entity.payMethod},#{entity.outerTradeNo},#{entity.bestDate},#{entity.payDate},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus})
         </foreach>
 
@@ -75,5 +91,32 @@
     <update id="cancelNoPayOrderByMainOrderNo" >
         update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where main_order_no=#{mainOrderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
     </update>
+
+
+
+    <select id="queryOrderListByPayTimeoutPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select t.* from t_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryOrderListByPayTimeoutPageWhere" />
+
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryOrderListByPayTimeoutPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select count(*) from t_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryOrderListByPayTimeoutPageWhere" />
+
+        </where>
+
+    </select>
 
 </mapper>

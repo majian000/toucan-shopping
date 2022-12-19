@@ -29,6 +29,8 @@ public class MainOrder {
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)
 
+    private Date paymentDeadlineTime; //支付截止时间(超时时间)
+
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date payDate; //订单支付时间

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
@@ -667,11 +668,15 @@ public class OrderApiController {
         //按照运费模板排序,用于合并运送方式
         createOrderVo.getBuyCarItems().sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
 
+        //支付截止时间
+        Date paymentDeadlineTime = DateUtils.addMillisecond(DateUtils.currentDate(),OrderConstant.MAX_PAY_TIME);
+
         //开始拆分订单
         OrderVO orderVO = new OrderVO(new LinkedList<>(),null,new LinkedList<>());
         orderVO.setId(idGenerator.id());
         orderVO.setOrderNo(orderNoService.generateOrderNo());
         orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
+        orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -696,6 +701,7 @@ public class OrderApiController {
                     orderVO.setId(idGenerator.id());
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
+                    orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
                     orders.add(orderVO);
                     //如果为空默认为包邮
                     if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {
@@ -714,6 +720,7 @@ public class OrderApiController {
         mainOrder.setOrderAmount(new BigDecimal(0)); //订单总金额
         mainOrder.setTotalAmount(new BigDecimal(0)); //商品最终金额(折扣算完)
         mainOrder.setFreightAmount(new BigDecimal(0)); //运费总金额
+        mainOrder.setPaymentDeadlineTime(paymentDeadlineTime); //设置支付截止时间
 
         //计算每个订单的金额
         for(OrderVO ovo:orders)
