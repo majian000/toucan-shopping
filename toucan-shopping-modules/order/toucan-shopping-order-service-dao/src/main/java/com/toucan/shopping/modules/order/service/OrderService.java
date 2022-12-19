@@ -21,6 +21,8 @@ public interface OrderService {
 
     Order findByOrderNo(String orderNo);
 
+    List<Order> findListByMainOrderNo(String mainOrderNo);
+
 //    int finishOrder(Order order);
 //
 
@@ -44,4 +46,12 @@ public interface OrderService {
      */
     int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId);
 
+    /**
+     * 根据主订单编号取消订单
+     * @param mainOrderNo
+     * @param appCode
+     * @param cancelRemark
+     * @return
+     */
+    int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
 }

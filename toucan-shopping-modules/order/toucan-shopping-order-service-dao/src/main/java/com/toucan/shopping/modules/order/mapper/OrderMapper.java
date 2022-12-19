@@ -39,5 +39,9 @@ public interface OrderMapper {
 
     Long queryOrderListByPayTimeoutPageCount(OrderPageInfo pageInfo);
 
+    List<Order> findListByMainOrderNo(String mainOrderNo);
+
+    int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
+
 
 }

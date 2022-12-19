@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,7 +41,6 @@ public class OrderPayTimeOutScheduler {
 
     @Autowired
     private FeignMainOrderService feignMainOrderService;
-
 
     @Autowired
     private Toucan toucan;
@@ -63,45 +63,13 @@ public class OrderPayTimeOutScheduler {
         //获得30分钟前的时间戳
         try {
             Order order = new Order();
-            order.setCreateDate(DateUtils.advanceSecond(DateUtils.currentDate(), 60 * 30));
+            order.setCreateDate(new Date());
             order.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), null, order);
             ResultObjectVO resultObjectVO = feignOrderService.queryOrderByPayTimeOut(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            if(resultObjectVO.isSuccess())
             {
-                List<Order> orders = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Order.class);
-                if(!CollectionUtils.isEmpty(orders))
-                {
-                    for(Order faildOrder:orders)
-                    {
-                        faildOrder.setAppCode(toucan.getAppCode());
-                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), null, faildOrder);
-                        //取消订单
-                        resultObjectVO = feignMainOrderService.cancel(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
-                        if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-                        {
-                            //恢复预扣库存
-                            requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), faildOrder);
-                            resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
-                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-                            {
-                                List<ProductSku> productSkus = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
-                                requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), productSkus);
-//                                resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
-                                if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
-                                {
-                                    logger.warn("查询订单的商品sku失败 order :{}",JSONObject.toJSONString(faildOrder));
-                                }
 
-                            }else{
-                                logger.warn("查询订单的商品sku失败 order :{}",JSONObject.toJSONString(faildOrder));
-                            }
-                        }else{
-                            logger.warn("取消订单失败 order :{}",JSONObject.toJSONString(faildOrder));
-                        }
-                    }
-
-                }
             }else{
                 logger.warn("查询支付超时订单列表失败 param {}",requestJsonVO.getEntityJson());
             }

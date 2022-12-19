@@ -319,7 +319,7 @@ public class OrderApiController {
 
                         //锁库存对象
                         ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
-                        productSkuStockLockVO.setOrderNo(orderNo);
+                        productSkuStockLockVO.setMainOrderNo(orderNo);
                         productSkuStockLockVO.setAppCode(toucan.getAppCode());
                         productSkuStockLockVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
                         productSkuStockLockVO.setUserMainId(Long.parseLong(userId));

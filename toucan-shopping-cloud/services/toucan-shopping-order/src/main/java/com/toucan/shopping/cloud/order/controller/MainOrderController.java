@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.order.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -10,6 +11,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
@@ -213,4 +215,59 @@ public class MainOrderController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询支付超时订单页
+     */
+    @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
+                pageInfo.setAppCode(requestJsonVO.getAppCode());
+                resultObjectVO.setData(mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo));
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 批量取消支付超时订单
+     */
+    @RequestMapping(value="/batch/cancel/pay/timeout",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO batchCancelPayTimeout(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
+                pageInfo.setAppCode(requestJsonVO.getAppCode());
+                PageInfo<MainOrderVO> pageResult =  mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo);
+                List<MainOrderVO> mainOrders = pageResult.getList();
+                if(!CollectionUtils.isEmpty(mainOrders)) {
+                    for(MainOrderVO mainOrderVO:mainOrders) {
+
+                    }
+                }
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
 }

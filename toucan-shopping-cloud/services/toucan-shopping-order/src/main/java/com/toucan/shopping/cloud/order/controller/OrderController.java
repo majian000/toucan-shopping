@@ -174,15 +174,13 @@ public class OrderController {
     @ResponseBody
     public ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
             try {
                 OrderPageInfo orderPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderPageInfo.class);
                 orderPageInfo.setAppCode(requestJsonVO.getAppCode());
                 resultObjectVO.setData(orderService.queryOrderListByPayTimeoutPage(orderPageInfo));
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);

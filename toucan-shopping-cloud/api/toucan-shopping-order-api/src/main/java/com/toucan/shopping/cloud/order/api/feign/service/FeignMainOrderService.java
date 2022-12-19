@@ -49,5 +49,10 @@ public interface FeignMainOrderService {
     ResultObjectVO queryMainOrderByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 查询支付超时订单页
+     */
+    @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO);
 
 }

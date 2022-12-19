@@ -117,6 +117,11 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findByOrderNo(orderNo);
     }
 
+    @Override
+    public List<Order> findListByMainOrderNo(String mainOrderNo) {
+        return orderMapper.findListByMainOrderNo(mainOrderNo);
+    }
+
 //    @Transactional
 //    @Override
 //    public int finishOrder(Order order) {
@@ -138,7 +143,6 @@ public class OrderServiceImpl implements OrderService {
         return pageResult;
     }
 
-    @Transactional
     @Override
     public int saveByVos(List<OrderVO> orders) {
         return orderMapper.insertByVoList(orders);
@@ -148,5 +152,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public int cancelNoPayOrderByMainOrderNo(String mainOrderNo, String userId) {
         return orderMapper.cancelNoPayOrderByMainOrderNo(mainOrderNo,userId);
+    }
+
+    @Transactional
+    @Override
+    public int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark) {
+        return orderMapper.cancelByMainOrderNo(mainOrderNo,appCode,cancelRemark);
     }
 }

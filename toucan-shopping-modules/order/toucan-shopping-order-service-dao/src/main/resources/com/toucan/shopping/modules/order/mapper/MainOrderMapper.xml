@@ -27,7 +27,31 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
 
+    <resultMap id="orderVOMap" type="com.toucan.shopping.modules.order.vo.MainOrderVO" extends="orderMap">
 
+    </resultMap>
+
+
+
+    <sql id="queryMainOrderListByPayTimeoutPageWhere">
+        and t.delete_status=0
+        and t.pay_method=1
+        and t.app_code=#{appCode}
+        and t.pay_status=0
+        and t.trade_status=0
+
+        <if test="userId!=null">
+            and t.user_id = #{userId}
+        </if>
+
+        <if test="appCode!=null">
+            and t.app_code = #{appCode}
+        </if>
+
+        <![CDATA[
+            and t.payment_deadline_time<#{createDate}
+         ]]>
+    </sql>
 
 
     <sql id="queryByVOWhere">
@@ -78,5 +102,31 @@
         limit 0,1
     </select>
 
+
+
+    <select id="queryMainOrderListByPayTimeoutPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select t.* from t_main_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryMainOrderListByPayTimeoutPageWhere" />
+
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryMainOrderListByPayTimeoutPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select count(*) from t_main_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryMainOrderListByPayTimeoutPageWhere" />
+
+        </where>
+
+    </select>
 
 </mapper>

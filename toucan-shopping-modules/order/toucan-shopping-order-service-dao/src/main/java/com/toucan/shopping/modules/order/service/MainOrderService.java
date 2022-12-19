@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.order.service;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
+import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
@@ -27,4 +29,13 @@ public interface MainOrderService {
     MainOrder queryOneByVO(MainOrderVO mainOrderVO);
 
     int cancelMainOrder(String orderNo,String userId);
+
+
+    /**
+     * 查询支付超时列表
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<MainOrderVO> queryMainOrderListByPayTimeoutPage(MainOrderPageInfo pageInfo);
+
 }
