@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class SendCallback implements ProducerListener<String, Object> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
