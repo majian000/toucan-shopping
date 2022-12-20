@@ -288,7 +288,8 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("主订单编号不能为空");
                 return resultObjectVO;
             }
-            List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO);
+            productSkuStockLockVO.setType(null);
+            List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
 
             int ret = productSkuStockLockService.deletes(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
             if(ret<=0||ret!=skuStockLockVO.size())

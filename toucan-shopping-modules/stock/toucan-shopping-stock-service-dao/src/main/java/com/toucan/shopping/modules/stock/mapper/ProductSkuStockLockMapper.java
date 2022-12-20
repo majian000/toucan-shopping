@@ -17,5 +17,6 @@ public interface ProductSkuStockLockMapper {
 
     List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
+    List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
 }

@@ -61,6 +61,12 @@
         group by t.product_sku_id
     </select>
 
+    <select id="queryListByVO" resultMap="productSkuStockLockVOMap">
+        select t.* from t_product_sku_stock_lock t
+        where 1=1
+        <include refid="queryVOListWhere" />
+    </select>
+
     <update id="deletes">
         update t_product_sku_stock_lock set delete_status = 1 where id in
         <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">

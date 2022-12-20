@@ -25,4 +25,10 @@ public interface ProductSkuStockLockService {
      */
     List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
+    /**
+     * 查询列表
+     * @param productSkuStockLockVO
+     * @return
+     */
+    List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO);
 }
