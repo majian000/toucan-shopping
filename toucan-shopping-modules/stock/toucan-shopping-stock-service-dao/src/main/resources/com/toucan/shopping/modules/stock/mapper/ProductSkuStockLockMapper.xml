@@ -32,6 +32,16 @@
             </foreach>
         </if>
 
+        <if test="mainOrderNoList!=null and mainOrderNoList.size>0 ">
+            and t.main_order_no in
+            <foreach item="item" index="index" collection="mainOrderNoList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="type!=null and type!=-1">
+            and t.type = #{type}
+        </if>
 
         and t.delete_status = 0
 
@@ -44,11 +54,10 @@
           values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo})
     </insert>
 
-    <select id="queryStockNumByProductSkuIdList" resultMap="productSkuStockLockVOMap">
+    <select id="queryStockNumByVO" resultMap="productSkuStockLockVOMap">
         select product_sku_id,sum(stock_num) as stock_num from t_product_sku_stock_lock t
         where 1=1
         <include refid="queryVOListWhere" />
-        and ( t.type=1 or (t.type=2 and t.pay_status=1))
         group by t.product_sku_id
     </select>
 

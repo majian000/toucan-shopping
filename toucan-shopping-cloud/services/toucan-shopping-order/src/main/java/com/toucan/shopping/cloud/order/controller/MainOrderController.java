@@ -267,6 +267,7 @@ public class MainOrderController {
                         orderService.cancelByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getAppCode(),cancelRemark);
                     }
                 }
+                resultObjectVO.setData(pageResult);
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);

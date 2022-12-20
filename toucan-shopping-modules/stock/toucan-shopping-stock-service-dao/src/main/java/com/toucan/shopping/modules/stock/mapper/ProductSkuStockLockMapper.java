@@ -15,7 +15,7 @@ public interface ProductSkuStockLockMapper {
 
     int deletes(List<Long> idList);
 
-    List<ProductSkuStockLockVO> queryStockNumByProductSkuIdList(ProductSkuStockLockVO productSkuStockLockVO);
+    List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
 
 }

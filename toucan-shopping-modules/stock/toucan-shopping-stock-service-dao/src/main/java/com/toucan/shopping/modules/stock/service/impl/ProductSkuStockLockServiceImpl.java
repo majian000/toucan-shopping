@@ -33,8 +33,8 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
     }
 
     @Override
-    public List<ProductSkuStockLockVO> queryStockNumByProductSkuIdList(ProductSkuStockLockVO productSkuStockLockVO) {
-        return productSkuStockLockMapper.queryStockNumByProductSkuIdList(productSkuStockLockVO);
+    public List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO) {
+        return productSkuStockLockMapper.queryStockNumByVO(productSkuStockLockVO);
     }
 
 

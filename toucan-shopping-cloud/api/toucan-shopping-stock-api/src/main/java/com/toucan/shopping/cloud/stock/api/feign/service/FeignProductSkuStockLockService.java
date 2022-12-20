@@ -38,22 +38,22 @@ public interface FeignProductSkuStockLockService {
     @RequestMapping(value="/delete/lock/stock",produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteLockStock(@RequestBody RequestJsonVO requestJsonVO);
 
-//    @RequestMapping(value = "/inventoryReduction",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-//    ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-//
-//    @RequestMapping(value = "/restore/stock",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-//    ResultObjectVO restoreStock(@RequestBody RequestJsonVO requestJsonVO);
-//
-//    @RequestMapping(value="/restore/cache/stock",produces = "application/json;charset=UTF-8")
-//    ResultObjectVO restoreCacheStock(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-//
-//    @RequestMapping(value="/query/sku/uuids",produces = "application/json;charset=UTF-8")
-//    ResultObjectVO queryBySkuUuidList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-//
-//    @RequestMapping(value="/query/stock/cache/sku/uuids",produces = "application/json;charset=UTF-8")
-//    ResultObjectVO queryStockCacheBySkuUuidList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-//
-//    @RequestMapping(method= RequestMethod.POST,value="/deduct/cache/stock",produces = "application/json;charset=UTF-8")
-//    ResultObjectVO deductCacheStock(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 根据主订单编号查询锁定库存数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/lock/stock/num/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findLockStockNumByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 删除锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/lock/stock/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    ResultObjectVO deleteLockStockByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO);
 }

@@ -23,6 +23,6 @@ public interface ProductSkuStockLockService {
      * @param productSkuStockLockVO
      * @return
      */
-    List<ProductSkuStockLockVO> queryStockNumByProductSkuIdList(ProductSkuStockLockVO productSkuStockLockVO);
+    List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
 }

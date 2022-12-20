@@ -982,6 +982,15 @@ public class OrderApiController {
 
 
     /**
+     * 支付回调
+     */
+    void payCallback()
+    {
+        //查询付款扣库存,扣商品库存
+
+    }
+
+    /**
      * 查询主订单
      * @param request
      * @param mainOrderVO

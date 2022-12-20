@@ -36,7 +36,6 @@
     <sql id="queryMainOrderListByPayTimeoutPageWhere">
         and t.delete_status=0
         and t.pay_method=1
-        and t.app_code=#{appCode}
         and t.pay_status=0
         and t.trade_status=0
 
@@ -49,7 +48,7 @@
         </if>
 
         <![CDATA[
-            and t.payment_deadline_time<#{systemDate}
+            and t.payment_deadline_time<= #{systemDate}
          ]]>
     </sql>
 
