@@ -29,6 +29,8 @@ public interface MainOrderMapper {
 
     int cancelMainOrder(String orderNo,String userId);
 
+    int cancelMainOrderAndSaveCancelRemark(String orderNo,String userId,String cancelRemark);
+
     MainOrder queryOneByVO(MainOrderVO mainOrderVO);
 
 

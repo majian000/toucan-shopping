@@ -91,6 +91,12 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
 
+    @Transactional
+    @Override
+    public int cancelMainOrder(String orderNo,String userId,String cancelRemark) {
+        return mainOrderMapper.cancelMainOrderAndSaveCancelRemark(orderNo,userId,cancelRemark);
+    }
+
     @Override
     public PageInfo<MainOrderVO> queryMainOrderListByPayTimeoutPage(MainOrderPageInfo pageInfo) {
         PageInfo<MainOrderVO> pageResult = new PageInfo();

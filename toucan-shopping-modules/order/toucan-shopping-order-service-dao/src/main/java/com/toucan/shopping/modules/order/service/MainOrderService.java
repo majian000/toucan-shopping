@@ -30,6 +30,7 @@ public interface MainOrderService {
 
     int cancelMainOrder(String orderNo,String userId);
 
+    int cancelMainOrder(String orderNo,String userId,String cancelRemark);
 
     /**
      * 查询支付超时列表

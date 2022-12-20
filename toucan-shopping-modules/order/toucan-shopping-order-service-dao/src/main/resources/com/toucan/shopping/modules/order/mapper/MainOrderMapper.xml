@@ -49,7 +49,7 @@
         </if>
 
         <![CDATA[
-            and t.payment_deadline_time<#{createDate}
+            and t.payment_deadline_time<#{systemDate}
          ]]>
     </sql>
 
@@ -85,6 +85,10 @@
         update t_main_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where order_no=#{orderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
     </update>
 
+
+    <update id="cancelMainOrderAndSaveCancelRemark" >
+        update t_main_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark=#{cancelRemark}  where order_no=#{orderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
+    </update>
 
     <select id="queryMainOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
         select t.* from t_main_order t

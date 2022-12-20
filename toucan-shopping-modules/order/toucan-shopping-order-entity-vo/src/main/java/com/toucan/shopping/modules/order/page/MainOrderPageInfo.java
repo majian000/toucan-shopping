@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Date;
+
 /**
  * 列表查询页
  */
@@ -29,6 +31,8 @@ public class MainOrderPageInfo extends PageInfo<MainOrder> {
     private String appCode; //所属应用
 
     private String userId; //所属用户
+
+    private Date systemDate; //系统时间
 
 
     //==============================================

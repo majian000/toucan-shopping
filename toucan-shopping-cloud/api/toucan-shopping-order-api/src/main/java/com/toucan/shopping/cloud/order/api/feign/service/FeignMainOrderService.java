@@ -55,4 +55,10 @@ public interface FeignMainOrderService {
     @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 批量取消支付超时订单
+     */
+    @RequestMapping(value="/batch/cancel/pay/timeout",produces = "application/json;charset=UTF-8")
+    ResultObjectVO batchCancelPayTimeout(@RequestBody RequestJsonVO requestJsonVO);
+
 }

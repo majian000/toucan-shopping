@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -254,14 +255,16 @@ public class MainOrderController {
             try {
                 MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
                 pageInfo.setAppCode(requestJsonVO.getAppCode());
+                pageInfo.setSystemDate(new Date());
                 PageInfo<MainOrderVO> pageResult =  mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo);
                 List<MainOrderVO> mainOrders = pageResult.getList();
+                String cancelRemark = "支付超时,自动取消订单";
                 if(!CollectionUtils.isEmpty(mainOrders)) {
                     for(MainOrderVO mainOrderVO:mainOrders) {
                         //取消主订单
-                        mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                        mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),cancelRemark);
                         //取消所有子订单
-                        orderService.cancelByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getAppCode(),"支付超时,自动取消订单");
+                        orderService.cancelByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getAppCode(),cancelRemark);
                     }
                 }
             }catch(Exception e)
