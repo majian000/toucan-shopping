@@ -580,12 +580,6 @@ public class ProductSkuController {
         }
 
         for(InventoryReductionVO inventoryReductionVO:inventoryReductions) {
-            if (StringUtils.isEmpty(inventoryReductionVO.getUserId())) {
-                logger.info("没有找到用户: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户");
-                return resultObjectVO;
-            }
             if (inventoryReductionVO.getProductSkuId()==null) {
                 logger.info("没有找到商品ID: param: {} " , JSONObject.toJSONString(inventoryReductionVO));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -609,7 +603,7 @@ public class ProductSkuController {
                     int row = productSkuService.restoreStock(inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum());
                     if (row <= 0) {
                         restoreInventoryReductionFailds.add(inventoryReductionVO);
-                        logger.warn("还原扣库存失败 skuId:{} stockNum:{} userId:{} " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum(),inventoryReductionVO.getUserId());
+                        logger.warn("还原扣库存失败 skuId:{} stockNum:{}  " , inventoryReductionVO.getProductSkuId(),inventoryReductionVO.getStockNum());
                         throw new IllegalArgumentException("还原扣库存失败");
                     }else{
                         productSkuRedisService.deleteCache(String.valueOf(inventoryReductionVO.getProductSkuId()));
