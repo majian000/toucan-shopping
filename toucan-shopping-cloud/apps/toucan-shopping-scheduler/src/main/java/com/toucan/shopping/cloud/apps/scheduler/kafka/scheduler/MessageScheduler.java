@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 /**
  * 重发所有发送失败的消息
  */
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 public class MessageScheduler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,7 +34,7 @@ public class MessageScheduler {
     @Scheduled(cron = "0 0/2 * * * ? ")
     public void resend()
     {
-        logger.info("消息重发 开始=====================");
+//        logger.info("消息重发 开始=====================");
         //查询五分钟之前发送失败的所有消息
 //        List<EventPublish> eventPublishes =  eventPublishService.queryFaildListByBefore(DateUtils.advanceSecond(new Date(),60*5));
 //        if(!CollectionUtils.isEmpty(eventPublishes))
@@ -44,7 +44,7 @@ public class MessageScheduler {
 //            }
 //
 //        }
-        logger.info("消息重发 结束=====================");
+//        logger.info("消息重发 结束=====================");
     }
 
 }

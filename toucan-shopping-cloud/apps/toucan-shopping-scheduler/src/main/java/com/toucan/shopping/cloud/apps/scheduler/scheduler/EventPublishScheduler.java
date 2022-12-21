@@ -67,7 +67,7 @@ public class EventPublishScheduler {
     /**
      * 每5分钟重新扫描一次本地看有没有执行失败的事件
      */
-    @Scheduled(cron = "0 0/2 * * * ? ")
+    @Scheduled(cron = "0 0/5 * * * ? ")
     public void rerun()
     {
         logger.info("处理远程调用失败的消息 开始=====================");
