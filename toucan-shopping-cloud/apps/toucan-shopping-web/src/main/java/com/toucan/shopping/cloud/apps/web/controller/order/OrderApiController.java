@@ -688,6 +688,7 @@ public class OrderApiController {
         {
             UserBuyCarItemVO currentUserBuyCarItem = createOrderVo.getBuyCarItems().get(i);
             orderVO.getBuyCarItems().add(currentUserBuyCarItem);
+            orderVO.setShopId(currentUserBuyCarItem.getShopId());
             if(orderVO.getOrderFreight()==null)
             {
                 //如果为空默认为包邮
