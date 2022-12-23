@@ -271,6 +271,11 @@ public class ShopProductApproveApiController extends BaseController {
                                 shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + shopProductApproveSkuVO.getProductPreviewPath());
                             }
 
+                            //设置介绍图
+                            if (StringUtils.isNotEmpty(shopProductApproveSkuVO.getDescriptionImgFilePath())) {
+                                shopProductApproveSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix() + shopProductApproveSkuVO.getDescriptionImgFilePath());
+                            }
+
                             Map<String, String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(), Map.class);
                             Set<String> keysSet = attributeKeyValue.keySet();
                             for (String key : keysSet) {

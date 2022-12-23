@@ -320,6 +320,14 @@ function setSkuTableValue()
                         $("#skuPreviewPath_"+skuRowIndex).val(skuVo.productPreviewPath);
                         $("#skuTableuploading-tip" + skuRowIndex).show();
 
+                        if(skuVo.httpDescriptionImgPath!=null&&skuVo.httpDescriptionImgPath!="")
+                        {
+                            $("#skuDescriptionImg"+skuRowIndex).attr("src",skuVo.httpDescriptionImgPath);
+                            $("#skuDescriptionImgPath_"+skuRowIndex).val(skuVo.descriptionImgFilePath);
+                            $("#skuTableDescriptionuploading-tip" + skuRowIndex).show();
+
+                        }
+
                         $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
                     }

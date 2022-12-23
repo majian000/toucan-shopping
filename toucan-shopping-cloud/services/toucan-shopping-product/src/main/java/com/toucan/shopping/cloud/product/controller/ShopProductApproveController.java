@@ -834,8 +834,40 @@ public class ShopProductApproveController {
                     ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
                     BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
 
-                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductApproveDescription.getId());
-                    shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
+                    List<ShopProductApproveDescriptionImgVO> productApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductApproveDescription.getId());
+
+                    //设置店铺商品介绍图
+                    if(CollectionUtils.isNotEmpty(productApproveDescriptionImgVOS))
+                    {
+                        shopProductApproveDescriptionVO.setProductDescriptionImgs(new LinkedList<>());
+                        for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:productApproveDescriptionImgVOS)
+                        {
+                            if(shopProductApproveDescriptionImgVO.getType().intValue()==1)
+                            {
+                                shopProductApproveDescriptionVO.getProductDescriptionImgs().add(shopProductApproveDescriptionImgVO);
+                            }
+                        }
+
+
+                        //设置SKU介绍图
+                        if(CollectionUtils.isNotEmpty(shopProductVO.getProductSkuVOList()))
+                        {
+                            for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductVO.getProductSkuVOList())
+                            {
+                                for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:productApproveDescriptionImgVOS) {
+                                    if (shopProductApproveDescriptionImgVO.getType().intValue() == 2) {
+                                        if(shopProductApproveSkuVO.getId().intValue()==shopProductApproveDescriptionImgVO.getProductSkuId().intValue())
+                                        {
+                                            shopProductApproveSkuVO.setDescriptionImgFilePath(shopProductApproveDescriptionImgVO.getFilePath());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
                     shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }
 
