@@ -1,6 +1,7 @@
 
 var g_goApproveSecond=3;
 var delFilePos=new Array();
+var delSkuDescriptionImgs= new Array();
 var g_descriptionTablePos=0;
 
 
@@ -89,9 +90,8 @@ function showSetp3Page()
 {
     var result = checkInputFunctionByContainerId("step2",2);
 
-    var skuTablePhotos = $(".skuTablePhotos");
-    var skuTableImgPaths = $(".skuTableImgPaths");
-    if(skuTablePhotos==null||skuTablePhotos.length<=0)
+    var skuTablePreviewPhotoImgs = $(".skuTablePreviewPhotoImgs");
+    if(skuTablePreviewPhotoImgs==null||skuTablePreviewPhotoImgs.length<=0)
     {
         $.message({
             message: "请选择商品属性",
@@ -99,13 +99,13 @@ function showSetp3Page()
         });
         return ;
     }
-    if(skuTablePhotos.length>0)
+    if(skuTablePreviewPhotoImgs.length>0)
     {
-        for(var i=0;i<skuTablePhotos.length;i++)
+        for(var i=0;i<skuTablePreviewPhotoImgs.length;i++)
         {
-            var skuTablePhoto = $(skuTablePhotos[i]).val();
-            var skuTableImgPath =  $(skuTableImgPaths[i]).val();
-            if((skuTablePhoto==null||skuTablePhoto=="")&&(skuTableImgPath==null||skuTableImgPath==""))
+            var skuTablePhoto = $(skuTablePreviewPhotoImgs[i]).attr("src");
+
+            if((skuTablePhoto==null||skuTablePhoto=="")||skuTablePhoto.indexOf("/static/lib/tupload/images/imgadd.png")!=-1)
             {
                 $.message({
                     message: "请上传销售规格中的商品图片",
@@ -696,6 +696,19 @@ $("#ppfbtn").click(function() {
         }
     }
 
+    //删除SKU表格中没有商品介绍图的控件
+    var skuTableDescriptionUploadFiles = $(".skuTableDescriptionUploadFiles");
+    if(skuTableDescriptionUploadFiles.length>0)
+    {
+        for(var i=0;i<skuTableDescriptionUploadFiles.length;i++)
+        {
+            var skuTableUploadFile=$(skuTableDescriptionUploadFiles[i]);
+            if(skuTableUploadFile.val()==null||skuTableUploadFile.val()=="")
+            {
+                skuTableUploadFile.remove();
+            }
+        }
+    }
 
     //删除商品介绍表格中没有文件上传的控件
     var descriptionTableUploadFiles = $(".descriptionTableUploadFile");
@@ -715,6 +728,13 @@ $("#ppfbtn").click(function() {
     if($("#mainPhotoFile").val()==null||$("#mainPhotoFile").val()=="")
     {
         $("#mainPhotoFile").remove();
+    }
+
+
+    var skuDescriptionPhotoDelIdsArrayHidden = $("#skuDescriptionPhotoDelIdsArray");
+    if(skuDescriptionPhotoDelIdsArrayHidden!=null)
+    {
+        skuDescriptionPhotoDelIdsArrayHidden.val(delSkuDescriptionImgs.join(","));
     }
 
     $('#productReleaseForm').ajaxSubmit({

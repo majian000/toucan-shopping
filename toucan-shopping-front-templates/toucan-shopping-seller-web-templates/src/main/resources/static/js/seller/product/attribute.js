@@ -138,6 +138,12 @@ function initSkuTableDescriptionPhotoUploadDel()
         {
             skuDescriptionImgPathObj.val("");
         }
+
+        //已删除的商品介绍图
+        if(delSkuDescriptionImgs!=null)
+        {
+            delSkuDescriptionImgs.push($("#productSkuVOList_"+attrIndex+"_id").val());
+        }
     });
 
 }
@@ -335,7 +341,7 @@ var attributeControl = {
                         "<ul class=\"picView-magnify-list\">\n" +
                         "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
                         "           <div id=\"skuTableimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
-                        "<img id='skuPreview"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
+                        "<img id='skuPreview"+g_sku_pos+"' attr-index='"+g_sku_pos+"' class='skuTablePreviewPhotoImgs' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
                         "           <div id=\"skuTableuploading-tip"+g_sku_pos+"\" class=\"skuTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
                         "               <i class=\"onSkuDelPic\" data=\""+g_sku_pos+"\">删除</i>\n" +
@@ -357,14 +363,14 @@ var attributeControl = {
                     td7.appendTo(tr);
                     var td8 = $("<input type='hidden' class='skuTableImgPaths' id='skuPreviewPath_"+g_sku_pos+"'  />");
                     td8.appendTo(tr);
-                    var td9 = $("<input type='file' class='skuTableDescriptionPhotos skuTableDescriptionUploadFile' attr-index='"+g_sku_pos+"' style='display: none' name='productSkuVOList["+g_sku_pos+"].descriptionImgFile' id='skuProductDescriptionImgFile"+g_sku_pos+"' />");
+                    var td9 = $("<input type='file' class='skuTableDescriptionPhotos skuTableDescriptionUploadFiles' attr-index='"+g_sku_pos+"' style='display: none' name='productSkuVOList["+g_sku_pos+"].descriptionImgFile' id='skuProductDescriptionImgFile"+g_sku_pos+"' />");
                     td9.appendTo(tr);
                     var td10 = $("<td >" +
                         "<div class=\"sku-table-description-uploading-img\">"+
                         "<ul class=\"picView-magnify-list\">\n" +
                         "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
                         "           <div id=\"skuTableDescriptionimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
-                        "<img id='skuDescriptionImg"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
+                        "<img id='skuDescriptionImg"+g_sku_pos+"' attr-index='"+g_sku_pos+"' class='skuTableDescriptionImgs' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
                         "           <div id=\"skuTableDescriptionuploading-tip"+g_sku_pos+"\" class=\"skuTableDescriptionuploading-tip\" style=\"display: none; height: 0px;\">\n" +
                         "               <i class=\"onSkuDescriptionImgDelPic\" data=\""+g_sku_pos+"\">删除</i>\n" +
@@ -374,7 +380,7 @@ var attributeControl = {
                         "</div>"+
                         "</td>");
                     td10.appendTo(tr);
-                    var td11 = $("<input type='hidden' class='skuTableImgPaths' id='skuDescriptionImgPath_"+g_sku_pos+"'  />");
+                    var td11 = $("<input type='hidden' class='skuTableDescriptionImgPaths' id='skuDescriptionImgPath_"+g_sku_pos+"'  />");
                     td11.appendTo(tr);
 
 

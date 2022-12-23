@@ -414,6 +414,8 @@ public class ShopProductApproveController {
                     productSku.setCategoryId(rePublishProductApproveVO.getCategoryId()); //商品分类ID
                     productSku.setShopCategoryId(rePublishProductApproveVO.getShopCategoryId()); //店铺商品分类ID
 
+                    productSkuVO.setId(productSku.getId());
+
                     skuIdList.add(productSku.getId());
                     productSkus.add(productSku);
 
@@ -536,6 +538,28 @@ public class ShopProductApproveController {
                                 shopProductApproveDescriptionImg.setAppCode(rePublishProductApproveVO.getAppCode());
                                 shopProductApproveDescriptionImg.setCreateDate(new Date());
                                 shopProductApproveDescriptionImg.setCreateUserId(rePublishProductApproveVO.getCreateUserId());
+                                shopProductApproveDescriptionImg.setDeleteStatus(0);
+                                shopProductApproveDescriptionImg.setType((short)1);
+                                shopProductApproveDescriptionImgs.add(shopProductApproveDescriptionImg);
+                            }
+                        }
+
+                        //SKU介绍图
+                        for(ShopProductApproveSkuVO productSkuVO : rePublishProductApproveVO.getProductSkuVOList())
+                        {
+                            if(StringUtils.isNotEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                                ShopProductApproveDescriptionImg shopProductApproveDescriptionImg = new ShopProductApproveDescriptionImg();
+                                shopProductApproveDescriptionImg.setId(idGenerator.id());
+                                shopProductApproveDescriptionImg.setProductApproveId(rePublishProductApproveVO.getId());
+                                shopProductApproveDescriptionImg.setFilePath(productSkuVO.getDescriptionImgFilePath());
+                                shopProductApproveDescriptionImg.setWidth("750");
+                                shopProductApproveDescriptionImg.setWidthUnit("px");
+                                shopProductApproveDescriptionImg.setProductSkuId(productSkuVO.getId());
+                                shopProductApproveDescriptionImg.setProductDescriptionId(shopProductApproveDescription.getId());
+                                shopProductApproveDescriptionImg.setAppCode(rePublishProductApproveVO.getAppCode());
+                                shopProductApproveDescriptionImg.setCreateDate(new Date());
+                                shopProductApproveDescriptionImg.setCreateUserId(rePublishProductApproveVO.getCreateUserId());
+                                shopProductApproveDescriptionImg.setType((short)2);
                                 shopProductApproveDescriptionImg.setDeleteStatus(0);
                                 shopProductApproveDescriptionImgs.add(shopProductApproveDescriptionImg);
                             }
@@ -739,6 +763,37 @@ public class ShopProductApproveController {
                     BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
 
                     List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductApproveDescription.getId());
+
+                    //设置店铺商品介绍图
+                    if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgVOS))
+                    {
+                        shopProductApproveDescriptionVO.setProductDescriptionImgs(new LinkedList<>());
+                        for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS)
+                        {
+                            if(shopProductApproveDescriptionImgVO.getType().intValue()==1)
+                            {
+                                shopProductApproveDescriptionVO.getProductDescriptionImgs().add(shopProductApproveDescriptionImgVO);
+                            }
+                        }
+
+
+                        //设置SKU介绍图
+                        if(CollectionUtils.isNotEmpty(shopProductVO.getProductSkuVOList()))
+                        {
+                            for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductVO.getProductSkuVOList())
+                            {
+                                for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS) {
+                                    if (shopProductApproveDescriptionImgVO.getType().intValue() == 2) {
+                                        if(shopProductApproveSkuVO.getId().intValue()==shopProductApproveDescriptionImgVO.getProductSkuId().intValue())
+                                        {
+                                            shopProductApproveSkuVO.setDescriptionImgFilePath(shopProductApproveDescriptionImgVO.getFilePath());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
                     shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }

@@ -16,7 +16,10 @@ public class RePublishProductApproveVO extends PublishProductApproveVO {
      */
     private String previewPhotoDelPosArray;
 
-
+    /**
+     * 已删除商品介绍图的SKUID
+     */
+    private String skuDescriptionPhotoDelIdsArray;
 
 
 

@@ -963,14 +963,24 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            //校验SKU主图
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())){
                 for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                 {
+                    //校验SKU主图
                     if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+
+
+                    //校验SKU介绍图
+                    if(productSkuVO.getDescriptionImgFile()!=null
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");
                         return resultObjectVO;
                     }
                 }
@@ -992,9 +1002,15 @@ public class ShopProductApproveApiController extends BaseController {
             }
 
 
-            //上传SKU表商品主图
+            //已删除的SKU商品介绍图片
+            String[] skuDescriptionPhotoDelIdsArray = null;
+            if(StringUtils.isNotEmpty(republishProductVO.getSkuDescriptionPhotoDelIdsArray())) {
+                skuDescriptionPhotoDelIdsArray = republishProductVO.getSkuDescriptionPhotoDelIdsArray().split(",");
+            }
+
             for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
             {
+                //上传SKU表商品主图
                 if(productSkuVO.getMainPhotoFile()!=null) {
                     productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                     productSkuVO.setMainPhotoFile(null);
@@ -1011,23 +1027,55 @@ public class ShopProductApproveApiController extends BaseController {
                             productSkuVO.setProductPreviewPath(oldProductSkuVO.getProductPreviewPath());
                         }
                     }
+                }
 
+                //上传SKU商品介绍图
+                if(productSkuVO.getDescriptionImgFile()!=null) {
+                    productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
+                    productSkuVO.setDescriptionImgFile(null);
+                    if (StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
+                        return resultObjectVO;
+                    }
+                }else{
+                    //找到库中保存的商品介绍图路径设置进去
+                    for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
+                    {
+                        if(productSkuVO.getId()!=null&&productSkuVO.getId().longValue()==oldProductSkuVO.getId().longValue())
+                        {
+                            productSkuVO.setDescriptionImgFilePath(oldProductSkuVO.getDescriptionImgFilePath());
+                        }
+                    }
+                    //在判断是否被删除了,如果被删除了把设置进去的路径删除掉
+                    if(skuDescriptionPhotoDelIdsArray!=null&&skuDescriptionPhotoDelIdsArray.length>0)
+                    {
+                        for(String skuDescriptionPhotoDelId:skuDescriptionPhotoDelIdsArray)
+                        {
+                            if(productSkuVO.getId()!=null&&skuDescriptionPhotoDelId.equals(String.valueOf(productSkuVO.getId())))
+                            {
+                                productSkuVO.setDescriptionImgFilePath(null);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
-            //删除旧的SKU商品图片
+            //删除旧的SKU商品主图
             if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList()))
             {
-                boolean previewIsChange=false;
+                boolean previewIsChange=true;
                 for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
                 {
-                    previewIsChange = false;
+                    previewIsChange = true;
                     for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                     {
                         if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
                         {
-                            if(productSkuVO.getMainPhotoFile()!=null) {
-                                previewIsChange = true;
+                            if(productSkuVO.getMainPhotoFile()==null) {
+                                previewIsChange = false;
+                                break;
                             }
                         }
                     }
@@ -1038,6 +1086,32 @@ public class ShopProductApproveApiController extends BaseController {
                     }
                 }
             }
+
+            //删除旧的SKU商品介绍图
+            if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList()))
+            {
+                boolean descriptionImgIsChange=true;
+                for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
+                {
+                    descriptionImgIsChange = true;
+                    for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
+                    {
+                        if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
+                        {
+                            if(productSkuVO.getDescriptionImgFile()==null) {
+                                descriptionImgIsChange = false;
+                                break;
+                            }
+                        }
+                    }
+                    //图片修改了,那么就删除旧的图片
+                    if(descriptionImgIsChange)
+                    {
+                        this.deleteOldProductImage(oldProductSkuVO.getDescriptionImgFilePath());
+                    }
+                }
+            }
+
 
             List<String> reuploadPreviewPhotoPaths = new LinkedList<>();
             //上传商品预览图
