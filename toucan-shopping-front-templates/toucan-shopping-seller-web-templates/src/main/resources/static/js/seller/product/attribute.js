@@ -338,7 +338,7 @@ var attributeControl = {
                         "<img id='skuPreview"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
                         "           <div id=\"skuTableuploading-tip"+g_sku_pos+"\" class=\"skuTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
-                        "               <i class=\"onSkuDelPic\" data=\"0\">删除</i>\n" +
+                        "               <i class=\"onSkuDelPic\" data=\""+g_sku_pos+"\">删除</i>\n" +
                         "            </div>\n" +
                         "         </li>"+
                         " </ul>"+
@@ -367,7 +367,7 @@ var attributeControl = {
                         "<img id='skuDescriptionImg"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
                         "           <div id=\"skuTableDescriptionuploading-tip"+g_sku_pos+"\" class=\"skuTableDescriptionuploading-tip\" style=\"display: none; height: 0px;\">\n" +
-                        "               <i class=\"onSkuDescriptionImgDelPic\" data=\"0\">删除</i>\n" +
+                        "               <i class=\"onSkuDescriptionImgDelPic\" data=\""+g_sku_pos+"\">删除</i>\n" +
                         "            </div>\n" +
                         "         </li>"+
                         " </ul>"+
