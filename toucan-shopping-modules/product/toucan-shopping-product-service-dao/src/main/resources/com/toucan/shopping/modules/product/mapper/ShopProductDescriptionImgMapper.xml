@@ -89,13 +89,25 @@
             and shop_product_id = #{shopProductId}
             and shop_product_description_id = #{descriptionId}
             and t.delete_status = 0
-            and type = 1
         </where>
         order by t.img_sort desc
 
 
     </select>
 
+    <select id="queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc" resultMap="shopProductDescriptionImgVOMap" >
+        select t.* from t_shop_product_description_img t
+        <where>
+            1=1
+            and shop_product_id = #{shopProductId}
+            and shop_product_description_id = #{descriptionId}
+            and t.delete_status = 0
+            and t.type=#{type}
+        </where>
+        order by t.img_sort desc
+
+
+    </select>
 
     <select id="queryVOListBySkuIdAndDescriptionIdOrderBySortDesc" resultMap="shopProductDescriptionImgVOMap" >
         select t.* from t_shop_product_description_img t
@@ -104,7 +116,6 @@
             and product_sku_id = #{skuId}
             and shop_product_description_id = #{descriptionId}
             and t.delete_status = 0
-            and type = 2
         </where>
         order by t.img_sort desc
 

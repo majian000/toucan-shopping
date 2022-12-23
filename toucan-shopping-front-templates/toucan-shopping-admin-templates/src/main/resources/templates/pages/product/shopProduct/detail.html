@@ -444,7 +444,14 @@
                             return "";
                         }},
                     {field: 'roughWeight', width: 150, title: '毛重(单位kg)'},
-                    {field: 'suttle', width: 150, title: '净重(单位kg)'}
+                    {field: 'suttle', width: 150, title: '净重(单位kg)'},
+                    {field: 'httpDescriptionImgPath', width: 150, title: '介绍图片',
+                        templet: function (row) {
+                            if(row.httpDescriptionImgPath!=null) {
+                                return "<a href='" + row.httpDescriptionImgPath + "' target='_blank'><img src='" + row.httpDescriptionImgPath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }}
                 ]
             ],
             limits: [15,30,100,200],

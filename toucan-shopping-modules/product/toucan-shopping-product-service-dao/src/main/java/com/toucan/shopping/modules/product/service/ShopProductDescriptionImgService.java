@@ -21,6 +21,14 @@ public interface ShopProductDescriptionImgService {
      */
     List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdOrderBySortDesc(Long productId, Long descriptionId);
 
+
+    /**
+     * 根据商品审核ID和商品介绍ID查询
+     * @param productId
+     * @param descriptionId
+     * @return
+     */
+    List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(Long productId, Long descriptionId,Integer type);
     /**
      * 根据商品SKU的ID和商品介绍ID查询
      * @param descriptionId

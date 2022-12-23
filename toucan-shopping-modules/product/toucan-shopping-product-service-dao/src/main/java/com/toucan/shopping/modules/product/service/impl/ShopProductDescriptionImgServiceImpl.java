@@ -31,6 +31,10 @@ public class ShopProductDescriptionImgServiceImpl implements ShopProductDescript
     }
 
     @Override
+    public List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(Long productId, Long descriptionId,Integer type) {
+        return shopProductDescriptionImgMapper.queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(productId,descriptionId,type);
+    }
+    @Override
     public List<ShopProductDescriptionImgVO> queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(Long skuId, Long descriptionId) {
         return shopProductDescriptionImgMapper.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(skuId,descriptionId);
     }

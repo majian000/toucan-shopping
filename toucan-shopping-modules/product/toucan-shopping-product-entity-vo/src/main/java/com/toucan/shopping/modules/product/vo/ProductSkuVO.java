@@ -107,6 +107,11 @@ public class ProductSkuVO  extends ProductSku {
     private Short buckleInventoryMethod; //库存计数 1:买家拍下减库存 2:买家付款减库存
 
 
+    /**
+     * 介绍图路径
+     */
+    private String descriptionImgFilePath;
+
 
 
 }

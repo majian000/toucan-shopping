@@ -8,10 +8,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.product.entity.Brand;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.entity.ShopProductDescription;
-import com.toucan.shopping.modules.product.entity.ShopProductImg;
+import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
@@ -125,11 +122,11 @@ public class ProductSkuController {
 
                         List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = new LinkedList<>();
                         //店铺商品介绍预览图
-                        shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductDescription.getId()));
+                        shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(shopProductVO.getId(),shopProductDescription.getId(),1));
                         //SKU介绍预览图
                         if(!CollectionUtils.isEmpty(productSkuVOS))
                         {
-                            shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(productSkuVOS.get(0).getId(),shopProductDescription.getId()));
+                            shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(skuId,shopProductDescription.getId()));
                         }
                         shopProductDescriptionVO.setProductDescriptionImgs(shopProductDescriptionImgVOS);
                         shopProductSkuVO.setShopProductDescriptionVO(shopProductDescriptionVO);
@@ -320,6 +317,27 @@ public class ProductSkuController {
         try {
             ProductSkuPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuPageInfo.class);
             PageInfo<ProductSkuVO> pageInfo =  productSkuService.queryListPage(queryPageInfo);
+            if(!CollectionUtils.isEmpty(pageInfo.getList()))
+            {
+                ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(queryPageInfo.getShopProductId());
+                if(shopProductDescription!=null) {
+                    List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(queryPageInfo.getShopProductId(),shopProductDescription.getId());
+                    if(!CollectionUtils.isEmpty(shopProductDescriptionImgVOS))
+                    {
+                        for(ProductSkuVO productSkuVO:pageInfo.getList()) {
+                            for (ShopProductDescriptionImgVO shopProductDescriptionImgVO : shopProductDescriptionImgVOS) {
+                                if(shopProductDescriptionImgVO.getType()==2
+                                        &&shopProductDescriptionImgVO.getProductSkuId()!=null
+                                        &&productSkuVO.getId().longValue()==shopProductDescriptionImgVO.getProductSkuId().longValue())
+                                {
+                                    productSkuVO.setDescriptionImgFilePath(shopProductDescriptionImgVO.getFilePath());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
