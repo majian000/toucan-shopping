@@ -85,6 +85,27 @@ public class ShopProductApproveSkuController {
         try {
             ShopProductApproveSkuPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSkuPageInfo.class);
             PageInfo<ShopProductApproveSkuVO> pageInfo =  shopProductApproveSkuService.queryListPage(queryPageInfo);
+            if(!CollectionUtils.isEmpty(pageInfo.getList()))
+            {
+                ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(queryPageInfo.getProductApproveId());
+                if(shopProductApproveDescription!=null) {
+                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(queryPageInfo.getProductApproveId(),shopProductApproveDescription.getId());
+                    if(!CollectionUtils.isEmpty(shopProductApproveDescriptionImgVOS))
+                    {
+                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:pageInfo.getList()) {
+                            for (ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO : shopProductApproveDescriptionImgVOS) {
+                                if(shopProductApproveDescriptionImgVO.getType()==2
+                                        &&shopProductApproveDescriptionImgVO.getProductSkuId()!=null
+                                        &&shopProductApproveSkuVO.getId().longValue()==shopProductApproveDescriptionImgVO.getProductSkuId().longValue())
+                                {
+                                    shopProductApproveSkuVO.setDescriptionImgFilePath(shopProductApproveDescriptionImgVO.getFilePath());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

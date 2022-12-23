@@ -5,6 +5,8 @@ import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
 import java.util.Map;
@@ -98,5 +100,11 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
      * 介绍图路径
      */
     private String descriptionImgFilePath;
+
+
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long productSkuId; //SKU的ID
 
 }

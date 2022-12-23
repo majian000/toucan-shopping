@@ -1311,6 +1311,9 @@ public class ShopProductApproveController {
                         }else{
                             productSku.setStatus((short)0);
                         }
+
+                        shopProductApproveSkuVO.setProductSkuId(productSku.getId()); //给下面SKU商品介绍图片使用
+
                         productSkus.add(productSku);
                     }
                 }
@@ -1349,12 +1352,26 @@ public class ShopProductApproveController {
                         for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS)
                         {
                             ShopProductDescriptionImg shopProductDescriptionImg = new ShopProductDescriptionImg();
-                            BeanUtils.copyProperties(shopProductDescriptionImg,shopProductApproveDescriptionImgVO);
+                            BeanUtils.copyProperties(shopProductDescriptionImg, shopProductApproveDescriptionImgVO);
                             shopProductDescriptionImg.setId(idGenerator.id());
                             shopProductDescriptionImg.setShopProductId(shopProduct.getId()); //店铺商品ID
                             shopProductDescriptionImg.setShopProductDescriptionId(shopProductDescription.getId());  //商品介绍主表ID
                             shopProductDescriptionImg.setCreateDate(new Date());
+
+                            //SKU商品介绍图片
+                            if(shopProductDescriptionImg.getType().intValue()==2) {
+                                for (ShopProductApproveSkuVO shopProductApproveSkuVO : shopProductApproveSkuVOS) {
+                                    if (shopProductDescriptionImg.getProductSkuId() != null
+                                            && shopProductDescriptionImg.getProductSkuId().longValue() == shopProductApproveSkuVO.getId().longValue()) {
+                                        //将新生成SKU ID设置进去
+                                        shopProductDescriptionImg.setProductSkuId(shopProductApproveSkuVO.getProductSkuId());
+                                        break;
+                                    }
+                                }
+                            }
                             shopProductDescriptionImgs.add(shopProductDescriptionImg);
+
+
                         }
                         if(CollectionUtils.isNotEmpty(shopProductDescriptionImgs))
                         {

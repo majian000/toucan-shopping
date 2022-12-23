@@ -888,6 +888,9 @@ public class ShopProductApproveController extends UIController {
                             if(productSkuVO.getProductPreviewPath()!=null) {
                                 productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                             }
+                            if(productSkuVO.getDescriptionImgFilePath()!=null) {
+                                productSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getDescriptionImgFilePath());
+                            }
                         }
 
                     }
