@@ -113,6 +113,9 @@ public class ProductSkuController {
                         }
                     }
 
+                    List<ProductSkuVO> productSkuVOS = productSkuService.queryShelvesVOListByShopProductId(shopProductVO.getId());
+                    //查询商品SKU列表
+                    shopProductSkuVO.setProductSkuVOList(productSkuVOS);
 
                     //查询商品介绍
                     ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(shopProductVO.getId());
@@ -120,7 +123,14 @@ public class ProductSkuController {
                         ShopProductDescriptionVO shopProductDescriptionVO = new ShopProductDescriptionVO();
                         BeanUtils.copyProperties(shopProductDescriptionVO,shopProductDescription);
 
-                        List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductDescription.getId());
+                        List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = new LinkedList<>();
+                        //店铺商品介绍预览图
+                        shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductDescription.getId()));
+                        //SKU介绍预览图
+                        if(!CollectionUtils.isEmpty(productSkuVOS))
+                        {
+                            shopProductDescriptionImgVOS.addAll(shopProductDescriptionImgService.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(productSkuVOS.get(0).getId(),shopProductDescription.getId()));
+                        }
                         shopProductDescriptionVO.setProductDescriptionImgs(shopProductDescriptionImgVOS);
                         shopProductSkuVO.setShopProductDescriptionVO(shopProductDescriptionVO);
 
@@ -176,8 +186,6 @@ public class ProductSkuController {
                         shopProductDescriptionVO.setAttributes(attributes);
                     }
 
-                    //查询商品SKU列表
-                    shopProductSkuVO.setProductSkuVOList(productSkuService.queryShelvesVOListByShopProductId(shopProductVO.getId()));
 
                     //刷新到缓存
                     productSkuRedisService.addToCache(shopProductSkuVO);

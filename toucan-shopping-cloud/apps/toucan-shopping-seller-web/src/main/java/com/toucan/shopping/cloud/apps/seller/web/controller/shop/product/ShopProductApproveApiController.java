@@ -668,20 +668,30 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            //校验SKU主图
+
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
                 for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
                 {
+                    //校验SKU主图
                     if(productSkuVO.getMainPhotoFile()==null)
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("发布失败,的商品主图不能为空!");
+                        resultObjectVO.setMsg("发布失败,商品主图不能为空!");
                         return resultObjectVO;
                     }
                     if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+
+                    //校验SKU介绍图
+                    if(productSkuVO.getDescriptionImgFile()!=null
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");
                         return resultObjectVO;
                     }
                 }
@@ -697,15 +707,26 @@ public class ShopProductApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            //上传SKU表商品主图
+
             for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
             {
+                //上传SKU表商品主图
                 productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
                 if(StringUtils.isEmpty(productSkuVO.getProductPreviewPath()))
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("发布失败,商品主图上传失败!");
+                    return resultObjectVO;
+                }
+
+                //SKU商品介绍图
+                productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
+                productSkuVO.setDescriptionImgFile(null);
+                if(StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath()))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
                     return resultObjectVO;
                 }
             }

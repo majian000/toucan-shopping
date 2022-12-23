@@ -67,8 +67,9 @@ function bindAttLabelEvent()
 }
 
 
-
-
+/**
+ * 商品预览图删除
+ */
 function initSkuTablePreviewPhotoUploadDel()
 {
 
@@ -106,6 +107,51 @@ function uploadSkuTablePreviewPhoto(attrIndex)
     $("#skuProductProview"+attrIndex).click();
 }
 
+
+/**
+ * 商品介绍图删除
+ */
+function initSkuTableDescriptionPhotoUploadDel()
+{
+
+    $(".sku-table-description-uploading-img li").mouseenter(function () {
+        $(this).find(".skuTableDescriptionuploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".sku-table-description-uploading-img li").mouseleave(function () {
+        $(this).find(".skuTableDescriptionuploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onSkuDescriptionImgDelPic").click(function(){
+        var attrIndex = $(this).attr("data");
+        $("#skuDescriptionImg"+attrIndex).unbind("click");
+
+        $("#skuDescriptionImg"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#skuProductDescriptionImgFile"+attrIndex).val(null);
+        $("#skuTableDescriptionuploading-tip" + attrIndex).hide();
+
+        $("#skuDescriptionImg"+attrIndex).click(function() {
+            uploadSkuTableDescriptionPhoto($(this).attr("attr-index"));
+        });
+
+        var skuDescriptionImgPathObj = $("#skuDescriptionImgPath_"+attrIndex);
+        if(skuDescriptionImgPathObj!=null)
+        {
+            skuDescriptionImgPathObj.val("");
+        }
+    });
+
+}
+
+
+function uploadSkuTableDescriptionPhoto(attrIndex)
+{
+    $("#skuProductDescriptionImgFile"+attrIndex).click();
+}
+
+/**
+ * 商品预览
+ * @param rowCount
+ */
 function initSkuTablePreviewPhotoUpload(rowCount)
 {
     for(var p=0;p<rowCount;p++){
@@ -113,13 +159,21 @@ function initSkuTablePreviewPhotoUpload(rowCount)
     }
 
     initSkuTablePreviewPhotoUploadDel();
+    initSkuTableDescriptionPhotoUploadDel();
     for(var i=0;i<rowCount;i++)
     {
+        //商品预览
         $("#skuPreview"+i).click(function() {
             uploadSkuTablePreviewPhoto($(this).attr("attr-index"));
         });
 
+        //商品介绍图
+        $("#skuDescriptionImg"+i).click(function() {
+            uploadSkuTableDescriptionPhoto($(this).attr("attr-index"));
+        });
 
+
+        //商品预览
         $("#skuProductProview"+i).on("change", function(){
             // Get a reference to the fileList
             var files = !!this.files ? this.files : [];
@@ -144,6 +198,37 @@ function initSkuTablePreviewPhotoUpload(rowCount)
                 reader.onloadend = function(){
                     $("#skuPreview"+attrIndex).attr("src",this.result);
                     $("#skuTableuploading-tip" + attrIndex).show();
+                }
+
+            }
+
+        });
+
+        //商品介绍图
+        $("#skuProductDescriptionImgFile"+i).on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+            var attrIndex=$(this).attr("attr-index");
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#skuDescriptionImg"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                $("#skuProductDescriptionImgFile"+attrIndex).unbind("click");
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#skuDescriptionImg"+attrIndex).attr("src",this.result);
+                    $("#skuTableDescriptionuploading-tip" + attrIndex).show();
                 }
 
             }
@@ -211,7 +296,8 @@ var attributeControl = {
             });
             var itemColumHead = $("<th ><span class='red'>*</span>价格</th><th ><span class='red'>*</span>库存</th>  <th  ><span class='red'>*</span>图片预览(点击上传)</th>" +
                 "<th  ><span class='red'>*</span>毛重(单位kg)</th>" +
-                "<th  ><span class='red'>*</span>净重(单位kg)</th>");
+                "<th  ><span class='red'>*</span>净重(单位kg)</th>"+
+                "<th  >商品介绍图</th>");
             itemColumHead.appendTo(trHead);
             //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
             //itemColumHead2.appendTo(trHead);
@@ -271,7 +357,25 @@ var attributeControl = {
                     td7.appendTo(tr);
                     var td8 = $("<input type='hidden' class='skuTableImgPaths' id='skuPreviewPath_"+g_sku_pos+"'  />");
                     td8.appendTo(tr);
-
+                    var td9 = $("<input type='file' class='skuTableDescriptionPhotos skuTableDescriptionUploadFile' attr-index='"+g_sku_pos+"' style='display: none' name='productSkuVOList["+g_sku_pos+"].descriptionImgFile' id='skuProductDescriptionImgFile"+g_sku_pos+"' />");
+                    td9.appendTo(tr);
+                    var td10 = $("<td >" +
+                        "<div class=\"sku-table-description-uploading-img\">"+
+                        "<ul class=\"picView-magnify-list\">\n" +
+                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+                        "           <div id=\"skuTableDescriptionimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
+                        "<img id='skuDescriptionImg"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
+                        "            </div>\n" +
+                        "           <div id=\"skuTableDescriptionuploading-tip"+g_sku_pos+"\" class=\"skuTableDescriptionuploading-tip\" style=\"display: none; height: 0px;\">\n" +
+                        "               <i class=\"onSkuDescriptionImgDelPic\" data=\"0\">删除</i>\n" +
+                        "            </div>\n" +
+                        "         </li>"+
+                        " </ul>"+
+                        "</div>"+
+                        "</td>");
+                    td10.appendTo(tr);
+                    var td11 = $("<input type='hidden' class='skuTableImgPaths' id='skuDescriptionImgPath_"+g_sku_pos+"'  />");
+                    td11.appendTo(tr);
 
 
                     $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);

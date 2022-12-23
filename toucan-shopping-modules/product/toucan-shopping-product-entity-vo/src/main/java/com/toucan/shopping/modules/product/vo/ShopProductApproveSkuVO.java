@@ -87,4 +87,16 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
     private List<Long> productApproveIdList;
 
 
+    /**
+     * SKU商品介绍图片
+     */
+    @JSONField(serialize = false)
+    private MultipartFile descriptionImgFile;
+
+
+    /**
+     * 介绍图路径
+     */
+    private String descriptionImgFilePath;
+
 }
