@@ -160,7 +160,7 @@ public class ShopProductApproveSkuController {
                     ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
                     shopProductImgVO.setProductApproveId(shopProductApproveVO.getId());
                     List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByImgSortAsc(shopProductImgVO);
-                    if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(shopProductImgs)) {
+                    if (!CollectionUtils.isEmpty(shopProductImgs)) {
                         for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                             //如果是商品主图
                             if (shopProductImg.getImgType().intValue() == 1) {
@@ -179,7 +179,22 @@ public class ShopProductApproveSkuController {
                         BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
 
                         List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductApproveVO.getId(),shopProductApproveDescription.getId());
-                        shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
+                        if(!CollectionUtils.isEmpty(shopProductApproveDescriptionImgVOS))
+                        {
+                            shopProductApproveDescriptionVO.setProductDescriptionImgs(new LinkedList<>());
+                            for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS)
+                            {
+                                if(shopProductApproveDescriptionImgVO.getType().intValue()==1)
+                                {
+                                    shopProductApproveDescriptionVO.getProductDescriptionImgs().add(shopProductApproveDescriptionImgVO);
+                                }
+                                if(shopProductApproveDescriptionImgVO.getType().intValue()==2
+                                        &&shopProductApproveDescriptionImgVO.getProductSkuId().longValue()==skuId.longValue())
+                                {
+                                    shopProductApproveDescriptionVO.getProductDescriptionImgs().add(shopProductApproveDescriptionImgVO);
+                                }
+                            }
+                        }
                         shopProductApproveSkuVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
 
 

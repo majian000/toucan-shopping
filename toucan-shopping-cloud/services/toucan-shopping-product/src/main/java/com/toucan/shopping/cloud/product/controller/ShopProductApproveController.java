@@ -784,7 +784,7 @@ public class ShopProductApproveController {
                             {
                                 for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS) {
                                     if (shopProductApproveDescriptionImgVO.getType().intValue() == 2) {
-                                        if(shopProductApproveSkuVO.getId().intValue()==shopProductApproveDescriptionImgVO.getProductSkuId().intValue())
+                                        if(shopProductApproveSkuVO.getId().longValue()==shopProductApproveDescriptionImgVO.getProductSkuId().longValue())
                                         {
                                             shopProductApproveSkuVO.setDescriptionImgFilePath(shopProductApproveDescriptionImgVO.getFilePath());
                                         }
@@ -911,7 +911,7 @@ public class ShopProductApproveController {
                             {
                                 for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:productApproveDescriptionImgVOS) {
                                     if (shopProductApproveDescriptionImgVO.getType().intValue() == 2) {
-                                        if(shopProductApproveSkuVO.getId().intValue()==shopProductApproveDescriptionImgVO.getProductSkuId().intValue())
+                                        if(shopProductApproveSkuVO.getId().longValue()==shopProductApproveDescriptionImgVO.getProductSkuId().longValue())
                                         {
                                             shopProductApproveSkuVO.setDescriptionImgFilePath(shopProductApproveDescriptionImgVO.getFilePath());
                                         }
