@@ -77,7 +77,7 @@ toucan:
     log: #日志模块
       email:
         enabled: false
-        title: ——权限中心任务调度——异常邮件
+        title: ——商城任务调度——异常邮件
         ignore-exception-list[0]: javax.mail.MessagingException
         protocol: smtp
         smtp: #smtp服务器配置
