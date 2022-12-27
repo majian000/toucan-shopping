@@ -47,7 +47,7 @@ public class OrderPageController extends BaseController {
     @RequestMapping("/list")
     public String regist()
     {
-        return "user/order_list";
+        return "user/order/order_list";
     }
 
 }

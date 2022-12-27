@@ -6,7 +6,11 @@
                 <dd ><a href="${basePath}/page/user/info">我的主页</a></dd>
         </#if>
 
-        <dd><a href="${basePath}/page/order/list">我的订单</a></dd>
+        <#if leftMenuName??&&leftMenuName=="myOrder">
+                <dd class="active"><a href="${basePath}/page/order/list">我的订单</a></dd>
+        <#else>
+                <dd><a href="${basePath}/page/order/list">我的订单</a></dd>
+        </#if>
         <dd><a href="comment.html">商品评价</a></dd>
         <dd><a href="favorite.html">我的收藏</a></dd>
 
