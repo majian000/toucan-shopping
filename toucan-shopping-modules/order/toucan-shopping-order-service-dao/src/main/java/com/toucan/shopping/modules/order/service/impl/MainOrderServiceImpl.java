@@ -5,7 +5,9 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
 import com.toucan.shopping.modules.order.mapper.MainOrderMapper;
+import com.toucan.shopping.modules.order.mapper.OrderConsigneeAddressMapper;
 import com.toucan.shopping.modules.order.mapper.OrderItemMapper;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
@@ -54,6 +56,9 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private IdGenerator idGenerator;
 
+    @Autowired
+    private OrderConsigneeAddressMapper orderConsigneeAddressMapper;
+
     @Override
     public int save(MainOrder mainOrder) {
         return mainOrderMapper.insert(mainOrder);
@@ -75,19 +80,24 @@ public class MainOrderServiceImpl implements MainOrderService {
         {
             throw new IllegalArgumentException("保存子订单失败");
         }
-        List<OrderConsigneeAddressVO> orderConsigneeAddresss = new LinkedList<>();
+        List<OrderConsigneeAddress> orderConsigneeAddresss = new LinkedList<>();
         for(OrderVO orderVO:mainOrderVO.getOrders())
         {
-            OrderConsigneeAddressVO orderConsigneeAddressVO = new OrderConsigneeAddressVO();
-            BeanUtils.copyProperties(orderConsigneeAddressVO,createOrderVO.getConsigneeAddress());
-            orderConsigneeAddressVO.setId(idGenerator.id());
-            orderConsigneeAddressVO.setOrderId(orderVO.getId());
-            orderConsigneeAddressVO.setOrderNo(orderVO.getOrderNo());
-            orderConsigneeAddressVO.setMainOrderNo(mainOrderVO.getOrderNo());
-            orderConsigneeAddressVO.setDeleteStatus((short)0);
-            orderConsigneeAddressVO.setCreateDate(orderVO.getCreateDate());
-            orderConsigneeAddressVO.setAppCode(orderVO.getAppCode());
-            orderConsigneeAddresss.add(orderConsigneeAddressVO);
+            OrderConsigneeAddress orderConsigneeAddress = new OrderConsigneeAddress();
+            BeanUtils.copyProperties(orderConsigneeAddress,createOrderVO.getConsigneeAddress());
+            orderConsigneeAddress.setId(idGenerator.id());
+            orderConsigneeAddress.setOrderId(orderVO.getId());
+            orderConsigneeAddress.setOrderNo(orderVO.getOrderNo());
+            orderConsigneeAddress.setMainOrderNo(mainOrderVO.getOrderNo());
+            orderConsigneeAddress.setDeleteStatus((short)0);
+            orderConsigneeAddress.setCreateDate(orderVO.getCreateDate());
+            orderConsigneeAddress.setAppCode(orderVO.getAppCode());
+            orderConsigneeAddresss.add(orderConsigneeAddress);
+        }
+        ret = orderConsigneeAddressMapper.inserts(orderConsigneeAddresss);
+        if(ret!=orderConsigneeAddresss.size())
+        {
+            throw new IllegalArgumentException("保存收货信息失败");
         }
 
         for(OrderVO orderVO:mainOrderVO.getOrders())
