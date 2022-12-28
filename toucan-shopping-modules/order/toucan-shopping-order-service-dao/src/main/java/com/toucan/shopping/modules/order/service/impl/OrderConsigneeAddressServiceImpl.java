@@ -1,0 +1,36 @@
+package com.toucan.shopping.modules.order.service.impl;
+
+import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
+import com.toucan.shopping.modules.order.mapper.OrderConsigneeAddressMapper;
+import com.toucan.shopping.modules.order.service.OrderConsigneeAddressService;
+import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
+import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 订单收货地址服务
+ * @author majian
+ * @date 2022-12-28 11:09:16
+ */
+@Service
+public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressService {
+
+    @Autowired
+    private OrderConsigneeAddressMapper orderConsigneeAddressMapper;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
+    @Override
+    public int save(OrderConsigneeAddress entity) {
+        return orderConsigneeAddressMapper.insert(entity);
+    }
+
+}

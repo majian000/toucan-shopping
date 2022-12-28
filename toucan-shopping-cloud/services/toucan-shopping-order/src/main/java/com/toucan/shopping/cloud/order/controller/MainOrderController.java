@@ -128,7 +128,7 @@ public class MainOrderController {
                     return resultObjectVO;
                 }
             }
-            mainOrderService.createOrder(createOrder.getMainOrder());
+            mainOrderService.createOrder(createOrder);
             resultObjectVO.setCode(ResultObjectVO.SUCCESS);
             resultObjectVO.setMsg("订单创建完成");
         }catch(Exception e)

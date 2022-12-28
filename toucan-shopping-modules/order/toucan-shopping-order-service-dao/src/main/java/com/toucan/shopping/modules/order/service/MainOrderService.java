@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.order.service;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
+import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
@@ -16,10 +17,10 @@ public interface MainOrderService {
 
     /**
      * 创建订单
-     * @param mainOrderVO
+     * @param createOrderVO
      * @return
      */
-    int createOrder(MainOrderVO mainOrderVO);
+    int createOrder(CreateOrderVO createOrderVO)  throws Exception;
 
     /**
      * 查询一个主订单对象
