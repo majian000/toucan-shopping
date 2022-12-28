@@ -14,6 +14,6 @@ public interface OrderConsigneeAddressMapper {
 
     int insert(OrderConsigneeAddress entity);
 
-    int inserts(List<OrderConsigneeAddress> orderConsigneeAddresses);
+    int inserts(List<OrderConsigneeAddress> entitys);
 
 }
