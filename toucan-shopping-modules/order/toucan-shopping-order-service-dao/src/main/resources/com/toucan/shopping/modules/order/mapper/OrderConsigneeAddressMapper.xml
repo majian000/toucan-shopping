@@ -33,7 +33,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress" >
-        insert into t_consignee_address(id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
+        insert into t_order_consignee_address(id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
         values(#{id},#{userMainId},#{orderId},#{orderNo},#{mainOrderNo},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode})
     </insert>
 
@@ -41,7 +41,7 @@
 
 
     <insert id="inserts" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress"  >
-        insert into t_consignee_address
+        insert into t_order_consignee_address
         (id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
         values
         <foreach collection="entitys" item="entity" separator=",">
