@@ -46,6 +46,15 @@ public interface OrderService {
      */
     int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId);
 
+
+    /**
+     * 取消所有未支付的订单
+     * @param mainOrderNo
+     * @param userId
+     * @return
+     */
+    int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId,String cancelRemark);
+
     /**
      * 根据主订单编号取消订单
      * @param mainOrderNo

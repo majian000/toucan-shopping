@@ -154,6 +154,11 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.cancelNoPayOrderByMainOrderNo(mainOrderNo,userId);
     }
 
+    @Override
+    public int cancelNoPayOrderByMainOrderNo(String mainOrderNo, String userId, String cancelRemark) {
+        return orderMapper.cancelNoPayOrderByMainOrderNoAndCancelRemark(mainOrderNo,userId,cancelRemark);
+    }
+
     @Transactional
     @Override
     public int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark) {

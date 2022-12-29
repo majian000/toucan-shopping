@@ -33,6 +33,7 @@ public interface OrderMapper {
 
     int cancelNoPayOrderByMainOrderNo(String mainOrderNo,String userId);
 
+    int cancelNoPayOrderByMainOrderNoAndCancelRemark(String mainOrderNo,String userId,String cancelRemark);
 
 
     List<OrderVO> queryOrderListByPayTimeoutPage(OrderPageInfo pageInfo);

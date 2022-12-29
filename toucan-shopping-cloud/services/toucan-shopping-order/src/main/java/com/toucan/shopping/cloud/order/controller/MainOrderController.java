@@ -169,7 +169,7 @@ public class MainOrderController {
 
             try {
                 logger.info("取消订单 params {}",requestJsonVO.getEntityJson());
-                int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
                 if(row<1)
                 {
                     resultObjectVO.setCode(ResultObjectVO.SUCCESS);
@@ -177,7 +177,7 @@ public class MainOrderController {
                     return resultObjectVO;
                 }
 
-                orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId());
+                orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
 
             }catch(Exception e)
             {
