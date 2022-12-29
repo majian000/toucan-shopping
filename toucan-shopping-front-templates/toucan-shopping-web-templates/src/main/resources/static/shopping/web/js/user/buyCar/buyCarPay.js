@@ -73,12 +73,8 @@ function hideView()
 {
 
     $(".payfo_tips").css("padding-left","30%");
-    $(".oder_me").hide();
-    $(".two_bg").hide();
-    $(".btn_sure").hide();
-    $(".pay_amount").hide();
-    $(".p_pay").hide();
-    $(".cancel_order").hide();
+    $(".pay_sucess_panel").hide();
+    $(".pay_error_panel").show();
 }
 
 function queryMainOrder() {
@@ -118,12 +114,12 @@ function queryMainOrder() {
             var isHide = false;
             if(result.data.payStatus==4)
             {
-                $(".payfo_tips").html("订单已取消");
+                $(".payfo_err_msg").html("订单已取消");
                 isHide = true;
             }
             if(timeRemaining<=0)
             {
-                $(".payfo_tips").html("支付时间已超时");
+                $(".payfo_err_msg").html("支付时间已超时");
                 isHide = true;
             }
             if(isHide)
@@ -131,6 +127,9 @@ function queryMainOrder() {
                 hideView();
                 return;
             }
+
+
+            $(".pay_sucess_panel").show();
 
             $(".pay_amount").html("￥"+result.data.orderAmount);
 

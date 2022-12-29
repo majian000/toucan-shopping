@@ -32,6 +32,23 @@
     background: url(../../../images/order_icon_list.png) no-repeat -377px -407px;
     margin-left: 30%;
 }
+
+.payfo_err_tips {
+    padding: 20px 0;
+    height: 31px;
+    line-height: 31px;
+    font-size: 24px;
+    color: #434343;
+}
+.payfo_err_tips i {
+    display: block;
+    float: left;
+    height: 31px;
+    width: 47px;
+    background: url(../../../images/order_icon_list.png) no-repeat -377px -731px;
+    margin-left: 30%;
+}
+
 .o_n_t1 {
     color: #434343;
     height: 28px;
