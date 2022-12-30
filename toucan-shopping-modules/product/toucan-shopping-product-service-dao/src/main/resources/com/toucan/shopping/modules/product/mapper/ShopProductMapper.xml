@@ -66,6 +66,10 @@
             and t.id = #{id}
         </if>
 
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
+
         <if test="uuid!=null and uuid!='' ">
             and t.uuid = #{uuid}
         </if>

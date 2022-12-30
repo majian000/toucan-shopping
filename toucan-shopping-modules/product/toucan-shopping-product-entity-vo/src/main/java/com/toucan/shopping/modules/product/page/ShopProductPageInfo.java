@@ -35,6 +35,8 @@ public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
 
     private String name; //商品名称
 
+    private Short status; //是否上架 0:未上架 1:已上架
+
     private List<Long> categoryIdList; //分类ID列表
 
 

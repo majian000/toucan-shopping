@@ -302,6 +302,7 @@ $(function () {
         pagegizationConfigObject.current_page = 1;
         g_product_query_obj.page = 1;
         g_product_query_obj.name=$("#name").val();
+        g_product_query_obj.status=$("#status option:selected").val();
         g_product_query_obj.startDateYMDHS=$("#startDate").val();
         g_product_query_obj.endDateYMDHS=$("#endDate").val();
 
