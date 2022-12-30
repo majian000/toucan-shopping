@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.constant.FreightTemplateConstant;
@@ -434,6 +435,7 @@ public class FreightTemplateApiController extends BaseController {
             ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
             shopProductApproveVO.setFreightTemplateId(id);
             shopProductApproveVO.setShopId(sellerShopVO.getId());
+            shopProductApproveVO.setApproveStatus(ProductConstant.PROCESSING.shortValue()); //发布中
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApproveVO);
             resultObjectVO = feignShopProductApproveService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
             if(resultObjectVO.isSuccess())

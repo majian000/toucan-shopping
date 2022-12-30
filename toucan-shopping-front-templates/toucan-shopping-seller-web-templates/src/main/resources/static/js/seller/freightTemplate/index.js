@@ -173,6 +173,7 @@ function bindRowEvent()
                     }else{
                         $.message({
                             message: data.msg,
+                            time:4000,
                             type: 'error'
                         });
                     }
