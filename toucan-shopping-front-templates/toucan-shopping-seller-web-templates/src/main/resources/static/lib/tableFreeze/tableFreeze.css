@@ -7,5 +7,10 @@
     text-align:center;border:1px #ababab solid;background: white;
 }
 .tabTdWrap{
-    width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;
+    width:100%;
+    white-space:normal;
+    word-wrap:break-word;
+    word-break:break-all;
+    padding-left: 1%;
+    padding-right: 1%;
 }
