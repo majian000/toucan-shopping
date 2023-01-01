@@ -201,7 +201,14 @@ function drawProductPage(productVO)
         }
 
         drawSpuAttributes(productVO.productId);
+
+        showSaveBurCarBtns();
     }
+}
+
+function showSaveBurCarBtns()
+{
+    $(".suc_btn_panel").show();
 }
 
 function drawSalesAttributeChildHtml(attributeChild)
