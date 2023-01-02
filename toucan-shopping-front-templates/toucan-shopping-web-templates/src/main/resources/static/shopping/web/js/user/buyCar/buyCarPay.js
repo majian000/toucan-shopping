@@ -50,7 +50,7 @@ function cancelOrder()
         success: function (result) {
             if(result.code==1)
             {
-                $(".payfo_tips").html("订单已取消");
+                $(".payfo_err_msg").html("订单已取消");
                 hideView();
 
                 return;
