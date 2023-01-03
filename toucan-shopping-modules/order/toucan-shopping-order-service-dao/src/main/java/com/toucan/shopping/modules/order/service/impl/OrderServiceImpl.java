@@ -84,6 +84,10 @@ public class OrderServiceImpl implements OrderService {
         pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
         pageResult.setList(orderMapper.queryListPage(pageInfo));
         pageResult.setTotal(orderMapper.queryListPageCount(pageInfo));
+
+        pageResult.setSize(pageInfo.getSize());
+        pageResult.setLimit(pageInfo.getLimit());
+        pageResult.setPage(pageInfo.getPage());
         return pageResult;
     }
 

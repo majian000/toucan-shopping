@@ -71,6 +71,10 @@
             and t.pay_status = #{payStatus}
         </if>
 
+        <if test="tradeStatus!=null">
+            and t.trade_status = #{tradeStatus}
+        </if>
+
         and delete_status = 0
 
     </sql>

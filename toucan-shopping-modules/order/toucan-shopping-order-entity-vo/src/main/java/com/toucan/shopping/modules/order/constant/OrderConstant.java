@@ -12,4 +12,11 @@ public class OrderConstant {
      * 支付状态
      */
     public static final int PAY_STATUS_NON_PAYMENT=0; // 未支付
+
+
+    /**
+     * 交易状态
+     */
+    public static final int TRADE_STATUS_NON_PAYMENT=0; // 未付款
+
 }

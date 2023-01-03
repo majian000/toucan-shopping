@@ -1119,10 +1119,11 @@ public class OrderApiController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             OrderPageInfo orderPageInfo=new OrderPageInfo();
-            orderPageInfo.setSize(5); //显示五条
+            orderPageInfo.setLimit(5); //显示五条
             orderPageInfo.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             orderPageInfo.setAppCode(toucan.getAppCode());
             orderPageInfo.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT);
+            orderPageInfo.setTradeStatus(OrderConstant.TRADE_STATUS_NON_PAYMENT);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
             resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
