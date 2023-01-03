@@ -16,6 +16,9 @@ import java.util.Date;
  */
 @Data
 public class Order {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private String orderNo; //订单编号
     private String mainOrderNo; //主订单编号

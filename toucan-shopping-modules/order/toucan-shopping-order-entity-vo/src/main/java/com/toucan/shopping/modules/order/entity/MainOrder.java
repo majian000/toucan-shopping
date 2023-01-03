@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.order.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +16,9 @@ import java.util.Date;
  */
 @Data
 public class MainOrder {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private String orderNo; //订单编号
     private String userId; //用户ID
