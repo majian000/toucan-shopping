@@ -34,6 +34,7 @@ public class OrderPageInfo extends PageInfo<Order> {
 
     private String userId; //所属用户
 
+    private Integer payStatus; //支付状态 0未支付 1已支付 3线下支付已到账 4取消支付
 
     //==============================================
 

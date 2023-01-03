@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.order.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
@@ -14,10 +15,7 @@ import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.order.vo.CreateOrderVO;
-import com.toucan.shopping.modules.order.vo.MainOrderVO;
-import com.toucan.shopping.modules.order.vo.OrderVO;
-import com.toucan.shopping.modules.order.vo.QueryOrderVo;
+import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")
@@ -115,7 +115,7 @@ public class OrderController {
             String userId=queryOrderVo.getUserId();
 
             try {
-                List<OrderItem> orderItems = orderItemService.findByOrderNo(orderNo,userId);
+                List<OrderItemVO> orderItems = orderItemService.findByOrderNo(orderNo,userId);
                 List<ProductSku> productSkus = new ArrayList<ProductSku>();
                 if(!CollectionUtils.isEmpty(orderItems))
                 {
@@ -235,6 +235,52 @@ public class OrderController {
 
 
 
+
+    /**
+     * 查询列表页
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderPageInfo orderPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderPageInfo.class);
+                PageInfo<OrderVO> orderPage = orderService.queryOrderListPage(orderPageInfo);
+                if(!CollectionUtils.isEmpty(orderPage.getList()))
+                {
+                    //查询所有订单项
+                    List<String> orderNos = orderPage.getList().stream().map(OrderVO::getOrderNo).collect(Collectors.toList());
+                    if(!CollectionUtils.isEmpty(orderNos))
+                    {
+                        List<OrderItemVO> orderItems = orderItemService.findByOrderNos(orderNos);
+                        for(OrderVO orderVO:orderPage.getList())
+                        {
+                            orderVO.setOrderItems(new LinkedList<>());
+                            for(OrderItemVO orderItemVO:orderItems)
+                            {
+                                if(orderItemVO.getOrderNo().equals(orderVO.getOrderNo()))
+                                {
+                                    orderVO.getOrderItems().add(orderItemVO);
+                                }
+                            }
+                        }
+                    }
+                }
+                resultObjectVO.setData(orderPage);
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
 
 
 }

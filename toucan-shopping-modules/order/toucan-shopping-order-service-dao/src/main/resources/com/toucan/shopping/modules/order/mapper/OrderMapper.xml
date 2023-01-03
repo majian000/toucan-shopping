@@ -56,6 +56,25 @@
          ]]>
     </sql>
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="userId!=null">
+            and t.user_id = #{userId}
+        </if>
+
+        <if test="appCode!=null">
+            and t.app_code = #{appCode}
+        </if>
+
+        <if test="payStatus!=null">
+            and t.pay_status = #{payStatus}
+        </if>
+
+        and delete_status = 0
+
+    </sql>
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
         insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status,shop_id)
@@ -120,8 +139,6 @@
     </select>
 
 
-
-
     <select id="queryOrderListByPayTimeoutPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
         select count(*) from t_order t
         <where>
@@ -135,8 +152,37 @@
 
 
 
+
+    <select id="queryListPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select t.* from t_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select count(*) from t_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
+
     <select id="findListByMainOrderNo" resultMap="orderMap" parameterType="java.lang.String">
         select t.* from t_order t where 1=1 and t.delete_status=0 and t.main_order_no = #{mainOrderNo}
+    </select>
+
+    <select id="queryByMainOrderNo" resultMap="orderMap" >
+        select * from t_order where main_order_no=#{mainOrderNo} and app_code=#{appCode} for update
     </select>
 
     <update id="cancelByMainOrderNo">

@@ -17,12 +17,9 @@ public interface OrderItemMapper {
 
     int insertByVoList(List<OrderItemVO> entitys);
 
-    @Select("select * from bbs_order_item where order_no=#{orderNo} and user_id=#{userId} and delete_status =0 ")
-    public List<OrderItem> findByOrderNo(String orderNo,String userId);
+    List<OrderItemVO> findByOrderNoAndUserId(String orderNo,String userId);
 
-    @Update("update bbs_order_item set delete_status=1 where order_no=#{orderNo} ")
-    int deleteByOrderNo(String orderNo);
+    List<OrderItemVO> findByOrderNo(String orderNo);
 
-    int finishOrder(Order order);
-
+    List<OrderItemVO> findByOrderNos(List<String> orderNos);
 }

@@ -27,6 +27,9 @@
 
     </resultMap>
 
+    <resultMap id="orderItemVOMap" type="com.toucan.shopping.modules.order.vo.OrderItemVO" extends="orderItemMap">
+
+    </resultMap>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
@@ -57,5 +60,26 @@
         </foreach>
 
     </insert>
+
+
+    <select id="findByOrderNoAndUserId" resultMap="orderItemVOMap">
+        select * from t_order_item where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
+    </select>
+
+
+
+    <select id="findByOrderNo" resultMap="orderItemVOMap">
+        select * from t_order_item where order_no=#{orderNo}  and delete_status=0
+    </select>
+
+
+    <select id="findByOrderNos" resultMap="orderItemVOMap">
+        select * from t_order_item where
+            t.order_no in
+            <foreach item="item" index="index" collection="orderNos" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+          and delete_status=0
+    </select>
 
 </mapper>

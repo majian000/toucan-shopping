@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.order.service;
 
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
+import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 
@@ -12,10 +13,10 @@ public interface OrderItemService {
 
     int create(OrderItem orderItem);
 
-    List<OrderItem> createOrderItem(List<ProductSku> productSkuList, Map<String, ProductBuy> buyMap, Order order);
+    List<OrderItemVO> findByOrderNo(String orderNo, String userId);
 
-    List<OrderItem> findByOrderNo(String orderNo,String userId);
+    List<OrderItemVO> findByOrderNo(String orderNo);
 
-    int deleteByOrderNo(String orderNo);
+    List<OrderItemVO> findByOrderNos(List<String> orderNos);
 
 }

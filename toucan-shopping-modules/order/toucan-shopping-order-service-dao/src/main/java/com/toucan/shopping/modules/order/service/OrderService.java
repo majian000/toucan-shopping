@@ -36,6 +36,15 @@ public interface OrderService {
      */
     PageInfo<OrderVO> queryOrderListByPayTimeoutPage(OrderPageInfo pageInfo);
 
+
+
+    /**
+     * 查询订单列表页
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<OrderVO> queryOrderListPage(OrderPageInfo pageInfo);
+
     int saveByVos(List<OrderVO> orders);
 
     /**

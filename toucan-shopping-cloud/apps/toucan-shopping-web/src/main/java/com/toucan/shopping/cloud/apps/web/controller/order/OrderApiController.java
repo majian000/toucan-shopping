@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
+import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
@@ -1097,4 +1098,31 @@ public class OrderApiController {
     }
 
 
+
+
+    /**
+     * 未支付列表
+     * @param request
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/query/nonPayment/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryNonPaymentList(HttpServletRequest request){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            OrderPageInfo orderPageInfo=new OrderPageInfo();
+            orderPageInfo.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            orderPageInfo.setAppCode(toucan.getAppCode());
+            orderPageInfo.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
+            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 }
