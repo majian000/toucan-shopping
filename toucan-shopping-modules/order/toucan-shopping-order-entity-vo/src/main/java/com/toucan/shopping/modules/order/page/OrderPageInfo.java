@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.order.page;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.entity.UserApp;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class OrderPageInfo extends PageInfo<Order> {
+public class OrderPageInfo extends PageInfo<OrderVO> {
 
 
     // ===============查询条件===================

@@ -18,5 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderItemVO extends OrderItem {
 
-    private String httpDescriptionImgPath; //商品介绍图HTTP路径
+    private String httpProductPreviewPath; //商品主图HTTP路径
+
+
 }

@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateSe
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
@@ -111,6 +112,9 @@ public class OrderApiController {
 
     @Autowired
     private FeignMainOrderService feignMainOrderService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 创建订单
@@ -1131,8 +1135,20 @@ public class OrderApiController {
                 orderPageInfo = resultObjectVO.formatData(OrderPageInfo.class);
                 if(!CollectionUtils.isEmpty(orderPageInfo.getList()))
                 {
-
+                    for(OrderVO orderVO:orderPageInfo.getList())
+                    {
+                        if(!CollectionUtils.isEmpty(orderVO.getOrderItems()))
+                        {
+                            for(OrderItemVO orderItemVO:orderVO.getOrderItems())
+                            {
+                                if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())) {
+                                    orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                                }
+                            }
+                        }
+                    }
                 }
+                resultObjectVO.setData(orderPageInfo);
             }
         }catch (Exception e)
         {
