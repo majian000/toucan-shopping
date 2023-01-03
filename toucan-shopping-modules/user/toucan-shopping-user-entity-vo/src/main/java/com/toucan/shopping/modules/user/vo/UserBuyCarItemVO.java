@@ -23,6 +23,11 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
     private String productSkuName;
 
     /**
+     * 商品主图路径
+     */
+    private String productPreviewPath;
+
+    /**
      * 商品SKU预览图
      */
     private String httpProductImgPath;

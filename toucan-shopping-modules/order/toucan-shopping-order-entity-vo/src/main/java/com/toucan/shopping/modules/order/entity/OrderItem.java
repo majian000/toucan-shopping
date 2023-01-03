@@ -33,6 +33,8 @@ public class OrderItem {
     private BigDecimal productPrice; //商品单价
     private BigDecimal productRoughWeight; //商品毛重
     private BigDecimal orderItemAmount; //订单单项总金额
+    private String productPreviewPath; //商品主图路径
+
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

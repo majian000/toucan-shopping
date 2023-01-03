@@ -112,7 +112,6 @@ public class OrderApiController {
 
     /**
      * 创建订单
-     * TODO:订单30分钟未支付 恢复预扣库存数量,支付宝回调刷新订单状态 如果失败创建本地事件以便事务补偿回滚
      * @param createOrderVO
      * @return
      */
@@ -250,6 +249,8 @@ public class OrderApiController {
                 for (ProductSkuVO productSku : queryProductSkuList) {
                     if(userBuyCarItemVO.getShopProductSkuId().longValue()==productSku.getId().longValue())
                     {
+                        userBuyCarItemVO.setProductPrice(productSku.getPrice());
+                        userBuyCarItemVO.setProductPreviewPath(productSku.getProductPreviewPath());
                         isProductIsDel = false;
                         break;
                     }
@@ -751,6 +752,7 @@ public class OrderApiController {
                 orderItemVO.setProductPrice(ubc.getProductPrice()); //购买时商品价格
                 orderItemVO.setProductRoughWeight(ubc.getRoughWeight()); //购买时商品毛重
                 orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
+                orderItemVO.setProductPreviewPath(ubc.getProductPreviewPath()); //商品预览图
                 orderItemVO.setDeliveryStatus(0); //未收货
                 orderItemVO.setBuyerStatus(0); //待收货
                 orderItemVO.setSellerStatus(1); //备货完成
