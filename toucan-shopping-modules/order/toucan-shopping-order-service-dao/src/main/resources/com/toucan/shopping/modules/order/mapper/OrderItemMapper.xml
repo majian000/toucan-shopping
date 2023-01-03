@@ -74,12 +74,12 @@
 
 
     <select id="findByOrderNos" resultMap="orderItemVOMap">
-        select * from t_order_item where
+        select * from t_order_item t where
             t.order_no in
             <foreach item="item" index="index" collection="orderNos" open="("  close=")" separator=",">
                 #{item}
             </foreach>
-          and delete_status=0
+          and t.delete_status=0
     </select>
 
 </mapper>

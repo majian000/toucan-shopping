@@ -24,4 +24,6 @@ public class OrderVO extends Order {
     OrderFreightVO orderFreight; //订单运费规则
 
     List<OrderItemVO> orderItems; //订单项
+
+    OrderConsigneeAddressVO orderConsigneeAddress; //收货人
 }

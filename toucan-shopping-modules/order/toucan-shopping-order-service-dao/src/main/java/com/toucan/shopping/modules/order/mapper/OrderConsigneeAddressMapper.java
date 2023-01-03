@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.mapper;
 
 import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
+import com.toucan.shopping.modules.order.vo.OrderConsigneeAddressVO;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
@@ -16,4 +17,5 @@ public interface OrderConsigneeAddressMapper {
 
     int inserts(List<OrderConsigneeAddress> entitys);
 
+    List<OrderConsigneeAddressVO> findByOrderNos(List<String> orderNos);
 }

@@ -38,6 +38,14 @@
     </insert>
 
 
+    <select id="findByOrderNos" resultMap="entityVOMap">
+        select * from t_order_consignee_address t where
+        t.order_no in
+        <foreach item="item" index="index" collection="orderNos" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        and t.delete_status=0
+    </select>
 
 
     <insert id="inserts" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress"  >

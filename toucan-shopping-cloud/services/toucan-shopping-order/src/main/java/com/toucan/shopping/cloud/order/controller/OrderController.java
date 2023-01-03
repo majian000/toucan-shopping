@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
+import com.toucan.shopping.modules.order.service.OrderConsigneeAddressService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -56,6 +57,9 @@ public class OrderController {
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private OrderConsigneeAddressService orderConsigneeAddressService;
 
     /**
      * 测试分片
@@ -256,6 +260,7 @@ public class OrderController {
                     if(!CollectionUtils.isEmpty(orderNos))
                     {
                         List<OrderItemVO> orderItems = orderItemService.findByOrderNos(orderNos);
+                        List<OrderConsigneeAddressVO> orderConsigneeAddresss= orderConsigneeAddressService.queryListByOrderNos(orderNos);
                         for(OrderVO orderVO:orderPage.getList())
                         {
                             orderVO.setOrderItems(new LinkedList<>());
@@ -266,8 +271,17 @@ public class OrderController {
                                     orderVO.getOrderItems().add(orderItemVO);
                                 }
                             }
+
+                            for(OrderConsigneeAddressVO consigneeAddressVO:orderConsigneeAddresss)
+                            {
+                                if(consigneeAddressVO.getOrderNo().equals(orderVO.getOrderNo()))
+                                {
+                                    orderVO.setOrderConsigneeAddress(consigneeAddressVO);
+                                }
+                            }
                         }
                     }
+
                 }
                 resultObjectVO.setData(orderPage);
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);

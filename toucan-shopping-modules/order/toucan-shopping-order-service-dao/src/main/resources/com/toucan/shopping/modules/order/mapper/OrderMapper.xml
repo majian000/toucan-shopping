@@ -161,6 +161,7 @@
             <include refid="queryListPageWhere" />
 
         </where>
+        order by t.create_date desc
         limit #{start},#{limit}
     </select>
 

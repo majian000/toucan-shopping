@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
 import com.toucan.shopping.modules.order.mapper.OrderConsigneeAddressMapper;
 import com.toucan.shopping.modules.order.service.OrderConsigneeAddressService;
+import com.toucan.shopping.modules.order.vo.OrderConsigneeAddressVO;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
@@ -31,6 +32,11 @@ public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressSe
     @Override
     public int save(OrderConsigneeAddress entity) {
         return orderConsigneeAddressMapper.insert(entity);
+    }
+
+    @Override
+    public List<OrderConsigneeAddressVO> queryListByOrderNos(List<String> orderNos) {
+        return orderConsigneeAddressMapper.findByOrderNos(orderNos);
     }
 
 }

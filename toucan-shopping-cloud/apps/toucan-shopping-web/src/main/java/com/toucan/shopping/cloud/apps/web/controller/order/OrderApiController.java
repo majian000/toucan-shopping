@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
@@ -680,7 +681,10 @@ public class OrderApiController {
         Date paymentDeadlineTime = DateUtils.addMillisecond(DateUtils.currentDate(),OrderConstant.MAX_PAY_TIME);
 
         //开始拆分订单
-        OrderVO orderVO = new OrderVO(new LinkedList<>(),null,new LinkedList<>());
+        OrderVO orderVO = new OrderVO();
+        orderVO.setBuyCarItems(new LinkedList<>());
+        orderVO.setOrderItems(new LinkedList<>());
+
         orderVO.setId(idGenerator.id());
         orderVO.setOrderNo(orderNoService.generateOrderNo());
         orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
@@ -706,7 +710,10 @@ public class OrderApiController {
                 if(currentUserBuyCarItem.getFreightTemplateId().longValue()!=nextUserBuyCarItem.getFreightTemplateId().longValue())
                 {
                     i = j-1; //将运费模板ID不相等的设为下一个分组起始位置
-                    orderVO = new OrderVO(new LinkedList<>(),null,new LinkedList<>());
+                    orderVO = new OrderVO();
+                    orderVO.setBuyCarItems(new LinkedList<>());
+                    orderVO.setOrderItems(new LinkedList<>());
+
                     orderVO.setId(idGenerator.id());
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
@@ -1112,11 +1119,20 @@ public class OrderApiController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             OrderPageInfo orderPageInfo=new OrderPageInfo();
+            orderPageInfo.setSize(5); //显示五条
             orderPageInfo.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             orderPageInfo.setAppCode(toucan.getAppCode());
             orderPageInfo.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
             resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                orderPageInfo = resultObjectVO.formatData(OrderPageInfo.class);
+                if(!CollectionUtils.isEmpty(orderPageInfo.getList()))
+                {
+
+                }
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

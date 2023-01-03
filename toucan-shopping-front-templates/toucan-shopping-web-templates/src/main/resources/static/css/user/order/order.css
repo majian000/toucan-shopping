@@ -3694,3 +3694,28 @@ div.mod-main .mt .extra-l li {
 	float: left;
 }
 
+
+
+.user-order-pay-btn{
+	float:left;
+	display:block;
+	margin-top:10px;
+	padding-left:30px;
+}
+
+.user-order-pay-btn a{
+	color:#FFF;
+	width:93px;
+	height:30px;
+	display:block;
+	font-size:14px;
+	line-height:30px;
+	text-align:center;
+	background-color: #ff471a;
+}
+
+.user-order-pay-btn a:hover{
+	color:#fff;
+	background-color: #ff3200;
+}
+

@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.order.service;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
+import com.toucan.shopping.modules.order.vo.OrderConsigneeAddressVO;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ public interface OrderConsigneeAddressService {
 
     int save(OrderConsigneeAddress entity);
 
+    List<OrderConsigneeAddressVO> queryListByOrderNos(List<String> orderNos);
 
 }
