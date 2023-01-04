@@ -257,6 +257,7 @@ public class OrderApiController {
                     {
                         userBuyCarItemVO.setProductPrice(productSku.getPrice());
                         userBuyCarItemVO.setProductPreviewPath(productSku.getProductPreviewPath());
+                        userBuyCarItemVO.setProductSkuName(productSku.getName());
                         isProductIsDel = false;
                         break;
                     }
@@ -764,6 +765,7 @@ public class OrderApiController {
                 orderItemVO.setProductPrice(ubc.getProductPrice()); //购买时商品价格
                 orderItemVO.setProductRoughWeight(ubc.getRoughWeight()); //购买时商品毛重
                 orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
+                orderItemVO.setProductSkuName(ubc.getProductSkuName()); //商品SKU名称
                 orderItemVO.setProductPreviewPath(ubc.getProductPreviewPath()); //商品预览图
                 orderItemVO.setDeliveryStatus(0); //未收货
                 orderItemVO.setBuyerStatus(0); //待收货
