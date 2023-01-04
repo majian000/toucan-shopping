@@ -79,13 +79,13 @@ function drawNonPaymentOrderList(data)
 
                         orderTableHtml+="                                        <div class=\"goods-item \">\n" +
                             "                                            <div class=\"p-img\">\n" +
-                            "                                                <a href=\"#\" target=\"_blank\">\n" +
+                            "                                                <a href=\""+basePath+productSkuBasePath+orderItem.skuId+"\" target=\"_blank\">\n" +
                             "                                                    <img class=\"\" src=\""+orderItem.httpProductPreviewPath+"\" title=\""+orderItem.productSkuName+"\" data-lazy-img=\"done\" width=\"60\" height=\"60\">\n" +
                             "                                                </a>\n" +
                             "                                            </div>\n" +
                             "                                            <div class=\"p-msg\">\n" +
                             "                                                <div class=\"p-name\">\n" +
-                            "                                                    <a href=\"#\" class=\"a-link\"  target=\"_blank\" title=\""+orderItem.productSkuName+"\">"+orderItem.productSkuName+"</a>\n" +
+                            "                                                    <a href=\""+basePath+productSkuBasePath+orderItem.skuId+"\" class=\"a-link\"  target=\"_blank\" title=\""+orderItem.productSkuName+"\">"+orderItem.productSkuName+"</a>\n" +
                             "                                                </div>\n" +
                             "                                                <div class=\"p-extra\">\n" +
                             "                                                </div>\n" +

@@ -25,6 +25,8 @@ public class OrderItem {
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long orderId; //订单表ID
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long skuId; //商品SKUID
     private Integer deliveryStatus; //配送状态 0未收货 1送货中 2已收货
     private Integer sellerStatus; //卖家备货状态 0备货中 1备货完成 2缺货
