@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.util.PhoneUtils;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
@@ -276,6 +277,7 @@ public class OrderController {
                             {
                                 if(consigneeAddressVO.getOrderNo().equals(orderVO.getOrderNo()))
                                 {
+                                    consigneeAddressVO.setPhone(PhoneUtils.desensitization(consigneeAddressVO.getPhone()));
                                     orderVO.setOrderConsigneeAddress(consigneeAddressVO);
                                 }
                             }
