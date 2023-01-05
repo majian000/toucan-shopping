@@ -72,4 +72,13 @@ public interface OrderService {
      * @return
      */
     int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
+
+
+    /**
+     * 查询一个子订单对象
+     * @param orderVO
+     * @return
+     */
+    Order queryOneByVO(OrderVO orderVO);
+
 }

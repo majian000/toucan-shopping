@@ -54,7 +54,7 @@
 
 
     <sql id="queryByVOWhere">
-        and delete_status = 0
+        and t.delete_status = 0
         <if test="orderNo!=null and orderNo!='' ">
             and t.order_no = #{orderNo}
         </if>

@@ -48,4 +48,12 @@ public interface FeignOrderService {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询子订单
+     */
+    @RequestMapping(value="/queryByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

@@ -51,4 +51,6 @@ public interface OrderMapper {
 
     List<Order> queryByMainOrderNo(String mainOrderNo,String appCode);
 
+    Order queryOneByVO(OrderVO orderVO);
+
 }

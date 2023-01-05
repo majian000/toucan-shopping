@@ -36,6 +36,21 @@
     </resultMap>
 
 
+
+
+    <sql id="queryByVOWhere">
+        and t.delete_status = 0
+        <if test="orderNo!=null and orderNo!='' ">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="userId!=null and userId!='' ">
+            and t.user_id = #{userId}
+        </if>
+
+    </sql>
+
+
     <sql id="queryOrderListByPayTimeoutPageWhere">
          and t.delete_status=0
          and t.pay_method=1
@@ -193,5 +208,15 @@
     <update id="cancelByMainOrderNo">
         update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark=#{cancelRemark}  where main_order_no=#{mainOrderNo} and app_code=#{appCode} and delete_status=0
     </update>
+
+
+    <select id="queryOneByVO" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.vo.OrderVO" >
+        select t.* from t_order t
+        where 1=1
+        <include refid="queryByVOWhere" />
+
+        limit 0,1
+    </select>
+
 
 </mapper>

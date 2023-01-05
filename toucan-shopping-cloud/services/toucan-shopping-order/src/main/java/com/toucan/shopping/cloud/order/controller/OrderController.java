@@ -299,4 +299,32 @@ public class OrderController {
     }
 
 
+
+
+    /**
+     * 查询子订单
+     */
+    @RequestMapping(value="/queryByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
+                resultObjectVO.setData(orderService.queryOneByVO(orderVO));
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
 }

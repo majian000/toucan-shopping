@@ -137,7 +137,7 @@ function drawNonPaymentOrderList(data)
                 "                                            <div ></div>\n" +
                 "                                                <br/>\n" +
                 "                                                <a href=\"#\" class=\"btn-again btn-again-show \" target=\"_blank\" ><b></b>取消订单</a>|\n" +
-                "                                                <a href=\"#\" class=\"btn-again btn-again-show \" target=\"_blank\" ><b></b>立即付款</a>\n" +
+                "                                                <a href=\""+basePath+orderPayPath+"?orderNo="+order.orderNo+"\" class=\"btn-again btn-again-show \" target=\"_blank\" ><b></b>立即付款</a>\n" +
                 "                                            <br>\n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +

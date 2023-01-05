@@ -114,4 +114,9 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderMapper.queryByMainOrderNo(mainOrderNo,appCode);
         return orderMapper.cancelByMainOrderNo(mainOrderNo,appCode,cancelRemark);
     }
+
+    @Override
+    public Order queryOneByVO(OrderVO orderVO) {
+        return orderMapper.queryOneByVO(orderVO);
+    }
 }

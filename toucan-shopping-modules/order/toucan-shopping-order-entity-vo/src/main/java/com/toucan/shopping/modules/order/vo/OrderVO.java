@@ -26,4 +26,12 @@ public class OrderVO extends Order {
     List<OrderItemVO> orderItems; //订单项
 
     OrderConsigneeAddressVO orderConsigneeAddress; //收货人
+
+    Long createDateLong; //订单创建时间
+
+    Long systemDateLong; //系统时间
+
+    Long timeRemaining; //剩余时间=系统时间-订单创建时间
+
+    Long maxPayTime; //最大允许支付的时间
 }

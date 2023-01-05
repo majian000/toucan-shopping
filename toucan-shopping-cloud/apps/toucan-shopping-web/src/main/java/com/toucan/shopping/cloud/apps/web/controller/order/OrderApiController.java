@@ -1075,31 +1075,31 @@ public class OrderApiController {
     /**
      * 查询订单
      * @param request
-     * @param mainOrderVO
+     * @param orderVO
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/detail",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryOrderDetail(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
+    public ResultObjectVO queryOrderDetail(HttpServletRequest request,@RequestBody OrderVO orderVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-            resultObjectVO = feignMainOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+            orderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderVO);
+            resultObjectVO = feignOrderService.queryByOrderNoAndUserId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                mainOrderVO = resultObjectVO.formatData(MainOrderVO.class);
-                mainOrderVO.setCreateDateLong(mainOrderVO.getCreateDate().getTime());
-                mainOrderVO.setSystemDateLong(new Date().getTime());
-                Long timeRemaing = mainOrderVO.getSystemDateLong().longValue()-mainOrderVO.getCreateDateLong();
+                orderVO = resultObjectVO.formatData(OrderVO.class);
+                orderVO.setCreateDateLong(orderVO.getCreateDate().getTime());
+                orderVO.setSystemDateLong(new Date().getTime());
+                Long timeRemaing = orderVO.getSystemDateLong().longValue()-orderVO.getCreateDateLong();
                 if(timeRemaing>(OrderConstant.MAX_PAY_TIME))
                 {
                     timeRemaing=0L;
                 }
-                mainOrderVO.setTimeRemaining(timeRemaing);
-                mainOrderVO.setMaxPayTime(OrderConstant.MAX_PAY_TIME);
-                resultObjectVO.setData(mainOrderVO);
+                orderVO.setTimeRemaining(timeRemaing);
+                orderVO.setMaxPayTime(OrderConstant.MAX_PAY_TIME);
+                resultObjectVO.setData(orderVO);
             }
         }catch (Exception e)
         {

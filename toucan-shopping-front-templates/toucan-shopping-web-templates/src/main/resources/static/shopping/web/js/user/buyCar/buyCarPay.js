@@ -90,7 +90,7 @@ function queryMainOrder() {
     var requestUrl = basePath + "/api/order/main/order/detail";
     if(orderType=="2") //子订单支付
     {
-        requestUrl = basePath + "/api/order/order/detail";
+        requestUrl = basePath + "/api/order/detail";
     }
     $.ajax({
         type: "POST",
