@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/order/detail.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+<#assign leftMenuName = "myOrder">
+
+<!------------main---------------->
+<div class="main" style="width:100%">
+    <div class="current-position">
+        <h2 style="padding-left: 19%;">
+            <a href="${basePath}/page/user/info">个人中心</a>
+            &gt;
+            <a href="#">我的主页</a>
+        </h2>
+    </div>
+    <div class="user-content">
+        <div class="w">
+            <div class="order-detail-main">
+
+                <!--变量-->
+                <span id="pay-button-order" style="display:none"></span>            <div class="m order-state order-state01 order-state02">
+                <div class="mc state-cont">
+                    <!-- 工具条 -->
+                    <div class="state-lcol">
+                        <div class="state-top">订单号：258209929690</div>
+                        <h3 class="state-txt ftx-02">完成</h3>
+                        <br>
+                        <span class="remain-time" style="display: none" time=""><b></b></span>
+
+
+                        <div class="state-btns">
+                            <a id="pay-button-258209929690" class="btn-1 " style="display:none" href="#none">付款</a>
+                            <a target="_blank" href="//myivc.jd.com/fpzz/ivcLand.action?orderId=258209929690&amp;tagStr=AKDE1NTA2MyM2ODgjMCMxIzUjNSMzIzE2NzI3OTU5MDQwMDAjMCkoMDAwMCMwIzMjMCMwIzApKDApKDEp" class="btn-9" clstag="click|keycount|orderinfo|fapiaoxiangqing1">查看发票详情</a>
+                            <a target="_blank" clstag="click|keycount|orderinfo|xqpingjia" href="//club.jd.com/JdVote/TradeComment.aspx?ruleid=258209929690&amp;ot=0&amp;payid=4&amp;shipmentid=70" class="btn-1">评价</a></div>
+                        <div class="state-bottom">
+                            <a class="btn-print hide" href="//details.jd.com/normal/print.action?orderid=258209929690&amp;PassKey=E5184CEA34F14EA2893D85E24E4E0B03" target="_blank" clstag="click|keycount|orderinfo|xqdayindingdan" style="display: inline;">
+                                <b></b>
+                                打印订单
+                            </a>
+                            <a class="btn-del hide" href="#none" clstag="click|keycount|orderinfo|xqquxiaodingdan">
+                                <b></b>
+                                取消订单
+                            </a>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <!-- 进度条 -->
+                    <div class="state-rcol">
+                        <div class="state-rtop">
+                            <!--提示信息 -->
+                            <div class="ftx-03">
+
+                                订单已经完成，感谢您在京东商城购物，欢迎您对本次交易及所购商品进行评价。
+
+                            </div>
+                        </div>
+                        <!--进度条 -->
+
+                        <div id="process-04" class="order-process">
+                            <div class="node ready"><i class="node-icon icon-start"></i><ul><li class="txt1">&nbsp;</li><li class="txt2">提交订单</li><li id="track_time_0" class="txt3">2023-01-04 <br> 09:31:44</li></ul></div>
+                            <div class="proce done"><ul><li class="txt1"></li></ul></div>
+                            <div class="node ready"><i class="node-icon icon-pay"></i><ul><li class="txt1">&nbsp;</li><li class="txt2">付款成功</li><li id="track_time_4" class="txt3"></li></ul></div>
+                            <div class="proce done"><ul><li class="txt1">&nbsp;</li></ul></div>
+                            <div class="node ready"><i class="node-icon icon-store"></i><ul><li class="txt1">&nbsp;</li><li class="txt2">商品出库</li><li id="track_time_1" class="txt3">2023-01-04 <br> 10:29:55</li></ul></div>
+                            <div class="proce done"><ul><li class="txt1">&nbsp;</li></ul></div>
+                            <div class="node ready"><i class="node-icon icon-express"></i><ul><li class="txt1">&nbsp;</li><li class="txt2">等待收货</li><li id="track_time_5" class="txt3">2023-01-04 <br> 14:15:24</li></ul></div>
+                            <div class="proce done"><ul><li class="txt1">&nbsp;</li></ul></div>
+                            <div class="node ready"><i class="node-icon icon-finish"></i><ul><li class="txt1">&nbsp;</li><li class="txt2">完成</li><li id="track_time_6" class="txt3">2023-01-04 <br> 20:40:47</li></ul></div>
+                        </div>
+
+                        <!-- 正品鉴定文案 -->
+                        <div class="state-zpjd-tip" style="display:none">
+                        </div>
+                        <!-- 超星二期文案 -->
+                        <div class="state-cxjd-tip" style="display:none">
+                        </div>
+                        <div class="state-others">
+                            <span class="txt hide">完成订单可获得：</span>
+                            <a href="#none " class="btn-bean mr10 hide" clstag="click|keycount|orderinfo|xqjingdou" style="display: inline;"><b></b>京豆<span class="ml5 got">+339</span></a>
+                            <a href="#none " class="btn-coupon mr10 hide" clstag="click|keycount|orderinfo|xqyouhuiquan"><b></b>优惠券</a>
+                            <strong></strong>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+                <div class="mb"></div>
+            </div>
+                <!-- 订单跟踪及安装跟踪 -->
+                <input type="hidden" value="2023-01-04 09:31:44" id="datesubmit-258209929690">
+                <!--  /widget/order-track/order-track.tpl -->
+                <div class="order-track order-track-02 m order-track-new">
+                    <div class="mt">
+                        <div class="track-tab">
+                            <ul>
+                                <li class="tab-item curr" style="display:none;">
+                                    订单跟踪
+                                </li>
+                                <li class="tab-item" style="display:none;">安装跟踪</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 订单跟踪 -->
+                    <div class="mc">
+                        <div class="track-cont J-delivery-track">
+                            <div class="track-lcol">
+                                <div class="p-item">
+
+                                    <div class="p-img" clstag="click|keycount|orderinfo|xqgenzongshangpintupian">							<a href="//item.jd.com/100013747334.html"><img src="//img10.360buyimg.com/N4/jfs/t1/36056/39/19590/114555/63b5440aF4f29420d/e490e88e1222cd34.jpg" alt=""></a>
+                                    </div>
+
+                                    <div class="p-info">
+                                        <ul>
+
+                                            <li>
+                                                送货方式：京东快递
+                                            </li>
+                                            <li>承运人：京东快递<a class="ml10 ftx-01" href="javascript:void(0);" onclick="window.open('//chat.jd.com/jd/chat?entry=order_detail', '521360', 'status=no,toolbar=no,menubar=no,location=no,titlebar=no,resizable=no,width=1018px,height=590');return false;">快递咨询</a></li><li>货运单号：JD0093734730915</li></ul>
+                                    </div>
+                                </div>
+                                <div class="ac" style="display:none">
+                                    <a href="#none" class="btn-9 hide">查看地图</a>
+                                </div>
+                            </div>
+                            <div class="track-rcol">
+                                <div class="track-list track-list-date">
+                                    <ul>
+
+                                        <li class="afterdate  node-to-change track-node-0008  first"><i class="node-icon"><i class="dot"></i><i class="state-icon"></i></i><span class="date">2023-01-04<span class="week">/周三</span></span><span class="time">20:40:47</span><span class="txt"><div class="stress-txt">已签收<span class="show-phone"> </span></div>您的订单已由本人签收。如有疑问您可以联系配送员【刘伟，13366729695】确认。感谢您在京东购物，欢迎再次光临。</span></li><li class=" node-to-change track-node-0006 "><i class="node-icon"><i class="dot"></i><i class="state-icon"></i></i><span class="time">16:27:39</span><span class="txt"><div class="stress-txt">派送中<span class="show-phone"> </span></div>您的订单正在配送途中（快递员：刘伟，电话：13366729695），请您耐心等待。</span></li><li class=" node-to-change track-node-0005 "><i class="node-icon"><i class="dot"></i><i class="state-icon"></i></i><span class="time">14:15:24</span><span class="txt"><div class="stress-txt">运输中<span class="show-phone"> </span></div>您的订单由京东【北京大兴分拣中心】准备送往【北京北农营业部】</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">13:44:57</span><span class="txt">您的订单在京东【北京大兴分拣中心】分拣完成</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">11:39:42</span><span class="txt">您的订单由京东【北京魏永散货分拣中心】准备送往【北京大兴分拣中心】</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">10:33:02</span><span class="txt">您的订单在京东【北京魏永散货分拣中心】分拣完成</span></li><li class=" node-to-change track-node-0002 "><i class="node-icon"><i class="dot"></i><i class="state-icon"></i></i><span class="time">10:29:55</span><span class="txt"><div class="stress-txt">仓库处理中<span class="show-phone"> </span></div>打包完成</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">10:29:55</span><span class="txt">扫描完成</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">10:14:39</span><span class="txt">拣货完成</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">09:49:54</span><span class="txt">您的订单已经打印完成</span></li><li class=" node-to-change track-node-0001 "><i class="node-icon"><i class="dot"></i><i class="state-icon"></i></i><span class="time">09:46:44</span><span class="txt"><div class="stress-txt">已下单<span class="show-phone"> </span></div>温馨提示：您的订单预计1月4日送达</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">09:31:55</span><span class="txt">您的订单已经进入京东北京仓库准备出库</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">09:31:54</span><span class="txt">您的订单预计2023-01-04 09:31开始处理，请您耐心等待</span></li><li class=""><i class="node-icon"><i class="dot"></i></i><span class="time">09:31:44</span><span class="txt">您提交了订单，请等待系统确认</span></li></ul>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="gis-box" style="display:none">
+                                <b class="gis-arr"></b>
+                            </div>
+
+                        </div>
+                        <!-- 安装跟踪 -->
+                        <div class="track-cont J-install-track" style="display:none">
+                            <div class="track-lcol">
+                                <div class="install-list" id="install-scrollbar">
+
+                                </div>
+                            </div>
+                            <div class="track-rcol">
+                                <div class="track-list track-list-date">
+                                    <ul>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--/ /widget/order-track/order-track.tpl -->
+                <!--订单信息-->
+
+                <!--  /widget/order-info/order-info.tpl -->
+
+                <div class="m order-info-mod">
+                    <div class="order-info order-info-new mc">
+                        <div class="ui-switchable-body">
+                            <div class="ui-switchable-panel-main">
+                                <div class="ui-switchable-panel">
+                                    <!-- 收货人信息 -->
+                                    <div class="dl">
+                                        <div class="dt">
+
+                                            <h4>收货人信息
+                                            </h4>
+
+                                        </div>
+                                        <div class="dd">
+                                            <div class="item">
+
+                            <span class="label">
+						收货人：
+					</span>
+
+                                                <div class="info-rcol">
+                                                    马健
+                                                </div>
+                                            </div>
+                                            <div class="item">
+					<span class="label">
+						地址：
+					</span>
+                                                <div class="info-rcol">
+                                                    北京昌平区龙泽园街道昌平区回龙观镇慧华苑小区11号楼 南5-3号
+                                                </div>
+                                            </div>
+                                            <div class="item">
+					<span class="label">
+						手机号码：
+					</span>
+                                                <div class="info-rcol">
+                                                    187****1892
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>                    <!-- 配送信息 -->
+                                    <!-- 配送信息 new-->
+                                    <div class="dl">
+                                        <div class="dt">
+                                            <h4>配送信息</h4>
+                                        </div>
+                                        <div class="dd">
+                                            <div class="item">
+            <span class="label">
+                配送方式：
+            </span>
+                                                <div class="info-rcol">
+                                                    京东快递
+                                                </div>
+                                            </div>
+                                            <!-- 此部分和线上一致 -->
+                                            <!-- orderType 49：礼品卡订单 22：PopSop 23：popLbp 25：POp SOPL 77：LSP本地购 -->
+                                            <!-- 混单情况和其他中小件情况，统一处理 -->
+                                            <div class="item">
+                            <span class="label">
+                                期望送货日期：
+                            </span>
+                                                <div class="info-rcol">
+                                                    2023-01-04
+                                                </div>
+                                            </div>
+                                            <!-- 混单和其他中小件情况 -->
+                                            <div class="item">
+                                    <span class="label">
+                                        期望配送时间：
+                                    </span>
+                                                <div class="info-rcol">
+                                                    15:00-21:00
+                                                </div>
+                                            </div>
+                                            <!-- 大件安装保持线上逻辑 -->
+                                            <!-- 门店信息 -->
+                                            <!-- 集运信息 -->
+                                            <div class="item">
+            <span class="label">
+
+            </span>
+                                                <div class="info-rcol">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                                                <!-- 付款信息 -->
+                                    <!-- 付款信息 融合 -->
+                                    <!-- 付款 融合页面 -->
+                                    <div class="dl" id="pay-info-nozero">
+                                        <div class="dt">
+                                            <h4>付款信息</h4>
+                                        </div>
+                                        <div class="dd">
+                                            <div class="item">
+					<span class="label">
+						付款方式：
+					</span>
+                                                <div class="info-rcol">
+                                                    在线支付
+                                                </div>
+                                            </div>
+
+                                            <div class="item">
+					<span class="label">
+						付款时间：
+					</span>
+                                                <div class="info-rcol">
+                                                    2023-01-04 09:31:54
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- 续重运费	-->
+                                    <div id="freshTips" style="display:none">
+                                        <div class="prompt-box prompt-box-yf">
+                                            <div class="pc">
+                                                <div class="yf-item">
+                                                    <div class="yf-title">
+                                                        <span class="title">卖场商品</span>
+                                                    </div>
+                                                    <div class="yf-box">
+                                                        <div class="item"><label>基础运费：</label><span>￥</span></div>
+                                                        <div class="item"><label>续重运费：</label><span>￥</span>
+                                                            <a href="//help.jd.com/user/issue/109-188.html" target="_blank"> 查看续重标准&gt;</a></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="pc pc-other">
+                                                <div class="yf-item">
+                                                    <div class="yf-box">
+                                                        <div class="item"><label>其他（含店铺运费）：</label><span>￥</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 发票信息 -->
+                                </div>
+
+                            </div>
+                            <div class="info-page">
+                                <a href="javascript:void(0)" class="info-prev" style="display:none;">&lt;</a>
+                                <a href="javascript:void(0)" class="info-next" style="display:none;" title="查看更多信息">&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--进度条预计功能使用--><input type="hidden" id="orderStatus" value="18">
+                <input type="hidden" id="orderType" value="0">
+                <input type="hidden" id="orderStoreId" value="305">
+                <input type="hidden" id="pickDate" value="0">
+
+
+                <!--/ /widget/order-info/order-info.tpl -->
+
+                <!--店铺留言信息-->
+                <!--商品 及 金额 -->
+                <!--  /widget/order-goods/order-goods.tpl -->
+                <div class="order-goods m" style="margin-bottom: 50px;">
+
+                    <div class="mc">
+                        <div class="goods-list ">
+                            <table class="tb-void tb-order">
+                                <colgroup>
+                                    <col class="grap">
+                                    <col class="col-goods">
+                                    <col class="col-number">
+                                    <col class="col-price">
+                                    <col class="col-amount">
+                                    <col class="col-bean">
+
+                                    <col class="col-ops">
+                                    <col class="grap">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th class="grap"></th>
+                                    <th>商品</th>
+                                    <th>商品编号</th>
+                                    <th>京东价</th>
+                                    <th>商品数量</th>
+                                    <th>京豆</th>
+                                    <th>操作</th>
+                                    <th class="grap"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 获取礼品卡sku对应的贺卡寄语  -->
+
+
+                                <tr class="first-tr product-100013747334">
+                                    <td class="grap"></td>
+                                    <td>
+                                        <div class="p-item" clstag="click|keycount|orderinfo|xqliebiaoshangpin">
+                                            <div class="p-img">
+                                                <a href="//item.jd.com/100013747334.html" target="_blank">
+                                                    <img class="" src="//img10.360buyimg.com/N1/s60x60_jfs/t1/36056/39/19590/114555/63b5440aF4f29420d/e490e88e1222cd34.jpg" title="100013747334" data-lazy-img="done" width="60" height="60">
+                                                </a>
+                                            </div>
+                                            <div class="p-info">
+                                                <div class="p-name">
+                                                    <a href="//item.jd.com/100013747334.html" class="a-link" target="_blank" title="希捷(Seagate) 移动硬盘 4TB USB3.0 简 2.5英寸 机械硬盘 高速便携 兼容PS4 STJL4000400">希捷(Seagate) 移动硬盘 4TB USB3.0 简 2.5英寸 机械硬盘 高速便携 兼容PS4 STJL4000400</a>
+                                                </div>
+                                                <div class="clr"></div>
+                                                <div id="coupon_100013747334" class="fl"></div>
+
+
+                                                <div class="p-extra">
+                                                                                         <span class="txt">
+												                                                                                                               【简】爆款旗舰-高级灰
+                                                                                                                                                                                                                    												                                              </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="p-fxg mt5"><!-- 放心购打标 -->
+                                            <p><i class="fxg"></i>
+                                                <!-- 放心购打标 todo 待加文案 -->
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        100013747334
+                                    </td>
+                                    <td>
+    	                                	<span class="f-price">
+    	                                    	¥679.00
+    	                                	</span>
+                                    </td>
+                                    <td>1</td>
+                                    <td id="jingdou-100013747334">339</td>
+
+
+                                    <td>
+                                        <div class="p-btns">
+
+                                            <!-- 根据订单类型屏蔽pop延保商品操作,只显示评价 -->
+                                            <a href="//myjd.jd.com/repair/ordersearchlist.action?searchString=258209929690" target="_blank" class="link-btn mt10" clstag="click|keycount|orderinfo|product_repair">
+                                                申请售后
+                                            </a><br>
+                                            <!-- 非下柜商品才有【立即购买】功能-->
+                                            <a class="link-btn mt10" target="_blank" href="//club.jd.com/JdVote/TradeComment.aspx?ruleid=258209929690&amp;ot=0&amp;payid=4&amp;shipmentid=70" clstag="click|keycount|orderinfo|product_comment">评价</a>|<a class="link-btn mt10" clstag="click|keycount|orderinfo|product_show" href="//club.jd.com/mycomments.aspx?sort=1" target="_blank">晒单</a><br><a href="//cart.jd.com/reBuyForOrderCenter.action?wids=100013747334&amp;nums=1&amp;rid=1672968190970" class="mt10 btn-again" target="_blank"><b></b>立即购买</a><br>
+                                        </div>
+                                        <a href="#none" class="btn-scan mt10 hide"><b></b>查询条形码</a><br>
+                                    </td>
+                                    <td class="grap"></td>
+                                </tr>
+                                <!-- 商家运费险  -->
+                                <tr class="J-yunfeixian" style="display: none">
+                                    <td class="grap"></td>
+                                    <td>
+                                        <div class="p-item">
+                                            <div class="p-img">
+                                                <a href="#none">
+                                                    <img width="60" height="60" data-lazy-img="done" title="运费险" src="//img20.360buyimg.com/da/jfs/t2236/304/2631207742/2813/b69d1dd/56e25ef9N605e00e5.jpg" class="">
+                                                </a>
+                                            </div>
+                                            <div class="p-info">
+                                                <div class="p-name"><a title="运费险" class="a-link" href="#none">运费险</a></div>
+                                                <div class="p-extra">
+										<span class="txt">
+											最高赔付25元/单
+										</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        卖家赠送
+                                    </td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <td></td>
+                                    <td class="grap"></td>
+                                </tr>                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 金额 -->
+                        <!-- 金额 融合 -->
+                        <!-- 统一使用融合下发的数据-->
+                        <div class="goods-total">
+
+                            <ul>
+
+                                <li>
+                                    <span class="label">商品总额：</span>
+                                    <span class="txt">
+                                                         ¥679.00</span>
+                                </li>
+                                <li>
+                                    <span class="label">运费：</span>
+                                    <span class="txt">
+                                                         + ¥0.00</span>
+                                </li>
+                                <li class="ftx-01">
+                                    <span class="label">实付款：</span>
+                                    <span class="txt count">¥679.00</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 礼金明细 -->
+
+                    </div>
+
+                    <div id="plus95Tips" style="display:none">
+                        <div class="plus-95-box">
+                            <h3 class="plus-95-box-tit">PLUS专享95折</h3>
+                            <div class="plus-95-box-items">
+                                <ul>
+                                </ul>
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/order/order_list.js"></script>
+
+    <#include "/footer.html"/>
+
+</body>
+
+
+
+</html>

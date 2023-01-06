@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +46,16 @@ public class OrderPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/list")
-    public String regist()
+    public String orderList()
     {
         return "user/order/order_list";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/detail")
+    public String detail(HttpServletRequest httpServletRequest,@RequestParam String docNo)
+    {
+        httpServletRequest.setAttribute("docNo",docNo);
+        return "user/order/detail";
+    }
 }

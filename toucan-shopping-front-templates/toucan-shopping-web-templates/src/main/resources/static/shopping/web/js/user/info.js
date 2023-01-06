@@ -34,6 +34,8 @@ function drawNonPaymentOrderList(data)
 {
     if(data.total>0)
     {
+        $(".non-pay-order-tips").hide();
+        $(".non-pay-order-table").show();
         var orderTableHtml="";
         for(var i=0;i<data.list.length;i++)
         {
