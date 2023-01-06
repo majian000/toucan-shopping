@@ -73,4 +73,8 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
 
     private Integer lockStockNum = 0; //锁定商品库存数量
 
+    private String productSkuJson; //商品SKU快照
+
+
+
 }

@@ -46,6 +46,7 @@ import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,6 +259,13 @@ public class OrderApiController {
                         userBuyCarItemVO.setProductPrice(productSku.getPrice());
                         userBuyCarItemVO.setProductPreviewPath(productSku.getProductPreviewPath());
                         userBuyCarItemVO.setProductSkuName(productSku.getName());
+                        Map productSkuMap = BeanUtils.describe(productSku);
+                        productSkuMap.remove("previewPhotoPaths");
+                        productSkuMap.remove("shopProductDescriptionVO");
+                        productSkuMap.remove("productSkuVOList");
+                        productSkuMap.remove("createDate");
+                        productSkuMap.remove("class");
+                        userBuyCarItemVO.setProductSkuJson(JSONObject.toJSONString(productSkuMap));
                         isProductIsDel = false;
                         break;
                     }
@@ -767,6 +775,7 @@ public class OrderApiController {
                 orderItemVO.setSkuId(ubc.getShopProductSkuId()); //商品ID
                 orderItemVO.setProductSkuName(ubc.getProductSkuName()); //商品SKU名称
                 orderItemVO.setProductPreviewPath(ubc.getProductPreviewPath()); //商品预览图
+                orderItemVO.setProductSkuJson(ubc.getProductSkuJson()); //商品快照
                 orderItemVO.setDeliveryStatus(0); //未收货
                 orderItemVO.setBuyerStatus(0); //待收货
                 orderItemVO.setSellerStatus(1); //备货完成
