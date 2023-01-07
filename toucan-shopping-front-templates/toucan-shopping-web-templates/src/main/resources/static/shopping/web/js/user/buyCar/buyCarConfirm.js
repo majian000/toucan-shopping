@@ -775,6 +775,16 @@ function updateRow(cid,bnum)
                 $(this).val(bnum);
                 $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
                 calculatePriceTotal();
+                if(g_cache_buy_items!=null&&g_cache_buy_items.length>0)
+                {
+                    for(var i=0;i<g_cache_buy_items.length;i++)
+                    {
+                        if(g_cache_buy_items[i].id==cid)
+                        {
+                            g_cache_buy_items[i].buyCount = buyCarItem.buyCount;
+                        }
+                    }
+                }
             }else{
                 $.message({
                     message: "请稍后重试",
