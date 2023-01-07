@@ -372,6 +372,7 @@ function calculateFreight(rid,clickObj)
                         roughWeightTotal = roughWeightTotal.plus(itemBuyCountBigNumber.times(itemRoughWeightTotalBigNumber)); //毛重总量=数量*毛重
                     });
 
+                    buyCount = new BigNumber(buyCount);
                     var firstWeight; //首重、首件
                     var firstMoney; //首件价格
                     var appendWight; //续重、续件
@@ -379,47 +380,53 @@ function calculateFreight(rid,clickObj)
                     //默认运费规则
                     if(freightTemplateRule.type==1)
                     {
-                        firstWeight = freightTemplateRule.defaultWeight;
-                        firstMoney = freightTemplateRule.defaultWeightMoney;
-                        appendWight = freightTemplateRule.defaultAppendWeight;
-                        appendMoney = freightTemplateRule.defaultAppendWeightMoney;
+                        firstWeight = new BigNumber(freightTemplateRule.defaultWeight);
+                        firstMoney = new BigNumber(freightTemplateRule.defaultWeightMoney);
+                        appendWight = new BigNumber(freightTemplateRule.defaultAppendWeight);
+                        appendMoney = new BigNumber(freightTemplateRule.defaultAppendWeightMoney);
                     }else{ //地区运费规则
-                        firstWeight = freightTemplateRule.firstWeight;
-                        firstMoney = freightTemplateRule.firstWeightMoney;
-                        appendWight = freightTemplateRule.appendWeight;
-                        appendMoney = freightTemplateRule.appendWeightMoney;
+                        firstWeight = new BigNumber(freightTemplateRule.firstWeight);
+                        firstMoney = new BigNumber(freightTemplateRule.firstWeightMoney);
+                        appendWight = new BigNumber(freightTemplateRule.appendWeight);
+                        appendMoney = new BigNumber(freightTemplateRule.appendWeightMoney);
                     }
 
                     var freightMoney=0;
                     //按件
                     if(obj.freightTemplateVO.valuationMethod==1)
                     {
-                        if(buyCount<=firstWeight)
+                        //小于等于
+                        if(buyCount.lte(firstWeight))
                         {
                             //默认运费
-                            $(".bifm_"+obj.id).html(firstMoney.toFixed(2));
+                            firstMoney = firstMoney.toFixed(2);
+                            $(".bifm_"+obj.id).html(firstMoney);
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
-                            //(续件/(首件-购买数量))*续件金额
-                            freightMoney= (appendWight/(buyCount-firstWeight))*appendMoney;
-                            freightMoney= freightMoney<0?0:freightMoney;
-                            freightMoney+=firstMoney; //加上首件金额
-                            $(".bifm_"+obj.id).html(freightMoney.toFixed(2));
+                            //(购买数量-首件)/续件*续件金额
+                            freightMoney= new BigNumber(((buyCount.minus(firstWeight)).div(appendWight)).toFixed(2)).times(appendMoney);
+                            freightMoney= freightMoney<0?new BigNumber(0):freightMoney;
+                            freightMoney=freightMoney.plus(firstMoney); //加上首件金额
+                            freightMoney = freightMoney.toFixed(2);
+                            $(".bifm_"+obj.id).html(freightMoney);
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }else if(obj.freightTemplateVO.valuationMethod==2) //按重量
                     {
-                        if(roughWeightTotal<=firstWeight)
+                        //小于等于
+                        if(roughWeightTotal.lte(firstWeight))
                         {
+                            firstMoney = firstMoney.toFixed(2);
                             //默认运费
-                            $(".bifm_"+obj.id).html(firstMoney.toFixed(2));
+                            $(".bifm_"+obj.id).html(firstMoney);
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
-                            //(续件/(首件-购买数量))*续件金额
-                            freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
-                            freightMoney= freightMoney<0?0:freightMoney;
-                            freightMoney+=firstMoney; //加上首件金额
-                            $(".bifm_"+obj.id).html(freightMoney.toFixed(2));
+                            //((购买数量-首件)/续件)*续件金额
+                            freightMoney = new BigNumber((roughWeightTotal.minus(firstWeight)).div(appendWight)).toFixed(2).times(appendMoney);
+                            freightMoney= freightMoney<0?new BigNumber(0):freightMoney;
+                            freightMoney=freightMoney.plus(firstMoney); //加上首件金额
+                            freightMoney = freightMoney.toFixed(2);
+                            $(".bifm_"+obj.id).html(freightMoney);
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }
