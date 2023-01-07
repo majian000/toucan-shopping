@@ -201,6 +201,7 @@ public class OrderApiController {
             resultObjectVO = this.queryBuyCarItems(createOrderVO,Long.parseLong(userId));
             if(!resultObjectVO.isSuccess())
             {
+                resultObjectVO.setMsg("购物车商品不存在");
                 return resultObjectVO;
             }
 

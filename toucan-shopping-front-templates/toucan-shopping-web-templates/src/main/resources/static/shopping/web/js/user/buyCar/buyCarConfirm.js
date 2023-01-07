@@ -14,6 +14,7 @@ var g_sleectConsigneeAddressDialogHandler = null;
 var g_cache_buy_items=null;
 var g_freight_money = new BigNumber(0); //运费总价
 var g_product_price_money=new BigNumber(0); //商品总价
+var g_cache_buy_item_select_freight=new Map(); //选择运费模板
 
 function loadBuyCarConfirmPage() {
     startLoadding();
@@ -197,18 +198,28 @@ function drawFreightTemplateOption(datas)
     $(".bcy_fto").unbind();
     $(".bcy_fto").click(function() {
         var attrId = $(this).attr("attr-eid");
-        calculateFreight(attrId);
+        calculateFreight(attrId,this);
     });
 
     for(var i=0;i<datas.length;i++) {
         var obj =  datas[i];
-        if($("input[name='bcy_fto_group_"+obj.id+"']")!=null) {
-            $("input[name='bcy_fto_group_" + obj.id + "']:first").click();
+        freightOptionCalculate(obj.id);
+    }
+}
+
+/**
+ * 运费项计算
+ * @param groupId
+ */
+function freightOptionCalculate(groupId)
+{
+    if($("input[name='bcy_fto_group_"+groupId+"']")!=null) {
+        if(g_cache_buy_item_select_freight.get(groupId)==null) {
+            $("input[name='bcy_fto_group_" + groupId + "']:first").click();
+        }else{
+            $("#"+g_cache_buy_item_select_freight.get(groupId)).click();
         }
     }
-
-
-
 }
 
 /**
@@ -293,7 +304,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
  * 根据指定运送方式 计算运费
  * @param rid
  */
-function calculateFreight(rid)
+function calculateFreight(rid,clickObj)
 {
     if(g_cache_buy_items!=null) {
         for (var i = 0; i < g_cache_buy_items.length; i++) {
@@ -419,6 +430,9 @@ function calculateFreight(rid)
         }
     }
 
+    if(clickObj!=null) {
+        g_cache_buy_item_select_freight.set(rid, $(clickObj).attr("id"));
+    }
     calculateFreightTotal();
 
 }
@@ -461,7 +475,7 @@ function calculateAllFreight()
         g_cache_buy_items.forEach(function (item) {
             if(item.isMergeRow)
             {
-                calculateFreight(item.id);
+                calculateFreight(item.id,null);
             }
         });
     }
@@ -628,14 +642,17 @@ function loadModifyBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">运费(元)</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:5%\">购买数量</td>\n" +
-                    "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
-                    "                    <td class=\"car_th\" style = \"width:20%\">操作</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">小计</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">操作</td>\n" +
                     "                </tr>";
                 var productPriceTotal = 0;
 
+                result.data = findMergeRow(result.data);
                 g_cache_buy_items=result.data;
 
                 for(var i=0;i<result.data.length;i++)
@@ -649,6 +666,8 @@ function loadModifyBuyCarPanel(){
                     }
 
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
+                        "<td class='bif_"+buyCarItem.id+"' align=\"center\"></td>"+
+                        "<td class='bifm_"+buyCarItem.id+"' align=\"center\"></td>"+
                         "                <td>\n" +
                          "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" ;
                     if(!buyCarItem.isAllowedBuy)
@@ -681,6 +700,7 @@ function loadModifyBuyCarPanel(){
 
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
+                    "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
                     "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
@@ -691,6 +711,7 @@ function loadModifyBuyCarPanel(){
                     bindBuyCarIntInputKeyUp("num_"+result.data[i].id);
                 }
 
+                drawFreightTemplateOption(result.data);
                 g_product_price_money = new BigNumber(productPriceTotal);
                 $(".product_price_total").html("￥"+g_product_price_money);
                 $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
@@ -782,9 +803,13 @@ function updateRow(cid,bnum)
                         if(g_cache_buy_items[i].id==cid)
                         {
                             g_cache_buy_items[i].buyCount = buyCarItem.buyCount;
+                            freightOptionCalculate(g_cache_buy_items[i].id);
+                            calculateFreightTotal();
+                            break;
                         }
                     }
                 }
+
             }else{
                 $.message({
                     message: "请稍后重试",
