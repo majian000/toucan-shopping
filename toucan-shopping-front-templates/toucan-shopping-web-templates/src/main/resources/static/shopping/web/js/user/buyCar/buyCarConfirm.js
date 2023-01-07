@@ -93,13 +93,17 @@ function loadBuyCarConfirmPage() {
     });
 
 
+    bindPaymentBtnEvent();
+
+}
+
+function bindPaymentBtnEvent()
+{
 
     $(".confirm_payment_btn").click(function(){
         paymentEvent();
     });
-
 }
-
 
 /**
  * 校验收货人表单
@@ -781,6 +785,10 @@ function addNum(cid)
 function updateRow(cid,bnum)
 {
     g_buy_car_item_req = 1;
+
+    //卸载支付按钮事件
+    $(".confirm_payment_btn").unbind();
+
     loading.showLoading({
         type:1,
         tip:"提交中..."
@@ -816,7 +824,8 @@ function updateRow(cid,bnum)
                         }
                     }
                 }
-
+                //绑定支付按钮事件
+                bindPaymentBtnEvent();
             }else{
                 $.message({
                     message: "请稍后重试",
