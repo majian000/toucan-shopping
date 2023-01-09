@@ -131,7 +131,7 @@ function drawNonPaymentOrderList(data)
                 "            \t                            未支付\n" +
                 "                                        </span>\n" +
                 "                                            <br>\n" +
-                "                                            <a href=\"#\"  target=\"_blank\">订单详情</a>\n" +
+                "                                            <a href=\""+basePath+orderDetailPath+"?docNo="+order.orderNo+"\"  target=\"_blank\">订单详情</a>\n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +
                 "                                    <td rowspan=\"1\" >\n" +

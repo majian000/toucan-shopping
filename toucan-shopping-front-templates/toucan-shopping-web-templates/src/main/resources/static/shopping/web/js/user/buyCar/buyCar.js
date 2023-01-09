@@ -30,7 +30,7 @@ function loadBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls="";
-                var productPriceTotal = 0;
+                var productPriceTotal = new BigNumber(0);
                 var dataLength = 0;
                 if(result.data!=null)
                 {
@@ -69,13 +69,13 @@ function loadBuyCarPanel(){
                         "            </tr>\n" +
                         "           ";
                     if(buyCarItem.isAllowedBuy) {
-                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                        productPriceTotal =productPriceTotal.plus(new BigNumber(buyCarItem.productPrice).times(new BigNumber(buyCarItem.buyCount)));
                     }
                 }
                 productHtmls+="<tr height=\"70\">\n" +
                     "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
                     "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car clear_buy_car_ckx\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
-                    "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal+"</a></b></span>\n" +
+                    "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal.toFixed(2)+"</a></b></span>\n" +
                     "                </td>\n" +
                     "            </tr>\n" +
                     "            <tr valign=\"top\" height=\"150\">\n" +
@@ -310,10 +310,11 @@ function calculatePriceTotal()
 {
     var pns = $(".mcar_pn"); //数量
     var pps = $(".mcar_pp"); //单价
-    var productPriceTotal = 0;
+    var productPriceTotal = new BigNumber(0);
     for(var i=0;i<pns.length;i++)
     {
-        productPriceTotal+= (parseInt($(pns[i]).val())*parseFloat($(pps[i]).val()));
+        //数量*单价
+        productPriceTotal=productPriceTotal.plus(new BigNumber(parseInt($(pns[i]).val())).times(new BigNumber(parseFloat($(pps[i]).val()))));
     }
     $("#productPriceTotal").html(productPriceTotal);
 

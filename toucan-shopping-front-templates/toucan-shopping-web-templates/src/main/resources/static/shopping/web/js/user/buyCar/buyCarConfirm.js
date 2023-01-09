@@ -572,7 +572,7 @@ function loadBuyCarPanel(){
                     "                    <td class=\"car_th\" style = \"width:5%\">购买数量</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
                     "                </tr>";
-                var productPriceTotal = 0;
+                var productPriceTotal = new BigNumber(0);
 
                 result.data = findMergeRow(result.data);
                 g_cache_buy_items=result.data;
@@ -605,13 +605,14 @@ function loadBuyCarPanel(){
                         "            </tr>\n" +
                         "           ";
                     if(buyCarItem.isAllowedBuy) {
-                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                        //单价*数量
+                        productPriceTotal=productPriceTotal.plus(new BigNumber(buyCarItem.productPrice).times(new BigNumber(buyCarItem.buyCount)));
                     }
                 }
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
-                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal.toFixed(2)+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
@@ -661,7 +662,7 @@ function loadModifyBuyCarPanel(){
                     "                    <td class=\"car_th\" style = \"width:10%\">小计</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:10%\">操作</td>\n" +
                     "                </tr>";
-                var productPriceTotal = 0;
+                var productPriceTotal = new BigNumber(0);
 
                 result.data = findMergeRow(result.data);
                 g_cache_buy_items=result.data;
@@ -705,14 +706,14 @@ function loadModifyBuyCarPanel(){
                         "           ";
 
                     if(buyCarItem.isAllowedBuy) {
-                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                        productPriceTotal=productPriceTotal.plus(new BigNumber(buyCarItem.productPrice).times(new BigNumber(buyCarItem.buyCount)));
                     }
                 }
 
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
-                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal.toFixed(2)+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
@@ -850,10 +851,11 @@ function calculatePriceTotal()
 {
     var pns = $(".mcar_pn"); //数量
     var pps = $(".mcar_pp"); //单价
-    var productPriceTotal = 0;
+    var productPriceTotal = new BigNumber(0);
     for(var i=0;i<pns.length;i++)
     {
-        productPriceTotal+= (parseInt($(pns[i]).val())*parseFloat($(pps[i]).val()));
+        //数量*单价
+        productPriceTotal=productPriceTotal.plus(new BigNumber(parseInt($(pns[i]).val())).times(new BigNumber(parseFloat($(pps[i]).val()))));
     }
     $("#productPriceTotal").html(productPriceTotal);
 
@@ -897,8 +899,7 @@ function removeBuyCar()
         success: function (result) {
             if(result.code==1)
             {
-                $("#tr_"+buyCarId).remove();
-                calculatePriceTotal();
+                window.location.reload();
             }else{
                 $.message({
                     message: "删除失败,请稍后重试",
