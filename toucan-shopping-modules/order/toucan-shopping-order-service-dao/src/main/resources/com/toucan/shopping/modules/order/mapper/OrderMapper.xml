@@ -74,8 +74,12 @@
 
     <sql id="queryListPageWhere">
 
-        <if test="userId!=null">
+        <if test="userId!=null and userId!=''">
             and t.user_id = #{userId}
+        </if>
+
+        <if test="shopId!=null and shopId!=''">
+            and t.shop_id = #{shopId}
         </if>
 
         <if test="orderNo!=null and orderNo!=''">
@@ -86,11 +90,11 @@
             and t.app_code = #{appCode}
         </if>
 
-        <if test="payStatus!=null">
+        <if test="payStatus!=null and payStatus!=-1">
             and t.pay_status = #{payStatus}
         </if>
 
-        <if test="tradeStatus!=null">
+        <if test="tradeStatus!=null and tradeStatus!=-1 ">
             and t.trade_status = #{tradeStatus}
         </if>
 
