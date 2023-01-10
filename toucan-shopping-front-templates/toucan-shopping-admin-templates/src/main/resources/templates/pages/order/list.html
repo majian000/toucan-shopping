@@ -23,6 +23,7 @@
         <fieldset class="table-search-fieldset">
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="orderSearchForm" action="">
+                    <input type="hidden" id="tradeStatus" name="tradeStatus" value="-1">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">订单编号</label>
@@ -83,11 +84,11 @@
 
                 <div class="layui-tab" lay-filter="orderTablFilter">
                     <ul class="layui-tab-title">
-                        <li class="layui-this" lay-id="tab_index_0_">全部</li>
-                        <li lay-id="tab_index_1_">待付款</li>
-                        <li lay-id="tab_index_2_">待收货</li>
-                        <li lay-id="tab_index_3_">已取消</li>
-                        <li lay-id="tab_index_4_">已完成</li>
+                        <li class="layui-this" trade-status="-1" lay-id="tab_index_0_">全部</li>
+                        <li lay-id="tab_index_1_" trade-status="0">待付款</li>
+                        <li lay-id="tab_index_2_" trade-status="1">待收货</li>
+                        <li lay-id="tab_index_3_" trade-status="2">已取消</li>
+                        <li lay-id="tab_index_4_" trade-status="3">已完成</li>
                     </ul>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
@@ -105,10 +106,66 @@
                             </script>
 
                         </div>
-                        <div class="layui-tab-item">内容2</div>
-                        <div class="layui-tab-item">内容3</div>
-                        <div class="layui-tab-item">内容4</div>
-                        <div class="layui-tab-item">内容5</div>
+                        <div class="layui-tab-item">
+                            <script type="text/html" id="tab_index_1_toolbarDemo">
+                                <div class="layui-btn-container">
+                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                                </div>
+                            </script>
+
+                            <table class="layui-hide" id="tab_index_1_orderTable" lay-filter="tab_index_1_orderTableFilter"></table>
+
+                            <script type="text/html" id="tab_index_1_orderTableBar">
+                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                            </script>
+                        </div>
+                        <div class="layui-tab-item">
+
+                            <script type="text/html" id="tab_index_2_toolbarDemo">
+                                <div class="layui-btn-container">
+                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                                </div>
+                            </script>
+
+                            <table class="layui-hide" id="tab_index_2_orderTable" lay-filter="tab_index_2_orderTableFilter"></table>
+
+                            <script type="text/html" id="tab_index_2_orderTableBar">
+                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                            </script>
+                        </div>
+                        <div class="layui-tab-item">
+
+                            <script type="text/html" id="tab_index_3_toolbarDemo">
+                                <div class="layui-btn-container">
+                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                                </div>
+                            </script>
+
+                            <table class="layui-hide" id="tab_index_3_orderTable" lay-filter="tab_index_3_orderTableFilter"></table>
+
+                            <script type="text/html" id="tab_index_3_orderTableBar">
+                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                            </script>
+                        </div>
+                        <div class="layui-tab-item">
+
+
+                            <script type="text/html" id="tab_index_4_toolbarDemo">
+                                <div class="layui-btn-container">
+                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                                </div>
+                            </script>
+
+                            <table class="layui-hide" id="tab_index_4_orderTable" lay-filter="tab_index_4_orderTableFilter"></table>
+
+                            <script type="text/html" id="tab_index_4_orderTableBar">
+                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -134,6 +191,8 @@
 
         element.on('tab(orderTablFilter)',function(){
             var layId = this.getAttribute("lay-id");
+            $("#tradeStatus").val(this.getAttribute("trade-status"));
+
             initOrderTable(layId);
         });
 
