@@ -78,6 +78,10 @@
             and t.user_id = #{userId}
         </if>
 
+        <if test="orderNo!=null and orderNo!=''">
+            and t.order_no = #{orderNo}
+        </if>
+
         <if test="appCode!=null">
             and t.app_code = #{appCode}
         </if>
@@ -180,7 +184,7 @@
             <include refid="queryListPageWhere" />
 
         </where>
-        order by t.create_date desc
+        order by t.id desc
         limit #{start},#{limit}
     </select>
 

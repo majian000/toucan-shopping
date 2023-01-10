@@ -34,6 +34,7 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
     private String appCode; //所属应用
 
     private String userId; //所属用户
+    private String orderNo; //订单编号
 
     private Integer payStatus; //支付状态 0未支付 1已支付 3线下支付已到账 4取消支付
     private Integer tradeStatus; //交易状态 0:待付款 1:待收货 2:已取消 3:已完成
