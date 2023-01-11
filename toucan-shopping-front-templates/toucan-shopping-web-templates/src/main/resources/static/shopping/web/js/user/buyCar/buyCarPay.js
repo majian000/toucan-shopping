@@ -77,6 +77,19 @@ function hideView()
     $(".pay_error_panel").show();
 }
 
+function getPayType()
+{
+    var buyItemPays = $(".buy_item_pay");
+    for(var i=0;i<buyItemPays.length;i++)
+    {
+        if($(buyItemPays[i]).hasClass("checked"))
+        {
+            return $(buyItemPays[i]).attr("attr-type");
+        }
+    }
+    return "-1";
+}
+
 function queryMainOrder() {
     loading.showLoading({
         type: 1,
@@ -92,6 +105,7 @@ function queryMainOrder() {
     {
         requestUrl = basePath + "/api/order/detail";
     }
+
     $.ajax({
         type: "POST",
         url: requestUrl,

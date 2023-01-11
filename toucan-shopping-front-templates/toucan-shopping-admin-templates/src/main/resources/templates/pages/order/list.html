@@ -188,6 +188,7 @@
             table = layui.table;
 
         var element = layui.element;
+        var tableCache = new Map();
 
         element.on('tab(orderTablFilter)',function(){
             var layId = this.getAttribute("lay-id");
@@ -241,7 +242,17 @@
 
         function initOrderTable(tableIndex)
         {
-            table.render({
+            if(tableCache.get(tableIndex)!=null){
+                table.reload(tableIndex+'orderTable', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: getFormParam()
+                }, 'data');
+                return ;
+            }
+
+            var tableHandler = table.render({
                 elem: '#'+tableIndex+'orderTable',
                 url: "[[@{/}]]order/list",
                 method:'POST',
@@ -260,6 +271,65 @@
                         {type: "checkbox", width: 50},
                         {field: 'id',  title: '主键'},
                         {field: 'orderNo',  title: '订单编号'},
+                        {field: 'userId',  title: '用户ID'},
+                        {field: 'payMethod', title: '支付方式',
+                            templet: function (row) {
+                                if(row.payMethod == "1"){
+                                    return "线上支付"
+                                }else if(row.payMethod == "2"){
+                                    return "线下支付"
+                                }
+                                return row.payMethod;
+                            }},
+                        {field: 'payType', title: '交易类型',
+                            templet: function (row) {
+                                if(row.payType == -1){
+                                    return "未确定"
+                                }else if(row.payType == 0){
+                                    return "微信"
+                                }else if(row.payType == 1){
+                                    return "支付宝"
+                                }
+                                return row.payType;
+                            }},
+                        {field: 'payStatus', title: '支付状态',
+                            templet: function (row) {
+                                if(row.payStatus == "0"){
+                                    return "未支付"
+                                }else if(row.payStatus == "1"){
+                                    return "已支付"
+                                }else if(row.payStatus == "3"){
+                                    return "线下支付已到账"
+                                }else if(row.payStatus == "4"){
+                                    return "取消支付"
+                                }
+                                return row.payStatus;
+                            }},
+                        {field: 'tradeStatus', title: '交易状态',
+                            templet: function (row) {
+                                if(row.tradeStatus == "0"){
+                                    return "待付款"
+                                }else if(row.tradeStatus == "1"){
+                                    return "待收货"
+                                }else if(row.tradeStatus == "2"){
+                                    return "已取消"
+                                }else if(row.tradeStatus == "3"){
+                                    return "已完成"
+                                }
+                                return row.tradeStatus;
+                            }},
+                        {field: 'orderAmount',  title: '订单金额'},
+                        {field: 'outerTradeNo',  title: '交易订单号'},
+                        {field: 'srcType', title: '购买渠道',
+                            templet: function (row) {
+                                if(row.srcType == 1){
+                                    return "PC"
+                                }else if(row.srcType == 2){
+                                    return "APP"
+                                }
+                                return row.srcType;
+                            }},
+                        {field: 'payDate',  title: '支付时间'},
                         {title: '操作', minWidth: 300, toolbar: '#'+tableIndex+'orderTableBar', align: "center"}
                     ]
                 ],
@@ -268,6 +338,8 @@
                 page: true,
                 skin: 'line'
             });
+
+            tableCache.set(tableIndex,tableHandler);
 
             // 监听搜索操作
             form.on('submit(data-search-btn)', function (data) {

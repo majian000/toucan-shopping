@@ -34,6 +34,7 @@ public class Order {
     private Integer payMethod;  //支付方式 1线上支付 2线下支付
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)
+    private Integer srcType; //用户购买渠道 1:pc 2:app
 
     private Date paymentDeadlineTime; //支付截止时间(超时时间)
 

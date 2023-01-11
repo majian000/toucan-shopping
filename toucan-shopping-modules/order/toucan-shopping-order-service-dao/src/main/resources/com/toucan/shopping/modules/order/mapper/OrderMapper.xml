@@ -103,10 +103,10 @@
     </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,src_type,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status,shop_id)
 
-         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{orderAmount},#{payAmount},#{paymentDeadlineTime},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
+         values(#{id},#{orderNo},#{mainOrderNo},#{userId},#{srcType},#{orderAmount},#{payAmount},#{paymentDeadlineTime},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
          #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{bestDate},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus},#{shopId})
 
     </insert>
@@ -132,11 +132,11 @@
 
 
     <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderVO"  >
-        insert into t_order(id,order_no,main_order_no,user_id,order_amount,payment_deadline_time,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
+        insert into t_order(id,order_no,main_order_no,user_id,src_type,order_amount,payment_deadline_time,pay_amount,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status,shop_id)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.orderAmount},#{entity.paymentDeadlineTime},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.redPackageAmount},#{entity.couponAmount},#{entity.payStatus},
+            (#{entity.id},#{entity.orderNo},#{entity.mainOrderNo},#{entity.userId},#{entity.srcType},#{entity.orderAmount},#{entity.paymentDeadlineTime},#{entity.payAmount},#{entity.totalAmount},#{entity.freightAmount},#{entity.redPackageAmount},#{entity.couponAmount},#{entity.payStatus},
             #{entity.tradeStatus},#{entity.payType},#{entity.payMethod},#{entity.outerTradeNo},#{entity.bestDate},#{entity.payDate},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus},#{entity.shopId})
         </foreach>
 

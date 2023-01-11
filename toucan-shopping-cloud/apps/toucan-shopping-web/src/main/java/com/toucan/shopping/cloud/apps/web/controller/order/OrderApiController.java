@@ -703,6 +703,7 @@ public class OrderApiController {
         orderVO.setOrderNo(orderNoService.generateOrderNo());
         orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
         orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
+        orderVO.setSrcType(createOrderVo.getSrcType()); //下单渠道
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -732,6 +733,7 @@ public class OrderApiController {
                     orderVO.setOrderNo(orderNoService.generateOrderNo());
                     orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
                     orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
+                    orderVO.setSrcType(createOrderVo.getSrcType()); //下单渠道
                     orders.add(orderVO);
                     //如果为空默认为包邮
                     if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {

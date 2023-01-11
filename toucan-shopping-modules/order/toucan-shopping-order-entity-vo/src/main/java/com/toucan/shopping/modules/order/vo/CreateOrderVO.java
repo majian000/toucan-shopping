@@ -29,4 +29,6 @@ public class CreateOrderVO {
 
     private String userId; //买家
 
+    private Integer srcType = 1 ; //下单渠道 1:pc 2:app
+
 }
