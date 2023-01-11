@@ -82,95 +82,95 @@
                     </div>
                 </form>
 
-                <div class="layui-tab" lay-filter="orderTablFilter">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this" trade-status="-1" lay-id="tab_index_0_">全部</li>
-                        <li lay-id="tab_index_1_" trade-status="0">待付款</li>
-                        <li lay-id="tab_index_2_" trade-status="1">待收货</li>
-                        <li lay-id="tab_index_3_" trade-status="2">已取消</li>
-                        <li lay-id="tab_index_4_" trade-status="3">已完成</li>
-                    </ul>
-                    <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
-                            <script type="text/html" id="tab_index_0_toolbarDemo">
-                                <div class="layui-btn-container">
-                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                                </div>
-                            </script>
-
-                            <table class="layui-hide" id="tab_index_0_orderTable" lay-filter="tab_index_0_orderTableFilter"></table>
-
-                            <script type="text/html" id="tab_index_0_orderTableBar">
-                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                            </script>
-
-                        </div>
-                        <div class="layui-tab-item">
-                            <script type="text/html" id="tab_index_1_toolbarDemo">
-                                <div class="layui-btn-container">
-                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                                </div>
-                            </script>
-
-                            <table class="layui-hide" id="tab_index_1_orderTable" lay-filter="tab_index_1_orderTableFilter"></table>
-
-                            <script type="text/html" id="tab_index_1_orderTableBar">
-                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                            </script>
-                        </div>
-                        <div class="layui-tab-item">
-
-                            <script type="text/html" id="tab_index_2_toolbarDemo">
-                                <div class="layui-btn-container">
-                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                                </div>
-                            </script>
-
-                            <table class="layui-hide" id="tab_index_2_orderTable" lay-filter="tab_index_2_orderTableFilter"></table>
-
-                            <script type="text/html" id="tab_index_2_orderTableBar">
-                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                            </script>
-                        </div>
-                        <div class="layui-tab-item">
-
-                            <script type="text/html" id="tab_index_3_toolbarDemo">
-                                <div class="layui-btn-container">
-                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                                </div>
-                            </script>
-
-                            <table class="layui-hide" id="tab_index_3_orderTable" lay-filter="tab_index_3_orderTableFilter"></table>
-
-                            <script type="text/html" id="tab_index_3_orderTableBar">
-                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                            </script>
-                        </div>
-                        <div class="layui-tab-item">
-
-
-                            <script type="text/html" id="tab_index_4_toolbarDemo">
-                                <div class="layui-btn-container">
-                                    <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                                </div>
-                            </script>
-
-                            <table class="layui-hide" id="tab_index_4_orderTable" lay-filter="tab_index_4_orderTableFilter"></table>
-
-                            <script type="text/html" id="tab_index_4_orderTableBar">
-                                <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                            </script>
-                        </div>
-                    </div>
-                </div>
             </div>
         </fieldset>
 
+        <div class="layui-tab" lay-filter="orderTablFilter">
+            <ul class="layui-tab-title">
+                <li class="layui-this" trade-status="-1" lay-id="tab_index_0_">全部</li>
+                <li lay-id="tab_index_1_" trade-status="0">待付款</li>
+                <li lay-id="tab_index_2_" trade-status="1">待收货</li>
+                <li lay-id="tab_index_3_" trade-status="2">已取消</li>
+                <li lay-id="tab_index_4_" trade-status="3">已完成</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <script type="text/html" id="tab_index_0_toolbarDemo">
+                        <div class="layui-btn-container">
+                            <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                        </div>
+                    </script>
+
+                    <table class="layui-hide" id="tab_index_0_orderTable" lay-filter="tab_index_0_orderTableFilter"></table>
+
+                    <script type="text/html" id="tab_index_0_orderTableBar">
+                        <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                    </script>
+
+                </div>
+                <div class="layui-tab-item">
+                    <script type="text/html" id="tab_index_1_toolbarDemo">
+                        <div class="layui-btn-container">
+                            <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                        </div>
+                    </script>
+
+                    <table class="layui-hide" id="tab_index_1_orderTable" lay-filter="tab_index_1_orderTableFilter"></table>
+
+                    <script type="text/html" id="tab_index_1_orderTableBar">
+                        <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                    </script>
+                </div>
+                <div class="layui-tab-item">
+
+                    <script type="text/html" id="tab_index_2_toolbarDemo">
+                        <div class="layui-btn-container">
+                            <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                        </div>
+                    </script>
+
+                    <table class="layui-hide" id="tab_index_2_orderTable" lay-filter="tab_index_2_orderTableFilter"></table>
+
+                    <script type="text/html" id="tab_index_2_orderTableBar">
+                        <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                    </script>
+                </div>
+                <div class="layui-tab-item">
+
+                    <script type="text/html" id="tab_index_3_toolbarDemo">
+                        <div class="layui-btn-container">
+                            <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                        </div>
+                    </script>
+
+                    <table class="layui-hide" id="tab_index_3_orderTable" lay-filter="tab_index_3_orderTableFilter"></table>
+
+                    <script type="text/html" id="tab_index_3_orderTableBar">
+                        <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                    </script>
+                </div>
+                <div class="layui-tab-item">
+
+
+                    <script type="text/html" id="tab_index_4_toolbarDemo">
+                        <div class="layui-btn-container">
+                            <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                        </div>
+                    </script>
+
+                    <table class="layui-hide" id="tab_index_4_orderTable" lay-filter="tab_index_4_orderTableFilter"></table>
+
+                    <script type="text/html" id="tab_index_4_orderTableBar">
+                        <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                    </script>
+                </div>
+            </div>
+        </div>
 
 
     </div>
@@ -269,10 +269,12 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'id',  title: '主键'},
-                        {field: 'orderNo',  title: '订单编号'},
-                        {field: 'userId',  title: '用户ID'},
-                        {field: 'payMethod', title: '支付方式',
+                        {field: 'id', width: 200,  title: '主键'},
+                        {field: 'mainOrderNo', width: 300,  title: '主订单编号'},
+                        {field: 'orderNo', width: 300,  title: '订单编号'},
+                        {field: 'userId', width: 200,  title: '用户ID'},
+                        {field: 'shopId', width: 200,  title: '店铺ID'},
+                        {field: 'payMethod', width: 100, title: '支付方式',
                             templet: function (row) {
                                 if(row.payMethod == "1"){
                                     return "线上支付"
@@ -281,7 +283,7 @@
                                 }
                                 return row.payMethod;
                             }},
-                        {field: 'payType', title: '交易类型',
+                        {field: 'payType', width: 100, title: '交易类型',
                             templet: function (row) {
                                 if(row.payType == -1){
                                     return "未确定"
@@ -292,7 +294,7 @@
                                 }
                                 return row.payType;
                             }},
-                        {field: 'payStatus', title: '支付状态',
+                        {field: 'payStatus', width: 100, title: '支付状态',
                             templet: function (row) {
                                 if(row.payStatus == "0"){
                                     return "未支付"
@@ -305,7 +307,7 @@
                                 }
                                 return row.payStatus;
                             }},
-                        {field: 'tradeStatus', title: '交易状态',
+                        {field: 'tradeStatus', width: 100, title: '交易状态',
                             templet: function (row) {
                                 if(row.tradeStatus == "0"){
                                     return "待付款"
@@ -318,9 +320,12 @@
                                 }
                                 return row.tradeStatus;
                             }},
-                        {field: 'orderAmount',  title: '订单金额'},
-                        {field: 'outerTradeNo',  title: '交易订单号'},
-                        {field: 'srcType', title: '购买渠道',
+                        {field: 'freightAmount', width: 100,  title: '运费金额'},
+                        {field: 'redPackageAmount', width: 100,  title: '红包金额'},
+                        {field: 'couponAmount', width: 100,  title: '优惠券金额'},
+                        {field: 'orderAmount', width: 100,  title: '订单金额'},
+                        {field: 'outerTradeNo', width: 100,  title: '交易流水号'},
+                        {field: 'srcType', width: 100, title: '购买渠道',
                             templet: function (row) {
                                 if(row.srcType == 1){
                                     return "PC"
@@ -329,7 +334,11 @@
                                 }
                                 return row.srcType;
                             }},
-                        {field: 'payDate',  title: '支付时间'},
+                        {field: 'payDate', width: 150,  title: '支付时间'},
+                        {field: 'paymentDeadlineTime', width: 150,  title: '支付截止时间'},
+                        {field: 'createDate', width: 230,  title: '创建时间'},
+                        {field: 'cancelDate', width: 230,  title: '取消订单时间'},
+                        {field: 'cancelRemark', width: 230,  title: '取消订单备注'},
                         {title: '操作', minWidth: 300, toolbar: '#'+tableIndex+'orderTableBar', align: "center"}
                     ]
                 ],
