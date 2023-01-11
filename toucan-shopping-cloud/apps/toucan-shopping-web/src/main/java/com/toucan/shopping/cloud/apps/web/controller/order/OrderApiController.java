@@ -779,6 +779,7 @@ public class OrderApiController {
                 orderItemVO.setProductSkuName(ubc.getProductSkuName()); //商品SKU名称
                 orderItemVO.setProductPreviewPath(ubc.getProductPreviewPath()); //商品预览图
                 orderItemVO.setProductSkuJson(ubc.getProductSkuJson()); //商品快照
+                orderItemVO.setFreightTemplateId(ubc.getFreightTemplateId()); //运费模板ID
                 orderItemVO.setDeliveryStatus(0); //未收货
                 orderItemVO.setBuyerStatus(0); //待收货
                 orderItemVO.setSellerStatus(1); //备货完成
