@@ -36,6 +36,8 @@ public class Order {
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)
     private Integer srcType; //用户购买渠道 1:pc 2:app
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Date paymentDeadlineTime; //支付截止时间(超时时间)
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
