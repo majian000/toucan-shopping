@@ -57,7 +57,7 @@ public class PhoneUtils {
      */
     public static String desensitization(String phone) throws Exception
     {
-        if(StringUtils.isNotEmpty(phone))
+        if(StringUtils.isNotEmpty(phone)&&phone.length()>4)
         {
             int startPos = phone.length()/2 - 2;
             int endPos = phone.length()/2 + 2;
