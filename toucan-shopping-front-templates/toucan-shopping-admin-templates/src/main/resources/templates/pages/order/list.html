@@ -277,7 +277,10 @@
                         {type: "checkbox", width: 50},
                         {field: 'id', width: 200,  title: '主键'},
                         {field: 'mainOrderNo', width: 300,  title: '主订单编号'},
-                        {field: 'orderNo', width: 300,  title: '订单编号'},
+                        {field: 'orderNo', width: 300,  title: '订单编号',event:'openDetailDialogDevent',
+                            templet: function (row) {
+                                return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.orderNo+"</a>";
+                            }},
                         {field: 'userId', width: 200,  title: '用户ID'},
                         {field: 'shopId', width: 200,  title: '店铺ID'},
                         {field: 'payMethod', width: 100, title: '支付方式',
@@ -493,7 +496,12 @@
 
             table.on('tool('+tableIndex+'orderTableFilter)', function (obj) {
                 var data = obj.data;
-                if (obj.event == 'edit') {
+                if (obj.event == 'detail') {
+                    openDetailDialog(data.id);
+                }else if(obj.event=="openDetailDialogDevent")
+                {
+                    openDetailDialog(data.id);
+                }else if (obj.event == 'edit') {
 
                     var index = layer.open({
                         title: '编辑订单',
@@ -507,34 +515,28 @@
                         layer.full(index);
                     });
                     return false;
-                } else if (obj.event == 'delete') {
-                    layer.confirm('确定删除该订单?', function (index) {
-                        $.ajax({
-                            url:"[[@{/}]]order/delete/"+data.id,
-                            contentType: "application/json; charset=utf-8",
-                            type:'DELETE',
-                            success:function(data){
-                                layer.msg(data.msg);
-
-                                //执行搜索重载
-                                table.reload(tableIndex+'orderTable', {
-                                    page: {
-                                        curr: 1
-                                    }
-                                    , where: data.field
-                                }, 'data');
-
-                            },
-                            complete:function(data)
-                            {
-                                layer.close(index);
-                            }
-                        });
-                    });
                 }
             });
         }
 
+
+        function openDetailDialog(id)
+        {
+            var index = layer.open({
+                title: '订单详情',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]order/detailPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
 
         initOrderTable("tab_index_0_");
 

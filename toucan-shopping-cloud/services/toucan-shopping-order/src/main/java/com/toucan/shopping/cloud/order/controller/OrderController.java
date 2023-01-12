@@ -327,4 +327,27 @@ public class OrderController {
     }
 
 
+
+
+    /**
+     * 根据ID查询
+     */
+    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
+            resultObjectVO.setData(orderService.queryOneByVO(orderVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败");
+        }
+        return resultObjectVO;
+    }
+
+
 }

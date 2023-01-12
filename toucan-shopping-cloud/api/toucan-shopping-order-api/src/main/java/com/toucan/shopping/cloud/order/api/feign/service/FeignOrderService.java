@@ -56,4 +56,11 @@ public interface FeignOrderService {
     @RequestMapping(value="/queryByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 根据ID查询
+     */
+    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
+
 }

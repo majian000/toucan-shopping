@@ -118,5 +118,34 @@ public class OrderController extends UIController {
 
 
 
+
+
+    /**
+     * 查看
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            OrderVO query = new OrderVO();
+            query.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            ResultObjectVO resultObjectVO = feignOrderService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+                request.setAttribute("model",orderVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/order/detail.html";
+    }
+
 }
 

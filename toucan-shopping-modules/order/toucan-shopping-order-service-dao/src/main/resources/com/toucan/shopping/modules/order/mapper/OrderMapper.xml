@@ -40,6 +40,11 @@
 
     <sql id="queryByVOWhere">
         and t.delete_status = 0
+
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
         <if test="orderNo!=null and orderNo!='' ">
             and t.order_no = #{orderNo}
         </if>
