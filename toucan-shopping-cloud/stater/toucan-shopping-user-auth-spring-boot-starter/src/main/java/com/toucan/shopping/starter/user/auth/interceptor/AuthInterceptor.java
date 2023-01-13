@@ -266,6 +266,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     deleteCookies(response);
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.setAttribute("redirectUrl",request.getRequestURI());
                                         request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
                                     }
                                     return false;
@@ -280,6 +281,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     deleteCookies(response);
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.setAttribute("redirectUrl",request.getRequestURI());
                                         request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
                                     }
                                     return false;
@@ -309,6 +311,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     deleteCookies(response);
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.setAttribute("redirectUrl",request.getRequestURI());
                                         request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
                                     }
                                     return false;

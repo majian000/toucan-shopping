@@ -117,7 +117,12 @@ public class UserPageController extends BaseController {
             //查询登录次数,失败3次要求输入验证码
             String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
             Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
-            request.setAttribute("redirectUrl",request.getParameter("redirectUrl"));
+            String redirectUrl = request.getParameter("redirectUrl");
+            if(StringUtils.isEmpty(redirectUrl))
+            {
+                redirectUrl = request.getAttribute("redirectUrl")!=null?String.valueOf(request.getAttribute("redirectUrl")):null;
+            }
+            request.setAttribute("redirectUrl",redirectUrl);
             if (loginFaildCountValueObject != null) {
                 Integer faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
                 if (faildCount >= 3) {
