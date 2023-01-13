@@ -39,4 +39,9 @@ public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressSe
         return orderConsigneeAddressMapper.findByOrderNos(orderNos);
     }
 
+    @Override
+    public OrderConsigneeAddressVO queryOneByOrderNo(String orderNo) {
+        return orderConsigneeAddressMapper.queryOneByOrderNo(orderNo);
+    }
+
 }

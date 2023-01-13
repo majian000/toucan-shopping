@@ -148,6 +148,15 @@ public class OrderApiController {
             return resultObjectVO;
 
         }
+        if(StringUtils.isNotEmpty(createOrderVO.getRemark()))
+        {
+            if(createOrderVO.getRemark().length()>255)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("订单备注长度最多255个汉字!");
+                return resultObjectVO;
+            }
+        }
         //锁住当前购买所有商品
         List<String> lockKeys= new ArrayList<String>();
         String userId = "-1";
@@ -165,6 +174,7 @@ public class OrderApiController {
             mainOrderVO.setOrderNo(orderNo);
             mainOrderVO.setUserId(userId);
             mainOrderVO.setAppCode(toucan.getAppCode());
+            mainOrderVO.setRemark(createOrderVO.getRemark());
             mainOrderVO.setCreateDate(new Date());
             createOrderVO.setMainOrder(mainOrderVO);
             String globalTransactionId = UUID.randomUUID().toString().replace("-","");
@@ -704,6 +714,7 @@ public class OrderApiController {
         orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
         orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
         orderVO.setSrcType(createOrderVo.getSrcType()); //下单渠道
+        orderVO.setRemark(createOrderVo.getRemark()); //订单备注
         orders.add(orderVO);
         for(int i = 0; i< createOrderVo.getBuyCarItems().size();i++)
         {
@@ -734,6 +745,7 @@ public class OrderApiController {
                     orderVO.setMainOrderNo(createOrderVo.getMainOrder().getOrderNo());
                     orderVO.setPaymentDeadlineTime(paymentDeadlineTime); //支付截止时间
                     orderVO.setSrcType(createOrderVo.getSrcType()); //下单渠道
+                    orderVO.setRemark(createOrderVo.getRemark()); //订单备注
                     orders.add(orderVO);
                     //如果为空默认为包邮
                     if(StringUtils.isNotEmpty(currentUserBuyCarItem.getSelectTransportModel())) {

@@ -119,4 +119,9 @@ public class OrderServiceImpl implements OrderService {
     public Order queryOneByVO(OrderVO orderVO) {
         return orderMapper.queryOneByVO(orderVO);
     }
+
+    @Override
+    public OrderVO queryOneVOByVO(OrderVO orderVO) {
+        return orderMapper.queryOneVOByVO(orderVO);
+    }
 }

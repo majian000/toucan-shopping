@@ -236,4 +236,14 @@
     </select>
 
 
+
+    <select id="queryOneVOByVO" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.vo.OrderVO" >
+        select t.* from t_order t
+        where 1=1
+        <include refid="queryByVOWhere" />
+
+        limit 0,1
+    </select>
+
+
 </mapper>

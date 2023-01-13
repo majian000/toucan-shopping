@@ -31,4 +31,6 @@ public class CreateOrderVO {
 
     private Integer srcType = 1 ; //下单渠道 1:pc 2:app
 
+    private String remark; //备注
+
 }

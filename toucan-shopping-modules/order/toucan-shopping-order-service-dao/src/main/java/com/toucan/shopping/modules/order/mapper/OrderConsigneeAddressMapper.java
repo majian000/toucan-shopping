@@ -18,4 +18,6 @@ public interface OrderConsigneeAddressMapper {
     int inserts(List<OrderConsigneeAddress> entitys);
 
     List<OrderConsigneeAddressVO> findByOrderNos(List<String> orderNos);
+
+    OrderConsigneeAddressVO queryOneByOrderNo(String orderNo);
 }

@@ -60,5 +60,11 @@
     </insert>
 
 
+    <select id="queryOneByOrderNo" resultMap="entityVOMap">
+        select * from t_order_consignee_address t where t.order_no = #{orderNo} and t.delete_status=0 limit 0,1
+    </select>
+
+
+
 
 </mapper>

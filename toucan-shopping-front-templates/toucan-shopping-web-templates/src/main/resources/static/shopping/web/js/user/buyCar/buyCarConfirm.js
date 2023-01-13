@@ -1260,6 +1260,16 @@ function paymentEvent()
         return;
     }
 
+    var orderRemark = $("#order_remark").val();
+    if(orderRemark!=null&&orderRemark!=""&&orderRemark.length>255)
+    {
+        $.message({
+            message:"订单备注长度最多255个汉字",
+            type: 'error'
+        });
+        return;
+    }
+
     loading.showLoading({
         type:1,
         tip:"提交中..."
@@ -1273,7 +1283,8 @@ function paymentEvent()
     var params = {
         buyCarItems:g_cache_buy_items,
         consigneeAddress:g_consigneeAddress,
-        payType:-1
+        payType:-1,
+        remark:orderRemark
     };
 
 

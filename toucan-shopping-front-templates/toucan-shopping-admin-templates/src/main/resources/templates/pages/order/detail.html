@@ -40,24 +40,321 @@
 
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <div class="layui-form-item" >
-                            <div class="layui-inline" style="width:40%">
-                                <label class="layui-form-label " >上架状态</label>
-                                <div class="layui-input-block "  style="padding-top:7px;" >
-                                    <a th:if="${model.status!=null&&model.status eq 0}">未上架</a>
-                                    <a th:if="${model.status!=null&&model.status eq 1}">已上架</a>
+                        <div class="layui-inline" style="width:80%">
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>订单详情</legend>
+                            </fieldset>
+                            <div class="layui-form layuimini-form">
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >主订单号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.mainOrderNo}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >订单号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderNo}"  class="layui-input">
+                                        </div>
+                                    </div>
                                 </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >用户ID</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.userId}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >店铺ID</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.shopId}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >运费金额</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${model.freightAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >红包金额</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${model.redPackageAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >优惠券金额</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${model.couponAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  style="white-space: nowrap!important;">订单金额(不算折扣)</label>
+                                        <div class="layui-input-block" style="margin-left: 160px;">
+                                            <input type="text"  th:value="${model.totalAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " style="white-space: nowrap!important;" >订单金额(折扣算完)</label>
+                                        <div class="layui-input-block" style="margin-left: 160px;">
+                                            <input type="text"  th:value="${model.orderAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >付款金额</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${model.payAmount}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline" style="width:80%">
+                                    <label class="layui-form-label " style="white-space: nowrap!important;" >订单备注</label>
+                                    <div class="layui-input-block"   style="margin-left: 120px;">
+                                        <textarea name="remark" class="layui-textarea" th:text="${model.remark}" ></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >交易流水号</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${model.outerTradeNo}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >支付状态</label>
+                                        <div class="layui-input-block" th:if="${model.payStatus eq 0}" >
+                                            <select name="payStatus"  lay-search="">
+                                                <option value="0" selected>未支付</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payStatus eq 1}" >
+                                            <select name="payStatus"  lay-search="">
+                                                <option value="1" selected>已支付</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payStatus eq 3}" >
+                                            <select name="payStatus"  lay-search="">
+                                                <option value="3" selected>线下支付已到账</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payStatus eq 4}" >
+                                            <select name="payStatus"  lay-search="">
+                                                <option value="4" selected>取消支付</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" >
+
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >交易状态</label>
+                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 0}" >
+                                            <select name="tradeStatus"  lay-search="">
+                                                <option value="0" selected>待付款</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 1}" >
+                                            <select name="tradeStatus"  lay-search="">
+                                                <option value="1" selected>待收货</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 2}" >
+                                            <select name="tradeStatus"  lay-search="">
+                                                <option value="2" selected>已取消</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 3}" >
+                                            <select name="tradeStatus"  lay-search="">
+                                                <option value="3" selected>已完成</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >支付方式</label>
+                                        <div class="layui-input-block" th:if="${model.payMethod eq 1}" >
+                                            <select name="payMethod"  lay-search="">
+                                                <option value="0" selected>线上支付</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payMethod eq 2}" >
+                                            <select name="payMethod"  lay-search="">
+                                                <option value="1" selected>线下支付</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+
+                                        <label class="layui-form-label "  >支付渠道</label>
+                                        <div class="layui-input-block" th:if="${model.payType eq -1}" >
+                                            <select name="payType"  lay-search="">
+                                                <option  selected>未确定</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payType eq 0}" >
+                                            <select name="payType"  lay-search="">
+                                                <option value="0" selected>微信</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.payType eq 1}" >
+                                            <select name="payType"  lay-search="">
+                                                <option value="1" selected>支付宝</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >支付时间</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${#dates.format(model.payDate,'yyyy-MM-dd HH:mm:ss')}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " style="white-space: nowrap!important;" >取消订单时间</label>
+                                        <div class="layui-input-block"   style="margin-left: 120px;">
+                                            <input type="text"  th:value="${#dates.format(model.cancelDate,'yyyy-MM-dd HH:mm:ss')}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label "  >创建时间</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text"  th:value="${#dates.format(model.createDate,'yyyy-MM-dd HH:mm:ss')}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="layui-inline" style="width:80%">
+                                    <label class="layui-form-label " style="white-space: nowrap!important;" >取消订单备注</label>
+                                    <div class="layui-input-block"   style="margin-left: 120px;">
+                                        <textarea name="remark" class="layui-textarea" th:text="${model.cancelRemark}" ></textarea>
+                                    </div>
+                                </div>
+                                <!--<div class="layui-form-item" >-->
+                                <!--<div class="layui-inline" style="width:40%">-->
+                                <!--<label class="layui-form-label " >上架状态</label>-->
+                                <!--<div class="layui-input-block "  style="padding-top:7px;" >-->
+                                <!--<a th:if="${model.status!=null&&model.status eq 0}">未上架</a>-->
+                                <!--<a th:if="${model.status!=null&&model.status eq 1}">已上架</a>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
                             </div>
                         </div>
-                        <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺商品ID</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.id}"  class="layui-input">
+
+
+
+                        <div class="layui-inline" style="width:80%">
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>收货人信息</legend>
+                            </fieldset>
+                            <div class="layui-form layuimini-form">
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >收货人</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.name}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >收货人电话</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.phone}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >省份编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.provinceCode}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >省份名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.provinceName}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="layui-form-item" >
+
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >地市编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.cityCode}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >地市名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.cityName}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >区县编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.areaCode}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >区县名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderConsigneeAddress.areaName}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline" style="width:80%">
+                                    <label class="layui-form-label "  >收货地址</label>
+                                    <div class="layui-input-block"  >
+                                        <textarea name="remark" class="layui-textarea" th:text="${model.orderConsigneeAddress.address}" ></textarea>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
 
                     <div class="layui-tab-item">
+
+
                     </div>
 
                 </div>

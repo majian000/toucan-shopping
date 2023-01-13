@@ -339,7 +339,9 @@ public class OrderController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
-            resultObjectVO.setData(orderService.queryOneByVO(orderVO));
+            orderVO = orderService.queryOneVOByVO(orderVO);
+            orderVO.setOrderConsigneeAddress(orderConsigneeAddressService.queryOneByOrderNo(orderVO.getOrderNo()));
+            resultObjectVO.setData(orderVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

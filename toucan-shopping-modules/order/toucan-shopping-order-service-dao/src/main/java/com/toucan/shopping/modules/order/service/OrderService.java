@@ -81,4 +81,10 @@ public interface OrderService {
      */
     Order queryOneByVO(OrderVO orderVO);
 
+    /**
+     * 查询一个子订单对象
+     * @param orderVO
+     * @return
+     */
+    OrderVO queryOneVOByVO(OrderVO orderVO);
 }

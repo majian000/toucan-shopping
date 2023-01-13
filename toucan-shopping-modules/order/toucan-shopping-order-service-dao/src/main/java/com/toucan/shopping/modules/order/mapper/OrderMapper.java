@@ -53,4 +53,6 @@ public interface OrderMapper {
 
     Order queryOneByVO(OrderVO orderVO);
 
+    OrderVO queryOneVOByVO(OrderVO orderVO);
+
 }
