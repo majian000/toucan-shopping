@@ -375,7 +375,7 @@ function saveUserCar()
                 ShowDiv_1('userBuyCarMsg','fade1');
                 loadBuyCarPreviewPanel();
             }else if(result.code==403){
-                window.location.href=basePath+"/page/user/login";
+                window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getProductPageUrl());
             }
         },
         error: function (result) {

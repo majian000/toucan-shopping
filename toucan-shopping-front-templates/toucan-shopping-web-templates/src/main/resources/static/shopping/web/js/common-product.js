@@ -35,6 +35,11 @@ function getShopProductPreviewHrefIngoreId()
     return currentLocation;
 }
 
+function getProductPageUrl()
+{
+    return window.location.href;
+}
+
 /**
  * 判断是skuId查询还是商品id查询
  * @returns {number}

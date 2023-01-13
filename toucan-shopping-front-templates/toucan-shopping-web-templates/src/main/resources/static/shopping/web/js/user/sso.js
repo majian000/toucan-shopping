@@ -5,6 +5,7 @@
 
 function share_cookie()
 {
+    var redirectUrl = $("#redirectUrl").val();
     $.ajax({
         type: "POST",
         url: basePath+"/api/sso/query/domains",
@@ -16,17 +17,27 @@ function share_cookie()
             if(result.code==1)
             {
                 var pos =0;
-                set_cookie(pos,result.data)
+                set_cookie(redirectUrl,pos,result.data)
             }else{
-                window.location.href=basePath+"/page/user/info";
+                if(redirectUrl!=null&&redirectUrl!="")
+                {
+                    window.location.href =  redirectUrl;
+                }else {
+                    window.location.href = basePath + "/page/user/info";
+                }
             }
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        window.location.href=basePath+"/page/user/info";
+        if(redirectUrl!=null&&redirectUrl!="")
+        {
+            window.location.href =  redirectUrl;
+        }else {
+            window.location.href = basePath + "/page/user/info";
+        }
     });
 }
 
-function set_cookie(pos,domainList)
+function set_cookie(redirectUrl,pos,domainList)
 {
     $.ajax({
         type:"GET",
@@ -38,12 +49,22 @@ function set_cookie(pos,domainList)
         complete:function(data,status){
             if(pos+1<domainList.length)
             {
-                set_cookie(pos+1,domainList);
+                set_cookie(redirectUrl,pos+1,domainList);
             }else{
-                window.location.href=basePath+"/page/user/info";
+                if(redirectUrl!=null&&redirectUrl!="")
+                {
+                    window.location.href =  redirectUrl;
+                }else {
+                    window.location.href = basePath + "/page/user/info";
+                }
             }
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        window.location.href=basePath+"/page/user/info";
+        if(redirectUrl!=null&&redirectUrl!="")
+        {
+            window.location.href =  redirectUrl;
+        }else {
+            window.location.href = basePath + "/page/user/info";
+        }
     });
 }
