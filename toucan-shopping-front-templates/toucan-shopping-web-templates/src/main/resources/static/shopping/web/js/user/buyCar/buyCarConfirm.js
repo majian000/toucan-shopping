@@ -20,6 +20,11 @@ function loadBuyCarConfirmPage() {
     startLoadding();
     loadDefaultConsigneeAddress();
 
+    $('#order_remark').bind('input propertychange',function(){
+        $('.or_max_tips').html($(this).val().length+"/"+$(this).attr("maxlength"));
+    });
+
+
     $(".mcar_remove").click(function(){
         removeBuyCar();
     });
