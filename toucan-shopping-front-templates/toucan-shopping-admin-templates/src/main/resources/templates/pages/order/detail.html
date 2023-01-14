@@ -353,14 +353,10 @@
 
 
 
-                        <div class="layui-inline" style="width:80%">
-                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                                <legend>订单项列表</legend>
-                            </fieldset>
-                            <div class="layui-form layuimini-form">
-                                <table class="layui-hide" id="orderItemSkuTable" ></table>
-                            </div>
-                        </div>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>订单项列表</legend>
+                        </fieldset>
+                        <table class="layui-hide" id="orderItemSkuTable" ></table>
                     </div>
 
                     <div class="layui-tab-item">
@@ -394,6 +390,7 @@
             cols: [
                 [
                     {field: 'skuId',  title: '商品SKUID', width: 180},
+                    {field: 'productSkuName',  title: '商品名称', width: 320},
                     {field: 'httpProductPreviewPath', width: 150, title: '商品预览',
                         templet: function (row) {
                             if(row.httpProductPreviewPath!=null) {
@@ -413,7 +410,47 @@
                                 return "已收货";
                             }
                             return row.deliveryStatus;
-                        }}
+                        }},
+                    {field: 'sellerStatus',  title: '卖家备货状态', width: 150,
+                        templet: function (row) {
+                            if(row.sellerStatus==0) {
+                                return "备货中";
+                            }
+                            if(row.sellerStatus==1) {
+                                return "备货完成";
+                            }
+                            if(row.sellerStatus==2) {
+                                return "缺货";
+                            }
+                            return row.sellerStatus;
+                        }},
+                    {field: 'buyerStatus',  title: '买家状态', width: 100,
+                        templet: function (row) {
+                            if(row.buyerStatus==0) {
+                                return "待收货";
+                            }
+                            if(row.buyerStatus==1) {
+                                return "已收货";
+                            }
+                            if(row.buyerStatus==2) {
+                                return "换货";
+                            }
+                            if(row.buyerStatus==3) {
+                                return "退货";
+                            }
+                            return row.buyerStatus;
+                        }},
+                    {field: 'productPrice',  title: '商品单价', width: 120},
+                    {field: 'productNum',  title: '购买数量', width: 120},
+                    {field: 'orderItemAmount',  title: '总金额', width: 120},
+                    {field: 'deliveryReceiveTime',  title: '收货时间', width: 120},
+                    {field: 'deliveryFinishTime',  title: '配送完成时间', width: 120},
+                    {field: 'sellerFinishTime',  title: '卖家完成时间', width: 120},
+                    {field: 'buyerFinishTime',  title: '买家完成时间', width: 120},
+                    {field: 'freightTemplateId',  title: '运费模板ID', width: 120}
+
+
+
                 ]
             ],
             limits: [15,30,100,200],
