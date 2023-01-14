@@ -33,6 +33,16 @@
 
     </resultMap>
 
+    <sql id="queryListPageWhere">
+
+        <if test="orderId!=null and orderId!=-1 ">
+            and t.order_id = #{orderId}
+        </if>
+
+        and delete_status = 0
+
+    </sql>
+
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_item(id,user_id,order_no,order_id,sku_id,product_sku_name,product_sku_json,product_preview_path,delivery_status,seller_status,buyer_status,
@@ -82,6 +92,34 @@
                 #{item}
             </foreach>
           and t.delete_status=0
+    </select>
+
+
+
+
+    <select id="queryListPage" resultMap="orderItemVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderItemPageInfo">
+        select t.* from t_order_item t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderItemPageInfo">
+        select count(*) from t_order_item t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
     </select>
 
 </mapper>

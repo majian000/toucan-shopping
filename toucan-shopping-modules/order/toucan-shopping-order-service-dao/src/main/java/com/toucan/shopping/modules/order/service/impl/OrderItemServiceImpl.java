@@ -1,9 +1,11 @@
 package com.toucan.shopping.modules.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.mapper.OrderItemMapper;
+import com.toucan.shopping.modules.order.page.OrderItemPageInfo;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -49,4 +51,17 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemMapper.insert(orderItem);
     }
 
+
+    @Override
+    public PageInfo<OrderItemVO> queryOrderListPage(OrderItemPageInfo pageInfo) {
+        PageInfo<OrderItemVO> pageResult = new PageInfo();
+        pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
+        pageResult.setList(orderItemMapper.queryListPage(pageInfo));
+        pageResult.setTotal(orderItemMapper.queryListPageCount(pageInfo));
+
+        pageResult.setSize(pageInfo.getSize());
+        pageResult.setLimit(pageInfo.getLimit());
+        pageResult.setPage(pageInfo.getPage());
+        return pageResult;
+    }
 }

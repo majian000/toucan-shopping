@@ -81,7 +81,7 @@ public class FeignOrderServiceFallbackFactory implements FallbackFactory<FeignOr
                 }
                 logger.warn("FeignOrderServiceFallbackFactory queryListPage header {}  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询支付超时订单失败");
+                resultObjectVO.setMsg("查询订单页失败");
                 return resultObjectVO;
             }
 
