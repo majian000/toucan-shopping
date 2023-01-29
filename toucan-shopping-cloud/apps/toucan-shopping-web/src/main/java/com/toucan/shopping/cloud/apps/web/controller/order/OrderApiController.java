@@ -1185,4 +1185,50 @@ public class OrderApiController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 订单列表
+     * @param request
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/query/order/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody OrderPageInfo orderPageInfo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            orderPageInfo.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            orderPageInfo.setAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
+            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                orderPageInfo = resultObjectVO.formatData(OrderPageInfo.class);
+                if(!CollectionUtils.isEmpty(orderPageInfo.getList()))
+                {
+                    for(OrderVO orderVO:orderPageInfo.getList())
+                    {
+                        if(!CollectionUtils.isEmpty(orderVO.getOrderItems()))
+                        {
+                            for(OrderItemVO orderItemVO:orderVO.getOrderItems())
+                            {
+                                if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())) {
+                                    orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                                }
+                            }
+                        }
+                    }
+                }
+                resultObjectVO.setData(orderPageInfo);
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 }
