@@ -102,6 +102,7 @@ public class ShopProductController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/shopProduct/listPage",feignFunctionService);
+        request.setAttribute("pcProductDetailPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductDetailPage());
         return "pages/product/shopProduct/list.html";
     }
 
