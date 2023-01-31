@@ -64,7 +64,7 @@ function loadBuyCarPanel(){
                         "                        <input type=\"hidden\" class='mcar_pp'  id=\"productPrice_"+buyCarItem.id+"\" value=\""+buyCarItem.productPrice+"\" />"+
                         "                    </div>\n" +
                         "                </td>\n" +
-                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
+                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(parseFloat((new BigNumber(buyCarItem.buyCount).times(new BigNumber(buyCarItem.productPrice))).toFixed(2)))+"</a></td>\n" +
                         "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
@@ -75,7 +75,7 @@ function loadBuyCarPanel(){
                 productHtmls+="<tr height=\"70\">\n" +
                     "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
                     "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car clear_buy_car_ckx\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
-                    "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal.toFixed(2)+"</a></b></span>\n" +
+                    "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+parseFloat(productPriceTotal.toFixed(2))+"</a></b></span>\n" +
                     "                </td>\n" +
                     "            </tr>\n" +
                     "            <tr valign=\"top\" height=\"150\">\n" +
@@ -245,7 +245,10 @@ function updateRow(cid,bnum)
             if(result.code==1)
             {
                 $(this).val(bnum);
-                $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
+                var productNumber = new BigNumber(bnum);
+                var productPrice = new BigNumber($("#productPrice_"+cid).val());
+                //数量*单价
+                $("#buyItemTotal_"+cid).html(parseFloat((productNumber.times(productPrice)).toFixed(2)));
                 calculatePriceTotal();
             }else{
                 $.message({
@@ -313,9 +316,11 @@ function calculatePriceTotal()
     var productPriceTotal = new BigNumber(0);
     for(var i=0;i<pns.length;i++)
     {
+        var productNumber = new BigNumber($(pns[i]).val());
+        var productPrice = new BigNumber($(pps[i]).val());
         //数量*单价
-        productPriceTotal=productPriceTotal.plus(new BigNumber(parseInt($(pns[i]).val())).times(new BigNumber(parseFloat($(pps[i]).val()))));
+        productPriceTotal=productPriceTotal.plus(productNumber.times(productPrice));
     }
-    $("#productPriceTotal").html(productPriceTotal);
+    $("#productPriceTotal").html(parseFloat(productPriceTotal.toFixed(2)));
 
 }

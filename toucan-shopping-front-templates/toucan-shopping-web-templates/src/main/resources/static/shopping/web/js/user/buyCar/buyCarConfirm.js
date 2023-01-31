@@ -474,9 +474,9 @@ function calculateFreightTotal()
         }
     }
     g_freight_money = new BigNumber(freightMoneyTotal.toFixed(2));
-    $("#freightPriceTotal").html("￥"+g_freight_money);
-    $(".order_freight_total").html("￥"+g_freight_money);
-    $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
+    $("#freightPriceTotal").html("￥"+parseFloat(g_freight_money.toFixed(2)));
+    $(".order_freight_total").html("￥"+parseFloat(g_freight_money.toFixed(2)));
+    $(".order_price_total").html("￥"+parseFloat((g_product_price_money.plus(g_freight_money)).toFixed(2)));
 
 }
 
@@ -606,7 +606,7 @@ function loadBuyCarPanel(){
                     productHtmls+="                </td>\n" +
                         "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
                         "                <td align=\"center\">\n" +buyCarItem.buyCount + "                </td>\n" +
-                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
+                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(parseFloat((new BigNumber(buyCarItem.buyCount).times(new BigNumber(buyCarItem.productPrice))).toFixed(2)))+"</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
                     if(buyCarItem.isAllowedBuy) {
@@ -617,7 +617,7 @@ function loadBuyCarPanel(){
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
-                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal.toFixed(2)+"</a>\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+parseFloat(productPriceTotal.toFixed(2))+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
@@ -628,8 +628,8 @@ function loadBuyCarPanel(){
 
 
                 g_product_price_money = new BigNumber(productPriceTotal);
-                $(".product_price_total").html("￥"+g_product_price_money);
-                $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
+                $(".product_price_total").html("￥"+parseFloat(g_product_price_money.toFixed(2)));
+                $(".order_price_total").html("￥"+parseFloat((g_product_price_money.plus(g_freight_money)).toFixed(2)));
 
             }
         },
@@ -705,7 +705,7 @@ function loadModifyBuyCarPanel(){
                         "                        <input type=\"hidden\" class='mcar_pp'  id=\"productPrice_"+buyCarItem.id+"\" value=\""+buyCarItem.productPrice+"\" />"+
                         "                    </div>\n" +
                         "                </td>\n" +
-                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
+                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(parseFloat((new BigNumber(buyCarItem.buyCount).times(new BigNumber(buyCarItem.productPrice))).toFixed(2)))+"</a></td>\n" +
                         "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
@@ -718,7 +718,7 @@ function loadModifyBuyCarPanel(){
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
-                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal.toFixed(2)+"</a>\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+parseFloat(productPriceTotal.toFixed(2))+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
@@ -730,8 +730,8 @@ function loadModifyBuyCarPanel(){
 
                 drawFreightTemplateOption(result.data);
                 g_product_price_money = new BigNumber(productPriceTotal);
-                $(".product_price_total").html("￥"+g_product_price_money);
-                $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
+                $(".product_price_total").html("￥"+parseFloat(g_product_price_money.toFixed(2)));
+                $(".order_price_total").html("￥"+parseFloat((g_product_price_money.plus(g_freight_money)).toFixed(2)));
 
                 bindBuyItemNumEvent();
 
@@ -862,11 +862,11 @@ function calculatePriceTotal()
         //数量*单价
         productPriceTotal=productPriceTotal.plus(new BigNumber(parseInt($(pns[i]).val())).times(new BigNumber(parseFloat($(pps[i]).val()))));
     }
-    $("#productPriceTotal").html(productPriceTotal);
+    $("#productPriceTotal").html(parseFloat(productPriceTotal.toFixed(2)));
 
     g_product_price_money = new BigNumber(productPriceTotal);
-    $(".product_price_total").html("￥"+g_product_price_money);
-    $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
+    $(".product_price_total").html("￥"+parseFloat(g_product_price_money.toFixed(2)));
+    $(".order_price_total").html("￥"+parseFloat((g_product_price_money.plus(g_freight_money)).toFixed(2)));
 }
 
 
