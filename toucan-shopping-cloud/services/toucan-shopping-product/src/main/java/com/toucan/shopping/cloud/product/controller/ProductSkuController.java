@@ -319,19 +319,19 @@ public class ProductSkuController {
             PageInfo<ProductSkuVO> pageInfo =  productSkuService.queryListPage(queryPageInfo);
             if(!CollectionUtils.isEmpty(pageInfo.getList()))
             {
-                ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(queryPageInfo.getShopProductId());
-                if(shopProductDescription!=null) {
-                    List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(queryPageInfo.getShopProductId(),shopProductDescription.getId());
-                    if(!CollectionUtils.isEmpty(shopProductDescriptionImgVOS))
-                    {
-                        for(ProductSkuVO productSkuVO:pageInfo.getList()) {
-                            for (ShopProductDescriptionImgVO shopProductDescriptionImgVO : shopProductDescriptionImgVOS) {
-                                if(shopProductDescriptionImgVO.getType()==2
-                                        &&shopProductDescriptionImgVO.getProductSkuId()!=null
-                                        &&productSkuVO.getId().longValue()==shopProductDescriptionImgVO.getProductSkuId().longValue())
-                                {
-                                    productSkuVO.setDescriptionImgFilePath(shopProductDescriptionImgVO.getFilePath());
-                                    break;
+                if(queryPageInfo.getShopProductId()!=null) {
+                    ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(queryPageInfo.getShopProductId());
+                    if (shopProductDescription != null) {
+                        List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(queryPageInfo.getShopProductId(), shopProductDescription.getId());
+                        if (!CollectionUtils.isEmpty(shopProductDescriptionImgVOS)) {
+                            for (ProductSkuVO productSkuVO : pageInfo.getList()) {
+                                for (ShopProductDescriptionImgVO shopProductDescriptionImgVO : shopProductDescriptionImgVOS) {
+                                    if (shopProductDescriptionImgVO.getType() == 2
+                                            && shopProductDescriptionImgVO.getProductSkuId() != null
+                                            && productSkuVO.getId().longValue() == shopProductDescriptionImgVO.getProductSkuId().longValue()) {
+                                        productSkuVO.setDescriptionImgFilePath(shopProductDescriptionImgVO.getFilePath());
+                                        break;
+                                    }
                                 }
                             }
                         }

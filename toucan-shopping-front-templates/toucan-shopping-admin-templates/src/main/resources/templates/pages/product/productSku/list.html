@@ -83,17 +83,6 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">审核状态</label>
-                                    <div class="layui-input-inline">
-                                        <select id="approveStatus"  name="approveStatus" lay-search="" lay-filter="approveStatus">
-                                            <option value="-1" selected>全部</option>
-                                            <option value="1" >审核中</option>
-                                            <option value="2" >审核通过</option>
-                                            <option value="3" >审核驳回</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
                                     <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
@@ -109,9 +98,9 @@
                     </div>
                 </script>
 
-                <table class="layui-hide" id="shopProductTable" lay-filter="shopProductTableFilter"></table>
+                <table class="layui-hide" id="productSkuTable" lay-filter="productSkuTableFilter"></table>
 
-                <script type="text/html" id="shopProductTableBar">
+                <script type="text/html" id="productSkuTableBar">
                     <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
                 </script>
             </div>
@@ -165,7 +154,7 @@
 
 
         table.render({
-            elem: '#shopProductTable',
+            elem: '#productSkuTable',
             url: "[[@{/}]]product/productSku/list",
             method:'POST',
             where:getFormParam(),
@@ -181,139 +170,37 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '商品ID', width: 150},
-                    {field: 'approveStatus',width: 150,   title: '审核状态',
+                    {field: 'id',  title: '商品SKUID', width: 260},
+                    {field: 'httpMainPhoto',width:150,  title: '商品主图',
                         templet: function (row) {
-                            if(row.approveStatus == null){
-                                return "";
+                            if(row.httpMainPhoto!=null) {
+                                return "<a href='" + row.httpMainPhoto + "' target='_blank'><img src='" + row.httpMainPhoto + "' width='100' height='100'  /></a>";
                             }
-                            if(row.approveStatus == "1"){
-                                return "审核中";
-                            }
-                            if(row.approveStatus == "2"){
-                                return "<a style='color:green'>审核通过</a>";
-                            }
-                            if(row.approveStatus == "3"){
-                                return "<a style='color:red'>审核驳回</a>";
-                            }
-                            return row.approveStatus;
-                        }
-                    },
-                    {field: 'name',width: 400,  title: '商品名称',event:'openApproveDialogDevent',
+                            return "";
+                        }},
+                    {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
                         templet: function (row) {
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
                         }},
-                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
-                        templet: function (row) {
-                            if(row.httpMainPhotoFilePath!=null) {
-                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
-                    {field: 'categoryPath',width: 350,  title: '分类路径'},
-                    {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
-                        templet: function (row) {
-                            if(row.brandHttpLogo!=null) {
-                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
-                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
-                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
-                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
-                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
-                    {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'attributes',width: 550,  title: '属性列表'},
+                    {field: 'price', width: 150, title: '价格'},
+                    {field: 'stockNum', width: 150, title: '库存数量'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
                                 return "";
                             }
                             if(row.status == "0"){
-                                return "未上架";
+                                return "<a style='color:red'>未上架</a>";
                             }
                             if(row.status == "1"){
-                                return "已上架";
+                                return "<a style='color:green'>已上架</a>";
                             }
                             return row.status;
                         }
                     },
-                    {field: 'shopId',width: 300,  title: '店铺ID'},
-                    {field: 'shopName',width: 300,  title: '店铺名称'},
-                    {field: 'rejectText',width: 150,   title: '驳回原因'},
-                    {field: 'sellerNo',width: 150,   title: '卖家编码'},
-                    {field: 'articleNumber',width: 150, title: '货号'},
-                    {field: 'payMethod',width: 150,   title: '付款方式',
-                        templet: function (row) {
-                            if(row.payMethod == null){
-                                return "";
-                            }
-                            if(row.payMethod == "1"){
-                                return "一口价(普通交易模式)";
-                            }
-                            return row.payMethod;
-                        }
-                    },
-                    {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
-                        templet: function (row) {
-                            if(row.buckleInventoryMethod == null){
-                                return "";
-                            }
-                            if(row.buckleInventoryMethod == "1"){
-                                return "买家拍下减库存";
-                            }
-                            if(row.buckleInventoryMethod == "2"){
-                                return "买家付款减库存";
-                            }
-                            return row.buckleInventoryMethod;
-                        }
-                    },
-                    {field: 'giveInvoice',width: 150,   title: '开发票',
-                        templet: function (row) {
-                            if(row.giveInvoice == null){
-                                return "";
-                            }
-                            if(row.giveInvoice == "1"){
-                                return "支持";
-                            }
-                            if(row.giveInvoice == "0"){
-                                return "不支持";
-                            }
-                            return row.giveInvoice;
-                        }
-                    },
-                    {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
-                        templet: function (row) {
-                            if(row.changeOrReturn == null){
-                                return "";
-                            }
-                            if(row.changeOrReturn == "1"){
-                                return "承诺";
-                            }
-                            if(row.changeOrReturn == "0"){
-                                return "不承诺";
-                            }
-                            return row.changeOrReturn;
-                        }
-                    },
-                    {field: 'etractMethod',width: 150,   title: '提取方式',
-                        templet: function (row) {
-                            var etractMethodText = "";
-                            if(row.etractMethod!=null) {
-                                if (row.etractMethod.indexOf("1") != -1) {
-                                    etractMethodText += "用物流配送"
-                                }
-                            }
-                            return etractMethodText;
-                        }
-                    },
-                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
                     {field: 'createDate', width: 150, title: '创建时间'},
                     {field: 'updateDate', width: 150, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#shopProductTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#productSkuTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -325,7 +212,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('shopProductTable', {
+            table.reload('productSkuTable', {
                 page: {
                     curr: 1
                 }
@@ -401,7 +288,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(shopProductTableFilter)', function (obj) {
+        table.on('toolbar(productSkuTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加商品',
@@ -416,7 +303,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('shopProductTable')
+                var checkStatus = table.checkStatus('productSkuTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -433,7 +320,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('shopProductTable', {
+                            table.reload('productSkuTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -453,30 +340,34 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(shopProductTableFilter)', function (obj) {
+        table.on('checkbox(productSkuTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(shopProductTableFilter)', function (obj) {
+        table.on('tool(productSkuTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'approve') {
                 openApproveDialog(data.id);
             }else if(obj.event=="openApproveDialogDevent")
             {
                 openApproveDialog(data.id);
+            }else if(obj.event=="openDetailDialogDevent")
+            {
+                openDetailDialog(data.id);
             }
         });
 
-        function openApproveDialog(id)
+
+        function openDetailDialog(id)
         {
             var index = layer.open({
-                title: '审核商品',
+                title: '商品详情',
                 type: 2,
                 shade: 0.2,
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/productSku/approvePage/'+id
+                content: '[[@{/}]]product/productSku/detailPage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);
