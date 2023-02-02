@@ -34,6 +34,7 @@ import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -576,6 +577,79 @@ public class ProductSkuController extends UIController {
 
 
 
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+            queryProductSkuVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductSkuVO);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                ProductSkuVO productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+                if(ObjectUtils.isNotEmpty(productSkuVO)) {
+                    Long[] categoryIds = new Long[1];
+                    Long[] shopCategoryIds = new Long[1];
+                    List<Long> brandIdList = new LinkedList<>();
+                    List<Long> shopIdList =new LinkedList<>();
+
+                    categoryIds[0] = productSkuVO.getCategoryId();
+
+                    //设置品牌ID
+                    if(productSkuVO.getBrandId()!=null) {
+                        brandIdList.add(productSkuVO.getBrandId());
+                    }
+
+
+                    //设置店铺分类ID
+                    if(productSkuVO.getShopCategoryId()!=null) {
+                        shopCategoryIds[0] = productSkuVO.getShopCategoryId();
+                    }
+
+
+
+                    //设置店铺ID
+                    if(productSkuVO.getShopId()!=null) {
+                        shopIdList.add(productSkuVO.getShopId());
+                    }
+
+
+                    productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+
+                    List<ProductSkuVO> list = new LinkedList<>();
+                    list.add(productSkuVO);
+
+                    //查询类别名称
+                    this.queryCategory(list,categoryIds);
+
+
+                    //查询店铺类别名称
+                    this.queryShopCategory(list,shopCategoryIds);
+
+                    //查询品牌名称
+                    this.queryBrand(list,brandIdList);
+
+                    //查询店铺名称
+                    this.queryShop(list,shopIdList);
+
+
+                    request.setAttribute("model", list.get(0));
+                }else{
+                    request.setAttribute("model", new ProductSkuVO());
+                }
+            }
+        }catch(Exception e)
+        {
+            request.setAttribute("model", new ProductSkuVO());
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/productSku/detail.html";
+    }
 
 
 

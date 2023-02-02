@@ -195,7 +195,7 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '商品SKUID', width: 260},
+                    {field: 'id',  title: '商品SKUID', hide:true, width: 260},
                     {field: 'httpMainPhoto',width:150,  title: '商品主图',
                         templet: function (row) {
                             if(row.httpMainPhoto!=null) {
@@ -223,8 +223,7 @@
                             return row.status;
                         }
                     },
-                    {field: 'createDate', width: 150, title: '创建时间'},
-                    {field: 'updateDate', width: 150, title: '修改时间'},
+                    {field: 'createDate', width: 200, title: '发布时间'},
                     {title: '操作', minWidth: 300, toolbar: '#productSkuTableBar', align: "center"}
                 ]
             ],

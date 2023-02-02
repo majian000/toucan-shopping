@@ -379,7 +379,10 @@ public class ProductSkuController {
         }
         try {
             ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSku.class);
-            resultObjectVO.setData(productSkuService.queryById(productSku.getId()));
+            productSku = productSkuService.queryById(productSku.getId());
+            ProductSkuVO productSkuVO = new ProductSkuVO();
+            BeanUtils.copyProperties(productSkuVO,productSku);
+            resultObjectVO.setData(productSkuVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -192,7 +192,7 @@ public class ShopProductApproveController {
                     productSku.setShopId(publishProductApproveVO.getShopId()); //设置店铺ID
                     productSku.setProductApproveId(publishProductApproveVO.getId()); //设置店铺发布的商品ID
                     productSku.setProductApproveUuid(publishProductApproveVO.getUuid());
-                    productSku.setBrankId(publishProductApproveVO.getBrandId()); //设置品牌ID
+                    productSku.setBrandId(publishProductApproveVO.getBrandId()); //设置品牌ID
                     productSku.setCategoryId(publishProductApproveVO.getCategoryId()); //商品分类ID
                     productSku.setShopCategoryId(publishProductApproveVO.getShopCategoryId()); //店铺商品分类ID
 
@@ -410,7 +410,7 @@ public class ShopProductApproveController {
                     productSku.setShopId(rePublishProductApproveVO.getShopId()); //设置店铺ID
                     productSku.setProductApproveId(rePublishProductApproveVO.getId()); //设置店铺发布的商品ID
                     productSku.setProductApproveUuid(rePublishProductApproveVO.getUuid());
-                    productSku.setBrankId(rePublishProductApproveVO.getBrandId()); //设置品牌ID
+                    productSku.setBrandId(rePublishProductApproveVO.getBrandId()); //设置品牌ID
                     productSku.setCategoryId(rePublishProductApproveVO.getCategoryId()); //商品分类ID
                     productSku.setShopCategoryId(rePublishProductApproveVO.getShopCategoryId()); //店铺商品分类ID
 

@@ -76,7 +76,7 @@ public class ShopProductApproveSku {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long brankId; //品牌ID
+    private Long brandId; //品牌ID
 
     private Integer stockNum=0; //库存
 
