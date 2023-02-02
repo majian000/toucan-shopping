@@ -22,7 +22,15 @@ public class ProductSkuPageInfo extends PageInfo<ProductSkuVO> {
 
     private Long shopProductId;
 
+    private String shopProductUuid;
+
     private Long categoryId; //分类ID
+
+    private Integer status;
+
+    private Long id;
+
+    private String uuid;
 
     private List<Long> categoryIdList; //分类ID列表
 

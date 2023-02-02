@@ -56,30 +56,55 @@
                             <div class="layui-form-item">
 
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">店铺商品ID</label>
+                                    <label class="layui-form-label">SKU ID</label>
                                     <div class="layui-input-inline">
                                         <input type="text" name="id" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
+
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" style="width:140px;">店铺商品UUID</label>
+                                    <label class="layui-form-label">SKU UUID</label>
                                     <div class="layui-input-inline">
                                         <input type="text" name="uuid" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
+
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">商品名称</label>
+                                    <label class="layui-form-label">店铺ID</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">上架状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="status"  name="status" lay-search="">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="0" >未上架</option>
+                                            <option value="1" >已上架</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-form-item">
 
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">店铺ID</label>
+                                    <label class="layui-form-label">店铺商品ID</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                        <input type="text" name="shopProductId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width:140px;">店铺商品UUID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopProductUuid" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">商品名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">

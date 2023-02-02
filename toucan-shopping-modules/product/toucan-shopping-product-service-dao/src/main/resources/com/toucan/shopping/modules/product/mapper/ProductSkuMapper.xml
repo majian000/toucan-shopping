@@ -46,6 +46,22 @@
             and t.shop_product_id = #{shopProductId}
         </if>
 
+        <if test="shopProductUuid!=null">
+            and t.shop_product_uuid = #{shopProductUuid}
+        </if>
+
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+        <if test="uuid!=null">
+            and t.uuid = #{uuid}
+        </if>
+
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
+
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in
             <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
