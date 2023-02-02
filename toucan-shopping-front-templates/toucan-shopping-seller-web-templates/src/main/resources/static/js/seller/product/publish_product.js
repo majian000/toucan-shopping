@@ -304,6 +304,20 @@ $("#ppfbtn").click(function() {
         }
     }
 
+    //删除SKU表格中没有介绍图片的控件
+    var skuTableDescriptionUploadFiles = $(".skuTableDescriptionUploadFiles");
+    if(skuTableDescriptionUploadFiles.length>0)
+    {
+        for(var i=0;i<skuTableDescriptionUploadFiles.length;i++)
+        {
+            var skuTableDescriptionTableUploadFile=$(skuTableDescriptionUploadFiles[i]);
+            if(skuTableDescriptionTableUploadFile.val()==null||skuTableDescriptionTableUploadFile.val()=="")
+            {
+                skuTableDescriptionTableUploadFile.remove();
+            }
+        }
+    }
+
     loading.showLoading({
         type:6,
         tip:"发布中..."

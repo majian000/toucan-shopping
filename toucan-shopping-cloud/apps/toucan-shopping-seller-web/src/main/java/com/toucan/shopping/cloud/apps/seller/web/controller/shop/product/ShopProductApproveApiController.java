@@ -725,14 +725,15 @@ public class ShopProductApproveApiController extends BaseController {
                     return resultObjectVO;
                 }
 
-                //SKU商品介绍图
-                productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
-                productSkuVO.setDescriptionImgFile(null);
-                if(StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath()))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
-                    return resultObjectVO;
+                if(productSkuVO.getDescriptionImgFile()!=null) {
+                    //SKU商品介绍图
+                    productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
+                    productSkuVO.setDescriptionImgFile(null);
+                    if (StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
+                        return resultObjectVO;
+                    }
                 }
             }
 
