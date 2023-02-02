@@ -400,7 +400,9 @@ public class ProductSkuController extends UIController {
                     }
                 }
             }
-            pageInfo.setOrderColumn("update_date");
+            pageInfo.setOrderColumns(new LinkedList<>());
+            pageInfo.getOrderColumns().add("update_date");
+            pageInfo.getOrderColumns().add("create_date");
             pageInfo.setOrderSort("desc");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);

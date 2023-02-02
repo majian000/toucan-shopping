@@ -38,6 +38,8 @@ public class ProductSkuPageInfo extends PageInfo<ProductSkuVO> {
 
     private String orderColumn; //排序列
 
+    private List<String> orderColumns; //排序列
+
     private String orderSort; //升序还是降序
 
     //==============================================

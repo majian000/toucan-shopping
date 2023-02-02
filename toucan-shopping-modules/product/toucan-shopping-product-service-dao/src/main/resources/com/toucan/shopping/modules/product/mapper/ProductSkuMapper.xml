@@ -139,7 +139,16 @@
                 </if>
             </when>
             <otherwise>
-                order by t.id desc
+                <if test="orderColumns!=null and orderColumns.size>0 ">
+                    order by
+                    <foreach item="item" index="index" collection="orderColumns" open=""  close="" separator=",">
+                        t.${item}
+                    </foreach>
+
+                    <if test="orderSort!=null and orderSort!=''">
+                        ${orderSort}
+                    </if>
+                </if>
             </otherwise>
         </choose>
 
