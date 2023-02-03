@@ -112,6 +112,57 @@
                         </div>
 
                         <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >单价</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.price}"  class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" style="width:40%">
+
+                                <label class="layui-form-label " >库存数量</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.stockNum}"  class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
+
+                                <label class="layui-form-label " >商品编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.productNo}"  class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >属性</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.attributes}"  class="layui-input">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
+
+                                <label class="layui-form-label " >毛重(kg)</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.roughWeight}"  class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >净重(kg)</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.suttle}"  class="layui-input">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item" >
                             <label class="layui-form-label " >分类路径</label>
                             <div class="layui-input-block" >
                                 <input type="text"  th:value="${model.categoryPath}"  class="layui-input">
@@ -159,12 +210,6 @@
                                 <div class="layui-input-block">
                                     <input type="text"  th:value="${model.shopName}"  class="layui-input">
                                 </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item" >
-                            <label class="layui-form-label " >商家编码</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.sellerNo}"  class="layui-input">
                             </div>
                         </div>
                     </div>
