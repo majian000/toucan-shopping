@@ -370,11 +370,8 @@
 
         table.on('tool(productSkuTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'approve') {
-                openApproveDialog(data.id);
-            }else if(obj.event=="openApproveDialogDevent")
-            {
-                openApproveDialog(data.id);
+            if (obj.event == 'detail') {
+                openDetailDialog(data.id);
             }else if(obj.event=="openDetailDialogDevent")
             {
                 openDetailDialog(data.id);
