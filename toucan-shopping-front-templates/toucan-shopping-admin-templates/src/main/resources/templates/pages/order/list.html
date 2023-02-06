@@ -195,6 +195,7 @@
 
         var element = layui.element;
         var tableCache = new Map();
+        var currentTabIndex="tab_index_0_";
 
         element.on('tab(orderTablFilter)',function(){
             var layId = this.getAttribute("lay-id");
@@ -248,8 +249,9 @@
 
         function initOrderTable(tableIndex)
         {
-            if(tableCache.get(tableIndex)!=null){
-                table.reload(tableIndex+'orderTable', {
+            currentTabIndex = tableIndex;
+            if(tableCache.get(currentTabIndex)!=null){
+                table.reload(currentTabIndex+'orderTable', {
                     page: {
                         curr: 1
                     }
@@ -259,11 +261,11 @@
             }
 
             var tableHandler = table.render({
-                elem: '#'+tableIndex+'orderTable',
+                elem: '#'+currentTabIndex+'orderTable',
                 url: "[[@{/}]]order/list",
                 method:'POST',
                 where:getFormParam(),
-                toolbar: '#'+tableIndex+'toolbarDemo',
+                toolbar: '#'+currentTabIndex+'toolbarDemo',
                 defaultToolbar: ['filter',  {
                     title: '提示',
                     layEvent: 'LAYTABLE_TIPS',
@@ -357,12 +359,12 @@
                 skin: 'line'
             });
 
-            tableCache.set(tableIndex,tableHandler);
+            tableCache.set(currentTabIndex,tableHandler);
 
             // 监听搜索操作
             form.on('submit(data-search-btn)', function (data) {
                 //执行搜索重载
-                table.reload(tableIndex+'orderTable', {
+                table.reload(currentTabIndex+'orderTable', {
                     page: {
                         curr: 1
                     }
@@ -378,7 +380,7 @@
             /**
              * toolbar监听事件
              */
-            table.on('toolbar('+tableIndex+'orderTableFilter)', function (obj) {
+            table.on('toolbar('+currentTabIndex+'orderTableFilter)', function (obj) {
                 if (obj.event === 'add') {  // 监听添加操作
                     var index = layer.open({
                         title: '添加订单',
@@ -392,7 +394,7 @@
                         layer.full(index);
                     });
                 } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                    var checkStatus = table.checkStatus(tableIndex+'orderTable')
+                    var checkStatus = table.checkStatus(currentTabIndex+'orderTable')
                         , data = checkStatus.data;
                     if(data==null||data.length<=0)
                     {
@@ -409,66 +411,7 @@
                                 layer.msg(data.msg);
 
                                 //执行搜索重载
-                                table.reload(tableIndex+'orderTable', {
-                                    page: {
-                                        curr: 1
-                                    }
-                                    , where: data.field
-                                }, 'data');
-
-                            },
-                            complete:function(data)
-                            {
-                                layer.close(index);
-                            }
-                        });
-                    });
-                }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                    var checkStatus = table.checkStatus(tableIndex+'orderTable')
-                        , data = checkStatus.data;
-                    if(data==null||data.length<=0)
-                    {
-                        layer.msg("请选择要操作的记录");
-                        return;
-                    }
-                    layer.confirm('确定刷新PC首页缓存?', function (index) {
-                        $.ajax({
-                            url:"[[@{/}]]order/flush/index/cache",
-                            contentType: "application/json; charset=utf-8",
-                            type:'POST',
-                            data:JSON.stringify(data),
-                            success:function(data){
-                                layer.msg(data.msg);
-
-                                //执行搜索重载
-                                table.reload(tableIndex+'orderTable', {
-                                    page: {
-                                        curr: 1
-                                    }
-                                    , where: data.field
-                                }, 'data');
-
-                            },
-                            complete:function(data)
-                            {
-                                layer.close(index);
-                            }
-                        });
-                    });
-                }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                    var checkStatus = table.checkStatus(tableIndex+'orderTable')
-                        , data = checkStatus.data;
-                    layer.confirm('确定清空PC首页缓存?', function (index) {
-                        $.ajax({
-                            url:"[[@{/}]]order/clear/index/cache",
-                            contentType: "application/json; charset=utf-8",
-                            type:'POST',
-                            data:null,
-                            success:function(data){
-                                layer.msg(data.msg);
-
-                                //执行搜索重载
-                                table.reload(tableIndex+'orderTable', {
+                                table.reload(currentTabIndex+'orderTable', {
                                     page: {
                                         curr: 1
                                     }
@@ -490,31 +433,17 @@
 
 
             //监听表格复选框选择
-            table.on('checkbox('+tableIndex+'orderTableFilter)', function (obj) {
+            table.on('checkbox('+currentTabIndex+'orderTableFilter)', function (obj) {
                 console.log(obj)
             });
 
-            table.on('tool('+tableIndex+'orderTableFilter)', function (obj) {
+            table.on('tool('+currentTabIndex+'orderTableFilter)', function (obj) {
                 var data = obj.data;
                 if (obj.event == 'detail') {
                     openDetailDialog(data.id);
                 }else if(obj.event=="openDetailDialogDevent")
                 {
                     openDetailDialog(data.id);
-                }else if (obj.event == 'edit') {
-
-                    var index = layer.open({
-                        title: '编辑订单',
-                        type: 2,
-                        shade: 0.2,
-                        maxmin:true,
-                        area: ['100%', '100%'],
-                        content: '[[@{/}]]order/editPage/'+data.id
-                    });
-                    $(window).on("resize", function () {
-                        layer.full(index);
-                    });
-                    return false;
                 }
             });
         }
