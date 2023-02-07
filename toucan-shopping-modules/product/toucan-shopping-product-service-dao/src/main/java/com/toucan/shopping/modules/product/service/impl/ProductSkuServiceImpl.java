@@ -41,6 +41,12 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         return productSkuMapper.updateStatusByShopProductId(shopProductId,shopId,status);
     }
 
+
+    @Override
+    public int updateStatusById(Long id,Long shopId,Integer status) {
+        return productSkuMapper.updateStatusById(id,shopId,status);
+    }
+
     @Override
     public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
@@ -64,6 +70,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     public ProductSkuVO queryFirstOneByShopProductId(Long shopProductId) {
         return productSkuMapper.queryFirstOneByShopProductId(shopProductId);
+    }
+
+    @Override
+    public Long queryShelvesCountByShopProductId(Long shopProductId) {
+        return productSkuMapper.queryShelvesCountByShopProductId(shopProductId);
     }
 
     @Transactional

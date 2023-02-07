@@ -8,11 +8,14 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.redis.ShopProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,7 +38,8 @@ public class ProductSkuController {
     @Autowired
     private ProductSkuService productSkuService;
 
-
+    @Autowired
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private ProductSkuRedisService productSkuRedisService;
@@ -648,5 +652,90 @@ public class ProductSkuController {
         resultObjectVO.setData(restoreInventoryReductionFailds);
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 商品上架/下架
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        String productSkuId ="";
+        try {
+            logger.info("商品上架/下架 {} ",requestJsonVO.getEntityJson());
+            ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
+            if(productSkuVO.getId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+            if(productSkuVO.getShopId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            productSkuId = String.valueOf(productSkuVO.getId());
+            skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
+
+            ProductSku productSku = productSkuService.queryById(productSkuVO.getId());
+            if(productSku==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("该商品不存在!");
+                return resultObjectVO;
+            }
+
+            //如果当前是上架状态
+            if(productSku.getStatus()!=null
+                    &&productSku.getStatus().intValue()== ProductConstant.SHELVES_UP.intValue())
+            {
+                productSkuService.updateStatusById(productSku.getId(),productSku.getShopId(),ProductConstant.SHELVES_DOWN); //下架
+            }else if(productSku.getStatus()!=null
+                    &&productSku.getStatus().intValue()== ProductConstant.SHELVES_DOWN.intValue()) //如果当前是下架状态
+            {
+                productSkuService.updateStatusById(productSku.getId(),productSku.getShopId(), ProductConstant.SHELVES_UP); //上架
+            }
+
+            //查询店铺商品,判断下面所有SKU如果都下架的话,这个店铺商品直接下架
+            Long shelvesCount = productSkuService.queryShelvesCountByShopProductId(productSku.getShopId());
+            if(shelvesCount==0)
+            {
+                shopProductService.updateStatus(productSku.getId(),productSku.getShopId(),ProductConstant.SHELVES_DOWN); //下架
+            }else{
+                productSkuService.updateStatusByShopProductId(productSku.getId(),productSku.getShopId(), ProductConstant.SHELVES_UP); //上架
+            }
+
+            productSkuRedisService.deleteCache(productSkuId);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败");
+        }finally{
+            skylarkLock.unLock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
+        }
+        return resultObjectVO;
+    }
+
 
 }

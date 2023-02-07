@@ -656,6 +656,41 @@ public class ProductSkuController extends UIController {
 
 
 
+    /**
+     * 店铺商品 上架/下架
+     * @param shopProductVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/shelves",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(shopProductVO.getId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空");
+                return resultObjectVO;
+            }
+            if(shopProductVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+            resultObjectVO = feignProductSkuService.shelves(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("操作失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 }
 

@@ -20,12 +20,22 @@ public interface ProductSkuService {
 
 
     /**
-     * 修改上架/下架状态
+     * 修改上架/下架状态(根据店铺商品ID)
      * @param shopProductId
      * @param status
      * @return
      */
     int updateStatusByShopProductId(Long shopProductId,Long shopId,Integer status);
+
+
+
+    /**
+     * 修改上架/下架状态(根据SKU ID)
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateStatusById(Long id,Long shopId,Integer status);
 
     /**
      * 查询列表页
@@ -40,7 +50,19 @@ public interface ProductSkuService {
 
     List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
 
+    /**
+     * 根据店铺商品ID查询一个商品
+     * @param shopProductId
+     * @return
+     */
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
+
+    /**
+     * 查询上架商品数量
+     * @param shopProductId
+     * @return
+     */
+    Long queryShelvesCountByShopProductId(Long shopProductId);
 
     /**
      * 保存sku

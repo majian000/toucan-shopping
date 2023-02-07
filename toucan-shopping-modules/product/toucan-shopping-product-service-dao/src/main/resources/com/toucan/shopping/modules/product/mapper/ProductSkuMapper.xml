@@ -215,6 +215,9 @@
         update t_product_sku  set status=#{status} where shop_product_id=#{shopProductId} and shop_id=#{shopId} and delete_status=0
     </update>
 
+    <update id="updateStatusById" >
+        update t_product_sku  set status=#{status} where id=#{id} and shop_id=#{shopId} and delete_status=0
+    </update>
 
     <select id="queryShelvesListByIdList" resultMap="productSkuMap">
         select * from t_product_sku t
@@ -233,6 +236,10 @@
     <update id="restoreStock" >
         update t_product_sku set stock_num=stock_num+#{stockNum} where id=#{skuId} and delete_status=0
     </update>
+
+    <select id="queryShelvesCountByShopProductId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select count(*) from t_product_sku where shop_product_id=#{shopProductId} and delete_status=0 and status=1
+    </select>
 
 
 </mapper>

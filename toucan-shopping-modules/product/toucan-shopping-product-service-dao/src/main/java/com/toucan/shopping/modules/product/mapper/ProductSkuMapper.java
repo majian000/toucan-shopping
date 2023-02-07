@@ -37,6 +37,8 @@ public interface ProductSkuMapper {
 
     int updateStatusByShopProductId(Long shopProductId, Long shopId, Integer status);
 
+    int updateStatusById(Long id,Long shopId,Integer status);
+
     /**
      * 查询列表页
      * @param pageInfo
@@ -70,5 +72,13 @@ public interface ProductSkuMapper {
      * @return
      */
     int restoreStock(Long skuId,Integer stockNum);
+
+
+    /**
+     * 查询上架商品数量
+     * @param shopProductId
+     * @return
+     */
+    Long queryShelvesCountByShopProductId(Long shopProductId);
 
 }

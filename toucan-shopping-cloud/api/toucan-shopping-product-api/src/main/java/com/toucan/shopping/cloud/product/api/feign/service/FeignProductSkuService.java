@@ -59,6 +59,15 @@ public interface FeignProductSkuService {
 
 
     /**
+     * 商品上架/下架
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
      * 扣库存
      * @param requestJsonVO
      * @return
