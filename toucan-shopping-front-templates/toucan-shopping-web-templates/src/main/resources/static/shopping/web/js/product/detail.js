@@ -5,12 +5,21 @@ $(function(){
     tabsEvent();
     bindProductNumEvent();
     var id = getProductId();
+    var ptype = $("#ptype").val();
     if(id!=null&&id!="") {
         var type= getShopProductPreviewType();
-        var requestPath = basePath + "/api/product/detail";
-        if(type==1)
-        {
-            requestPath  = basePath + "/api/product/detail/pid";
+        var requestPath ="";
+        if(ptype=="detail") {
+            requestPath = basePath + "/api/product/detail";
+            if (type == 1) {
+                requestPath = basePath + "/api/product/detail/pid";
+            }
+        }else if(ptype=="preview"){
+            requestPath = basePath + "/api/product/preview";
+            if(type==1)
+            {
+                requestPath  = basePath + "/api/product/preview/pid";
+            }
         }
         $.ajax({
             type: "POST",
@@ -25,6 +34,13 @@ $(function(){
                         type: 'error'
                     });
                     return ;
+                }
+                if(result.data==null)
+                {
+                    $.message({
+                        message: "该商品已下架",
+                        type: 'error'
+                    });
                 }
                 drawProductPage(result.data);
             },
@@ -80,7 +96,17 @@ function bindAttributeCheckboxEvent()
 {
     $(".att_chks").bind("click", function () {
         var attrRow = $(this).attr("attr-row");
-        $(".att_check"+attrRow).removeClass("checked");
+        var preSelectAttrObj=null; //上一个选择的属性项
+        var attCheckRowObjects = $(".att_check"+attrRow);
+        for(var i=0;i<attCheckRowObjects.length;i++)
+        {
+            if($(attCheckRowObjects[i]).hasClass("checked"))
+            {
+                preSelectAttrObj = attCheckRowObjects[i];
+                break;
+            }
+        }
+        attCheckRowObjects.removeClass("checked");
         $(this).addClass("checked");
 
         var attributeChks=$(".att_chks");
@@ -109,8 +135,18 @@ function bindAttributeCheckboxEvent()
                     {
                         var currentLocation=getShopProductPreviewHrefIngoreId();
                         window.location.href = currentLocation+"/"+sku.id;
+                        return;
                     }
                 }
+
+                if(preSelectAttrObj!=null) {
+                    attCheckRowObjects.removeClass("checked");
+                    $(preSelectAttrObj).addClass("checked");
+                }
+                $.message({
+                    message: "该商品已下架",
+                    type: 'error'
+                });
             }
         }
     });
@@ -343,7 +379,11 @@ function bindProductNumEvent()
 
 function saveUserCar()
 {
-
+    var ptype = $("#ptype").val();
+    if(ptype=="preview")
+    {
+        return;
+    }
     loading.showLoading({
         type:1,
         tip:"提交中..."

@@ -819,7 +819,15 @@ public class ProductSkuController {
                 productSkuService.updateStatusByShopProductId(productSku.getId(),productSku.getShopId(), ProductConstant.SHELVES_UP); //上架
             }
 
-            productSkuRedisService.deleteCache(productSkuId);
+            //清空该商品下所有SKU缓存
+            List<ProductSkuVO> productSkuVOS = productSkuService.queryProductSkuListByShopProductId(productSku.getShopProductId());
+            if (!CollectionUtils.isEmpty(productSkuVOS)) {
+                for (ProductSkuVO psv : productSkuVOS) {
+                    if (psv.getId() != null) {
+                        productSkuRedisService.deleteCache(String.valueOf(psv.getId()));
+                    }
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
