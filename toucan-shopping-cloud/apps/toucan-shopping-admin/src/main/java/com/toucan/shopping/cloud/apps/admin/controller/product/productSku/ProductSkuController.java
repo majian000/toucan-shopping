@@ -105,6 +105,7 @@ public class ProductSkuController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/productSku/listPage",feignFunctionService);
+        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
         return "pages/product/productSku/list.html";
     }
 

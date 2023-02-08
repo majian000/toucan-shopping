@@ -133,6 +133,8 @@
     </div>
 </div>
 
+<input type="hidden" id="pcProductSkuPreviewPage" th:value="${pcProductSkuPreviewPage}"/>
+
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
@@ -377,6 +379,8 @@
                 openDetailDialog(data.id);
             }else if (obj.event == 'shelves') {
                 shelves(data);
+            }else if (obj.event == 'previewPc') {
+                previewPc(data);
             }
         });
 
@@ -399,6 +403,12 @@
 
         }
 
+
+        function previewPc(data)
+        {
+            var pcProductSkuPreviewPage = $("#pcProductSkuPreviewPage").val();
+            window.open(pcProductSkuPreviewPage+data.id)
+        }
 
         function shelves(row)
         {

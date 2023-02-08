@@ -46,6 +46,11 @@ public class ShoppingPC {
      * 商品详情页
      */
     private String productPreviewPage;
+
+    /**
+     * 商品详情页
+     */
+    private String productSkuPreviewPage;
     /**
      * 首页商品栏目编码
      */
