@@ -105,7 +105,7 @@ public class ShopProductApproveController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/shopProductApprove/listPage",feignFunctionService);
-        request.setAttribute("pcProductDetailPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductApprovePreviewPage());
+        request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductApprovePreviewPage());
         return "pages/product/shopProductApprove/list.html";
     }
 

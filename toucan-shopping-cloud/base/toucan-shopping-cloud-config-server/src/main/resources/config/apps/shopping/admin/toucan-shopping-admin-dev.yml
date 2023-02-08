@@ -97,7 +97,8 @@ toucan:
     ip-list: localhost:8083,127.0.0.1:8083,localhost:8101,127.0.0.1:8101 #多个用,分割
     pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
     product-approve-preview-page: /page/product/approve/preview/paid/ #商品审核预览
-    product-detail-page: /page/product/detail/pid/ #商品预览
+    product-detail-page: /page/product/detail/pid/ #商品详情
+    product-preview-page: /page/product/preview/pid/ #商品详情
   shopping-seller-web-pc: #PC端页面静态化
     ip-list: localhost:8101,127.0.0.1:8101 #多个用,分割
   admin-auth:

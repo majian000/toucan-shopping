@@ -112,7 +112,7 @@ function bindPreviewEvent()
     $(".previewRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
 
-        window.open(shoppingPcPath+productDetailPage+attrId);
+        window.open(shoppingPcPath+productPreviewPage+attrId);
     });
 }
 

@@ -43,6 +43,10 @@ public class ShoppingPC {
     private String productDetailPage;
 
     /**
+     * 商品详情页
+     */
+    private String productPreviewPage;
+    /**
      * 首页商品栏目编码
      */
     private String pcIndexColumnTypeCode;

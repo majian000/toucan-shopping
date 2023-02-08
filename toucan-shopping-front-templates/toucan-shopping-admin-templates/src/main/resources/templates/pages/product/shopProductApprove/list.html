@@ -120,7 +120,7 @@
 </div>
 
 
-<input type="hidden" id="pcProductDetailPage" th:value="${pcProductDetailPage}"/>
+<input type="hidden" id="pcProductPreviewPage" th:value="${pcProductPreviewPage}"/>
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
@@ -500,8 +500,8 @@
 
         function previewPc(data)
         {
-            var pcProductDetailPage = $("#pcProductDetailPage").val();
-            window.open(pcProductDetailPage+data.id)
+            var pcProductPreviewPage = $("#pcProductPreviewPage").val();
+            window.open(pcProductPreviewPage+data.id)
         }
 
 
