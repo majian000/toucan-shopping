@@ -47,8 +47,9 @@ public interface ProductSkuService {
     PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo);
 
 
-    List<ProductSkuVO> queryShelvesVOListByShopProductId(Long approveId);
+    List<ProductSkuVO> queryShelvesVOListByShopProductId(Long shopProductId);
 
+    List<ProductSkuVO> queryVOListByShopProductIdAndStatus(Long shopProductId,int status);
 
     List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
 

@@ -65,6 +65,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
+    public List<ProductSkuVO> queryVOListByShopProductIdAndStatus(Long shopProductId,int status) {
+        return productSkuMapper.queryVOListByShopProductIdAndStatus(shopProductId,status);
+    }
+
+    @Override
     public List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid) {
         return productSkuMapper.queryProductSkuListByShopProductUuid(shopProductUuid);
     }

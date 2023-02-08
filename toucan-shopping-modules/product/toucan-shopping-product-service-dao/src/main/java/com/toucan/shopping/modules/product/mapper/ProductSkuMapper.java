@@ -26,6 +26,9 @@ public interface ProductSkuMapper {
 
     List<ProductSkuVO> queryShelvesVOListByShopProductId(Long shopProductId);
 
+    List<ProductSkuVO> queryVOListByShopProductIdAndStatus(Long shopProductId,int status) ;
+
+
     int deleteByShopProductId(Long shopProductId);
 
 

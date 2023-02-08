@@ -190,6 +190,15 @@
         select * from t_product_sku where shop_product_id=#{shopProductId} and delete_status=0 and status=1
     </select>
 
+    <select id="queryVOListByShopProductIdAndStatus" resultMap="productSkuVOMap" >
+        select * from t_product_sku where
+         shop_product_id=#{shopProductId}
+         and delete_status=0
+        <if test="status!=-1">
+            and t.status = #{status}
+        </if>
+    </select>
+
 
     <update id="deleteByShopProductId">
         update t_product_sku  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0

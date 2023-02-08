@@ -115,7 +115,7 @@ public class ProductSkuController {
                         }
                     }
 
-                    List<ProductSkuVO> productSkuVOS = productSkuService.queryShelvesVOListByShopProductId(shopProductVO.getId());
+                    List<ProductSkuVO> productSkuVOS = productSkuService.queryVOListByShopProductIdAndStatus(shopProductVO.getId(),status);
                     //查询商品SKU列表
                     shopProductSkuVO.setProductSkuVOList(productSkuVOS);
 
@@ -374,8 +374,10 @@ public class ProductSkuController {
             }
 
             ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndStatus(shopProductVO.getId(),-1);
-            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),-1);
-            resultObjectVO.setData(shopProductApproveSkuVO);
+            if(productSku!=null) {
+                ProductSkuVO shopProductSkuVO = queryProductSkuByCacheOrDB(productSku.getId(), -1);
+                resultObjectVO.setData(shopProductSkuVO);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
