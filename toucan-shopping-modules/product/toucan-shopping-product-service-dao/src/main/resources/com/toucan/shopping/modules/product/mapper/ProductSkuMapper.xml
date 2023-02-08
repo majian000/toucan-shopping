@@ -195,7 +195,7 @@
          shop_product_id=#{shopProductId}
          and delete_status=0
         <if test="status!=-1">
-            and t.status = #{status}
+            and status = #{status}
         </if>
     </select>
 
@@ -219,7 +219,7 @@
         id=#{id}
         and delete_status=0
         <if test="status!=-1">
-            and t.status = #{status}
+            and status = #{status}
         </if>
          limit 0,1
     </select>

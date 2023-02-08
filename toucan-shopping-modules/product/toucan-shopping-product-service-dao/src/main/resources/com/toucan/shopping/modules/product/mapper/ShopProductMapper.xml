@@ -166,7 +166,7 @@
 
     <select id="findByIdAndStatus" resultMap="shopProductVOMap" >
         select t.* from t_shop_product t
-        where t.id = #{id} and delete_status=0
+        where t.id = #{id} and t.delete_status=0
         <if test="status!=-1">
             and t.status = #{status}
         </if>
