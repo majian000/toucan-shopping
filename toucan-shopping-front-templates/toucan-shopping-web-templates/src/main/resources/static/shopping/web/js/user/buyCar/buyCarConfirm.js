@@ -431,7 +431,7 @@ function calculateFreight(rid,clickObj)
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
                             //((购买数量-首件)/续件)*续件金额
-                            freightMoney = new BigNumber((roughWeightTotal.minus(firstWeight)).div(appendWight)).toFixed(2).times(appendMoney);
+                            freightMoney = new BigNumber((roughWeightTotal.minus(firstWeight)).div(appendWight).toFixed(2)).times(appendMoney);
                             freightMoney= freightMoney<0?new BigNumber(0):freightMoney;
                             freightMoney=freightMoney.plus(firstMoney); //加上首件金额
                             freightMoney = freightMoney.toFixed(2);

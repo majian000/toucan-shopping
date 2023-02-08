@@ -59,7 +59,8 @@
         </if>
 
         <if test="name!=null and name!='' ">
-            and t.name  like concat(#{name},'%')
+            <!-- 这种不走索引但是为了用户体验只能如此-->
+            and t.name  like concat('%',#{name},'%')
         </if>
 
         <if test="id!=null and id!=-1">

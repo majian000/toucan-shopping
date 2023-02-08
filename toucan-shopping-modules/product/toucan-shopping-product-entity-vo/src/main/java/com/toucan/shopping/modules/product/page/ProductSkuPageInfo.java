@@ -26,6 +26,8 @@ public class ProductSkuPageInfo extends PageInfo<ProductSkuVO> {
 
     private Long categoryId; //分类ID
 
+    private String name; //SKU名称(商品名称 + 属性值)
+
     private Integer status;
 
     private Long id;
