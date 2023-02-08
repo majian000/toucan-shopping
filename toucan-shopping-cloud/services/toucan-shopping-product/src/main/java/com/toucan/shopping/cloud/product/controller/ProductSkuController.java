@@ -82,17 +82,18 @@ public class ProductSkuController {
     /**
      * 从缓存或者数据库中查询
      * @param skuId
+     * @param status 上架状态 1:已上架 -1:全部
      * @return
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private ProductSkuVO queryProductSkuByCacheOrDB(Long skuId) throws InvocationTargetException, IllegalAccessException {
+    private ProductSkuVO queryProductSkuByCacheOrDB(Long skuId,int status) throws InvocationTargetException, IllegalAccessException {
         ProductSkuVO shopProductSkuVO = productSkuRedisService.queryProductSkuById(String.valueOf(skuId));
         if(shopProductSkuVO==null) { //查询数据库然后同步缓存
-            shopProductSkuVO = productSkuService.queryVOById(skuId); //查询数据库
+            shopProductSkuVO = productSkuService.queryVOByIdAndStatus(skuId,status); //查询数据库
 
             if(shopProductSkuVO!=null) { //如果数据库中这条记录没被删除,就刷新到缓存
-                ShopProductVO shopProductVO = shopProductService.findById(shopProductSkuVO.getShopProductId());
+                ShopProductVO shopProductVO = shopProductService.findByIdAndStatus(shopProductSkuVO.getShopProductId(),status);
                 if(shopProductVO!=null) {
                     shopProductSkuVO.setProductAttributes(shopProductVO.getAttributes());
                     shopProductSkuVO.setPreviewPhotoPaths(new LinkedList<>());
@@ -233,7 +234,7 @@ public class ProductSkuController {
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
-            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId());
+            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
             resultObjectVO.setData(shopProductApproveSkuVO);
         }catch(Exception e)
         {
@@ -246,6 +247,50 @@ public class ProductSkuController {
     }
 
 
+    /**
+     * 根据ID查询(商城PC端预览使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryByIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSku.class);
+
+            if(productSku.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),-1);
+            resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 根据ID查询,只查询1个sku(商城PC端使用)
@@ -272,16 +317,16 @@ public class ProductSkuController {
             return resultObjectVO;
         }
         try {
-            ShopProductApproveVO shopProductApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
-            if(shopProductApproveVO.getId()==null)
+            ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+            if(shopProductVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
 
-            ProductSku productSku = productSkuService.queryFirstOneByShopProductId(shopProductApproveVO.getId());
-            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId());
+            ProductSku productSku = productSkuService.queryFirstOneByShopProductId(shopProductVO.getId());
+            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
             resultObjectVO.setData(shopProductApproveSkuVO);
         }catch(Exception e)
         {
@@ -293,6 +338,53 @@ public class ProductSkuController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 根据ID查询,只查询1个sku(商城PC端预览使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOneByShopProductIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+            if(shopProductVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndStatus(shopProductVO.getId(),-1);
+            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),-1);
+            resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 查询列表
@@ -431,7 +523,7 @@ public class ProductSkuController {
                 List<ProductSku> productSkuList = new ArrayList<ProductSku>();
                 for(ProductSkuVO productSku:productSkus) {
                     if(productSku.getId()!=null) {
-                        ProductSkuVO productSkuEntity = queryProductSkuByCacheOrDB(productSku.getId());
+                        ProductSkuVO productSkuEntity = queryProductSkuByCacheOrDB(productSku.getId(),-1);
                         if (productSkuEntity != null) {
                             productSkuList.add(productSkuEntity);
                         }

@@ -9,7 +9,7 @@ public interface ShopProductDescriptionService {
 
     int save(ShopProductDescription entity);
 
-    int deleteByShopProductApproveId(Long productApproveId);
+    int deleteByShopProductId(Long productApproveId);
 
     ShopProductDescription queryByShopProductId(Long productApproveId);
 

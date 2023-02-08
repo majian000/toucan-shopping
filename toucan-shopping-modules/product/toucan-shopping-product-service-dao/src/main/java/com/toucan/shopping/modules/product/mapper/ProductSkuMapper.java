@@ -33,7 +33,11 @@ public interface ProductSkuMapper {
 
     ProductSkuVO queryVOById(Long id);
 
+    ProductSkuVO queryVOByIdAndStatus(Long id,int status);
+
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
+
+    ProductSkuVO queryFirstOneByShopProductIdAndStatus(Long shopProductId,int status);
 
     int updateStatusByShopProductId(Long shopProductId, Long shopId, Integer status);
 
@@ -54,6 +58,9 @@ public interface ProductSkuMapper {
     Long queryListPageCount(ProductSkuPageInfo pageInfo);
 
     List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
+
+    List<ProductSkuVO> queryProductSkuListByShopProductId(Long shopProductId);
+
 
     List<ProductSku> queryShelvesListByIdList(List<Long> idList);
 

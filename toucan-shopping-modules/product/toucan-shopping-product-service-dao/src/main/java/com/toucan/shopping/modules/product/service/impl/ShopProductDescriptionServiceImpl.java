@@ -18,7 +18,7 @@ public class ShopProductDescriptionServiceImpl implements ShopProductDescription
     }
 
     @Override
-    public int deleteByShopProductApproveId(Long productApproveId) {
+    public int deleteByShopProductId(Long productApproveId) {
         return shopProductDescriptionMapper.deleteByShopProductId(productApproveId);
     }
 

@@ -474,4 +474,95 @@ public class ShopProductController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+
+            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
+            {
+                logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID!");
+                return resultObjectVO;
+            }
+            if(shopProductVO==null||shopProductVO.getShopId()==null||shopProductVO.getShopId().longValue()==-1)
+            {
+                logger.warn("没有找到店铺ID: param:"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到店铺ID!");
+                return resultObjectVO;
+            }
+
+
+            ShopProductVO queryShopProductVO = new ShopProductVO();
+            queryShopProductVO.setId(shopProductVO.getId());
+            queryShopProductVO.setShopId(shopProductVO.getShopId());
+
+            shopProductVO = shopProductService.queryOne(queryShopProductVO);
+
+            if(shopProductVO!=null) {
+
+                List<ProductSkuVO> productSkuVOS = productSkuService.queryProductSkuListByShopProductId(shopProductVO.getId());
+                if (CollectionUtils.isNotEmpty(productSkuVOS)) {
+                    for (ProductSkuVO productSkuVO : productSkuVOS) {
+                        if (productSkuVO.getId() != null) {
+                            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+                        }
+                    }
+                }
+
+                shopProductService.deleteById(shopProductVO.getId());
+                productSkuService.deleteByShopProductId(shopProductVO.getId());
+                shopProductImgService.deleteByShopProductId(shopProductVO.getId());
+                shopProductDescriptionService.deleteByShopProductId(shopProductVO.getId());
+                shopProductDescriptionImgService.deleteByShopProductId(shopProductVO.getId());
+
+                Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
+
+                if (CollectionUtils.isNotEmpty(productSkuVOS)) {
+                    for (ProductSkuVO productSkuVO : productSkuVOS) {
+                        if (productSkuVO.getId() != null) {
+                            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+                        }
+                    }
+                }
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
 }

@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/css/ShopShow.css" />
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/css/MagicZoom.css" />
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/css/product/approve/preview.css" />
+
+    <script type="text/javascript" src="${basePath}/static/js/num.js">
+        var jq = jQuery.noConflict();
+    </script>
+
+
+    <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/common/location-param.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/common-product.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+<#assign leftMenuName = "myIndex">
+
+<!------------main---------------->
+<div class="i_bg">
+    <div class="postion">
+        <span class="fl">全部 > 美妆个护 > 香水 > 迪奥 > 迪奥真我香水</span>
+    </div>
+    <div class="content">
+
+        <div id="tsShopContainer">
+            <div id="tsImgS">
+                <a href="${basePath}/static/images/error-td.gif"  class="MagicZoom" id="MagicZoom">
+                    <img src="${basePath}/static/images/error-td.gif" id="MagicZoomImg" width="390" height="390" />
+                </a>
+            </div>
+            <div id="tsPicContainer">
+                <div id="tsImgSArrL" onclick="tsScrollArrLeft()"></div>
+                <div id="tsImgSCon">
+                    <ul class="productPhotoPreview">
+                    </ul>
+                </div>
+                <div id="tsImgSArrR" onclick="tsScrollArrRight()"></div>
+            </div>
+            <img class="MagicZoomLoading" width="16" height="16" src="${basePath}/static/images/loading.gif" alt="Loading..." />
+        </div>
+
+        <div class="pro_des">
+            <div class="des_name">
+
+            </div>
+            <div class="des_price">
+                本店价格：<b id="productPrice"></b><br />
+                优惠券：<span class="quan-item" title="仅可购买自营文具指定商品 有效期2022-05-01至2022-05-31">
+                    <s></s><b></b>
+                    <span class="text">满159减20</span>
+                </span>
+            </div>
+
+            <div class="des_rough_weight">
+                重量：<a class="product_detail_rough_weight"></a>
+            </div>
+
+            <div style="width:100%" class="attributeList">
+
+            </div>
+            <div class="des_share">
+                <div class="d_sh">
+                    分享
+                    <div class="d_sh_bg">
+                        <a href="#"><img src="${basePath}/static/images/sh_1.gif" /></a>
+                        <a href="#"><img src="${basePath}/static/images/sh_2.gif" /></a>
+                        <a href="#"><img src="${basePath}/static/images/sh_3.gif" /></a>
+                        <a href="#"><img src="${basePath}/static/images/sh_4.gif" /></a>
+                        <a href="#"><img src="${basePath}/static/images/sh_5.gif" /></a>
+                    </div>
+                </div>
+                <div class="d_care"><a onclick="ShowDiv('MyDiv','fade')">关注商品</a></div>
+            </div>
+            <div class="des_join">
+                <div class="j_nums">
+                    <input type="text" value="1" id="buyCount" class="n_ipt" />
+                    <input type="button" value="" onclick="addUpdate(jq(this));" class="n_btn_1" />
+                    <input type="button" value="" onclick="jianUpdate(jq(this));" class="n_btn_2" />
+                </div>
+                <span class="fl suc_btn_panel"  style="display:none;"><a onclick="saveUserCar();" ><img src="${basePath}/static/images/j_car.png" /></a></span>
+            </div>
+        </div>
+
+        <div class="s_brand">
+            <div class="s_brand_img"><img src="${basePath}/static/images/sbrand.jpg" width="188" height="132" /></div>
+            <div class="s_brand_c"><a href="#">进入品牌专区</a></div>
+        </div>
+
+
+    </div>
+    <div class="content mar_20">
+        <div class="l_history">
+            <div class="fav_t">用户还喜欢</div>
+            <ul>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_1.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_2.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_3.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>680.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_4.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_5.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="l_list">
+            <div class="des_border">
+                <div class="des_tit">
+                    <ul>
+                        <li class="current">推荐搭配</li>
+                    </ul>
+                </div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/mat_1.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">倩碧补水组合套装8折促销</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" checked="checked" /></div>
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="${basePath}/static/images/jia_b.gif" /></div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/mat_2.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">香奈儿邂逅清新淡香水50ml</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" /></div>
+                        <font>￥<span>749.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="${basePath}/static/images/jia_b.gif" /></div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/mat_3.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">香奈儿邂逅清新淡香水50ml</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" checked="checked" /></div>
+                        <font>￥<span>749.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="${basePath}/static/images/equl.gif" /></div>
+                <div class="team_sum">
+                    套餐价：￥<span>1517</span><br />
+                    <input type="text" value="1" class="sum_ipt" /><br />
+                    <a href="#"><img src="${basePath}/static/images/z_buy.gif" /></a>
+                </div>
+
+            </div>
+            <div class="des_border">
+                <div class="des_tit">
+                    <ul>
+                        <li class="step1 current" ><a class="tabls" attr-n="1" attr-m="3" style="cursor:pointer">商品介绍</a></li>
+                        <li class="step2" ><a class="tabls" attr-n="2" attr-m="3" style="cursor:pointer">规格与包装</a></li>
+                        <li class="step3" ><a class="tabls" attr-n="3" attr-m="3" style="cursor:pointer" >商品评论</a></li>
+                    </ul>
+                </div>
+                <div class="des_con_w p_attribute step1Panel" >
+                    <div class="des_con_at" >
+                        <ul class="attribute-brand description-attribute-brand">
+
+                        </ul>
+                        <ul class="attribute-more description-attribute-more">
+
+                        </ul>
+
+                        <p class="more-par">
+                            <a class="moreAtt J-more-param" attr-n="2" attr-m="3" style="cursor:pointer" >更多参数<s class="txt-arr">&gt;&gt;</s></a>
+                        </p>
+                    </div>
+
+                    <div class="des_con_inner">
+                        <div class="des_con_p">
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="des_con_pd p_attribute step2Panel spuAttributeList" style="display:none" >
+
+                </div>
+
+                <div class="des_con_pd p_attribute step3Panel" style="display:none" >
+
+                    <table border="0" class="jud_tab" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="175" class="jud_per">
+                                <p>80.0%</p>好评度
+                            </td>
+                            <td width="300">
+                                <table border="0" style="width:100%;" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="90">好评<font color="#999999">（80%）</font></td>
+                                        <td><img src="${basePath}/static/images/pl.gif" align="absmiddle" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>中评<font color="#999999">（20%）</font></td>
+                                        <td><img src="${basePath}/static/images/pl.gif" align="absmiddle" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>差评<font color="#999999">（0%）</font></td>
+                                        <td><img src="${basePath}/static/images/pl.gif" align="absmiddle" /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="185" class="jud_bg">
+                                购买过雅诗兰黛第六代特润精华露50ml的顾客，在收到商品才可以对该商品发表评论
+                            </td>
+                            <td class="jud_bg">您可对已购买商品进行评价<br /><a href="#"><img src="${basePath}/static/images/btn_jud.gif" /></a></td>
+                        </tr>
+                    </table>
+
+
+
+                    <table border="0" class="jud_list" style="width:100%; margin-top:30px;" cellspacing="0" cellpadding="0">
+                        <tr valign="top">
+                            <td width="160"><img src="${basePath}/static/images/peo1.jpg" width="20" height="20" align="absmiddle" />&nbsp;向死而生</td>
+                            <td width="180">
+                                颜色分类：<font color="#999999">粉色</font> <br />
+                                型号：<font color="#999999">50ml</font>
+                            </td>
+                            <td>
+                                产品很好，香味很喜欢，必须给赞。 <br />
+                                <font color="#999999">2015-09-24</font>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td width="160"><img src="${basePath}/static/images/peo2.jpg" width="20" height="20" align="absmiddle" />&nbsp;就是这么想的</td>
+                            <td width="180">
+                                颜色分类：<font color="#999999">粉色</font> <br />
+                                型号：<font color="#999999">50ml</font>
+                            </td>
+                            <td>
+                                送朋友，她很喜欢，大爱。 <br />
+                                <font color="#999999">2015-09-24</font>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td width="160"><img src="${basePath}/static/images/peo3.jpg" width="20" height="20" align="absmiddle" />&nbsp;墨镜墨镜</td>
+                            <td width="180">
+                                颜色分类：<font color="#999999">粉色</font> <br />
+                                型号：<font color="#999999">50ml</font>
+                            </td>
+                            <td>
+                                大家都说不错<br />
+                                <font color="#999999">2015-09-24</font>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td width="160"><img src="${basePath}/static/images/peo4.jpg" width="20" height="20" align="absmiddle" />&nbsp;那*****洋 <br /><font color="#999999">（匿名用户）</font></td>
+                            <td width="180">
+                                颜色分类：<font color="#999999">粉色</font> <br />
+                                型号：<font color="#999999">50ml</font>
+                            </td>
+                            <td>
+                                下次还会来买，推荐。<br />
+                                <font color="#999999">2015-09-24</font>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+                    <div class="pages">
+                        <a href="#" class="p_pre">上一页</a><a href="#" class="cur">1</a><a href="#">2</a><a href="#">3</a>...<a href="#">20</a><a href="#" class="p_pre">下一页</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+    <!--Begin 弹出层-收藏成功 Begin-->
+    <div id="fade" class="black_overlay"></div>
+    <div id="MyDiv" class="white_content">
+        <div class="white_d">
+            <div class="notice_t">
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('MyDiv','fade')"><img src="${basePath}/static/images/close.gif" /></span>
+            </div>
+            <div class="notice_c">
+
+                <table border="0" align="center" style="margin-top:;" cellspacing="0" cellpadding="0">
+                    <tr valign="top">
+                        <td width="40"><img src="${basePath}/static/images/suc.png" /></td>
+                        <td>
+                            <span style="color:#3e3e3e; font-size:18px; font-weight:bold;">您已成功收藏该商品</span><br />
+                            <a href="#">查看我的关注 >></a>
+                        </td>
+                    </tr>
+                    <tr height="50" valign="bottom">
+                        <td>&nbsp;</td>
+                        <td><a href="#" class="b_sure">确定</a></td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--End 弹出层-收藏成功 End-->
+
+
+    <!--Begin 弹出层-加入购物车 Begin-->
+    <div id="fade1" class="black_overlay"></div>
+    <div id="userBuyCarMsg" class="white_content">
+        <div class="white_d">
+            <div class="notice_t">
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv_1('userBuyCarMsg','fade1')"><img src="${basePath}/static/images/close.gif" /></span>
+            </div>
+            <div class="notice_c">
+
+                <table border="0" align="center" style="margin-top:;" cellspacing="0" cellpadding="0">
+                    <tr valign="top">
+                        <td width="40"><img src="${basePath}/static/images/suc.png" /></td>
+                        <td>
+                            <span style="color:#3e3e3e; font-size:18px; font-weight:bold;">宝贝已成功添加到购物车</span><br />
+                            购物车共有<a id="buyCarItemCount"></a>个宝贝 &nbsp; &nbsp; 合计：<a class="buy_car_price_total"></a>元
+                        </td>
+                    </tr>
+                    <tr height="50" valign="bottom">
+                        <td>&nbsp;</td>
+                        <td><a href="${basePath}/page/user/buyCar/index" class="b_sure">去购物车结算</a><a style="cursor:pointer;" onclick="CloseDiv_1('userBuyCarMsg','fade1')" class="b_buy">继续购物</a></td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<#include "/footer.html"/>
+
+</body>
+
+<script src="${basePath}/static/js/ShopShow.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/product/preview.js"></script>
+
+<script type="text/javascript" src="${basePath}/static/js/MagicZoom.js"></script>
+
+</html>

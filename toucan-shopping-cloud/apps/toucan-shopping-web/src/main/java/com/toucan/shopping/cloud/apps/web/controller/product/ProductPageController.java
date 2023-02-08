@@ -45,17 +45,28 @@ public class ProductPageController extends BaseController {
 
 
     @RequestMapping("/detail/{id}")
-    public String page(@PathVariable String id)
+    public String detailPage(@PathVariable String id)
     {
         return "product/detail";
     }
 
 
+    @RequestMapping("/preview/{id}")
+    public String previewPage(@PathVariable String id)
+    {
+        return "product/preview";
+    }
 
     @RequestMapping("/detail/pid/{id}")
-    public String previewPageByProductApproveId(@PathVariable String id)
+    public String detailPageByProductApproveId(@PathVariable String id)
     {
         return "product/detail";
     }
 
+
+    @RequestMapping("/preview/pid/{id}")
+    public String previewPageByProductApproveId(@PathVariable String id)
+    {
+        return "product/preview";
+    }
 }

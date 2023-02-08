@@ -18,6 +18,8 @@ public interface ProductSkuService {
 
     ProductSkuVO queryVOById(Long id);
 
+    ProductSkuVO queryVOByIdAndStatus(Long id,int status);
+
 
     /**
      * 修改上架/下架状态(根据店铺商品ID)
@@ -50,6 +52,8 @@ public interface ProductSkuService {
 
     List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
 
+    List<ProductSkuVO> queryProductSkuListByShopProductId(Long shopProductId);
+
     /**
      * 根据店铺商品ID查询一个商品
      * @param shopProductId
@@ -57,6 +61,12 @@ public interface ProductSkuService {
      */
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
 
+    /**
+     * 根据店铺商品ID查询一个商品
+     * @param shopProductId
+     * @return
+     */
+    ProductSkuVO queryFirstOneByShopProductIdAndStatus(Long shopProductId,int status);
     /**
      * 查询上架商品数量
      * @param shopProductId

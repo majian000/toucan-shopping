@@ -21,6 +21,8 @@ public interface ShopProductService {
 
     ShopProductVO findById(Long id);
 
+    ShopProductVO findByIdAndStatus(Long id,int status);
+
     /**
      * 修改上架/下架状态
      * @param id

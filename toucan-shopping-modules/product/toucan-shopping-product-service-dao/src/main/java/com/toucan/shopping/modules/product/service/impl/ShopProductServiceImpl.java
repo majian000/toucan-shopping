@@ -44,6 +44,10 @@ public class ShopProductServiceImpl implements ShopProductService {
     }
 
     @Override
+    public ShopProductVO findByIdAndStatus(Long id,int status) {
+        return shopProductMapper.findByIdAndStatus(id,status);
+    }
+    @Override
     public int updateStatus(Long id,Long shopId, Integer status) {
         return shopProductMapper.updateStatus(id,shopId,status);
     }

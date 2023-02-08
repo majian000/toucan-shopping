@@ -82,6 +82,7 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"delRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
             // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
             // tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
@@ -91,12 +92,21 @@ function drawTable(pageResult)
     }
     $("#productTableBody").html(tableHtml);
     $("#productTable").FrozenTable(2,0,0);
+    bindRowEvents();
+}
+
+
+function bindRowEvents()
+{
     bindPreviewEvent();
+    bindShelvesEvent();
+    bindDelEvent();
 }
 
 
 function bindPreviewEvent()
 {
+    //预览事件
     $(".previewRow").unbind("click");
     //SKU信息
     $(".previewRow").bind("click", function () {
@@ -104,89 +114,12 @@ function bindPreviewEvent()
 
         window.open(shoppingPcPath+productDetailPage+attrId);
     });
+}
 
-    $(".modifyStockBtn").bind("click", function () {
-        var uuid = $(this).attr("attr-id");
-        var attrName = $(this).attr("attr-name");
-        openSelectProductSkuTableDialog(attrName);
-        initProductSkuTablePagination(uuid);
-    });
+function bindShelvesEvent()
+{
 
-    function  openSelectProductSkuTableDialog(attrName){
-        var productSkuTableHtml="  <div class=\"pageToolbar\" style='margin-top:2%'>\n" +
-        "                    <table id=\"productSkuTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
-        "                        <tbody id=\"productSkuTableBody\">\n" +
-        "                        </tbody>\n" +
-        "                    </table>\n" +
-        "                </div>";
-
-        var index = layer.open({
-            title: attrName + ' 修改库存',
-            //type: 1,
-            shade: 0.2,
-            maxmin: true,
-            area: ['30', '30%'],
-            btn: ["确定", "取消"],
-            content: productSkuTableHtml,//打开produckSKU列表页面
-            yes: function (index, layero) {
-                //todo ajax post 保存库存
-                layer.close(index);
-            },
-            cancel: function (index, layero) {
-                layer.close(index);
-            }
-        });
-    }
-
-
-    function initProductSkuTablePagination(uuid)
-    {
-
-        $(".pageToolbar").html("<table id=\"productSkuTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
-            "                        <tbody id=\"productSkuTableBody\">\n" +
-            "                        </tbody>\n" +
-            "                    </table>");
-
-        loading.showLoading({
-            type:6,
-            tip:"查询中..."
-        });
-
-        $.ajax({
-            type: "POST",
-            url: basePath+"/api/shop/product/queryProductByShopProductUUID",
-            contentType: "application/json;charset=utf-8",
-            data:  JSON.stringify(uuid),
-            dataType: "json",
-            success: function (result) {
-                if(result.code<=0)
-                {
-                    $.message({
-                        message: "查询失败,请稍后重试",
-                        type: 'error'
-                    });
-                    return ;
-                }
-                if(result.data!=null) {
-
-                    //drawPrductSkuTemplateTable(result.data);
-                }
-            },
-            error: function (result) {
-                $.message({
-                    message: "查询失败,请稍后重试",
-                    type: 'error'
-                });
-            },
-            complete:function()
-            {
-                loading.hideLoading();
-            }
-
-        });
-     }
-
-
+    //上架下架事件
     $(".shelvesBtn").unbind("click");
     $(".shelvesBtn").bind("click", function () {
         var attrId = $(this).attr("attr-id");
@@ -242,9 +175,56 @@ function bindPreviewEvent()
 
         });
     });
-
 }
 
+function bindDelEvent()
+{
+    $(".delRow").unbind("click");
+    //SKU信息
+    $(".delRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        layer.confirm('确定删除?', {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            // $("#descriptionTableTr" +attrIndex ).remove();
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/shop/product/delete",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify({id:attrId}),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code<=0)
+                    {
+                        $.message({
+                            message: "删除失败,请稍后重试",
+                            type: 'error'
+                        });
+                        return ;
+                    }
+
+                    $.message({
+                        message: "删除成功",
+                        type: 'success'
+                    });
+                },
+                error: function (result) {
+                    $.message({
+                        message: "删除失败,请稍后重试",
+                        type: 'error'
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(index);
+                    $("#queryBtn").click();
+                }
+
+            });
+        });
+    });
+}
 
 function initPagination()
 {

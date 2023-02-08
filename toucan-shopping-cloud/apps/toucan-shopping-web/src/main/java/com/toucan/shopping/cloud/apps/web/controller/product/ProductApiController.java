@@ -90,8 +90,59 @@ public class ProductApiController {
     }
 
 
+    @RequestMapping(value = "/preview",method = RequestMethod.POST)
+    public ResultObjectVO preview(@RequestBody ProductSkuVO shopProductSkuVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            ProductSkuVO queryShopProductSku = new ProductSkuVO();
+            queryShopProductSku.setId(shopProductSkuVO.getId());;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductSku);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFrontPreview(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    shopProductSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+
+                    if(shopProductSkuVO.getMainPhotoFilePath()!=null) {
+                        shopProductSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductSkuVO.getMainPhotoFilePath());
+                    }
+
+                    if(org.apache.commons.collections.CollectionUtils.isNotEmpty(shopProductSkuVO.getPreviewPhotoPaths())) {
+                        shopProductSkuVO.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath:shopProductSkuVO.getPreviewPhotoPaths())
+                        {
+                            shopProductSkuVO.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                        }
+                    }
+
+                    if(shopProductSkuVO.getShopProductDescriptionVO()!=null) {
+                        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(shopProductSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:shopProductSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
+                            }
+                        }
+                    }
+                    if(shopProductSkuVO.getProductPreviewPath()!=null) {
+                        shopProductSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductSkuVO.getProductPreviewPath());
+                    }
+
+
+                    retObject.setData(shopProductSkuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
+
     /**
-     * 根据商品主表ID查询1个预览的SKU
+     * 根据商品主表ID查询1个SKU
      * @param shopProductVO
      * @return
      */
@@ -147,6 +198,62 @@ public class ProductApiController {
     }
 
 
+
+    /**
+     * 根据商品主表ID查询1个预览的SKU
+     * @param shopProductVO
+     * @return
+     */
+    @RequestMapping(value = "/preview/pid",method = RequestMethod.POST)
+    public ResultObjectVO previewByProductId(@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            ShopProductVO queryShopProduct = new ShopProductVO();
+            queryShopProduct.setId(shopProductVO.getId());;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFrontPreview(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    ProductSkuVO productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+
+                    if(productSkuVO.getMainPhotoFilePath()!=null) {
+                        productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getMainPhotoFilePath());
+                    }
+
+                    if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getPreviewPhotoPaths())) {
+                        productSkuVO.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath:productSkuVO.getPreviewPhotoPaths())
+                        {
+                            productSkuVO.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                        }
+                    }
+
+                    if(productSkuVO.getShopProductDescriptionVO()!=null) {
+                        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
+                            }
+                        }
+                    }
+                    if(productSkuVO.getProductPreviewPath()!=null) {
+                        productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+                    }
+
+
+                    retObject.setData(productSkuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
 
 
     /**

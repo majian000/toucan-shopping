@@ -48,6 +48,24 @@ public interface FeignProductSkuService {
 
 
     /**
+     * 根据ID查询,只查询1个sku(商城PC端预览使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOneByShopProductIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据ID查询(商城PC端预览使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryByIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO);
+
+    /**
      * 根据ID查询,只查询1个sku(商城PC端使用)
      * @param requestJsonVO
      * @return
