@@ -255,28 +255,9 @@ public class ShopProductApiController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/queryProductByShopProductUUID",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryProductByShopProductUUID(HttpServletRequest request,@RequestBody  String shopProductUUID)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductUUID);
-            requestJsonVO.setEntityJson(shopProductUUID);
-            resultObjectVO = feignShopProductService.queryListByShopProductUuid(requestJsonVO);
-            if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
-
-            }
-        }catch(Exception e)
-        {
-
-        }
-        return resultObjectVO;
-    }
-
 
     /**
-     * 查询详情
+     * 删除
      * @param queryShopProductApproveVO
      * @return
      */

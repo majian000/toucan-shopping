@@ -5,6 +5,9 @@ var pagegizationConfigObject={
     per_num:10,//每页条目数
     current_page:1//当前页
 };
+
+
+
 var g_product_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 function doPage()
 {
@@ -82,6 +85,7 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"modifyStockRow\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"delRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
             // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
             // tableHtml+=     "                                &nbsp;&nbsp;\n" ;
@@ -101,6 +105,7 @@ function bindRowEvents()
     bindPreviewEvent();
     bindShelvesEvent();
     bindDelEvent();
+    bindStockEvent();
 }
 
 
@@ -223,6 +228,114 @@ function bindDelEvent()
 
             });
         });
+    });
+}
+
+
+//修改库存事件
+function bindStockEvent()
+{
+    //预览事件
+    $(".modifyStockRow").unbind("click");
+    //SKU信息
+    $(".modifyStockRow").bind("click", function () {
+
+        var attrId = $(this).attr("attr-id");
+        var skuTableHtml = "     <table border=\"0\" class=\"freezeTable\" style=\"width:90%;margin-top: 20px;margin-bottom: 20px;\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+            "                                <thead>\n" +
+            "                                <tr class=\"tabTh\">\n" +
+            "                                    <td align=\"center\" style=\"width:5%\">序号</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">主图</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">名称</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">上架状态</td>\n" +
+            "                                    <td align=\"center\" style=\"width:15%\">单价</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">库存数量</td>\n" +
+            "                                </tr>\n" +
+            "                                </thead>\n" +
+            "                                <tbody id=\"skuProductStockTable\">\n" +
+            "\n" +
+            "                                </tbody>\n" +
+            "                            </table>\n" +
+            "\n" +
+            "\n";
+
+        layer.open({
+            type: 1,
+            title: "修改库存",
+            area: ['55%', '50%'], //宽高
+            content: skuTableHtml
+        });
+
+        querySkuProductStockPage(attrId);
+    });
+
+}
+
+/**
+ * 查询SKU商品库存列表(查询全部,不做分页)
+ * @param shopProductId
+ */
+function querySkuProductStockPage(shopProductId)
+{
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/product/sku/listByShopProductId",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({shopProductId:shopProductId}),
+        dataType: "json",
+        success: function(result) {
+            if(result.data!=null) {
+                var listHtml = "";
+                for (var i = 0; i < result.data.length; i++) {
+                    var obj = result.data[i];
+                    var statusName="";
+                    if(obj.status==0)
+                    {
+                        statusName="<a style='color:red'>已下架</a>";
+                    }else{
+                        statusName="<a style='color:green'>已上架</a>";
+                    }
+                    listHtml+="<tr class=\"tabTd\">\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                           "+(i+1)+"" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                            <img style='width:100px;height:100px' src='"+obj.httpProductPreviewPath+"'>\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                            "+obj.name+"\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                           "+statusName+"\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                           "+obj.price+"\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                           <input type='text' class='bootstrap-input-text' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
+                        "                        </td>\n" +
+                        "                    </tr>";
+                }
+                $("#skuProductStockTable").html(listHtml);
+
+                // $(".select_cap").unbind();
+                // $(".select_cap").click(function(){
+                //     var attrId =$(this).attr("attr-id");
+                //     if(g_selectConsigneeAddressPageData!=null&&g_selectConsigneeAddressPageData.length>0)
+                //     {
+                //
+                //     }
+                // });
+
+            }else{
+                $("#skuProductStockTable").html("<a style='font-size:20px;'>没有查询到商品信息~</a>");
+            }
+
+        },
+        complete:function()
+        {
+        }
+
     });
 }
 

@@ -80,34 +80,40 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="status!=null">
+            and t.status = #{status}
+        </if>
+
+        <if test="shopProductId!=null">
+            and t.shop_product_id = #{shopProductId}
+        </if>
+
+        <if test="shopProductUuid!=null">
+            and t.shop_product_uuid = #{shopProductUuid}
+        </if>
+
+        <if test="shopId!=null">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="appCode!=null">
+            and t.app_code = #{appCode}
+        </if>
+
+        and t.delete_status = 0
+    </sql>
 
     <select id="queryList" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuVO">
         select t.* from t_product_sku t
         <where>
             1=1
-
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-
-            <if test="status!=null">
-                 and t.status = #{status}
-            </if>
-
-            <if test="shopProductId!=null">
-                and t.shop_product_id = #{shopProductId}
-            </if>
-
-            <if test="shopProductUuid!=null">
-                and t.shop_product_uuid = #{shopProductUuid}
-            </if>
-
-            <if test="appCode!=null">
-                and t.app_code = #{appCode}
-            </if>
-
-            and t.delete_status = 0
-
+            <include refid="queryListWhere" />
         </where>
     </select>
 
