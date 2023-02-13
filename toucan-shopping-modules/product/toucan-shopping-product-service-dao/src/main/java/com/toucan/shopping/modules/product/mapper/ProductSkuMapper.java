@@ -31,6 +31,7 @@ public interface ProductSkuMapper {
 
     int deleteByShopProductId(Long shopProductId);
 
+    int updateStock(Long id, Integer stockNum);
 
     ProductSkuVO queryVOByIdAndShelves(Long id);
 

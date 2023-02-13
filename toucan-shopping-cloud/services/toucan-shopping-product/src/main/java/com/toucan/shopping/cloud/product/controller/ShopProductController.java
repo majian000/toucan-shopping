@@ -542,6 +542,7 @@ public class ShopProductController {
                 shopProductDescriptionService.deleteByShopProductId(shopProductVO.getId());
                 shopProductDescriptionImgService.deleteByShopProductId(shopProductVO.getId());
 
+                //延时双删
                 Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
 
                 if (CollectionUtils.isNotEmpty(productSkuVOS)) {

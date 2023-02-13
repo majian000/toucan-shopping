@@ -40,6 +40,14 @@ public interface ProductSkuService {
     int updateStatusById(Long id,Long shopId,Integer status);
 
     /**
+     * 修改库存
+     * @param id
+     * @param stockNum
+     * @return
+     */
+    int updateStock(Long id,Integer stockNum);
+
+    /**
      * 查询列表页
      * @param queryPageInfo
      * @return

@@ -272,6 +272,10 @@
            and t.delete_status=0 and t.status = 1
     </select>
 
+    <update id="updateStock" >
+        update t_product_sku set stock_num=#{stockNum} where id=#{id} and delete_status=0
+    </update>
+
     <update id="inventoryReduction" >
         update t_product_sku set stock_num=stock_num-#{stockNum} where id=#{skuId} and delete_status=0 and status=1 and stock_num>0
     </update>

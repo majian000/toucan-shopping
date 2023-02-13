@@ -58,7 +58,6 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
-        // "                            <td style=\"width:75px;\" >库存</td>\n" +
         "                            <td style=\"width:75px;\" >商品分类</td>\n" +
         "                            <td style=\"width:75px;\" >上架状态</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
@@ -263,6 +262,7 @@ function bindStockEvent()
             type: 1,
             title: "修改库存",
             area: ['55%', '50%'], //宽高
+            zIndex: layer.zIndex,
             content: skuTableHtml
         });
 
@@ -312,20 +312,75 @@ function querySkuProductStockPage(shopProductId)
                         "                           "+obj.price+"\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                        "                           <input type='text' class='bootstrap-input-text' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
+                        "                           <input type='text' class='bootstrap-input-text stockNumInput' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
                         "                        </td>\n" +
                         "                    </tr>";
                 }
                 $("#skuProductStockTable").html(listHtml);
 
-                // $(".select_cap").unbind();
-                // $(".select_cap").click(function(){
-                //     var attrId =$(this).attr("attr-id");
-                //     if(g_selectConsigneeAddressPageData!=null&&g_selectConsigneeAddressPageData.length>0)
-                //     {
-                //
-                //     }
-                // });
+
+                //库存输入
+                $(".stockNumInput").unbind("change");
+                //库存输入
+                $(".stockNumInput").change(function(){
+                    var attrId = $(this).attr("attr-id");
+                    var stockNum = $(this).val();
+                    var dialogZIndex = layer.zIndex;
+                    if(!checkInput.productCount[0].test(stockNum))
+                    {
+                        $.message({
+                            message: checkInput.productCount[1],
+                            type: 'error',
+                            zIndex:dialogZIndex+1
+                        });
+                        return;
+                    }
+
+                    loading.showLoading({
+                        type:6,
+                        tip:"保存中...",
+                        zIndex:dialogZIndex+2
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: basePath+"/api/product/sku/update/stock",
+                        contentType: "application/json;charset=utf-8",
+                        data:  JSON.stringify({id:attrId,stockNum:stockNum}),
+                        dataType: "json",
+                        success: function (result) {
+                            if(result.code<=0)
+                            {
+                                $.message({
+                                    message: "修改失败,请稍后重试",
+                                    type: 'error',
+                                    zIndex: dialogZIndex + 1
+                                });
+                                return ;
+                            }
+
+                            $.message({
+                                message: "修改完成",
+                                type: 'success',
+                                zIndex: dialogZIndex + 1
+                            });
+
+                        },
+                        error: function (result) {
+                            $.message({
+                                message: "保存失败,请稍后重试",
+                                type: 'error',
+                                zIndex:dialogZIndex+1
+                            });
+                        },
+                        complete:function()
+                        {
+                            loading.hideLoading();
+                        }
+
+                    });
+
+                });
 
             }else{
                 $("#skuProductStockTable").html("<a style='font-size:20px;'>没有查询到商品信息~</a>");

@@ -51,6 +51,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
+    public int updateStock(Long id, Integer stockNum) {
+        return productSkuMapper.updateStock(id,stockNum);
+    }
+
+    @Override
     public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<ProductSkuVO> pageInfo = new PageInfo();
