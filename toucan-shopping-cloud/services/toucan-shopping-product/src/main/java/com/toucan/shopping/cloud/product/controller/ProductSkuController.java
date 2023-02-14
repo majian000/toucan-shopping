@@ -904,12 +904,12 @@ public class ProductSkuController {
             }
 
             //查询店铺商品,判断下面所有SKU如果都下架的话,这个店铺商品直接下架
-            Long shelvesCount = productSkuService.queryShelvesCountByShopProductId(productSku.getShopId());
+            Long shelvesCount = productSkuService.queryShelvesCountByShopProductId(productSku.getShopProductId());
             if(shelvesCount==0)
             {
-                shopProductService.updateStatus(productSku.getId(),productSku.getShopId(),ProductConstant.SHELVES_DOWN); //下架
+                shopProductService.updateStatus(productSku.getShopProductId(),productSku.getShopId(),ProductConstant.SHELVES_DOWN); //下架
             }else{
-                productSkuService.updateStatusByShopProductId(productSku.getId(),productSku.getShopId(), ProductConstant.SHELVES_UP); //上架
+                shopProductService.updateStatus(productSku.getShopProductId(),productSku.getShopId(), ProductConstant.SHELVES_UP); //上架
             }
 
             //清空该商品下所有SKU缓存

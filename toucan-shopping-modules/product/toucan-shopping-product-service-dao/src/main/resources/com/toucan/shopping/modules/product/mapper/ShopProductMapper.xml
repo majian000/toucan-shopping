@@ -67,6 +67,14 @@
             and t.id = #{id}
         </if>
 
+        <if test="startDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ >= ]]>  #{startDateYMDHS}
+        </if>
+
+        <if test="endDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ <= ]]>  #{endDateYMDHS}
+        </if>
+
         <if test="status!=null and status!=-1">
             and t.status = #{status}
         </if>

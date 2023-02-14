@@ -1,12 +1,15 @@
 package com.toucan.shopping.modules.product.page;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +48,17 @@ public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
     private String orderSort; //升序还是降序
 
     private Long[] ids; //商品ID数组
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    private Date startDateYMDHS; //开始日期
+
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    private Date endDateYMDHS; //结束日期
 
     //==============================================
 

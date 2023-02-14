@@ -84,7 +84,7 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"modifyStockRow\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"modifuSkuRow\" style=\"color:blue;cursor: pointer;\">SKU管理</a>\n" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"delRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
             // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
             // tableHtml+=     "                                &nbsp;&nbsp;\n" ;
@@ -104,7 +104,7 @@ function bindRowEvents()
     bindPreviewEvent();
     bindShelvesEvent();
     bindDelEvent();
-    bindStockEvent();
+    bindModifySkuEvent();
 }
 
 
@@ -232,12 +232,12 @@ function bindDelEvent()
 
 
 //修改库存事件
-function bindStockEvent()
+function bindModifySkuEvent()
 {
     //预览事件
-    $(".modifyStockRow").unbind("click");
+    $(".modifuSkuRow").unbind("click");
     //SKU信息
-    $(".modifyStockRow").bind("click", function () {
+    $(".modifuSkuRow").bind("click", function () {
 
         var attrId = $(this).attr("attr-id");
         var skuTableHtml = "     <table border=\"0\" class=\"freezeTable\" style=\"width:90%;margin-top: 20px;margin-bottom: 20px;\" cellspacing=\"0\" cellpadding=\"0\">\n" +
@@ -249,6 +249,7 @@ function bindStockEvent()
             "                                    <td align=\"center\" style=\"width:10%\">上架状态</td>\n" +
             "                                    <td align=\"center\" style=\"width:15%\">单价</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">库存数量</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">操作</td>\n" +
             "                                </tr>\n" +
             "                                </thead>\n" +
             "                                <tbody id=\"skuProductStockTable\">\n" +
@@ -260,7 +261,7 @@ function bindStockEvent()
 
         layer.open({
             type: 1,
-            title: "修改库存",
+            title: "SKU管理",
             area: ['55%', '50%'], //宽高
             zIndex: layer.zIndex,
             content: skuTableHtml
@@ -289,11 +290,14 @@ function querySkuProductStockPage(shopProductId)
                 for (var i = 0; i < result.data.length; i++) {
                     var obj = result.data[i];
                     var statusName="";
+                    var operateText="";
                     if(obj.status==0)
                     {
                         statusName="<a style='color:red'>已下架</a>";
+                        operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableShelvesRow' style=\"color:blue;cursor: pointer;\">上架</a>";
                     }else{
                         statusName="<a style='color:green'>已上架</a>";
+                        operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableShelvesRow' style=\"color:red;cursor: pointer;\">下架</a>";
                     }
                     listHtml+="<tr class=\"tabTd\">\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
@@ -313,6 +317,9 @@ function querySkuProductStockPage(shopProductId)
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           <input type='text' class='bootstrap-input-text stockNumInput' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\" style=\"font-family:'宋体';\" >\n" +
+                        "                           "+operateText+
                         "                        </td>\n" +
                         "                    </tr>";
                 }
@@ -365,6 +372,7 @@ function querySkuProductStockPage(shopProductId)
                                 zIndex: dialogZIndex + 1
                             });
 
+
                         },
                         error: function (result) {
                             $.message({
@@ -382,6 +390,62 @@ function querySkuProductStockPage(shopProductId)
 
                 });
 
+
+
+                //上架/下架
+                $(".skuTableShelvesRow").unbind("click");
+                //上架/下架
+                $(".skuTableShelvesRow").bind("click", function () {
+                    var attrId = $(this).attr("attr-id");
+                    var dialogZIndex = layer.zIndex;
+
+                    loading.showLoading({
+                        type:6,
+                        tip:"生效中...",
+                        zIndex:dialogZIndex+2
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: basePath+"/api/product/sku/update/shelves",
+                        contentType: "application/json;charset=utf-8",
+                        data:  JSON.stringify({id:attrId}),
+                        dataType: "json",
+                        success: function (result) {
+                            if(result.code<=0)
+                            {
+                                $.message({
+                                    message: "操作失败,请稍后重试",
+                                    type: 'error',
+                                    zIndex: dialogZIndex + 1
+                                });
+                                return ;
+                            }
+
+                            $.message({
+                                message: "操作完成",
+                                type: 'success',
+                                zIndex: dialogZIndex + 1
+                            });
+
+                            queryBtnEvent();
+                            querySkuProductStockPage(shopProductId);
+                        },
+                        error: function (result) {
+                            $.message({
+                                message: "操作失败,请稍后重试",
+                                type: 'error',
+                                zIndex:dialogZIndex+1
+                            });
+                        },
+                        complete:function()
+                        {
+                            loading.hideLoading();
+                        }
+
+                    });
+
+                });
             }else{
                 $("#skuProductStockTable").html("<a style='font-size:20px;'>没有查询到商品信息~</a>");
             }
@@ -443,18 +507,23 @@ function initPagination()
     });
 }
 
+function queryBtnEvent()
+{
+    pagegizationConfigObject.current_page = 1;
+    g_product_query_obj.page = 1;
+    g_product_query_obj.name=$("#name").val();
+    g_product_query_obj.status=$("#status option:selected").val();
+    g_product_query_obj.startDateYMDHS=$("#startDate").val();
+    g_product_query_obj.endDateYMDHS=$("#endDate").val();
+
+    initPagination();
+}
+
 $(function () {
 
 
     $("#queryBtn").bind( 'click' ,function(){
-        pagegizationConfigObject.current_page = 1;
-        g_product_query_obj.page = 1;
-        g_product_query_obj.name=$("#name").val();
-        g_product_query_obj.status=$("#status option:selected").val();
-        g_product_query_obj.startDateYMDHS=$("#startDate").val();
-        g_product_query_obj.endDateYMDHS=$("#endDate").val();
-
-        initPagination();
+        queryBtnEvent();
     });
 
 
