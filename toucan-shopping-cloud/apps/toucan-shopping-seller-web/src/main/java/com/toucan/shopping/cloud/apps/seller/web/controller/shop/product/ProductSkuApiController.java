@@ -108,6 +108,7 @@ public class ProductSkuApiController extends BaseController {
                             for(ProductSkuVO psv:productSkuVOS)
                             {
                                 psv.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+psv.getProductPreviewPath());
+                                psv.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix()+psv.getDescriptionImgFilePath());
                             }
                         }
                         resultObjectVO.setData(productSkuVOS);

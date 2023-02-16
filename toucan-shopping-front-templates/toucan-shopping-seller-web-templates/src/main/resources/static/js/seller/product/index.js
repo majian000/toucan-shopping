@@ -246,6 +246,7 @@ function bindModifySkuEvent()
             "                                    <td align=\"center\" style=\"width:5%\">序号</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">主图</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">名称</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">介绍</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">上架状态</td>\n" +
             "                                    <td align=\"center\" style=\"width:15%\">单价</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">库存数量</td>\n" +
@@ -291,6 +292,7 @@ function querySkuProductStockPage(shopProductId)
                     var obj = result.data[i];
                     var statusName="";
                     var operateText="";
+                    var httpDescriptionImgPath="";
                     if(obj.status==0)
                     {
                         statusName="<a style='color:red'>已下架</a>";
@@ -299,15 +301,22 @@ function querySkuProductStockPage(shopProductId)
                         statusName="<a style='color:green'>已上架</a>";
                         operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableShelvesRow' style=\"color:red;cursor: pointer;\">下架</a>";
                     }
+                    if(obj.descriptionImgFilePath!=null)
+                    {
+                        httpDescriptionImgPath=" <a href='"+obj.httpDescriptionImgPath+"'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
+                    }
                     listHtml+="<tr class=\"tabTd\">\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           "+(i+1)+"" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                        "                            <img style='width:100px;height:100px' src='"+obj.httpProductPreviewPath+"'>\n" +
+                        "                            <a href='"+obj.httpProductPreviewPath+"'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpProductPreviewPath+"'></a>\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                            "+obj.name+"\n" +
+                        "                        </td>\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        httpDescriptionImgPath+
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           "+statusName+"\n" +

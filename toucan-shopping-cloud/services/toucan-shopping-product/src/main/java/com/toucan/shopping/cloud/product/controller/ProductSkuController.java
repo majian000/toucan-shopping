@@ -527,7 +527,28 @@ public class ProductSkuController {
                 resultObjectVO.setMsg("店铺商品ID不能为空!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(productSkuService.queryList(productSkuVO));
+            List<ProductSkuVO> productSkuVOS = productSkuService.queryList(productSkuVO);
+            if(!CollectionUtils.isEmpty(productSkuVOS)) {
+                if (productSkuVOS.get(0).getShopProductId() != null) {
+                    ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(productSkuVOS.get(0).getShopProductId());
+                    if (shopProductDescription != null) {
+                        List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(productSkuVOS.get(0).getShopProductId(), shopProductDescription.getId());
+                        if (!CollectionUtils.isEmpty(shopProductDescriptionImgVOS)) {
+                            for (ProductSkuVO psv : productSkuVOS) {
+                                for (ShopProductDescriptionImgVO shopProductDescriptionImgVO : shopProductDescriptionImgVOS) {
+                                    if (shopProductDescriptionImgVO.getType() == 2
+                                            && shopProductDescriptionImgVO.getProductSkuId() != null
+                                            && psv.getId().longValue() == shopProductDescriptionImgVO.getProductSkuId().longValue()) {
+                                        psv.setDescriptionImgFilePath(shopProductDescriptionImgVO.getFilePath());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            resultObjectVO.setData(productSkuVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
