@@ -244,13 +244,13 @@ function bindModifySkuEvent()
             "                                <thead>\n" +
             "                                <tr class=\"tabTh\">\n" +
             "                                    <td align=\"center\" style=\"width:5%\">序号</td>\n" +
-            "                                    <td align=\"center\" style=\"width:10%\">主图</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">预览图</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">名称</td>\n" +
-            "                                    <td align=\"center\" style=\"width:10%\">介绍</td>\n" +
-            "                                    <td align=\"center\" style=\"width:10%\">上架状态</td>\n" +
-            "                                    <td align=\"center\" style=\"width:15%\">单价</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">介绍图</td>\n" +
+            "                                    <td align=\"center\" style=\"width:7%\">上架状态</td>\n" +
+            "                                    <td align=\"center\" style=\"width:10%\">单价</td>\n" +
             "                                    <td align=\"center\" style=\"width:10%\">库存数量</td>\n" +
-            "                                    <td align=\"center\" style=\"width:10%\">操作</td>\n" +
+            "                                    <td align=\"center\" style=\"width:25%\">操作</td>\n" +
             "                                </tr>\n" +
             "                                </thead>\n" +
             "                                <tbody id=\"skuProductStockTable\">\n" +
@@ -301,18 +301,21 @@ function querySkuProductStockPage(shopProductId)
                         statusName="<a style='color:green'>已上架</a>";
                         operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableShelvesRow' style=\"color:red;cursor: pointer;\">下架</a>";
                     }
+                    operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableUploadMainPhotoRow' style=\"color:blue;cursor: pointer;\">替换预览图</a>";
+                    operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableUploadDescriptionPhotoRow' style=\"color:blue;cursor: pointer;\">替换介绍图</a>";
                     if(obj.descriptionImgFilePath!=null)
                     {
-                        httpDescriptionImgPath=" <a href='"+obj.httpDescriptionImgPath+"'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
+                        httpDescriptionImgPath=" <a href='javascript:window.open(\""+obj.httpDescriptionImgPath+"\")'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
                     }
                     listHtml+="<tr class=\"tabTd\">\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           "+(i+1)+"" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                        "                            <a href='"+obj.httpProductPreviewPath+"'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpProductPreviewPath+"'></a>\n" +
+                        "                            <a href='javascript:window.open(\""+obj.httpProductPreviewPath+"\")'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpProductPreviewPath+"'></a>\n" +
+                        "<input type='file' id='skuTableMainPhotoFile_"+obj.id+"' class='skuTableMainPhotoFiles' attr-id='"+obj.id+"' style='display:none' />"+
                         "                        </td>\n" +
-                        "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                        "                        <td align=\"center\"  style=\"font-family:'宋体';padding-top: 2%; padding-bottom: 2%;padding-left: 2%; padding-right: 2%;\">\n" +
                         "                            "+obj.name+"\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
@@ -327,134 +330,15 @@ function querySkuProductStockPage(shopProductId)
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           <input type='text' class='bootstrap-input-text stockNumInput' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
                         "                        </td>\n" +
-                        "                        <td align=\"center\" style=\"font-family:'宋体';\" >\n" +
+                        "                        <td align=\"center\" style=\"font-family:'宋体';padding-top: 2%; padding-bottom: 2%;padding-left: 2%; padding-right: 2%;\" >\n" +
                         "                           "+operateText+
                         "                        </td>\n" +
                         "                    </tr>";
                 }
                 $("#skuProductStockTable").html(listHtml);
 
+                bindSkuTableEvents(shopProductId);
 
-                //库存输入
-                $(".stockNumInput").unbind("change");
-                //库存输入
-                $(".stockNumInput").change(function(){
-                    var attrId = $(this).attr("attr-id");
-                    var stockNum = $(this).val();
-                    var dialogZIndex = layer.zIndex;
-                    if(!checkInput.productCount[0].test(stockNum))
-                    {
-                        $.message({
-                            message: checkInput.productCount[1],
-                            type: 'error',
-                            zIndex:dialogZIndex+1
-                        });
-                        return;
-                    }
-
-                    loading.showLoading({
-                        type:6,
-                        tip:"保存中...",
-                        zIndex:dialogZIndex+2
-                    });
-
-                    $.ajax({
-                        type: "POST",
-                        url: basePath+"/api/product/sku/update/stock",
-                        contentType: "application/json;charset=utf-8",
-                        data:  JSON.stringify({id:attrId,stockNum:stockNum}),
-                        dataType: "json",
-                        success: function (result) {
-                            if(result.code<=0)
-                            {
-                                $.message({
-                                    message: "修改失败,请稍后重试",
-                                    type: 'error',
-                                    zIndex: dialogZIndex + 1
-                                });
-                                return ;
-                            }
-
-                            $.message({
-                                message: "修改完成",
-                                type: 'success',
-                                zIndex: dialogZIndex + 1
-                            });
-
-
-                        },
-                        error: function (result) {
-                            $.message({
-                                message: "保存失败,请稍后重试",
-                                type: 'error',
-                                zIndex:dialogZIndex+1
-                            });
-                        },
-                        complete:function()
-                        {
-                            loading.hideLoading();
-                        }
-
-                    });
-
-                });
-
-
-
-                //上架/下架
-                $(".skuTableShelvesRow").unbind("click");
-                //上架/下架
-                $(".skuTableShelvesRow").bind("click", function () {
-                    var attrId = $(this).attr("attr-id");
-                    var dialogZIndex = layer.zIndex;
-
-                    loading.showLoading({
-                        type:6,
-                        tip:"生效中...",
-                        zIndex:dialogZIndex+2
-                    });
-
-                    $.ajax({
-                        type: "POST",
-                        url: basePath+"/api/product/sku/update/shelves",
-                        contentType: "application/json;charset=utf-8",
-                        data:  JSON.stringify({id:attrId}),
-                        dataType: "json",
-                        success: function (result) {
-                            if(result.code<=0)
-                            {
-                                $.message({
-                                    message: "操作失败,请稍后重试",
-                                    type: 'error',
-                                    zIndex: dialogZIndex + 1
-                                });
-                                return ;
-                            }
-
-                            $.message({
-                                message: "操作完成",
-                                type: 'success',
-                                zIndex: dialogZIndex + 1
-                            });
-
-                            queryBtnEvent();
-                            querySkuProductStockPage(shopProductId);
-                        },
-                        error: function (result) {
-                            $.message({
-                                message: "操作失败,请稍后重试",
-                                type: 'error',
-                                zIndex:dialogZIndex+1
-                            });
-                        },
-                        complete:function()
-                        {
-                            loading.hideLoading();
-                        }
-
-                    });
-
-                });
             }else{
                 $("#skuProductStockTable").html("<a style='font-size:20px;'>没有查询到商品信息~</a>");
             }
@@ -465,6 +349,213 @@ function querySkuProductStockPage(shopProductId)
         }
 
     });
+}
+
+
+function bindSkuTableEvents(shopProductId)
+{
+    //库存输入
+    $(".stockNumInput").unbind("change");
+    //库存输入
+    $(".stockNumInput").change(function(){
+        var attrId = $(this).attr("attr-id");
+        var stockNum = $(this).val();
+        var dialogZIndex = layer.zIndex;
+        if(!checkInput.productCount[0].test(stockNum))
+        {
+            $.message({
+                message: checkInput.productCount[1],
+                type: 'error',
+                zIndex:dialogZIndex+1
+            });
+            return;
+        }
+
+        loading.showLoading({
+            type:6,
+            tip:"保存中...",
+            zIndex:dialogZIndex+2
+        });
+
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/product/sku/update/stock",
+            contentType: "application/json;charset=utf-8",
+            data:  JSON.stringify({id:attrId,stockNum:stockNum}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "修改失败,请稍后重试",
+                        type: 'error',
+                        zIndex: dialogZIndex + 1
+                    });
+                    return ;
+                }
+
+                $.message({
+                    message: "修改完成",
+                    type: 'success',
+                    zIndex: dialogZIndex + 1
+                });
+
+
+            },
+            error: function (result) {
+                $.message({
+                    message: "保存失败,请稍后重试",
+                    type: 'error',
+                    zIndex:dialogZIndex+1
+                });
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+
+        });
+
+    });
+
+
+
+    //上架/下架
+    $(".skuTableShelvesRow").unbind("click");
+    //上架/下架
+    $(".skuTableShelvesRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var dialogZIndex = layer.zIndex;
+
+        loading.showLoading({
+            type:6,
+            tip:"生效中...",
+            zIndex:dialogZIndex+2
+        });
+
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/product/sku/update/shelves",
+            contentType: "application/json;charset=utf-8",
+            data:  JSON.stringify({id:attrId}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "操作失败,请稍后重试",
+                        type: 'error',
+                        zIndex: dialogZIndex + 1
+                    });
+                    return ;
+                }
+
+                $.message({
+                    message: "操作完成",
+                    type: 'success',
+                    zIndex: dialogZIndex + 1
+                });
+
+                queryBtnEvent();
+                querySkuProductStockPage(shopProductId);
+            },
+            error: function (result) {
+                $.message({
+                    message: "操作失败,请稍后重试",
+                    type: 'error',
+                    zIndex:dialogZIndex+1
+                });
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+
+        });
+
+    });
+
+
+
+    //重新上传主图
+    $(".skuTableUploadMainPhotoRow").unbind("click");
+    //重新上传主图
+    $(".skuTableUploadMainPhotoRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        $("#skuTableMainPhotoFile_"+attrId).click();
+    });
+
+
+    $(".skuTableMainPhotoFiles").unbind("change");
+    $(".skuTableMainPhotoFiles").on("change", function () {
+        // Get a reference to the fileList
+        var dialogZIndex = layer.zIndex;
+        var files = !!this.files ? this.files : [];
+        var attrId = $(this).attr("attr-id");
+        var fileObject=$(this);
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) {
+            $.message({
+                message: "请选择一张图片",
+                type: 'error',
+                zIndex:dialogZIndex+1
+            });
+            return;
+        }
+
+        loading.showLoading({
+            type:6,
+            tip:"上传中...",
+            zIndex:dialogZIndex+2
+        });
+        var formData = new FormData();
+        formData.append("mainPhotoFile", files[0]);
+        formData.append("id",attrId);
+        $.ajax({
+            url: basePath + "/api/product/sku/reupload/preview/photo",
+            type: "post",
+            data: formData,
+            processData: false, // 告诉jQuery不要去处理发送的数据
+            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+            dataType: 'text',
+            success: function(result) {
+                fileObject.clone().val("");
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "替换失败,请稍后重试",
+                        type: 'error',
+                        zIndex: dialogZIndex + 1
+                    });
+                    return ;
+                }
+
+                $.message({
+                    message: "替换成功",
+                    type: 'success',
+                    zIndex: dialogZIndex + 1
+                });
+
+                querySkuProductStockPage(shopProductId);
+            },
+            error: function(data) {
+                $.message({
+                    message: "操作失败,请稍后重试",
+                    type: 'error',
+                    zIndex:dialogZIndex+1
+                });
+
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+        });
+
+
+    });
+
 }
 
 function initPagination()

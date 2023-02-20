@@ -28,6 +28,7 @@ public interface ProductSkuMapper {
 
     List<ProductSkuVO> queryVOListByShopProductIdAndStatus(Long shopProductId,int status) ;
 
+    int update(ProductSku productSku);
 
     int deleteByShopProductId(Long shopProductId);
 

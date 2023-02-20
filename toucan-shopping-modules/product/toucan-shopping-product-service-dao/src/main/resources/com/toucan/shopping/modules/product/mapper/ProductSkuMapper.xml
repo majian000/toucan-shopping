@@ -134,6 +134,14 @@
 
     </insert>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.ProductSku">
+        update t_product_sku set attributes=#{attributes} , attribute_value_group=#{attributeValueGroup},price=#{price},
+        status=#{status},remark=#{remark},update_date=sysdate(),update_user_id=#{updateUserId},brand_id=#{brandId},
+        name=#{name},only_name=#{onlyName},stock_num=#{stockNum},product_preview_path=#{productPreviewPath},
+        category_id=#{categoryId},shop_category_id=#{shopCategoryId},product_no=#{productNo},
+        rough_weight=#{roughWeight},suttle=#{suttle}
+         where id = #{id} and delete_status = 0
+    </update>
 
 
     <select id="queryListPage" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.page.ProductSkuPageInfo">

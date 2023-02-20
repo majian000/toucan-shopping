@@ -91,7 +91,6 @@ public class ShopProductApproveApiController extends BaseController {
     private FeignFreightTemplateService feignFreightTemplateService;
 
 
-    private String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
 
 
 
@@ -652,7 +651,7 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
@@ -664,7 +663,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                 for(MultipartFile multipartFile:previewPhotoFiles)
                 {
-                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
@@ -684,7 +683,7 @@ public class ShopProductApproveApiController extends BaseController {
                         resultObjectVO.setMsg("发布失败,商品主图不能为空!");
                         return resultObjectVO;
                     }
-                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
@@ -693,7 +692,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                     //校验SKU介绍图
                     if(productSkuVO.getDescriptionImgFile()!=null
-                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),imageExtScope))
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");
@@ -943,7 +942,7 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            if(republishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(republishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            if(republishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(republishProductVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
@@ -955,7 +954,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                 for(MultipartFile multipartFile:previewPhotoFiles)
                 {
-                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
@@ -968,7 +967,7 @@ public class ShopProductApproveApiController extends BaseController {
                 for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                 {
                     //校验SKU主图
-                    if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
@@ -978,7 +977,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                     //校验SKU介绍图
                     if(productSkuVO.getDescriptionImgFile()!=null
-                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),imageExtScope))
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");

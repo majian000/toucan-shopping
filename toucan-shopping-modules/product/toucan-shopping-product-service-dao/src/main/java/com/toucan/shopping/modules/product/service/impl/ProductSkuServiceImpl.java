@@ -117,6 +117,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
+    public int update(ProductSku productSku) {
+        return productSkuMapper.update(productSku);
+    }
+
+    @Override
     public ProductSku queryByUuid(String uuid) {
         return productSkuMapper.queryByUuid(uuid);
     }

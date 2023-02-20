@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -208,6 +209,93 @@ public class ProductSkuApiController extends BaseController {
         }
 
         return resultObjectVO;
+    }
+
+
+
+    /**
+     * 上传主图
+     * @param productSkuVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/reupload/preview/photo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO reuploadMainPhoto(HttpServletRequest httpServletRequest,ProductSkuVO productSkuVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            if (StringUtils.isEmpty(userMainId)) {
+                logger.warn("修改失败 没有找到用户ID {} ", userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            //校验SKU主图
+            if(productSkuVO.getMainPhotoFile()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("替换失败,商品主图不能为空!");
+                return resultObjectVO;
+            }
+            if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("替换失败,商品主图格式只能为:JPG、JPEG、PNG!");
+                return resultObjectVO;
+            }
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if (sellerShopVO != null) {
+                    productSkuVO.setShopId(sellerShopVO.getId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                    //判断该用户有权限操作该商品
+                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        //旧的预览图
+                        ProductSkuVO oldProductSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+                        productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
+                        productSkuVO.setMainPhotoFile(null);
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                        resultObjectVO = feignProductSkuService.updatePreviewPhoto(requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            this.deleteOldProductImage(oldProductSkuVO.getProductPreviewPath());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后重试");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 删除旧的商品图片
+     * @param imagePath
+     */
+    void deleteOldProductImage(String imagePath)
+    {
+        try{
+            imageUploadService.deleteFile(imagePath);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
     }
 
 }

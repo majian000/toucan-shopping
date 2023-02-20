@@ -954,4 +954,48 @@ public class ProductSkuController {
     }
 
 
+
+
+    /**
+     * 修改商品预览图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/preview/photo",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updatePreviewPhoto(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
+            ProductSku productSku = productSkuService.queryById(productSkuVO.getId());
+            productSku.setProductPreviewPath(productSkuVO.getProductPreviewPath());
+            int ret = productSkuService.update(productSku);
+            if(ret!=1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败");
+        }
+        return resultObjectVO;
+    }
+
 }

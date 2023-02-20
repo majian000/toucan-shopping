@@ -94,6 +94,8 @@ public interface ProductSkuService {
 
     ProductSku queryById(Long id);
 
+    int update(ProductSku productSku);
+
     ProductSku queryByUuid(String uuid);
 
 

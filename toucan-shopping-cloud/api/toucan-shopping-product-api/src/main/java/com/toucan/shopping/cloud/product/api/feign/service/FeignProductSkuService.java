@@ -120,4 +120,14 @@ public interface FeignProductSkuService {
     @RequestMapping(method= RequestMethod.POST,value="/restoreStock",produces = "application/json;charset=UTF-8")
     ResultObjectVO restoreStock(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 修改商品预览图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/preview/photo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updatePreviewPhoto(@RequestBody RequestJsonVO requestJsonVO);
+
 }
