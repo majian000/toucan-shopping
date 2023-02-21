@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.product.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.service.ProductSkuRedisService;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
@@ -58,6 +59,9 @@ public class ProductSkuController {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private IdGenerator idGenerator;
 
     /**
      * 查询所有上架商品
@@ -480,6 +484,21 @@ public class ProductSkuController {
             productSku = productSkuService.queryById(productSku.getId());
             ProductSkuVO productSkuVO = new ProductSkuVO();
             BeanUtils.copyProperties(productSkuVO,productSku);
+            //查询介绍图
+            ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(productSkuVO.getShopProductId());
+            if (shopProductDescription != null) {
+                List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(productSkuVO.getShopProductId(), shopProductDescription.getId());
+                if (!CollectionUtils.isEmpty(shopProductDescriptionImgVOS)) {
+                    for (ShopProductDescriptionImgVO shopProductDescriptionImgVO : shopProductDescriptionImgVOS) {
+                        if (shopProductDescriptionImgVO.getType() == 2
+                                && shopProductDescriptionImgVO.getProductSkuId() != null
+                                && productSkuVO.getId().longValue() == shopProductDescriptionImgVO.getProductSkuId().longValue()) {
+                            productSkuVO.setDescriptionImgFilePath(shopProductDescriptionImgVO.getFilePath());
+                            break;
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(productSkuVO);
         }catch(Exception e)
         {
@@ -989,6 +1008,65 @@ public class ProductSkuController {
                 resultObjectVO.setMsg("修改失败");
                 return resultObjectVO;
             }
+            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 修改商品介绍图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/description/photo",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
+            ProductSku productSku = productSkuService.queryById(productSkuVO.getId());
+            ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(productSku.getShopProductId());
+            List<ShopProductDescriptionImgVO> shopProductDescriptionImgs = shopProductDescriptionImgService.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(productSku.getId(),shopProductDescription.getId());
+
+            ShopProductDescriptionImgVO productSkuDescriptionImgVO = new ShopProductDescriptionImgVO();
+            if(!CollectionUtils.isEmpty(shopProductDescriptionImgs))
+            {
+                ShopProductDescriptionImgVO productDescriptionImgSkuVO = shopProductDescriptionImgs.get(0);
+                BeanUtils.copyProperties(productSkuDescriptionImgVO,productDescriptionImgSkuVO);
+                shopProductDescriptionImgService.deleteById(productDescriptionImgSkuVO.getId());
+                productSkuDescriptionImgVO.setCreateDate(new Date());
+            }else {
+                productSkuDescriptionImgVO.setCreateDate(new Date());
+                productSkuDescriptionImgVO.setShopProductId(productSku.getShopProductId()); //店铺商品ID
+                productSkuDescriptionImgVO.setShopProductDescriptionId(shopProductDescription.getId());  //商品介绍主表ID
+                productSkuDescriptionImgVO.setCreateDate(new Date());
+                productSkuDescriptionImgVO.setType((short)2);
+                productSkuDescriptionImgVO.setProductSkuId(productSku.getId());
+            }
+            productSkuDescriptionImgVO.setId(idGenerator.id());
+            productSkuDescriptionImgVO.setFilePath(productSkuVO.getDescriptionImgFilePath());
+            shopProductDescriptionImgService.save(productSkuDescriptionImgVO);
+            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -292,7 +292,7 @@ function querySkuProductStockPage(shopProductId)
                     var obj = result.data[i];
                     var statusName="";
                     var operateText="";
-                    var httpDescriptionImgPath="";
+                    var httpDescriptionImgPathHtml="";
                     if(obj.status==0)
                     {
                         statusName="<a style='color:red'>已下架</a>";
@@ -305,8 +305,9 @@ function querySkuProductStockPage(shopProductId)
                     operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableUploadDescriptionPhotoRow' style=\"color:blue;cursor: pointer;\">替换介绍图</a>";
                     if(obj.descriptionImgFilePath!=null)
                     {
-                        httpDescriptionImgPath=" <a href='javascript:window.open(\""+obj.httpDescriptionImgPath+"\")'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
+                        httpDescriptionImgPathHtml=" <a href='javascript:window.open(\""+obj.httpDescriptionImgPath+"\")'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
                     }
+                    httpDescriptionImgPathHtml+="<input type='file' id='skuTableDescriptionPhotoFiles_"+obj.id+"' class='skuTableDescriptionPhotoFiles' attr-id='"+obj.id+"' style='display:none' />";
                     listHtml+="<tr class=\"tabTd\">\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           "+(i+1)+"" +
@@ -319,7 +320,7 @@ function querySkuProductStockPage(shopProductId)
                         "                            "+obj.name+"\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                        httpDescriptionImgPath+
+                        httpDescriptionImgPathHtml+
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           "+statusName+"\n" +
@@ -477,9 +478,9 @@ function bindSkuTableEvents(shopProductId)
 
 
 
-    //重新上传主图
+    //重新上传预览图
     $(".skuTableUploadMainPhotoRow").unbind("click");
-    //重新上传主图
+    //重新上传预览图
     $(".skuTableUploadMainPhotoRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         $("#skuTableMainPhotoFile_"+attrId).click();
@@ -513,11 +514,11 @@ function bindSkuTableEvents(shopProductId)
         formData.append("mainPhotoFile", files[0]);
         formData.append("id",attrId);
         $.ajax({
-            url: basePath + "/api/product/sku/reupload/preview/photo",
+            url: basePath + "/api/product/sku/update/preview/photo",
             type: "post",
             data: formData,
-            processData: false, // 告诉jQuery不要去处理发送的数据
-            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+            processData: false,
+            contentType: false,
             dataType: 'text',
             success: function(result) {
                 fileObject.clone().val("");
@@ -552,8 +553,85 @@ function bindSkuTableEvents(shopProductId)
                 loading.hideLoading();
             }
         });
+    });
 
 
+
+    //重新上传预览图
+    $(".skuTableUploadDescriptionPhotoRow").unbind("click");
+    //重新上传预览图
+    $(".skuTableUploadDescriptionPhotoRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        $("#skuTableDescriptionPhotoFiles_"+attrId).click();
+    });
+
+
+    $(".skuTableDescriptionPhotoFiles").unbind("change");
+    $(".skuTableDescriptionPhotoFiles").on("change", function () {
+        // Get a reference to the fileList
+        var dialogZIndex = layer.zIndex;
+        var files = !!this.files ? this.files : [];
+        var attrId = $(this).attr("attr-id");
+        var fileObject=$(this);
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) {
+            $.message({
+                message: "请选择一张图片",
+                type: 'error',
+                zIndex:dialogZIndex+1
+            });
+            return;
+        }
+
+        loading.showLoading({
+            type:6,
+            tip:"上传中...",
+            zIndex:dialogZIndex+2
+        });
+        var formData = new FormData();
+        formData.append("shopProductDescriptionVO.productDescriptionImgs[0].imgFile", files[0]);
+        formData.append("id",attrId);
+        $.ajax({
+            url: basePath + "/api/product/sku/update/description/photo",
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'text',
+            success: function(result) {
+                fileObject.clone().val("");
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "替换失败,请稍后重试",
+                        type: 'error',
+                        zIndex: dialogZIndex + 1
+                    });
+                    return ;
+                }
+
+                $.message({
+                    message: "替换成功",
+                    type: 'success',
+                    zIndex: dialogZIndex + 1
+                });
+
+                querySkuProductStockPage(shopProductId);
+            },
+            error: function(data) {
+                $.message({
+                    message: "操作失败,请稍后重试",
+                    type: 'error',
+                    zIndex:dialogZIndex+1
+                });
+
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+        });
     });
 
 }

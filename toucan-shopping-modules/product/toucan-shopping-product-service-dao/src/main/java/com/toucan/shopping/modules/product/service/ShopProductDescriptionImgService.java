@@ -11,7 +11,14 @@ public interface ShopProductDescriptionImgService {
 
     int saves(List<ShopProductDescriptionImg> entitys);
 
+    int save(ShopProductDescriptionImg entity);
+
     int deleteByShopProductId(Long shopProductId);
+
+    int deleteById(Long id);
+
+
+    int update(ShopProductDescriptionImg entity);
 
     /**
      * 根据商品审核ID和商品介绍ID查询

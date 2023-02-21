@@ -219,9 +219,9 @@ public class ProductSkuApiController extends BaseController {
      * @return
      */
     @UserAuth
-    @RequestMapping(value = "/reupload/preview/photo", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/preview/photo", method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO reuploadMainPhoto(HttpServletRequest httpServletRequest,ProductSkuVO productSkuVO) {
+    public ResultObjectVO updateMainPhoto(HttpServletRequest httpServletRequest,ProductSkuVO productSkuVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
@@ -282,6 +282,78 @@ public class ProductSkuApiController extends BaseController {
     }
 
 
+
+    /**
+     * 上传介绍图
+     * @param productSkuVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/update/description/photo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO updateDescriptionPhoto(HttpServletRequest httpServletRequest,ProductSkuVO productSkuVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            if (StringUtils.isEmpty(userMainId)) {
+                logger.warn("修改失败 没有找到用户ID {} ", userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            //校验SKU主图
+            if(productSkuVO.getShopProductDescriptionVO()==null
+                    ||productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()==null
+                    ||productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("替换失败,商品介绍图不能为空!");
+                return resultObjectVO;
+            }
+            if(!ImageUtils.isImage(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("替换失败,商品介绍图格式只能为:JPG、JPEG、PNG!");
+                return resultObjectVO;
+            }
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if (sellerShopVO != null) {
+                    productSkuVO.setShopId(sellerShopVO.getId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                    //判断该用户有权限操作该商品
+                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        //旧的介绍图
+                        ProductSkuVO oldProductSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+                        productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getOriginalFilename())));
+                        productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).setImgFile(null);
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                        resultObjectVO = feignProductSkuService.updateDescriptionPhoto(requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            if(StringUtils.isNotEmpty(oldProductSkuVO.getDescriptionImgFilePath())) {
+                                this.deleteOldProductImage(oldProductSkuVO.getDescriptionImgFilePath());
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后重试");
+        }
+
+        return resultObjectVO;
+    }
 
 
     /**

@@ -40,6 +40,12 @@
 
     </insert>
 
+    <insert id="insert"  keyProperty="id" >
+        insert into t_shop_product_description_img(id,shop_product_id,product_sku_id,type,shop_product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id)
+        values
+        (#{id},#{shopProductId},#{productSkuId},#{type},#{shopProductDescriptionId},#{filePath},#{width},#{widthUnit},#{title},#{link},#{imgSort},#{createDate},#{appCode},#{createUserId})
+
+    </insert>
 
     <select id="queryByIdList" resultMap="shopProductDescriptionImgMap">
         select * from t_shop_product_description_img t
@@ -137,6 +143,12 @@
         </foreach>
     </update>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.ShopProductDescriptionImg">
+        update t_shop_product_description_img set file_path=#{filePath},width=#{width},width_unit=#{widthUnit},title=#{title},link=#{link},img_sort=#{imgSort} where id =#{id}
+    </update>
 
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_shop_product_description_img set delete_status=1 where id=#{id}
+    </update>
 
 </mapper>

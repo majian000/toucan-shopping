@@ -130,4 +130,15 @@ public interface FeignProductSkuService {
     @RequestMapping(value="/update/preview/photo",produces = "application/json;charset=UTF-8")
     ResultObjectVO updatePreviewPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 修改商品介绍图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/description/photo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
+
 }

@@ -29,4 +29,10 @@ public interface ShopProductDescriptionImgMapper {
 
     int updateResumeByIdList(List<Long> idList);
 
+    int update(ShopProductDescriptionImg entity);
+
+    int deleteById(Long id);
+
+    int insert(ShopProductDescriptionImg entity);
+
 }
