@@ -305,7 +305,16 @@ function querySkuProductStockPage(shopProductId)
                     operateText+="&nbsp;<a attr-id=\""+obj.id+"\" class='skuTableUploadDescriptionPhotoRow' style=\"color:blue;cursor: pointer;\">替换介绍图</a>";
                     if(obj.descriptionImgFilePath!=null)
                     {
-                        httpDescriptionImgPathHtml=" <a href='javascript:window.open(\""+obj.httpDescriptionImgPath+"\")'><img style='width:100px;height:100px;margin-top: 4%; margin-bottom: 4%;' src='"+obj.httpDescriptionImgPath+"'></a>\n" ;
+
+                        httpDescriptionImgPathHtml+="<div class='z_photo upimg-div'>";
+                        httpDescriptionImgPathHtml+="<section class=\"up-section fl\" style='width:100px;height:100px;margin-left: 4%;'>\n" +
+                            "  <span class=\"up-span\" >\n" +
+                            "  </span>\n" +
+                            "  <img class=\"close-upimg skuTableRemoveDescriptionImg\" attr-id='"+obj.id+"' src=\"/static/images/product/skuManager/a7.png\" style='width:20px;height:20px;'>\n" +
+                            "  <img class=\"up-img\" style='width:100px;height:100px;' src=\""+obj.httpDescriptionImgPath+"\">\n" +
+                            // "  <p class=\"img-name-p\"></p>\n" +
+                            "</section>";
+                        httpDescriptionImgPathHtml+="</div>";
                     }
                     httpDescriptionImgPathHtml+="<input type='file' id='skuTableDescriptionPhotoFiles_"+obj.id+"' class='skuTableDescriptionPhotoFiles' attr-id='"+obj.id+"' style='display:none' />";
                     listHtml+="<tr class=\"tabTd\">\n" +
@@ -631,6 +640,22 @@ function bindSkuTableEvents(shopProductId)
             {
                 loading.hideLoading();
             }
+        });
+    });
+
+
+
+    //删除预览图
+    $(".skuTableRemoveDescriptionImg").unbind("click");
+    //删除预览图
+    $(".skuTableRemoveDescriptionImg").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        layer.confirm("确定要删除介绍图?", {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            alert(attrId);
+            layer.close(index);
         });
     });
 
