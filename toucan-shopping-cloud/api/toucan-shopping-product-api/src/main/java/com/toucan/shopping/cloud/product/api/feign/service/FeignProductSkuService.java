@@ -141,4 +141,15 @@ public interface FeignProductSkuService {
     @RequestMapping(value="/update/description/photo",produces = "application/json;charset=UTF-8")
     ResultObjectVO updateDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 移除商品介绍图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/remove/description/photo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO removeDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
+
 }

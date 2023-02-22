@@ -1076,4 +1076,48 @@ public class ProductSkuController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 移除商品介绍图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/remove/description/photo",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO removeDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
+            ProductSku productSku = productSkuService.queryById(productSkuVO.getId());
+            ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(productSku.getShopProductId());
+            List<ShopProductDescriptionImgVO> shopProductDescriptionImgs = shopProductDescriptionImgService.queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(productSku.getId(),shopProductDescription.getId());
+
+            if(!CollectionUtils.isEmpty(shopProductDescriptionImgs))
+            {
+                ShopProductDescriptionImgVO productDescriptionImgSkuVO = shopProductDescriptionImgs.get(0);
+                shopProductDescriptionImgService.deleteById(productDescriptionImgSkuVO.getId());
+            }
+            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("删除失败");
+        }
+        return resultObjectVO;
+    }
 }

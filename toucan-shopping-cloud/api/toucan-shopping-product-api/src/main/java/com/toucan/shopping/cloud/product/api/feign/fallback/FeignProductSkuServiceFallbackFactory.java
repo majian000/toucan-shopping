@@ -215,7 +215,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignProductSkuService restoreStock faild   params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("扣库存失败,请重试!");
+                resultObjectVO.setMsg("还原库存失败,请重试!");
                 return resultObjectVO;
             }
 
@@ -230,7 +230,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignProductSkuService updatePreviewPhoto faild   params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("扣库存失败,请重试!");
+                resultObjectVO.setMsg("更新预览图失败,请重试!");
                 return resultObjectVO;
             }
 
@@ -245,7 +245,22 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignProductSkuService updateDescriptionPhoto faild   params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("扣库存失败,请重试!");
+                resultObjectVO.setMsg("更新介绍图失败,请重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO removeDescriptionPhoto(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuService removeDescriptionPhoto faild   params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("删除介绍图失败,请重试!");
                 return resultObjectVO;
             }
         };

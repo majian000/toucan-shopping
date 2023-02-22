@@ -450,10 +450,10 @@ function bindSkuTableEvents(shopProductId)
             data:  JSON.stringify({id:attrId}),
             dataType: "json",
             success: function (result) {
-                if(result.code<=0)
+                if(result.code==0)
                 {
                     $.message({
-                        message: "操作失败,请稍后重试",
+                        message: result.msg,
                         type: 'error',
                         zIndex: dialogZIndex + 1
                     });
@@ -531,10 +531,11 @@ function bindSkuTableEvents(shopProductId)
             dataType: 'text',
             success: function(result) {
                 fileObject.clone().val("");
-                if(result.code<=0)
+                result = JSON.parse(result);
+                if(result.code==0)
                 {
                     $.message({
-                        message: "替换失败,请稍后重试",
+                        message: result.msg,
                         type: 'error',
                         zIndex: dialogZIndex + 1
                     });
@@ -610,10 +611,11 @@ function bindSkuTableEvents(shopProductId)
             dataType: 'text',
             success: function(result) {
                 fileObject.clone().val("");
-                if(result.code<=0)
+                result = JSON.parse(result);
+                if(result.code==0)
                 {
                     $.message({
-                        message: "替换失败,请稍后重试",
+                        message: result.msg,
                         type: 'error',
                         zIndex: dialogZIndex + 1
                     });
@@ -650,12 +652,58 @@ function bindSkuTableEvents(shopProductId)
     //删除预览图
     $(".skuTableRemoveDescriptionImg").bind("click", function () {
         var attrId = $(this).attr("attr-id");
+        var dialogZIndex = layer.zIndex;
         layer.confirm("确定要删除介绍图?", {
             btn: ['确定','关闭'], //按钮
-            title:'提示信息'
+            title:'提示信息',
+            zIndex: dialogZIndex+1
         }, function(index) {
-            alert(attrId);
             layer.close(index);
+            loading.showLoading({
+                type:6,
+                tip:"生效中...",
+                zIndex:dialogZIndex+2
+            });
+
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/product/sku/remove/description/photo",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify({id:attrId}),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code==0)
+                    {
+                        $.message({
+                            message: result.msg,
+                            type: 'error',
+                            zIndex: dialogZIndex + 1
+                        });
+                        return ;
+                    }
+
+                    $.message({
+                        message: "操作完成",
+                        type: 'success',
+                        zIndex: dialogZIndex + 1
+                    });
+
+                    querySkuProductStockPage(shopProductId);
+                },
+                error: function (result) {
+                    $.message({
+                        message: "操作失败,请稍后重试",
+                        type: 'error',
+                        zIndex:dialogZIndex+1
+                    });
+                },
+                complete:function()
+                {
+                    loading.hideLoading();
+                }
+
+            });
+
         });
     });
 

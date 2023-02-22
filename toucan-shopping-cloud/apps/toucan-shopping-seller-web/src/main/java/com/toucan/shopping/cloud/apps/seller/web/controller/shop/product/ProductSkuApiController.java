@@ -231,6 +231,12 @@ public class ProductSkuApiController extends BaseController {
                 resultObjectVO.setMsg("操作失败,请稍后重试");
                 return resultObjectVO;
             }
+            if(productSkuVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,商品ID不能为空");
+                return resultObjectVO;
+            }
 
             //校验SKU主图
             if(productSkuVO.getMainPhotoFile()==null)
@@ -302,6 +308,13 @@ public class ProductSkuApiController extends BaseController {
                 return resultObjectVO;
             }
 
+            if(productSkuVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,商品ID不能为空");
+                return resultObjectVO;
+            }
+
             //校验SKU主图
             if(productSkuVO.getShopProductDescriptionVO()==null
                     ||productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()==null
@@ -337,6 +350,70 @@ public class ProductSkuApiController extends BaseController {
                         productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).setImgFile(null);
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
                         resultObjectVO = feignProductSkuService.updateDescriptionPhoto(requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            if(StringUtils.isNotEmpty(oldProductSkuVO.getDescriptionImgFilePath())) {
+                                this.deleteOldProductImage(oldProductSkuVO.getDescriptionImgFilePath());
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后重试");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 移除介绍图
+     * @param productSkuVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/remove/description/photo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO removeDescriptionPhoto(HttpServletRequest httpServletRequest,@RequestBody ProductSkuVO productSkuVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            if (StringUtils.isEmpty(userMainId)) {
+                logger.warn("修改失败 没有找到用户ID {} ", userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            if(productSkuVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作失败,商品ID不能为空");
+                return resultObjectVO;
+            }
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if (sellerShopVO != null) {
+                    productSkuVO.setShopId(sellerShopVO.getId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                    //判断该用户有权限操作该商品
+                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        //旧的介绍图
+                        ProductSkuVO oldProductSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
+                        resultObjectVO = feignProductSkuService.removeDescriptionPhoto(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             if(StringUtils.isNotEmpty(oldProductSkuVO.getDescriptionImgFilePath())) {
