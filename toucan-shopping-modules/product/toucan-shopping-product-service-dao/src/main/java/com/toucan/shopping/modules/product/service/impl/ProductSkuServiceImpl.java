@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,12 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     public int updateStock(Long id, Integer stockNum) {
         return productSkuMapper.updateStock(id,stockNum);
     }
+
+    @Override
+    public int updatePrice(Long id, BigDecimal price) {
+        return productSkuMapper.updatePrice(id,price);
+    }
+
 
     @Override
     public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {

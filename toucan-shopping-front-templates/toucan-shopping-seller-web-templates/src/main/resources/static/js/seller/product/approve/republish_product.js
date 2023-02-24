@@ -633,7 +633,7 @@ $(function () {
         initFreightTemplatePagination();
     });
 
-    $(".publishProductButton").bind( 'click' ,function(){
+    $(".addFreigtTemplateButton").bind( 'click' ,function(){
         window.open(basePath+"/page/freightTemplate/add");
     });
 
@@ -789,7 +789,7 @@ function appendDescriptionTableRow(descriptionImg)
             "\n" +
             "                                                                <div class=\"description-table-uploading-img\">\n" +
             "                                                                    <ul class=\"picView-magnify-list\">\n" +
-            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
             "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\""+descriptionImg.httpFilePath+"\" data-caption=\"图片预览\">\n" +
             "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\""+descriptionImg.httpFilePath+"\" style=\"width:100%;height:100%\">            </div>\n" +
             "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
@@ -819,7 +819,7 @@ function appendDescriptionTableRow(descriptionImg)
             "\n" +
             "                                                                <div class=\"description-table-uploading-img\">\n" +
             "                                                                    <ul class=\"picView-magnify-list\">\n" +
-            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
             "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
             "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\"/static/lib/tupload/images/imgadd.png\" style=\"width:100%;height:100%\">            </div>\n" +
             "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +

@@ -335,7 +335,7 @@ function querySkuProductStockPage(shopProductId)
                         "                           "+statusName+"\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                        "                           "+obj.price+"\n" +
+                        "                           <input type='text' class='bootstrap-input-text priceNumInput' attr-id='"+obj.id+"' value='"+obj.price+"' />\n" +
                         "                        </td>\n" +
                         "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                         "                           <input type='text' class='bootstrap-input-text stockNumInput' attr-id='"+obj.id+"' value='"+obj.stockNum+"' />\n" +
@@ -428,7 +428,69 @@ function bindSkuTableEvents(shopProductId)
 
     });
 
+    //商品单价输入
+    $(".priceNumInput").unbind("change");
+    //商品单价输入
+    $(".priceNumInput").change(function(){
+        var attrId = $(this).attr("attr-id");
+        var price = $(this).val();
+        var dialogZIndex = layer.zIndex;
+        if(!checkInput.money[0].test(price))
+        {
+            $.message({
+                message: checkInput.money[1],
+                type: 'error',
+                zIndex:dialogZIndex+1
+            });
+            return;
+        }
 
+        loading.showLoading({
+            type:6,
+            tip:"保存中...",
+            zIndex:dialogZIndex+2
+        });
+
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/product/sku/update/price",
+            contentType: "application/json;charset=utf-8",
+            data:  JSON.stringify({id:attrId,price:price}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "修改失败,请稍后重试",
+                        type: 'error',
+                        zIndex: dialogZIndex + 1
+                    });
+                    return ;
+                }
+
+                $.message({
+                    message: "修改完成",
+                    type: 'success',
+                    zIndex: dialogZIndex + 1
+                });
+
+
+            },
+            error: function (result) {
+                $.message({
+                    message: "保存失败,请稍后重试",
+                    type: 'error',
+                    zIndex:dialogZIndex+1
+                });
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+
+        });
+
+    });
 
     //上架/下架
     $(".skuTableShelvesRow").unbind("click");

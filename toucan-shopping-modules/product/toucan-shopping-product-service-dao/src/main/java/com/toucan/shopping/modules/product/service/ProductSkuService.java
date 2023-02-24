@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,15 @@ public interface ProductSkuService {
      * @return
      */
     int updateStock(Long id,Integer stockNum);
+
+
+    /**
+     * 修改单价
+     * @param id
+     * @param price
+     * @return
+     */
+    int updatePrice(Long id, BigDecimal price);
 
     /**
      * 查询列表页

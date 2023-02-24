@@ -284,6 +284,10 @@
         update t_product_sku set stock_num=#{stockNum} where id=#{id} and delete_status=0
     </update>
 
+    <update id="updatePrice" >
+        update t_product_sku set price=#{price} where id=#{id} and delete_status=0
+    </update>
+
     <update id="inventoryReduction" >
         update t_product_sku set stock_num=stock_num-#{stockNum} where id=#{skuId} and delete_status=0 and status=1 and stock_num>0
     </update>

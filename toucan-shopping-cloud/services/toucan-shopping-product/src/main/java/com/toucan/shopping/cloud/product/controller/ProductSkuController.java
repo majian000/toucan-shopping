@@ -781,6 +781,12 @@ public class ProductSkuController {
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
+            if(productSkuVO.getStockNum()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("库存数量不能为空!");
+                return resultObjectVO;
+            }
             productSkuId = String.valueOf(productSkuVO.getId());
             skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
@@ -800,6 +806,57 @@ public class ProductSkuController {
         return resultObjectVO;
     }
 
+    /**
+     * 修改单价
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(method= RequestMethod.POST,value="/update/price",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updatePrice(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        String productSkuId="-1";
+        try {
+            ProductSkuVO productSkuVO = requestJsonVO.formatEntity(ProductSkuVO.class);
+            if(productSkuVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+            if(productSkuVO.getPrice()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品单价不能为空!");
+                return resultObjectVO;
+            }
+            productSkuId = String.valueOf(productSkuVO.getId());
+            skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
+            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+            productSkuService.updatePrice(productSkuVO.getId(),productSkuVO.getPrice());
+
+            //延时双删
+            Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
+            productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改库存失败!");
+        }finally{
+            skylarkLock.unLock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
+        }
+        return resultObjectVO;
+    }
 
 
 

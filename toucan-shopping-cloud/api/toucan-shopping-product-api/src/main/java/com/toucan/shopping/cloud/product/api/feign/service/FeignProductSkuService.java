@@ -65,6 +65,15 @@ public interface FeignProductSkuService {
     @RequestMapping(method= RequestMethod.POST,value="/update/stock",produces = "application/json;charset=UTF-8")
     ResultObjectVO updateStock(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 修改单价
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(method= RequestMethod.POST,value="/update/price",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updatePrice(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID查询,只查询1个sku(商城PC端预览使用)
      * @param requestJsonVO

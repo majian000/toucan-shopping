@@ -339,7 +339,7 @@ var attributeControl = {
                     var td4 = $("<td >" +
                         "<div class=\"sku-table-uploading-img\">"+
                         "<ul class=\"picView-magnify-list\">\n" +
-                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
                         "           <div id=\"skuTableimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
                         "<img id='skuPreview"+g_sku_pos+"' attr-index='"+g_sku_pos+"' class='skuTablePreviewPhotoImgs' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
@@ -368,7 +368,7 @@ var attributeControl = {
                     var td10 = $("<td >" +
                         "<div class=\"sku-table-description-uploading-img\">"+
                         "<ul class=\"picView-magnify-list\">\n" +
-                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
                         "           <div id=\"skuTableDescriptionimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
                         "<img id='skuDescriptionImg"+g_sku_pos+"' attr-index='"+g_sku_pos+"' class='skuTableDescriptionImgs' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
                         "            </div>\n" +
