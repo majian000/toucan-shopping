@@ -364,6 +364,7 @@ function querySkuProductStockPage(shopProductId)
 
 function bindSkuTableEvents(shopProductId)
 {
+
     //库存输入
     $(".stockNumInput").unbind("change");
     //库存输入
