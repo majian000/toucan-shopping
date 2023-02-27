@@ -499,52 +499,58 @@ function bindSkuTableEvents(shopProductId)
         var attrId = $(this).attr("attr-id");
         var dialogZIndex = layer.zIndex;
 
-        loading.showLoading({
-            type:6,
-            tip:"生效中...",
-            zIndex:dialogZIndex+2
-        });
+        layer.confirm("确定要下架该商品?", {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息',
+            zIndex: dialogZIndex+1
+        }, function(index) {
+            layer.close(index);
+            loading.showLoading({
+                type:6,
+                tip:"生效中...",
+                zIndex:dialogZIndex+2
+            });
 
-        $.ajax({
-            type: "POST",
-            url: basePath+"/api/product/sku/update/shelves",
-            contentType: "application/json;charset=utf-8",
-            data:  JSON.stringify({id:attrId}),
-            dataType: "json",
-            success: function (result) {
-                if(result.code==0)
-                {
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/product/sku/update/shelves",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify({id:attrId}),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code==0)
+                    {
+                        $.message({
+                            message: result.msg,
+                            type: 'error',
+                            zIndex: dialogZIndex + 1
+                        });
+                        return ;
+                    }
+
                     $.message({
-                        message: result.msg,
-                        type: 'error',
+                        message: "操作完成",
+                        type: 'success',
                         zIndex: dialogZIndex + 1
                     });
-                    return ;
+
+                    queryBtnEvent();
+                    querySkuProductStockPage(shopProductId);
+                },
+                error: function (result) {
+                    $.message({
+                        message: "操作失败,请稍后重试",
+                        type: 'error',
+                        zIndex:dialogZIndex+1
+                    });
+                },
+                complete:function()
+                {
+                    loading.hideLoading();
                 }
 
-                $.message({
-                    message: "操作完成",
-                    type: 'success',
-                    zIndex: dialogZIndex + 1
-                });
-
-                queryBtnEvent();
-                querySkuProductStockPage(shopProductId);
-            },
-            error: function (result) {
-                $.message({
-                    message: "操作失败,请稍后重试",
-                    type: 'error',
-                    zIndex:dialogZIndex+1
-                });
-            },
-            complete:function()
-            {
-                loading.hideLoading();
-            }
-
+            });
         });
-
     });
 
 
