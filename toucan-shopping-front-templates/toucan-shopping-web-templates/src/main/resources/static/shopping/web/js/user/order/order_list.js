@@ -1,9 +1,11 @@
 
 
 var g_om_cpage=1;
+var g_query_order_type=-1;
 
 $(function () {
     loadListTable(1);
+    bindTabEvent();
 });
 
 
@@ -131,6 +133,10 @@ function drawOrderList(cpage,data)
 
         drawPagination(cpage,data);
 
+    }else{
+        $(".order-list-tips").show();
+        $(".order-list-table").hide();
+        $(".pagination").empty();
     }
 }
 
@@ -204,13 +210,17 @@ function loadListTable(cpage)
         tip:"查询中..."
     });
 
+    var queryParams = {page:cpage,limit:5};
+    if(g_query_order_type!=-1)
+    {
+        queryParams.tradeStatus=g_query_order_type;
+    }
     g_om_cpage = cpage;
-
     $.ajax({
         type: "POST",
         url: basePath+"/api/order/query/order/list",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({page:cpage,limit:5}),
+        data: JSON.stringify(queryParams),
         dataType: "json",
         success: function (result) {
             if(result.code!=0)
@@ -223,5 +233,59 @@ function loadListTable(cpage)
         complete:function(data,status){
             loading.hideLoading();
         }
+    });
+}
+
+/**
+ * 绑定选项卡事件
+ */
+function bindTabEvent()
+{
+    $("#orderAll").click(function(){
+        g_query_order_type=-1;
+        loadListTable(1);
+        $(".order_tbs_li").removeClass("fore1");
+        $(".order_tbs_a").removeClass("curr");
+        $(this).parent().addClass("fore1");
+        $(this).addClass("curr");
+    });
+
+    $("#ordertoPay").click(function(){
+        g_query_order_type=0;
+        loadListTable(1);
+        $(".order_tbs_li").removeClass("fore1");
+        $(".order_tbs_a").removeClass("curr");
+        $(this).parent().addClass("fore1");
+        $(this).addClass("curr");
+    });
+
+    $("#ordertoReceive").click(function(){
+        g_query_order_type=1;
+        loadListTable(1);
+        $(".order_tbs_li").removeClass("fore1");
+        $(".order_tbs_a").removeClass("curr");
+        $(this).parent().addClass("fore1");
+        $(this).addClass("curr");
+    });
+
+    $("#orderCompleted").click(function(){
+        g_query_order_type=3;
+        loadListTable(1);
+        $(".order_tbs_li").removeClass("fore1");
+        $(".order_tbs_a").removeClass("curr");
+        $(this).parent().addClass("fore1");
+        $(this).addClass("curr");
+    });
+
+    $("#orderCancel").click(function(){
+        g_query_order_type=2;
+        loadListTable(1);
+        $(".order_tbs_li").removeClass("fore1");
+        $(".order_tbs_a").removeClass("curr");
+        $(this).parent().addClass("fore1");
+        $(this).addClass("curr");
+    });
+
+    $("#ordertoRecycle").click(function(){
     });
 }
