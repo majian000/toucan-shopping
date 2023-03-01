@@ -2,6 +2,7 @@
 
 var g_om_cpage=1;
 var g_query_order_type=-1;
+var g_query_keyword="";
 
 $(function () {
     loadListTable(1);
@@ -215,6 +216,10 @@ function loadListTable(cpage)
     {
         queryParams.tradeStatus=g_query_order_type;
     }
+    if(g_query_keyword!="")
+    {
+        queryParams.keyword = g_query_keyword;
+    }
     g_om_cpage = cpage;
     $.ajax({
         type: "POST",
@@ -284,6 +289,11 @@ function bindTabEvent()
         $(".order_tbs_a").removeClass("curr");
         $(this).parent().addClass("fore1");
         $(this).addClass("curr");
+    });
+
+    $(".order-search-btn").click(function(){
+        g_query_keyword=$("#ip_keyword").val();
+        loadListTable(1);
     });
 
     $("#ordertoRecycle").click(function(){

@@ -3625,19 +3625,6 @@ div.mod-main .mt .extra-l li {
 	border: 1px solid #ccc;
 }
 
-.mt .order-search .search-btn b {
-	position: absolute;
-	left: 17px;
-	top: 3px;
-	display: inline-block;
-	*display: inline;
-	*zoom: 1;
-	vertical-align: middle;
-	width: 18px;
-	height: 16px;
-	overflow: hidden;
-	background: url(../../../images/order-icons.png) -8px -58px;
-}
 
 .mt .order-search .search-btn {
 	position: relative;
@@ -3657,7 +3644,7 @@ div.mod-main .mt .extra-l li {
 	background-image: linear-gradient(to bottom,#f7f7f7 0,#f3f2f2 100%);
 }
 
-.mt .order-search .order-search-btn b {
+.mt .order-search .search-btn b {
 	position: absolute;
 	left: 17px;
 	top: 3px;
@@ -3668,7 +3655,7 @@ div.mod-main .mt .extra-l li {
 	width: 18px;
 	height: 16px;
 	overflow: hidden;
-	background: url(../../../images/order-icons.png) -8px -58px;
+	background: url(../../../images/order-icons2.png) -8px -58px;
 }
 
 

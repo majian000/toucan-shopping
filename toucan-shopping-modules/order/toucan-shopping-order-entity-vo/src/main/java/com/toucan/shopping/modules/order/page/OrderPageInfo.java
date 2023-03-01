@@ -53,6 +53,7 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endCreateDate; //结束下单时间
 
+    private String keyword; //查询关键字
 
     //==============================================
 

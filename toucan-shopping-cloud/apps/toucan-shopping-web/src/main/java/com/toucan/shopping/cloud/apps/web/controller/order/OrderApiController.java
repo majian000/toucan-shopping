@@ -1200,6 +1200,10 @@ public class OrderApiController {
         try{
             orderPageInfo.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             orderPageInfo.setAppCode(toucan.getAppCode());
+            if(StringUtils.isNotEmpty(orderPageInfo.getKeyword()))
+            {
+                orderPageInfo.setKeyword(orderPageInfo.getKeyword().trim());
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
             resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())

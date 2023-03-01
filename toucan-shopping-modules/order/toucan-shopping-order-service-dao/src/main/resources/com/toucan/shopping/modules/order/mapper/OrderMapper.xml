@@ -107,6 +107,10 @@
             and t.trade_status = #{tradeStatus}
         </if>
 
+        <if test="keyword!=null and keyword!=-1 ">
+            and t.order_no = #{keyword}
+        </if>
+
         and delete_status = 0
 
     </sql>
