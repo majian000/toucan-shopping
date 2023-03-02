@@ -62,13 +62,16 @@
             and t.status = #{status}
         </if>
 
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in
             <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-
 
         <if test="name!=null and name!='' ">
             <!-- 这种不走索引但是为了用户体验只能如此-->
@@ -105,6 +108,11 @@
         <if test="appCode!=null">
             and t.app_code = #{appCode}
         </if>
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
 
         and t.delete_status = 0
     </sql>
