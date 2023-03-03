@@ -2575,3 +2575,19 @@ a.review-btn-tj{
     font-weight:bold;
     background-color:#ededed;
 }
+
+.modifyPwd-sendVC{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+.modifyPwd-sendVC:hover{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+

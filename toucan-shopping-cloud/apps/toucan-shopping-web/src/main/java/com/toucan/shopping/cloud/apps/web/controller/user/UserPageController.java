@@ -180,6 +180,15 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/modifyPwd")
+    public String modifyPwd(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        return "user/modifyPwd/modify_pwd";
+    }
+
+
 
 
     @RequestMapping(value="/logout")

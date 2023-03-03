@@ -47,5 +47,9 @@
         <#else>
                 <dd><a href="${basePath}/page/user/consigneeAddress/list">收货地址</a></dd>
         </#if>
-        <dd><a href="changePassword.html">修改密码</a></dd>
+        <#if leftMenuName??&&leftMenuName=="modifyPwd">
+                <dd class="active"><a href="${basePath}/page/user/modifyPwd">修改密码</a></dd>
+        <#else>
+                <dd><a href="${basePath}/page/user/modifyPwd">修改密码</a></dd>
+        </#if>
 </dl>
