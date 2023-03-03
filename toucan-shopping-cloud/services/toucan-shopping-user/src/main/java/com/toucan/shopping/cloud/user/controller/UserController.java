@@ -169,7 +169,7 @@ public class UserController {
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("请输入6至15位的密码");
+            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
 
@@ -388,7 +388,7 @@ public class UserController {
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("重置失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("重置失败,"+UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
 

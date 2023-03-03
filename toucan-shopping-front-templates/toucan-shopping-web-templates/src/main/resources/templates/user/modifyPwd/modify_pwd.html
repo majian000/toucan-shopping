@@ -59,35 +59,66 @@
                     <div class="toucan-form-title">
                         <h3 style="font-size:20px;">修改密码</h3>
                     </div>
-                    <div class="toucan-form-body">
-
-                    <div class="item">
-                        <span class="label">手机号：</span>
-                        <div class="field">
-                            <input type="text" id="mobile"  maxlength="15" style="width:307px" class="l_ipt" tabindex="1"  />&nbsp;&nbsp;<a id="mobileSendVcBtn" class="modifyPwd-sendVC" >发送验证码</a>
-                        </div>
-                    </div>
+                    <div class="toucan-form-body" id="verifyCodeDiv">
 
                         <div class="item">
-                            <span class="label">邮箱：</span>
+                            <span class="label">手机号：</span>
                             <div class="field">
-                                <input type="text" id="email"  maxlength="15" style="width:307px" class="l_ipt" tabindex="2"  />&nbsp;&nbsp;<a id="emailSendVcBtn" class="modifyPwd-sendVC" >发送验证码</a>
+                                <input type="text" id="mobile" readonly  style="width:307px" class="l_ipt" tabindex="1"   value="${userVO.mobilePhone!''}" />&nbsp;&nbsp;<a id="mobileSendVcBtn" class="modifyPwd-sendVC" >发送验证码</a>
                             </div>
                         </div>
-                    <br>
-                    <br>
-                    <div class="item" style="width:150px;">
-                        <span class="label">&nbsp;</span>
-                        <input type="button" value="下一步" class="log_btn" id="nextBtn" style="font-size:15px;" />
-                    </div><!--item end-->
 
-                    <div class="item">
+                            <div class="item">
+                                <span class="label">邮箱：</span>
+                                <div class="field">
+                                    <input type="text" id="email"  readonly  style="width:307px" class="l_ipt" tabindex="2"   value="${userVO.email!''}" />&nbsp;&nbsp;<a id="emailSendVcBtn" class="modifyPwd-sendVC" >发送验证码</a>
+                                </div>
+                            </div>
                         <br>
-                        <a id="modify_pwd_msg" style="color:#ff4e00;"></a>
+                        <br>
+                        <div class="item" style="width:150px;">
+                            <span class="label">&nbsp;</span>
+                            <input type="button" value="下一步" class="log_btn" id="nextBtn" style="font-size:15px;" />
+                        </div><!--item end-->
+
+
                     </div>
 
-                </div>
-        </div>
+
+                    <div class="toucan-form-body" id="confirmPwdDiv" style="display:none">
+                        <div class="item">
+                            <span class="label">密码：</span>
+                            <div class="field">
+                                <input type="password" id="pwd"   style="width:307px" class="l_ipt" lay-verify="required|password"  tabindex="1"   />&nbsp;&nbsp;
+                            </div>
+                        </div>
+                        <div class="item">
+                            <span class="label">确认密码：</span>
+                            <div class="field">
+                                <input type="password" id="cpwd" readonly  style="width:307px" class="l_ipt" lay-verify="required|password" tabindex="2"    />&nbsp;&nbsp;
+                            </div>
+                        </div>
+                        <div class="item">
+                            <span class="label">验证码：</span>
+                            <div class="field">
+                                <input type="text" id="mobile" readonly  style="width:307px" class="l_ipt" tabindex="1"   value="${userVO.mobilePhone!''}" />&nbsp;&nbsp;<a id="mobileSendVcBtn" class="modifyPwd-sendVC" >发送验证码</a>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="item" style="width:150px;">
+                            <span class="label">&nbsp;</span>
+                            <input type="button" value="确认修改" class="log_btn" id="modifyBtn" style="font-size:15px;" />
+                        </div><!--item end-->
+                    </div>
+
+                    <div class="toucan-form-body">
+                        <div class="item">
+                            <br>
+                            <a id="modify_pwd_msg" style="color:#ff4e00;"></a>
+                        </div>
+                    </div>
+            </div>
     </div>
 
 
