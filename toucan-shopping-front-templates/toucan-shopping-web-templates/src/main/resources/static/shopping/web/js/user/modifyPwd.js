@@ -11,6 +11,7 @@ $(function () {
         }else{
             $("#modify_pwd_msg").text("");
             $("#verifyCodeDiv").hide();
+            $("#confirmPwdDiv").show();
         }
     });
 });
