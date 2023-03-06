@@ -46,6 +46,12 @@ public class TextVerifyCodeController extends BaseController {
         String userMainId ="-1";
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
             String vcode = VerifyCodeUtil.generateVerifyCode(6,"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
             //TODO:手机验证码这个版本固定写死
             vcode="1234";
@@ -71,8 +77,15 @@ public class TextVerifyCodeController extends BaseController {
         String userMainId ="-1";
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
             String vcode = VerifyCodeUtil.generateVerifyCode(6,"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
             toucanStringRedisService.set(UserModifyPwdRedisKey.getEmailVerifyCodeKey(userMainId),vcode,UserModifyPwdConstant.MAX_MODIFY_PWD_VCODE_MAX_AGE, TimeUnit.SECONDS);
+
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);

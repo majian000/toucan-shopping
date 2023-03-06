@@ -282,7 +282,7 @@ var validatePrompt = {
         succeed:"",
         isNull:"请输入用户名",
         error:{
-            beUsed:"该用户名已被使用，请使用其它用户名注册，如果您是&quot;{1}&quot;，请<a href='https://passport.360buy.com/new/login.aspx' class='flk13'>登录</a>",
+            beUsed:"该用户名已被使用，请使用其它用户名注册，如果您是&quot;{1}&quot;，请<a href='#' class='flk13'>登录</a>",
             badLength:"用户名长度只能在4-20位字符之间",
             badFormat:"用户名只能由中文、英文、数字及“_”、“-”组成",
             fullNumberName:"用户名不能全为数字"
@@ -312,7 +312,7 @@ var validatePrompt = {
         succeed:"",
         isNull:"请输入邮箱",
         error:{
-            beUsed:"该邮箱已被使用，请更换其它邮箱，或使用该邮箱<a href='http://passport.360buy.com/retrievepassword.aspx' class='flk13'>找回密码</a>",
+            beUsed:"该邮箱已被使用，请更换其它邮箱，或使用该邮箱<a href='#' class='flk13'>找回密码</a>",
             badFormat:"邮箱格式不正确",
             badLength:"您填写的邮箱过长，邮件地址只能在50个字符以内"
         }

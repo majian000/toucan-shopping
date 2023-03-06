@@ -17,7 +17,7 @@ public class UserModifyPwdRedisKey {
      */
     public static String getMobileVerifyCodeKey(String userId)
     {
-        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_verifycode_mobile_"+userId;
+        return "TOUCAN_SHOPPING_WEB:VCODE:MOBILE:"+appCode +"_"+smsRegistType+"_verifycode_mobile_"+userId;
     }
 
 
@@ -30,7 +30,7 @@ public class UserModifyPwdRedisKey {
      */
     public static String getEmailVerifyCodeKey(String userId)
     {
-        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_verifycode_email_"+userId;
+        return "TOUCAN_SHOPPING_WEB:VCODE:EMAIL:"+appCode +"_"+smsRegistType+"_verifycode_email_"+userId;
     }
 
 
