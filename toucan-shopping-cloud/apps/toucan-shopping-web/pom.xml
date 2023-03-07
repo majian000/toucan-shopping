@@ -213,6 +213,10 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-email</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.modules.config</groupId>

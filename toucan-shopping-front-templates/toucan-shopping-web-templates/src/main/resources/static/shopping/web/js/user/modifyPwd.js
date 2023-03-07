@@ -99,7 +99,7 @@ function bindSendVerifyCodeEvent()
                 dataType: "json",
                 success: function (result) {
                     if (result.code <= 0) {
-                        $("#modify_pwd_msg").text("生成失败,请稍后重试");
+                        $("#modify_pwd_msg").text("发送失败,请稍后重试");
                         return;
                     }
                     mobileSendVcBtnObj.text("已发送");
@@ -109,7 +109,7 @@ function bindSendVerifyCodeEvent()
                     g_isSendVC = 1;
                 },
                 error: function (result) {
-                    $("#modify_pwd_msg").text("生成失败,请稍后重试");
+                    $("#modify_pwd_msg").text("发送失败,请稍后重试");
                 },
                 complete: function (data, status) {
                     loading.hideLoading();
@@ -139,7 +139,7 @@ function bindSendVerifyCodeEvent()
                 dataType: "json",
                 success: function (result) {
                     if (result.code <= 0) {
-                        $("#modify_pwd_msg").text("生成失败,请稍后重试");
+                        $("#modify_pwd_msg").text("发送失败,请稍后重试");
                         return;
                     }
                     emailSendVcBtnObj.text("已发送");
@@ -148,7 +148,7 @@ function bindSendVerifyCodeEvent()
                     g_isSendVC=1;
                 },
                 error: function (result) {
-                    $("#modify_pwd_msg").text("生成失败,请稍后重试");
+                    $("#modify_pwd_msg").text("发送失败,请稍后重试");
                 },
                 complete: function (data, status) {
                     loading.hideLoading();

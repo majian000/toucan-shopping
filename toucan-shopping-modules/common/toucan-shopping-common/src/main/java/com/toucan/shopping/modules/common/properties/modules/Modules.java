@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.common.properties.modules.adminAuthCache.Admi
 import com.toucan.shopping.modules.common.properties.modules.areaCache.AreaCache;
 import com.toucan.shopping.modules.common.properties.modules.categoryCache.CategoryCache;
 import com.toucan.shopping.modules.common.properties.modules.contentCache.ContentCache;
+import com.toucan.shopping.modules.common.properties.modules.email.Email;
 import com.toucan.shopping.modules.common.properties.modules.log.Log;
 import com.toucan.shopping.modules.common.properties.modules.skylarkLock.SkylarkLock;
 import com.toucan.shopping.modules.common.properties.modules.toucanRedis.ToucanRedis;
@@ -56,4 +57,9 @@ public class Modules {
      * 日志
      */
     private Log log;
+
+    /**
+     * 邮件
+     */
+    private Email email;
 }
