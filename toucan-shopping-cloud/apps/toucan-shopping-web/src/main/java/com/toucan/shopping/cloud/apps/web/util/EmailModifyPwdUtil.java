@@ -20,9 +20,7 @@ public class EmailModifyPwdUtil {
                 "\n" +
                 "如果您并未发过此请求，则可能是因为其他用户在尝试重设密码时误输入了您的电子邮件地址而使您收到这封邮件，那么您可以放心的忽略此邮件，无需进一步采取任何操作。\n" +
                 "\n" +
-                "此致\n" +
-                "\n" +
-                "新浪微博敬上\n" +
+                "犀鸟商城敬上\n" +
                 "\n" +
                 senderDate);
         return builder.toString();

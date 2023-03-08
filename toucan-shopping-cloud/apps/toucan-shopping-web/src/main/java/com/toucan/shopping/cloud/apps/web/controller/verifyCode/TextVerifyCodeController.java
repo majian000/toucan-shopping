@@ -120,7 +120,7 @@ public class TextVerifyCodeController extends BaseController {
                 if(emailConfig!=null) {
                     email.setEmailConfig(emailConfig);
                     email.setSubject("犀鸟商城——修改密码");
-                    email.setContent(EmailModifyPwdUtil.getEmailContent(vcode, userVO.getNickName(), UserModifyPwdConstant.MAX_MODIFY_PWD_VCODE_MAX_AGE, DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
+                    email.setContent(EmailModifyPwdUtil.getEmailContent(vcode, userVO.getNickName(), (UserModifyPwdConstant.MAX_MODIFY_PWD_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
 
                     Receiver receiver = new Receiver();
                     receiver.setEmail(userVO.getEmail());
