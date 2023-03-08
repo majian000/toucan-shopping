@@ -83,6 +83,7 @@ public class EmailConfig {
      */
     private List<String> ignoreExceptionList;
 
+    private boolean debug = false;
 
     /**
      * 返回配置对象

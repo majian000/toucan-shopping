@@ -106,7 +106,8 @@ public class EmailHelper {
         }
 
         Session session = Session.getInstance(emailConfig.getProperties());
-        session.setDebug(true);
+
+        session.setDebug(emailConfig.isDebug());
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(emailConfig.getSender(), emailConfig.getSenderName(), "UTF-8"));

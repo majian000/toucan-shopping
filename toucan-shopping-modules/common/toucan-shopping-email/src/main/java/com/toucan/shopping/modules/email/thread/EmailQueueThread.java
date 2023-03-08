@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.email.thread;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.EmailHelper;
 import com.toucan.shopping.modules.email.message.EmailMessage;
 import com.toucan.shopping.modules.email.queue.EmailQueue;
@@ -19,6 +20,9 @@ public class EmailQueueThread extends Thread {
 
     @Autowired
     private EmailQueue emailQueue;
+
+    @Autowired
+    private Toucan toucan;
 
     @Override
     public void run() {
