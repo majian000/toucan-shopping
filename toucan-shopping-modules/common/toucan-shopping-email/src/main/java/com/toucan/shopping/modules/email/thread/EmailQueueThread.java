@@ -28,7 +28,6 @@ public class EmailQueueThread extends Thread {
             try {
                 EmailMessage emailMessage = emailQueue.pop();
                 if (emailMessage != null) {
-                    logger.info("从邮件队列中拿到对象 {}", JSONObject.toJSONString(emailMessage));
                     if(emailMessage.getEmail()!=null) {
                         EmailHelper.send(emailMessage.getEmail());
                     }
