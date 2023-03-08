@@ -1,8 +1,10 @@
 package com.toucan.shopping.modules.common.vo.email;
 
 
+import com.sun.mail.util.MailSSLSocketFactory;
 import lombok.Data;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Properties;
 
@@ -86,8 +88,7 @@ public class EmailConfig {
      * 返回配置对象
      * @return
      */
-    public Properties getProperties()
-    {
+    public Properties getProperties() throws GeneralSecurityException {
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", protocol);
         props.setProperty("mail.smtp.host", smtpServer);
@@ -96,7 +97,11 @@ public class EmailConfig {
         props.setProperty("mail.smtp.socketFactory.class", smtpSocketFactoryClass);
         props.setProperty("mail.smtp.socketFactory.fallback", smtpSocketFactoryFallback);
         props.setProperty("mail.smtp.socketFactory.port", port);
-
+        //忽略SSL证书
+        MailSSLSocketFactory mailSSLSocketFactory = new MailSSLSocketFactory();
+        mailSSLSocketFactory.setTrustAllHosts(true);
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.socketFactory", mailSSLSocketFactory);
         return props;
     }
 

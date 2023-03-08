@@ -4,9 +4,9 @@ public final class UserModifyPwdConstant {
 
 
     /**
-     * 找回密码验证码最多10分钟
+     * 找回密码验证码最多5分钟
      */
-    public static Integer MAX_MODIFY_PWD_VCODE_MAX_AGE=600;
+    public static Integer MAX_MODIFY_PWD_VCODE_MAX_AGE=300;
 
 
 }
