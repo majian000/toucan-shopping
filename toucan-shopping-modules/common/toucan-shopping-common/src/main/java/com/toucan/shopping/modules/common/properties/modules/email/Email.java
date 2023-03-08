@@ -1,7 +1,5 @@
 package com.toucan.shopping.modules.common.properties.modules.email;
 
-import com.toucan.shopping.modules.common.properties.modules.log.ReceiverProperty;
-import com.toucan.shopping.modules.common.properties.modules.log.Smtp;
 import lombok.Data;
 
 import java.util.List;

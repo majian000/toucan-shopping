@@ -30,7 +30,7 @@ public class EmailHelper {
         //设置收件人
         List<Receiver> receivers = new ArrayList<Receiver>();
         Receiver receiver = new Receiver();
-        receiver.setEmail("695391446@qq.com");
+        receiver.setEmail("mj7612158@qq.com");
         receiver.setName("user001");
         receivers.add(receiver);
         emailConfig.setReceivers(receivers);
