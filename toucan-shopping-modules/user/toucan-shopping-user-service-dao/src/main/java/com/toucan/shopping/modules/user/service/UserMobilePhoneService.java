@@ -63,4 +63,11 @@ public interface UserMobilePhoneService {
      */
     int deleteByUserMainId(Long userMainId);
 
+    /**
+     * 查询有效的手机号关联
+     * @param userMainId
+     * @return
+     */
+    UserMobilePhone findByUserMainId(Long userMainId);
+
 }

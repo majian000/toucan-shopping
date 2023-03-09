@@ -1413,6 +1413,18 @@ public class UserController {
                 UserDetail userDetail = userDetails.get(0);
                 BeanUtils.copyProperties(userVO,userDetail);
             }
+            //查询手机号
+            UserMobilePhone userMobilePhone = userMobilePhoneService.findByUserMainId(userVO.getUserMainId());
+            if(userMobilePhone!=null)
+            {
+                userVO.setMobilePhone(userMobilePhone.getMobilePhone());
+            }
+            //查询邮箱
+            UserEmail userEmail = userEmailService.findByUserMainId(userVO.getUserMainId());
+            if(userEmail!=null)
+            {
+                userVO.setEmail(userEmail.getEmail());
+            }
             resultObjectVO.setData(userVO);
         }catch(Exception e)
         {

@@ -32,6 +32,7 @@
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/cookie.js"></script>
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/login.js"></script>
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/sso.js"></script>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
 
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/forgetPwd/forgetPwd.css" />
 
@@ -72,38 +73,27 @@
                     <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
                 </div>
             </div><!--for-liucheng/-->
-            <form action="forgetPwd3.html" method="get" class="forget-pwd">
+            <form method="get" class="forget-pwd">
                 <dl>
-                    <dt>验证方式：</dt>
+                    <dt>获取验证码：</dt>
                     <dd>
-                        <select class="selyz">
-                            <option value="0">已验证手机</option>
-                            <option value="1">已验证邮箱</option>
+                        <select id="verifyMethod" class="l_combobox">
+                             <#if mobileMethod==1>
+                                <option value="0">手机号</option>
+                             </#if>
+                            <#if emailMethod==1>
+                                <option value="1">邮箱地址</option>
+                            </#if>
                         </select>
                     </dd>
                     <div class="clears"></div>
                 </dl>
-                <dl>
-                    <dt>用户名：</dt>
-                    <dd><input type="text" /></dd>
-                    <div class="clears"></div>
-                </dl>
-                <dl class="sel-yzsj">
-                    <dt>已验证手机：</dt>
-                    <dd><input type="text" value="1851****517" readonly  /></dd>
-                    <div class="clears"></div>
-                </dl>
-                <dl class="sel-yzyx">
-                    <dt>已验证邮箱：</dt>
-                    <dd><input type="text" value="764852123@qq.com" readonly /></dd>
-                    <div class="clears"></div>
-                </dl>
-                <dl>
-                    <dt>手机校验码：</dt>
-                    <dd><input type="text" /> <button>获取短信验证码</button></dd>
-                    <div class="clears"></div>
-                </dl>
-                <div class="subtijiao"><button type="button" onclick="forgetPwdStep3();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button></div>
+                <br/>
+                <br/>
+                <div style="width: 100%;">
+                    <button type="button" onclick="forgetPwdStep1();" class="db_button" style="width:200px;" >上一步</button>
+                    <button type="button" onclick="forgetPwdStep3();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
+                </div>
             </form><!--forget-pwd/-->
         </div><!--web-width/-->
     </div><!--content/-->
@@ -114,13 +104,6 @@
 <#include "/footer.html"/>
 
 </body>
-<script>
-    $(function () {
 
-
-
-    });
-
-</script>
-
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/forgetPwd/forgetPwdSetp2.js"></script>
 </html>

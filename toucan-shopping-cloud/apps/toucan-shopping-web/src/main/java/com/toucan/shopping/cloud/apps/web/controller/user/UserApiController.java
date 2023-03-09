@@ -878,14 +878,13 @@ public class UserApiController extends BaseController {
                     if(userVO.getEnableStatus().intValue()==1) {
                         logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
                         resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                        resultObjectVO.setData("page/user/forget/pwd/step2");
                     }else{
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("该账号已被禁用");
                     }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("没有找到该账号");
+                    resultObjectVO.setMsg("账号不存在");
                 }
             }
         }catch(Exception e)

@@ -78,4 +78,9 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     public int deleteByUserMainId(Long userMainId) {
         return userMobilePhoneMapper.deleteByUserMainId(userMainId);
     }
+
+    @Override
+    public UserMobilePhone findByUserMainId(Long userMainId) {
+        return userMobilePhoneMapper.findByUserMainId(userMainId);
+    }
 }

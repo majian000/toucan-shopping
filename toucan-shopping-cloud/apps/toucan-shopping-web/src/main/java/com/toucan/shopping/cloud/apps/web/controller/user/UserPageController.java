@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -82,9 +83,32 @@ public class UserPageController extends BaseController {
      * @return
      */
     @RequestMapping("/forget/pwd/step2")
-    public String forgetPwdByStep2()
+    public String forgetPwdByStep2(HttpServletRequest request,@RequestParam String username)
     {
-        return "user/forgetPwd/forget_pwd_step2";
+        try {
+            if(StringUtils.isNotEmpty(username)) {
+                UserForgetPasswordVO userForgetPasswordVO = new UserForgetPasswordVO();
+                userForgetPasswordVO.setUsername(username);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userForgetPasswordVO);
+                ResultObjectVO resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                    request.setAttribute("mobileMethod", 0);
+                    request.setAttribute("emailMethod", 0);
+                    if (StringUtils.isNotEmpty(userVO.getMobilePhone())) {
+                        request.setAttribute("mobileMethod", 1);
+                    }
+                    if (StringUtils.isNotEmpty(userVO.getEmail())) {
+                        request.setAttribute("emailMethod", 1);
+                    }
+                    return "user/forgetPwd/forget_pwd_step2";
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+        return "user/forgetPwd/forget_pwd";
     }
 
 

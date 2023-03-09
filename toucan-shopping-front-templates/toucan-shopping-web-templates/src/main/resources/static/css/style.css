@@ -1198,6 +1198,30 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	border-color: #f52b00
 }
 
+.db_button {
+
+	background: #FFF;
+	border: 1px solid #CCC;
+	font-size: 16px;
+	color: #333;
+	border-radius: 3px;
+	font-size: 20px;
+	height: 42px;
+	line-height: 42px;
+	outline: none;
+	color: #000000;
+	width: 100%;
+	cursor: pointer;
+}
+
+
+.db_button:active {
+	color: #333;
+	background-color: #EBEBEB;
+	border-color: #ADADAD;
+}
+
+
 .send_vcode_btn{
 	width:100px; height:35px; line-height:35px\9; overflow:hidden; background:url(../images/vcode_btn.gif) repeat-x center top; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; padding:0; border:0; cursor:pointer; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
 }

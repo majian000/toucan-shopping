@@ -43,7 +43,8 @@ function forgetPwdStep2()
 
                 flushVcode();
             }else{
-                window.location.href= basePath+"/"+result.data;
+                $("#step2_username").val(username);
+                $("#step2Submit").click();
             }
         },
         error: function (result) {

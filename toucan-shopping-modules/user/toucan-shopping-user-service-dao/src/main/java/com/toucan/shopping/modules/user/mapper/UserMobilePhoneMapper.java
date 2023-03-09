@@ -36,4 +36,5 @@ public interface UserMobilePhoneMapper {
 
     int deleteByUserMainId(Long userMainId);
 
+    UserMobilePhone findByUserMainId(Long userMainId);
 }

@@ -29,7 +29,7 @@
 
     <#include "/common_js.html"/>
 	<script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
-    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/forgetPwd.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/forgetPwd/forgetPwd.js"></script>
 
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/forgetPwd/forgetPwd.css" />
 
@@ -70,7 +70,7 @@
                     <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
                 </div>
             </div><!--for-liucheng/-->
-            <form action="forgetPwd2.html" method="get" class="forget-pwd">
+            <form method="get" class="forget-pwd">
                 <dl>
                     <dt>用户名：</dt>
                     <dd><input type="text" id="username"  class="l_ipt" style="width:240px;"  placeholder="手机号/邮箱/用户名" maxlength="50" /></dd>
@@ -88,7 +88,6 @@
                 </dl>
                 <div class="subtijiao">
                     <button type="button" onclick="forgetPwdStep2();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
-
                 </div>
                 <br/>
                 <div id="wrn_msg" style="width:100%;text-align:center;">
@@ -96,6 +95,11 @@
                 </div>
 
             </form><!--forget-pwd/-->
+
+            <form action="${basePath}/page/user/forget/pwd/step2" method="post">
+                <input type="hidden" name="username" id="step2_username" >
+                <input type="submit" id="step2Submit"/>
+            </form>
         </div><!--web-width/-->
     </div><!--content/-->
 

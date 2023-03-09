@@ -34,5 +34,5 @@ public interface UserEmailMapper {
 
     int deleteByUserMainId(Long userMainId);
 
-
+    UserEmail findByUserMainId(Long userMainId);
 }

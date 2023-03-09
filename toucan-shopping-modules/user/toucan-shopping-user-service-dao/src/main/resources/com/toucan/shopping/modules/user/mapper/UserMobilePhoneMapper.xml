@@ -158,6 +158,10 @@
         update t_user_mobile_phone set delete_status=1  where user_main_id =#{userMainId}
     </update>
 
+    <select id="findByUserMainId" resultMap="userMobilePhoneMap" parameterType="java.lang.Long">
+        select * from t_user_mobile_phone t where  t.user_main_id =#{userMainId} and t.delete_status = 0 limit 0,1
+    </select>
+
 
 
 </mapper>

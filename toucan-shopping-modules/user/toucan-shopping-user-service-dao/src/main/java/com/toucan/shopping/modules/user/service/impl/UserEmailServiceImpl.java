@@ -75,4 +75,9 @@ public class UserEmailServiceImpl implements UserEmailService {
         return userEmailMapper.deleteByUserMainId(userMainId);
     }
 
+    @Override
+    public UserEmail findByUserMainId(Long userMainId) {
+        return userEmailMapper.findByUserMainId(userMainId);
+    }
+
 }

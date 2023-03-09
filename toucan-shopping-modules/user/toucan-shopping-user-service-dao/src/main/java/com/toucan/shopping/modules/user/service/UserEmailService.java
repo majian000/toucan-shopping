@@ -52,4 +52,12 @@ public interface UserEmailService {
      * @return
      */
     int deleteByUserMainId(Long userMainId);
+
+
+    /**
+     * 查询有效的邮箱关联
+     * @param userMainId
+     * @return
+     */
+    UserEmail findByUserMainId(Long userMainId);
 }

@@ -139,5 +139,10 @@
     </update>
 
 
+    <select id="findByUserMainId" resultMap="userEmailMap" parameterType="java.lang.Long">
+        select * from t_user_email t where  t.user_main_id =#{userMainId} and t.delete_status = 0 limit 0,1
+    </select>
+
+
 
 </mapper>
