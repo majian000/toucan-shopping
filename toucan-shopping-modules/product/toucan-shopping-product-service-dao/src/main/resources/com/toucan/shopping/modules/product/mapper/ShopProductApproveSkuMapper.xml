@@ -9,7 +9,7 @@
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         <result column="attribute_value_group" jdbcType="VARCHAR" property="attributeValueGroup" />
-        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
         <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
