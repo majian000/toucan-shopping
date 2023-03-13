@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,7 +68,7 @@ public class UserPageController extends BaseController {
 
 
     /**
-     * 找回密码
+     * 找回密码页面
      * @return
      */
     @RequestMapping("/forget/pwd")
@@ -79,7 +80,7 @@ public class UserPageController extends BaseController {
 
 
     /**
-     * 找回密码 步骤2
+     * 找回密码页面 步骤2
      * @return
      */
     @RequestMapping("/forget/pwd/step2")
@@ -106,6 +107,7 @@ public class UserPageController extends BaseController {
                     {
                         request.setAttribute("idcardMethod", 1);
                     }
+                    request.setAttribute("username",username);
                     return "user/forgetPwd/forget_pwd_step2";
                 }
             }
@@ -117,16 +119,29 @@ public class UserPageController extends BaseController {
     }
 
 
-
     /**
-     * 找回密码 步骤3
+     * 找回密码页面 步骤3
      * @return
      */
     @RequestMapping("/forget/pwd/step3")
-    public String forgetPwdByStep3()
+    public String forgetPwdByStep3(HttpServletRequest request, UserForgetPasswordVO userForgetPasswordVO)
     {
-        return "user/forgetPwd/forget_pwd_step3";
+        try {
+            if(StringUtils.isNotEmpty(userForgetPasswordVO.getUsername())) {
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userForgetPasswordVO);
+                ResultObjectVO resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                    return "user/forgetPwd/forget_pwd_step3";
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+        return "user/forgetPwd/forget_pwd";
     }
+
 
     /**
      * 找回密码 步骤3

@@ -12,7 +12,7 @@ function forgetPwdStep1(){
 
 function forgetPwdStep3()
 {
-    var username = $("#username").val();
+    var username = $("#step3_username").val();
     var verifyMethod = $("#verifyMethod option:selected").val();
     $.ajax({
         type: "POST",
@@ -21,7 +21,15 @@ function forgetPwdStep3()
         data:  JSON.stringify({"username":username,"verifyMethod":verifyMethod}),
         dataType: "json",
         success: function (result) {
-
+            if(result.code<=0)
+            {
+                $("#wrn_msg").show();
+                $("#wrn_msg_tip").text(result.msg);
+            }else{
+                $("#step3_username").val(username);
+                $("#step3_verifyMethod").val(verifyMethod);
+                $("#step3Submit").click();
+            }
         },
         error: function (result) {
             $("#login_msg_c").show();
