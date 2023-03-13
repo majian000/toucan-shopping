@@ -1018,7 +1018,6 @@ public class UserApiController extends BaseController {
      * 找回密码(发送验证码)
      * @param request
      */
-    @UserAuth
     @RequestMapping(value="/send/forget/pwd/vcode", method = RequestMethod.POST)
     public ResultObjectVO sendForgetPwdVerifyCode(HttpServletRequest request,@RequestBody UserForgetPasswordVO userForgetPasswordVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

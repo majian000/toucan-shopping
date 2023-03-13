@@ -21,14 +21,14 @@ function forgetPwdStep3()
         data:  JSON.stringify({"username":username,"verifyMethod":verifyMethod}),
         dataType: "json",
         success: function (result) {
-            if(result.code<=0)
+            if(result.code==1)
             {
-                $("#wrn_msg").show();
-                $("#wrn_msg_tip").text(result.msg);
-            }else{
                 $("#step3_username").val(username);
                 $("#step3_verifyMethod").val(verifyMethod);
                 $("#step3Submit").click();
+            }else{
+                $("#wrn_msg").show();
+                $("#wrn_msg_tip").text(result.msg);
             }
         },
         error: function (result) {
