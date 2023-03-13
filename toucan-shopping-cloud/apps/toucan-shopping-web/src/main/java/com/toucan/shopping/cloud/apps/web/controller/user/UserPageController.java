@@ -95,11 +95,16 @@ public class UserPageController extends BaseController {
                     UserVO userVO = resultObjectVO.formatData(UserVO.class);
                     request.setAttribute("mobileMethod", 0);
                     request.setAttribute("emailMethod", 0);
+                    request.setAttribute("idcardMethod", 0);
                     if (StringUtils.isNotEmpty(userVO.getMobilePhone())) {
                         request.setAttribute("mobileMethod", 1);
                     }
                     if (StringUtils.isNotEmpty(userVO.getEmail())) {
                         request.setAttribute("emailMethod", 1);
+                    }
+                    if(userVO.getTrueNameStatus()!=null&&userVO.getTrueNameStatus().intValue()==1)
+                    {
+                        request.setAttribute("idcardMethod", 1);
                     }
                     return "user/forgetPwd/forget_pwd_step2";
                 }

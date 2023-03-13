@@ -74,6 +74,7 @@
                 </div>
             </div><!--for-liucheng/-->
             <form method="get" class="forget-pwd">
+                <input type="hidden" id="username" />
                 <dl>
                     <dt>获取验证码：</dt>
                     <dd>
@@ -83,6 +84,9 @@
                              </#if>
                             <#if emailMethod==1>
                                 <option value="1">邮箱地址</option>
+                            </#if>
+                            <#if idcardMethod==1>
+                                <option value="2">身份证信息</option>
                             </#if>
                         </select>
                     </dd>

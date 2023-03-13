@@ -100,8 +100,6 @@ public class UserShopApiController extends BaseController {
                 resultObjectVO.setMsg("请发送验证码");
                 return resultObjectVO;
             }
-            //TODO:临时开放注册
-            vcodeObject = "1234";
             if (!sellerShopVO.getVcode().equals(String.valueOf(vcodeObject))) {
                 //释放注册锁
                 redisLock.unLock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);

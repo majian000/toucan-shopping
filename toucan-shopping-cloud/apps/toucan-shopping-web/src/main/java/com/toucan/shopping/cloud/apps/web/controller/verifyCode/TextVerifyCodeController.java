@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserModifyPwdRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.EmailModifyPwdUtil;
+import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -76,9 +77,7 @@ public class TextVerifyCodeController extends BaseController {
                 resultObjectVO.setMsg("登录超时,请稍后重试");
                 return resultObjectVO;
             }
-            String vcode = VerifyCodeUtil.generateVerifyCode(6,"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-            //TODO:手机验证码这个版本固定写死
-            vcode="1234";
+            String vcode = MobilePhoneVCodeUtil.genCode(6);
             toucanStringRedisService.set(UserModifyPwdRedisKey.getMobileVerifyCodeKey(userMainId),vcode,UserModifyPwdConstant.MAX_MODIFY_PWD_VCODE_MAX_AGE, TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);

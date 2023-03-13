@@ -3,16 +3,26 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.redis.*;
+import com.toucan.shopping.cloud.apps.web.util.EmailForgetPwdUtil;
+import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.common.vo.email.Email;
+import com.toucan.shopping.modules.common.vo.email.EmailConfig;
+import com.toucan.shopping.modules.common.vo.email.Receiver;
+import com.toucan.shopping.modules.email.helper.EmailConfigHelper;
+import com.toucan.shopping.modules.email.message.EmailMessage;
+import com.toucan.shopping.modules.email.queue.EmailQueue;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
+import com.toucan.shopping.modules.user.constant.UserForgetPwdConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
+import com.toucan.shopping.modules.user.constant.UserModifyPwdConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.vo.*;
@@ -34,6 +44,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -69,7 +81,8 @@ public class UserApiController extends BaseController {
     @Autowired
     private SkylarkLock skylarkLock;
 
-
+    @Autowired
+    private EmailQueue emailQueue;
 
     @Autowired
     private Toucan toucan;
@@ -133,7 +146,7 @@ public class UserApiController extends BaseController {
 
 
             //保存生成验证码到缓存
-            String code = NumberUtil.random(6);
+            String code = MobilePhoneVCodeUtil.genCode(6);
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了手机号码注册,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
@@ -159,90 +172,6 @@ public class UserApiController extends BaseController {
     }
 
 
-
-
-    /**
-     * 发送找回密码验证码
-     * @return
-     */
-    @RequestMapping("/sendForgetPwdVerifyCode")
-    @ResponseBody
-    public ResultObjectVO sendForgetPwdVerifyCode(String mobilePhone)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(StringUtils.isEmpty(mobilePhone)||!PhoneUtils.isChinaPhoneLegal(mobilePhone))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,手机号错误");
-            return resultObjectVO;
-        }
-
-        try {
-            UserForgetPasswordVO userResetPasswordVO = new UserForgetPasswordVO();
-            userResetPasswordVO.setMobilePhone(mobilePhone);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userResetPasswordVO);
-            resultObjectVO = feignUserService.findByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.SUCCESS.intValue()==ResultObjectVO.FAILD.intValue())
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("发送失败,请稍后重试");
-                return resultObjectVO;
-            }
-            if(resultObjectVO.getData()!=null)
-            {
-                List<UserMobilePhone> userMobilePhoneList = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), UserMobilePhone.class);
-                if(CollectionUtils.isNotEmpty(userMobilePhoneList))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("手机号已经注册");
-                    return resultObjectVO;
-                }
-            }
-
-            Object mobilePhoneValue = toucanStringRedisService.get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone));
-            if(mobilePhoneValue!=null&&StringUtils.isNotEmpty(String.valueOf(mobilePhoneValue)))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("已发送,请在1分钟后重新获取");
-                return resultObjectVO;
-            }
-
-            UserSmsVO userSmsVO = new UserSmsVO();
-            userSmsVO.setMobilePhone(mobilePhone);;
-            userSmsVO.setType(SmsTypeConstant.USER_REGIST_TYPE);
-            boolean lockStatus = redisLock.lock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
-
-
-            //保存生成验证码到缓存
-            String code = NumberUtil.random(6);
-            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"发起了找回密码申请,验证码是"+code);
-            requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
-
-            resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
-            {
-                //将验证码保存到缓存
-                toucanStringRedisService.set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
-                //默认1分钟过期
-                toucanStringRedisService.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,请稍后重试");
-        }finally{
-            redisLock.unLock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
-        }
-        return resultObjectVO;
-
-
-    }
 
 
     @RequestMapping(value="/regist")
@@ -320,8 +249,6 @@ public class UserApiController extends BaseController {
                 resultObjectVO.setMsg("请发送验证码");
                 return resultObjectVO;
             }
-            //TODO:临时开放注册
-            vcodeObject="1234";
             if(!user.getVcode().equals(String.valueOf(vcodeObject)))
             {
                 //释放注册锁
@@ -1083,6 +1010,84 @@ public class UserApiController extends BaseController {
 
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 找回密码(发送验证码)
+     * @param request
+     */
+    @UserAuth
+    @RequestMapping(value="/send/forget/pwd/vcode", method = RequestMethod.POST)
+    public ResultObjectVO sendForgetPwdVerifyCode(HttpServletRequest request,@RequestBody UserForgetPasswordVO userForgetPasswordVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
+            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                if(userVO==null||userVO.getUserMainId()==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("账号不存在");
+                    return resultObjectVO;
+                }
+                if(userVO.getEnableStatus().intValue()==0) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("账号已被禁用");
+                    return resultObjectVO;
+                }
+                String userMainId = String.valueOf(userVO.getUserMainId());
+                if(userForgetPasswordVO.getVerifyMethod()==0) //手机号接收验证码
+                {
+                    String vcode = MobilePhoneVCodeUtil.genCode(6);
+                    toucanStringRedisService.set(UserForgetPwdRedisKey.getMobileVerifyCodeKey(userMainId),vcode, UserForgetPwdConstant.MAX_FORGET_PWD_VCODE_MAX_AGE, TimeUnit.SECONDS);
+
+                }else if(userForgetPasswordVO.getVerifyMethod()==1) //邮箱接收验证码
+                {
+                    String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+                    toucanStringRedisService.set(UserForgetPwdRedisKey.getEmailVerifyCodeKey(userMainId), vcode, UserForgetPwdConstant.MAX_FORGET_PWD_VCODE_MAX_AGE, TimeUnit.SECONDS);
+                    Email email = new Email();
+                    EmailConfig emailConfig= EmailConfigHelper.getEmailConfig("犀鸟商城——找回密码");
+                    if(emailConfig!=null) {
+                        email.setEmailConfig(emailConfig);
+                        email.setSubject("犀鸟商城——找回密码");
+                        email.setContent(EmailForgetPwdUtil.getEmailContent(vcode, userVO.getNickName(), (UserForgetPwdConstant.MAX_FORGET_PWD_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
+
+                        Receiver receiver = new Receiver();
+                        receiver.setEmail(userVO.getEmail());
+                        receiver.setName(userVO.getNickName());
+                        List<Receiver> receiverList = new LinkedList<>();
+                        receiverList.add(receiver);
+                        emailConfig.setReceivers(receiverList);
+                        EmailMessage EmailMessage = new EmailMessage();
+                        EmailMessage.setEmail(email);
+                        emailQueue.push(EmailMessage);
+                    }else{
+                        logger.warn("修改密码发送邮件功能已被禁用...");
+                    }
+                }else if(userForgetPasswordVO.getVerifyMethod()==2) //身份证信息验证
+                {
+                    if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该账号未进行实名认证");
+                        return resultObjectVO;
+                    }
+                }
+            }else{
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 //
 //
