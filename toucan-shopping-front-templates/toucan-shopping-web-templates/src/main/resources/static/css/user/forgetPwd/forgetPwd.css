@@ -12,11 +12,11 @@
 .liutextbox .for-cur em{ background:#77b852;}
 .liutextbox .for-cur strong{color:#77b852;}
 
-.forget-pwd{width:500px;margin:20px auto;min-height:400px;}
+.forget-pwd{width:500px;margin:20px auto;}
 .forget-pwd dl{margin-bottom:20px;}
 .forget-pwd dt{float:left;padding-right:10px;width:100px; height:30px; line-height:30px; text-align:right; font-size:14px;}
 .forget-pwd dd{float:left;width:380px; height:30px; position:relative;}
-.forget-pwd .yanzma{ position:absolute;left:200px;top:2px; height:30px; line-height:30px;width:180px;}
+.forget-pwd .yanzma{ position:absolute;left:155px;top:2px; height:30px; line-height:30px;width:180px;}
 .subtijiao{padding:0 0 0 110px;}
 .subtijiao input{width:85px; height:32px; background:#f60;color:#fff; font-size:14px; cursor:pointer;}
 .successs{ text-align:center;padding: 20px 0 60px 0;}

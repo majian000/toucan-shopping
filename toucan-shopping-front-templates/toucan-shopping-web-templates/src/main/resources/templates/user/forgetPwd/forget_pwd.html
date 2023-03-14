@@ -11,26 +11,9 @@
     <![endif]-->
 
     <#include "/common_js.html"/>
-	<script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
-    
-    <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
-        
-	<script type="text/javascript" src="${basePath}/static/js/select.js"></script>
-    
-	<script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
-    
-    <script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/f_ban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/mban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/bban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
-
-    <#include "/common_js.html"/>
-	<script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/forgetPwd/forgetPwd.js"></script>
 
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/forgetPwd/forgetPwd.css" />
 
     <title>犀鸟商城——找回密码</title>
@@ -56,8 +39,8 @@
 </div>
 <!--Begin Login Begin-->
 <div class="log_bg" style="height:440px;">
-    <div class="forget_pwd_content">
-        <div class="web-width">
+    <div class="forget_pwd_content ">
+        <div class="web-width forgetPwdStep1">
             <div class="for-liucheng">
                 <div class="liulist for-cur"></div>
                 <div class="liulist"></div>
@@ -70,10 +53,10 @@
                     <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
                 </div>
             </div><!--for-liucheng/-->
-            <form method="get" class="forget-pwd">
+            <form method="post" class="forget-pwd" id="step1Form">
                 <dl>
                     <dt>用户名：</dt>
-                    <dd><input type="text" id="username"  class="l_ipt" style="width:240px;"  placeholder="手机号/邮箱/用户名" maxlength="50" /></dd>
+                    <dd><input type="text" id="step1_username"  class="l_ipt" style="width:240px;"  placeholder="手机号/邮箱/用户名" maxlength="50" /></dd>
                     <div class="clears"></div>
                 </dl>
                 <dl>
@@ -81,27 +64,95 @@
                     <dd>
                         <input type="text" id="vcode"  placeholder="请输入验证码" class="l_ipt" maxlength="4" />
                         <div class="yanzma">
-                            <img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/forget/vcode" alt="换一换" title="换一换">
+                            <img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/forget/pwd/vcode" alt="换一换" title="换一换">
                         </div>
                     </dd>
                     <div class="clears"></div>
                 </dl>
                 <div class="subtijiao">
-                    <button type="button" onclick="forgetPwdStep2();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
-                </div>
-                <br/>
-                <div id="wrn_msg" style="width:100%;text-align:center;">
-                    <a id="wrn_msg_tip" style="color:#ff0000;"></a>
+                    <button type="button"  id="go_step2_btn" class="log_btn" style="width:200px;" >提交</button>
                 </div>
 
             </form><!--forget-pwd/-->
 
-            <form action="${basePath}/page/user/forget/pwd/step2" method="post">
-                <input type="hidden" name="username" id="step2_username" >
-                <input type="submit" id="step2Submit"/>
-            </form>
         </div><!--web-width/-->
-    </div><!--content/-->
+
+        <div class="web-width forgetPwdStep2" style="display:none">
+            <div class="for-liucheng">
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liulist"></div>
+                <div class="liulist"></div>
+                <div class="liutextbox">
+                    <div class="liutext for-cur"><em>1</em><br /><strong>填写账户名</strong></div>
+                    <div class="liutext for-cur"><em>2</em><br /><strong>验证身份</strong></div>
+                    <div class="liutext"><em>3</em><br /><strong>设置新密码</strong></div>
+                    <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
+                </div>
+            </div><!--for-liucheng/-->
+            <form method="get" class="forget-pwd" id="step2Form">
+                <dl>
+                    <dt>获取验证码：</dt>
+                    <dd>
+                        <select id="verifyMethod" class="l_combobox">
+                            <option value="0" class="mobileMethod">手机号</option>
+                            <option value="1" class="emailMethod">邮箱地址</option>
+                            <option value="2" class="idcardMethod">身份证信息</option>
+                        </select>
+                    </dd>
+                    <div class="clears"></div>
+                </dl>
+                <br/>
+                <br/>
+                <div style="width: 100%;">
+                    <button type="button"  id="back_step1_btn" class="db_button" style="width:200px;" >上一步</button>
+                    <button type="button"  id="go_step3_btn" class="log_btn" style="width:200px;" >提交</button>
+                </div>
+                <br/>
+            </form><!--forget-pwd/-->
+        </div><!--web-width/-->
+
+        <div class="web-width forgetPwdStep3" style="display:none">
+            <div class="for-liucheng">
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liulist"></div>
+                <div class="liutextbox">
+                    <div class="liutext for-cur"><em>1</em><br /><strong>填写账户名</strong></div>
+                    <div class="liutext for-cur"><em>2</em><br /><strong>验证身份</strong></div>
+                    <div class="liutext for-cur"><em>3</em><br /><strong>设置新密码</strong></div>
+                    <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
+                </div>
+            </div><!--for-liucheng/-->
+            <form action="forgetPwd4.html" method="get" class="forget-pwd">
+
+                <dl>
+                    <dt>密码：</dt>
+                    <dd><input type="password" id="password"  class="l_ipt" style="width:240px;"  placeholder="密码" maxlength="15" /></dd>
+                    <div class="clears"></div>
+                </dl>
+                <dl>
+                    <dt>确认密码：</dt>
+                    <dd><input type="password" id="confirm_password"  class="l_ipt" style="width:240px;"  placeholder="确认密码" maxlength="15" /></dd>
+                    <div class="clears"></div>
+                </dl>
+                <br/>
+                <br/>
+                <div style="width: 100%;">
+                    <button type="button" id="back_step2_btn" class="db_button" style="width:200px;" >上一步</button>
+                    <button type="button" id="forgetPwdBtn"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
+                </div>
+            </form><!--forget-pwd/-->
+        </div><!--web-width/-->
+
+        <div id="wrn_msg" style="width:100%;text-align:center;">
+            <a id="wrn_msg_tip" style="color:#ff0000;"></a>
+        </div>
+
+
+    </div>
+
 
 </div>
 <!--End Login End-->
