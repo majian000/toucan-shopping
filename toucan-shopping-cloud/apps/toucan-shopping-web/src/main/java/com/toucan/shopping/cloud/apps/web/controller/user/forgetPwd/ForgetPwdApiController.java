@@ -297,4 +297,156 @@ public class ForgetPwdApiController extends BaseController {
 
 
 
+    /**
+     * 修改密码
+     * @param request
+     */
+    @RequestMapping(value="/modify/pwd", method = RequestMethod.POST)
+    public ResultObjectVO modifyPwd(HttpServletRequest request,@RequestBody UserForgetPasswordVO userForgetPasswordVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(userForgetPasswordVO.getVerifyMethod()==0||userForgetPasswordVO.getVerifyMethod()==1) {
+                if (StringUtils.isEmpty(userForgetPasswordVO.getVcode())) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请输入验证码");
+                    return resultObjectVO;
+                }
+            }
+            if(userForgetPasswordVO.getVerifyMethod()==2||userForgetPasswordVO.getVerifyMethod()==3||userForgetPasswordVO.getVerifyMethod()==4)
+            {
+                if(StringUtils.isEmpty(userForgetPasswordVO.getTrueName())||StringUtils.isEmpty(userForgetPasswordVO.getIdCard()))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请输入证件信息");
+                    return resultObjectVO;
+                }
+            }
+
+            if(StringUtils.isEmpty(userForgetPasswordVO.getPassword()))
+            {
+                resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+                resultObjectVO.setMsg("请输入密码");
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(userForgetPasswordVO.getPassword(),userForgetPasswordVO.getConfirmPassword()))
+            {
+                resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+                resultObjectVO.setMsg("密码与确认密码不一致");
+                return resultObjectVO;
+            }
+
+            if(!UserRegistUtil.checkPwd(userForgetPasswordVO.getPassword()))
+            {
+                resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
+                resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
+                return resultObjectVO;
+            }
+
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
+            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                if(userVO==null||userVO.getUserMainId()==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("账号不存在");
+                    return resultObjectVO;
+                }
+                if(userVO.getEnableStatus().intValue()==0) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("账号已被禁用");
+                    return resultObjectVO;
+                }
+                String userMainId = String.valueOf(userVO.getUserMainId());
+
+                if(userForgetPasswordVO.getVerifyMethod()==0) //手机号接收验证码
+                {
+                    Object mobilePhoneVCode = toucanStringRedisService.get(UserForgetPwdRedisKey.getMobileVerifyCodeKey(userMainId));
+                    if(mobilePhoneVCode==null)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("手机验证码已过期,请重新发送");
+                        return resultObjectVO;
+                    }
+                    if(!userForgetPasswordVO.getVcode().toUpperCase().equals(String.valueOf(mobilePhoneVCode).toUpperCase()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("手机验证码输入有误,请重新输入");
+                        return resultObjectVO;
+                    }
+
+                    UserVO modifyPwdUser = new UserVO();
+                    modifyPwdUser.setUserMainId(userVO.getUserMainId());
+                    modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
+                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        toucanStringRedisService.delete(UserForgetPwdRedisKey.getMobileVerifyCodeKey(userMainId));
+                    }
+
+                }else if(userForgetPasswordVO.getVerifyMethod()==1){  //邮箱接收验证码
+                    Object emailVCode = toucanStringRedisService.get(UserForgetPwdRedisKey.getEmailVerifyCodeKey(userMainId));
+                    if(emailVCode==null)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("邮箱验证码已过期,请重新发送");
+                        return resultObjectVO;
+                    }
+                    if(!userForgetPasswordVO.getVcode().toUpperCase().equals(String.valueOf(emailVCode).toUpperCase()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("邮箱验证码输入有误,请重新输入");
+                        return resultObjectVO;
+                    }
+
+                    UserVO modifyPwdUser = new UserVO();
+                    modifyPwdUser.setUserMainId(userVO.getUserMainId());
+                    modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
+                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        toucanStringRedisService.delete(UserForgetPwdRedisKey.getEmailVerifyCodeKey(userMainId));
+                    }
+                }else if(userForgetPasswordVO.getVerifyMethod()==2||userForgetPasswordVO.getVerifyMethod()==3||userForgetPasswordVO.getVerifyMethod()==4) //身份证信息验证
+                {
+                    if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("用户未实名,请检查是否输入有误");
+                        return resultObjectVO;
+                    }
+                    if(StringUtils.isEmpty(userVO.getTrueName())||StringUtils.isEmpty(userVO.getIdCard()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("实名信息有误,请刷新页面后重试");
+                        return resultObjectVO;
+                    }
+                    if(!userVO.getTrueName().equals(userForgetPasswordVO.getTrueName())&&!userVO.getIdCard().equals(userForgetPasswordVO.getIdCard()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("证件信息输入有误,请重新输入");
+                        return resultObjectVO;
+                    }
+                    UserVO modifyPwdUser = new UserVO();
+                    modifyPwdUser.setUserMainId(userVO.getUserMainId());
+                    modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
+                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                }
+            }else{
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 }

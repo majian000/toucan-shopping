@@ -38,7 +38,7 @@
     <#include "/logo.html"/>
 </div>
 <!--Begin Login Begin-->
-<div class="log_bg" style="height:440px;">
+<div class="log_bg" style="height:540px;">
     <div class="forget_pwd_content ">
         <div class="web-width forgetPwdStep1">
             <div class="for-liucheng">
@@ -131,12 +131,12 @@
 
                 <dl>
                     <dt>密码：</dt>
-                    <dd><input type="password" id="password"  class="l_ipt" style="width:240px;"  placeholder="密码" maxlength="15" /></dd>
+                    <dd><input type="password" id="password" name="password"  class="l_ipt" style="width:240px;"  placeholder="密码" /></dd>
                     <div class="clears"></div>
                 </dl>
                 <dl>
                     <dt>确认密码：</dt>
-                    <dd><input type="password" id="confirm_password"  class="l_ipt" style="width:240px;"  placeholder="确认密码" maxlength="15" /></dd>
+                    <dd><input type="password" id="confirm_password"  name="confirmPassword" class="l_ipt" style="width:240px;"  placeholder="确认密码"/></dd>
                     <div class="clears"></div>
                 </dl>
                 <dl class="step3_vcode_panel" style="display: none;">
@@ -158,11 +158,28 @@
                 <br/>
                 <div style="width: 100%;">
                     <button type="button" id="back_step2_btn" class="db_button" style="width:200px;" >上一步</button>
-                    <button type="button" id="forgetPwdBtn"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
+                    <button type="button" id="forgetPwdBtn"   class="log_btn" style="width:200px;" >提交</button>
                 </div>
             </form><!--forget-pwd/-->
         </div><!--web-width/-->
 
+        <div class="web-width forgetPwdStep4" style="display:none">
+            <div class="for-liucheng">
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liulist for-cur"></div>
+                <div class="liutextbox">
+                    <div class="liutext for-cur"><em>1</em><br /><strong>填写账户名</strong></div>
+                    <div class="liutext for-cur"><em>2</em><br /><strong>验证身份</strong></div>
+                    <div class="liutext for-cur"><em>3</em><br /><strong>设置新密码</strong></div>
+                    <div class="liutext for-cur"><em>4</em><br /><strong>完成</strong></div>
+                </div>
+            </div><!--for-liucheng/-->
+            <div class="successs">
+                <h3>恭喜您，修改成功！</h3>
+            </div>
+        </div>
         <div id="wrn_msg" style="width:100%;text-align:center;">
             <a id="wrn_msg_tip" style="color:#ff0000;"></a>
         </div>
