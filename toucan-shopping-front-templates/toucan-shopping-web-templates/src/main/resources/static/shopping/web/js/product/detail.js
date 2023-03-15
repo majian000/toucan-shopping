@@ -247,7 +247,7 @@ function showSaveBurCarBtns()
     $(".suc_btn_panel").show();
 }
 
-function drawSalesAttributeChildHtml(attributeChild)
+function drawSpuAttributeChildHtml(attributeChild)
 {
     var salesAttributeChildHtml="<div class=\"Ptable-item-child\">";
     salesAttributeChildHtml+="<dl style=\"Ptable-item-dl\">";
@@ -265,7 +265,7 @@ function drawSalesAttributeChildHtml(attributeChild)
     salesAttributeChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
     if(attributeChild.children!=null) {
         for (var p = 0; p < attributeChild.children.length; p++) {
-            salesAttributeChildHtml += drawSalesAttributeChildHtml(attributeChild.children[p]);
+            salesAttributeChildHtml += drawSpuAttributeChildHtml(attributeChild.children[p]);
         }
     }
     salesAttributeChildHtml+="</dl>";
@@ -274,7 +274,7 @@ function drawSalesAttributeChildHtml(attributeChild)
     return salesAttributeChildHtml;
 }
 
-function drawSalesAttribute(spu)
+function drawSpuAttribute(spu)
 {
     if(spu!=null&&spu.attributeTree.length>0)
     {
@@ -302,7 +302,7 @@ function drawSalesAttribute(spu)
                 salesAttributeHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
                 if(attributeTree.children!=null) {
                     for (var p = 0; p < attributeTree.children.length; p++) {
-                        salesAttributeHtml += drawSalesAttributeChildHtml(attributeTree.children[p]);
+                        salesAttributeHtml += drawSpuAttributeChildHtml(attributeTree.children[p]);
                     }
                 }
                 salesAttributeHtml+="</dl>";
@@ -329,7 +329,7 @@ function drawSpuAttributes(productId)
             if (result.code <= 0) {
                 return ;
             }
-            drawSalesAttribute(result.data);
+            drawSpuAttribute(result.data);
         },
         error: function (result) {
 
