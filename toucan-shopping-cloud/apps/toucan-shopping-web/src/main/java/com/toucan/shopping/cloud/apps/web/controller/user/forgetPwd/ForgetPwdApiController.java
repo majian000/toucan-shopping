@@ -143,6 +143,8 @@ public class ForgetPwdApiController extends BaseController {
                         retVO.put("mobileMethod", 0);
                         retVO.put("emailMethod", 0);
                         retVO.put("idcardMethod", 0);
+                        retVO.put("passportMethod", 0);
+                        retVO.put("overseasMethod", 0);
 
                         if (StringUtils.isNotEmpty(userVO.getMobilePhone())) {
                             retVO.put("mobileMethod", 1);
@@ -152,7 +154,13 @@ public class ForgetPwdApiController extends BaseController {
                         }
                         if(userVO.getTrueNameStatus()!=null&&userVO.getTrueNameStatus().intValue()==1)
                         {
-                            retVO.put("idcardMethod", 1);
+                            if(userVO.getIdcardType().intValue()==1) { //身份证
+                                retVO.put("idcardMethod", 1);
+                            }else if(userVO.getIdcardType().intValue()==2) { //护照
+                                retVO.put("passportMethod", 1);
+                            }else if(userVO.getIdcardType().intValue()==3) { //海外证件
+                                retVO.put("overseasMethod", 1);
+                            }
                         }
                         resultObjectVO.setData(retVO);
                     }else{

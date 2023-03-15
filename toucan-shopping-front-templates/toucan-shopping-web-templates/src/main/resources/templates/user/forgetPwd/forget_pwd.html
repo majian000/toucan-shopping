@@ -95,9 +95,11 @@
                     <dt>获取验证码：</dt>
                     <dd>
                         <select id="verifyMethod" class="l_combobox">
-                            <option value="0" class="mobileMethod">手机号</option>
-                            <option value="1" class="emailMethod">邮箱地址</option>
-                            <option value="2" class="idcardMethod">身份证信息</option>
+                            <option value="0" class="mobileMethod" style="display:none">手机号</option>
+                            <option value="1" class="emailMethod"  style="display:none">邮箱地址</option>
+                            <option value="2" class="idcardMethod"  style="display:none">身份证信息</option>
+                            <option value="3" class="passportMethod"  style="display:none">护照信息</option>
+                            <option value="4" class="overseasMethod"  style="display:none">海外信息</option>
                         </select>
                     </dd>
                     <div class="clears"></div>
@@ -135,6 +137,21 @@
                 <dl>
                     <dt>确认密码：</dt>
                     <dd><input type="password" id="confirm_password"  class="l_ipt" style="width:240px;"  placeholder="确认密码" maxlength="15" /></dd>
+                    <div class="clears"></div>
+                </dl>
+                <dl class="step3_vcode_panel" style="display: none;">
+                    <dt>验证码：</dt>
+                    <dd><input type="text" id="step3_vcode" name="vcode"  placeholder="请输入验证码" class="l_ipt"  /></dd>
+                    <div class="clears"></div>
+                </dl>
+                <dl class="step3_idcard_panel" style="display: none;">
+                    <dt>姓名：</dt>
+                    <dd><input type="text" id="step3_true_name" name="trueName"  style="width:240px;"  placeholder="请输入姓名" class="l_ipt"  /></dd>
+                    <div class="clears"></div>
+                </dl>
+                <dl class="step3_idcard_panel" style="display: none;">
+                    <dt>证件号码：</dt>
+                    <dd><input type="text" id="step3_id_card" name="idCard"   style="width:240px;"  placeholder="请输入证件号码" class="l_ipt"  /></dd>
                     <div class="clears"></div>
                 </dl>
                 <br/>

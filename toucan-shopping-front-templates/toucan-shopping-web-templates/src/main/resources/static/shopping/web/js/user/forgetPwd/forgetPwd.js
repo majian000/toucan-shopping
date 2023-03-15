@@ -37,21 +37,33 @@ $(function () {
                 }else{
                     $("#wrn_msg").hide();
                     $(".forgetPwdStep1").hide();
-                    $(".mobileMethod").show();
-                    $(".emailMethod").show();
-                    $(".idcardMethod").show();
-                    if(result.data.mobileMethod==0)
+                    $(".mobileMethod").hide();
+                    $(".emailMethod").hide();
+                    $(".idcardMethod").hide();
+                    $(".passportMethod").hide();
+                    $(".overseasMethod").hide();
+
+                    if(result.data.mobileMethod==1)
                     {
-                        $(".mobileMethod").hide();
+                        $(".mobileMethod").show();
                     }
-                    if(result.data.emailMethod==0)
+                    if(result.data.emailMethod==1)
                     {
-                        $(".emailMethod").hide();
+                        $(".emailMethod").show();
                     }
-                    if(result.data.idcardMethod==0)
+                    if(result.data.idcardMethod==1)
                     {
-                        $(".idcardMethod").hide();
+                        $(".idcardMethod").show();
                     }
+                    if(result.data.passportMethod==1)
+                    {
+                        $(".passportMethod").show();
+                    }
+                    if(result.data.overseasMethod==1)
+                    {
+                        $(".overseasMethod").show();
+                    }
+
                     $(".forgetPwdStep2").show();
                 }
             },
@@ -84,6 +96,17 @@ $(function () {
                 if(result.code==1)
                 {
                     $(".forgetPwdStep2").hide();
+                    $(".step3_vcode_panel").hide();
+                    $(".step3_idcard_panel").hide();
+
+                    if(verifyMethod==0||verifyMethod==1)
+                    {
+                        $(".step3_vcode_panel").show();
+                    }
+                    if(verifyMethod==2||verifyMethod==3||verifyMethod==4)
+                    {
+                        $(".step3_idcard_panel").show();
+                    }
                     $(".forgetPwdStep3").show();
                 }else{
                     $("#wrn_msg").show();
