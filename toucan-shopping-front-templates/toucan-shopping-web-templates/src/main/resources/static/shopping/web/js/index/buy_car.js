@@ -36,7 +36,7 @@ function loadBuyCarPreviewPanel(){
                         "                <div class=\"img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"58\" height=\"58\" /></a></div>\n" ;
                     if(!buyCarItem.isAllowedBuy)
                     {
-                        productHtmls+=    "                <div class=\"name\"><del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</del></div>\n" ;
+                        productHtmls+=    "                <div class=\"name\" title='"+buyCarItem.productSkuName+noAllowedBuyDesc+"'><del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</del></div>\n" ;
                     }else{
                         productHtmls+=    "                <div class=\"name\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a></div>\n" ;
                     }
