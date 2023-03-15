@@ -404,14 +404,14 @@ function saveUserCar()
                 if(result.data!=null){
                     $("#buyCarItemCount").html(result.data.length);
                 }
-                var buyCarPriceTotal=0;
+                var buyCarPriceTotal=new BigNumber(0);
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
-                    buyCarPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+                    buyCarPriceTotal = buyCarPriceTotal.plus(new BigNumber(buyCarItem.productPrice).times(new BigNumber(buyCarItem.buyCount)));
                 }
 
-                $(".buy_car_price_total").html(buyCarPriceTotal);
+                $(".buy_car_price_total").html(buyCarPriceTotal.toFixed(2));
                 ShowDiv_1('userBuyCarMsg','fade1');
                 loadBuyCarPreviewPanel();
             }else if(result.code==403){
