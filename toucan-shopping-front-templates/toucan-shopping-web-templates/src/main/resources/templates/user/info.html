@@ -55,14 +55,33 @@
 
         <div class="user-right">
             <div class="personal-tou">
-                <div class="user-header"><a href="${basePath}/page/user/head/sculpture/approve/page"><img src="${userVO.httpHeadSculpture!''}" width="90" height="90"><i></i></a></div>
+                <div class="user-header"><a href="${basePath}/page/user/head/sculpture/approve/page" title="点击修改头像"><img src="${userVO.httpHeadSculpture!''}" alt="点击修改头像" width="90" height="90"><i></i></a></div>
                 <div class="personal-info">
                     <h2>${userVO.nickName!''}<span>${welcomeText!''}</span></h2>
                     <!-----------class-middle普通--class-high较高----class-low较低--------------------->
                     <p>
-                        <span>账户安全级别：</span><i class="class-middle"></i><span>普通&nbsp;&nbsp;|</span>
-                        <i class="binding"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
-                        <i class="binding-not"></i><span><a href="#">绑定邮箱</a></span>
+                        <span>账户安全级别：</span>
+                        <#if userVO.securityLevel?? && userVO.securityLevel==1 >
+                            <i class="class-middle"></i>
+                            <span>普通&nbsp;&nbsp;|</span>
+                        <#elseif userVO.securityLevel?? && userVO.securityLevel==2 >
+                            <i class="class-high"></i>
+                            <span>高&nbsp;&nbsp;|</span>
+                        <#else>
+                            <i class="class-middle"></i>
+                            <span>普通&nbsp;&nbsp;|</span>
+                        </#if>
+                        <#if userVO.mobilePhone?? && userVO.mobilePhone!='' >
+                             <i class="binding"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
+                        <#else>
+                             <i class="binding-not"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
+                        </#if>
+
+                        <#if userVO.email?? && userVO.email!='' >
+                            <i class="binding"></i><span><a href="#">绑定邮箱</a></span>
+                        <#else>
+                            <i class="binding-not"></i><span><a href="#">绑定邮箱</a></span>
+                         </#if>
                     </p>
                 </div>
             </div>

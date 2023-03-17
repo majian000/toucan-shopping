@@ -153,6 +153,10 @@ public class UserVO extends User {
     private Short enableStatus;
 
 
+    /**
+     * 安全等级 1:普通(没绑定手机号、邮箱、未实名) 2:高(绑定手机号、邮箱、已实名)
+     */
+    private Integer securityLevel = 1;
 
 
 
