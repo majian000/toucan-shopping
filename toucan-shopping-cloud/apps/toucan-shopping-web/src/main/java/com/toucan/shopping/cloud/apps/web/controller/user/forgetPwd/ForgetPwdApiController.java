@@ -29,6 +29,7 @@ import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserForgetPwdConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
+import com.toucan.shopping.modules.user.constant.UserVerifyCodeConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -273,7 +274,7 @@ public class ForgetPwdApiController extends BaseController {
             //生成客户端验证码ID
             String vcodeRedisKey = VerifyCodeRedisKey.getForgetVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey, UserVerifyCodeConstant.DEFAULT_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);

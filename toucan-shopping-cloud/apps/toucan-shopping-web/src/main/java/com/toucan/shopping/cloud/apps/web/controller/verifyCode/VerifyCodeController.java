@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.user.constant.UserVerifyCodeConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,12 @@ public class VerifyCodeController extends BaseController {
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey, UserVerifyCodeConstant.DEFAULT_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
-            //60秒过期
-            clientVCodeId.setMaxAge(60);
+            //过期时间
+            clientVCodeId.setMaxAge(UserVerifyCodeConstant.DEFAULT_VERIFY_CODE_MAX_AGE);
             response.addCookie(clientVCodeId);
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);

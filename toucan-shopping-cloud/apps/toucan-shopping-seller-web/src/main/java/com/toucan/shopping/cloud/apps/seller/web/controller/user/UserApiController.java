@@ -20,6 +20,7 @@ import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
+import com.toucan.shopping.modules.user.constant.UserVerifyCodeConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
@@ -287,7 +288,7 @@ public class UserApiController extends BaseController {
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey, UserVerifyCodeConstant.DEFAULT_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
@@ -328,7 +329,7 @@ public class UserApiController extends BaseController {
             //生成客户端验证码ID
             String vcodeRedisKey = VerifyCodeRedisKey.getLoginFaildVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey,UserVerifyCodeConstant.LOGIN_FAILD_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);

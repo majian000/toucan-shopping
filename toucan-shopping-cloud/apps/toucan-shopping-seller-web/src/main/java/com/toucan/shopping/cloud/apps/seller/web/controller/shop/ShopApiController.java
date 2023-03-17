@@ -159,8 +159,8 @@ public class ShopApiController extends BaseController {
             {
                 //将验证码保存到缓存
                 toucanStringRedisService.set(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
-                //默认1分钟过期
-                toucanStringRedisService.expire(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
+                //默认2分钟过期
+                toucanStringRedisService.expire(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*2, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {

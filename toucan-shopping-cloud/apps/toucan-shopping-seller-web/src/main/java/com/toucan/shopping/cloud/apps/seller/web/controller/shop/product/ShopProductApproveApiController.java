@@ -1225,12 +1225,12 @@ public class ShopProductApproveApiController extends BaseController {
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey,180, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
-            //60秒过期
-            clientVCodeId.setMaxAge(60);
+            //180秒过期
+            clientVCodeId.setMaxAge(180);
             response.addCookie(clientVCodeId);
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);
