@@ -2141,7 +2141,7 @@ public class UserController {
                 {
                     try {
                         //清空用户登录信息
-                        userRedisService.clearLoginCache(String.valueOf(entity.getUserMainId()));
+                        userRedisService.clearLoginCache(String.valueOf(entity.getUserMainId()),requestVo.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("清空redis登录缓存失败 {}", requestVo.getEntityJson());

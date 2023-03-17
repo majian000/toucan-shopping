@@ -55,7 +55,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginTokenAppKey(String userId, String appCode)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOGIN:LOGIN_TOKEN_"+userId;
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOGIN:"+appCode+":LOGIN_TOKEN_"+userId;
     }
 
 

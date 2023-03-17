@@ -111,26 +111,13 @@ public class UserRedisServiceImpl implements UserRedisService {
     }
 
     @Override
-    public void clearLoginCache(String userMainId) throws Exception {
+    public void clearLoginCache(String userMainId,String appCode) throws Exception {
         UserVO userVO = new UserVO();
         userVO.setUserMainId(Long.parseLong(userMainId));
         ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
-
         String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
-        //判断是否已有登录token,如果有将删除掉
-        Set<String> loginKeys = toucanStringRedisService.keys(loginGroupKey);
-        if(loginKeys!=null) {
-            Iterator<String> loginKeyIt = loginKeys.iterator();
-            while (loginKeyIt.hasNext()) {
-                long deleteRows = 0;
-                int tryCount = 0;
-                do {
-                    //只删除这个应用的会话
-                    deleteRows = toucanStringRedisService.delete(loginGroupKey, loginKeyIt.next());
-                    tryCount++;
-                } while (deleteRows <= 0 && tryCount < 5);
 
-            }
-        }
+        //只删除这个应用的会话
+        toucanStringRedisService.delete(loginGroupKey, UserCenterLoginRedisKey.getLoginTokenAppKey(userMainId, appCode));
     }
 }

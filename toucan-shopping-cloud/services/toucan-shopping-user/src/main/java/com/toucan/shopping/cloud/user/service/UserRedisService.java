@@ -15,5 +15,5 @@ public interface UserRedisService {
      * @return
      * @throws Exception
      */
-    void clearLoginCache(String userMainId) throws Exception;
+    void clearLoginCache(String userMainId,String appCode) throws Exception;
 }
