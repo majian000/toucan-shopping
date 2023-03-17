@@ -116,7 +116,8 @@ public class UserRedisServiceImpl implements UserRedisService {
         userVO.setUserMainId(Long.parseLong(userMainId));
         ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
         String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
-
+        //删除用户详情缓存
+        toucanStringRedisService.delete(loginGroupKey, UserCenterLoginRedisKey.getLoginInfoAppKey(userMainId,appCode));
         //只删除这个应用的会话
         toucanStringRedisService.delete(loginGroupKey, UserCenterLoginRedisKey.getLoginTokenAppKey(userMainId, appCode));
     }
