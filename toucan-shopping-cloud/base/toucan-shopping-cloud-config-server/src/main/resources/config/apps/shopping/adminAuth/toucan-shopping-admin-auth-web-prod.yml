@@ -106,6 +106,8 @@ toucan:
       email:
         enabled: true
         title: ——权限中台应用——异常邮件
+        ignore-exception-list[0]: javax.mail.MessagingException
+        ignore-exception-list[1]: com.toucan.shopping.modules.common.exception.InvalidAdminHeaderException
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器
