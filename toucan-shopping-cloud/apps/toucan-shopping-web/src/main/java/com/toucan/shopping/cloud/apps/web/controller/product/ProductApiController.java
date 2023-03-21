@@ -164,6 +164,7 @@ public class ProductApiController {
                 setAttributeValueTreeDisabledStatus(attributeValueStatusVOS.get(i));
             }
 
+            productSkuVO.setAttributeValueStatusVOS(attributeValueStatusVOS);
             productSkuVO.setSkuBuyStatusList(null);
         }
     }
