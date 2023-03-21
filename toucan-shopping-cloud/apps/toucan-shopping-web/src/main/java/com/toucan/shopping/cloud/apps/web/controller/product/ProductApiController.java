@@ -99,92 +99,166 @@ public class ProductApiController {
         //将全部属性转换成对象
         Map<String, JSONArray> allAttributeMap = JSONObject.parseObject(productSkuVO.getProductAttributes(),Map.class);
         if(allAttributeMap.size()>0) {
-            List<ProductSkuBuyStatusVO> skuBuyStatusVOS = productSkuVO.getSkuBuyStatusList();
             Object[] attributeKeys = allAttributeMap.keySet().toArray();
-            //构造出二维数组,在每一个元素中会有是否启用属性,返回到前端进行判断
             int elementSize = allAttributeMap.get(attributeKeys[0]).size();
-            AttributeValueStatusVO[][] attributeValueStatusVOS =
-                    new AttributeValueStatusVO[attributeKeys.length][elementSize];
-            if (CollectionUtils.isNotEmpty(skuBuyStatusVOS)) {
-                //填充属性二维数组
-                for(int i=0;i<attributeKeys.length;i++)
+            String[][] attributeValueArray = new String[attributeKeys.length][elementSize];
+            //填充属性二维数组
+            for(int i=0;i<attributeKeys.length;i++)
+            {
+                for(int j=0;j<elementSize;j++)
                 {
-                    for(int j=0;j<elementSize;j++)
-                    {
-                        AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
-                        attributeValueStatusVO.setStatus(1);
-                        attributeValueStatusVO.setValue(String.valueOf(allAttributeMap.get(attributeKeys[i]).get(j)));
-                        attributeValueStatusVOS[i][j] = attributeValueStatusVO;
-                    }
+                    attributeValueArray[i][j] = String.valueOf(allAttributeMap.get(attributeKeys[i]).get(j));
                 }
-
-                boolean isDisabled = false;
-                //设置当前页属性二维数组启用/禁用状态
-                for (int i = 0; i < skuBuyStatusVOS.size(); i++) {
-                    ProductSkuBuyStatusVO productSkuBuyStatusVO = skuBuyStatusVOS.get(i);
-                    isDisabled = false;
-                    String parentAttribute = productSkuBuyStatusVO.getAttributeValueGroup().substring(0, productSkuBuyStatusVO.getAttributeValueGroup().lastIndexOf("_"));
-                    String currentSkuParentAttribute = productSkuVO.getAttributeValueGroup().substring(0, productSkuVO.getAttributeValueGroup().lastIndexOf("_"));
-
-                    //判断是当前商品页的属性路径
-                    if (parentAttribute.equals(currentSkuParentAttribute)) {
-                        if (productSkuBuyStatusVO.getAttributeValueGroup().indexOf("_") != -1)  //多组属性
-                        {
-                            if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
-                                isDisabled = true;
-                            }
-                            if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
-                                isDisabled = true;
-                            }
-                            if (isDisabled) {
-                                String[] attributeValueGroup = productSkuBuyStatusVO.getAttributeValueGroup().split("_");
-                                int attributeValueGroupLength = attributeValueGroup.length;
-                                for (int j = 0; j < elementSize; j++) {
-                                    AttributeValueStatusVO valueStatusVO = attributeValueStatusVOS[attributeValueGroupLength - 1][j];
-                                    if (valueStatusVO.getValue().equals(attributeValueGroup[attributeValueGroupLength - 1])) {
-                                        valueStatusVO.setStatus(0);
-                                    }
-                                }
-                            }
-                        } else { //单组属性
-                            for (int s = 0; s < attributeKeys.length; s++) {
-                                for (int j = 0; j < elementSize; j++) {
-                                    AttributeValueStatusVO valueStatusVO = attributeValueStatusVOS[s][j];
-                                    if (valueStatusVO.getValue().equals(productSkuBuyStatusVO.getAttributeValueGroup())) {
-                                        if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
-                                            valueStatusVO.setStatus(0);
-                                        }
-                                        if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
-                                            valueStatusVO.setStatus(0);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            }
+            List<AttributeValueStatusVO> attributeValueStatusVOS = new LinkedList<>();
+            int hier= 0; //层数
+            for(int p=0;p<attributeValueArray[0].length;p++)
+            {
+                AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
+                attributeValueStatusVO.setStatus(1);
+                attributeValueStatusVO.setValue(attributeValueArray[0][p]);
+                attributeValueStatusVO.setValuePath(attributeValueArray[0][p]);
+                if((hier+1)<attributeValueArray.length)
+                {
+                    //填充这个属性值树结构
+                    fillAttributeValueTree(attributeValueStatusVO,hier+1,attributeValueArray);
                 }
-
-                //设置倒数第二个属性选择项及以上的启用/禁用状态
-                for (int i = 0; i < skuBuyStatusVOS.size(); i++) {
-                    ProductSkuBuyStatusVO productSkuBuyStatusVO = skuBuyStatusVOS.get(i);
-                    String parentAttribute = productSkuBuyStatusVO.getAttributeValueGroup().substring(0, productSkuBuyStatusVO.getAttributeValueGroup().lastIndexOf("_"));
-                    String currentSkuParentAttribute = productSkuVO.getAttributeValueGroup().substring(0, productSkuVO.getAttributeValueGroup().lastIndexOf("_"));
-
-                    //判断不是当前商品页的属性路径
-                    if (!parentAttribute.equals(currentSkuParentAttribute)) {
-                        if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
-//                        valueStatusVO.setStatus(0);
-                        }
-                        if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
-//                        valueStatusVO.setStatus(0);
-                        }
-                    }
-                }
-
+                attributeValueStatusVOS.add(attributeValueStatusVO);
             }
 
-            productSkuVO.setAttributeValueStatusVOS(attributeValueStatusVOS);
+            //判断属性节点是否可以点击
+            boolean isDisabled;
+            List<ProductSkuBuyStatusVO> skuBuyStatusVOS = productSkuVO.getSkuBuyStatusList();
+            for (int i = 0; i < skuBuyStatusVOS.size(); i++) {
+                ProductSkuBuyStatusVO productSkuBuyStatusVO = skuBuyStatusVOS.get(i);
+                isDisabled = false;
+
+                if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
+                    isDisabled = true;
+                }
+                if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
+                    isDisabled = true;
+                }
+                if(isDisabled) {
+                    AttributeValueStatusVO attributeValueStatusVO = getAttributeValueTreeNode(productSkuBuyStatusVO.getAttributeValueGroup(), attributeValueStatusVOS);
+                    if (attributeValueStatusVO != null) {
+                        //设置禁用
+                        if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
+                            attributeValueStatusVO.setStatus(0);
+                        }
+                        if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
+                            attributeValueStatusVO.setStatus(0);
+                        }
+                    }
+                }
+            }
+
+            //设置禁用数量
+            for(int i=0;i<attributeValueStatusVOS.size();i++)
+            {
+                setAttributeValueTreeDisabledCount(attributeValueStatusVOS.get(i),attributeValueStatusVOS.get(i).getChildren(),attributeValueStatusVOS);
+            }
+
+            //设置禁用状态
+            for(int i=0;i<attributeValueStatusVOS.size();i++) {
+                setAttributeValueTreeDisabledStatus(attributeValueStatusVOS.get(i));
+            }
+
             productSkuVO.setSkuBuyStatusList(null);
+        }
+    }
+
+    /**
+     * 拿到属性值树节点
+     * @param attributeValueGroup
+     * @param attributeValueStatusVOS
+     * @return
+     */
+    public AttributeValueStatusVO getAttributeValueTreeNode(String attributeValueGroup,List<AttributeValueStatusVO> attributeValueStatusVOS)
+    {
+        AttributeValueStatusVO ret = null;
+        if (CollectionUtils.isNotEmpty(attributeValueStatusVOS)&&ret==null) {
+            for (AttributeValueStatusVO attributeValueStatusVO : attributeValueStatusVOS) {
+                if (attributeValueGroup.equals(attributeValueStatusVO.getValuePath())) {
+                    ret = attributeValueStatusVO;
+                    break;
+                } else {
+                    ret = getAttributeValueTreeNode( attributeValueGroup, attributeValueStatusVO.getChildren());
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * 填充属性值树结构
+     * @param parent
+     */
+    public void fillAttributeValueTree(AttributeValueStatusVO parent,int hier,String[][] attributeValueArray)
+    {
+        if(parent.getChildren()==null)
+        {
+            parent.setChildren(new LinkedList<>());
+        }
+        for(int s=0;s<attributeValueArray[hier].length;s++)
+        {
+            AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
+            attributeValueStatusVO.setStatus(1);
+            attributeValueStatusVO.setValue(attributeValueArray[hier][s]);
+            attributeValueStatusVO.setValuePath(parent.getValuePath()+"_"+attributeValueStatusVO.getValue());
+            if((hier+1)<attributeValueArray.length)
+            {
+                //填充这个属性值树结构
+                fillAttributeValueTree(attributeValueStatusVO,hier+1,attributeValueArray);
+            }
+            attributeValueStatusVO.setParentValuePath(parent.getValuePath());
+            parent.getChildren().add(attributeValueStatusVO);
+        }
+    }
+
+    /**
+     * 设置子节点禁用数量
+     * @param current
+     */
+    public void setAttributeValueTreeDisabledCount(AttributeValueStatusVO current,List<AttributeValueStatusVO> children,List<AttributeValueStatusVO> attributeValueStatusVOS)
+    {
+        if(CollectionUtils.isNotEmpty(children))
+        {
+            for(AttributeValueStatusVO child:children) {
+                setAttributeValueTreeDisabledCount(child,child.getChildren(),attributeValueStatusVOS);
+            }
+        }else{
+            if(current.getStatus().intValue()==0)
+            {
+                if(current.getParentValuePath()!=null) {
+                    AttributeValueStatusVO parent = getAttributeValueTreeNode(current.getParentValuePath(), attributeValueStatusVOS);
+                    if(parent!=null) {
+                        Integer disabledChildCount = parent.getDisabledChildCount();
+                        disabledChildCount++;
+                        parent.setDisabledChildCount(disabledChildCount);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    /**
+     * 设置子节点禁用状态
+     * @param current
+     */
+    public void setAttributeValueTreeDisabledStatus(AttributeValueStatusVO current)
+    {
+        if(CollectionUtils.isNotEmpty(current.getChildren()))
+        {
+            if(current.getDisabledChildCount().intValue()==current.getChildren().size())
+            {
+                current.setStatus(0);
+            }
+            for(AttributeValueStatusVO child:current.getChildren()) {
+                setAttributeValueTreeDisabledStatus(child);
+            }
         }
     }
 

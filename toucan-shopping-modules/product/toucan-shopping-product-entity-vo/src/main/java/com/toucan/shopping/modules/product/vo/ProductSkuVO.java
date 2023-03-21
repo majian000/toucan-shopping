@@ -121,6 +121,6 @@ public class ProductSkuVO  extends ProductSku {
     /**
      * 属性值状态
      */
-    private AttributeValueStatusVO[][] attributeValueStatusVOS;
+    private List<AttributeValueStatusVO> attributeValueStatusVOS;
 
 }
