@@ -238,8 +238,9 @@ public class ProductSkuController {
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
-            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
-            resultObjectVO.setData(shopProductApproveSkuVO);
+            ProductSkuVO shopProductSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
+            shopProductSkuVO.setSkuBuyStatusList(productSkuService.queryShelvesBuyStatus(shopProductSkuVO.getShopProductId()));
+            resultObjectVO.setData(shopProductSkuVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -330,8 +331,9 @@ public class ProductSkuController {
             }
 
             ProductSku productSku = productSkuService.queryFirstOneByShopProductId(shopProductVO.getId());
-            ProductSkuVO shopProductApproveSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
-            resultObjectVO.setData(shopProductApproveSkuVO);
+            ProductSkuVO productSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
+            productSkuVO.setSkuBuyStatusList(productSkuService.queryShelvesBuyStatus(productSkuVO.getShopProductId()));
+            resultObjectVO.setData(productSkuVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -88,7 +88,20 @@ function drawAttributeList(productVO)
             rowIndex++;
         }
         $(".attributeList").append(attributeHtml);
+        disabledAttribute(productVO);
         bindAttributeCheckboxEvent();
+    }
+}
+
+/**
+ * 将库存为0的和下架的禁用
+ * @param productVO
+ */
+function disabledAttribute(productVO)
+{
+    var attChks = $(".att_chks");
+    if(attChks!=null&&attChks.length>0)
+    {
     }
 }
 

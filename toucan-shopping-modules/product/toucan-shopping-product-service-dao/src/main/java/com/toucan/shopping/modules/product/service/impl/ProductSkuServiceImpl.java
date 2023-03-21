@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.mapper.ProductSkuMapper;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
+import com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -165,5 +166,10 @@ public class ProductSkuServiceImpl implements ProductSkuService {
             return new ArrayList();
         }
         return productSkuMapper.queryShelvesListByIdList(idList);
+    }
+
+    @Override
+    public List<ProductSkuBuyStatusVO> queryShelvesBuyStatus(Long shopProductId) {
+        return productSkuMapper.queryShelvesBuyStatus(shopProductId);
     }
 }

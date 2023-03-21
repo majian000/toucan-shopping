@@ -1651,6 +1651,10 @@ ul.brand li .name span{
 .des_choice ul li.checked{
 	height:26px; line-height:26px; padding:0 14px; overflow:hidden; border:2px solid #ff4e00;
 }
+
+.des_choice ul li.disabled{
+	height:26px; line-height:26px; padding:0 14px; overflow:hidden; border:2px solid #9f9f9f;
+}
 .des_choice ul li.checked .ch_img{
 	display:block;
 }

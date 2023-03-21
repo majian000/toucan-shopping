@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -95,5 +96,7 @@ public interface ProductSkuMapper {
      * @return
      */
     Long queryShelvesCountByShopProductId(Long shopProductId);
+
+    List<ProductSkuBuyStatusVO> queryShelvesBuyStatus(Long shopProductId);
 
 }

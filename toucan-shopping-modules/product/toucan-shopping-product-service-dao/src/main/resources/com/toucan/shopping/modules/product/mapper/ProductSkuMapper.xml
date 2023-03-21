@@ -35,6 +35,13 @@
 
     </resultMap>
 
+    <resultMap id="productSkuBuyStatusVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO">
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="attribute_value_group" jdbcType="VARCHAR" property="attributeValueGroup" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
+    </resultMap>
+
     <resultMap id="productSkuVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuVO" extends="productSkuMap">
 
     </resultMap>
@@ -309,4 +316,7 @@
     </select>
 
 
+    <select id="queryShelvesBuyStatus" resultMap="productSkuBuyStatusVOMap">
+      select t.id,t.attribute_value_group,t.stock_num,t.status from t_product_sku t where   t.delete_status=0   and t.shop_product_id = #{shopProductId}
+    </select>
 </mapper>

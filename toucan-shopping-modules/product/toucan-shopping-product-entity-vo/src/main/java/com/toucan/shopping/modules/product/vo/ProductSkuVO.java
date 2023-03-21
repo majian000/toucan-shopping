@@ -25,6 +25,7 @@ public class ProductSkuVO  extends ProductSku {
     private Map<String,String> attributeMap;
 
 
+
     /**
      * SKU商品主图
      */
@@ -112,6 +113,14 @@ public class ProductSkuVO  extends ProductSku {
      */
     private String descriptionImgFilePath;
 
+    /**
+     * 商品购买状态
+     */
+    private List<ProductSkuBuyStatusVO> skuBuyStatusList;
 
+    /**
+     * 属性值状态
+     */
+    private AttributeValueStatusVO[][] attributeValueStatusVOS;
 
 }
