@@ -3,7 +3,6 @@ package com.toucan.shopping.cloud.apps.web.controller.product;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
-import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -12,6 +11,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuServic
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,26 +128,26 @@ public class ProductApiController {
 
             //判断属性节点是否可以点击
             boolean isDisabled;
-            List<ProductSkuBuyStatusVO> skuBuyStatusVOS = productSkuVO.getSkuBuyStatusList();
+            List<ProductSkuStatusVO> skuBuyStatusVOS = productSkuVO.getSkuStatusList();
             for (int i = 0; i < skuBuyStatusVOS.size(); i++) {
-                ProductSkuBuyStatusVO productSkuBuyStatusVO = skuBuyStatusVOS.get(i);
+                ProductSkuStatusVO productSkuStatusVO = skuBuyStatusVOS.get(i);
                 isDisabled = false;
 
-                if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
+                if (productSkuStatusVO.getStatus() != null && productSkuStatusVO.getStatus().intValue() == 0) {
                     isDisabled = true;
                 }
-                if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
+                if (productSkuStatusVO.getStockNum() != null && productSkuStatusVO.getStockNum().intValue() <= 0) {
                     isDisabled = true;
                 }
                 if(isDisabled) {
-                    AttributeValueStatusVO attributeValueStatusVO = getAttributeValueTreeNode(productSkuBuyStatusVO.getAttributeValueGroup(), attributeValueStatusVOS);
+                    AttributeValueStatusVO attributeValueStatusVO = getAttributeValueTreeNode(productSkuStatusVO.getAttributeValueGroup(), attributeValueStatusVOS);
                     if (attributeValueStatusVO != null) {
                         //设置禁用
-                        if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
+                        if (productSkuStatusVO.getStatus() != null && productSkuStatusVO.getStatus().intValue() == 0) {
                             attributeValueStatusVO.setStatus(0);
                             attributeValueStatusVO.setStatusCode(2);
                         }
-                        if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
+                        if (productSkuStatusVO.getStockNum() != null && productSkuStatusVO.getStockNum().intValue() <= 0) {
                             attributeValueStatusVO.setStatus(0);
                             attributeValueStatusVO.setStatusCode(1);
                         }
@@ -167,7 +167,7 @@ public class ProductApiController {
             }
 
             productSkuVO.setAttributeValueStatusVOS(attributeValueStatusVOS);
-            productSkuVO.setSkuBuyStatusList(null);
+            productSkuVO.setSkuStatusList(null);
         }
     }
 
@@ -332,6 +332,10 @@ public class ProductApiController {
         try {
             ShopProductVO queryShopProduct = new ShopProductVO();
             queryShopProduct.setId(shopProductVO.getId());;
+            if(StringUtils.isNotEmpty(shopProductVO.getAttrPath()))
+            {
+                queryShopProduct.setAttrPath(shopProductVO.getAttrPath());
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
             ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFront(requestJsonVO);
             if(resultObjectVO.isSuccess())

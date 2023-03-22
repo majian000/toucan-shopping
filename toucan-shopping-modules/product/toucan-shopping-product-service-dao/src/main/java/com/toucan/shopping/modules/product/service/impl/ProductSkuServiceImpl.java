@@ -5,14 +5,13 @@ import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.mapper.ProductSkuMapper;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
-import com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +97,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
+    public ProductSkuVO queryFirstOneByShopProductIdAndAttrPath(Long shopProductId,String attrPath) {
+        return productSkuMapper.queryFirstOneByShopProductIdAndAttrPath(shopProductId,attrPath);
+    }
+
+    @Override
     public ProductSkuVO queryFirstOneByShopProductIdAndStatus(Long shopProductId,int status){
         return productSkuMapper.queryFirstOneByShopProductIdAndStatus(shopProductId,status);
     }
@@ -169,7 +173,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
-    public List<ProductSkuBuyStatusVO> queryShelvesBuyStatus(Long shopProductId) {
+    public List<ProductSkuStatusVO> queryShelvesBuyStatus(Long shopProductId) {
         return productSkuMapper.queryShelvesBuyStatus(shopProductId);
     }
 }

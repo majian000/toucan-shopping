@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 商品购买状态
+ * 商品状态
  */
 @Data
-public class ProductSkuBuyStatusVO {
+public class ProductSkuStatusVO {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

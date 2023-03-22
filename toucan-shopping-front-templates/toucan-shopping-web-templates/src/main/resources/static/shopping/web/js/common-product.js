@@ -61,9 +61,13 @@ function getPreviewType()
 function getShopProductPreviewType()
 {
     var urlParam = window.location.href;
-    if(urlParam.indexOf("/pid/")!=-1)
+    if(urlParam.indexOf("/pid/")!=-1) //查询第一个SKU
     {
         return 1;
+    }
+    if(urlParam.indexOf("/attrPath/")!=-1) //指定属性查询
+    {
+        return 3;
     }
     return 2;
 }

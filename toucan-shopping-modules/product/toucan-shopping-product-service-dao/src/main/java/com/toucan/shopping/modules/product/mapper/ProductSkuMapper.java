@@ -2,7 +2,7 @@ package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
-import com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -46,6 +46,9 @@ public interface ProductSkuMapper {
 
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
 
+    ProductSkuVO queryFirstOneByShopProductIdAndAttrPath(Long shopProductId,String attrPath);
+
+    ProductSkuVO queryFirstOneByShopProductId(Long shopProductId,String attrPath);
     ProductSkuVO queryFirstOneByShopProductIdAndStatus(Long shopProductId,int status);
 
     int updateStatusByShopProductId(Long shopProductId, Long shopId, Integer status);
@@ -97,6 +100,6 @@ public interface ProductSkuMapper {
      */
     Long queryShelvesCountByShopProductId(Long shopProductId);
 
-    List<ProductSkuBuyStatusVO> queryShelvesBuyStatus(Long shopProductId);
+    List<ProductSkuStatusVO> queryShelvesBuyStatus(Long shopProductId);
 
 }

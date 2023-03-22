@@ -5,12 +5,11 @@ package com.toucan.shopping.modules.product.service;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
-import com.toucan.shopping.modules.product.vo.ProductSkuBuyStatusVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public interface ProductSkuService {
 
@@ -86,6 +85,12 @@ public interface ProductSkuService {
      * @param shopProductId
      * @return
      */
+    ProductSkuVO queryFirstOneByShopProductIdAndAttrPath(Long shopProductId,String attrPath);
+    /**
+     * 根据店铺商品ID查询一个商品
+     * @param shopProductId
+     * @return
+     */
     ProductSkuVO queryFirstOneByShopProductIdAndStatus(Long shopProductId,int status);
     /**
      * 查询上架商品数量
@@ -141,5 +146,5 @@ public interface ProductSkuService {
      * @param shopProductId
      * @return
      */
-    List<ProductSkuBuyStatusVO> queryShelvesBuyStatus(Long shopProductId);
+    List<ProductSkuStatusVO> queryShelvesBuyStatus(Long shopProductId);
 }

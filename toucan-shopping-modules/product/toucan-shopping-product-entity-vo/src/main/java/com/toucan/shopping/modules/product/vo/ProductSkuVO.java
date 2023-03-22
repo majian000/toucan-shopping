@@ -1,12 +1,10 @@
 package com.toucan.shopping.modules.product.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +114,7 @@ public class ProductSkuVO  extends ProductSku {
     /**
      * 商品购买状态
      */
-    private List<ProductSkuBuyStatusVO> skuBuyStatusList;
+    private List<ProductSkuStatusVO> skuStatusList;
 
     /**
      * 属性值状态

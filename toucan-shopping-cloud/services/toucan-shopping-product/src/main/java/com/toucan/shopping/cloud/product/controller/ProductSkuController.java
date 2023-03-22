@@ -14,7 +14,6 @@ import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.redis.ShopProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
-import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -239,7 +237,7 @@ public class ProductSkuController {
                 return resultObjectVO;
             }
             ProductSkuVO shopProductSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
-            shopProductSkuVO.setSkuBuyStatusList(productSkuService.queryShelvesBuyStatus(shopProductSkuVO.getShopProductId()));
+            shopProductSkuVO.setSkuStatusList(productSkuService.queryShelvesBuyStatus(shopProductSkuVO.getShopProductId()));
             resultObjectVO.setData(shopProductSkuVO);
         }catch(Exception e)
         {
@@ -330,9 +328,9 @@ public class ProductSkuController {
                 return resultObjectVO;
             }
 
-            ProductSku productSku = productSkuService.queryFirstOneByShopProductId(shopProductVO.getId());
+            ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndAttrPath(shopProductVO.getId(),shopProductVO.getAttrPath());
             ProductSkuVO productSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
-            productSkuVO.setSkuBuyStatusList(productSkuService.queryShelvesBuyStatus(productSkuVO.getShopProductId()));
+            productSkuVO.setSkuStatusList(productSkuService.queryShelvesBuyStatus(productSkuVO.getShopProductId()));
             resultObjectVO.setData(productSkuVO);
         }catch(Exception e)
         {

@@ -8,11 +8,15 @@ $(function(){
     var ptype = $("#ptype").val();
     if(id!=null&&id!="") {
         var type= getShopProductPreviewType();
+        var params = {"id": id};
         var requestPath ="";
         if(ptype=="detail") {
             requestPath = basePath + "/api/product/detail";
             if (type == 1) {
                 requestPath = basePath + "/api/product/detail/pid";
+            }else if (type == 3) {
+                requestPath = basePath + "/api/product/detail/pid";
+                params.attrPath=$("#attrPath").val();
             }
         }else if(ptype=="preview"){
             requestPath = basePath + "/api/product/preview";
@@ -25,7 +29,7 @@ $(function(){
             type: "POST",
             url: requestPath,
             contentType: "application/json;charset=utf-8",
-            data: JSON.stringify({"id": id}),
+            data: JSON.stringify(params),
             dataType: "json",
             success: function (result) {
                 if (result.code <= 0) {
@@ -220,7 +224,7 @@ function bindAttributeCheckboxEvent()
                         return;
                     }
                 }
-                window.location.href = basePath+"/page/product/detail/pid/"+g_productVo.shopProductId;
+                formpost(basePath+"/page/product/detail/attrPath/"+g_productVo.shopProductId,{attrPath:attributeValueGroup});
                 return;
             }
         }
