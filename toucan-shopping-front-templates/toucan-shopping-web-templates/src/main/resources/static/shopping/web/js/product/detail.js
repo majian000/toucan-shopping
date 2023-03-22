@@ -72,6 +72,7 @@ function drawAttributeList(productVO)
             heriCount++;
         }
         var heri=0;
+        var vpath="";
         for (var attributeKey in attributesObject) {
             attributeHtml+="<div class=\"des_choice\">";
             attributeHtml+=" <span class=\"fl\">"+attributeKey+"：</span>";
@@ -79,11 +80,17 @@ function drawAttributeList(productVO)
             var attributeValues= attributesObject[attributeKey];
             if(attributeValues!=null&&attributeValues.length>0)
             {
+                vpath="";
                 for(var j=0;j<attributeValues.length;j++)
                 {
+                    vpath=parentPath+attributeValues[j];
+                    if(heri==0)
+                    {
+                        vpath=attributeValues[j];
+                    }
                     if(attributeValueGroupArray[skuAttributeValuePos]==attributeValues[j])
                     {
-                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+(parentPath+attributeValues[j])+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
                         if(heri+1<heriCount) {
                             parentPath += attributeValues[j];
                             if(parentPath!="")
@@ -92,7 +99,7 @@ function drawAttributeList(productVO)
                             }
                         }
                     }else{
-                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+(parentPath+attributeValues[j])+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
                     }
                 }
             }
@@ -127,6 +134,7 @@ function disabledAttribute(productVO)
             {
                 $(attrObj).unbind();
                 $(attrObj).removeClass("att_chks");
+                $(attrObj).removeClass("checked");
                 $(attrObj).addClass("disabled");
                 if(attrNode.statusCode==1)
                 {
@@ -208,15 +216,8 @@ function bindAttributeCheckboxEvent()
                         return;
                     }
                 }
-
-                if(preSelectAttrObj!=null) {
-                    attCheckRowObjects.removeClass("checked");
-                    $(preSelectAttrObj).addClass("checked");
-                }
-                $.message({
-                    message: "该商品已下架",
-                    type: 'error'
-                });
+                window.location.href = basePath+"/page/product/detail/pid/"+g_productVo.shopProductId;
+                return;
             }
         }
     });
