@@ -145,9 +145,11 @@ public class ProductApiController {
                         //设置禁用
                         if (productSkuBuyStatusVO.getStatus() != null && productSkuBuyStatusVO.getStatus().intValue() == 0) {
                             attributeValueStatusVO.setStatus(0);
+                            attributeValueStatusVO.setStatusCode(2);
                         }
                         if (productSkuBuyStatusVO.getStockNum() != null && productSkuBuyStatusVO.getStockNum().intValue() <= 0) {
                             attributeValueStatusVO.setStatus(0);
+                            attributeValueStatusVO.setStatusCode(1);
                         }
                     }
                 }

@@ -65,6 +65,13 @@ function drawAttributeList(productVO)
             attributeValueGroupArray = new Array();
             attributeValueGroupArray.push(productVO.attributeValueGroup);
         }
+        var parentPath="";
+        var heriCount = 0 ;
+        //拿到属性层数
+        for (var attributeKey in attributesObject) {
+            heriCount++;
+        }
+        var heri=0;
         for (var attributeKey in attributesObject) {
             attributeHtml+="<div class=\"des_choice\">";
             attributeHtml+=" <span class=\"fl\">"+attributeKey+"：</span>";
@@ -76,12 +83,20 @@ function drawAttributeList(productVO)
                 {
                     if(attributeValueGroupArray[skuAttributeValuePos]==attributeValues[j])
                     {
-                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+(parentPath+attributeValues[j])+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        if(heri+1<heriCount) {
+                            parentPath += attributeValues[j];
+                            if(parentPath!="")
+                            {
+                                parentPath+="_";
+                            }
+                        }
                     }else{
-                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+(parentPath+attributeValues[j])+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
                     }
                 }
             }
+            heri++;
             attributeHtml+=" </ul>";
             attributeHtml+="</div>";
             skuAttributeValuePos++;
@@ -102,7 +117,49 @@ function disabledAttribute(productVO)
     var attChks = $(".att_chks");
     if(attChks!=null&&attChks.length>0)
     {
+        for(var i=0;i<attChks.length;i++)
+        {
+            var attrObj = attChks[i];
+            var valuePath = $(attrObj).attr("attr-vpath");
+            var attrText = $(attrObj).text();
+            var attrNode = getAttributeNode(valuePath,productVO.attributeValueStatusVOS);
+            if(attrNode!=null&&attrNode.status==0)
+            {
+                $(attrObj).unbind();
+                $(attrObj).removeClass("att_chks");
+                $(attrObj).addClass("disabled");
+                if(attrNode.statusCode==1)
+                {
+                    $(attrObj).text(attrText+" 已售罄");
+                }else if(attrNode.statusCode==2)
+                {
+                    $(attrObj).text(attrText+" 已下架");
+                }
+            }
+        }
     }
+}
+
+/**
+ * 拿到属性节点状态对象
+ * @param valuePath
+ * @param attributeValueTreeList
+ * @returns {*}
+ */
+function getAttributeNode(valuePath,attributeValueTreeList)
+{
+    var ret = null;
+    if (attributeValueTreeList!=null&&attributeValueTreeList.length>0&&ret==null) {
+        for (var i=0;i<attributeValueTreeList.length;i++) {
+            if (valuePath==attributeValueTreeList[i].valuePath) {
+                ret = attributeValueTreeList[i];
+                break;
+            } else {
+                ret = getAttributeNode(valuePath, attributeValueTreeList[i].children);
+            }
+        }
+    }
+    return ret;
 }
 
 function bindAttributeCheckboxEvent()

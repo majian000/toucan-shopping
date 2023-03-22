@@ -16,6 +16,8 @@ public class AttributeValueStatusVO {
 
     private Integer status = 0; //0:禁用 1:启用
 
+    private Integer statusCode = 0; //1:已售罄 2:已下架
+
     private Integer disabledChildCount=0; //禁用子节点数量
 
     private String parentValuePath; //父属性路径
