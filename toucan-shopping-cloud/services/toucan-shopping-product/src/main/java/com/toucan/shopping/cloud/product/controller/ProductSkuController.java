@@ -329,9 +329,40 @@ public class ProductSkuController {
             }
 
             ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndAttrPath(shopProductVO.getId(),shopProductVO.getAttrPath());
-            ProductSkuVO productSkuVO =queryProductSkuByCacheOrDB(productSku.getId(),1);
-            productSkuVO.setSkuStatusList(productSkuService.queryShelvesBuyStatus(productSkuVO.getShopProductId()));
-            resultObjectVO.setData(productSkuVO);
+            //如果当前属性路径没有商品,在往上查询,直到返回一个商品
+            if(productSku==null)
+            {
+                if(StringUtils.isNotEmpty(shopProductVO.getAttrPath()))
+                {
+                    String[] attrPaths = shopProductVO.getAttrPath().split("_");
+                    int loopCount = 1; //减去上面的那次查询
+                    int maxQueryCount = attrPaths.length-1;
+                    String newAttrPath;
+                    while(maxQueryCount>0) {
+                        newAttrPath="";
+                        //开始生成新的属性值路径
+                        for (int i = 0; i < attrPaths.length - loopCount; i++) {
+                            newAttrPath += attrPaths[i];
+                            if (i + 1 < attrPaths.length - loopCount) {
+                                newAttrPath += "_";
+                            }
+                        }
+                        loopCount++;
+                        productSku = productSkuService.queryFirstOneByShopProductIdAndAttrPath(shopProductVO.getId(),newAttrPath);
+                        if(productSku!=null){
+                            break;
+                        }
+                        maxQueryCount--;
+                    }
+                }
+            }
+            if(productSku!=null) {
+                ProductSkuVO productSkuVO = queryProductSkuByCacheOrDB(productSku.getId(), 1);
+                if(productSkuVO!=null) {
+                    productSkuVO.setSkuStatusList(productSkuService.queryShelvesBuyStatus(productSkuVO.getShopProductId()));
+                    resultObjectVO.setData(productSkuVO);
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

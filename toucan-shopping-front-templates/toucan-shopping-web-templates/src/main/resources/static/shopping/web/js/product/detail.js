@@ -219,6 +219,16 @@ function bindAttributeCheckboxEvent()
                     var sku = g_productVo.productSkuVOList[p];
                     if(sku.attributeValueGroup==attributeValueGroup)
                     {
+                        //已下架
+                        if(sku.status==0)
+                        {
+                            break;
+                        }
+                        //已售罄
+                        if(sku.stockNum<=0)
+                        {
+                            break;
+                        }
                         var currentLocation=getShopProductPreviewHrefIngoreId();
                         window.location.href = currentLocation+"/"+sku.id;
                         return;

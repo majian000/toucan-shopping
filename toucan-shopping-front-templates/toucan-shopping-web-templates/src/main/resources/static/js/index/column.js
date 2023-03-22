@@ -99,7 +99,7 @@ $(function(){
                                             {
                                                 targetBlankHtml = " target=\"_blank\"";
                                             }
-                                            columnsHtml+="<a href=\""+leftLabel.clickPath+"\" "+targetBlankHtml+">"+leftLabel.labelName+"</a>";
+                                            columnsHtml+="<a href=\""+leftLabel.clickPath+"\" "+targetBlankHtml+" title=\""+leftLabel.labelName+"\">"+leftLabel.labelName+"</a>";
                                             if(p+1<column.leftLabels.length)
                                             {
                                                 columnsHtml+="&nbsp; &nbsp; &nbsp;";
@@ -124,7 +124,7 @@ $(function(){
                                             targetBlankHtml = " target=\"_blank\"";
                                         }
                                         columnsHtml += "            <li>\n" +
-                                            "                <div class=\"name\"><a href=\""+recommendProduct.clickPath+"\" "+targetBlankHtml+">"+recommendProduct.productName+"</a></div>\n" +
+                                            "                <div class=\"name\"><a href=\""+recommendProduct.clickPath+"\" "+targetBlankHtml+" title=\""+recommendProduct.productName+"\">"+recommendProduct.productName+"</a></div>\n" +
                                             "                <div class=\"price\">\n" +
                                             "                    <font>￥<span>"+recommendProduct.productPrice+"</span></font> &nbsp;\n" +
                                             "                </div>\n" +
