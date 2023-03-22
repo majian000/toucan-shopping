@@ -21,6 +21,10 @@ function getApprovePreviewHrefIngoreId()
     {
         currentLocation = currentLocation.substring(0,currentLocation.indexOf("/paid"));
     }
+    if(currentLocation.indexOf("/attrPath")!=-1)
+    {
+        currentLocation = currentLocation.substring(0,currentLocation.indexOf("/attrPath"));
+    }
     return currentLocation;
 }
 
@@ -31,6 +35,10 @@ function getShopProductPreviewHrefIngoreId()
     if(currentLocation.indexOf("/pid")!=-1)
     {
         currentLocation = currentLocation.substring(0,currentLocation.indexOf("/pid"));
+    }
+    if(currentLocation.indexOf("/attrPath")!=-1)
+    {
+        currentLocation = currentLocation.substring(0,currentLocation.indexOf("/attrPath"));
     }
     return currentLocation;
 }
