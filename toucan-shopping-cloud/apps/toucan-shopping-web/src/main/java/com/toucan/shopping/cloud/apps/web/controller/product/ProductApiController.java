@@ -187,6 +187,10 @@ public class ProductApiController {
                     break;
                 } else {
                     ret = getAttributeValueTreeNode( attributeValueGroup, attributeValueStatusVO.getChildren());
+                    if(ret!=null)
+                    {
+                        return ret;
+                    }
                 }
             }
         }

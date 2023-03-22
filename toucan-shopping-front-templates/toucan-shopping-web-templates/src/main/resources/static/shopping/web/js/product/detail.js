@@ -164,6 +164,10 @@ function getAttributeNode(valuePath,attributeValueTreeList)
                 break;
             } else {
                 ret = getAttributeNode(valuePath, attributeValueTreeList[i].children);
+                if(ret!=null)
+                {
+                    return ret;
+                }
             }
         }
     }
