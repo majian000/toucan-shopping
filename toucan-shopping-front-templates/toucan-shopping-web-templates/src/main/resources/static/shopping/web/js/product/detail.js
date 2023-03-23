@@ -39,13 +39,13 @@ $(function(){
                     });
                     return ;
                 }
-                if(result.data==null)
-                {
-                    $.message({
-                        message: "该商品已下架",
-                        type: 'error'
-                    });
-                }
+                // if(result.data==null)
+                // {
+                //     $.message({
+                //         message: "该商品已下架",
+                //         type: 'error'
+                //     });
+                // }
                 drawProductPage(result.data);
             },
             error: function (result) {
@@ -69,39 +69,40 @@ function drawAttributeList(productVO)
             attributeValueGroupArray = new Array();
             attributeValueGroupArray.push(productVO.attributeValueGroup);
         }
-        var parentPath="";
         var heriCount = 0 ;
         //拿到属性层数
         for (var attributeKey in attributesObject) {
             heriCount++;
         }
+        var selectAttributeArray=new Array();
+
         var heri=0;
         var vpath="";
+        var parentAttPath="";
         for (var attributeKey in attributesObject) {
             attributeHtml+="<div class=\"des_choice\">";
             attributeHtml+=" <span class=\"fl\">"+attributeKey+"：</span>";
             attributeHtml+=" <ul>";
             var attributeValues= attributesObject[attributeKey];
+            parentAttPath="";
+            for(var s=0;s<selectAttributeArray.length;s++)
+            {
+                if(selectAttributeArray[s].heri<heri)
+                {
+                    parentAttPath+=selectAttributeArray[s].attributeValue;
+                    parentAttPath+="_";
+                }
+            }
             if(attributeValues!=null&&attributeValues.length>0)
             {
                 vpath="";
                 for(var j=0;j<attributeValues.length;j++)
                 {
-                    vpath=parentPath+attributeValues[j];
-                    if(heri==0)
-                    {
-                        vpath=attributeValues[j];
-                    }
+                    vpath = parentAttPath+attributeValues[j];
                     if(attributeValueGroupArray[skuAttributeValuePos]==attributeValues[j])
                     {
                         attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
-                        if(heri+1<heriCount) {
-                            parentPath += attributeValues[j];
-                            if(parentPath!="")
-                            {
-                                parentPath+="_";
-                            }
-                        }
+                        selectAttributeArray.push({attributeValue:attributeValues[j],heri:heri});
                     }else{
                         attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
                     }

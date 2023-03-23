@@ -233,6 +233,15 @@ public class ProductApiController {
         {
             for(AttributeValueStatusVO child:children) {
                 setAttributeValueTreeDisabledCount(child,child.getChildren(),attributeValueStatusVOS);
+                if(child.getParentValuePath()!=null&&child.getDisabledChildCount().intValue()>0
+                        &&child.getDisabledChildCount().intValue()==child.getChildren().size()) {
+                    AttributeValueStatusVO parent = getAttributeValueTreeNode(child.getParentValuePath(), attributeValueStatusVOS);
+                    if(parent!=null) {
+                        Integer disabledChildCount = parent.getDisabledChildCount();
+                        disabledChildCount++;
+                        parent.setDisabledChildCount(disabledChildCount);
+                    }
+                }
             }
         }else{
             if(current.getStatus().intValue()==0)
