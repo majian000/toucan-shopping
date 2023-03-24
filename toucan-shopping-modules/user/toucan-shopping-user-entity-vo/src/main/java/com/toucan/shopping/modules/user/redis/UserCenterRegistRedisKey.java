@@ -42,4 +42,34 @@ public class UserCenterRegistRedisKey {
     }
 
 
+    /**
+     * 绑定邮箱锁
+     * @param userId
+     * @return
+     */
+    public static String getBindEmailLock(String userId)
+    {
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_BIND_EMAIL_"+userId+"_LOCK";
+    }
+
+    /**
+     * 绑定手机号锁
+     * @param userId
+     * @return
+     */
+    public static String getBindMobilePhoneLock(String userId)
+    {
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_BIND_MOBILE_PHONE_"+userId+"_LOCK";
+    }
+
+
+    /**
+     * 绑定用户名锁
+     * @param userId
+     * @return
+     */
+    public static String getBindUserNameLock(String userId)
+    {
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_BIND_USERNAME_"+userId+"_LOCK";
+    }
 }

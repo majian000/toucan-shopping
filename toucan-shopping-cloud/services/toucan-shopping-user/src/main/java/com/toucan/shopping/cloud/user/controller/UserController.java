@@ -435,7 +435,7 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要关联的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
 
@@ -448,7 +448,7 @@ public class UserController {
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getUsername()))
@@ -473,7 +473,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindUserNameLock(userRegistVO.getUsername()), userRegistVO.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
@@ -538,7 +538,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("关联失败,请稍后重试");
         }finally{
-            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getBindUserNameLock(userRegistVO.getUsername()), userRegistVO.getUsername());
         }
         return resultObjectVO;
     }
@@ -616,7 +616,7 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要关联的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
 
@@ -629,7 +629,7 @@ public class UserController {
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getEmail()))
@@ -654,7 +654,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
@@ -720,12 +720,79 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("绑定失败,请稍后重试");
         }finally{
-            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
         }
         return resultObjectVO;
     }
 
 
+    /**
+     * 更新关联邮箱
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/connect/email",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateConnectEmail(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到参数");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserBindEmailVO userBindEmailVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserBindEmailVO.class);
+        if(userBindEmailVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到参数");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userBindEmailVO.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("关联失败,请输入邮箱");
+            return resultObjectVO;
+        }
+
+        if(!EmailUtils.isEmail(userBindEmailVO.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("关联失败,邮箱格式错误");
+            return resultObjectVO;
+        }
+
+        if(userBindEmailVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
+
+        try {
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userBindEmailVO.getUserMainId())), String.valueOf(userBindEmailVO.getUserMainId()));
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("绑定失败,请稍后重试");
+        }finally{
+            skylarkLock.unLock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userBindEmailVO.getUserMainId())), String.valueOf(userBindEmailVO.getUserMainId()));
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 查询邮箱列表
@@ -2700,7 +2767,7 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要关联的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
 
@@ -2713,7 +2780,7 @@ public class UserController {
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("关联失败,没有找到参数");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
@@ -2738,7 +2805,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindMobilePhoneLock(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
@@ -2803,7 +2870,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("关联失败,请稍后重试");
         }finally{
-            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getBindMobilePhoneLock(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
         }
         return resultObjectVO;
     }

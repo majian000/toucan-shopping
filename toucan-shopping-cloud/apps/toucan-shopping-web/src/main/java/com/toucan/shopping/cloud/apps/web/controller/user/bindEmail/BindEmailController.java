@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 用户注册、用户登录
+ * 绑定邮箱
  */
 @RestController("apiBindEmailController")
 @RequestMapping("/api/user/bind/email")
