@@ -56,6 +56,8 @@ public interface UserMobilePhoneService {
 
     int updateDeleteStatus(Short deleteStatus,Long userMainId,String mobilePhone);
 
+    int updateDeleteStatusById(Short deleteStatus,Long userMainId,String mobilePhone,Long id);
+
     /**
      * 删除指定用户ID下所有关联手机号
      * @param userMainId

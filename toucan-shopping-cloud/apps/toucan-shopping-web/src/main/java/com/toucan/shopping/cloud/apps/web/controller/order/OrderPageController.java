@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.user;
+package com.toucan.shopping.cloud.apps.web.controller.order;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;

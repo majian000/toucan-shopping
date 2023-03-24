@@ -159,6 +159,14 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/bindEmail")
+    public String bindEmail(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        return "user/bindEmail/bind_email";
+    }
+
 
 
     @RequestMapping(value="/logout")

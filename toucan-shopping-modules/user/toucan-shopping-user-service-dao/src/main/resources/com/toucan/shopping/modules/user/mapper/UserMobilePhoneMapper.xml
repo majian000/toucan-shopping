@@ -153,6 +153,12 @@
     </update>
 
 
+    <update id="updateDeleteStatusById" >
+        update t_user_mobile_phone set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and mobile_phone=#{mobilePhone} and id=#{id}
+    </update>
+
+
 
     <update id="deleteByUserMainId" >
         update t_user_mobile_phone set delete_status=1  where user_main_id =#{userMainId}

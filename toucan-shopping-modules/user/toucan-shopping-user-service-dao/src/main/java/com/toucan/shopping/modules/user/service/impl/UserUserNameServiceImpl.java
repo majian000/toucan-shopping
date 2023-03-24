@@ -70,6 +70,10 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     }
 
     @Override
+    public int updateDeleteStatusById(Short deleteStatus, Long userMainId, String username,Long id) {
+        return userUserNameMapper.updateDeleteStatusById(deleteStatus,userMainId,username,id);
+    }
+    @Override
     public int deleteByUserMainId(Long userMainId) {
         return userUserNameMapper.deleteByUserMainId(userMainId);
     }

@@ -2591,3 +2591,16 @@ a.review-btn-tj{
 }
 
 
+.bindEmail-sendVC{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+.bindEmail-sendVC:hover{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}

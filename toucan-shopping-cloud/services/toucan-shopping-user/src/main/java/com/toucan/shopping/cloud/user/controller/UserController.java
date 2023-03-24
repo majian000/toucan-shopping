@@ -484,51 +484,52 @@ public class UserController {
             query.setUsername(userRegistVO.getUsername());
             List<UserUserName> userUserNames = userUserNameService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(userUserNames)) {
-                resultObjectVO.setCode(UserResultVO.FAILD);
-                resultObjectVO.setMsg("关联失败，用户名已注册!");
-            } else {
-                query = new UserUserName();
-                query.setUserMainId(userRegistVO.getUserMainId());
-                userUserNames = userUserNameService.findListByEntity(query);
-                if(CollectionUtils.isNotEmpty(userUserNames))
+                for(UserUserName userUserName:userUserNames)
                 {
-                    resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("关联失败，该用户已存在使用中用户名!");
-                }else {
-                    query.setUsername(userRegistVO.getUsername());
-                    userUserNames = userUserNameService.findListByEntityNothingDeleteStatus(query);
-                    if(CollectionUtils.isNotEmpty(userUserNames))
+                    if(userUserName.getUserMainId().longValue()==userRegistVO.getUserMainId().longValue())
                     {
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("关联失败，邮箱已经关联到该用户了!");
-                    }else {
-
-                        //保存用户和用户名关联
-                        UserUserName userUserName = new UserUserName();
-                        userUserName.setId(idGenerator.id());
-                        //设置邮箱
-                        userUserName.setUsername(userRegistVO.getUsername());
-                        //设置用户主表ID
-                        userUserName.setUserMainId(userRegistVO.getUserMainId());
-                        userUserName.setCreateDate(new Date());
-                        userUserName.setDeleteStatus((short) 0);
-
-                        int row = userUserNameService.save(userUserName);
-                        if (row < 1) {
-                            logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
-                            resultObjectVO.setCode(UserResultVO.FAILD);
-                            resultObjectVO.setMsg("关联失败,请重试!");
-                        }else{
-                            try {
-                                //刷新用户信息到登录缓存
-                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
-                            }catch(Exception e)
-                            {
-                                logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
-                                logger.warn(e.getMessage(),e);
-                            }
-                        }
+                        resultObjectVO.setMsg("绑定失败，用户名已经绑定到该用户了!");
+                        return resultObjectVO;
                     }
+                }
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，用户名已被绑定!");
+                return resultObjectVO;
+            }
+            query = new UserUserName();
+            query.setUserMainId(userRegistVO.getUserMainId());
+            userUserNames = userUserNameService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userUserNames))
+            {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，该用户已存在使用中用户名!");
+                return resultObjectVO;
+            }
+
+            //保存用户和用户名关联
+            UserUserName userUserName = new UserUserName();
+            userUserName.setId(idGenerator.id());
+            //设置用户名
+            userUserName.setUsername(userRegistVO.getUsername());
+            //设置用户主表ID
+            userUserName.setUserMainId(userRegistVO.getUserMainId());
+            userUserName.setCreateDate(new Date());
+            userUserName.setDeleteStatus((short) 0);
+
+            int row = userUserNameService.save(userUserName);
+            if (row < 1) {
+                logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("关联失败,请重试!");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
                 }
             }
         }catch(Exception e)
@@ -664,58 +665,60 @@ public class UserController {
             query.setEmail(userRegistVO.getEmail());
             List<UserEmail> userEmails = userEmailService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(userEmails)) {
-                resultObjectVO.setCode(UserResultVO.FAILD);
-                resultObjectVO.setMsg("关联失败，邮箱已注册!");
-            } else {
-                query = new UserEmail();
-                query.setUserMainId(userRegistVO.getUserMainId());
-                userEmails = userEmailService.findListByEntity(query);
-                if(CollectionUtils.isNotEmpty(userEmails))
+                for(UserEmail userEmail:userEmails)
                 {
-                    resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("关联失败，该用户已存在使用中手机号!");
-                }else {
-                    query.setEmail(userRegistVO.getEmail());
-                    userEmails = userEmailService.findListByEntityNothingDeleteStatus(query);
-                    if(CollectionUtils.isNotEmpty(userEmails))
+                    if(userEmail.getUserMainId().longValue()==userRegistVO.getUserMainId().longValue())
                     {
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("关联失败，邮箱已经关联到该用户了!");
-                    }else {
-
-                        //保存用户邮箱关联
-                        UserEmail userEmail = new UserEmail();
-                        userEmail.setId(idGenerator.id());
-                        //设置邮箱
-                        userEmail.setEmail(userRegistVO.getEmail());
-                        //设置用户主表ID
-                        userEmail.setUserMainId(userRegistVO.getUserMainId());
-                        userEmail.setCreateDate(new Date());
-                        userEmail.setDeleteStatus((short) 0);
-
-                        int row = userEmailService.save(userEmail);
-                        if (row < 1) {
-                            logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
-                            resultObjectVO.setCode(UserResultVO.FAILD);
-                            resultObjectVO.setMsg("关联失败,请重试!");
-                        }else{
-                            try {
-                                //刷新用户信息到登录缓存
-                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
-                            }catch(Exception e)
-                            {
-                                logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
-                                logger.warn(e.getMessage(),e);
-                            }
-                        }
+                        resultObjectVO.setMsg("绑定失败，邮箱已经绑定到该用户了!");
+                        return resultObjectVO;
                     }
                 }
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，邮箱已被绑定!");
+                return resultObjectVO;
             }
+            query = new UserEmail();
+            query.setUserMainId(userRegistVO.getUserMainId());
+            userEmails = userEmailService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userEmails))
+            {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，该用户已存在使用中邮箱!");
+                return resultObjectVO;
+            }
+
+            //保存用户邮箱绑定
+            UserEmail userEmail = new UserEmail();
+            userEmail.setId(idGenerator.id());
+            //设置邮箱
+            userEmail.setEmail(userRegistVO.getEmail());
+            //设置用户主表ID
+            userEmail.setUserMainId(userRegistVO.getUserMainId());
+            userEmail.setCreateDate(new Date());
+            userEmail.setDeleteStatus((short) 0);
+
+            int row = userEmailService.save(userEmail);
+            if (row < 1) {
+                logger.warn("绑定邮箱失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败,请重试!");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("关联失败,请稍后重试");
+            resultObjectVO.setMsg("绑定失败,请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
         }
@@ -2174,7 +2177,7 @@ public class UserController {
      */
     @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO disabledEnabledMobilePhone(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -2184,23 +2187,19 @@ public class UserController {
         }
 
         try {
-            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
-            if(entity.getUserMainId()==null)
+            UserMobilePhoneVO queryUserMobile = JSONObject.parseObject(requestVo.getEntityJson(),UserMobilePhoneVO.class);
+            if(queryUserMobile.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到ID");
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(entity.getMobilePhone()))
+            if(StringUtils.isEmpty(queryUserMobile.getMobilePhone()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到手机号");
                 return resultObjectVO;
             }
-
-            UserMobilePhone queryUserMobile = new UserMobilePhone();
-            queryUserMobile.setUserMainId(entity.getUserMainId());
-            queryUserMobile.setMobilePhone(entity.getMobilePhone());
 
             List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(queryUserMobile);
             if(CollectionUtils.isNotEmpty(userMobilePhones)) {
@@ -2209,17 +2208,18 @@ public class UserController {
                 if(userMobilePhones.get(0).getDeleteStatus().shortValue()==0)
                 {
                     //禁用
-                    userMobilePhoneService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getMobilePhone());
+                    userMobilePhoneService.updateDeleteStatusById((short) 1, queryUserMobile.getUserMainId(),queryUserMobile.getMobilePhone(),queryUserMobile.getId());
                 }else{
 
                     //查询当前手机号关联用户列表,判断手机号是否已经有其他人使用了
-                    queryUserMobile.setUserMainId(null);
-                    userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobile);
+                    UserMobilePhone queryExists = new UserMobilePhone();
+                    queryExists.setMobilePhone(queryUserMobile.getMobilePhone());
+                    userMobilePhones = userMobilePhoneService.findListByEntity(queryExists);
                     if(CollectionUtils.isNotEmpty(userMobilePhones))
                     {
                         for(UserMobilePhone userMobilePhone:userMobilePhones)
                         {
-                            if(userMobilePhone.getUserMainId()!=entity.getUserMainId())
+                            if(userMobilePhone.getUserMainId().longValue()!=queryUserMobile.getUserMainId().longValue())
                             {
                                 resultObjectVO.setCode(ResultVO.FAILD);
                                 resultObjectVO.setMsg("操作失败,手机号无法启用,已经有人在使用中了");
@@ -2228,13 +2228,13 @@ public class UserController {
                         }
                     }
                     //禁用用户ID下所有关联手机号
-                    userMobilePhoneService.deleteByUserMainId(entity.getUserMainId());
+                    userMobilePhoneService.deleteByUserMainId(queryUserMobile.getUserMainId());
                     //启用
-                    row = userMobilePhoneService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getMobilePhone());
+                    row = userMobilePhoneService.updateDeleteStatusById((short) 0, queryUserMobile.getUserMainId(),queryUserMobile.getMobilePhone(),queryUserMobile.getId());
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(queryUserMobile.getUserMainId()), queryUserMobile.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -2244,7 +2244,7 @@ public class UserController {
 
             }
 
-            resultObjectVO.setData(entity);
+            resultObjectVO.setData(queryUserMobile);
 
         }catch(Exception e)
         {
@@ -2267,7 +2267,7 @@ public class UserController {
      */
     @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO disabledEnabledEmail(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -2277,23 +2277,20 @@ public class UserController {
         }
 
         try {
-            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
-            if(entity.getUserMainId()==null)
+            UserEmailVO queryUserEmail = JSONObject.parseObject(requestVo.getEntityJson(),UserEmailVO.class);
+            if(queryUserEmail.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到ID");
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(entity.getEmail()))
+            if(StringUtils.isEmpty(queryUserEmail.getEmail()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到邮箱");
                 return resultObjectVO;
             }
 
-            UserEmail queryUserEmail = new UserEmail();
-            queryUserEmail.setUserMainId(entity.getUserMainId());
-            queryUserEmail.setEmail(entity.getEmail());
 
             List<UserEmail> userEmails = userEmailService.findListByEntityNothingDeleteStatus(queryUserEmail);
             if(CollectionUtils.isNotEmpty(userEmails)) {
@@ -2301,17 +2298,18 @@ public class UserController {
                 if(userEmails.get(0).getDeleteStatus().shortValue()==0)
                 {
                     //禁用
-                    userEmailService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getEmail());
+                    userEmailService.updateDeleteStatusById((short) 1, queryUserEmail.getUserMainId(),queryUserEmail.getEmail(),queryUserEmail.getId());
                 }else{
 
                     //查询当前邮箱关联用户列表,判断邮箱是否已经有其他人使用了
-                    queryUserEmail.setUserMainId(null);
-                    userEmails = userEmailService.findListByEntity(queryUserEmail);
+                    UserEmail queryExists = new UserEmail();
+                    queryExists.setEmail(queryUserEmail.getEmail());
+                    userEmails = userEmailService.findListByEntity(queryExists);
                     if(CollectionUtils.isNotEmpty(userEmails))
                     {
                         for(UserEmail userEmail:userEmails)
                         {
-                            if(userEmail.getUserMainId()!=entity.getUserMainId())
+                            if(userEmail.getUserMainId().longValue()!=queryUserEmail.getUserMainId().longValue())
                             {
                                 resultObjectVO.setCode(ResultVO.FAILD);
                                 resultObjectVO.setMsg("操作失败,邮箱无法启用,已经有人在使用中了");
@@ -2320,13 +2318,13 @@ public class UserController {
                         }
                     }
                     //禁用用户ID下所有关联邮箱
-                    userEmailService.deleteByUserMainId(entity.getUserMainId());
+                    userEmailService.deleteByUserMainId(queryUserEmail.getUserMainId());
                     //启用
-                    row = userEmailService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getEmail());
+                    row = userEmailService.updateDeleteStatusById((short) 0, queryUserEmail.getUserMainId(),queryUserEmail.getEmail(),queryUserEmail.getId());
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(queryUserEmail.getUserMainId()), queryUserEmail.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -2337,7 +2335,7 @@ public class UserController {
             }
 
 
-            resultObjectVO.setData(entity);
+            resultObjectVO.setData(queryUserEmail);
 
         }catch(Exception e)
         {
@@ -2370,23 +2368,20 @@ public class UserController {
         }
 
         try {
-            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
-            if(entity.getUserMainId()==null)
+            UserUserNameVO queryUsername = JSONObject.parseObject(requestVo.getEntityJson(),UserUserNameVO.class);
+            if(queryUsername.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到ID");
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(entity.getUsername()))
+            if(StringUtils.isEmpty(queryUsername.getUsername()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("操作失败,没有找到用户名");
                 return resultObjectVO;
             }
 
-            UserUserName queryUsername = new UserUserName();
-            queryUsername.setUserMainId(entity.getUserMainId());
-            queryUsername.setUsername(entity.getUsername());
 
             List<UserUserName> userUserNames = userUserNameService.findListByEntityNothingDeleteStatus(queryUsername);
             if(CollectionUtils.isNotEmpty(userUserNames)) {
@@ -2395,17 +2390,18 @@ public class UserController {
                 if(userUserNames.get(0).getDeleteStatus().shortValue()==0)
                 {
                     //禁用
-                    userUserNameService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getUsername());
+                    userUserNameService.updateDeleteStatusById((short) 1, queryUsername.getUserMainId(),queryUsername.getUsername(),queryUsername.getId());
                 }else{
 
                     //查询当前邮箱关联用户列表,判断邮箱是否已经有其他人使用了
-                    queryUsername.setUserMainId(null);
-                    userUserNames = userUserNameService.findListByEntity(queryUsername);
+                    UserUserName queryExists = new UserUserName();
+                    queryExists.setUsername(queryUsername.getUsername());
+                    userUserNames = userUserNameService.findListByEntity(queryExists);
                     if(CollectionUtils.isNotEmpty(userUserNames))
                     {
                         for(UserUserName userUserName:userUserNames)
                         {
-                            if(userUserName.getUserMainId()!=entity.getUserMainId())
+                            if(userUserName.getUserMainId().longValue()!=queryUsername.getUserMainId().longValue())
                             {
                                 resultObjectVO.setCode(ResultVO.FAILD);
                                 resultObjectVO.setMsg("操作失败,用户名无法启用,已经有人在使用中了");
@@ -2414,13 +2410,13 @@ public class UserController {
                         }
                     }
                     //禁用用户ID下所有关联用户名
-                    userUserNameService.deleteByUserMainId(entity.getUserMainId());
+                    userUserNameService.deleteByUserMainId(queryUsername.getUserMainId());
                     //启用
-                    row = userUserNameService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getUsername());
+                    row = userUserNameService.updateDeleteStatusById((short) 0, queryUsername.getUserMainId(),queryUsername.getUsername(),queryUsername.getId());
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(queryUsername.getUserMainId()), queryUsername.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -2430,7 +2426,7 @@ public class UserController {
 
             }
 
-            resultObjectVO.setData(entity);
+            resultObjectVO.setData(queryUsername);
 
         }catch(Exception e)
         {
@@ -2748,47 +2744,57 @@ public class UserController {
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
-            //查询手机号是否已经关联
+            //查询邮箱是否已关联
             UserMobilePhone query = new UserMobilePhone();
             query.setMobilePhone(userRegistVO.getMobilePhone());
             List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(userMobilePhones)) {
-                resultObjectVO.setCode(UserResultVO.FAILD);
-                resultObjectVO.setMsg("关联失败，手机号已注册!");
-            } else {
-                query = new UserMobilePhone();
-                query.setUserMainId(userRegistVO.getUserMainId());
-                userMobilePhones = userMobilePhoneService.findListByEntity(query);
-                if(CollectionUtils.isNotEmpty(userMobilePhones))
+                for(UserMobilePhone userMobilePhone:userMobilePhones)
                 {
-                    resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("关联失败，该用户已存在使用中手机号!");
-                }else {
-                    query.setMobilePhone(userRegistVO.getMobilePhone());
-                    userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(query);
-                    if(CollectionUtils.isNotEmpty(userMobilePhones))
+                    if(userMobilePhone.getUserMainId().longValue()==userRegistVO.getUserMainId().longValue())
                     {
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("关联失败，手机号已经关联到该用户了!");
-                    }else {
-
-                        //保存用户手机号关联
-                        UserMobilePhone userMobilePhone = new UserMobilePhone();
-                        userMobilePhone.setId(idGenerator.id());
-                        //设置手机号
-                        userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
-                        //设置用户主表ID
-                        userMobilePhone.setUserMainId(userRegistVO.getUserMainId());
-                        userMobilePhone.setCreateDate(new Date());
-                        userMobilePhone.setDeleteStatus((short) 0);
-
-                        int row = userMobilePhoneService.save(userMobilePhone);
-                        if (row < 1) {
-                            logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
-                            resultObjectVO.setCode(UserResultVO.FAILD);
-                            resultObjectVO.setMsg("关联失败,请重试!");
-                        }
+                        resultObjectVO.setMsg("绑定失败，手机号已经绑定到该用户了!");
+                        return resultObjectVO;
                     }
+                }
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，手机号已被绑定!");
+                return resultObjectVO;
+            }
+            query = new UserMobilePhone();
+            query.setUserMainId(userRegistVO.getUserMainId());
+            userMobilePhones = userMobilePhoneService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userMobilePhones))
+            {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，该用户已存在使用中手机号!");
+                return resultObjectVO;
+            }
+
+            //保存用户手机号关联
+            UserMobilePhone userMobilePhone = new UserMobilePhone();
+            userMobilePhone.setId(idGenerator.id());
+            //设置手机号
+            userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
+            //设置用户主表ID
+            userMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+            userMobilePhone.setCreateDate(new Date());
+            userMobilePhone.setDeleteStatus((short) 0);
+
+            int row = userMobilePhoneService.save(userMobilePhone);
+            if (row < 1) {
+                logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("关联失败,请重试!");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
                 }
             }
         }catch(Exception e)

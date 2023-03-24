@@ -32,6 +32,9 @@ public interface UserEmailMapper {
 
     int updateDeleteStatus(Short deleteStatus, Long userMainId, String email);
 
+
+    int updateDeleteStatusById(Short deleteStatus, Long userMainId, String email,Long id);
+
     int deleteByUserMainId(Long userMainId);
 
     UserEmail findByUserMainId(Long userMainId);

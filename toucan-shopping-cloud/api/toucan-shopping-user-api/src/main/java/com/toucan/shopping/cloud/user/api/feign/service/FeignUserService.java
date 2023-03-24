@@ -253,7 +253,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -263,7 +263,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledEmail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据用户ID和用户名 禁用用户名关联

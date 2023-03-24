@@ -137,6 +137,11 @@
            where user_main_id =#{userMainId} and username=#{username}
     </update>
 
+    <update id="updateDeleteStatusById" >
+        update t_user_username set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and username=#{username} and id=#{id}
+    </update>
+
     <update id="deleteByUserMainId" >
         update t_user_username set delete_status=1  where user_main_id =#{userMainId}
     </update>

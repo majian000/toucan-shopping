@@ -45,6 +45,10 @@ public class UserEmailServiceImpl implements UserEmailService {
     public int updateDeleteStatus(Short deleteStatus, Long userMainId, String email) {
         return userEmailMapper.updateDeleteStatus(deleteStatus,userMainId,email);
     }
+    @Override
+    public int updateDeleteStatusById(Short deleteStatus, Long userMainId, String email,Long id) {
+        return userEmailMapper.updateDeleteStatusById(deleteStatus,userMainId,email,id);
+    }
 
     @Override
     public List<UserEmail> findListByEmail(String email) {

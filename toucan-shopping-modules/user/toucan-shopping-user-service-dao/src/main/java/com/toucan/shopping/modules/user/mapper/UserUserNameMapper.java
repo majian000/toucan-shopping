@@ -31,6 +31,8 @@ public interface UserUserNameMapper {
 
     int updateDeleteStatus(Short deleteStatus, Long userMainId, String username);
 
+    int updateDeleteStatusById(Short deleteStatus, Long userMainId, String username,Long id);
+
     int deleteByUserMainId(Long userMainId);
 
 }

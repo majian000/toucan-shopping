@@ -166,9 +166,10 @@
                 }
                 layer.confirm("确定"+optText+"该用户名?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/username/disabled/enabled/"+data.userMainId+"/"+data.username,
+                        url:"[[@{/}]]user/username/disabled/enabled",
                         contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
+                        data: JSON.stringify({id:data.id,userMainId:data.userMainId,username:data.username}),
+                        type:'POST',
                         success:function(data){
                             layer.msg(data.msg);
 

@@ -73,6 +73,10 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
         return userMobilePhoneMapper.updateDeleteStatus(deleteStatus,userMainId,mobilePhone);
     }
 
+    @Override
+    public int updateDeleteStatusById(Short deleteStatus,Long userMainId,String mobilePhone,Long id) {
+        return userMobilePhoneMapper.updateDeleteStatusById(deleteStatus,userMainId,mobilePhone,id);
+    }
 
     @Override
     public int deleteByUserMainId(Long userMainId) {

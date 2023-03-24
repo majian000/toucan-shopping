@@ -72,15 +72,15 @@
                             <span>普通&nbsp;&nbsp;|</span>
                         </#if>
                         <#if userVO.mobilePhone?? && userVO.mobilePhone!='' >
-                             <i class="binding"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
+                             <i class="binding"></i><span><a href="#">修改手机号</a>&nbsp;&nbsp;|</span>
                         <#else>
                              <i class="binding-not"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
                         </#if>
 
                         <#if userVO.email?? && userVO.email!='' >
-                            <i class="binding"></i><span><a href="#">绑定邮箱</a></span>
+                            <i class="binding"></i><span><a href="${basePath}/page/user/bindEmail">修改邮箱</a></span>
                         <#else>
-                            <i class="binding-not"></i><span><a href="#">绑定邮箱</a></span>
+                            <i class="binding-not"></i><span><a href="${basePath}/page/user/bindEmail">绑定邮箱</a></span>
                          </#if>
                     </p>
                 </div>

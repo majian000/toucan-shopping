@@ -99,7 +99,7 @@ function bindSendVerifyCodeEvent()
                 dataType: "json",
                 success: function (result) {
                     if (result.code <= 0) {
-                        $("#modify_pwd_msg").text("发送失败,请稍后重试");
+                        $("#modify_pwd_msg").text(result.msg);
                         return;
                     }
                     mobileSendVcBtnObj.text("已发送");
@@ -139,7 +139,7 @@ function bindSendVerifyCodeEvent()
                 dataType: "json",
                 success: function (result) {
                     if (result.code <= 0) {
-                        $("#modify_pwd_msg").text("发送失败,请稍后重试");
+                        $("#modify_pwd_msg").text(result.msg);
                         return;
                     }
                     emailSendVcBtnObj.text("已发送");

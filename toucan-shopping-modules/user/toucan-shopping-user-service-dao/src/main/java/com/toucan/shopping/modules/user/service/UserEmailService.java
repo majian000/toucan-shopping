@@ -26,6 +26,7 @@ public interface UserEmailService {
 
     int updateDeleteStatus(Short deleteStatus,Long userMainId,String email);
 
+    int updateDeleteStatusById(Short deleteStatus,Long userMainId,String email,Long id);
     /**
      * 根据邮箱查询关联
      * @param email

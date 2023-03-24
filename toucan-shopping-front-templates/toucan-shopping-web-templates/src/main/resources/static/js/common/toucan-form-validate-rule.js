@@ -13,6 +13,9 @@ var checkInput = {
     phone: [
         /^1(3|4|5|6|7|8|9)\d{9}$/, '请输入正确的电话号码'
     ],
+    email:[
+        /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,50}/,'请输入正确的邮箱地址'
+    ],
     required: function(value) {
         if (value == "" || value == null) {
             return "必填项不能为空";

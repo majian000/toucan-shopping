@@ -391,7 +391,7 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
-            public ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO disabledEnabledMobilePhone(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -406,7 +406,7 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
-            public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO disabledEnabledEmail(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {

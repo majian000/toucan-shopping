@@ -166,9 +166,10 @@
                 }
                 layer.confirm("确定"+optText+"该邮箱?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/email/disabled/enabled/"+data.userMainId+"/"+data.email,
+                        url:"[[@{/}]]user/email/disabled/enabled",
                         contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
+                        data: JSON.stringify({id:data.id,userMainId:data.userMainId,email:data.email}),
+                        type:'POST',
                         success:function(data){
                             layer.msg(data.msg);
 

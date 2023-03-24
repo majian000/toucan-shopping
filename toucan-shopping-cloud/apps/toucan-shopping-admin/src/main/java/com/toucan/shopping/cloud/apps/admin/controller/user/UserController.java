@@ -19,8 +19,7 @@ import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
-import com.toucan.shopping.modules.user.vo.UserRegistVO;
-import com.toucan.shopping.modules.user.vo.UserVO;
+import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -999,29 +998,25 @@ public class UserController extends UIController {
 
     /**
      * 手机号 禁用/启用
-     * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/mobile/phone/disabled/enabled/{id}/{mobilePhone}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/mobile/phone/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(HttpServletRequest request,  @PathVariable String id,  @PathVariable String mobilePhone)
+    public ResultObjectVO disabledEnabledMobilePhone(@RequestBody UserMobilePhoneVO userMobilePhoneVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(userMobilePhoneVO.getId()==null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            UserVO userVO =new UserVO();
-            userVO.setUserMainId(Long.parseLong(id));
-            userVO.setMobilePhone(mobilePhone);
-            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            userMobilePhoneVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userMobilePhoneVO);
+            resultObjectVO = feignUserService.disabledEnabledMobilePhone(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1035,29 +1030,24 @@ public class UserController extends UIController {
 
     /**
      * 邮箱 禁用/启用
-     * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/email/disabled/enabled/{id}/{email}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/email/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(HttpServletRequest request,  @PathVariable String id,  @PathVariable String email)
+    public ResultObjectVO disabledEnabledEmail(@RequestBody UserEmailVO userEmailVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(userEmailVO.getId()==null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            UserVO userVO =new UserVO();
-            userVO.setUserMainId(Long.parseLong(id));
-            userVO.setEmail(email);
-            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
-
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
+            userEmailVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userEmailVO);
+            resultObjectVO = feignUserService.disabledEnabledEmail(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1072,28 +1062,24 @@ public class UserController extends UIController {
 
     /**
      * 用户名 禁用/启用
-     * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/username/disabled/enabled/{id}/{username}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/username/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(HttpServletRequest request,  @PathVariable String id,  @PathVariable String username)
+    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody UserUserNameVO userUserNameVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(userUserNameVO.getId()==null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            UserVO userVO =new UserVO();
-            userVO.setUserMainId(Long.parseLong(id));
-            userVO.setUsername(username);
-            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            userUserNameVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userUserNameVO);
             resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
