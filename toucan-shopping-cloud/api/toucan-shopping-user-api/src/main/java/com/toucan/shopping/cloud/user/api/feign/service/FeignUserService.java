@@ -256,6 +256,15 @@ public interface FeignUserService {
     ResultObjectVO disabledEnabledMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 更新关联邮箱
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/connect/email",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateConnectEmail(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据用户ID和邮箱 禁用邮箱关联
      * @param signHeader

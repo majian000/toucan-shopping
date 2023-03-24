@@ -171,7 +171,7 @@ public class BindEmailController extends BaseController {
                 return resultObjectVO;
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBindEmailVO);
-            resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignUserService.updateConnectEmail(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 toucanStringRedisService.delete(UserBindEmailRedisKey.getEmailVerifyCodeKey(userMainId));
             }

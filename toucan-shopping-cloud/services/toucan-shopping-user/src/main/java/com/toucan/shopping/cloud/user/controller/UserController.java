@@ -783,6 +783,51 @@ public class UserController {
                 return resultObjectVO;
             }
 
+            List<UserEmail> userEmails = userEmailService.findListByEmail(userBindEmailVO.getEmail());
+            if (!CollectionUtils.isEmpty(userEmails)) {
+                for(UserEmail userEmail:userEmails)
+                {
+                    if(userEmail.getUserMainId().longValue()==userBindEmailVO.getUserMainId().longValue())
+                    {
+                        resultObjectVO.setCode(UserResultVO.FAILD);
+                        resultObjectVO.setMsg("绑定失败，邮箱已经绑定到该用户了!");
+                        return resultObjectVO;
+                    }
+                }
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，邮箱已被绑定!");
+                return resultObjectVO;
+            }
+
+            //清空当前绑定的邮箱
+            userEmailService.deleteByUserMainId(userBindEmailVO.getUserMainId());
+
+            //保存用户邮箱绑定
+            UserEmail userEmail = new UserEmail();
+            userEmail.setId(idGenerator.id());
+            //设置邮箱
+            userEmail.setEmail(userBindEmailVO.getEmail());
+            //设置用户主表ID
+            userEmail.setUserMainId(userBindEmailVO.getUserMainId());
+            userEmail.setCreateDate(new Date());
+            userEmail.setDeleteStatus((short) 0);
+
+            int row = userEmailService.save(userEmail);
+            if (row < 1) {
+                logger.warn("绑定邮箱失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败,请稍后重试!");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userBindEmailVO.getUserMainId()), userBindEmailVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
