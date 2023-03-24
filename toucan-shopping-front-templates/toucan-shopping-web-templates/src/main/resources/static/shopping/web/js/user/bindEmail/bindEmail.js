@@ -77,11 +77,11 @@ $(function () {
                 {
                     $("#bind_meail_msg").text(result.msg);
                 }else{
+                    $("#bind_meail_msg").css("color","green");
                     $("#bind_meail_msg").text("绑定成功");
                 }
             },
             error: function (result) {
-                $("#bind_meail_msg").css("color","green");
                 $("#bind_meail_msg").text("修改失败,请稍后重试");
             },
             complete:function(data,status){
