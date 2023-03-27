@@ -129,7 +129,7 @@ public class BindEmailController extends BaseController {
             String emailVCode=emailVCodeObj!=null?String.valueOf(emailVCodeObj):"";
             if(StringUtils.isEmpty(emailVCode))
             {
-                resultObjectVO.setMsg("请先发送验证码");
+                resultObjectVO.setMsg("验证码已过期,请重新发送");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
