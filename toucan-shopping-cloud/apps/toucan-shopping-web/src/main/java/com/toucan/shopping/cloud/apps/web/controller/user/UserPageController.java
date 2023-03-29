@@ -168,6 +168,22 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/bindMobilePhone")
+    public String bindMobilePhone(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        UserVO userVO = (UserVO)httpServletRequest.getAttribute("userVO");
+        //如果是修改手机号的话,需要先进行实名认证
+        if(StringUtils.isNotEmpty(userVO.getMobilePhone())) {
+            if (userVO.getTrueNameStatus().intValue() == 0) {
+                httpServletRequest.setAttribute("msg", "请您先进行实名");
+                return "user/bindMobilePhone/bind_mobile_phone_msg";
+            }
+        }
+        return "user/bindMobilePhone/bind_mobile_phone";
+    }
+
 
     @RequestMapping(value="/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

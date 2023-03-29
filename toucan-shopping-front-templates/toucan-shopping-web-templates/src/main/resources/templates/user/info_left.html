@@ -57,4 +57,9 @@
         <#else>
                 <dd><a href="${basePath}/page/user/bindEmail">绑定邮箱</a></dd>
         </#if>
+        <#if leftMenuName??&&leftMenuName=="bindMobilePhone">
+                <dd class="active"><a href="${basePath}/page/user/bindMobilePhone">绑定手机号</a></dd>
+        <#else>
+                <dd><a href="${basePath}/page/user/bindMobilePhone">绑定手机号</a></dd>
+        </#if>
 </dl>
