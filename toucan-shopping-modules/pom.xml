@@ -625,6 +625,20 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.search</groupId>
+                <artifactId>toucan-shopping-search</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.search</groupId>
+                <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
