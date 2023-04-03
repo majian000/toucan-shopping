@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.search.service;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 
@@ -21,7 +22,7 @@ public interface ProductSearchService {
      * @param productSearchVO
      * @return
      */
-    List<ProductSearchResultVO> search(ProductSearchVO productSearchVO);
+    PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO);
 
 
 }
