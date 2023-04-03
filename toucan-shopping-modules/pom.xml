@@ -144,8 +144,10 @@
         <!--商品Service和DAO -->
         <module>product/toucan-shopping-product-service-dao</module>
 
+        <!--搜索模块 -->
+        <module>search/toucan-shopping-search</module>
         <!--es搜索 -->
-        <module>search/toucan-shopping-elasticsearch-search</module>
+        <module>search/toucan-shopping-search-elasticsearch</module>
 
         <!--库存实体和VO -->
         <module>stock/toucan-shopping-stock-entity-vo</module>

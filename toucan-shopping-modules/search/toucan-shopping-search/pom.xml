@@ -16,7 +16,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.search</groupId>
-    <artifactId>toucan-shopping-elasticsearch-search</artifactId>
+    <artifactId>toucan-shopping-search</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
