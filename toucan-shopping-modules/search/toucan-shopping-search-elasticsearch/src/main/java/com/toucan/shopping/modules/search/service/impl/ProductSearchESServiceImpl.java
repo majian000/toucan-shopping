@@ -1,7 +1,9 @@
-package com.toucan.shopping.modules.search.es.service.impl;
+package com.toucan.shopping.modules.search.service.impl;
 
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
-import com.toucan.shopping.modules.search.es.service.ProductSearchService;
+import com.toucan.shopping.modules.search.service.ProductSearchService;
+import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
+import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -10,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
-@Service("productSearchServiceImpl")
-public class ProductSearchServiceImpl implements ProductSearchService {
+
+@Service("productSearchESServiceImpl")
+public class ProductSearchESServiceImpl implements ProductSearchService {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -30,5 +34,10 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         {
             logger.warn(e.getMessage(),e);
         }
+    }
+
+    @Override
+    public List<ProductSearchResultVO> search(ProductSearchVO productSearchVO) {
+        return null;
     }
 }
