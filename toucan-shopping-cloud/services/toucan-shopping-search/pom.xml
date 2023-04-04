@@ -88,23 +88,7 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-entity-vo</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-service-dao</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-controller</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-cache</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
@@ -129,16 +113,6 @@
         <dependency>
             <groupId>com.toucan.shopping.cloud.modules.config</groupId>
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-db-sharding</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.column</groupId>
-            <artifactId>toucan-shopping-column-controller</artifactId>
         </dependency>
 
 
