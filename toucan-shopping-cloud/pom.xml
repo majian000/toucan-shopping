@@ -80,6 +80,8 @@
         <module>services/toucan-shopping-seller</module>
         <!--消息服务 -->
         <module>services/toucan-shopping-message</module>
+        <!--搜索服务-->
+        <module>services/toucan-shopping-search</module>
 
         <!-- ===============================================-->
 
@@ -332,6 +334,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.seller</groupId>
                 <artifactId>toucan-shopping-seller-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.services</groupId>
+                <artifactId>toucan-shopping-search</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

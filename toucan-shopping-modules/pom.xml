@@ -145,7 +145,7 @@
         <module>product/toucan-shopping-product-service-dao</module>
 
         <!--搜索模块 -->
-        <module>search/toucan-shopping-search</module>
+        <module>search/toucan-shopping-search-common</module>
         <!--es搜索 -->
         <module>search/toucan-shopping-search-elasticsearch</module>
 
@@ -627,7 +627,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.search</groupId>
-                <artifactId>toucan-shopping-search</artifactId>
+                <artifactId>toucan-shopping-search-common</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

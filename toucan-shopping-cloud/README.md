@@ -106,6 +106,7 @@
  | services/toucan-shopping-message             | 8103                  | 消息服务                                           |
  | services/toucan-shopping-common-data         | 8104                  | 公共数据服务                                       |
  | services/toucan-shopping-content             | 8105                  | 内容服务                                           |
+ | services/toucan-shopping-search             | 8106                  | 搜索服务                                           |
 
     
 

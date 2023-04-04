@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>com.toucan.shopping.modules.search</groupId>
-            <artifactId>toucan-shopping-search</artifactId>
+            <artifactId>toucan-shopping-search-common</artifactId>
         </dependency>
 
         <!--elasticsearch -->

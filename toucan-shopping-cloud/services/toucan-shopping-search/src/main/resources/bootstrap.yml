@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true #名称重复直接覆盖
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+---
+spring:
+  profiles: prod
+  application:
+    name: toucan-shopping-search
+  cloud:
+    config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
+      uri: http://${toucan.config.server.ip}:${toucan.config.server.port}
+      label: master
+      profile: prod
+
+
+---
+spring:
+  profiles: dev
+  application:
+    name: toucan-shopping-search
+  cloud:
+    config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
+      uri: http://localhost:9090
+      label: master
+      profile: dev
+
