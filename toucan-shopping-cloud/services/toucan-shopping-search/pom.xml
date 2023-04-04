@@ -95,11 +95,6 @@
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.skylark</groupId>
-            <artifactId>toucan-shopping-skylark-lock</artifactId>
-        </dependency>
-
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
