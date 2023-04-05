@@ -5,5 +5,5 @@ package com.toucan.shopping.modules.search.es.index;
  */
 public class ProductIndex {
 
-    public static final String PRODUCT_INDEX ="product_index";
+    public static final String PRODUCT_SKU_INDEX ="product_sku_index";
 }

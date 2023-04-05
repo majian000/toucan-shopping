@@ -110,6 +110,10 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.search</groupId>
+            <artifactId>toucan-shopping-search-common</artifactId>
+        </dependency>
 
     </dependencies>
 

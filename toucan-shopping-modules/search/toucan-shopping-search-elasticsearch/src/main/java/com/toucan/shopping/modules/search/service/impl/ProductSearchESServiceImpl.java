@@ -1,6 +1,5 @@
 package com.toucan.shopping.modules.search.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
@@ -13,7 +12,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -22,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service("productSearchESServiceImpl")
@@ -39,7 +35,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     @Override
     public void createIndex() {
         try {
-            CreateIndexRequest request = new CreateIndexRequest(ProductIndex.PRODUCT_INDEX);
+            CreateIndexRequest request = new CreateIndexRequest(ProductIndex.PRODUCT_SKU_INDEX);
             restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         }catch(Exception e)
         {
@@ -51,7 +47,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) {
         try {
             SearchRequest request = new SearchRequest();
-            request.indices(ProductIndex.PRODUCT_INDEX);
+            request.indices(ProductIndex.PRODUCT_SKU_INDEX);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
             sourceBuilder.query(QueryBuilders.fuzzyQuery("name","name").fuzziness(Fuzziness.AUTO));
 
