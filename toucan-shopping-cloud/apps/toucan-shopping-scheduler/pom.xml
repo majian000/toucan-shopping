@@ -56,12 +56,6 @@
         </dependency>
 
 
-        <!--kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
 
 
         <!-- 我们的包-->
@@ -126,6 +120,11 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.search</groupId>
             <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-kafka</artifactId>
         </dependency>
 
 
