@@ -55,6 +55,7 @@
 
 
 
+
         <!--对sleuth链路追踪支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -120,6 +121,10 @@
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-kafka</artifactId>
+        </dependency>
 
     </dependencies>
 
