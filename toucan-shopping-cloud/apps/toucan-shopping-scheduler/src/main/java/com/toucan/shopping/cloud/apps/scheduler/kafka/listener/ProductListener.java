@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component;
  * 同步修改的商品到ES中
  */
 @Component
-public class ProductSkuListener {
+public class ProductListener {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ProductSearchService productSearchService;
 
-    @KafkaListener(topics = {ProductMessageTopicConstant.SKU_TOPIC}, groupId = ProductMessageTopicConstant.SKU_GROUP)
+    @KafkaListener(topics = {ProductMessageTopicConstant.PRODUCT_TOPIC}, groupId = ProductMessageTopicConstant.PRODUCT_GROUP)
     public void listenSkuTopics(ConsumerRecord<String, String> record) {
         logger.info("收到商品同步消息: {} " , record);
         String messageJsonString = record.value();

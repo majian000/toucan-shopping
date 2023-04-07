@@ -7,8 +7,11 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.kafka.service.KafkaService;
+import com.toucan.shopping.modules.kafka.vo.KafkaMessage;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.*;
+import com.toucan.shopping.modules.product.kafka.constant.ProductMessageTopicConstant;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
@@ -76,6 +79,8 @@ public class ShopProductApproveController {
     @Autowired
     private ShopProductApproveSkuRedisService shopProductApproveSkuRedisService;
 
+    @Autowired
+    private KafkaService kafkaService;
 
 
     /**
@@ -1386,6 +1391,9 @@ public class ShopProductApproveController {
 
                 //更新关联店铺商品ID
                 shopProductApproveService.updateShopProductId(shopProductApproveVO.getId(),shopProduct.getId());
+
+                KafkaMessage kafkaMessage = new KafkaMessage().put("productId",String.valueOf(shopProduct.getId()));
+                kafkaService.sendMsg(ProductMessageTopicConstant.PRODUCT_TOPIC,JSONObject.toJSONString(kafkaMessage));
 
             }else{
                 throw new IllegalArgumentException("保存商品图片失败");
