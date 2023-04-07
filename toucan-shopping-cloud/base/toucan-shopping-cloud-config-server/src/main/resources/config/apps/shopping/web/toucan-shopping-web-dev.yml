@@ -70,6 +70,11 @@ feign:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
+  threadpool:
+    default:
+      coreSize: 80 #最大并发数
+      maxQueueSize: 1500 #最大队列长度
+      queueSizeRejectionThreshold: 1000
   command:
     default:
       execution:
