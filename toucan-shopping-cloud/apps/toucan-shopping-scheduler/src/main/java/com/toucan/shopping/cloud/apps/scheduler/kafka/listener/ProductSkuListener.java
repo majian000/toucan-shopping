@@ -21,7 +21,7 @@ public class ProductSkuListener {
     @Autowired
     private ProductSearchService productSearchService;
 
-    @KafkaListener(topics = {ProductMessageTopicConstant.SKU_TOPIC}, groupId = ProductMessageTopicConstant.SKU_GROUP)
+//    @KafkaListener(topics = {ProductMessageTopicConstant.SKU_TOPIC}, groupId = ProductMessageTopicConstant.SKU_GROUP)
     public void listenSkuTopics(ConsumerRecord<String, String> record) {
         logger.info("收到商品同步消息: {} " , record);
         String messageJsonString = record.value();
