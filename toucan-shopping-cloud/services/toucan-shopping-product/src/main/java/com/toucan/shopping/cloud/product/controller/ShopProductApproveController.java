@@ -79,8 +79,6 @@ public class ShopProductApproveController {
     @Autowired
     private ShopProductApproveSkuRedisService shopProductApproveSkuRedisService;
 
-    @Autowired
-    private KafkaService kafkaService;
 
 
     /**
@@ -1391,9 +1389,6 @@ public class ShopProductApproveController {
 
                 //更新关联店铺商品ID
                 shopProductApproveService.updateShopProductId(shopProductApproveVO.getId(),shopProduct.getId());
-
-                KafkaMessage kafkaMessage = new KafkaMessage().put("productId",String.valueOf(shopProduct.getId()));
-                kafkaService.sendMsg(ProductMessageTopicConstant.PRODUCT_TOPIC,JSONObject.toJSONString(kafkaMessage));
 
             }else{
                 throw new IllegalArgumentException("保存商品图片失败");
