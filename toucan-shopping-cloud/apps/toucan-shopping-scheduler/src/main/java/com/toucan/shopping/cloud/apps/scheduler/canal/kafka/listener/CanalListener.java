@@ -17,8 +17,8 @@ public class CanalListener {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @KafkaListener(topics = "canal_topic",  concurrency = "5")
-    public void consumer(ConsumerRecord<String, String> record) throws InterruptedException {
+    @KafkaListener(topics = "canal_topic",groupId = "canal_topic_group",  concurrency = "5")
+    public void consumer(ConsumerRecord<String, String> record){
         logger.info("接收canal消息 {} ",record.value());
     }
 }
