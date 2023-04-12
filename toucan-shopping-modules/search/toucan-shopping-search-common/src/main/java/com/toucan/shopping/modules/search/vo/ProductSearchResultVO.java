@@ -10,6 +10,10 @@ import java.math.BigDecimal;
 @Data
 public class ProductSearchResultVO {
 
+    private Long id; //SKU ID
+
+    private Long skuId; //SKU ID
+
     private String name; //商品名称
 
     private BigDecimal price; //价格
