@@ -37,6 +37,8 @@ public class CanalListener {
                 //修改了SKU
                 if (canalMessage.getTable().startsWith("t_product_sku_")) {
                     if (CollectionUtils.isNotEmpty(canalMessage.getData())) {
+                        canalMessage.getData().get(0).put("create_date",null);
+                        canalMessage.getData().get(0).put("update_date",null);
                         ProductSkuVO productSkuVO = JSONObject.parseObject(JSONObject.toJSONString(canalMessage.getData().get(0)), ProductSkuVO.class);
                         if (productSkuVO != null) {
                             List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
