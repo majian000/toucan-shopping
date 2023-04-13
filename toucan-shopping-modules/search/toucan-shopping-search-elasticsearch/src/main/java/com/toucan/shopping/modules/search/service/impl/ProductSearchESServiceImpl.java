@@ -12,12 +12,16 @@ import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -29,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,5 +138,21 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     public void save(ProductSearchResultVO productSearchResultVO) throws IOException {
         IndexRequest request = new IndexRequest(ProductIndex.PRODUCT_SKU_INDEX).id(String.valueOf(productSearchResultVO.getSkuId())).source(JSONObject.toJSONString(productSearchResultVO), XContentType.JSON);
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
+    }
+
+    @Override
+    public void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException {
+        UpdateRequest request = new UpdateRequest(ProductIndex.PRODUCT_SKU_INDEX,String.valueOf(productSearchResultVO.getId()));
+        XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+        Field[] declaredFields = productSearchResultVO.getClass().getDeclaredFields();
+        for(Field field:declaredFields){
+            field.setAccessible(true);
+            updateBody.field(field.getName(),field.get(productSearchResultVO));
+        }
+        updateBody.endObject();
+        request.doc(updateBody);
+        UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+        //强制刷新
+        updateResponse.forcedRefresh();
     }
 }

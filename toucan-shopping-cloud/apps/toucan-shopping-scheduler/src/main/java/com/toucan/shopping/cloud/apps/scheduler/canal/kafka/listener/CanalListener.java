@@ -42,13 +42,16 @@ public class CanalListener {
                         ProductSkuVO productSkuVO = JSONObject.parseObject(JSONObject.toJSONString(canalMessage.getData().get(0)), ProductSkuVO.class);
                         if (productSkuVO != null) {
                             List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
+                            ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
+                            productSearchResultVO.setId(productSkuVO.getId());
+                            productSearchResultVO.setSkuId(productSkuVO.getId());
+                            productSearchResultVO.setName(productSkuVO.getName());
+                            productSearchResultVO.setPrice(productSkuVO.getPrice());
+                            productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
                             if(CollectionUtils.isEmpty(productSearchResultVOS)) {
-                                ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
-                                productSearchResultVO.setId(productSkuVO.getId());
-                                productSearchResultVO.setSkuId(productSkuVO.getId());
-                                productSearchResultVO.setName(productSkuVO.getName());
-                                productSearchResultVO.setPrice(productSkuVO.getPrice());
                                 productSearchService.save(productSearchResultVO);
+                            }else{
+                                productSearchService.update(productSearchResultVO);
                             }
                         }
                     }

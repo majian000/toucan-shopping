@@ -32,6 +32,13 @@ public interface ProductSearchService {
     void save(ProductSearchResultVO productSearchResultVO) throws IOException;
 
     /**
+     * 修改商品
+     * @param productSearchResultVO
+     * @throws IOException
+     */
+    void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException;
+
+    /**
      * 是否存在索引
      * @return
      */

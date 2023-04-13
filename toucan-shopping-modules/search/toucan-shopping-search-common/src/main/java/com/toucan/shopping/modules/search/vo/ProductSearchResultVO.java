@@ -26,4 +26,6 @@ public class ProductSearchResultVO {
 
     private BigDecimal randk; //权重值
 
+    private String productPreviewPath; //商品图片预览
+
 }
