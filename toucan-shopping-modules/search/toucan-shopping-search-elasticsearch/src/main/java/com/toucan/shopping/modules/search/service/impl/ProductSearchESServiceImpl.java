@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 @Service("productSearchESServiceImpl")
@@ -51,6 +53,37 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     public void createIndex() {
         try {
             CreateIndexRequest request = new CreateIndexRequest(ProductIndex.PRODUCT_SKU_INDEX);
+
+            //配置IK分词器
+            XContentBuilder builder = XContentFactory.jsonBuilder();
+            builder.startObject();
+            {
+                builder.startObject("properties");
+                {
+                    builder.startObject("id");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.startObject("skuId");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.endObject();
+                    //商品名称
+                    builder.startObject("name");
+                    {
+                        builder.field("type", "text")
+                                //插入时分词
+                                .field("analyzer", "ik_max_word")
+                                //搜索时分词
+                                .field("search_analyzer", "ik_smart");
+                    }
+                    builder.endObject();
+                }
+                builder.endObject();
+            }
+            builder.endObject();
+            request.mapping(builder);
             restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         }catch(Exception e)
         {
@@ -61,7 +94,22 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     @Override
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws IOException {
 
+        SearchRequest searchRequest = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders
+                //.fuzzyQuery("op_member.name", name)
+                .fuzzyQuery("name",productSearchVO.getKeyword())
+        );
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHit[] hits = response.getHits().getHits();
+        List result = new ArrayList();
+        for (int i = 0; i < hits.length; i++) {
+            result.add(i, hits[i].getSourceAsMap());
+        }
+        Stream.of(hits).forEach(System.out::println);
 
 
         List<ProductSearchResultVO> queryResult = new LinkedList<>();
