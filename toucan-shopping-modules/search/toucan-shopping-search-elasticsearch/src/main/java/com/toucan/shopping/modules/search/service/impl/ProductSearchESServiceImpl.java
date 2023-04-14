@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -15,13 +16,13 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -59,28 +60,11 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
     @Override
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws IOException {
-        List<ProductSearchResultVO> queryResult= new LinkedList<>();
 
-        SearchRequest request = new SearchRequest();
-        request.indices(ProductIndex.PRODUCT_SKU_INDEX);
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        BoolQueryBuilder productNameIKBoolBuilder = QueryBuilders.boolQuery();
-        productNameIKBoolBuilder.must(QueryBuilders.matchQuery("name.keyword_ik", productSearchVO.getKeyword()));
-        sourceBuilder.query(productNameIKBoolBuilder);
 
-        sourceBuilder.from(productSearchVO.getPage()-1);
-        sourceBuilder.size(productSearchVO.getSize());
-        request.source(sourceBuilder);
 
-        SearchResponse searchResponse = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-        SearchHits searchHits = searchResponse.getHits();
-        SearchHit[] searchHitsHits = searchHits.getHits();
-        for (SearchHit searchHit : searchHitsHits) {
-            String sourceString = searchHit.getSourceAsString();
-            if (StringUtils.isNotEmpty(sourceString)) {
-                queryResult.add(JSONObject.parseObject(sourceString,ProductSearchResultVO.class));
-            }
-        }
+
+        List<ProductSearchResultVO> queryResult = new LinkedList<>();
         PageInfo pageInfo = new PageInfo();
         pageInfo.setList(queryResult);
         pageInfo.setPage(productSearchVO.getPage());
@@ -137,6 +121,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     @Override
     public void save(ProductSearchResultVO productSearchResultVO) throws IOException {
         IndexRequest request = new IndexRequest(ProductIndex.PRODUCT_SKU_INDEX).id(String.valueOf(productSearchResultVO.getSkuId())).source(JSONObject.toJSONString(productSearchResultVO), XContentType.JSON);
+
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
     }
 
