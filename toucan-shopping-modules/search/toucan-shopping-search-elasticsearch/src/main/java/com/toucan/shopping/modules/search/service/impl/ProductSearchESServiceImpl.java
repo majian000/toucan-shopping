@@ -64,6 +64,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     {
                         builder.field("type", "text");
                     }
+                    builder.endObject();
                     builder.startObject("skuId");
                     {
                         builder.field("type", "text");
