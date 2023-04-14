@@ -126,7 +126,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.search.app.CloudSearchServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.search.CloudSearchServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -6,7 +6,6 @@ import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -19,10 +18,10 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -34,10 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @Service("productSearchESServiceImpl")
@@ -62,30 +58,34 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     }
 
     @Override
-    public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) {
-        try {
-            SearchRequest request = new SearchRequest();
-            request.indices(ProductIndex.PRODUCT_SKU_INDEX);
-            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-            sourceBuilder.query(QueryBuilders.fuzzyQuery("name","name").fuzziness(Fuzziness.AUTO));
+    public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws IOException {
+        List<ProductSearchResultVO> queryResult= new LinkedList<>();
 
-            sourceBuilder.from(productSearchVO.getPage()-1);
-            sourceBuilder.size(productSearchVO.getSize());
-            request.source(sourceBuilder);
+        SearchRequest request = new SearchRequest();
+        request.indices(ProductIndex.PRODUCT_SKU_INDEX);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder productNameIKBoolBuilder = QueryBuilders.boolQuery();
+        productNameIKBoolBuilder.must(QueryBuilders.matchQuery("name.keyword_ik", productSearchVO.getKeyword()));
+        sourceBuilder.query(productNameIKBoolBuilder);
 
-            SearchResponse searchResponse = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            SearchHits searchHits = searchResponse.getHits();
-            SearchHit[] searchHitsHits = searchHits.getHits();
-            for (SearchHit searchHit : searchHitsHits) {
-                String sourceString = searchHit.getSourceAsString();
-                if (StringUtils.isNotEmpty(sourceString)) {
-                }
+        sourceBuilder.from(productSearchVO.getPage()-1);
+        sourceBuilder.size(productSearchVO.getSize());
+        request.source(sourceBuilder);
+
+        SearchResponse searchResponse = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for (SearchHit searchHit : searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)) {
+                queryResult.add(JSONObject.parseObject(sourceString,ProductSearchResultVO.class));
             }
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
         }
-        return null;
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setList(queryResult);
+        pageInfo.setPage(productSearchVO.getPage());
+        pageInfo.setSize(productSearchVO.getSize());
+        return pageInfo;
     }
 
 

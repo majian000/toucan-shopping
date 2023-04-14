@@ -23,7 +23,7 @@ public interface ProductSearchService {
      * @param productSearchVO
      * @return
      */
-    PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO);
+    PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws IOException;
 
     /**
      * 保存商品到搜索中间件
