@@ -20,9 +20,11 @@ public class ProductSearchResultVO {
 
     private String brandName; //品牌名称
 
-    private Short status; //是否上架 0:未上架 1:已上架
+    private Long brandId; //品牌ID
 
     private String categoryName; //分类名称
+
+    private Long categoryId; //分类ID
 
     private BigDecimal randk; //权重值
 

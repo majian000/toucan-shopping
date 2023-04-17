@@ -3,6 +3,16 @@ package com.toucan.shopping.cloud.apps.scheduler.canal.kafka.listener;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.vo.CanalMessage;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
+import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
@@ -28,6 +38,15 @@ public class CanalListener {
     @Autowired
     private ProductSearchService productSearchService;
 
+    @Autowired
+    private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignBrandService feignBrandService;
+
+    @Autowired
+    private Toucan toucan;
+
     @KafkaListener(topics = "canal_topic",groupId = "canal_topic_group",  concurrency = "5")
     public void consumer(ConsumerRecord<String, String> record){
         try {
@@ -48,6 +67,54 @@ public class CanalListener {
                             productSearchResultVO.setName(productSkuVO.getName());
                             productSearchResultVO.setPrice(productSkuVO.getPrice());
                             productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
+                            productSearchResultVO.setBrandId(productSkuVO.getBrandId());
+                            productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
+
+                            ProductSearchResultVO productSearchResultVOResult = null;
+                            if(!CollectionUtils.isEmpty(productSearchResultVOS))
+                            {
+                                productSearchResultVOResult = productSearchResultVOS.get(0);
+                            }
+
+                            //查询品牌名称
+                            if(productSearchResultVOResult==null
+                                    ||productSearchResultVOResult.getBrandId()==null
+                                    ||productSearchResultVOResult.getBrandId().longValue()!=productSearchResultVO.getBrandId().longValue()) {
+
+                                BrandVO queryBrand = new BrandVO();
+                                queryBrand.setId(productSkuVO.getBrandId());
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
+                                ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                                    BrandVO brandVO = resultObjectVO.formatData(BrandVO.class);
+                                    if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                        productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
+                                    } else {
+                                        if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                                            productSearchResultVO.setBrandName(brandVO.getChineseName());
+                                        }
+                                        if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                            productSearchResultVO.setBrandName(brandVO.getEnglishName());
+                                        }
+                                    }
+                                }
+                            }
+
+                            //查询分类名称
+                            if(productSearchResultVOResult==null
+                                    ||productSearchResultVOResult.getCategoryId()==null
+                                    ||productSearchResultVOResult.getCategoryId().longValue()!=productSearchResultVO.getCategoryId().longValue()) {
+
+                                CategoryVO queryCategoryVO = new CategoryVO();
+                                queryCategoryVO.setId(productSkuVO.getCategoryId());
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+                                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
+                                    productSearchResultVO.setCategoryName(categoryVO.getName());
+                                }
+                            }
+
                             if(CollectionUtils.isEmpty(productSearchResultVOS)) {
                                 productSearchService.save(productSearchResultVO);
                             }else{

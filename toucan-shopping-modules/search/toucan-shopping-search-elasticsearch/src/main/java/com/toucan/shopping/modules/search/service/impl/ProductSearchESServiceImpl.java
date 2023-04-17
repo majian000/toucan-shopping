@@ -8,6 +8,8 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -62,14 +64,16 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                 {
                     builder.startObject("id");
                     {
-                        builder.field("type", "text");
+                        builder.field("type", "long");
                     }
                     builder.endObject();
+
                     builder.startObject("skuId");
                     {
-                        builder.field("type", "text");
+                        builder.field("type", "long");
                     }
                     builder.endObject();
+
                     //商品名称
                     builder.startObject("name");
                     {
@@ -80,6 +84,43 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                                 .field("search_analyzer", "ik_smart");
                     }
                     builder.endObject();
+
+                    //价格
+                    builder.startObject("price");
+                    {
+                        builder.field("type", "double");
+                    }
+                    builder.endObject();
+
+                    //品牌名称
+                    builder.startObject("brandName");
+                    {
+                        builder.field("type", "text")
+                                //插入时分词
+                                .field("analyzer", "ik_max_word")
+                                //搜索时分词
+                                .field("search_analyzer", "ik_smart");
+                    }
+                    builder.endObject();
+
+                    //分类名称
+                    builder.startObject("categoryName");
+                    {
+                        builder.field("type", "text")
+                                //插入时分词
+                                .field("analyzer", "ik_max_word")
+                                //搜索时分词
+                                .field("search_analyzer", "ik_smart");
+                    }
+                    builder.endObject();
+
+                    //权重值
+                    builder.startObject("randk");
+                    {
+                        builder.field("type", "double");
+                    }
+                    builder.endObject();
+
                 }
                 builder.endObject();
             }
@@ -93,32 +134,46 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     }
 
     @Override
-    public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws IOException {
-
-        SearchRequest searchRequest = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
-
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders
-                //.fuzzyQuery("op_member.name", name)
-                .fuzzyQuery("name",productSearchVO.getKeyword())
-        );
-        searchRequest.source(searchSourceBuilder);
-
-        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-        SearchHit[] hits = response.getHits().getHits();
-        List result = new ArrayList();
-        for (int i = 0; i < hits.length; i++) {
-            result.add(i, hits[i].getSourceAsMap());
-        }
-        Stream.of(hits).forEach(System.out::println);
-
+    public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception {
 
         List<ProductSearchResultVO> queryResult = new LinkedList<>();
+
+        SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders
+                .multiMatchQuery(productSearchVO.getKeyword(),new String[]{"name","brandName","categoryName"})
+        );
+
+        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:(productSearchVO.getPage()*productSearchVO.getSize()));
+        sourceBuilder.size(productSearchVO.getSize());
+        request.source(sourceBuilder);
+
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        SearchHits searchHits = response.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for (SearchHit searchHit : searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)) {
+                queryResult.add(JSONObject.parseObject(sourceString,ProductSearchResultVO.class));
+            }
+        }
+
+
         PageInfo pageInfo = new PageInfo();
         pageInfo.setList(queryResult);
         pageInfo.setPage(productSearchVO.getPage());
         pageInfo.setSize(productSearchVO.getSize());
+        pageInfo.setTotal(queryCount(sourceBuilder).longValue());
         return pageInfo;
+    }
+
+
+    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+        CountRequest countRequest=new CountRequest(ProductIndex.PRODUCT_SKU_INDEX);
+        countRequest.source(searchSourceBuilder);
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
     }
 
 
