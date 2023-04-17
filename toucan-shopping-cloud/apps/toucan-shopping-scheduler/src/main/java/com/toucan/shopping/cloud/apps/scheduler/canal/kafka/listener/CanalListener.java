@@ -60,65 +60,72 @@ public class CanalListener {
                         canalMessage.getData().get(0).put("update_date",null);
                         ProductSkuVO productSkuVO = JSONObject.parseObject(JSONObject.toJSONString(canalMessage.getData().get(0)), ProductSkuVO.class);
                         if (productSkuVO != null) {
-                            List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
-                            ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
-                            productSearchResultVO.setId(productSkuVO.getId());
-                            productSearchResultVO.setSkuId(productSkuVO.getId());
-                            productSearchResultVO.setName(productSkuVO.getName());
-                            productSearchResultVO.setPrice(productSkuVO.getPrice());
-                            productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
-                            productSearchResultVO.setBrandId(productSkuVO.getBrandId());
-                            productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
+                            if (productSkuVO.getDeleteStatus() != null
+                                    && productSkuVO.getDeleteStatus().intValue() == 0
+                                    && productSkuVO.getStatus()!=null
+                                    && productSkuVO.getStatus().intValue()==1) {
+                                List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
+                                ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
+                                productSearchResultVO.setId(productSkuVO.getId());
+                                productSearchResultVO.setSkuId(productSkuVO.getId());
+                                productSearchResultVO.setName(productSkuVO.getName());
+                                productSearchResultVO.setPrice(productSkuVO.getPrice());
+                                productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
+                                productSearchResultVO.setBrandId(productSkuVO.getBrandId());
+                                productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
 
-                            ProductSearchResultVO productSearchResultVOResult = null;
-                            if(!CollectionUtils.isEmpty(productSearchResultVOS))
-                            {
-                                productSearchResultVOResult = productSearchResultVOS.get(0);
-                            }
+                                ProductSearchResultVO productSearchResultVOResult = null;
+                                if (!CollectionUtils.isEmpty(productSearchResultVOS)) {
+                                    productSearchResultVOResult = productSearchResultVOS.get(0);
+                                }
 
-                            //查询品牌名称
-                            if(productSearchResultVOResult==null
-                                    ||productSearchResultVOResult.getBrandId()==null
-                                    ||productSearchResultVOResult.getBrandId().longValue()!=productSearchResultVO.getBrandId().longValue()) {
+                                //查询品牌名称
+                                if (productSearchResultVOResult == null
+                                        || productSearchResultVOResult.getBrandId() == null
+                                        || productSearchResultVOResult.getBrandId().longValue() != productSearchResultVO.getBrandId().longValue()) {
 
-                                BrandVO queryBrand = new BrandVO();
-                                queryBrand.setId(productSkuVO.getBrandId());
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
-                                ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
-                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                                    BrandVO brandVO = resultObjectVO.formatData(BrandVO.class);
-                                    if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                                        productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
-                                    } else {
-                                        if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
-                                            productSearchResultVO.setBrandName(brandVO.getChineseName());
-                                        }
-                                        if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                                            productSearchResultVO.setBrandName(brandVO.getEnglishName());
+                                    BrandVO queryBrand = new BrandVO();
+                                    queryBrand.setId(productSkuVO.getBrandId());
+                                    RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
+                                    ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+                                    if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                                        List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
+                                        if (CollectionUtils.isNotEmpty(brands)) {
+                                            BrandVO brandVO = brands.get(0);
+                                            if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                                productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
+                                            } else {
+                                                if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                                                    productSearchResultVO.setBrandName(brandVO.getChineseName());
+                                                }
+                                                if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                                    productSearchResultVO.setBrandName(brandVO.getEnglishName());
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            //查询分类名称
-                            if(productSearchResultVOResult==null
-                                    ||productSearchResultVOResult.getCategoryId()==null
-                                    ||productSearchResultVOResult.getCategoryId().longValue()!=productSearchResultVO.getCategoryId().longValue()) {
+                                //查询分类名称
+                                if (productSearchResultVOResult == null
+                                        || productSearchResultVOResult.getCategoryId() == null
+                                        || productSearchResultVOResult.getCategoryId().longValue() != productSearchResultVO.getCategoryId().longValue()) {
 
-                                CategoryVO queryCategoryVO = new CategoryVO();
-                                queryCategoryVO.setId(productSkuVO.getCategoryId());
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
-                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
-                                    productSearchResultVO.setCategoryName(categoryVO.getName());
+                                    CategoryVO queryCategoryVO = new CategoryVO();
+                                    queryCategoryVO.setId(productSkuVO.getCategoryId());
+                                    RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+                                    ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                                    if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                                        CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
+                                        productSearchResultVO.setCategoryName(categoryVO.getName());
+                                    }
                                 }
-                            }
 
-                            if(CollectionUtils.isEmpty(productSearchResultVOS)) {
-                                productSearchService.save(productSearchResultVO);
-                            }else{
-                                productSearchService.update(productSearchResultVO);
+                                if (CollectionUtils.isEmpty(productSearchResultVOS)) {
+                                    productSearchService.save(productSearchResultVO);
+                                } else {
+                                    productSearchService.update(productSearchResultVO);
+                                }
                             }
                         }
                     }
