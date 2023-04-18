@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.common.page;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,5 +54,24 @@ public class PageInfo<E> {
      * 数据列表
      */
     private List<E> list;
+
+
+
+    public <T> T formatData(Class<T> clazz)
+    {
+        if(list!=null) {
+            return JSONObject.parseObject(JSONObject.toJSONString(list),clazz);
+        }
+        return null;
+    }
+
+
+    public <T> List<T> formatDataList(Class<T> clazz)
+    {
+        if(list!=null) {
+            return JSONArray.parseArray(JSONObject.toJSONString(list),clazz);
+        }
+        return null;
+    }
 
 }
