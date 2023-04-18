@@ -28,6 +28,7 @@ ribbon:
               toucan-shopping-user,\
               toucan-shopping-seller,\
               toucan-shopping-message,\
+              toucan-shopping-search,\
               toucan-shopping-stock"
 
 
