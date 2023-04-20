@@ -49,7 +49,8 @@ public class ProductSearchController {
                 PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);
                 List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
                 httpServletRequest.setAttribute("productResult",productResult);
-                httpServletRequest.setAttribute("page",productSearchVO.getPage());
+                httpServletRequest.setAttribute("page",pageInfo.getPage());
+                httpServletRequest.setAttribute("total",pageInfo.getTotal());
             }
         }catch(Exception e)
         {
