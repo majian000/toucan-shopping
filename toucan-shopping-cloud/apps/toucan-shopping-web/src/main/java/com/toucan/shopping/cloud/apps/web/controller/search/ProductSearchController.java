@@ -37,9 +37,13 @@ public class ProductSearchController {
 
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public String search(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
-        if(productSearchVO==null||StringUtils.isEmpty(productSearchVO.getKeyword()))
+        if(productSearchVO==null)
         {
-            return "";
+            productSearchVO = new ProductSearchVO();
+        }
+        if(StringUtils.isEmpty(productSearchVO.getKeyword()))
+        {
+            productSearchVO.setKeyword("手机"); //默认关键字
         }
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
@@ -56,7 +60,7 @@ public class ProductSearchController {
         {
             logger.error(e.getMessage(),e);
         }
-        return "";
+        return "search/product_list";
     }
 
 }
