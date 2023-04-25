@@ -1551,6 +1551,15 @@ ul.cate_list li .price font{
 ul.cate_list li .price span{
 	font-size:18px;
 }
+ul.cate_list li .price2{
+	width:208px; height:25px; line-height:25px; overflow:hidden; color:#999999; text-transform:uppercase; margin-top:10px;margin-left: 5%;
+}
+ul.cate_list li .price2 font{
+	color:#ff4e00; font-size:14px;
+}
+ul.cate_list li .price2 span{
+	font-size:18px;
+}
 ul.cate_list li .name{
 	width:208px; height:25px; line-height:25px; overflow:hidden; font-size:14px;
 }

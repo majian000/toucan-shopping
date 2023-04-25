@@ -30,4 +30,6 @@ public class ProductSearchResultVO {
 
     private String productPreviewPath; //商品图片预览
 
+    private String httpProductPreviewPath; //商品图片预览
+
 }

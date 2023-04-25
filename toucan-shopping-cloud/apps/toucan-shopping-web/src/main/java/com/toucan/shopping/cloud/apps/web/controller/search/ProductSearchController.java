@@ -6,8 +6,10 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class ProductSearchController {
     @Autowired
     private FeignProductSearchService feignProductSearchService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
+
 
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public String search(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
@@ -46,12 +51,20 @@ public class ProductSearchController {
             productSearchVO.setKeyword("手机"); //默认关键字
         }
         try {
+            productSearchVO.setSize(20);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
             ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);
                 List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
+                if(CollectionUtils.isNotEmpty(productResult))
+                {
+                    for(ProductSearchResultVO productSearchResultVO:productResult)
+                    {
+                        productSearchResultVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSearchResultVO.getProductPreviewPath());
+                    }
+                }
                 httpServletRequest.setAttribute("productResult",productResult);
                 httpServletRequest.setAttribute("page",pageInfo.getPage());
                 httpServletRequest.setAttribute("total",pageInfo.getTotal());
