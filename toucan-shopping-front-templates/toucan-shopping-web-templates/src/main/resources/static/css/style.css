@@ -283,6 +283,10 @@ ul.cars li .price{
 .menu{
 	width:1200px; height:43px; line-height:43px; color:#3e3e3e; font-size:16px; position:relative; z-index:800;
 }
+
+.menu2{
+	width:80%; height:43px; line-height:43px; color:#3e3e3e; font-size:16px; position:relative; z-index:800;
+}
 ul.menu_r{
 	width:720px; height:40px; overflow:hidden; float:left; display:inline; margin-left:211px;
 }
@@ -380,6 +384,9 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	
 .content{
 	width:1200px; overflow:hidden;
+}
+.content2{
+	width:80%; overflow:hidden;
 }
 .mar_5{
 	margin-top:5px;
@@ -1430,6 +1437,9 @@ ul.cate li{
 .postion{
 	width:1200px; height:40px; line-height:40px; overflow:hidden; font-family:"宋体";
 }
+.postion2{
+	width:80%; height:40px; line-height:40px; overflow:hidden; font-family:"宋体";
+}
 .n_ch{
 	height:23px; line-height:23px; overflow:hidden; float:left; display:inline; margin-left:10px; margin-top:7px; padding:0 10px; border:1px dashed #ff4e00;
 }
@@ -1514,6 +1524,12 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 .list_c ul{
 	overflow:hidden;
 }
+
+
+.l_list2{
+	width:85%; overflow:hidden; float:right; padding-bottom:30px;
+}
+
 ul.cate_list{
 	padding:5px 0;
 }
