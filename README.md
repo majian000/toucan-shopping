@@ -1,6 +1,7 @@
 # 犀鸟电商平台
 
     犀鸟电商平台致力于快速搭建属于自己的电商网站
+    开源协议采用MIT协议,任何人都可以用这个项目进行商用以及二次开发
 
 #### 标准版
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
