@@ -46,7 +46,7 @@ public class ProductSearchController {
         {
             productSearchVO = new ProductSearchVO();
         }
-        if(StringUtils.isEmpty(productSearchVO.getKeyword()))
+        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
         {
             productSearchVO.setKeyword("手机"); //默认关键字
         }
