@@ -3,9 +3,8 @@
 $(function(){
 
     $(".s_btn").bind("click", function () {
-        var sq=$(".s_ipt").val();
-        window.close();
-        window.open(basePath+"/api/product/search?keyword="+sq);
+        $(".s_form").attr("action",basePath+"/api/product/search");
+        $(".s_form").submit();
     });
 
 });

@@ -40,7 +40,13 @@ public class ProductSearchController {
     private ImageUploadService imageUploadService;
 
 
-    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    /**
+     * 商品搜索 支持两种方式(GET、POST)
+     * @param productSearchVO
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/search")
     public String search(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
         if(productSearchVO==null)
         {
