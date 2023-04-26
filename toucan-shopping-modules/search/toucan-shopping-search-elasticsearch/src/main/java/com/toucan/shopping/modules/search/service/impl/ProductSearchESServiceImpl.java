@@ -165,6 +165,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         pageInfo.setPage(productSearchVO.getPage());
         pageInfo.setSize(productSearchVO.getSize());
         pageInfo.setTotal(queryCount(sourceBuilder).longValue());
+        pageInfo.setPageTotal(pageInfo.getTotal()%pageInfo.getSize()==0?(pageInfo.getTotal()/pageInfo.getSize()):((pageInfo.getTotal()/pageInfo.getSize())+1));
         return pageInfo;
     }
 

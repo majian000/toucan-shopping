@@ -2,6 +2,11 @@
 
 server:
   port: ${toucan.port}
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
 spring:
   application:
     name: toucan-shopping-search #应用名称

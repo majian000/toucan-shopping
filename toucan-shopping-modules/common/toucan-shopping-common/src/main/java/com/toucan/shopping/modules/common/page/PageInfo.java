@@ -20,6 +20,11 @@ public class PageInfo<E> {
     private Long total = 0L;
 
     /**
+     * 页总数
+     */
+    private Long pageTotal = 0L;
+
+    /**
      * 页码
      */
     private int page = 1;

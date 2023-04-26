@@ -68,6 +68,7 @@ public class ProductSearchController {
                 httpServletRequest.setAttribute("productResult",productResult);
                 httpServletRequest.setAttribute("page",pageInfo.getPage());
                 httpServletRequest.setAttribute("total",pageInfo.getTotal());
+                httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
             }
         }catch(Exception e)
         {
