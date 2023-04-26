@@ -96,7 +96,7 @@ toucan:
   shopping-pc: #商城PC端
     app-code: 10001001
     base-path: http://8.140.187.184:8083
-    ip-list: 8.140.187.184:8083,8.140.187.184:8083,8.140.187.184:8101,8.140.187.184:8101 #多个用,分割
+    ip-list: 8.140.187.184:8083,8.140.187.184:8083 #多个用,分割
     pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
     product-approve-preview-page: /page/product/approve/preview/paid/ #商品审核预览
     product-detail-page: /page/product/detail/pid/ #商品详情
