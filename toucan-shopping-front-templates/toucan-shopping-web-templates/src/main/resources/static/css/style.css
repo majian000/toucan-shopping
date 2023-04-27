@@ -1466,7 +1466,7 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 }
 
 .l_history{
-	width:209px; overflow:hidden; float:left; border:1px solid #eaeaea;
+	width:14%; overflow:hidden; float:left; border:1px solid #eaeaea;
 }
 .his_t{
 	height:38px; line-height:38px; overflow:hidden; background:url(../images/h_t.gif) no-repeat 10px center; color:#ff4e00; font-size:16px; padding-left:22px; padding-right:10px; border-bottom:1px solid #eaeaea;
@@ -1527,7 +1527,7 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 
 
 .l_list2{
-	width:85%; overflow:hidden; float:right; padding-bottom:30px;
+	width:83%; overflow:hidden; float:right; padding-bottom:30px;
 }
 
 ul.cate_list{
