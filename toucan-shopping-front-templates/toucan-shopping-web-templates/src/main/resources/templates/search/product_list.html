@@ -141,11 +141,11 @@
                     <#if productResult??>
                         <#list productResult as product >
                             <li>
-                                <div class="img"><a href="#"><img src="${product.httpProductPreviewPath}" width="210" height="185" /></a></div>
+                                <div class="img"><a href="${basePath}/page/product/detail/${product.skuId?c}"><img src="${product.httpProductPreviewPath}" width="210" height="185" /></a></div>
                                 <div class="price2">
                                     <font>￥<span>${product.price?c}</span></font>
                                 </div>
-                                <div class="name"><a href="#" title="${product.name}">${product.name}</a></div>
+                                <div class="name"><a href="${basePath}/page/product/detail/${product.skuId?c}" title="${product.name}">${product.name}</a></div>
                                 <div class="carbg">
                                     <a href="#" class="ss">收藏</a>
                                     <a href="#" class="j_car">加入购物车</a>
