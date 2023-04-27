@@ -181,6 +181,9 @@ table.c_tab tr th{
 .s_ipt{
 	width:408px; height:36px; line-height:36px\9; overflow:hidden; color:#555555; font-size:14px; font-family:"Microsoft YaHei"; float:left; padding:0 10px; border:2px solid #ff4e00; border-right:0;
 }
+.q_labels{
+	cursor:pointer;
+}
 .s_btn{
 	width:90px; height:40px; line-height:40px\9; background-color:#ff4e00; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; float:left; border:0; cursor:pointer;
 }
