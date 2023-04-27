@@ -57,6 +57,7 @@ public class ProductSearchController {
             productSearchVO.setKeyword("手机"); //默认关键字
         }
         try {
+            httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
             productSearchVO.setSize(20);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
             ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
