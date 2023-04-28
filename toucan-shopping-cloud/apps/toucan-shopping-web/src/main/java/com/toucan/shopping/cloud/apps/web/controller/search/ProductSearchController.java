@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.web.controller.search;
 
+import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -7,6 +8,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +41,8 @@ public class ProductSearchController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignAttributeKeyService feignAttributeKeyService;
 
     /**
      * 商品搜索 支持两种方式(GET、POST)
@@ -76,6 +80,18 @@ public class ProductSearchController {
                 httpServletRequest.setAttribute("page",pageInfo.getPage());
                 httpServletRequest.setAttribute("total",pageInfo.getTotal());
                 httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
+
+                //查询搜索属性列表
+                if(CollectionUtils.isNotEmpty(productResult)) {
+                    AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
+                    attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
+                    resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        httpServletRequest.setAttribute("attributes",resultObjectVO .formatDataList(AttributeKeyVO.class));
+                    }
+                }
             }
         }catch(Exception e)
         {

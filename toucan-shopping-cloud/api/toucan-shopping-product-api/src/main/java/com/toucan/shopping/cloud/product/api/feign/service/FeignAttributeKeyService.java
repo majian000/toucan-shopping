@@ -85,4 +85,14 @@ public interface FeignAttributeKeyService {
     @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.POST)
     ResultObjectVO queryTreeByCategoryId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询所有可搜索的属性键值对
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/search/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO querySearchList(@RequestBody RequestJsonVO requestJsonVO);
+
 }

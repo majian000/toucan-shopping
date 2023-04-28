@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.AttributeValueService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -794,5 +796,70 @@ public class AttributeKeyController {
     }
 
 
+
+
+    /**
+     * 查询所有可搜索的属性键值对
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/search/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO querySearchList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            AttributeKeyVO keyQuery = requestJsonVO.formatEntity(AttributeKeyVO.class);
+            if(keyQuery==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询不能为空");
+                return resultObjectVO;
+            }
+            if(keyQuery.getCategoryId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询分类条件不能为空");
+                return resultObjectVO;
+            }
+            keyQuery.setQueryStatus((short)1);
+            keyQuery.setShowStatus((short)1);
+            //可被搜素的属性
+            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(keyQuery);
+            if(CollectionUtils.isNotEmpty(attributeKeyVOS))
+            {
+                AttributeValueVO valueQuery = new AttributeValueVO();
+                valueQuery.setAttributeKeyIdList(attributeKeyVOS.stream().map(AttributeKeyVO::getId).distinct().collect(Collectors.toList()));
+                valueQuery.setQueryStatus((short)1);
+                valueQuery.setShowStatus((short)1);
+                List<AttributeValueVO> attributeValueVOS = attributeValueService.queryListBySortDesc(valueQuery);
+                if(CollectionUtils.isNotEmpty(attributeValueVOS))
+                {
+                    for(AttributeKeyVO attributeKeyVO:attributeKeyVOS)
+                    {
+                        attributeKeyVO.setValues(new ArrayList<>());
+                    }
+
+                    for(AttributeValueVO attributeValueVO:attributeValueVOS)
+                    {
+                        for(AttributeKeyVO attributeKeyVO:attributeKeyVOS)
+                        {
+                            if(attributeValueVO.getAttributeKeyId().longValue()==attributeKeyVO.getId().longValue())
+                            {
+                                attributeKeyVO.getValues().add(attributeValueVO);
+                                break;
+                            }
+                        }
+                    }
+                }
+                resultObjectVO.setData(attributeKeyVOS);
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 }
