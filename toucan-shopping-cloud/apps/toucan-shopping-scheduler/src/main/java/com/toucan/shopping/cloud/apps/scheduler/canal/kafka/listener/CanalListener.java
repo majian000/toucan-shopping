@@ -63,7 +63,8 @@ public class CanalListener {
                             if (productSkuVO.getDeleteStatus() != null
                                     && productSkuVO.getDeleteStatus().intValue() == 0
                                     && productSkuVO.getStatus()!=null
-                                    && productSkuVO.getStatus().intValue()==1) {
+                                    && productSkuVO.getStatus().intValue()==1
+                                    && productSkuVO.getStockNum().intValue()>0) {
                                 List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
                                 ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
                                 productSearchResultVO.setId(productSkuVO.getId());
