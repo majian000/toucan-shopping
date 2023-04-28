@@ -73,6 +73,7 @@ public class CanalListener {
                                 productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
                                 productSearchResultVO.setBrandId(productSkuVO.getBrandId());
                                 productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
+                                productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
 
                                 ProductSearchResultVO productSearchResultVOResult = null;
                                 if (!CollectionUtils.isEmpty(productSearchResultVOS)) {

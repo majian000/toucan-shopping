@@ -28,6 +28,8 @@ public class ProductSearchResultVO {
 
     private BigDecimal randk; //权重值
 
+    private String attributeValueGroup; //属性值组合
+
     private String productPreviewPath; //商品图片预览
 
     private String httpProductPreviewPath; //商品图片预览
