@@ -44,22 +44,8 @@ public class ProductSearchController {
     @Autowired
     private FeignAttributeKeyService feignAttributeKeyService;
 
-    /**
-     * 商品搜索 支持两种方式(GET、POST)
-     * @param productSearchVO
-     * @param httpServletRequest
-     * @return
-     */
-    @RequestMapping(value = "/search")
-    public String search(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
-        if(productSearchVO==null)
-        {
-            productSearchVO = new ProductSearchVO();
-        }
-        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
-        {
-            productSearchVO.setKeyword("手机"); //默认关键字
-        }
+    private String doSearch(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest)
+    {
         try {
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
             productSearchVO.setSize(20);
@@ -99,5 +85,49 @@ public class ProductSearchController {
         }
         return "search/product_list";
     }
+
+    /**
+     * 商品搜索 支持两种方式
+     *  /p/search POST
+     *  /g/search GET
+     * @param productSearchVO
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/p/search",method = RequestMethod.POST)
+    public String searchByPost(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
+        if(productSearchVO==null)
+        {
+            productSearchVO = new ProductSearchVO();
+        }
+        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
+        {
+            productSearchVO.setKeyword("手机"); //默认关键字
+        }
+        return this.doSearch(productSearchVO,httpServletRequest);
+    }
+
+    /**
+     * 商品搜索 支持两种方式
+     *  /p/search POST
+     *  /g/search GET
+     * @param productSearchVO
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/g/search",method = RequestMethod.GET)
+    public String searchByGet(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest){
+        if(productSearchVO==null)
+        {
+            productSearchVO = new ProductSearchVO();
+        }
+        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
+        {
+            productSearchVO.setKeyword("手机"); //默认关键字
+        }
+        return this.doSearch(productSearchVO,httpServletRequest);
+    }
+
+
 
 }
