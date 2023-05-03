@@ -145,7 +145,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                 .multiMatchQuery(productSearchVO.getKeyword(),new String[]{"name","brandName","categoryName"})
         );
 
-        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:(productSearchVO.getPage()*productSearchVO.getSize()));
+        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
         sourceBuilder.size(productSearchVO.getSize());
         request.source(sourceBuilder);
 

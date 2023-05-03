@@ -41,6 +41,10 @@ public class ProductSearchController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
         try {
+            if(productSearch.getPage()<1)
+            {
+                productSearch.setPage(1);
+            }
             resultObjectVO.setData(productSearchService.search(productSearch));
         }catch(Exception e)
         {
