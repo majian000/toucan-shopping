@@ -14,7 +14,7 @@ public class BizExceptionFeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         if(response.status() >= 400 && response.status() <= 499){
-            return new HystrixBadRequestException("服务调用失败 请求服务状态码为 "+response.status()+" ");
+            return new HystrixBadRequestException("服务调用失败 status: "+response.status()+" methodKey:"+methodKey);
         }
         return feign.FeignException.errorStatus(methodKey, response);
     }
