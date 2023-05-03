@@ -1592,12 +1592,33 @@ ul.cate_list li:hover .carbg a.j_car{
 	overflow:hidden; color:#888888; padding:20px 10px; text-align:right; font-size:16px; font-family:"宋体"; margin-top:20px;
 }
 .pages a{
-	height:36px; line-height:36px; overflow:hidden; color:#666666; font-size:16px; text-align:center; display:inline-block; padding:0 12px; margin:0 4px; border:1px solid #cccccc; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
+	height:36px;
+	line-height:36px;
+	overflow:hidden;
+	color:#666666;
+	font-size:16px;
+	text-align:center;
+	display:inline-block;
+	padding:0 12px;
+	margin:0 4px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
+	cursor:pointer;
 }
-.pages a:hover, .pages a.cur{
+.pages .pages_a{
+	height:36px; line-height:36px; overflow:hidden; color:#666666; font-size:16px; text-align:center; display:inline-block; padding:0 12px; margin:0 4px; border:1px solid #cccccc; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;cursor:pointer;
+}
+.pages .p_pn:hover, .pages .pages_a.cur{
 	color:#FFF; background-color:#ff4e00; border:1px solid #ff4e00;
 }
 .pages a.p_pre:hover{
+	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
+}
+.pages a.p_next:hover{
+	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
+}
+.pages a.p_jump:hover{
 	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
 }
 

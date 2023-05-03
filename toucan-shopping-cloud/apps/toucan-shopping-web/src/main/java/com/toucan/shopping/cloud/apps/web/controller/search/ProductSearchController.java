@@ -48,7 +48,7 @@ public class ProductSearchController {
     {
         try {
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
-            productSearchVO.setSize(20);
+            productSearchVO.setSize(1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
             ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
             if(resultObjectVO.isSuccess())

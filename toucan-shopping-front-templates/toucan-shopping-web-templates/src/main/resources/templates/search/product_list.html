@@ -77,6 +77,9 @@
     </div>
     <!--End 筛选条件 End-->
 
+    <input type="hidden" id="pageTotal" value="${pageTotal!'1'}"/>
+    <input type="hidden" id="page" value="${page!'1'}"/>
+
     <div class="content2 mar_20">
         <div class="l_history">
             <div class="his_t">
@@ -161,7 +164,7 @@
                 </ul>
 
                 <div class="pages">
-                    <a href="#" class="p_pre">上一页</a><a href="#" class="cur">1</a><a href="#">2</a><a href="#">3</a>...<a href="#">20</a><a href="#" class="p_pre">下一页</a>
+
                 </div>
 
 
@@ -178,6 +181,8 @@
 <#include "/footer.html"/>
 
 </body>
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/search/product/product_list.js"></script>
 
 
 </html>
