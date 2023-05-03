@@ -1,5 +1,7 @@
 
 
+var g_um_cpage=1;
+
 $(function(){
 
 
@@ -11,15 +13,30 @@ $(function(){
 
 function drawPageJumpBtns()
 {
-    var pageTotal = parseInt($("#pageTotal").val());
-    var page = parseInt($("#page").val());
-    var pageHtml="<a  class=\"p_pre pages_a\">上一页</a>";
-    pageHtml+="<a  class=\"cur pages_a\" attr-val=\""+page+"\">"+page+"</a>";
-    for(var i=page+1;i<5;i++)
-    {
-        pageHtml += "<a  class=\"p_pn pages_a\" attr-val=\""+i+"\">"+i+"</a>";
-    }
-    pageHtml+="<a class=\"p_next pages_a\">下一页</a> <a>共"+pageTotal+"页 跳转到<input type=\"text\" class=\"l_ipt\" style=\"width:30px;height: 30px; margin-top: -5px;\" />页 </a><a  class=\"p_jump pages_a\">跳转</a>";
-    $(".pages").html(pageHtml);
+    var cpage = parseInt($("#page").val());
+    var totalPage = parseInt($("#pageTotal").val());
+    var total = parseInt($("#pageTotal").val());
+
+    g_um_cpage = cpage;
+
+    $(".pagination").empty();
+
+    new pagination({
+        pagination: $('.pagination'),
+        maxPage: 7, //最大页码数,支持奇数，左右对称
+        startPage: 1,    //默认第一页
+        currentPage: cpage,          //当前页码
+        totalItemCount: total,    //项目总数,大于0，显示页码总数
+        totalPageCount: totalPage,        //总页数
+        callback: function (pageNum) {
+            if (g_um_cpage != pageNum) {
+                var keyword=$(".s_ipt").val();
+                var searchUrl=searchGetPath+"?keyword="+keyword;
+                window.location=searchUrl+"&page="+pageNum;
+            }
+        }
+    });
+
 
 }
+

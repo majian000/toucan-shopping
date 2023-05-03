@@ -4,7 +4,7 @@ var webName="犀鸟商城";
 var productSkuBasePath="/page/product/detail/";
 var orderPayPath="/page/user/buyCar/pay/";
 var orderDetailPath="/page/order/detail";
-
+var searchGetPath="/api/product/g/search";
 
 /**
  * 模拟post表单提交

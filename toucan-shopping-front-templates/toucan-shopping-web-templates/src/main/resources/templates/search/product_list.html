@@ -17,6 +17,7 @@
 
     <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
     <link rel="stylesheet" type="text/css" href="${basePath}/static/css/MagicZoom.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
     <script type="text/javascript" src="${basePath}/static/js/num.js">
         var jq = jQuery.noConflict();
     </script>
@@ -79,6 +80,7 @@
 
     <input type="hidden" id="pageTotal" value="${pageTotal!'1'}"/>
     <input type="hidden" id="page" value="${page!'1'}"/>
+    <input type="hidden" id="total" value="${total!'0'}"/>
 
     <div class="content2 mar_20">
         <div class="l_history">
@@ -163,8 +165,8 @@
 
                 </ul>
 
-                <div class="pages">
 
+                <div class="pagination" id="pagination">
                 </div>
 
 
@@ -182,6 +184,8 @@
 
 </body>
 
+<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
 <script type="text/javascript" src="${basePath}/static/shopping/web/js/search/product/product_list.js"></script>
 
 
