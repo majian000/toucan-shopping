@@ -96,6 +96,10 @@
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-service-dao</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-controller</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>

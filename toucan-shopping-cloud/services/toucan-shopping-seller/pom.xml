@@ -93,6 +93,10 @@
             <artifactId>toucan-shopping-seller-service-dao</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.toucan.shopping.modules.seller</groupId>
+            <artifactId>toucan-shopping-seller-controller</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
