@@ -512,7 +512,7 @@ public class BrandController extends UIController {
             //查询类别树
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryService.queryMiniTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<CategoryTreeVO> categoryTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryTreeVO.class);

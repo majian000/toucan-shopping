@@ -96,6 +96,15 @@ public interface FeignCategoryService {
 
 
     /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/mini",method = RequestMethod.POST)
+    ResultObjectVO queryMiniTree(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
      * 查询商城首页类别树
      * @param signHeader
      * @param requestJsonVO

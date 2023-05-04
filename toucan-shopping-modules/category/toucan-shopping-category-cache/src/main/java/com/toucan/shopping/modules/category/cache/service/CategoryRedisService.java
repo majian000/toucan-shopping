@@ -45,12 +45,18 @@ public interface CategoryRedisService {
      * @return
      */
     List<CategoryVO> queryWebNavigationCache();
+
     /**
      * 查询简洁版的类别树(只有id,name,children)
      * @return
      */
     List<CategoryVO> queryMiniTree();
 
+    /**
+     * 查询简洁版的类别树(只有id,name,children)
+     * @return
+     */
+    List<CategoryTreeVO> queryCategoryMiniTree();
 
     /**
      * 清空商城首页缓存

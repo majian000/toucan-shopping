@@ -189,6 +189,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
+            public ResultObjectVO queryMiniTree(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryMiniTree faild  params:{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO queryWebIndexTree(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

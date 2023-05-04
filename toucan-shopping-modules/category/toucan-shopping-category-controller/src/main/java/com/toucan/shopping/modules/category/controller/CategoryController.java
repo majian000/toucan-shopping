@@ -819,6 +819,84 @@ public class CategoryController {
     }
 
 
+    /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/mini",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryMiniTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            List<CategoryTreeVO> categoryMiniTree = categoryRedisService.queryCategoryMiniTree();
+            if(CollectionUtils.isEmpty(categoryMiniTree))
+            {
+                try {
+                    CategoryVO queryMiniTree = new CategoryVO();
+                    List<Category> categoryList = categoryService.queryPcIndexList(queryMiniTree);
+                    if(!CollectionUtils.isEmpty(categoryList)) {
+                        List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
+                        for(Category category : categoryList)
+                        {
+                            if(category.getParentId().longValue()==-1) {
+                                CategoryTreeVO treeVO = new CategoryTreeVO();
+                                BeanUtils.copyProperties(treeVO, category);
+                                treeVO.setTitle(category.getName());
+                                treeVO.setText(category.getName());
+                                categoryTreeVOS.add(treeVO);
+
+                                treeVO.setChildren(new ArrayList<CategoryTreeVO>());
+                                categoryService.setChildren(categoryList,treeVO);
+                            }
+                        }
+                        categoryRedisService.flushWMiniTree(categoryTreeVOS);
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                }
+            }
+
+            for(CategoryTreeVO categoryTreeVO:categoryMiniTree)
+            {
+                categoryTreeVO.setPid(-1L);
+                categoryTreeVO.setTitle(categoryTreeVO.getName());
+                categoryTreeVO.setText(categoryTreeVO.getName());
+                categoryTreeVO.setPid(categoryTreeVO.getParentId());
+                categoryTreeVO.setPath(categoryTreeVO.getName());
+            }
+
+            CategoryTreeVO rootTreeVO = new CategoryTreeVO();
+            rootTreeVO.setTitle("商城分类");
+            rootTreeVO.setParentId(-1L);
+            rootTreeVO.setPid(-1L);
+            rootTreeVO.setId(-1L);
+            rootTreeVO.setText("商城分类");
+            if(!CollectionUtils.isEmpty(categoryMiniTree))
+            {
+                rootTreeVO.setChildren(categoryMiniTree);
+            }
+
+            categoryService.complementChildren(rootTreeVO);
+            List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            rootCategoryTreeVOS.add(rootTreeVO);
+            resultObjectVO.setData(rootCategoryTreeVOS);
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 查询PC端首页类别树

@@ -63,6 +63,11 @@ public interface CategoryService {
      */
     void setChildren(List<Category> categoryVOS, CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
+    /**
+     * 补全子节点
+     * @param currentNode
+     */
+    void complementChildren(CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
     /**
      * 查询树表格

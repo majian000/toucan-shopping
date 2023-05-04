@@ -157,6 +157,24 @@ public class CategoryServiceImpl implements CategoryService {
 
 
 
+    public void complementChildren(CategoryTreeVO currentNode) {
+        for (CategoryTreeVO categoryTreeVO : currentNode.getChildren()) {
+            categoryTreeVO.setTitle(categoryTreeVO.getName());
+            categoryTreeVO.setText(categoryTreeVO.getName());
+            categoryTreeVO.setPid(currentNode.getId());
+            categoryTreeVO.setParentId(currentNode.getId());
+            if(currentNode.getPath()!=null) {
+                categoryTreeVO.setPath(currentNode.getPath() +"》"+categoryTreeVO.getName());
+            }
+
+            if(CollectionUtils.isNotEmpty(categoryTreeVO.getChildren())) {
+                //查找当前节点的子节点
+                complementChildren(categoryTreeVO);
+            }
+        }
+    }
+
+
     @Override
     public List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo) {
         return categoryMapper.findTreeTableByPageInfo(queryTreeInfo);
