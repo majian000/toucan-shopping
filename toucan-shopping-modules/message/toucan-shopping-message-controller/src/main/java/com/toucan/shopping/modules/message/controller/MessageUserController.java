@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.message.controller;
+package com.toucan.shopping.modules.message.controller;
 
 
 import com.alibaba.fastjson.JSONObject;

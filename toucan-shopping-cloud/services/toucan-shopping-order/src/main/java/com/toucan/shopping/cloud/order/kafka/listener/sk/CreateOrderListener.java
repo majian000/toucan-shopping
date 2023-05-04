@@ -1,13 +1,10 @@
 package com.toucan.shopping.cloud.order.kafka.listener.sk;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
-import com.toucan.shopping.modules.order.entity.Order;
-import com.toucan.shopping.modules.order.entity.OrderItem;
-import com.toucan.shopping.modules.order.kafka.constant.OrderMessageTopicConstant;
-import com.toucan.shopping.modules.order.message.CreateOrderMessage;
+import com.toucan.shopping.cloud.order.kafka.constant.OrderMessageTopicConstant;
+import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -19,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 

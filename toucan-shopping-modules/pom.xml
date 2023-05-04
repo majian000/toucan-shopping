@@ -137,6 +137,8 @@
         <module>order/toucan-shopping-order-entity-vo</module>
         <!--订单Service和DAO -->
         <module>order/toucan-shopping-order-service-dao</module>
+        <!--订单控制层-->
+        <module>order/toucan-shopping-order-controller</module>
         <!-- 订单编号生成 -->
         <module>order/toucan-shopping-order-no</module>
 
@@ -160,6 +162,8 @@
         <module>message/toucan-shopping-message-entity-vo</module>
         <!--消息Service和DAO -->
         <module>message/toucan-shopping-message-service-dao</module>
+        <!--消息控制器层-->
+        <module>message/toucan-shopping-message-controller</module>
         <!--消息的redis -->
         <module>message/toucan-shopping-message-redis</module>
 
@@ -299,6 +303,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.order</groupId>
                 <artifactId>toucan-shopping-order-no</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -510,6 +521,20 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.user</groupId>
                 <artifactId>toucan-shopping-message-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-redis</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

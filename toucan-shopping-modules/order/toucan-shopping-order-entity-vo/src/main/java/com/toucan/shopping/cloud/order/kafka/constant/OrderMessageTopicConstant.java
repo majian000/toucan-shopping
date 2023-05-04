@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.order.kafka.constant;
+package com.toucan.shopping.cloud.order.kafka.constant;
 
 public enum OrderMessageTopicConstant {
     //秒杀创建订单消息

@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.order.controller;
+package com.toucan.shopping.modules.order.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

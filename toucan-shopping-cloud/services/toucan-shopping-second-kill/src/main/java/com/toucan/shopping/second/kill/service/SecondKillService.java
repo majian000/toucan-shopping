@@ -1,7 +1,7 @@
 package com.toucan.shopping.second.kill.service;
 
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
-import com.toucan.shopping.modules.order.message.CreateOrderMessage;
+import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.message.InventoryReductionMessage;
 

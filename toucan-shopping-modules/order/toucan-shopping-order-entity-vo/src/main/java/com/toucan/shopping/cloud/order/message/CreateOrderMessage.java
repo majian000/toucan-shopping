@@ -1,9 +1,6 @@
-package com.toucan.shopping.modules.order.message;
+package com.toucan.shopping.cloud.order.message;
 
 import lombok.Data;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 创建订单消息

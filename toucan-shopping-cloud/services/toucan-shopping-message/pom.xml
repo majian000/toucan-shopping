@@ -112,6 +112,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.modules.message</groupId>
+            <artifactId>toucan-shopping-message-controller</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.toucan.shopping.cloud.modules.config</groupId>
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>

@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.message.controller;
+package com.toucan.shopping.modules.message.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -8,7 +8,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.message.entity.MessageType;
-import com.toucan.shopping.modules.message.entity.MessageUser;
 import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
 import com.toucan.shopping.modules.message.redis.MessageTypeLockKey;
 import com.toucan.shopping.modules.message.redis.service.MessageTypeRedisService;
