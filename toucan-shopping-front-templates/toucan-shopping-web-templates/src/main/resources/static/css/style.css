@@ -1573,18 +1573,18 @@ ul.cate_list li .carbg a.ss{
 	width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
 }
 ul.cate_list li .carbg a.ss:hover{
-	color:#888888; background:url(../images/heart_h.png) no-repeat 10px center;
-}
-ul.cate_list li:hover .carbg a.ss{
-	color:#888888; background:url(../images/heart_h.png) no-repeat 10px center;
+	color:#ff4e00;  background:url(../images/heart_h.png) no-repeat 10px center;
 }
 ul.cate_list li .carbg a.j_car{
-	width:138px; height:28px; line-height:28px; overflow:hidden; background:url(../images/cars.png) no-repeat 24px center; color:#ff4e00; text-indent:47px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+	width:138px; height:28px; line-height:28px; overflow:hidden;
+	background:url(../images/cars.png) no-repeat 24px center;
+	color:#ff4e00;
+	text-indent:47px;
+	float:left;
+	display:inline;
+	margin-right:-1px; border:1px solid #cccccc;
 }
 ul.cate_list li .carbg a.j_car:hover{
-	color:#FFF; background:url(../images/cars_h.png) no-repeat 24px center; background-color:#ff4e00; border:1px solid #ff4e00;
-}
-ul.cate_list li:hover .carbg a.j_car{
 	color:#FFF; background:url(../images/cars_h.png) no-repeat 24px center; background-color:#ff4e00; border:1px solid #ff4e00;
 }
 
