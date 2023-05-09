@@ -22,6 +22,7 @@
         var jq = jQuery.noConflict();
     </script>
     <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/common-product.js"></script>
 
 
 
@@ -156,8 +157,8 @@
                                 </div>
                                 <div class="name"><a href="${basePath}/page/product/detail/${product.skuId?c}" title="${product.name}"  target="_blank">${product.name}</a></div>
                                 <div class="carbg">
-                                    <a href="#" class="ss">收藏</a>
-                                    <a href="#" class="j_car" attr-pid="${product.id?c}">加入购物车</a>
+                                    <a class="ss">收藏</a>
+                                    <a  class="j_car p_l_ac" attr-pid="${product.id?c}">加入购物车</a>
                                 </div>
                             </li>
                         </#list>
@@ -179,6 +180,7 @@
 
 
 
+<#include "/common_user_car.html"/>
 
 <#include "/footer.html"/>
 
