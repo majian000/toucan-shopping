@@ -6,8 +6,11 @@ import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexResponse;
@@ -27,6 +30,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -244,5 +248,41 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
         //强制刷新
         updateResponse.forcedRefresh();
+    }
+
+    @Override
+    public boolean removeById(Long id,List<Long> deleteFaildIdList) throws Exception {
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(ProductIndex.PRODUCT_SKU_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("skuId", id));
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            DeleteRequest deleteRequest = new DeleteRequest(ProductIndex.PRODUCT_SKU_INDEX);
+            deleteRequest.id(searchHit.getId());
+            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+            {
+                //强制刷新
+                deleteResponse.forcedRefresh();
+            }else{
+                //保存删除失败ID
+                deleteFaildIdList.add(Long.parseLong(searchHit.getId()));
+            }
+        }
+        //没有删除失败的ID
+        if(CollectionUtils.isEmpty(deleteFaildIdList))
+        {
+            return true;
+        }
+        return false;
     }
 }

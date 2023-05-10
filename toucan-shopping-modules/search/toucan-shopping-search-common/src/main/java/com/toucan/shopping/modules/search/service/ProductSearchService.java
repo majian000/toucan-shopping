@@ -48,6 +48,14 @@ public interface ProductSearchService {
     void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException;
 
     /**
+     * 移除商品
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    boolean removeById(Long id,List<Long> deleteFaildIdList) throws Exception;
+
+    /**
      * 是否存在索引
      * @return
      */
