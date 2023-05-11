@@ -45,6 +45,7 @@ public class ProductSearchController {
             {
                 productSearch.setPage(1);
             }
+
             resultObjectVO.setData(productSearchService.search(productSearch));
         }catch(Exception e)
         {

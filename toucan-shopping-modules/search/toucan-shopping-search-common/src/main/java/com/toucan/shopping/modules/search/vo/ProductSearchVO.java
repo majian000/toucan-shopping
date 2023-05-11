@@ -14,4 +14,6 @@ public class ProductSearchVO extends SearchVO{
 
     private BigDecimal price; //价格
 
+    private String cid; //分类ID
+
 }

@@ -74,4 +74,8 @@ public class CategoryVO extends Category {
      */
     private List<String> namePaths;
 
+    /**
+     * 分类路径
+     */
+    private String path;
 }

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -122,6 +123,9 @@ public class CanalListener {
                                         ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
                                         if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                                             CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
+                                            //反转ID
+                                            Collections.reverse(categoryVO.getIdPath());
+                                            productSearchResultVO.setCategoryIdPath(StringUtils.join(categoryVO.getIdPath(),"."));
                                             productSearchResultVO.setCategoryName(categoryVO.getName());
                                         }
                                     }

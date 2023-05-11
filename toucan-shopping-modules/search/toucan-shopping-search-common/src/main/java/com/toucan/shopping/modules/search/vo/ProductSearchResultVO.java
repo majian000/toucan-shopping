@@ -24,6 +24,8 @@ public class ProductSearchResultVO {
 
     private String categoryName; //分类名称
 
+    private String categoryIdPath; //分类ID路径 格式 .根节点.一级节点.二级节点
+
     private Long categoryId; //分类ID
 
     private BigDecimal randk; //权重值
