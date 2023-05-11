@@ -417,13 +417,16 @@ public class CategoryController {
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter_2021&")!=-1)
+                            if(treeVO.getName().indexOf("/")!=-1)
                             {
                                 String[] names = treeVO.getName().split("/");
-                                String[] hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
+                                String[] hrefs = new String[0];
+                                if(StringUtils.isNotEmpty(treeVO.getHref())) {
+                                    hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
+                                }
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
+                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\" attr-id=\""+category.getId()+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
@@ -433,7 +436,7 @@ public class CategoryController {
                                     }
                                 }else{
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\"#\">");
+                                        linkhtml.append("<a class=\"category_a\" href=\"#\" attr-id=\""+category.getId()+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
@@ -457,7 +460,7 @@ public class CategoryController {
             }
         }catch(Exception e)
         {
-            logger.warn(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");

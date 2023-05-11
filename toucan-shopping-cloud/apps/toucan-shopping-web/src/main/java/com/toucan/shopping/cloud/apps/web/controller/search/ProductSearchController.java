@@ -48,6 +48,7 @@ public class ProductSearchController {
     {
         try {
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
+            httpServletRequest.setAttribute("cid",productSearchVO.getCid());
             productSearchVO.setSize(20);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
             ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
@@ -100,9 +101,10 @@ public class ProductSearchController {
         {
             productSearchVO = new ProductSearchVO();
         }
-        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
-        {
-            productSearchVO.setKeyword("手机"); //默认关键字
+        if(StringUtils.isEmpty(productSearchVO.getCid())) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+                productSearchVO.setKeyword("手机"); //默认关键字
+            }
         }
         return this.doSearch(productSearchVO,httpServletRequest);
     }
@@ -121,9 +123,10 @@ public class ProductSearchController {
         {
             productSearchVO = new ProductSearchVO();
         }
-        if(StringUtils.isEmpty(productSearchVO.getKeyword())||productSearchVO.getKeyword().length()>50)
-        {
-            productSearchVO.setKeyword("手机"); //默认关键字
+        if(StringUtils.isEmpty(productSearchVO.getCid())) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+                productSearchVO.setKeyword("手机"); //默认关键字
+            }
         }
         return this.doSearch(productSearchVO,httpServletRequest);
     }

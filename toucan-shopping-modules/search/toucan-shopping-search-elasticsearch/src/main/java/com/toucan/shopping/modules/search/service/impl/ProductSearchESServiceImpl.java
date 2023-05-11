@@ -141,13 +141,28 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception {
 
         List<ProductSearchResultVO> queryResult = new LinkedList<>();
+        if(StringUtils.isEmpty(productSearchVO.getKeyword())&&StringUtils.isEmpty(productSearchVO.getCid()))
+        {
+            PageInfo pageInfo = new PageInfo();
+            pageInfo.setList(queryResult);
+            pageInfo.setPage(productSearchVO.getPage());
+            pageInfo.setSize(productSearchVO.getSize());
+            return pageInfo;
+        }
 
         SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders
-                .multiMatchQuery(productSearchVO.getKeyword(),new String[]{"name","brandName","categoryName"})
-        );
+        if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
+            sourceBuilder.query(QueryBuilders
+                    .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName", "categoryName"})
+            );
+        }
+        if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
+            sourceBuilder.query(QueryBuilders
+                    .multiMatchQuery(productSearchVO.getCid(), new String[]{"categoryIdPath"})
+            );
+        }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
         sourceBuilder.size(productSearchVO.getSize());
