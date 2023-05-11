@@ -12,7 +12,7 @@ $(function(){
 
     $(".category_a").bind("click", function () {
         var href = $(this).attr("href");
-        if(href==null||href==""||href=="#"||href=="javascript:void(0)")
+        if(href==null||href==""||href=="#"||href=="null"||href=="javascript:void(0)")
         {
             window.location.href=searchGetPath+"?cid="+$(this).attr("attr-id");
         }else{
