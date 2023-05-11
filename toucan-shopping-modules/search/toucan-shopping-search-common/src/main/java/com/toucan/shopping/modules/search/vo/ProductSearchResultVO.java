@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.search.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 商品搜索响应对象
@@ -25,6 +26,8 @@ public class ProductSearchResultVO {
     private String categoryName; //分类名称
 
     private String categoryIdPath; //分类ID路径 格式 .根节点.一级节点.二级节点
+
+    private List<String> categoryIds; //分类ID路径列表
 
     private Long categoryId; //分类ID
 

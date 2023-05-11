@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -126,6 +127,11 @@ public class CanalListener {
                                             //反转ID
                                             Collections.reverse(categoryVO.getIdPath());
                                             productSearchResultVO.setCategoryIdPath(StringUtils.join(categoryVO.getIdPath(),"."));
+                                            productSearchResultVO.setCategoryIds(new LinkedList<>());
+                                            for(Long categoryId:categoryVO.getIdPath())
+                                            {
+                                                productSearchResultVO.getCategoryIds().add(String.valueOf(categoryId));
+                                            }
                                             productSearchResultVO.setCategoryName(categoryVO.getName());
                                         }
                                     }

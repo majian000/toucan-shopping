@@ -159,9 +159,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             );
         }
         if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
-            sourceBuilder.query(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getCid(), new String[]{"categoryIdPath"})
-            );
+            sourceBuilder.query(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
