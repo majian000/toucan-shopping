@@ -126,7 +126,6 @@ public class CanalListener {
                                             CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
                                             //反转ID
                                             Collections.reverse(categoryVO.getIdPath());
-                                            productSearchResultVO.setCategoryIdPath(StringUtils.join(categoryVO.getIdPath(),"."));
                                             productSearchResultVO.setCategoryIds(new LinkedList<>());
                                             for(Long categoryId:categoryVO.getIdPath())
                                             {

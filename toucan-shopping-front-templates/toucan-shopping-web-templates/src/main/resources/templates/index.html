@@ -69,7 +69,7 @@
                                                     <div style="padding-left: 10px;">
                                                     <#list cc.children as ccc>
                                                         <#if ccc.showStatus?? && ccc.showStatus==1>
-                                                             <a href="${ccc.href!'/api/product/g/search?cid='+cc.id?c}" class="ac cals" >${ccc.name!}</a>|
+                                                             <a href="${ccc.href!'/api/product/g/search?cid='+ccc.id?c}" class="ac cals" >${ccc.name!}</a>|
                                                          </#if>
                                                      </#list>
                                                     </div>

@@ -118,6 +118,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+
+                    //分类ID数组
+                    builder.startObject("categoryIds");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.endObject();
+
                     //权重值
                     builder.startObject("randk");
                     {
