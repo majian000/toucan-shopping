@@ -71,7 +71,12 @@ public class ProductSearchController {
                 //查询搜索属性列表
                 if(CollectionUtils.isNotEmpty(productResult)) {
                     AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
-                    attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    if(StringUtils.isNotEmpty(productSearchVO.getCid()))
+                    {
+                        attributeKeyVO.setCategoryId(Long.parseLong(productSearchVO.getCid()));
+                    }else {
+                        attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    }
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
                     resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
                     if(resultObjectVO.isSuccess())
