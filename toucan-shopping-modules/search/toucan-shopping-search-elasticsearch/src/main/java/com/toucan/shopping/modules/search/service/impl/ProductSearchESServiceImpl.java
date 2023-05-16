@@ -160,14 +160,20 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
         SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
+        //名称查询
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
             sourceBuilder.query(QueryBuilders
                     .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName", "categoryName"})
             );
         }
+        //分类查询
         if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
             sourceBuilder.query(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
+        }
+        //品牌查询
+        if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
+            sourceBuilder.query(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));

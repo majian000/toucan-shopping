@@ -98,6 +98,13 @@
                 </foreach>
             </if>
 
+            <if test="categoryId!=null and categoryId!='' ">
+                and t.category_id_cache like binary concat(#{name},'%')
+            </if>
+
+            <if test="name!=null and name!=''  ">
+                and (t.chinese_name=#{name} or t.english_name=#{name})
+            </if>
 
             and t.delete_status = 0
 

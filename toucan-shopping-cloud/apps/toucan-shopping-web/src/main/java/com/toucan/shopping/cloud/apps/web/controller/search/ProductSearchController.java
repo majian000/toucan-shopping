@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.search;
 
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -9,6 +10,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 商品搜索
@@ -44,14 +47,32 @@ public class ProductSearchController {
     @Autowired
     private FeignAttributeKeyService feignAttributeKeyService;
 
+    @Autowired
+    private FeignBrandService feignBrandService;
+
     private String doSearch(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest)
     {
         try {
+            BrandVO queryBrandVO = new BrandVO();
+            queryBrandVO.setCategoryId(productSearchVO.getCid());
+            queryBrandVO.setName(productSearchVO.getKeyword());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrandVO);
+            ResultObjectVO resultObjectVO = feignBrandService.findListByNameAndCategoryId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
+                if(CollectionUtils.isNotEmpty(brands))
+                {
+                    httpServletRequest.setAttribute("brands",brands);
+                    productSearchVO.setBrandIds(brands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
+                }
+            }
+
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
             httpServletRequest.setAttribute("cid",productSearchVO.getCid());
             productSearchVO.setSize(20);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
-            ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
+            resultObjectVO = feignProductSearchService.search(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);

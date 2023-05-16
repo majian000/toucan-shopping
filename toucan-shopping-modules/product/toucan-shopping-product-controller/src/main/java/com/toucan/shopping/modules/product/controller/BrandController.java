@@ -512,6 +512,57 @@ public class BrandController {
 
 
 
+
+
+
+
+    /**
+     * 根据名称以及分类ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/name/categoryId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findListByNameAndCategoryId(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            BrandVO query = JSONObject.parseObject(requestVo.getEntityJson(),BrandVO.class);
+            if(StringUtils.isEmpty(query.getName()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("名称不能为空");
+                return resultObjectVO;
+            }
+
+            List<Brand> brands = brandService.queryList(query);
+            if(CollectionUtils.isEmpty(brands))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌列表为空");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(brands);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 根据ID删除
      * @param requestJsonVO
