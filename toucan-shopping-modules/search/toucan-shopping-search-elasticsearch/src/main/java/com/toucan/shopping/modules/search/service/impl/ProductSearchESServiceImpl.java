@@ -126,6 +126,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+
+                    //品牌ID
+                    builder.startObject("brandId");
+                    {
+                        builder.field("type", "long");
+                    }
+                    builder.endObject();
+
                     //权重值
                     builder.startObject("randk");
                     {

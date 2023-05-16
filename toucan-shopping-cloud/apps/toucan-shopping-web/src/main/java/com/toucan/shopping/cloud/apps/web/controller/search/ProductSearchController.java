@@ -63,6 +63,17 @@ public class ProductSearchController {
                 List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
                 if(CollectionUtils.isNotEmpty(brands))
                 {
+                    for(BrandVO brandVO:brands)
+                    {
+                        if(StringUtils.isNotEmpty(brandVO.getChineseName())&&StringUtils.isNotEmpty(brandVO.getEnglishName()))
+                        {
+                            brandVO.setName(brandVO.getChineseName() + "/"+brandVO.getEnglishName());
+                        }else if(StringUtils.isNotEmpty(brandVO.getChineseName())){
+                            brandVO.setName(brandVO.getChineseName());
+                        }else if(StringUtils.isNotEmpty(brandVO.getEnglishName())){
+                            brandVO.setName(brandVO.getEnglishName());
+                        }
+                    }
                     httpServletRequest.setAttribute("brands",brands);
                     productSearchVO.setBrandIds(brands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
                 }

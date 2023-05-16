@@ -47,10 +47,14 @@
 <div class="i_bg">
     <div class="postion2">
         <span class="fl">全部 >  </span>
-        <span class="n_ch">
-            <span class="fl">品牌：<font>香奈儿</font></span>
-            <a href="#"><img src="${basePath}/static/images/s_close.gif" /></a>
-        </span>
+        <#if brands??>
+            <#list brands as brand>
+                <span class="n_ch">
+                    <span class="fl">品牌：<font>${brand.name!''}</font></span>
+                    <a href="#"><img src="${basePath}/static/images/s_close.gif" /></a>
+                </span>
+            </#list>
+        </#if>
         &nbsp;<b>"${keyword!''}"</b>
     </div>
     <!--Begin 筛选条件 Begin-->
