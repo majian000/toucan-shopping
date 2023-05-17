@@ -33,11 +33,6 @@
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
 
-        <!--elasticsearch -->
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-elasticsearch</artifactId>
-        </dependency>
 
     </dependencies>
 
