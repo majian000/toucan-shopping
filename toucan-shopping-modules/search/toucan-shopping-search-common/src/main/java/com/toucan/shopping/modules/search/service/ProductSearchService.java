@@ -3,7 +3,6 @@ package com.toucan.shopping.modules.search.service;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,13 +25,6 @@ public interface ProductSearchService {
      */
     PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception;
 
-    /**
-     * 查询数量
-     * @param searchSourceBuilder
-     * @return
-     * @throws Exception
-     */
-    Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception;
 
     /**
      * 保存商品到搜索中间件
