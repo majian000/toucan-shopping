@@ -646,7 +646,7 @@ public class ProductSkuController {
                             productSkuList.add(productSkuEntity);
                         }
                     }else{
-                        logger.warn("exists product sku uuid is null {}",requestJsonVO.getEntityJson());
+                        logger.warn("exists product sku id is null {}",requestJsonVO.getEntityJson());
                     }
                 }
                 resultObjectVO.setData(productSkuList);

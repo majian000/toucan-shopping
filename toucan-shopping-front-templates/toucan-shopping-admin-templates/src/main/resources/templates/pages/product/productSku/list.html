@@ -323,12 +323,17 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
+                var reqData= new Array();
+                for(var i=0;i<data.length;i++)
+                {
+                    reqData.push({id:data[i].id});
+                }
                 layer.confirm('确定同步到搜索?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/productSku/flush/search",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
-                        data:JSON.stringify(data),
+                        data:JSON.stringify({productSkuVOList:reqData}),
                         success:function(data){
                             layer.msg(data.msg);
 
