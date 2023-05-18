@@ -22,16 +22,16 @@ import javax.annotation.PostConstruct;
 public class AfterStartConfig {
 
     @Autowired
-    public static ProductSearchService productSearchService;
+    public ProductSearchService productSearchService;
 
     @Autowired
-    public static Toucan toucan;
+    public Toucan toucan;
 
     @Autowired
-    public static FeignCategoryService feignCategoryService;
+    public FeignCategoryService feignCategoryService;
 
     @Autowired
-    public static FeignBrandService feignBrandService;
+    public FeignBrandService feignBrandService;
 
 
 
