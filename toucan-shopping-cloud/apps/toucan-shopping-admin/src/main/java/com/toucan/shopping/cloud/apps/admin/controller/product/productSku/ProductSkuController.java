@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
@@ -700,6 +701,7 @@ public class ProductSkuController extends UIController {
 
 
 
+
     /**
      * SKU同步搜索缓存
      * @param shopProductVO
@@ -727,86 +729,7 @@ public class ProductSkuController extends UIController {
                 {
                     for(ProductSkuVO productSkuVO:productSkuVOS)
                     {
-                        if (productSkuVO.getDeleteStatus() != null
-                                && productSkuVO.getDeleteStatus().intValue() == 0
-                                && productSkuVO.getStatus() != null
-                                && productSkuVO.getStatus().intValue() == 1
-                                && productSkuVO.getStockNum().intValue() > 0) {
-                            List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
-                            ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
-                            productSearchResultVO.setId(productSkuVO.getId());
-                            productSearchResultVO.setSkuId(productSkuVO.getId());
-                            productSearchResultVO.setName(productSkuVO.getName());
-                            productSearchResultVO.setPrice(productSkuVO.getPrice());
-                            productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
-                            productSearchResultVO.setBrandId(productSkuVO.getBrandId());
-                            productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
-                            productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
-
-                            ProductSearchResultVO productSearchResultVOResult = null;
-                            if (!CollectionUtils.isEmpty(productSearchResultVOS)) {
-                                productSearchResultVOResult = productSearchResultVOS.get(0);
-                            }
-
-                            //查询品牌名称
-                            if (productSearchResultVOResult == null
-                                    || productSearchResultVOResult.getBrandId() == null
-                                    || productSearchResultVOResult.getBrandId().longValue() != productSearchResultVO.getBrandId().longValue()) {
-
-                                BrandVO queryBrand = new BrandVO();
-                                queryBrand.setId(productSkuVO.getBrandId());
-                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
-                                resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
-                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                                    List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
-                                    if (CollectionUtils.isNotEmpty(brands)) {
-                                        BrandVO brandVO = brands.get(0);
-                                        if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                                            productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
-                                        } else {
-                                            if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
-                                                productSearchResultVO.setBrandName(brandVO.getChineseName());
-                                            }
-                                            if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                                                productSearchResultVO.setBrandName(brandVO.getEnglishName());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            //查询分类名称
-                            if (productSearchResultVOResult == null
-                                    || productSearchResultVOResult.getCategoryId() == null
-                                    || productSearchResultVOResult.getCategoryId().longValue() != productSearchResultVO.getCategoryId().longValue()) {
-
-                                CategoryVO queryCategoryVO = new CategoryVO();
-                                queryCategoryVO.setId(productSkuVO.getCategoryId());
-                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                                resultObjectVO = feignCategoryService.queryById(requestJsonVO);
-                                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
-                                    //反转ID
-                                    Collections.reverse(categoryVO.getIdPath());
-                                    productSearchResultVO.setCategoryIds(new LinkedList<>());
-                                    for(Long categoryId:categoryVO.getIdPath())
-                                    {
-                                        productSearchResultVO.getCategoryIds().add(String.valueOf(categoryId));
-                                    }
-                                    productSearchResultVO.setCategoryName(categoryVO.getName());
-                                }
-                            }
-
-                            if (CollectionUtils.isEmpty(productSearchResultVOS)) {
-                                productSearchService.save(productSearchResultVO);
-                            } else {
-                                productSearchService.update(productSearchResultVO);
-                            }
-                        }else if(productSkuVO.getDeleteStatus().intValue() == 1)
-                        {
-                            List<Long> deleteFaildList = new ArrayList<>();
-                            productSearchService.removeById(productSkuVO.getId(),deleteFaildList);
-                        }
+                        SearchUtils.flushToSearch(productSkuVO);
                     }
                 }
 
