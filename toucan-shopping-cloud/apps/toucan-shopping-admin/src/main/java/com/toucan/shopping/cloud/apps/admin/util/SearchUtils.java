@@ -58,53 +58,43 @@ public class SearchUtils {
                 productSearchResultVOResult = productSearchResultVOS.get(0);
             }
 
-            //查询品牌名称
-            if (productSearchResultVOResult == null
-                    || productSearchResultVOResult.getBrandId() == null
-                    || productSearchResultVOResult.getBrandId().longValue() != productSearchResultVO.getBrandId().longValue()) {
-
-                BrandVO queryBrand = new BrandVO();
-                queryBrand.setId(productSkuVO.getBrandId());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
-                ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
-                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                    List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
-                    if (CollectionUtils.isNotEmpty(brands)) {
-                        BrandVO brandVO = brands.get(0);
-                        if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                            productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
-                        } else {
-                            if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
-                                productSearchResultVO.setBrandName(brandVO.getChineseName());
-                            }
-                            if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
-                                productSearchResultVO.setBrandName(brandVO.getEnglishName());
-                            }
+            //查询品牌信息
+            BrandVO queryBrand = new BrandVO();
+            queryBrand.setId(productSkuVO.getBrandId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
+            ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
+                if (CollectionUtils.isNotEmpty(brands)) {
+                    BrandVO brandVO = brands.get(0);
+                    if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                        productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
+                    } else {
+                        if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                            productSearchResultVO.setBrandName(brandVO.getChineseName());
+                        }
+                        if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                            productSearchResultVO.setBrandName(brandVO.getEnglishName());
                         }
                     }
                 }
             }
 
-            //查询分类名称
-            if (productSearchResultVOResult == null
-                    || productSearchResultVOResult.getCategoryId() == null
-                    || productSearchResultVOResult.getCategoryId().longValue() != productSearchResultVO.getCategoryId().longValue()) {
-
-                CategoryVO queryCategoryVO = new CategoryVO();
-                queryCategoryVO.setId(productSkuVO.getCategoryId());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
-                if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
-                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
-                    //反转ID
-                    Collections.reverse(categoryVO.getIdPath());
-                    productSearchResultVO.setCategoryIds(new LinkedList<>());
-                    for(Long categoryId:categoryVO.getIdPath())
-                    {
-                        productSearchResultVO.getCategoryIds().add(String.valueOf(categoryId));
-                    }
-                    productSearchResultVO.setCategoryName(categoryVO.getName());
+            //查询分类
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setId(productSkuVO.getCategoryId());
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
+                //反转ID
+                Collections.reverse(categoryVO.getIdPath());
+                productSearchResultVO.setCategoryIds(new LinkedList<>());
+                for(Long categoryId:categoryVO.getIdPath())
+                {
+                    productSearchResultVO.getCategoryIds().add(String.valueOf(categoryId));
                 }
+                productSearchResultVO.setCategoryName(categoryVO.getName());
             }
 
             if (CollectionUtils.isEmpty(productSearchResultVOS)) {

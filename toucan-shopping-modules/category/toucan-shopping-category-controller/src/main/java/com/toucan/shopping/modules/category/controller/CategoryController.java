@@ -285,10 +285,7 @@ public class CategoryController {
                 BeanUtils.copyProperties(categoryTreeVO,category);
                 categoryTreeVO.setIdPath(new LinkedList<>());
                 categoryTreeVO.getIdPath().add(categoryTreeVO.getId());
-                Long parentId = categoryTreeVO.getParentId();
-                categoryTreeVO.getIdPath().add(parentId);
-                categoryService.setPath(categoryTreeVO);
-                categoryTreeVO.setParentId(parentId);
+                categoryService.setPath(categoryTreeVO,categoryTreeVO.getParentId());
             }
             resultObjectVO.setData(categoryTreeVO);
         }catch(Exception e)

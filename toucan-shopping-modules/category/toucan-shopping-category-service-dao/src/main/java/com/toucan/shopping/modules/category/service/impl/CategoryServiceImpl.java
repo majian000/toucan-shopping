@@ -253,15 +253,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void setPath(CategoryTreeVO categoryTreeVO) {
-        if(categoryTreeVO.getParentId()!=null&&categoryTreeVO.getParentId().longValue()!=-1)
+    public void setPath(CategoryTreeVO categoryTreeVO,Long parentId) {
+        if(parentId!=null&&parentId.longValue()!=-1)
         {
-            Category parentCategory = this.queryById(categoryTreeVO.getParentId());
+            Category parentCategory = this.queryById(parentId);
             if(parentCategory!=null) {
                 categoryTreeVO.setPath(parentCategory.getName()+"》"+categoryTreeVO.getName());
-                categoryTreeVO.setParentId(parentCategory.getParentId());
                 categoryTreeVO.getIdPath().add(parentCategory.getId());
-                this.setPath(categoryTreeVO);
+                this.setPath(categoryTreeVO,parentCategory.getParentId());
             }
         }
     }

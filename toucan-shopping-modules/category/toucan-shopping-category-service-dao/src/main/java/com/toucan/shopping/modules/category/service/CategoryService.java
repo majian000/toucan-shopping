@@ -105,7 +105,7 @@ public interface CategoryService {
      * 设置分类名称路径
      * @param categoryTreeVO
      */
-    void setPath(CategoryTreeVO categoryTreeVO);
+    void setPath(CategoryTreeVO categoryTreeVO,Long parentId);
 
     /**
      * 设置ID路径
