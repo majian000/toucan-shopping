@@ -46,12 +46,12 @@
 <!------------main---------------->
 <div class="i_bg">
     <div class="postion2">
-        <span class="fl">全部 >  </span>
+        <span class="fl"><a class="qball">全部</a> >  </span>
         <#if brands??>
             <#list brands as brand>
-                <span class="n_ch">
-                    <span class="fl">品牌：<font>${brand.name!''}</font></span>
-                    <a href="#"><img src="${basePath}/static/images/s_close.gif" /></a>
+                <span class="n_ch" attr-bid="${brand.id?c}" >
+                    <span class="fl"><font>${brand.name!''}（品牌）</font></span>
+                    <a ><img src="${basePath}/static/images/s_close.gif" /></a>
                 </span>
             </#list>
         </#if>

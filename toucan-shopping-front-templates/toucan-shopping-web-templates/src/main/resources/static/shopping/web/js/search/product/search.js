@@ -3,10 +3,7 @@
 $(function(){
 
     $(".s_btn").bind("click", function () {
-        // $(".s_form").attr("action","/api/product/g/search");
-        // $(".s_form").submit();
-        var cid=$("#cid").val();
-        window.location.href=searchGetPath+"?keyword="+$(".s_ipt").val()+"&cid="+cid;
+        doSearch();
     });
 
     $(".q_labels").bind("click", function () {
@@ -17,3 +14,34 @@ $(function(){
     });
 
 });
+
+
+function doSearch()
+{
+    // $(".s_form").attr("action","/api/product/g/search");
+    // $(".s_form").submit();
+    var keywrd=$(".s_ipt").val();
+    var qkeyword=$("#qkeyword").val();
+    var cid=$("#cid").val();
+    var ebids=$("#ebids").val();
+    var qbs=$("#qbs").val();
+    var params ="?keyword="+keywrd;
+    if(cid!=null&&cid!="")
+    {
+        params+="&cid="+cid;
+    }
+    if(ebids!=null&&ebids!="")
+    {
+        params+="&ebids="+ebids;
+    }
+    if(qkeyword!=keywrd)
+    {
+        qbs='t';
+    }
+    if(qbs!=null&&qbs!='')
+    {
+        params+="&qbs="+qbs;
+    }
+
+    window.location.href=searchGetPath+params;
+}

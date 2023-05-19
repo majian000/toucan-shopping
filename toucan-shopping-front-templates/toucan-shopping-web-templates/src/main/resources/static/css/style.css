@@ -1444,7 +1444,7 @@ ul.cate li{
 	width:80%; height:40px; line-height:40px; overflow:hidden; font-family:"宋体";
 }
 .n_ch{
-	height:23px; line-height:23px; overflow:hidden; float:left; display:inline; margin-left:10px; margin-top:7px; padding:0 10px; border:1px dashed #ff4e00;
+	height:23px; line-height:23px; overflow:hidden; float:left; display:inline; margin-left:10px; margin-top:7px; padding:0 10px; border:1px dashed #ff4e00;cursor:pointer;
 }
 .n_ch font{
 	color:#ff3200;
@@ -1465,6 +1465,14 @@ table.choice tr td.td_a a{
 	display:inline-block; margin:0 11px; color:#888888;
 }
 table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
+	color:#ff4e00;
+}
+
+
+.qball{
+	color:#555555;
+}
+.qball:hover{
 	color:#ff4e00;
 }
 

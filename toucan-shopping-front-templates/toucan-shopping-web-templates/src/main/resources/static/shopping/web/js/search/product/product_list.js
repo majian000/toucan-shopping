@@ -9,6 +9,8 @@ $(function(){
 
     bindAddBuyCar();
 
+    bindRemoveBrandEvent();
+
 });
 
 
@@ -86,5 +88,28 @@ function bindAddBuyCar(){
                 loading.hideLoading();
             }
         });
+    });
+}
+
+
+function bindRemoveBrandEvent()
+{
+    $(".n_ch").bind("click", function () {
+        var bid = $(this).attr("attr-bid");
+        var ebids = $("#ebids").val();
+        var ebidArray = new Array();
+        if(ebids!=null&&ebids!='')
+        {
+            ebidArray.addAll(ebids.split(","));
+        }
+        ebidArray.push(bid);
+        $("#ebids").val(ebidArray.join(","));
+
+        doSearch();
+    });
+
+    $(".qball").bind("click", function () {
+        $("#qbs").val("f");
+        doSearch();
     });
 }

@@ -19,4 +19,8 @@ public class ProductSearchVO extends SearchVO{
 
     private List<Long> brandIds; //品牌ID
 
+    private String ebids; //将这些品牌ID排除出查询条件
+
+    private String qbs="t"; //是否先查询品牌 f:不查询 t:查询
+
 }
