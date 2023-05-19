@@ -521,9 +521,9 @@ public class BrandController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/name/categoryId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/name/categoryId/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO findListByNameAndCategoryId(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO findListByNameAndCategoryIdAndEnabled(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {

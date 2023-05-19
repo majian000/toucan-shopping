@@ -56,8 +56,9 @@ public class ProductSearchController {
             BrandVO queryBrandVO = new BrandVO();
             queryBrandVO.setCategoryId(productSearchVO.getCid());
             queryBrandVO.setName(productSearchVO.getKeyword());
+            queryBrandVO.setEnabledStatus(1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrandVO);
-            ResultObjectVO resultObjectVO = feignBrandService.findListByNameAndCategoryId(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignBrandService.findListByNameAndCategoryIdAndEnabled(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
