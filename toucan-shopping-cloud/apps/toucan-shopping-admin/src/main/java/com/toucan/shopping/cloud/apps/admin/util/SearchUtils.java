@@ -53,10 +53,6 @@ public class SearchUtils {
             productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
             productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
 
-            ProductSearchResultVO productSearchResultVOResult = null;
-            if (!CollectionUtils.isEmpty(productSearchResultVOS)) {
-                productSearchResultVOResult = productSearchResultVOS.get(0);
-            }
 
             //查询品牌信息
             BrandVO queryBrand = new BrandVO();
