@@ -161,4 +161,13 @@ public interface FeignProductSkuService {
     @RequestMapping(value="/remove/description/photo",produces = "application/json;charset=UTF-8")
     ResultObjectVO removeDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据店铺商品ID查询SKU列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/shopProductIdList",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByShopProductIdList(@RequestBody RequestJsonVO requestJsonVO);
 }

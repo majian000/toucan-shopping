@@ -278,6 +278,21 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("删除介绍图失败,请重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryListByShopProductIdList(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuService queryListByShopProductIdList faild   params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

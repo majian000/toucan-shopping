@@ -112,6 +112,13 @@
             and t.shop_id = #{shopId}
         </if>
 
+        <if test="shopProductIdList!=null and shopProductIdList.size>0">
+            and t.shop_product_id in
+            <foreach item="item" index="index" collection="shopProductIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
         <if test="appCode!=null">
             and t.app_code = #{appCode}
         </if>

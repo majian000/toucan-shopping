@@ -395,7 +395,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/shopProduct/addPage}]]",
+                    content: "[[@{/product/shopProduct/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -414,6 +414,43 @@
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('shopProductTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
+                var checkStatus = table.checkStatus('shopProductTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                var reqData= new Array();
+                for(var i=0;i<data.length;i++)
+                {
+                    reqData.push(data[i].id);
+                }
+                layer.confirm('确定同步到搜索?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/shopProduct/flush/search",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:JSON.stringify({ids:reqData}),
                         success:function(data){
                             layer.msg(data.msg);
 

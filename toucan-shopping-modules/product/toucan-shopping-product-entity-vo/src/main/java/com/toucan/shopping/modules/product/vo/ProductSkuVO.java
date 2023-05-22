@@ -121,4 +121,9 @@ public class ProductSkuVO  extends ProductSku {
      */
     private List<AttributeValueStatusVO> attributeValueStatusVOS;
 
+    /**
+     * 店铺商品ID列表
+     */
+    private List<Long> shopProductIdList;
+
 }
