@@ -105,7 +105,7 @@ public class AdminController {
             if(!AdminRegistUtil.checkPwd(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("添加失败,请输入6至25位的密码");
+                resultObjectVO.setMsg("添加失败,请输入6至25位的密码并且只能是字母、数字或下划线");
                 return resultObjectVO;
             }
 
@@ -221,7 +221,7 @@ public class AdminController {
             if(!AdminRegistUtil.checkPwd(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("请输入6至25位的密码");
+                resultObjectVO.setMsg("请输入6至25位的密码并且只能是字母、数字或下划线");
                 return resultObjectVO;
             }
             adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
