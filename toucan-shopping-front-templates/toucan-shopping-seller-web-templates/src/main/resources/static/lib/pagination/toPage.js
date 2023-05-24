@@ -52,7 +52,7 @@ function page_ctrl(b,callback) {
         } else {
             h += '<button class="page_num">' + (k + 1) + "</button>"
         }
-        h += '<button class="next_page">下一页</button><span class="page_total">共 ' + g + ' 页, 到第</span><input class="input_page_num" type="text" value="' + l + '"><span class="page_text">页</span><button class="to_page_num">确定</button>';
+        h += '<button class="next_page">下一页</button><span class="page_total">共 ' + g + ' 页('+f+'条), 到第</span><input class="input_page_num" type="text" value="' + l + '"><span class="page_text">页</span><button class="to_page_num">确定</button>';
         $(c).children(".page_ctrl").append(h);
         if (a == 1) {
             $(c + " .page_ctrl .prev_page").attr("disabled", "disabled").addClass("btn_dis")

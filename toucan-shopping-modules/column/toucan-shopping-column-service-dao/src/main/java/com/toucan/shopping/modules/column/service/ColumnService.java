@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.column.service;
 import com.toucan.shopping.modules.column.entity.Column;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +33,9 @@ public interface ColumnService {
 
     List<ColumnVO> queryList(ColumnVO query);
 
+
+    List<PcIndexColumnVO> queryPcIndexColumns(ColumnVO query);
+
     /**
      * 根据ID查询
      * @param id
@@ -39,7 +43,19 @@ public interface ColumnService {
      */
     ColumnVO findById(Long id);
 
+    /**
+     * 保存
+     * @param column
+     * @return
+     */
     int save(Column column);
+
+    /**
+     * 修改
+     * @param column
+     * @return
+     */
+    int update(Column column);
 
 
     /**

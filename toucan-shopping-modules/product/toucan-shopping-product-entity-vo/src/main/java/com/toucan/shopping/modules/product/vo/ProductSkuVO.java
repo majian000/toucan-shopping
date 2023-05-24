@@ -1,12 +1,10 @@
 package com.toucan.shopping.modules.product.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +21,7 @@ public class ProductSkuVO  extends ProductSku {
      * 属性映射
      */
     private Map<String,String> attributeMap;
+
 
 
     /**
@@ -99,5 +98,32 @@ public class ProductSkuVO  extends ProductSku {
      */
     private List<ProductSkuVO> productSkuVOList;
 
+    /**
+     * 运费模板ID
+     */
+    private Long freightTemplateId;
+
+    private Short buckleInventoryMethod; //库存计数 1:买家拍下减库存 2:买家付款减库存
+
+
+    /**
+     * 介绍图路径
+     */
+    private String descriptionImgFilePath;
+
+    /**
+     * 商品购买状态
+     */
+    private List<ProductSkuStatusVO> skuStatusList;
+
+    /**
+     * 属性值状态
+     */
+    private List<AttributeValueStatusVO> attributeValueStatusVOS;
+
+    /**
+     * 店铺商品ID列表
+     */
+    private List<Long> shopProductIdList;
 
 }

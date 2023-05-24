@@ -4,10 +4,19 @@
     </li>
     <li class="nav-item ">
         <a href="javascript:;"><i class="coolc nav-icon icon-fahuo"></i><span>发货管理</span><i class="coolc nav-more"></i></a>
-        <ul style="display: none;">
+        <#if menuType??&&menuType=="deliveryMenu">
+             <ul style="">
+        <#else>
+            <ul style="display: none;">
+        </#if>
             <li><a href="order.html"><span class="menu-item-cls">订单列表</span></a></li>
             <li><a href="to_order.html"><span class="menu-item-cls">待发货订单</span></a></li>
-            <li><a href="freight.html"><span class="menu-item-cls">运费模板</span></a></li>
+
+            <#if leftName??&&leftName=="freightTemplateList">
+                <li class="active"><a href="${basePath}/page/freightTemplate/index"><span class="menu-item-cls">运费模板</span></a></li>
+            <#else>
+                <li><a href="${basePath}/page/freightTemplate/index"><span class="menu-item-cls">运费模板</span></a></li>
+            </#if>
         </ul>
     </li>
     <li class="nav-item">
@@ -18,7 +27,11 @@
     </li>
     <li class="nav-item">
         <a href="javascript:;"><i class="coolc nav-icon icon-shangpin"></i><span>商品管理</span><i class="coolc nav-more"></i></a>
-        <ul style="">
+        <#if menuType??&&menuType=="productMenu">
+            <ul style="">
+        <#else>
+            <ul style="display: none;">
+        </#if>
 
             <#if leftName??&&leftName=="publishProduct">
                 <li class="active" ><a href="${basePath}/page/shop/product/publish"><span class="menu-item-cls">发布商品</span></a></li>
@@ -36,7 +49,6 @@
             <#else>
                 <li><a href="${basePath}/page/shop/product/index"><span class="menu-item-cls">商品列表</span></a></li>
             </#if>
-            <li><a href="goods_data.html"><span class="menu-item-cls">商品数据</span></a></li>
             <li><a href="comment_list.html"><span class="menu-item-cls">评价管理</span></a></li>
         </ul>
     </li>

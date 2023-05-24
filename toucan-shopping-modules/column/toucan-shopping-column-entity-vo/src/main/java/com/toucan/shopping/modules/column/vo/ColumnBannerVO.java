@@ -23,4 +23,6 @@ public class ColumnBannerVO extends ColumnBanner {
     @JSONField(serialize = false)
     private MultipartFile img;
 
+    private String httpImgPath; //外网访问地址
+
 }

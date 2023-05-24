@@ -111,7 +111,7 @@ public class ProductSpuController extends UIController {
                 {
                     CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
                     request.setAttribute("categoryId",categoryTreeVO.getId());
-                    request.setAttribute("categoryName",categoryTreeVO.getPath());
+                    request.setAttribute("categoryName",categoryTreeVO.getName());
                 }else{
                     request.setAttribute("categoryId","");
                     request.setAttribute("categoryName","");
@@ -646,7 +646,7 @@ public class ProductSpuController extends UIController {
                     {
                         CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
                         if(categoryTreeVO!=null) {
-                            productSpuVO.setCategoryName(categoryTreeVO.getPath());
+                            productSpuVO.setCategoryName(categoryTreeVO.getName());
                         }
                     }
 
@@ -686,6 +686,74 @@ public class ProductSpuController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ProductSpuVO queryProductSpu = new ProductSpuVO();
+            queryProductSpu.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
+            ResultObjectVO resultObjectVO = feignProductSpuService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    ProductSpuVO productSpuVO = resultObjectVO.formatData(ProductSpuVO.class);
+
+                    //查询分类
+                    CategoryVO queryCategory = new CategoryVO();
+                    queryCategory.setId(productSpuVO.getCategoryId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
+                    resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
+                    {
+                        CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
+                        if(categoryTreeVO!=null) {
+                            productSpuVO.setCategoryName(categoryTreeVO.getName());
+                            productSpuVO.setCategoryPath(categoryTreeVO.getPath());
+                        }
+                    }
+
+                    //查询品牌
+                    BrandVO queryBrand = new BrandVO();
+                    queryBrand.setId(productSpuVO.getBrandId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
+                    resultObjectVO = feignBrandService.findById(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
+                    {
+                        List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
+                        BrandVO brandVO = brandVOS.get(0);
+                        String brandName = "";
+                        if(StringUtils.isNotEmpty(brandVO.getChineseName()))
+                        {
+                            brandName+=brandVO.getChineseName();
+                        }
+                        if(StringUtils.isNotEmpty(brandVO.getEnglishName()))
+                        {
+                            brandName+=" "+brandVO.getEnglishName();
+                        }
+                        productSpuVO.setBrandName(brandName);
+                        productSpuVO.setBrandChineseName(brandVO.getChineseName());
+                        productSpuVO.setBrandEnglishName(brandVO.getEnglishName());
+                        productSpuVO.setBrandLogo(brandVO.getLogoPath());
+                        if(brandVO.getLogoPath()!=null) {
+                            productSpuVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                        }
+
+                    }
+
+                    //将属性名和属性值转换成字符串
+                    productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(productSpuVO.getAttributeKeyValues()));
+
+                    request.setAttribute("model",productSpuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/productSpu/detail.html";
+    }
 
 
 }

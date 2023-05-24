@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/num.js"></script>
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+
+<div class="i_bg">
+    <div class="content mar_20">
+        <img src="${basePath}/static/images/img2.jpg" />
+    </div>
+
+
+    <!--Begin 第二步：确认订单信息 Begin -->
+    <div class="content mar_20">
+        <div class="two_bg">
+            <div class="two_t">
+                <span class="fr"><a style="cursor:pointer;" class="mcar_modify" attr-opt="1">修改</a></span>商品列表
+            </div>
+            <table border="0" class="car_tab mcar_tab " style="width:1110px;" cellspacing="0" cellpadding="0">
+
+
+
+            </table>
+            <form id="consigneeAddressForm">
+                <div class="two_t">
+                    <span class="fr">
+                        <a style="cursor:pointer;margin-left: 10px;" id="caubtn" class="mac_modify" attr-opt="1">修改</a>
+                        <a style="cursor:pointer;display:none;margin-left: 10px;" id="cacbtn" class="mac_close" >关闭</a>
+                        <a class="ca_select" style="cursor:pointer;margin-left: 10px;" >选择</a>
+                    </span>收货人信息
+                </div>
+                <!--只读表单 -->
+                <table border="0" class="default_tab" id="ca_form" style="width:1110px;" cellspacing="0" cellpadding="0">
+
+                    <tr>
+                        <td class="p_td"  width="160">收货人</td>
+                        <td width="395" id="ca_name" ></td>
+                        <td class="p_td"  width="160">电话号</td>
+                        <td width="395" id="ca_phone"></td>
+                    </tr>
+                    <tr >
+                        <td class="p_td" >省/直辖市</td>
+                        <td id="ca_provice_name"></td>
+                        <td class="p_td" >地市</td>
+                        <td id="ca_city_name"></td>
+                    </tr>
+                    <tr>
+                        <td class="p_td" >区县</td>
+                        <td id="ca_area_name"></td>
+
+                        <td class="p_td" >详细信息</td>
+                        <td id="ca_address"></td>
+                    </tr>
+                </table>
+                <!--收货信息编辑表单 -->
+                <table border="0" class="peo_tab" id="ca_edit_form" style="width:1110px;display:none" cellspacing="0" cellpadding="0">
+
+                        <input type="hidden" id="ca_id" name="id" />
+                        <tr>
+                            <td class="p_td" id="ca_name_l" width="160"><a style='color:red'>*</a>收货人</td>
+                            <td width="395" >
+                                <input type="text" id="ca_name_edit" name="name" maxlength="30" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required"  />
+                            </td>
+                            <td class="p_td" id="ca_phone_l" width="160"><a style='color:red'>*</a>电话号</td>
+                            <td width="395" >
+                                <input type="text" id="ca_phone_edit" name="phone" maxlength="20" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required"  />
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="p_td"  id="ca_pcc_l"><a style="color:red">*</a>所在城市：</td>
+                            <td id="ca_pcc" >
+                                <input name="" id="ms_city" style="width:40%" type="text" lay-verify="required" placeholder="请选择" class="l_ipt" autocomplete="off"  readonly="true">
+                                <input type="hidden" id="province" name="provinceName" />
+                                <input type="hidden" id="city" name="cityName"  />
+                                <input type="hidden" id="area" name="areaName"   />
+                                <input type="hidden" id="province_code" name="provinceCode"   />
+                                <input type="hidden" id="city_code" name="cityCode"   />
+                                <input type="hidden" id="area_code" name="areaCode" />
+                            </td>
+                            <td class="p_td" ><a style='color:red'>*</a>详细信息</td>
+                            <td >
+                                <textarea id="ca_address_edit" name="address" class="l_ipt"  maxlength="300"  tabindex="2" style="width: 334px; height: 85px;"  lay-verify="required"  ></textarea>
+                            </td>
+                        </tr>
+
+                </table>
+            </form>
+
+            <form id="orderForm">
+                <div class="two_t">
+                    <span class="fr">
+                    </span>备注
+                </div>
+                <div class="two_t" style="height:100%;text-align: right;">
+                    <textarea id="order_remark" name="remark" class="l_ipt"  maxlength="255"   style="width: 97%; height: 85px;"  ></textarea>
+                    <br/>
+                    <a class="or_max_tips" style="color: #b3b3b3;font-size: 15px;">0/255</a>
+                </div>
+
+            </form>
+
+
+
+            <table border="0" style="width:90%; margin-top:20px;" cellspacing="0" cellpadding="0">
+                <tr height="70">
+                    <td align="right">
+                        商品总价: <font color="#ff4e00" class="product_price_total"></font>  + 配送费用: <a class="order_freight_total" style="color:#ff4e00">￥0</a>
+                        &nbsp;&nbsp;&nbsp;
+                        <b style="font-size:14px;">应付款金额：<span style="font-size:22px; color:#ff4e00;" class="order_price_total"></span></b>
+                    </td>
+                </tr>
+                <tr height="70">
+                    <td align="right" class="confirm_btns" style="display:none">
+                        <a style="cursor:pointer;" href="${basePath}/page/user/buyCar/index" class="refersh_buy_car"><img src="${basePath}/static/images/buy3.gif" /></a>&nbsp; &nbsp;
+                        <a style="cursor:pointer;" class="confirm_payment_btn"><img src="${basePath}/static/images/btn_sure.gif" /></a>
+                    </td>
+                </tr>
+            </table>
+
+
+
+        </div>
+    </div>
+    <!--End 第二步：确认订单信息 End-->
+
+
+
+    <!--Begin 弹出层-删除商品 Begin-->
+    <div id="fade" class="black_overlay"></div>
+    <div id="removeBuyCar" class="white_content">
+        <input type="hidden" id="removeBuyCarId"/>
+        <div class="white_d">
+            <div class="notice_t">
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('removeBuyCar','fade')"><img src="${basePath}/static/images/close.gif" /></span>
+            </div>
+            <div class="notice_c">
+
+                <table border="0" align="center" style="font-size:16px;width: 100%;" cellspacing="0" cellpadding="0">
+                    <tr valign="top">
+                        <td style="text-align: center;" >您确定要把"<a id="removeBuyCarProductName"></a>"移除购物车吗？</td>
+                    </tr>
+                    <tr height="50" valign="bottom">
+                        <td>
+                            <a  class="b_sure mcar_remove" style="cursor:pointer;margin-left: 25%;">确定</a>
+                            <a  style="cursor:pointer;" onclick="CloseDiv_1('removeBuyCar','fade')"  class="b_buy">取消</a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--End 弹出层-删除商品 End-->
+
+
+    <!-- 选择收货信息 Begin -->
+
+    <!-- 选择收货信息 End -->
+
+
+    <#include "/footer.html"/>
+</div>
+
+
+<div id="pcaDiv">
+</div>
+
+<link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
+<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
+
+<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/common-product.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/buyCar/buyCarConfirm.js"></script>
+
+<script>
+
+    $(function () {
+
+        loading.showLoading({
+            type:1,
+            tip:"加载中..."
+        });
+
+        $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
+
+            $("#pcaDiv").html(data);
+
+            loading.hideLoading();
+
+            $("#ms_city").click(function (e) {
+                SelCity(this,e,selectProvinceEvent,selectCityEvent);
+            });
+            $(".msc_l").click(function (e) {
+                SelCity(document.getElementById("ms_city"),e,selectProvinceEvent,selectCityEvent);
+            });
+            loadBuyCarConfirmPage();
+        });
+    });
+
+</script>
+
+</html>

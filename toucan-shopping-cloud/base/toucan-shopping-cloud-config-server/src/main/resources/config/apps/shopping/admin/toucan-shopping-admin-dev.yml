@@ -91,10 +91,15 @@ toucan:
   #雪花算法ID相关
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
-  shopping-pc: #PC端页面静态化
+  shopping-pc: #商城PC端
     app-code: 10001001
+    base-path: http://localhost:8083
     ip-list: localhost:8083,127.0.0.1:8083 #多个用,分割
     pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
+    product-approve-preview-page: /page/product/approve/preview/paid/ #商品审核预览
+    product-detail-page: /page/product/detail/pid/ #商品详情
+    product-preview-page: /page/product/preview/pid/ #商品详情
+    product-sku-preview-page: /page/product/preview/ #SKU商品预览
   shopping-seller-web-pc: #PC端页面静态化
     ip-list: localhost:8101,127.0.0.1:8101 #多个用,分割
   admin-auth:
@@ -127,6 +132,7 @@ toucan:
         enabled: false
         title: ——商城后台——异常邮件
         ignore-exception-list[0]: javax.mail.MessagingException
+        ignore-exception-list[1]: com.toucan.shopping.modules.common.exception.InvalidAdminHeaderException
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器

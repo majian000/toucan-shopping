@@ -32,15 +32,12 @@ public class AreaVO extends Area {
     private List children;
 
 
-    /**
-     * 创建人
-     */
-    private String createAdminUsername;
+
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
 
 
-    /**
-     * 修改人
-     */
-    private String updateAdminUsername;
+    private List<String> cityNameList; //地市名称集合
 
+    private List<String> codeList; //编码集合
 }

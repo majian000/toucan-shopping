@@ -38,40 +38,9 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-elasticsearch</artifactId>
-            <!--发现很奇怪问题,当本项目关联到toucan-shopping-elasticsearch时发现里面依赖的版本是7.6.2,但实际上依赖的是7.8.0 -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.elasticsearch.client</groupId>
-                    <artifactId>elasticsearch-rest-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.elasticsearch.client</groupId>
-                    <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.elasticsearch</groupId>
-                    <artifactId>elasticsearch</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 
-        <!--elasticsearch -->
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>${elasticsearch-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>${elasticsearch-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>${elasticsearch-version}</version>
-        </dependency>
 
 
     </dependencies>

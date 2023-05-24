@@ -1,0 +1,212 @@
+
+/*确定交易*/
+.payfor_h2 {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    padding-top: 20px;
+    border-bottom: 2px solid #000;
+    font-size: 18px;
+    color: #ff4e00;
+}
+.payfor_h2 i {
+    display: block;
+    float: left;
+    height: 21px;
+    margin-top: 16px;
+    width: 47px;
+    background: url(../../../images/order_icon_list.png) no-repeat -377px -350px;
+}
+.payfo_tips {
+    padding: 20px 0;
+    height: 31px;
+    line-height: 31px;
+    font-size: 24px;
+    color: #434343;
+}
+.payfo_tips i {
+    display: block;
+    float: left;
+    height: 31px;
+    width: 47px;
+    background: url(../../../images/order_icon_list.png) no-repeat -377px -407px;
+    margin-left: 30%;
+}
+
+.payfo_err_tips {
+    padding: 20px 0;
+    height: 31px;
+    line-height: 31px;
+    font-size: 24px;
+    color: #434343;
+}
+.payfo_err_tips i {
+    display: block;
+    float: left;
+    height: 31px;
+    width: 47px;
+    background: url(../../../images/order_icon_list.png) no-repeat -377px -731px;
+    margin-left: 30%;
+}
+
+.o_n_t1 {
+    color: #434343;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 30%;
+}
+.o_n_t2 {
+    padding-bottom: 29px;
+    padding-left: 30%;
+}
+.o_n_l {
+    float: left;
+    padding-right: 30px;
+}
+.o_n_m {
+    float: left;
+    padding-right: 30px;
+}
+.o_n_l span {
+    color: #ff4e00;
+}
+.o_n_m span {
+    color: #ff4e00;
+}
+.s_fs_12 {
+    font-size: 12px;
+}
+.s_fs_14 {
+    font-size: 14px;
+}
+.s_fs_18 {
+    font-size: 18px;
+    color: #ff4e00;
+}
+/**/
+.choose_pay {
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    padding: 33px 68px 0px;
+}
+.choose_pay_box {
+    background-color: #fff;
+    padding: 25px 44px;
+}
+.choose_agin {
+    padding-top: 25px;
+}
+.r_txt {
+    padding-left: 10px;
+    font-size: 18px;
+    color: #000;
+    display: inline-block;
+    height: 27px;
+    line-height: 27px;
+}
+.agin_radio {
+    padding-top: 15px;
+}
+.s_a_radio {
+    margin-right: 40px;
+}
+.l_t_pay {
+    border: 1px solid #ccc;
+    display: inline-block;
+    height: 29px;
+    line-height: 29px;
+    padding: 8px 25px;
+}
+.i_zfb {
+    background: url("../../../images/order_icon_list.png") no-repeat scroll -382px -465px;
+    display: inline-block;
+    height: 29px;
+    padding-right: 10px;
+    vertical-align: top;
+    width: 29px;
+    margin-top: 4%;
+}
+.i_wx {
+    background: url("../../../images/order_icon_list.png") no-repeat scroll -382px -517px;
+    display: inline-block;
+    height: 29px;
+    padding-right: 10px;
+    vertical-align: top;
+    width: 29px;
+    margin-top: 4%;
+}
+.btnsure_bg {
+    overflow: hidden;
+    padding: 25px 0;
+    width: 100%;
+}
+.sureorder {
+    width: 460px;
+    margin: 0 25%;
+}
+.jine {
+    float: left;
+    height: 38px;
+    line-height: 38px;
+    padding-right: 15px;
+    font-family: "宋体";
+}
+.btn_sure {
+    background-color: #ff4e00;
+    color: #fff;
+    display: block;
+    font-size: 22px;
+    height: 45px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+    float: right;
+}
+
+.btn_sure:hover {
+    background-color: #ff4e00;
+    color: #fff;
+    display: block;
+    font-size: 22px;
+    height: 45px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+    float: right;
+}
+
+
+.btn_cancel {
+    background-color: #f2f2f2;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+}
+
+.btn_cancel:hover {
+    background-color: #f2f2f2;
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    width: 177px;
+}
+
+.fwxh_30 {
+    font-family: "华文细黑";
+    font-size: 30px;
+    color: #ff4e00;
+}
+.span_m {
+    font-family: Arial;
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff4e00;
+}
+/*确定交易end*/

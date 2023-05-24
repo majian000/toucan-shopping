@@ -283,9 +283,9 @@ public class CategoryController {
             {
                 categoryTreeVO = new CategoryTreeVO();
                 BeanUtils.copyProperties(categoryTreeVO,category);
-                Long parentId = categoryTreeVO.getParentId();
-                categoryService.setPath(categoryTreeVO);
-                categoryTreeVO.setParentId(parentId);
+                categoryTreeVO.setIdPath(new LinkedList<>());
+                categoryTreeVO.getIdPath().add(categoryTreeVO.getId());
+                categoryService.setPath(categoryTreeVO,categoryTreeVO.getParentId());
             }
             resultObjectVO.setData(categoryTreeVO);
         }catch(Exception e)
@@ -414,13 +414,16 @@ public class CategoryController {
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter_2021&")!=-1)
+                            if(treeVO.getName().indexOf("/")!=-1)
                             {
                                 String[] names = treeVO.getName().split("/");
-                                String[] hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
+                                String[] hrefs = new String[0];
+                                if(StringUtils.isNotEmpty(treeVO.getHref())) {
+                                    hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
+                                }
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
+                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\" attr-id=\""+category.getId()+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
@@ -430,7 +433,7 @@ public class CategoryController {
                                     }
                                 }else{
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\"#\">");
+                                        linkhtml.append("<a class=\"category_a\" href=\"#\" attr-id=\""+category.getId()+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
@@ -454,7 +457,7 @@ public class CategoryController {
             }
         }catch(Exception e)
         {
-            logger.warn(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -819,6 +822,84 @@ public class CategoryController {
     }
 
 
+    /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/mini",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryMiniTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            List<CategoryTreeVO> categoryMiniTree = categoryRedisService.queryCategoryMiniTree();
+            if(CollectionUtils.isEmpty(categoryMiniTree))
+            {
+                try {
+                    CategoryVO queryMiniTree = new CategoryVO();
+                    List<Category> categoryList = categoryService.queryPcIndexList(queryMiniTree);
+                    if(!CollectionUtils.isEmpty(categoryList)) {
+                        List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
+                        for(Category category : categoryList)
+                        {
+                            if(category.getParentId().longValue()==-1) {
+                                CategoryTreeVO treeVO = new CategoryTreeVO();
+                                BeanUtils.copyProperties(treeVO, category);
+                                treeVO.setTitle(category.getName());
+                                treeVO.setText(category.getName());
+                                categoryTreeVOS.add(treeVO);
+
+                                treeVO.setChildren(new ArrayList<CategoryTreeVO>());
+                                categoryService.setChildren(categoryList,treeVO);
+                            }
+                        }
+                        categoryRedisService.flushWMiniTree(categoryTreeVOS);
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                }
+            }
+
+            for(CategoryTreeVO categoryTreeVO:categoryMiniTree)
+            {
+                categoryTreeVO.setPid(-1L);
+                categoryTreeVO.setTitle(categoryTreeVO.getName());
+                categoryTreeVO.setText(categoryTreeVO.getName());
+                categoryTreeVO.setPid(categoryTreeVO.getParentId());
+                categoryTreeVO.setPath(categoryTreeVO.getName());
+            }
+
+            CategoryTreeVO rootTreeVO = new CategoryTreeVO();
+            rootTreeVO.setTitle("商城分类");
+            rootTreeVO.setParentId(-1L);
+            rootTreeVO.setPid(-1L);
+            rootTreeVO.setId(-1L);
+            rootTreeVO.setText("商城分类");
+            if(!CollectionUtils.isEmpty(categoryMiniTree))
+            {
+                rootTreeVO.setChildren(categoryMiniTree);
+            }
+
+            categoryService.complementChildren(rootTreeVO);
+            List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            rootCategoryTreeVOS.add(rootTreeVO);
+            resultObjectVO.setData(rootCategoryTreeVOS);
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 查询PC端首页类别树
@@ -1024,7 +1105,34 @@ public class CategoryController {
         return resultObjectVO;
     }
 
+    /**
+     * 查询指定节点下一级子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+        try {
+            CategoryVO queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
+            resultObjectVO.setData(categoryService.queryList(queryCategory));
 
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 查询树表格
@@ -1214,6 +1322,71 @@ public class CategoryController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            CategoryVO categoryVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
+            List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            List<Category> categoryList = categoryService.queryList(categoryVO);
+            if(categoryVO.getParentId()==null)
+            {
+                CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                categoryTreeVO.setId(-1L);
+                categoryTreeVO.setName("根节点");
+                categoryTreeVO.setParentId(-1L);
+                Long childCount = categoryService.queryOneChildCountByPid(-1L);
+                if(childCount>0)
+                {
+                    categoryTreeVO.setIsParent(true);
+                }
+                categoryTreeVOS.add(categoryTreeVO);
+            }else {
+                for (int i = 0; i < categoryList.size(); i++) {
+                    Category category = categoryList.get(i);
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    BeanUtils.copyProperties(categoryTreeVO, category);
+                    categoryTreeVO.setTitle(category.getName());
+                    Long childCount = categoryService.queryOneChildCountByPid(categoryTreeVO.getId());
+                    if (childCount > 0) {
+                        categoryTreeVO.setIsParent(true);
+                    } else {
+                        categoryTreeVO.setIsParent(false);
+                    }
+                    categoryTreeVOS.add(categoryTreeVO);
+                }
+            }
+
+            resultObjectVO.setData(categoryTreeVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 

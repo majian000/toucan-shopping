@@ -30,6 +30,12 @@ public class ShopProductDescriptionImg {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopProductDescriptionId; //商品介绍主表ID
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long productSkuId; //商品SKU ID
+
+    private Short type = 1 ; //介绍图类型 1:店铺商品 2:SKU
+
     private String filePath; //文件路径
 
     private String width = "750"; //宽度

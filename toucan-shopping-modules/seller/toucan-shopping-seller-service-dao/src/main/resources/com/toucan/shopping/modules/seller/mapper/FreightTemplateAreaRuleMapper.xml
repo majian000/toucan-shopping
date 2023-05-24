@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.FreightTemplateAreaRuleMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="shop_id" jdbcType="VARCHAR" property="shopId" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="transport_model" jdbcType="VARCHAR" property="transportModel" />
+        <result column="first_weight" jdbcType="DOUBLE" property="firstWeight" />
+        <result column="first_weight_money" jdbcType="DOUBLE" property="firstWeightMoney" />
+        <result column="append_weight" jdbcType="DOUBLE" property="appendWeight" />
+        <result column="append_weight_money" jdbcType="DOUBLE" property="appendWeightMoney" />
+        <result column="group_id" jdbcType="BIGINT" property="groupId" />
+        <result column="default_rule_id" jdbcType="BIGINT" property="defaultRuleId" />
+        <result column="template_id" jdbcType="BIGINT" property="templateId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
+    </resultMap>
+
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+    </sql>
+
+    <sql id="queryWhere">
+        and t.delete_status = 0
+
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+    </sql>
+
+    <sql id="queryVOWhere">
+        and t.delete_status = 0
+
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
+
+        <if test="templateId!=null  ">
+            and t.template_id = #{templateId}
+        </if>
+
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+        <if test="transportModel!=null and transportModel!='' ">
+            and t.transport_model = #{transportModel}
+        </if>
+
+    </sql>
+
+
+    <select id="queryListByVO" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO">
+        select * from t_freight_template_area_rule t
+        <where>
+            1=1
+            <include refid="queryVOWhere" />
+        </where>
+
+    </select>
+
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_freight_template_area_rule(id,user_main_id,shop_id,province_code,
+        city_code,area_code,province_name,city_name,area_name,first_weight,first_weight_money,append_weight,append_weight_money,
+        group_id,default_rule_id,template_id,delete_status,create_date,update_date,transport_model)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.userMainId},#{entity.shopId},#{entity.provinceCode},#{entity.cityCode},#{entity.areaCode},#{entity.provinceName},
+            #{entity.cityName},#{entity.areaName},#{entity.firstWeight},#{entity.firstWeightMoney},#{entity.appendWeight},#{entity.appendWeightMoney},#{entity.groupId},
+            #{entity.defaultRuleId},#{entity.templateId},#{entity.deleteStatus},#{entity.createDate},#{entity.updateDate},#{entity.transportModel})
+        </foreach>
+
+    </insert>
+
+
+
+    <update id="deleteByTemplateId" parameterType="java.lang.Long">
+        update t_freight_template_area_rule  set delete_status=1 where template_id=#{templateId}   and delete_status=0
+    </update>
+
+
+    <update id="updateResumeByIdList" parameterType="java.util.List">
+        update t_freight_template_area_rule  set delete_status=0 where
+        id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

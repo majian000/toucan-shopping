@@ -24,7 +24,7 @@ public class OrderNoServiceImpl implements OrderNoService {
 
     /**
      * 订单号生成规则
-     * 总长度32位=机器ID(4位)+时间戳(13位)+备用字段填充0(10位)+随机数(5位)
+     * 总长度32位=机器ID(4位)+时间戳(13位)+备用字段填充0(3位)+随机数(5位)
      *
      * @return
      */
@@ -48,7 +48,7 @@ public class OrderNoServiceImpl implements OrderNoService {
         StringBuilder builder= new StringBuilder();
         builder.append(machineId);
         builder.append(String.valueOf(DateUtils.currentDate().getTime()));
-        builder.append("0000000000");
+        builder.append("000");
         builder.append(NumberUtil.random(5));
 
         if(builder.toString().length()>32)

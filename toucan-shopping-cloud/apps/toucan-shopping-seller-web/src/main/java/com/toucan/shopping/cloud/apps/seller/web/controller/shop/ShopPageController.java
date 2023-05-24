@@ -170,21 +170,6 @@ public class ShopPageController extends BaseController {
 
                             httpServletRequest.setAttribute("selectProvinceCityAreaName",selectProvinceCityAreaName);
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                            try {
-                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());
-                                resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
-                                if(resultObjectVO.isSuccess())
-                                {
-                                    httpServletRequest.setAttribute("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
-                                }else{
-                                    httpServletRequest.setAttribute("areaList","[]");
-                                }
-                            }catch(Exception e)
-                            {
-                                httpServletRequest.setAttribute("areaList","[]");
-                                logger.warn("查询地区缓存失败 {} ",e.getMessage());
-                                logger.warn(e.getMessage(),e);
-                            }
                             return "shop/userShop/edit";
                         }
 

@@ -15,6 +15,9 @@
         body {
             background-color: #ffffff;
         }
+        .layui-table img{
+            max-width: 260px;
+        }
     </style>
 </head>
 <body>
@@ -25,12 +28,12 @@
 <div class="layui-form layuimini-form">
 
 
-    <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="id" id="dataId" th:value="${id}">
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
-            <input type="title" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
+            <input type="title" name="title" id="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
             <tip>填写栏目标题。</tip>
         </div>
     </div>
@@ -86,17 +89,143 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">关联城市</label>
         <div class="layui-input-block">
+            <input type="hidden" >
             <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item" id="connectProduct" >
         <label class="layui-form-label required " >商品推荐</label>
         <div class="layui-input-block">
-            <input type="text" id="shopProductRecommend"  lay-verify="required"  readonly required class="layui-input">
-            <input type="hidden" id="selectProductIds" name="selectProductIds" />
-            <tip>最多只显示6个。</tip>
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传(推荐185px*155px)</th>
+                    <th>商品名称</th>
+                    <th>商品价格</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="recommendProducts">
+                <tr >
+                    <td><img id='recommend_product_preview_0' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="0" id='recommend_product_img_0' />
+                        <input type='hidden' id='recommend_product_img_hidden_0'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_0"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_0"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_0"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_1' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'   attr-index="1" id='recommend_product_img_1' />
+                        <input type='hidden' id='recommend_product_img_hidden_1'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_1"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_1"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_1"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_2' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file' attr-index="2" id='recommend_product_img_2' />
+                        <input type='hidden' id='recommend_product_img_hidden_2'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_2"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_2"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_2"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_3' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="3" id='recommend_product_img_3' />
+                        <input type='hidden' id='recommend_product_img_hidden_3'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_3"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_3"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_3"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_4' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="4" id='recommend_product_img_4' />
+                        <input type='hidden' id='recommend_product_img_hidden_4'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_4"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_4"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_4"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_5' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="5" id='recommend_product_img_5' />
+                        <input type='hidden' id='recommend_product_img_hidden_5'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_5"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_5"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_5"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顶部图片预览</label>
+        <div class="layui-input-block">
+            <img id='top_banner_preview' src='/images/img_260_220.png'  style="width:1200px;height:110px;"   >
         </div>
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顶部图片</label>
+        <div class="layui-input-block">
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片上传(推荐1200px*110px)</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="topBanner">
+                <tr >
+                    <td>
+                        <input type='file' class='topBannerImgs'   id='top_banner_img' />
+                        <input type='hidden' id='top_img_hidden'  />
+                    </td>
+                    <td><input type='text' id="top_banner_title"  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text'   id="top_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                    <td> <button type='button' id='top_banner_delete_btn'  >清空</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <div class="layui-form-item">
         <label class="layui-form-label required">左侧轮播图</label>
@@ -113,7 +242,7 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                     <th>操作</th>
@@ -134,7 +263,7 @@
 
             <table class="layui-table">
                 <colgroup>
-                    <col >
+                    <col>
                     <col >
                     <col >
                     <col>
@@ -142,17 +271,17 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                 </tr>
                 </thead>
                 <tbody id="rightBanner">
                 <tr >
-                    <td><img id='right_banner_preview' src='/images/imgadd.png'></td>
+                    <td><img id='right_banner_preview' src='/images/img_260_220.png' style="width:260px;height:220px;"></td>
                     <td>
-                        <input type='file' class='rightTopBannerImgs' id='right_banner_img' />
-                        <input type='hidden' id='right_banner_img_hidden'  />
+                        <input type='file'  id='right_banner_img' />
+                        <input type='hidden'  class='rightTopBannerImgs' id='right_banner_img_hidden'  />
                     </td>
                     <td><input type='text' id="right_banner_title"  maxlength='100' class='layui-input' /></td>
                     <td><input type='text'  id="right_banner_clickPath"  maxlength='255' class='layui-input'  /></td>
@@ -177,17 +306,17 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                 </tr>
                 </thead>
                 <tbody id="rightBottomBanner">
                 <tr >
-                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png'></td>
+                    <td><img id='right_bottom_banner_preview' src='/images/img_260_220.png' style="width:260px;height:220px;" ></td>
                     <td>
-                        <input type='file' class='rightBottomBannerImgs'   id='right_bottom_banner_img' />
-                        <input type='hidden' id='right_bottom_img_hidden'  />
+                        <input type='file'    id='right_bottom_banner_img' />
+                        <input type='hidden' class='rightBottomBannerImgs'  id='right_bottom_img_hidden'  />
                     </td>
                     <td><input type='text' id="right_bottom_banner_title"  maxlength='100' class='layui-input' /></td>
                     <td><input type='text'   id="right_bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
@@ -197,11 +326,54 @@
         </div>
     </div>
 
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">底部图片预览</label>
+        <div class="layui-input-block">
+            <img id='bottom_banner_preview' src='/images/img_260_220.png'  style="width:1200px;height:110px;"   >
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">底部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片上传(推荐1200px*110px)</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="bottomBanner">
+                <tr >
+                    <td>
+                        <input type='file' class='bottomBannerImgs'   id='bottom_banner_img' />
+                        <input type='hidden' id='bottom_img_hidden'  />
+                    </td>
+                    <td><input type='text' id="bottom_banner_title"  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text'   id="bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                    <td> <button type='button' id='bottom_banner_delete_btn'  >清空</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="showStatus" value="1" title="显示" checked="">
-            <input type="radio" name="showStatus" value="0" title="隐藏">
+            <input type="radio" name="showStatus" id="showStatus1" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" id="showStatus0" value="0" title="隐藏">
         </div>
     </div>
 
@@ -216,7 +388,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="columnSort"  id="columnSort"   placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
             <tip>值越大越靠前</tip>
         </div>
 
@@ -226,7 +398,7 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
+            <textarea name="remark" id="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
         </div>
     </div>
 
@@ -238,7 +410,6 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
-<script th:src="@{/lib/jquery-form/jquery-form.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
@@ -267,6 +438,7 @@
 
 
 
+
         //初始化时间控件
         laydate.render({
             elem: '#startShowDate' //指定元素
@@ -282,7 +454,8 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            var bannerImgs = $(".leftBannerImgs");
+            var bannerImgs = $(".leftBannerHiddens");
+            console.log(bannerImgs);
             if(bannerImgs==null||bannerImgs.length<=0)
             {
                 layer.msg("请上传左侧轮播图");
@@ -363,6 +536,44 @@
             }
             data.field.columnLeftBannerVOS = columnLeftBannerVOS;
 
+            var columnRecommendProductVOS = new Array();
+            for(var j=0;j<6;j++)
+            {
+                var recommendProduct={};
+                var recommendProductImg = $("#recommend_product_img_hidden_"+j).val();
+                if(recommendProductImg==null||recommendProductImg=="")
+                {
+                    layer.msg("请上传商品图片");
+                    return false;
+                }
+                recommendProduct.imgPath = recommendProductImg;
+                recommendProduct.productName=$("#recommend_product_name_"+j).val();
+                if(recommendProduct.productName==null||recommendProduct.productName=="")
+                {
+                    layer.msg("商品名称不能为空");
+                    return false;
+                }
+                recommendProduct.productPrice=$("#recommend_product_price_"+j).val();
+                if(recommendProduct.productPrice==null||recommendProduct.productPrice=="")
+                {
+                    layer.msg("商品价格不能为空");
+                    return false;
+                }
+                recommendProduct.clickPath=$("#recommend_product_clickPath_"+j).val();
+                if(recommendProduct.clickPath==null||recommendProduct.clickPath=="")
+                {
+                    layer.msg("商品点击跳转不能为空");
+                    return false;
+                }
+                columnRecommendProductVOS.push(recommendProduct);
+            }
+            if(columnRecommendProductVOS.length<6)
+            {
+                layer.msg("请配置商品推荐,数量至少6个");
+                return false;
+            }
+            data.field.columnRecommendProducts = columnRecommendProductVOS;
+
             //右侧顶部图片
             data.field.rightTopBanner={};
             data.field.rightTopBanner.imgPath = $("#right_banner_img_hidden").val();
@@ -376,9 +587,22 @@
             data.field.rightBottomBanner.title = $("#right_bottom_banner_title").val();
             data.field.rightBottomBanner.clickPath = $("#right_bottom_banner_clickPath").val();
 
+            //顶部图片
+            data.field.topBanner={};
+            data.field.topBanner.imgPath = $("#top_img_hidden").val();
+            data.field.topBanner.title = $("#top_banner_title").val();
+            data.field.topBanner.clickPath = $("#top_banner_clickPath").val();
+
+
+            //底部图片
+            data.field.bottomBanner={};
+            data.field.bottomBanner.imgPath = $("#bottom_img_hidden").val();
+            data.field.bottomBanner.title = $("#bottom_banner_title").val();
+            data.field.bottomBanner.clickPath = $("#bottom_banner_clickPath").val();
+
             loadding = layer.load();
             $.ajax({
-                url:"[[@{/column/pcIndexColumn/save}]]",
+                url:"[[@{/column/pcIndexColumn/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -679,6 +903,23 @@
         });
 
 
+        $("#top_banner_delete_btn").click(function(){
+            $("#top_img_hidden").val("");
+            $("#top_banner_title").val("");
+            $("#top_banner_clickPath").val("");
+            $("#top_banner_img").val("");
+            $("#top_banner_preview").attr("src",basePath+"#");
+        });
+
+
+        $("#bottom_banner_delete_btn").click(function(){
+            $("#bottom_img_hidden").val("");
+            $("#bottom_banner_title").val("");
+            $("#bottom_banner_clickPath").val("");
+            $("#bottom_banner_img").val("");
+            $("#bottom_banner_preview").attr("src",basePath+"#");
+        });
+
         $("#shopProductRecommend").click(function(){
             var categoryId = "-1";
             var selectProductIds=$("#selectProductIds").val();
@@ -724,7 +965,7 @@
 
         });
 
-        appendLeftBannner();
+
 
         /**
          * 添加一行轮播图
@@ -733,10 +974,10 @@
         {
             leftBannerIncrement++;
             $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
-                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png'></td>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/img_260_220.png' style='width:260px;height:220px;'></td>\n" +
                 "        <td>" +
-                "               <input type='file' class='leftBannerImgs'  id='left_banner_img_"+leftBannerIncrement+"' />" +
-                "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
+                "               <input type='file'   id='left_banner_img_"+leftBannerIncrement+"' />" +
+                "               <input type='hidden'  attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
                 "       </td>\n" +
                 "        <td><input type='text' id='left_banner_title_"+leftBannerIncrement+"'  maxlength='100' class='layui-input' /></td>\n" +
                 "        <td><input type='text' id='left_banner_clickPath_"+leftBannerIncrement+"'  maxlength='255' class='layui-input'  /></td>\n" +
@@ -753,26 +994,28 @@
         });
 
 
+
         function uploadImg(fileId,previewImg,imgHidden)
         {
-            loadding = layer.load();
-            var formData = new FormData();
-            formData.append("file",$(fileId)[0].files[0]);
-            $.ajax({
-                url:'/common/img/upload',
-                type:'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success:function(res){
-                    $(previewImg).attr("src", res.data.httpPath);
-                    $(imgHidden).val(res.data.path);
-                },
-                complete:function()
-                {
-                    layer.close(loadding);
-                }
-            });
+            if($(fileId)[0].files[0]!=null) {
+                loadding = layer.load();
+                var formData = new FormData();
+                formData.append("file", $(fileId)[0].files[0]);
+                $.ajax({
+                    url: '/common/img/upload',
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        $(previewImg).attr("src", res.data.httpPath);
+                        $(imgHidden).val(res.data.path);
+                    },
+                    complete: function () {
+                        layer.close(loadding);
+                    }
+                });
+            }
         }
 
 
@@ -792,6 +1035,23 @@
         }
 
 
+        recommendProductUploadPreview();
+
+        /**
+         * 初始化推荐商品
+         */
+        function recommendProductUploadPreview()
+        {
+            for(var pos=0;pos<6;pos++)
+            {
+                $("#recommend_product_img_" + pos).on("change", function () {
+                    var attrIndex = $(this).attr("attr-index");
+                    uploadImg("#recommend_product_img_"+attrIndex,"#recommend_product_preview_"+attrIndex,"#recommend_product_img_hidden_"+attrIndex);
+                });
+            }
+        }
+
+
         rightTopBannerTableUploadPreview();
 
         /**
@@ -804,6 +1064,26 @@
             if($("#right_banner_img")!=null) {
                 $("#right_banner_img" ).on("change", function () {
                     uploadImg("#right_banner_img","#right_banner_preview","#right_banner_img_hidden");
+                });
+            }
+
+        }
+
+
+
+        topBannerTableUploadPreview();
+
+        /**
+         * 初始化顶部轮播图列表中点击上传图片
+         */
+        function topBannerTableUploadPreview()
+        {
+
+            if($("#top_banner_img")!=null) {
+                $("#top_banner_img" ).on("change", function () {
+
+                    uploadImg("#top_banner_img","#top_banner_preview","#top_img_hidden");
+
                 });
             }
 
@@ -829,6 +1109,25 @@
 
         }
 
+        bottomBannerTableUploadPreview();
+
+        /**
+         * 初始化底部轮播图列表中点击上传图片
+         */
+        function bottomBannerTableUploadPreview()
+        {
+
+            if($("#bottom_banner_img")!=null) {
+                $("#bottom_banner_img" ).on("change", function () {
+
+                    uploadImg("#bottom_banner_img","#bottom_banner_preview","#bottom_img_hidden");
+
+                });
+            }
+
+        }
+
+
         /**
          * 初始化删除事件
          */
@@ -845,6 +1144,137 @@
                     $("#banner_tr_" +attrIndex ).remove();
                     layer.close(index);
                 });
+            });
+        }
+
+
+
+        loadPage();
+
+        function loadPage()
+        {
+            var dataId  =$("#dataId").val();
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/column/pcIndexColumn/findById}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify({id:dataId}),
+                success:function(resp){
+                    // console.log(resp);
+                    var entity = resp.data;
+                    $("#title").val(entity.title);
+                    $("#startShowDate").val(entity.startShowDate);
+                    $("#endShowDate").val(entity.endShowDate);
+                    $("#columnSort").val(entity.columnSort);
+                    $("#remark").val(entity.remark);
+                    $("#showStatus"+entity.showStatus).attr('checked', 'true');
+
+
+                    //设置栏目地区
+                    if(entity.columnAreas!=null&&entity.columnAreas.length>0)
+                    {
+                        var areaNames="";
+                        for(var i=0;i<entity.columnAreas.length;i++) {
+                            areaArray.push({name:entity.columnAreas[i].areaName,code:entity.columnAreas[i].areaCode});
+                            areaNames+=entity.columnAreas[i].areaName;
+                            if(i+1<entity.columnAreas.length)
+                            {
+                                areaNames+=",";
+                            }
+                        }
+                        $("#selectArea").val(areaNames);
+                    }
+
+                    //设置推荐商品
+                    if(entity.columnRecommendProducts!=null&&entity.columnRecommendProducts.length>0)
+                    {
+                        for(var j=0;j<entity.columnRecommendProducts.length;j++)
+                        {
+                            var recommendProduct=entity.columnRecommendProducts[j];
+                            $("#recommend_product_preview_"+j).attr("src",recommendProduct.httpImgPath);
+                            $("#recommend_product_img_hidden_"+j).val(recommendProduct.imgPath);
+                            $("#recommend_product_name_"+j).val(recommendProduct.productName);
+                            $("#recommend_product_price_"+j).val(recommendProduct.productPrice);
+                            $("#recommend_product_clickPath_"+j).val(recommendProduct.clickPath);
+                        }
+                    }
+
+                    //设置顶部标签
+                    if(entity.topLabels!=null) {
+                        for(var p=0;p<entity.topLabels.length;p++) {
+                            labelIncrement++;
+                            var topLabel = entity.topLabels[p];
+                            topLabelData.push({id: labelIncrement, labelName: topLabel.labelName, clickPath: topLabel.clickPath});
+                        }
+                        initTopLabelTable();
+                    }
+
+                    //设置左侧标签
+                    if(entity.leftLabels!=null) {
+                        for(var p=0;p<entity.leftLabels.length;p++) {
+                            labelIncrement++;
+                            var leftLabel = entity.leftLabels[p];
+                            leftLabelData.push({id: labelIncrement, labelName: leftLabel.labelName, clickPath: leftLabel.clickPath});
+                        }
+                        initLeftLabelTable();
+                    }
+
+                    //设置左侧轮播图
+                    if(entity.columnLeftBannerVOS!=null&&entity.columnLeftBannerVOS.length>0)
+                    {
+                        for(var p=0;p<entity.columnLeftBannerVOS.length;p++)
+                        {
+                            appendLeftBannner();
+                            var leftBanner = entity.columnLeftBannerVOS[p];
+
+                            $("#left_banner_preview_"+leftBannerIncrement).attr("src",leftBanner.httpImgPath);
+                            $("#left_banner_img_hidden_"+leftBannerIncrement).val(leftBanner.imgPath);
+                            $("#left_banner_title_"+leftBannerIncrement).val(leftBanner.title);
+                            $("#left_banner_clickPath_"+leftBannerIncrement).val(leftBanner.clickPath);
+                        }
+                    }else {
+                        appendLeftBannner();
+                    }
+
+                    //设置右侧顶部图片
+                    $("#right_banner_preview").attr("src",entity.rightTopBanner.httpImgPath);
+                    $("#right_banner_img_hidden").val(entity.rightTopBanner.imgPath);
+                    $("#right_banner_title").val(entity.rightTopBanner.title);
+                    $("#right_banner_clickPath").val(entity.rightTopBanner.clickPath);
+
+                    //设置右侧底部图片
+                    $("#right_bottom_banner_preview").attr("src",entity.rightBottomBanner.httpImgPath);
+                    $("#right_bottom_banner_title").val(entity.rightBottomBanner.title);
+                    $("#right_bottom_banner_clickPath").val(entity.rightBottomBanner.clickPath);
+                    $("#right_bottom_img_hidden").val(entity.rightBottomBanner.imgPath);
+
+
+                    //设置底部图片
+                    if(entity.topBanner!=null) {
+                        $("#top_banner_preview").attr("src", entity.topBanner.httpImgPath);
+                        $("#top_banner_title").val(entity.topBanner.title);
+                        $("#top_banner_clickPath").val(entity.topBanner.clickPath);
+                        $("#top_img_hidden").val(entity.topBanner.imgPath);
+                    }
+
+
+                    //设置底部图片
+                    if(entity.bottomBanner!=null) {
+                        $("#bottom_banner_preview").attr("src", entity.bottomBanner.httpImgPath);
+                        $("#bottom_banner_title").val(entity.bottomBanner.title);
+                        $("#bottom_banner_clickPath").val(entity.bottomBanner.clickPath);
+                        $("#bottom_img_hidden").val(entity.bottomBanner.imgPath);
+                    }
+
+
+                    layui.form.render();
+                    layer.close(loadding);
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
             });
         }
 

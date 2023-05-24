@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -25,6 +26,7 @@ import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -85,8 +87,10 @@ public class ShopProductApproveApiController extends BaseController {
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
+    @Autowired
+    private FeignFreightTemplateService feignFreightTemplateService;
 
-    private String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
+
 
 
 
@@ -185,16 +189,14 @@ public class ShopProductApproveApiController extends BaseController {
             resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                if(resultObjectVO.getData()!=null)
-                {
+                if(resultObjectVO.getData()!=null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
                     ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
                     shopProductApproveVO.setId(queryShopProductApproveVO.getId());
                     shopProductApproveVO.setShopId(sellerShopVORet.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
                     resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
+                    if (resultObjectVO.isSuccess()) {
                         shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
                         CategoryVO queryCateogry = new CategoryVO();
                         queryCateogry.setId(shopProductApproveVO.getCategoryId());
@@ -202,22 +204,17 @@ public class ShopProductApproveApiController extends BaseController {
 
                         //查询分类
                         ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
-                        if(resultCategoryObjectVO.isSuccess()&&resultCategoryObjectVO.getData()!=null)
-                        {
+                        if (resultCategoryObjectVO.isSuccess() && resultCategoryObjectVO.getData() != null) {
                             CategoryVO categoryVO = resultCategoryObjectVO.formatData(CategoryVO.class);
                             List<String> categoryIdPath = new LinkedList<>();
                             List<String> categoryNamePath = new LinkedList<>();
-                            if(CollectionUtils.isNotEmpty(categoryVO.getIdPath()))
-                            {
-                                for(Long categoryId:categoryVO.getIdPath())
-                                {
+                            if (CollectionUtils.isNotEmpty(categoryVO.getIdPath())) {
+                                for (Long categoryId : categoryVO.getIdPath()) {
                                     categoryIdPath.add(String.valueOf(categoryId));
                                 }
                             }
-                            if(CollectionUtils.isNotEmpty(categoryVO.getNamePaths()))
-                            {
-                                for(String categoryName:categoryVO.getNamePaths())
-                                {
+                            if (CollectionUtils.isNotEmpty(categoryVO.getNamePaths())) {
+                                for (String categoryName : categoryVO.getNamePaths()) {
                                     categoryNamePath.add(String.valueOf(categoryName));
                                 }
                             }
@@ -228,7 +225,7 @@ public class ShopProductApproveApiController extends BaseController {
 
 
                         //查询店铺分类
-                        if(shopProductApproveVO.getShopCategoryId()!=null) {
+                        if (shopProductApproveVO.getShopCategoryId() != null) {
                             ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
                             queryShopCateogry.setId(shopProductApproveVO.getShopCategoryId());
                             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryShopCateogry);
@@ -254,56 +251,52 @@ public class ShopProductApproveApiController extends BaseController {
                         }
 
                     }
-                    if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
-                    {
-                        shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveVO.getMainPhotoFilePath());
+                    if (StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath())) {
+                        shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductApproveVO.getMainPhotoFilePath());
                     }
-                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getPreviewPhotoPaths()))
-                    {
+                    if (CollectionUtils.isNotEmpty(shopProductApproveVO.getPreviewPhotoPaths())) {
                         List<String> httpPreviewPhotos = new LinkedList<>();
-                        for(String previewPhoto:shopProductApproveVO.getPreviewPhotoPaths())
-                        {
-                            httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix()+previewPhoto);
+                        for (String previewPhoto : shopProductApproveVO.getPreviewPhotoPaths()) {
+                            httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix() + previewPhoto);
                         }
                         shopProductApproveVO.setHttpPreviewPhotoPaths(httpPreviewPhotos);
                     }
 
-                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
+                    if (CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
                         List<ShopProductApproveSkuAttribute> skuAttributes = new LinkedList<>();
-                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
-                        {
+                        for (ShopProductApproveSkuVO shopProductApproveSkuVO : shopProductApproveVO.getProductSkuVOList()) {
                             //设置商品预览图
-                            if(StringUtils.isNotEmpty(shopProductApproveSkuVO.getProductPreviewPath()))
-                            {
-                                shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getProductPreviewPath());
+                            if (StringUtils.isNotEmpty(shopProductApproveSkuVO.getProductPreviewPath())) {
+                                shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + shopProductApproveSkuVO.getProductPreviewPath());
                             }
 
-                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
+                            //设置介绍图
+                            if (StringUtils.isNotEmpty(shopProductApproveSkuVO.getDescriptionImgFilePath())) {
+                                shopProductApproveSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix() + shopProductApproveSkuVO.getDescriptionImgFilePath());
+                            }
+
+                            Map<String, String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(), Map.class);
                             Set<String> keysSet = attributeKeyValue.keySet();
-                            for(String key:keysSet)
-                            {
+                            for (String key : keysSet) {
                                 ShopProductApproveSkuAttribute shopProductApproveSkuAttribute = null;
                                 Optional<ShopProductApproveSkuAttribute> shopProductApproveSkuAttributeOptional = skuAttributes.stream().filter(item -> item.getKey().equals(key)).findFirst();
                                 //如果不存在属性名对象就创建
-                                if(!shopProductApproveSkuAttributeOptional.isPresent())
-                                {
+                                if (!shopProductApproveSkuAttributeOptional.isPresent()) {
                                     shopProductApproveSkuAttribute = new ShopProductApproveSkuAttribute();
                                     shopProductApproveSkuAttribute.setKey(key);
                                     shopProductApproveSkuAttribute.setValues(new LinkedList<>());
                                     skuAttributes.add(shopProductApproveSkuAttribute);
-                                }else{
+                                } else {
                                     shopProductApproveSkuAttribute = shopProductApproveSkuAttributeOptional.get();
                                 }
 
                                 //如果这个属性名没有任何属性值就直接添加
-                                if(CollectionUtils.isEmpty(shopProductApproveSkuAttribute.getValues()))
-                                {
+                                if (CollectionUtils.isEmpty(shopProductApproveSkuAttribute.getValues())) {
                                     shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
-                                }else{
+                                } else {
                                     //判断是否有重复
                                     Optional<String> shopProductApproveSkuAttributeValueOptional = shopProductApproveSkuAttribute.getValues().stream().filter(item -> item.equals(attributeKeyValue.get(key))).findFirst();
-                                    if(!shopProductApproveSkuAttributeValueOptional.isPresent())
-                                    {
+                                    if (!shopProductApproveSkuAttributeValueOptional.isPresent()) {
                                         shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
                                     }
                                 }
@@ -313,12 +306,23 @@ public class ShopProductApproveApiController extends BaseController {
 
                         shopProductApproveVO.setSkuAttributes(skuAttributes);
                     }
-                    if(shopProductApproveVO.getShopProductApproveDescriptionVO()!=null
-                            &&CollectionUtils.isNotEmpty(shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()))
-                    {
-                        for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs())
-                        {
-                            shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveDescriptionImgVO.getFilePath());
+                    if (shopProductApproveVO.getShopProductApproveDescriptionVO() != null
+                            && CollectionUtils.isNotEmpty(shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs())) {
+                        for (ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO : shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()) {
+                            shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix() + shopProductApproveDescriptionImgVO.getFilePath());
+                        }
+                    }
+                    if(shopProductApproveVO.getFreightTemplateId()!=null) {
+                        FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+                        freightTemplateVO.setId(shopProductApproveVO.getFreightTemplateId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
+                        resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+                        if (resultObjectVO.isSuccess()) {
+                            freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
+                            if (freightTemplateVO != null) {
+                                shopProductApproveVO.setFreightTemplateId(freightTemplateVO.getId());
+                                shopProductApproveVO.setFreightTemplateName(freightTemplateVO.getName());
+                            }
                         }
                     }
                     resultObjectVO.setData(shopProductApproveVO);
@@ -380,6 +384,11 @@ public class ShopProductApproveApiController extends BaseController {
                             for (int i = 0; i < list.size(); i++) {
                                 ShopProductApproveVO shopProductVO = list.get(i);
 
+
+                                if(StringUtils.isNotEmpty(shopProductVO.getMainPhotoFilePath()))
+                                {
+                                    shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
+                                }
 
                                 //设置店铺分类ID
                                 categoryExists = false;
@@ -642,7 +651,7 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
@@ -654,7 +663,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                 for(MultipartFile multipartFile:previewPhotoFiles)
                 {
-                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
@@ -663,20 +672,30 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            //校验SKU主图
+
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
                 for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
                 {
+                    //校验SKU主图
                     if(productSkuVO.getMainPhotoFile()==null)
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("发布失败,的商品主图不能为空!");
+                        resultObjectVO.setMsg("发布失败,商品主图不能为空!");
                         return resultObjectVO;
                     }
-                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+
+                    //校验SKU介绍图
+                    if(productSkuVO.getDescriptionImgFile()!=null
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");
                         return resultObjectVO;
                     }
                 }
@@ -692,9 +711,10 @@ public class ShopProductApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            //上传SKU表商品主图
+
             for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
             {
+                //上传SKU表商品主图
                 productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
                 if(StringUtils.isEmpty(productSkuVO.getProductPreviewPath()))
@@ -702,6 +722,17 @@ public class ShopProductApproveApiController extends BaseController {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("发布失败,商品主图上传失败!");
                     return resultObjectVO;
+                }
+
+                if(productSkuVO.getDescriptionImgFile()!=null) {
+                    //SKU商品介绍图
+                    productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
+                    productSkuVO.setDescriptionImgFile(null);
+                    if (StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
+                        return resultObjectVO;
+                    }
                 }
             }
 
@@ -911,7 +942,7 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            if(republishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(republishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            if(republishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(republishProductVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
@@ -923,7 +954,7 @@ public class ShopProductApproveApiController extends BaseController {
 
                 for(MultipartFile multipartFile:previewPhotoFiles)
                 {
-                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
@@ -932,14 +963,24 @@ public class ShopProductApproveApiController extends BaseController {
                 }
             }
 
-            //校验SKU主图
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())){
                 for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                 {
-                    if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    //校验SKU主图
+                    if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+
+
+                    //校验SKU介绍图
+                    if(productSkuVO.getDescriptionImgFile()!=null
+                            &&!ImageUtils.isImage(productSkuVO.getDescriptionImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品介绍图格式只能为:JPG、JPEG、PNG!");
                         return resultObjectVO;
                     }
                 }
@@ -961,9 +1002,15 @@ public class ShopProductApproveApiController extends BaseController {
             }
 
 
-            //上传SKU表商品主图
+            //已删除的SKU商品介绍图片
+            String[] skuDescriptionPhotoDelIdsArray = null;
+            if(StringUtils.isNotEmpty(republishProductVO.getSkuDescriptionPhotoDelIdsArray())) {
+                skuDescriptionPhotoDelIdsArray = republishProductVO.getSkuDescriptionPhotoDelIdsArray().split(",");
+            }
+
             for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
             {
+                //上传SKU表商品主图
                 if(productSkuVO.getMainPhotoFile()!=null) {
                     productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                     productSkuVO.setMainPhotoFile(null);
@@ -980,23 +1027,55 @@ public class ShopProductApproveApiController extends BaseController {
                             productSkuVO.setProductPreviewPath(oldProductSkuVO.getProductPreviewPath());
                         }
                     }
+                }
 
+                //上传SKU商品介绍图
+                if(productSkuVO.getDescriptionImgFile()!=null) {
+                    productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getDescriptionImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getDescriptionImgFile().getOriginalFilename())));
+                    productSkuVO.setDescriptionImgFile(null);
+                    if (StringUtils.isEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品介绍图上传失败!");
+                        return resultObjectVO;
+                    }
+                }else{
+                    //找到库中保存的商品介绍图路径设置进去
+                    for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
+                    {
+                        if(productSkuVO.getId()!=null&&productSkuVO.getId().longValue()==oldProductSkuVO.getId().longValue())
+                        {
+                            productSkuVO.setDescriptionImgFilePath(oldProductSkuVO.getDescriptionImgFilePath());
+                        }
+                    }
+                    //在判断是否被删除了,如果被删除了把设置进去的路径删除掉
+                    if(skuDescriptionPhotoDelIdsArray!=null&&skuDescriptionPhotoDelIdsArray.length>0)
+                    {
+                        for(String skuDescriptionPhotoDelId:skuDescriptionPhotoDelIdsArray)
+                        {
+                            if(productSkuVO.getId()!=null&&skuDescriptionPhotoDelId.equals(String.valueOf(productSkuVO.getId())))
+                            {
+                                productSkuVO.setDescriptionImgFilePath(null);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
-            //删除旧的SKU商品图片
+            //删除旧的SKU商品主图
             if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList()))
             {
-                boolean previewIsChange=false;
+                boolean previewIsChange=true;
                 for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
                 {
-                    previewIsChange = false;
+                    previewIsChange = true;
                     for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                     {
                         if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
                         {
-                            if(productSkuVO.getMainPhotoFile()!=null) {
-                                previewIsChange = true;
+                            if(productSkuVO.getMainPhotoFile()==null) {
+                                previewIsChange = false;
+                                break;
                             }
                         }
                     }
@@ -1007,6 +1086,32 @@ public class ShopProductApproveApiController extends BaseController {
                     }
                 }
             }
+
+            //删除旧的SKU商品介绍图
+            if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList()))
+            {
+                boolean descriptionImgIsChange=true;
+                for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
+                {
+                    descriptionImgIsChange = true;
+                    for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
+                    {
+                        if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
+                        {
+                            if(productSkuVO.getDescriptionImgFile()==null) {
+                                descriptionImgIsChange = false;
+                                break;
+                            }
+                        }
+                    }
+                    //图片修改了,那么就删除旧的图片
+                    if(descriptionImgIsChange)
+                    {
+                        this.deleteOldProductImage(oldProductSkuVO.getDescriptionImgFilePath());
+                    }
+                }
+            }
+
 
             List<String> reuploadPreviewPhotoPaths = new LinkedList<>();
             //上传商品预览图
@@ -1120,12 +1225,12 @@ public class ShopProductApproveApiController extends BaseController {
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey,180, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
-            //60秒过期
-            clientVCodeId.setMaxAge(60);
+            //180秒过期
+            clientVCodeId.setMaxAge(180);
             response.addCookie(clientVCodeId);
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);
@@ -1167,6 +1272,76 @@ public class ShopProductApproveApiController extends BaseController {
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据用户ID查询所属的店铺ID
+     * @param userMainId
+     * @return
+     */
+    private Long queryShopIdByUserMainId(Long userMainId)
+    {
+        try{
+            //查询这个用户下的店铺
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
+            ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            if(!resultObjectVO.isSuccess()) {
+                return -1L;
+            }
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            if (sellerShopVO == null||(sellerShopVO.getEnableStatus()!=null&&sellerShopVO.getEnableStatus().intValue()==0)) {
+                return -1L;
+            }
+            return sellerShopVO.getId();
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return -1L;
+    }
+
+
+
+    /**
+     * 查询最新4个商品审核
+     * @param request
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/queryProductApproveListTop4",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryProductApproveListTop4(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            ShopProductApprovePageInfo shopProductApprovePageInfo = new ShopProductApprovePageInfo();
+            shopProductApprovePageInfo.setLimit(4);
+            shopProductApprovePageInfo.setShopId(queryShopIdByUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApprovePageInfo);
+            resultObjectVO = feignShopProductApproveService.queryNewestListByShopId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ShopProductApproveVO> shopProductApproveVOS = resultObjectVO.formatDataList(ShopProductApproveVO.class);
+                if(CollectionUtils.isNotEmpty(shopProductApproveVOS))
+                {
+                    for(ShopProductApproveVO shopProductApproveVO:shopProductApproveVOS)
+                    {
+                        if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
+                        {
+                            shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveVO.getMainPhotoFilePath());
+                        }
+                    }
+                }
+                resultObjectVO.setData(shopProductApproveVOS);
+            }
+        }catch(Exception e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
         }
         return resultObjectVO;
     }

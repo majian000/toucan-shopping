@@ -80,4 +80,13 @@
         select * from t_column_banner where delete_status = 0 and column_id = #{columnId}
     </select>
 
+
+    <select id="queryListByColumnIds" resultMap="columnBannerVOMap">
+        select * from t_column_banner where delete_status = 0
+          and column_id in
+        <foreach item="item" index="index" collection="columnIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

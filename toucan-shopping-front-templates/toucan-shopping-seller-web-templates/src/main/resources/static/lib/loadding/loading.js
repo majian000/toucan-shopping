@@ -3,6 +3,7 @@ const loading = {
     _anItem:null,
     _tipItem:null,
     _tipLabel:null,
+    _zIndex:null,
     _showTip:true,
     _type:1,
     showLoading(config){
@@ -11,6 +12,7 @@ const loading = {
             this._loadItem = null;
             this._anItem = null;
             this._tipItem = null;
+            this._zIndex=null;
             this._showTip = true;
             this._type = 1;
         }
@@ -20,6 +22,10 @@ const loading = {
         }else if(typeof config == "object"){
             this._tipLabel = typeof config.tip == "string" ? config.tip : "loading...";
             this._type = typeof config.type == "number" ? config.type : 1;
+            if(config.zIndex!=null)
+            {
+                this._zIndex = config.zIndex;
+            }
             this._showTip = typeof config.showTip == "boolean" ? config.showTip : true;
         }else{
             this._tipLabel = "loading...";
@@ -124,6 +130,10 @@ const loading = {
             this._tipItem.appendTo(this._loadItem);
         }
         this._loadItem.appendTo($('body'));
+        if(this._zIndex!=null)
+        {
+            this._loadItem.css("z-index",this._zIndex);
+        }
     },
     hideLoading(){
         if(this._loadItem!=null) {
@@ -136,6 +146,7 @@ const loading = {
         this._loadItem = null;
         this._anItem = null;
         this._tipItem = null;
+        this._zIndex=null;
         this._showTip = true;
         this._type = 1;
     }

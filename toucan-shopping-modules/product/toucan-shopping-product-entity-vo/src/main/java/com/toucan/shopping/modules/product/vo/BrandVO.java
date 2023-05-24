@@ -42,4 +42,14 @@ public class BrandVO extends Brand {
      */
     private String httpLogoPath;
 
+    /**
+     * 分类ID
+     */
+    private String categoryId;
+
+    /**
+     * 品牌名称
+     */
+    private String name;
+
 }

@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -606,6 +608,35 @@ public class AreaController {
                 return resultObjectVO;
             }
 
+            List<Area> children = new LinkedList<>();
+            areaService.queryChildren(children,query);
+            if(!CollectionUtils.isEmpty(children))
+            {
+                for(Area child:children)
+                {
+                    if(child.getBigAreaCode()==null||child.getCountryCode()==null)
+                    {
+                        child.setCountryCode(entity.getCountryCode());
+                        child.setCountryName(entity.getCountryName());
+                        child.setBigAreaCode(entity.getBigAreaCode());
+                        child.setBigAreaName(entity.getBigAreaName());
+                        child.setUpdateAdminId(entity.getUpdateAdminId());
+                        child.setUpdateDate(entity.getUpdateDate());
+                        areaService.update(child);
+                    }else if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
+                            ||(!child.getBigAreaCode().equals(entity.getBigAreaCode())||!child.getBigAreaName().equals(entity.getBigAreaName())))
+                    {
+                        child.setCountryCode(entity.getCountryCode());
+                        child.setCountryName(entity.getCountryName());
+                        child.setBigAreaCode(entity.getBigAreaCode());
+                        child.setBigAreaName(entity.getBigAreaName());
+                        child.setUpdateAdminId(entity.getUpdateAdminId());
+                        child.setUpdateDate(entity.getUpdateDate());
+                        areaService.update(child);
+                    }
+                }
+            }
+
             try{
                 //刷新到缓存
                 initAllAreaCache();
@@ -836,6 +867,75 @@ public class AreaController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<AreaTreeVO> areaVOS = new ArrayList<AreaTreeVO>();
+            if(queryArea.getPid()==null)
+            {
+                AreaTreeVO areaVO = new AreaTreeVO();
+                areaVO.setId(-1L);
+                areaVO.setName("中国");
+                areaVO.setParentId(-1L);
+                Long childCount = areaService.queryOneChildCountByPid(-1L,queryArea.getAppCode());
+                if(childCount>0)
+                {
+                    areaVO.setIsParent(true);
+                }
+                areaVOS.add(areaVO);
+            }else {
+                List<Area> areas = areaService.queryList(queryArea);
+                for (int i = 0; i < areas.size(); i++) {
+                    Area area = areas.get(i);
+                    AreaTreeVO areaTreeVO = new AreaTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    if (area.getType() == 1) {
+                        areaTreeVO.setName(area.getProvince());
+                    } else if (area.getType() == 2) {
+                        areaTreeVO.setName(area.getCity());
+                    } else if (area.getType() == 3) {
+                        areaTreeVO.setName(area.getArea());
+                    }
+                    Long childCount = areaService.queryOneChildCountByPid(areaTreeVO.getId(),areaTreeVO.getAppCode());
+                    if(childCount>0)
+                    {
+                        areaTreeVO.setIsParent(true);
+                    }else{
+                        areaTreeVO.setIsParent(false);
+                    }
+                    areaVOS.add(areaTreeVO);
+                }
+            }
+
+            resultObjectVO.setData(areaVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 
@@ -1134,17 +1234,16 @@ public class AreaController {
             provinceVO.setPid(null);
             provinceVO.setAppCode(null);
             provinceVO.setParentName(null);
-            provinceVO.setCreateAdminUsername(null);
+            provinceVO.setCreateAdminName(null);
             provinceVO.setCreateDate(null);
             provinceVO.setCreateAdminId(null);
-            provinceVO.setUpdateAdminUsername(null);
+            provinceVO.setUpdateAdminName(null);
             provinceVO.setUpdateAdminId(null);
             provinceVO.setUpdateDate(null);
             provinceVO.setDeleteStatus(null);
             provinceVO.setCodeArray(null);
             provinceVO.setArea(null);
             provinceVO.setAreaSort(null);
-            provinceVO.setIsMunicipality(null);
             provinceVO.setCity(null);
             provinceVO.setProvince(null);
             provinceVO.setRemark(null);
@@ -1156,17 +1255,16 @@ public class AreaController {
                     cityOrAreaVO.setPid(null);
                     cityOrAreaVO.setAppCode(null);
                     cityOrAreaVO.setParentName(null);
-                    cityOrAreaVO.setCreateAdminUsername(null);
+                    cityOrAreaVO.setCreateAdminName(null);
                     cityOrAreaVO.setCreateDate(null);
                     cityOrAreaVO.setCreateAdminId(null);
-                    cityOrAreaVO.setUpdateAdminUsername(null);
+                    cityOrAreaVO.setUpdateAdminName(null);
                     cityOrAreaVO.setUpdateAdminId(null);
                     cityOrAreaVO.setUpdateDate(null);
                     cityOrAreaVO.setDeleteStatus(null);
                     cityOrAreaVO.setCodeArray(null);
                     cityOrAreaVO.setArea(null);
                     cityOrAreaVO.setAreaSort(null);
-                    cityOrAreaVO.setIsMunicipality(null);
                     cityOrAreaVO.setCity(null);
                     cityOrAreaVO.setProvince(null);
                     cityOrAreaVO.setRemark(null);
@@ -1177,17 +1275,16 @@ public class AreaController {
                             areaVO.setPid(null);
                             areaVO.setAppCode(null);
                             areaVO.setParentName(null);
-                            areaVO.setCreateAdminUsername(null);
+                            areaVO.setCreateAdminName(null);
                             areaVO.setCreateDate(null);
                             areaVO.setCreateAdminId(null);
-                            areaVO.setUpdateAdminUsername(null);
+                            areaVO.setUpdateAdminName(null);
                             areaVO.setUpdateAdminId(null);
                             areaVO.setUpdateDate(null);
                             areaVO.setDeleteStatus(null);
                             areaVO.setCodeArray(null);
                             areaVO.setArea(null);
                             areaVO.setAreaSort(null);
-                            areaVO.setIsMunicipality(null);
                             areaVO.setCity(null);
                             areaVO.setProvince(null);
                             areaVO.setRemark(null);
@@ -1269,5 +1366,36 @@ public class AreaController {
 
 
 
+    /**
+     * 根据所有市级名称查询出所有市级对象
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/city/list/by/names",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryCityListByNames(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AreaVO queryAreaVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaVO.class);
+            if(!CollectionUtils.isEmpty(queryAreaVO.getCityNameList())) {
+                queryAreaVO.setType((short)2);
+                resultObjectVO.setData(areaService.queryListByVO(queryAreaVO));
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 }

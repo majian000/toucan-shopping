@@ -127,6 +127,22 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO findListByNameAndCategoryIdAndEnabled(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignBrandService findListByNameAndCategoryIdAndEnabled faild  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

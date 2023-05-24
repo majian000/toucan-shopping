@@ -2,21 +2,34 @@
 var g_productVo;
 
 $(function(){
-
     tabsEvent();
+    bindProductNumEvent();
     var id = getProductId();
+    var ptype = $("#ptype").val();
     if(id!=null&&id!="") {
         var type= getShopProductPreviewType();
-        var requestPath = basePath + "/api/product/detail";
-        if(type==1)
-        {
-            requestPath  = basePath + "/api/product/detail/pid";
+        var params = {"id": id};
+        var requestPath ="";
+        if(ptype=="detail") {
+            requestPath = basePath + "/api/product/detail";
+            if (type == 1) {
+                requestPath = basePath + "/api/product/detail/pid";
+            }else if (type == 3) {
+                requestPath = basePath + "/api/product/detail/pid";
+                params.attrPath=$("#attrPath").val();
+            }
+        }else if(ptype=="preview"){
+            requestPath = basePath + "/api/product/preview";
+            if(type==1)
+            {
+                requestPath  = basePath + "/api/product/preview/pid";
+            }
         }
         $.ajax({
             type: "POST",
             url: requestPath,
             contentType: "application/json;charset=utf-8",
-            data: JSON.stringify({"id": id}),
+            data: JSON.stringify(params),
             dataType: "json",
             success: function (result) {
                 if (result.code <= 0) {
@@ -26,6 +39,13 @@ $(function(){
                     });
                     return ;
                 }
+                // if(result.data==null)
+                // {
+                //     $.message({
+                //         message: "该商品已下架",
+                //         type: 'error'
+                //     });
+                // }
                 drawProductPage(result.data);
             },
             error: function (result) {
@@ -49,38 +69,131 @@ function drawAttributeList(productVO)
             attributeValueGroupArray = new Array();
             attributeValueGroupArray.push(productVO.attributeValueGroup);
         }
+        var heriCount = 0 ;
+        //拿到属性层数
+        for (var attributeKey in attributesObject) {
+            heriCount++;
+        }
+        var selectAttributeArray=new Array();
+
+        var heri=0;
+        var vpath="";
+        var parentAttPath="";
         for (var attributeKey in attributesObject) {
             attributeHtml+="<div class=\"des_choice\">";
             attributeHtml+=" <span class=\"fl\">"+attributeKey+"：</span>";
             attributeHtml+=" <ul>";
             var attributeValues= attributesObject[attributeKey];
+            parentAttPath="";
+            for(var s=0;s<selectAttributeArray.length;s++)
+            {
+                if(selectAttributeArray[s].heri<heri)
+                {
+                    parentAttPath+=selectAttributeArray[s].attributeValue;
+                    parentAttPath+="_";
+                }
+            }
             if(attributeValues!=null&&attributeValues.length>0)
             {
+                vpath="";
                 for(var j=0;j<attributeValues.length;j++)
                 {
+                    vpath = parentAttPath+attributeValues[j];
                     if(attributeValueGroupArray[skuAttributeValuePos]==attributeValues[j])
                     {
-                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"checked att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        selectAttributeArray.push({attributeValue:attributeValues[j],heri:heri});
                     }else{
-                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                        attributeHtml+="<li class=\"att_chks att_check"+rowIndex+"\" attr-row=\""+rowIndex+"\" attr-vpath=\""+vpath+"\" attr-value=\""+attributeValues[j]+"\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
                     }
                 }
             }
+            heri++;
             attributeHtml+=" </ul>";
             attributeHtml+="</div>";
             skuAttributeValuePos++;
             rowIndex++;
         }
         $(".attributeList").append(attributeHtml);
+        disabledAttribute(productVO);
         bindAttributeCheckboxEvent();
     }
+}
+
+/**
+ * 将库存为0的和下架的禁用
+ * @param productVO
+ */
+function disabledAttribute(productVO)
+{
+    var attChks = $(".att_chks");
+    if(attChks!=null&&attChks.length>0)
+    {
+        for(var i=0;i<attChks.length;i++)
+        {
+            var attrObj = attChks[i];
+            var valuePath = $(attrObj).attr("attr-vpath");
+            var attrText = $(attrObj).text();
+            var attrNode = getAttributeNode(valuePath,productVO.attributeValueStatusVOS);
+            if(attrNode!=null&&attrNode.status==0)
+            {
+                $(attrObj).unbind();
+                $(attrObj).removeClass("att_chks");
+                $(attrObj).removeClass("checked");
+                $(attrObj).addClass("disabled");
+                if(attrNode.statusCode==1)
+                {
+                    $(attrObj).text(attrText+" 已售罄");
+                }else if(attrNode.statusCode==2)
+                {
+                    $(attrObj).text(attrText+" 已下架");
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 拿到属性节点状态对象
+ * @param valuePath
+ * @param attributeValueTreeList
+ * @returns {*}
+ */
+function getAttributeNode(valuePath,attributeValueTreeList)
+{
+    var ret = null;
+    if (attributeValueTreeList!=null&&attributeValueTreeList.length>0&&ret==null) {
+        for (var i=0;i<attributeValueTreeList.length;i++) {
+            if (valuePath==attributeValueTreeList[i].valuePath) {
+                ret = attributeValueTreeList[i];
+                break;
+            } else {
+                ret = getAttributeNode(valuePath, attributeValueTreeList[i].children);
+                if(ret!=null)
+                {
+                    return ret;
+                }
+            }
+        }
+    }
+    return ret;
 }
 
 function bindAttributeCheckboxEvent()
 {
     $(".att_chks").bind("click", function () {
         var attrRow = $(this).attr("attr-row");
-        $(".att_check"+attrRow).removeClass("checked");
+        var preSelectAttrObj=null; //上一个选择的属性项
+        var attCheckRowObjects = $(".att_check"+attrRow);
+        for(var i=0;i<attCheckRowObjects.length;i++)
+        {
+            if($(attCheckRowObjects[i]).hasClass("checked"))
+            {
+                preSelectAttrObj = attCheckRowObjects[i];
+                break;
+            }
+        }
+        attCheckRowObjects.removeClass("checked");
         $(this).addClass("checked");
 
         var attributeChks=$(".att_chks");
@@ -107,10 +220,23 @@ function bindAttributeCheckboxEvent()
                     var sku = g_productVo.productSkuVOList[p];
                     if(sku.attributeValueGroup==attributeValueGroup)
                     {
+                        //已下架
+                        if(sku.status==0)
+                        {
+                            break;
+                        }
+                        //已售罄
+                        if(sku.stockNum<=0)
+                        {
+                            break;
+                        }
                         var currentLocation=getShopProductPreviewHrefIngoreId();
                         window.location.href = currentLocation+"/"+sku.id;
+                        return;
                     }
                 }
+                formpost(basePath+"/page/product/detail/attrPath/"+g_productVo.shopProductId,{attrPath:attributeValueGroup});
+                return;
             }
         }
     });
@@ -129,6 +255,11 @@ function drawProductPage(productVO)
 
         $("#MagicZoom").attr("href",productVO.httpMainPhotoFilePath);
         $("#MagicZoomImg").attr("src",productVO.httpMainPhotoFilePath);
+
+        if(productVO.roughWeight!=null)
+        {
+            $(".product_detail_rough_weight").html(productVO.roughWeight+"kg");
+        }
 
         photoPos++;
         $(".productPhotoPreview").append("<li onclick=\"showPic("+photoPos+")\" rel=\"MagicZoom\" >" +
@@ -196,10 +327,17 @@ function drawProductPage(productVO)
         }
 
         drawSpuAttributes(productVO.productId);
+
+        showSaveBurCarBtns();
     }
 }
 
-function drawSalesAttributeChildHtml(attributeChild)
+function showSaveBurCarBtns()
+{
+    $(".suc_btn_panel").show();
+}
+
+function drawSpuAttributeChildHtml(attributeChild)
 {
     var salesAttributeChildHtml="<div class=\"Ptable-item-child\">";
     salesAttributeChildHtml+="<dl style=\"Ptable-item-dl\">";
@@ -217,7 +355,7 @@ function drawSalesAttributeChildHtml(attributeChild)
     salesAttributeChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
     if(attributeChild.children!=null) {
         for (var p = 0; p < attributeChild.children.length; p++) {
-            salesAttributeChildHtml += drawSalesAttributeChildHtml(attributeChild.children[p]);
+            salesAttributeChildHtml += drawSpuAttributeChildHtml(attributeChild.children[p]);
         }
     }
     salesAttributeChildHtml+="</dl>";
@@ -226,7 +364,7 @@ function drawSalesAttributeChildHtml(attributeChild)
     return salesAttributeChildHtml;
 }
 
-function drawSalesAttribute(spu)
+function drawSpuAttribute(spu)
 {
     if(spu!=null&&spu.attributeTree.length>0)
     {
@@ -254,7 +392,7 @@ function drawSalesAttribute(spu)
                 salesAttributeHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
                 if(attributeTree.children!=null) {
                     for (var p = 0; p < attributeTree.children.length; p++) {
-                        salesAttributeHtml += drawSalesAttributeChildHtml(attributeTree.children[p]);
+                        salesAttributeHtml += drawSpuAttributeChildHtml(attributeTree.children[p]);
                     }
                 }
                 salesAttributeHtml+="</dl>";
@@ -281,7 +419,7 @@ function drawSpuAttributes(productId)
             if (result.code <= 0) {
                 return ;
             }
-            drawSalesAttribute(result.data);
+            drawSpuAttribute(result.data);
         },
         error: function (result) {
 
@@ -315,3 +453,67 @@ function tabsEvent()
         $(".step"+tabNumber+"Panel").show();
     });
 }
+
+
+function bindProductNumEvent()
+{
+    $("#buyCount").change(function(){
+        var bnum = $(this).val();
+        if(isNaN(bnum))
+        {
+            $(this).val("1");
+        }
+    });
+}
+
+
+function saveUserCar()
+{
+    var ptype = $("#ptype").val();
+    if(ptype=="preview")
+    {
+        return;
+    }
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    var params = {
+        shopProductSkuId:g_productVo.id,
+        buyCount:$("#buyCount").val()
+    };
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/save",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(params),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1 ||result.code == 201)
+            {
+                if(result.data!=null){
+                    $("#buyCarItemCount").html(result.data.length);
+                }
+                var buyCarPriceTotal=new BigNumber(0);
+                for(var i=0;i<result.data.length;i++)
+                {
+                    var buyCarItem = result.data[i];
+                    buyCarPriceTotal = buyCarPriceTotal.plus(new BigNumber(buyCarItem.productPrice).times(new BigNumber(buyCarItem.buyCount)));
+                }
+
+                $(".buy_car_price_total").html(buyCarPriceTotal.toFixed(2));
+                ShowDiv_1('userBuyCarMsg','fade1');
+                loadBuyCarPreviewPanel();
+            }else if(result.code==403){
+                window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getProductPageUrl());
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+
+}
+

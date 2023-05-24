@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -47,5 +49,22 @@ public class PhoneUtils {
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(str);
         return m.matches();
+    }
+
+    /**
+     * 手机号脱敏(最起码4位)
+     * @return
+     */
+    public static String desensitization(String phone) throws Exception
+    {
+        if(StringUtils.isNotEmpty(phone)&&phone.length()>4)
+        {
+            int startPos = phone.length()/2 - 2;
+            int endPos = phone.length()/2 + 2;
+            String startStr = phone.substring(0,startPos);
+            String endStr = phone.substring(endPos,phone.length());
+            return startStr+"****"+endStr;
+        }
+        return phone;
     }
 }

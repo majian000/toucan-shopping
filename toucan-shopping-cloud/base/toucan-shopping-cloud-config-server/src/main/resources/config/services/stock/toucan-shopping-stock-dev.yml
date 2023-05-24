@@ -6,7 +6,7 @@ spring:
   application:
     name: toucan-shopping-stock #应用名称
   zipkin: #链路追踪
-    enabled: true
+    enabled: false
     base-url: http://localhost:9411
     sleuth:
       sampler:
@@ -40,6 +40,10 @@ spring:
 
 
 toucan:
+  machine-id: 2202 #机器编码
+  #雪花算法ID相关
+  workerId: 1 #工作ID 0~31, 每个服务实例都有一个工作ID
+  datacenterId: 0 #数据中心ID (0~31)
   modules:
     skylarkLock: #云雀分布式锁
       type: redis #中间件类型

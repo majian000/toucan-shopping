@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.stock.mapper.ProductSkuStockLockMapper">
+
+    <resultMap id="productSkuStockLockMap" type="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
+        <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="type" jdbcType="SMALLINT" property="type" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
+        <result column="order_create_date" jdbcType="TIMESTAMP" property="orderCreateDate" />
+    </resultMap>
+
+    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO">
+
+    </resultMap>
+
+    <sql id="queryVOListWhere">
+
+
+        <if test="productSkuIdList!=null and productSkuIdList.size>0 ">
+            and t.product_sku_id in
+            <foreach item="item" index="index" collection="productSkuIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="mainOrderNoList!=null and mainOrderNoList.size>0 ">
+            and t.main_order_no in
+            <foreach item="item" index="index" collection="mainOrderNoList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="type!=null and type!=-1">
+            and t.type = #{type}
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
+
+
+    <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
+          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no)
+          values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo})
+    </insert>
+
+    <select id="queryStockNumByVO" resultMap="productSkuStockLockVOMap">
+        select product_sku_id,sum(stock_num) as stock_num from t_product_sku_stock_lock t
+        where 1=1
+        <include refid="queryVOListWhere" />
+        group by t.product_sku_id
+    </select>
+
+    <select id="queryListByVO" resultMap="productSkuStockLockVOMap">
+        select t.* from t_product_sku_stock_lock t
+        where 1=1
+        <include refid="queryVOListWhere" />
+    </select>
+
+    <update id="deletes">
+        update t_product_sku_stock_lock set delete_status = 1 where id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

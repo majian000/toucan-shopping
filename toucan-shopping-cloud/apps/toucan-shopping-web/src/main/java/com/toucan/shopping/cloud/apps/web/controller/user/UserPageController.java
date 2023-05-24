@@ -23,8 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +68,7 @@ public class UserPageController extends BaseController {
 
 
     /**
-     * 找回密码
+     * 找回密码页面
      * @return
      */
     @RequestMapping("/forget/pwd")
@@ -77,38 +79,6 @@ public class UserPageController extends BaseController {
 
 
 
-    /**
-     * 找回密码 步骤2
-     * @return
-     */
-    @RequestMapping("/forget/pwd/step2")
-    public String forgetPwdByStep2()
-    {
-        return "user/forgetPwd/forget_pwd_step2";
-    }
-
-
-
-    /**
-     * 找回密码 步骤3
-     * @return
-     */
-    @RequestMapping("/forget/pwd/step3")
-    public String forgetPwdByStep3()
-    {
-        return "user/forgetPwd/forget_pwd_step3";
-    }
-
-    /**
-     * 找回密码 步骤3
-     * @return
-     */
-    @RequestMapping("/forget/pwd/success")
-    public String forgetPwdBySuccess()
-    {
-        return "user/forgetPwd/forget_pwd_success";
-    }
-
 
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)
@@ -117,6 +87,12 @@ public class UserPageController extends BaseController {
             //查询登录次数,失败3次要求输入验证码
             String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
             Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
+            String redirectUrl = request.getParameter("redirectUrl");
+            if(StringUtils.isEmpty(redirectUrl))
+            {
+                redirectUrl = request.getAttribute("redirectUrl")!=null?String.valueOf(request.getAttribute("redirectUrl")):null;
+            }
+            request.setAttribute("redirectUrl",redirectUrl);
             if (loginFaildCountValueObject != null) {
                 Integer faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
                 if (faildCount >= 3) {
@@ -174,6 +150,39 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/modifyPwd")
+    public String modifyPwd(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        return "user/modifyPwd/modify_pwd";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/bindEmail")
+    public String bindEmail(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        return "user/bindEmail/bind_email";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/bindMobilePhone")
+    public String bindMobilePhone(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        UserVO userVO = (UserVO)httpServletRequest.getAttribute("userVO");
+        //如果是修改手机号的话,需要先进行实名认证
+        if(StringUtils.isNotEmpty(userVO.getMobilePhone())) {
+            if (userVO.getTrueNameStatus().intValue() == 0) {
+                httpServletRequest.setAttribute("msg", "请您先进行实名");
+                return "user/bindMobilePhone/bind_mobile_phone_msg";
+            }
+        }
+        return "user/bindMobilePhone/bind_mobile_phone";
+    }
 
 
     @RequestMapping(value="/logout")

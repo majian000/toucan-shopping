@@ -26,7 +26,7 @@
 
 
     <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/common/location-param.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/common/location-param.js"></script>
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/common-product.js"></script>
 
 
@@ -49,6 +49,8 @@
 
 <#assign leftMenuName = "myIndex">
 
+<input type="hidden" id="ptype" value="detail"/>
+
 <!------------main---------------->
 <div class="i_bg">
     <div class="postion">
@@ -57,6 +59,7 @@
     <div class="content">
 
         <div id="tsShopContainer">
+            <input type="hidden" id="attrPath" value="${attrPath!''}" />
             <div id="tsImgS">
                 <a href="${basePath}/static/images/error-td.gif"  class="MagicZoom" id="MagicZoom">
                     <img src="${basePath}/static/images/error-td.gif" id="MagicZoomImg" width="390" height="390" />
@@ -84,6 +87,11 @@
                     <span class="text">满159减20</span>
                 </span>
             </div>
+
+            <div class="des_rough_weight">
+                重量：<a class="product_detail_rough_weight"></a>
+            </div>
+
             <div style="width:100%" class="attributeList">
 
             </div>
@@ -102,11 +110,11 @@
             </div>
             <div class="des_join">
                 <div class="j_nums">
-                    <input type="text" value="1" name="" class="n_ipt" />
+                    <input type="text" value="1" id="buyCount" class="n_ipt" />
                     <input type="button" value="" onclick="addUpdate(jq(this));" class="n_btn_1" />
                     <input type="button" value="" onclick="jianUpdate(jq(this));" class="n_btn_2" />
                 </div>
-                <span class="fl"><a onclick="ShowDiv_1('MyDiv1','fade1')"><img src="${basePath}/static/images/j_car.png" /></a></span>
+                <span class="fl suc_btn_panel"  style="display:none;"><a onclick="saveUserCar();" ><img src="${basePath}/static/images/j_car.png" /></a></span>
             </div>
         </div>
 
@@ -358,10 +366,10 @@
 
     <!--Begin 弹出层-加入购物车 Begin-->
     <div id="fade1" class="black_overlay"></div>
-    <div id="MyDiv1" class="white_content">
+    <div id="userBuyCarMsg" class="white_content">
         <div class="white_d">
             <div class="notice_t">
-                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv_1('MyDiv1','fade1')"><img src="${basePath}/static/images/close.gif" /></span>
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv_1('userBuyCarMsg','fade1')"><img src="${basePath}/static/images/close.gif" /></span>
             </div>
             <div class="notice_c">
 
@@ -370,12 +378,12 @@
                         <td width="40"><img src="${basePath}/static/images/suc.png" /></td>
                         <td>
                             <span style="color:#3e3e3e; font-size:18px; font-weight:bold;">宝贝已成功添加到购物车</span><br />
-                            购物车共有1种宝贝（3件） &nbsp; &nbsp; 合计：1120元
+                            购物车共有<a id="buyCarItemCount"></a>个宝贝 &nbsp; &nbsp; 合计：<a class="buy_car_price_total"></a>元
                         </td>
                     </tr>
                     <tr height="50" valign="bottom">
                         <td>&nbsp;</td>
-                        <td><a href="#" class="b_sure">去购物车结算</a><a href="#" class="b_buy">继续购物</a></td>
+                        <td><a href="${basePath}/page/user/buyCar/index" class="b_sure">去购物车结算</a><a style="cursor:pointer;" onclick="CloseDiv_1('userBuyCarMsg','fade1')" class="b_buy">继续购物</a></td>
                     </tr>
                 </table>
 

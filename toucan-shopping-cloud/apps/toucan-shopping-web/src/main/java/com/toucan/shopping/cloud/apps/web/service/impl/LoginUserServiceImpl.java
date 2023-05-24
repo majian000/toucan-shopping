@@ -51,6 +51,12 @@ public class LoginUserServiceImpl implements LoginUserService {
                 }else{
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+toucan.getUser().getDefaultHeadSculpture());
                 }
+                if(StringUtils.isNotEmpty(userVO.getMobilePhone())
+                        &&StringUtils.isNotEmpty(userVO.getEmail())
+                        &&(userVO.getTrueNameStatus()!=null&&userVO.getTrueNameStatus().intValue()==1))
+                {
+                    userVO.setSecurityLevel(2); //高级别
+                }
                 request.setAttribute("userVO",userVO);
             }else{
                 request.setAttribute("userVO",new UserVO());

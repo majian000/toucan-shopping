@@ -73,6 +73,17 @@
                                         <input type="text" name="name" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">上架状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="status"  name="status" lay-search="">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="0" >未上架</option>
+                                            <option value="1" >已上架</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="layui-form-item">
 
@@ -107,6 +118,8 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" id="pcProductPreviewPage" th:value="${pcProductPreviewPage}"/>
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
@@ -170,7 +183,7 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '店铺商品ID', width: 150},
+                    {field: 'id',  title: '店铺商品ID', hide:true, width: 150},
                     {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
                         templet: function (row) {
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
@@ -182,23 +195,23 @@
                             }
                             return "";
                         }},
-                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                    // {field: 'uuid',width: 300,  title: '店铺商品UUID'},
                     {field: 'categoryPath',width: 350,  title: '分类路径'},
-                    {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
-                        templet: function (row) {
-                            if(row.brandHttpLogo!=null) {
-                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
-                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
-                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
-                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
-                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
-                    {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'attributes',width: 550,  title: '属性列表'},
+                    // {field: 'categoryName',width: 150,  title: '分类名称'},
+                    // {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                    //     templet: function (row) {
+                    //         if(row.brandHttpLogo!=null) {
+                    //             return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                    //         }
+                    //         return "";
+                    //     }},
+                    // {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    // {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
+                    // {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
+                    // {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
+                    // {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
+                    // {field: 'productId',width: 150,  title: '平台商品ID'},
+                    // {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
@@ -213,77 +226,77 @@
                             return row.status;
                         }
                     },
-                    {field: 'shopId',width: 300,  title: '店铺ID'},
-                    {field: 'shopName',width: 300,  title: '店铺名称'},
-                    {field: 'sellerNo',width: 150,   title: '卖家编码'},
-                    {field: 'articleNumber',width: 150, title: '货号'},
-                    {field: 'payMethod',width: 150,   title: '付款方式',
-                        templet: function (row) {
-                            if(row.payMethod == null){
-                                return "";
-                            }
-                            if(row.payMethod == "1"){
-                                return "一口价(普通交易模式)";
-                            }
-                            return row.payMethod;
-                        }
-                    },
-                    {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
-                        templet: function (row) {
-                            if(row.buckleInventoryMethod == null){
-                                return "";
-                            }
-                            if(row.buckleInventoryMethod == "1"){
-                                return "买家拍下减库存";
-                            }
-                            if(row.buckleInventoryMethod == "2"){
-                                return "买家付款减库存";
-                            }
-                            return row.buckleInventoryMethod;
-                        }
-                    },
-                    {field: 'giveInvoice',width: 150,   title: '开发票',
-                        templet: function (row) {
-                            if(row.giveInvoice == null){
-                                return "";
-                            }
-                            if(row.giveInvoice == "1"){
-                                return "支持";
-                            }
-                            if(row.giveInvoice == "0"){
-                                return "不支持";
-                            }
-                            return row.giveInvoice;
-                        }
-                    },
-                    {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
-                        templet: function (row) {
-                            if(row.changeOrReturn == null){
-                                return "";
-                            }
-                            if(row.changeOrReturn == "1"){
-                                return "承诺";
-                            }
-                            if(row.changeOrReturn == "0"){
-                                return "不承诺";
-                            }
-                            return row.changeOrReturn;
-                        }
-                    },
-                    {field: 'etractMethod',width: 150,   title: '提取方式',
-                        templet: function (row) {
-                            var etractMethodText = "";
-                            if(row.etractMethod!=null) {
-                                if (row.etractMethod.indexOf("1") != -1) {
-                                    etractMethodText += "用物流配送"
-                                }
-                            }
-                            return etractMethodText;
-                        }
-                    },
-                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
-                    {field: 'createDate', width: 150, title: '创建时间'},
-                    {field: 'updateDate', width: 150, title: '修改时间'},
+                    // {field: 'shopId',width: 300,  title: '店铺ID'},
+                    // {field: 'shopName',width: 300,  title: '店铺名称'},
+                    // {field: 'sellerNo',width: 150,   title: '卖家编码'},
+                    // {field: 'articleNumber',width: 150, title: '货号'},
+                    // {field: 'payMethod',width: 150,   title: '付款方式',
+                    //     templet: function (row) {
+                    //         if(row.payMethod == null){
+                    //             return "";
+                    //         }
+                    //         if(row.payMethod == "1"){
+                    //             return "一口价(普通交易模式)";
+                    //         }
+                    //         return row.payMethod;
+                    //     }
+                    // },
+                    // {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
+                    //     templet: function (row) {
+                    //         if(row.buckleInventoryMethod == null){
+                    //             return "";
+                    //         }
+                    //         if(row.buckleInventoryMethod == "1"){
+                    //             return "买家拍下减库存";
+                    //         }
+                    //         if(row.buckleInventoryMethod == "2"){
+                    //             return "买家付款减库存";
+                    //         }
+                    //         return row.buckleInventoryMethod;
+                    //     }
+                    // },
+                    // {field: 'giveInvoice',width: 150,   title: '开发票',
+                    //     templet: function (row) {
+                    //         if(row.giveInvoice == null){
+                    //             return "";
+                    //         }
+                    //         if(row.giveInvoice == "1"){
+                    //             return "支持";
+                    //         }
+                    //         if(row.giveInvoice == "0"){
+                    //             return "不支持";
+                    //         }
+                    //         return row.giveInvoice;
+                    //     }
+                    // },
+                    // {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
+                    //     templet: function (row) {
+                    //         if(row.changeOrReturn == null){
+                    //             return "";
+                    //         }
+                    //         if(row.changeOrReturn == "1"){
+                    //             return "承诺";
+                    //         }
+                    //         if(row.changeOrReturn == "0"){
+                    //             return "不承诺";
+                    //         }
+                    //         return row.changeOrReturn;
+                    //     }
+                    // },
+                    // {field: 'etractMethod',width: 150,   title: '提取方式',
+                    //     templet: function (row) {
+                    //         var etractMethodText = "";
+                    //         if(row.etractMethod!=null) {
+                    //             if (row.etractMethod.indexOf("1") != -1) {
+                    //                 etractMethodText += "用物流配送"
+                    //             }
+                    //         }
+                    //         return etractMethodText;
+                    //     }
+                    // },
+                    // {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
+                    {field: 'createDate', width: 150, title: '发布时间'},
+                    // {field: 'updateDate', width: 150, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#shopProductTableBar', align: "center"}
                 ]
             ],
@@ -382,7 +395,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/shopProduct/addPage}]]",
+                    content: "[[@{/product/shopProduct/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -401,6 +414,43 @@
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('shopProductTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
+                var checkStatus = table.checkStatus('shopProductTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                var reqData= new Array();
+                for(var i=0;i<data.length;i++)
+                {
+                    reqData.push(data[i].id);
+                }
+                layer.confirm('确定同步到搜索?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/shopProduct/flush/search",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:JSON.stringify({ids:reqData}),
                         success:function(data){
                             layer.msg(data.msg);
 
@@ -438,9 +488,16 @@
                 openDetailDialog(data.id);
             }else if (obj.event == 'shelves') {
                 shelves(data);
+            }else if (obj.event == 'previewPc') {
+                previewPc(data);
             }
         });
 
+        function previewPc(data)
+        {
+            var pcProductPreviewPage = $("#pcProductPreviewPage").val();
+            window.open(pcProductPreviewPage+data.id)
+        }
 
         function shelves(row)
         {

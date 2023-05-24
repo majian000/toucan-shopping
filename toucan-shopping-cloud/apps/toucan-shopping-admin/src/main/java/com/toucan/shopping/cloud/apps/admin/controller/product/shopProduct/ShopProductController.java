@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
@@ -102,6 +103,7 @@ public class ShopProductController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/shopProduct/listPage",feignFunctionService);
+        request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductPreviewPage());
         return "pages/product/shopProduct/list.html";
     }
 
@@ -767,6 +769,9 @@ public class ShopProductController extends UIController {
                             if(productSkuVO.getProductPreviewPath()!=null) {
                                 productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                             }
+                            if(productSkuVO.getDescriptionImgFilePath()!=null) {
+                                productSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getDescriptionImgFilePath());
+                            }
                         }
 
                     }
@@ -821,6 +826,54 @@ public class ShopProductController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * SKU同步搜索缓存
+     * @param shopProductVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/flush/search",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushSearch(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(shopProductVO.getIds()))
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("要同步的店铺商品ID不能为空");
+                return resultObjectVO;
+            }
+            ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+            queryProductSkuVO.setShopProductIdList(shopProductVO.getIds());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductSkuVO);
+            resultObjectVO = feignProductSkuService.queryListByShopProductIdList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSkuVO> productSkuVOS = resultObjectVO.formatDataList(ProductSkuVO.class);
+                if(CollectionUtils.isNotEmpty(productSkuVOS))
+                {
+                    for(ProductSkuVO productSkuVO:productSkuVOS)
+                    {
+                        SearchUtils.flushToSearch(productSkuVO);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("操作失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 }
 

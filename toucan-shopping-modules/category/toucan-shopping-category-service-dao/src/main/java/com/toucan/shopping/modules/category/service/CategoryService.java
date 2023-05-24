@@ -16,6 +16,9 @@ public interface CategoryService {
 
     List<Category> queryPcIndexList(CategoryVO category);
 
+
+    Long queryOneChildCountByPid(Long pid);
+
     /**
      * 保存实体
      * @param category
@@ -60,6 +63,11 @@ public interface CategoryService {
      */
     void setChildren(List<Category> categoryVOS, CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
+    /**
+     * 补全子节点
+     * @param currentNode
+     */
+    void complementChildren(CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
     /**
      * 查询树表格
@@ -97,7 +105,7 @@ public interface CategoryService {
      * 设置分类名称路径
      * @param categoryTreeVO
      */
-    void setPath(CategoryTreeVO categoryTreeVO);
+    void setPath(CategoryTreeVO categoryTreeVO,Long parentId);
 
     /**
      * 设置ID路径

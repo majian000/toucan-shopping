@@ -27,6 +27,13 @@ public interface FeignCategoryService {
     @RequestMapping(value = "/find/idArray",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO findByIdArray(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询返回分类ID路径
@@ -86,6 +93,15 @@ public interface FeignCategoryService {
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     ResultObjectVO queryTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/mini",method = RequestMethod.POST)
+    ResultObjectVO queryMiniTree(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -186,6 +202,15 @@ public interface FeignCategoryService {
      * @return
      */
     @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 查询指定节点下一级子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 }

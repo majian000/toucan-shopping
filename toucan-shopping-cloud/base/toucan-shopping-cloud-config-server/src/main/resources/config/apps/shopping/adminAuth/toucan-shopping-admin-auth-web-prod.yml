@@ -46,15 +46,15 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 60000
-        readTimeout: 60000
+        connectTimeout: 120000
+        readTimeout: 120000
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000 #请求时间超过1分钟超时
+            timeoutInMilliseconds: 120000 #请求时间超过2分钟超时
       circuitBreaker:
         requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
 
@@ -106,6 +106,8 @@ toucan:
       email:
         enabled: true
         title: ——权限中台应用——异常邮件
+        ignore-exception-list[0]: javax.mail.MessagingException
+        ignore-exception-list[1]: com.toucan.shopping.modules.common.exception.InvalidAdminHeaderException
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器

@@ -8,6 +8,8 @@ import java.util.regex.PatternSyntaxException;
 
 public class ImageUtils {
 
+    public static String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
+
     public static boolean isImage(String fileName){
         if(StringUtils.isEmpty(fileName))
         {

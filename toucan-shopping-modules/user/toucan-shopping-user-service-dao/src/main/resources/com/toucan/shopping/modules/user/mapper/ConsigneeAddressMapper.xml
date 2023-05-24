@@ -11,16 +11,37 @@
         <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
         <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
         <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
         <result column="default_status" jdbcType="INTEGER" property="defaultStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
 
     </resultMap>
 
+
+    <resultMap id="entityVOMap" type="com.toucan.shopping.modules.user.vo.ConsigneeAddressVO">
+
+    </resultMap>
+
+
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+    </sql>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress" >
-        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status)
-        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus})
+        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status,province_name,city_name,area_name,app_code)
+        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode})
     </insert>
 
 
@@ -30,15 +51,29 @@
 
 
 
-    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
-        update t_consignee_address set  name=#{name},address=#{address},
-        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},default_status=#{defaultStatus}
-        update_date=#{updateDate}
-          where id = #{id} and user_main_id=#{userMainId}
+    <update id="deleteByIdAndUserMainIdAndAppCode" >
+        update t_consignee_address set delete_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
+    <update id="setDefaultByIdAndUserMainIdAndAppCode" >
+        update t_consignee_address set default_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
+    </update>
+
+    <update id="setCancelDefaultByUserMainIdAndAppCode" >
+        update t_consignee_address set default_status=0 where  user_main_id = #{userMainId} and app_code =#{appCode}
+    </update>
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
+        update t_consignee_address set  name=#{name},address=#{address},
+        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},
+        update_date=#{updateDate},province_name=#{provinceName},city_name=#{cityName},area_name=#{areaName}
+          where id = #{id} and user_main_id=#{userMainId} and app_code=#{appCode}
+    </update>
+
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.ConsigneeAddressVO">
         select * from t_consignee_address t
         <where>
             1=1
@@ -58,5 +93,44 @@
         </where>
 
     </select>
+
+
+
+    <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo">
+        select t.* from t_consignee_address t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo">
+        select count(*) from t_consignee_address t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+    <select id="findByIdAndUserMainIdAndAppCode" resultMap="entityVOMap">
+        select * from t_consignee_address where  id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode} and delete_status = 0  limit 0,1
+    </select>
+
+
+    <select id="findDefaultByUserMainIdAndAppCode" resultMap="entityVOMap" >
+        select * from t_consignee_address where  user_main_id = #{userMainId} and app_code =#{appCode} and default_status = 1 and delete_status = 0  limit 0,1
+    </select>
+
+    <select id="findNewestOneByUserMainIdAndAppCode" resultMap="entityVOMap" >
+        select * from t_consignee_address where  user_main_id = #{userMainId} and app_code =#{appCode} and delete_status = 0 order by create_time desc  limit 0,1
+    </select>
+
 
 </mapper>

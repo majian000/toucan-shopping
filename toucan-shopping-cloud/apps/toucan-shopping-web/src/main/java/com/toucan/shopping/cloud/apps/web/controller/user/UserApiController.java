@@ -3,17 +3,24 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.redis.*;
+import com.toucan.shopping.cloud.apps.web.util.EmailForgetPwdUtil;
+import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.common.vo.email.Email;
+import com.toucan.shopping.modules.common.vo.email.EmailConfig;
+import com.toucan.shopping.modules.common.vo.email.Receiver;
+import com.toucan.shopping.modules.email.helper.EmailConfigHelper;
+import com.toucan.shopping.modules.email.message.EmailMessage;
+import com.toucan.shopping.modules.email.queue.EmailQueue;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
-import com.toucan.shopping.modules.user.constant.UserLoginConstant;
-import com.toucan.shopping.modules.user.constant.UserRegistConstant;
+import com.toucan.shopping.modules.user.constant.*;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -34,6 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -69,7 +78,8 @@ public class UserApiController extends BaseController {
     @Autowired
     private SkylarkLock skylarkLock;
 
-
+    @Autowired
+    private EmailQueue emailQueue;
 
     @Autowired
     private Toucan toucan;
@@ -133,7 +143,7 @@ public class UserApiController extends BaseController {
 
 
             //保存生成验证码到缓存
-            String code = NumberUtil.random(6);
+            String code = MobilePhoneVCodeUtil.genCode(6);
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了手机号码注册,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
@@ -143,7 +153,7 @@ public class UserApiController extends BaseController {
                 //将验证码保存到缓存
                 toucanStringRedisService.set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
                 //默认1分钟过期
-                toucanStringRedisService.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
+                toucanStringRedisService.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),UserVerifyCodeConstant.REGIST_PHONE_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {
@@ -159,90 +169,6 @@ public class UserApiController extends BaseController {
     }
 
 
-
-
-    /**
-     * 发送找回密码验证码
-     * @return
-     */
-    @RequestMapping("/sendForgetPwdVerifyCode")
-    @ResponseBody
-    public ResultObjectVO sendForgetPwdVerifyCode(String mobilePhone)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(StringUtils.isEmpty(mobilePhone)||!PhoneUtils.isChinaPhoneLegal(mobilePhone))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,手机号错误");
-            return resultObjectVO;
-        }
-
-        try {
-            UserForgetPasswordVO userResetPasswordVO = new UserForgetPasswordVO();
-            userResetPasswordVO.setMobilePhone(mobilePhone);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userResetPasswordVO);
-            resultObjectVO = feignUserService.findByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.SUCCESS.intValue()==ResultObjectVO.FAILD.intValue())
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("发送失败,请稍后重试");
-                return resultObjectVO;
-            }
-            if(resultObjectVO.getData()!=null)
-            {
-                List<UserMobilePhone> userMobilePhoneList = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), UserMobilePhone.class);
-                if(CollectionUtils.isNotEmpty(userMobilePhoneList))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("手机号已经注册");
-                    return resultObjectVO;
-                }
-            }
-
-            Object mobilePhoneValue = toucanStringRedisService.get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone));
-            if(mobilePhoneValue!=null&&StringUtils.isNotEmpty(String.valueOf(mobilePhoneValue)))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("已发送,请在1分钟后重新获取");
-                return resultObjectVO;
-            }
-
-            UserSmsVO userSmsVO = new UserSmsVO();
-            userSmsVO.setMobilePhone(mobilePhone);;
-            userSmsVO.setType(SmsTypeConstant.USER_REGIST_TYPE);
-            boolean lockStatus = redisLock.lock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
-
-
-            //保存生成验证码到缓存
-            String code = NumberUtil.random(6);
-            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"发起了找回密码申请,验证码是"+code);
-            requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
-
-            resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
-            {
-                //将验证码保存到缓存
-                toucanStringRedisService.set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
-                //默认1分钟过期
-                toucanStringRedisService.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,请稍后重试");
-        }finally{
-            redisLock.unLock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
-        }
-        return resultObjectVO;
-
-
-    }
 
 
     @RequestMapping(value="/regist")
@@ -297,7 +223,7 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(user.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("请输入6至15位的密码");
+            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
 
@@ -320,8 +246,6 @@ public class UserApiController extends BaseController {
                 resultObjectVO.setMsg("请发送验证码");
                 return resultObjectVO;
             }
-            //TODO:临时开放注册
-            vcodeObject="1234";
             if(!user.getVcode().equals(String.valueOf(vcodeObject)))
             {
                 //释放注册锁
@@ -551,7 +475,7 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(userLoginVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("登录失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("登录失败,"+UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
 
@@ -791,7 +715,7 @@ public class UserApiController extends BaseController {
             //生成客户端验证码ID
             String vcodeRedisKey = VerifyCodeRedisKey.getLoginFaildVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey,UserVerifyCodeConstant.LOGIN_FAILD_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);
@@ -810,133 +734,6 @@ public class UserApiController extends BaseController {
             }
         }
     }
-
-    /**
-     * 找回密码 步骤2 (输入短信验证码或邮箱找回)
-     * @return
-     */
-    @RequestMapping(value = "/forget/pwd/step2", method = RequestMethod.POST)
-    public ResultObjectVO forgetPwdByStep2(HttpServletRequest request,@RequestBody UserForgetPasswordVO userForgetPasswordVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-
-        if(StringUtils.isEmpty(userForgetPasswordVO.getUsername()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请输入用户名");
-            return resultObjectVO;
-        }
-
-
-        try{
-
-            boolean lockStatus = skylarkLock.lock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("操作超时,请稍后重试");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(userForgetPasswordVO.getVcode()))
-            {
-                resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
-                resultObjectVO.setMsg("请输入验证码");
-                //释放锁
-                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
-                return resultObjectVO;
-            }
-
-            String vcodeRedisKey = VerifyCodeRedisKey.getForgetVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
-            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
-            if(vCodeObject==null)
-            {
-                resultObjectVO.setMsg("验证码过期,请刷新");
-                resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
-                //释放锁
-                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(userForgetPasswordVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
-            {
-                resultObjectVO.setMsg("验证码输入有误");
-                resultObjectVO.setCode(UserRegistConstant.LOGIN_VERIFY_CODE_FAILD);
-                //释放锁
-                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
-
-                return resultObjectVO;
-            }
-            //校验通过,删除验证码
-            toucanStringRedisService.delete(vcodeRedisKey);
-
-
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                if (resultObjectVO.getData() != null) {
-                    UserVO userVO = resultObjectVO.formatData(UserVO.class);
-                    if(userVO.getEnableStatus().intValue()==1) {
-                        logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
-                        resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                        resultObjectVO.setData("page/user/forget/pwd/step2");
-                    }else{
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("该账号已被禁用");
-                    }
-                }else{
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("没有找到该账号");
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }finally{
-            //释放锁
-            skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
-        }
-        return resultObjectVO;
-    }
-
-    /**
-     * 忘记密码 验证码
-     * @param request
-     * @param response
-     */
-    @RequestMapping(value="/forget/vcode", method = RequestMethod.GET)
-    public void forgetVerifyCode(HttpServletRequest request,HttpServletResponse response) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = response.getOutputStream();
-            int w = 200, h = 80;
-            //生成4位验证码
-            String code = VerifyCodeUtil.generateVerifyCode(4);
-
-
-            //生成客户端验证码ID
-            String vcodeRedisKey = VerifyCodeRedisKey.getForgetVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
-            toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
-
-
-            VerifyCodeUtil.outputImage(w, h, outputStream, code);
-        } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
-        }finally{
-            if(outputStream!=null)
-            {
-                try {
-                    outputStream.flush();
-                    outputStream.close();
-                }catch(Exception e)
-                {
-                    logger.warn(e.getMessage(),e);
-                }
-            }
-        }
-    }
-
-
 
 
 
@@ -954,12 +751,12 @@ public class UserApiController extends BaseController {
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             toucanStringRedisService.set(vcodeRedisKey,code);
-            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.expire(vcodeRedisKey, UserVerifyCodeConstant.TRUE_NAME_VERIFY_CODE_MAX_AGE, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
-            //60秒过期
-            clientVCodeId.setMaxAge(60);
+            //过期时间
+            clientVCodeId.setMaxAge(UserVerifyCodeConstant.TRUE_NAME_VERIFY_CODE_MAX_AGE);
             response.addCookie(clientVCodeId);
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);
@@ -978,6 +775,117 @@ public class UserApiController extends BaseController {
             }
         }
     }
+
+
+
+
+
+    /**
+     * 修改密码
+     * @param userModifyPasswordVO
+     * @return
+     */
+    @RequestMapping(value="/modify/password",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO modifyPassword(@RequestBody UserModifyPasswordVO userModifyPasswordVO,HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (userModifyPasswordVO == null) {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("没有找到账号");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(userModifyPasswordVO.getVcode()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+            resultObjectVO.setMsg("请输入验证码");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(userModifyPasswordVO.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("请输入密码");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(userModifyPasswordVO.getConfirmPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("请输入确认密码");
+            return resultObjectVO;
+        }
+        if(!UserRegistUtil.checkPwd(userModifyPasswordVO.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
+            return resultObjectVO;
+        }
+        if(!userModifyPasswordVO.getPassword().equals(userModifyPasswordVO.getConfirmPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("密码与确认密码输入不一致");
+            return resultObjectVO;
+        }
+
+        String userMainId ="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
+            Object mobileVCodeObj = toucanStringRedisService.get(UserModifyPwdRedisKey.getMobileVerifyCodeKey(userMainId));
+            Object emailVCodeObj = toucanStringRedisService.get(UserModifyPwdRedisKey.getEmailVerifyCodeKey(userMainId));
+            if(StringUtils.isEmpty(userModifyPasswordVO.getVcode()))
+            {
+                resultObjectVO.setMsg("验证码不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String mobileVCode=mobileVCodeObj!=null?String.valueOf(mobileVCodeObj):"";
+            String emailVCode=emailVCodeObj!=null?String.valueOf(emailVCodeObj):"";
+            if(!userModifyPasswordVO.getVcode().equals(mobileVCode)&&!userModifyPasswordVO.getVcode().equals(emailVCode))
+            {
+                resultObjectVO.setMsg("验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            boolean lockStatus = skylarkLock.lock(UserLoginRedisKey.getModifyPasswordKey(userMainId), "1");
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+            userModifyPasswordVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userModifyPasswordVO);
+            resultObjectVO = feignUserService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                toucanStringRedisService.delete(UserModifyPwdRedisKey.getMobileVerifyCodeKey(userMainId));
+                toucanStringRedisService.delete(UserModifyPwdRedisKey.getEmailVerifyCodeKey(userMainId));
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+
+            //释放锁
+            skylarkLock.unLock(UserLoginRedisKey.getModifyPasswordKey(userMainId), "1");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+
 
 
 //

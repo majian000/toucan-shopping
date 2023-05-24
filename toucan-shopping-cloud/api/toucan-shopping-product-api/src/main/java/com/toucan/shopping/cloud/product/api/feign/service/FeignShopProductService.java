@@ -24,7 +24,8 @@ public interface FeignShopProductService {
     @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
-
+    @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 查询列表
@@ -45,6 +46,15 @@ public interface FeignShopProductService {
 
 
 
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 商品上架/下架
      * @param requestJsonVO
@@ -52,5 +62,14 @@ public interface FeignShopProductService {
      */
     @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
     ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 根据运费模板ID查询关联的商品
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

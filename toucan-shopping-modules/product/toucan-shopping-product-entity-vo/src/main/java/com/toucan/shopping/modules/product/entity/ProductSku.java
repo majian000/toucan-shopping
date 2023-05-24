@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,7 +37,7 @@ public class ProductSku {
 
     private String uuid; //SKU的UUID
 
-    private Double price; //价格
+    private BigDecimal price; //价格
 
     private String remark; //备注
 
@@ -75,11 +76,13 @@ public class ProductSku {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long brankId; //品牌ID
+    private Long brandId; //品牌ID
 
     private Integer stockNum=0; //库存
 
     private String productPreviewPath; //商品主图路径
+
+    private String httpDescriptionImgPath; //商品介绍图HTTP路径
 
     private String productUuid; //SPU的UUID
 
@@ -98,5 +101,11 @@ public class ProductSku {
     private Long shopCategoryId; //店铺商品分类ID
 
     private String productNo; //商品编号
+
+    private BigDecimal roughWeight; //毛重
+
+    private BigDecimal suttle; //净重
+
+    private String lastRestoreTransactionId; //最后恢复库存的事务ID
 
 }

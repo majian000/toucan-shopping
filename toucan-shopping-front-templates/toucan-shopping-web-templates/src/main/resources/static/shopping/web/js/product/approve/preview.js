@@ -2,8 +2,8 @@
 var g_productVo;
 
 $(function(){
-
     tabsEvent();
+    bindProductNumEvent();
     var id = getProductId();
     if(id!=null&&id!="") {
         var type= getPreviewType();
@@ -116,6 +116,19 @@ function bindAttributeCheckboxEvent()
     });
 }
 
+
+function bindProductNumEvent()
+{
+    $("#buyCount").change(function(){
+        var bnum = $(this).val();
+        if(isNaN(bnum))
+        {
+            $(this).val("1");
+        }
+    });
+}
+
+
 function drawProductPage(productVO)
 {
     if(productVO!=null)
@@ -129,6 +142,11 @@ function drawProductPage(productVO)
 
         $("#MagicZoom").attr("href",productVO.httpMainPhotoFilePath);
         $("#MagicZoomImg").attr("src",productVO.httpMainPhotoFilePath);
+
+        if(productVO.roughWeight!=null)
+        {
+            $(".product_detail_rough_weight").html(productVO.roughWeight+"kg");
+        }
 
         photoPos++;
         $(".productPhotoPreview").append("<li onclick=\"showPic("+photoPos+")\" rel=\"MagicZoom\" >" +

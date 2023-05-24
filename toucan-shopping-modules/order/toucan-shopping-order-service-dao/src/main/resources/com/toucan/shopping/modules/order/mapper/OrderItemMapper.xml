@@ -5,38 +5,121 @@
     <resultMap id="orderItemMap" type="com.toucan.shopping.modules.order.entity.OrderItem" >
         <id property="id" jdbcType="BIGINT"  column="id" />
         <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
-        <result column="order_id" jdbcType="INTEGER" property="orderId" />
-        <result column="sku_uuid" jdbcType="VARCHAR" property="skuUuid" />
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
         <result column="delivery_status" jdbcType="SMALLINT" property="deliveryStatus" />
         <result column="seller_status" jdbcType="SMALLINT" property="sellerStatus" />
         <result column="buyer_status" jdbcType="SMALLINT" property="buyerStatus" />
         <result column="product_num" jdbcType="INTEGER" property="productNum" />
         <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+        <result column="product_rough_weight" jdbcType="DECIMAL" property="productRoughWeight" />
         <result column="order_item_amount" jdbcType="DECIMAL" property="orderItemAmount" />
-        <result column="delivery_money" jdbcType="DECIMAL" property="deliveryMoney" />
         <result column="delivery_receive_time" jdbcType="TIMESTAMP" property="deliveryReceiveTime" />
         <result column="delivery_finish_time" jdbcType="TIMESTAMP" property="deliveryFinishTime" />
         <result column="seller_finish_time" jdbcType="TIMESTAMP" property="sellerFinishTime" />
         <result column="buyer_finish_time" jdbcType="TIMESTAMP" property="buyerFinishTime" />
+        <result column="product_preview_path" jdbcType="VARCHAR" property="productPreviewPath" />
+        <result column="product_sku_name" jdbcType="VARCHAR" property="productSkuName" />
+        <result column="product_sku_json" jdbcType="VARCHAR" property="productSkuJson" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="freight_template_id" jdbcType="BIGINT" property="freightTemplateId" />
 
     </resultMap>
 
+    <resultMap id="orderItemVOMap" type="com.toucan.shopping.modules.order.vo.OrderItemVO" extends="orderItemMap">
+
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="orderId!=null and orderId!=-1 ">
+            and t.order_id = #{orderId}
+        </if>
+
+        and delete_status = 0
+
+    </sql>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
-        insert into t_order_item(user_id,order_no,order_id,sku_uuid,delivery_status,seller_status,buyer_status,
-        product_num,product_price,order_item_amount,delivery_money,delivery_receive_time,delivery_finish_time,
-        seller_finish_time,buyer_finish_time,remark,create_date,app_code,create_user_id,delete_status)
+        insert into t_order_item(id,user_id,order_no,order_id,sku_id,product_sku_name,product_sku_json,product_preview_path,delivery_status,seller_status,buyer_status,
+        product_num,product_price,product_rough_weight,order_item_amount,delivery_receive_time,delivery_finish_time,
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id)
 
-         values(#{userId},#{orderNo},#{orderId},#{skuUuid},#{deliveryStatus},#{sellerStatus},#{buyerStatus},
-         #{productNum},#{productPrice},#{orderItemAmount},#{deliveryMoney},#{deliveryReceiveTime},#{deliveryFinishTime},
-         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{createUserId},#{deleteStatus})
+         values(#{id},#{userId},#{orderNo},#{orderId},#{skuId},#{productSkuName},#{productSkuJson},#{productPreviewPath},#{deliveryStatus},#{sellerStatus},#{buyerStatus},
+         #{productNum},#{productPrice},#{productRoughWeight},#{orderItemAmount},#{deliveryReceiveTime},#{deliveryFinishTime},
+         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{deleteStatus},#{freightTemplateId})
 
     </insert>
+
+
+
+
+
+
+    <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderItemVO"  >
+        insert into t_order_item(id,user_id,order_no,order_id,sku_id,product_sku_name,product_sku_json,product_preview_path,delivery_status,seller_status,buyer_status,
+        product_num,product_price,product_rough_weight,order_item_amount,delivery_receive_time,delivery_finish_time,
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.userId},#{entity.orderNo},#{entity.orderId},#{entity.skuId},#{entity.productSkuName},#{entity.productSkuJson},#{entity.productPreviewPath},#{entity.deliveryStatus},#{entity.sellerStatus},#{entity.buyerStatus},
+            #{entity.productNum},#{entity.productPrice},#{entity.productRoughWeight},#{entity.orderItemAmount},#{entity.deliveryReceiveTime},#{entity.deliveryFinishTime},
+            #{entity.sellerFinishTime},#{entity.buyerFinishTime},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus},#{entity.freightTemplateId})
+        </foreach>
+
+    </insert>
+
+
+    <select id="findByOrderNoAndUserId" resultMap="orderItemVOMap">
+        select * from t_order_item where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
+    </select>
+
+
+
+    <select id="findByOrderNo" resultMap="orderItemVOMap">
+        select * from t_order_item where order_no=#{orderNo}  and delete_status=0
+    </select>
+
+
+    <select id="findByOrderNos" resultMap="orderItemVOMap">
+        select * from t_order_item t where
+            t.order_no in
+            <foreach item="item" index="index" collection="orderNos" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+          and t.delete_status=0
+    </select>
+
+
+
+
+    <select id="queryListPage" resultMap="orderItemVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderItemPageInfo">
+        select t.* from t_order_item t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderItemPageInfo">
+        select count(*) from t_order_item t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
 
 </mapper>

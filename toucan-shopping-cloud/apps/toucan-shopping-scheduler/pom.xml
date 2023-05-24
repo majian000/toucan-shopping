@@ -55,36 +55,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!--集成redis -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-
-
-        <!--kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
 
 
 
@@ -94,12 +64,16 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-entity-vo</artifactId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-persistence-event</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence</artifactId>
+            <artifactId>toucan-shopping-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-entity-vo</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -137,16 +111,41 @@
             <groupId>com.toucan.shopping.modules.stock</groupId>
             <artifactId>toucan-shopping-stock-entity-vo</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence-event</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.modules.config</groupId>
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.search</groupId>
+            <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-content-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-common-data-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.category</groupId>
+            <artifactId>toucan-shopping-category-entity-vo</artifactId>
+        </dependency>
 
     </dependencies>
 

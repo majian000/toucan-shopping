@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.HashMap;
 
-@Configuration
+//@Configuration
 public class KafkaProducerConfig {
     @Value("${spring.kafka.producer.bootstrap-servers}")
     private String bootstrapServersConfig;

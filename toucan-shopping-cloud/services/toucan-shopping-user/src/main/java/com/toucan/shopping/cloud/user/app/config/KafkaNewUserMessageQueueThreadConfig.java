@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.user.app.config;
 
 
-import com.toucan.shopping.cloud.user.kafka.thread.NewUserMessageQueueThread;
+import com.toucan.shopping.modules.user.kafka.thread.NewUserMessageQueueThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

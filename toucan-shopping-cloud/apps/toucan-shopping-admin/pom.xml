@@ -199,6 +199,16 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-order-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.order</groupId>
+            <artifactId>toucan-shopping-order-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-admin-auth-log-spring-boot-starter</artifactId>
         </dependency>
@@ -223,6 +233,10 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.search</groupId>
+            <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+        </dependency>
 
     </dependencies>
 

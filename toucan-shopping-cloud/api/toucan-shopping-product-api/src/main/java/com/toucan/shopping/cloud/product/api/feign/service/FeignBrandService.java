@@ -78,4 +78,14 @@ public interface FeignBrandService {
 
 
 
+
+
+    /**
+     * 根据名称以及分类ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/name/categoryId/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findListByNameAndCategoryIdAndEnabled(@RequestBody RequestJsonVO requestVo);
+
 }

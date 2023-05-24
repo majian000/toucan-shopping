@@ -105,7 +105,7 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 	width:254px; overflow:hidden; position:absolute; left:-50px; top:29px; z-index:900; display:none;
 }
 .s_city_t{
-	width:9px; height:7px; line-height:7px; overflow:hidden; background:url(../images/c_t.gif) no-repeat center top; position:absolute; left:55px; top:0;
+	width:9px; height:7px; line-height:7px; overflow:hidden; background:url(/static/images/c_t.gif) no-repeat center top; position:absolute; left:55px; top:0;
 }
 .s_city_c{
 	width:252px; height:460px; overflow:hidden; background-color:#FFF; font-family:"Microsoft YaHei"; margin-top:6px; border:1px solid #cdcdcd;
@@ -141,7 +141,7 @@ table.c_tab tr th{
 	width:116px; overflow:hidden; position:absolute; left:50%; top:29px; margin-left:-58px; z-index:900; display:none;
 }
 .ss_list_t{
-	height:7px; line-height:7px; overflow:hidden; background:url(../images/c_t.gif) no-repeat center top; position:absolute; left:0; top:0;
+	height:7px; line-height:7px; overflow:hidden; background:url(/static/images/c_t.gif) no-repeat center top; position:absolute; left:0; top:0;
 }
 .ss_list_c{
 	overflow:hidden; background-color:#FFF; font-family:"Microsoft YaHei"; margin-top:6px; padding:10px 0; border:1px solid #cdcdcd;
@@ -181,6 +181,9 @@ table.c_tab tr th{
 .s_ipt{
 	width:408px; height:36px; line-height:36px\9; overflow:hidden; color:#555555; font-size:14px; font-family:"Microsoft YaHei"; float:left; padding:0 10px; border:2px solid #ff4e00; border-right:0;
 }
+.q_labels{
+	cursor:pointer;
+}
 .s_btn{
 	width:90px; height:40px; line-height:40px\9; background-color:#ff4e00; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; float:left; border:0; cursor:pointer;
 }
@@ -206,6 +209,29 @@ table.c_tab tr th{
 .un_login{
 	overflow:hidden; text-align:center; margin:15px auto;
 }
+
+.buy_car_empty{
+	display:none;
+}
+.buy_car_login_tip{
+	display: block;
+}
+.mcarsd {
+	overflow:auto;
+	overflow-x:hidden;
+	max-height:300px;
+	margin: 0 auto;
+}
+.mcars{
+	display: none;
+}
+.mcars_price_total{
+	display: none;
+}
+.mcars_pay{
+	display: none;
+}
+
 ul.cars{
 	overflow:hidden;
 }
@@ -216,7 +242,19 @@ ul.cars li .img{
 	width:58px; height:58px; overflow:hidden; float:left; display:inline; margin-left:15px; border:1px solid #e2e2e2;
 }
 ul.cars li .name{
-	width:180px; height:40px; line-height:20px; overflow:hidden; color:#888888; font-family:"宋体"; float:left; display:inline; margin-left:8px;
+	width:180px;
+	height:40px;
+	line-height:20px;
+	overflow:hidden;
+	color:#888888;
+	font-family:"宋体";
+	float:left;
+	display:inline;
+	margin-left:8px;
+	text-overflow:ellipsis;
+	display:-webkit-box;
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:2;
 }
 ul.cars li .name a{
 	color:#888888;
@@ -247,6 +285,10 @@ ul.cars li .price{
 }
 .menu{
 	width:1200px; height:43px; line-height:43px; color:#3e3e3e; font-size:16px; position:relative; z-index:800;
+}
+
+.menu2{
+	width:80%; height:43px; line-height:43px; color:#3e3e3e; font-size:16px; position:relative; z-index:800;
 }
 ul.menu_r{
 	width:720px; height:40px; overflow:hidden; float:left; display:inline; margin-left:211px;
@@ -345,6 +387,9 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	
 .content{
 	width:1200px; overflow:hidden;
+}
+.content2{
+	width:80%; overflow:hidden;
 }
 .mar_5{
 	margin-top:5px;
@@ -594,7 +639,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	-moz-transform:scale(1.1,1.1); -webkit-transform:scale(1.1,1.1); -o-transform:scale(1.1,1.1); -ms-transform:scale(1.1,1.1); transform:scale(1.1,1.1);
 }
 .hot_pro #block .box .name{
-	height:40px; line-height:20px; overflow:hidden; color:#888888; font-size:12px; text-align:center; margin-top:10px;
+	height:40px; line-height:20px; overflow:hidden; color:#888888; font-size:12px; text-align:center; margin-top:10px;width: 90%;
 }
 .hot_pro #block .box .name h2{
 	height:20px; line-height:20px; overflow:hidden; color:#555555; font-size:16px; text-align:center;
@@ -743,30 +788,31 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:33px; height:34px; line-height:40px; overflow:hidden; background:url(../images/floor.png) no-repeat center top; color:#FFF; font-size:14px; text-transform:uppercase; text-indent:6px; float:left; display:inline; margin-right:15px;
 }
 .fresh_left{
-	width:211px; height:441px; overflow:hidden; background-color:#a6e5be; float:left;
+	width:211px; height:441px; overflow:hidden;  float:left;
+	/*background-color:#a6e5be;*/
 }
 .fre_ban{
 	width:211px; height:286px; overflow:hidden;
 }
-.fre_ban #imgPlay1{
+.fre_ban .imgPlays{
 	width:211px; height:286px; overflow:hidden; margin:0 auto; zoom:1; position:relative;
 }
 .fre_ban #imgPlay .imgs img{
 	width:211px;
 }
-.fre_ban #imgPlay1 .imgs li{
+.fre_ban .imgPlays .imgs li{
 	position:relative; float:left; width:211px; height:286px;
 }
-.fre_ban #imgPlay1 .imgs{
+.fre_ban .imgPlays .imgs{
 	width: 5760px;
 }
-.fre_ban #imgPlay1 .btn{
+.fre_ban .imgPlays .btn{
 	width:112px; height:29px; overflow:hidden; text-indent:-9999px; position:absolute; right:12px; bottom:12px;
 }
-.fre_ban #imgPlay1 .btn a{
+.fre_ban .imgPlays .btn a{
 	width:46px; height:71px; overflow:hidden; display:block; background: url(../images/b_left.png) no-repeat;
 }
-.fre_ban #imgPlay1 .btn a:hover{
+.fre_ban .imgPlays .btn a:hover{
 	background: url(../images/b_left.png) no-repeat;
 }
 .fre_ban .prevf{
@@ -1142,6 +1188,50 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	background: #f52b00;
 	border-color: #f52b00
 }
+.default_btn{
+	background: #f40;
+	border-color: #f40;
+	font-size: 16px;
+	background-color: #f40;
+	border: 1px solid #ff9000;
+	border-radius: 3px;
+	font-size: 20px;
+	height: 42px;
+	line-height: 42px;
+	outline: none;
+	color: #fff;
+	width: 100%;
+	cursor: pointer;
+}
+.default_btn:hover{
+	background: #f52b00;
+	border-color: #f52b00
+}
+
+.db_button {
+
+	background: #FFF;
+	border: 1px solid #CCC;
+	font-size: 16px;
+	color: #333;
+	border-radius: 3px;
+	font-size: 20px;
+	height: 42px;
+	line-height: 42px;
+	outline: none;
+	color: #000000;
+	width: 100%;
+	cursor: pointer;
+}
+
+
+.db_button:active {
+	color: #333;
+	background-color: #EBEBEB;
+	border-color: #ADADAD;
+}
+
+
 .send_vcode_btn{
 	width:100px; height:35px; line-height:35px\9; overflow:hidden; background:url(../images/vcode_btn.gif) repeat-x center top; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; padding:0; border:0; cursor:pointer; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
 }
@@ -1350,8 +1440,11 @@ ul.cate li{
 .postion{
 	width:1200px; height:40px; line-height:40px; overflow:hidden; font-family:"宋体";
 }
+.postion2{
+	width:80%; height:40px; line-height:40px; overflow:hidden; font-family:"宋体";
+}
 .n_ch{
-	height:23px; line-height:23px; overflow:hidden; float:left; display:inline; margin-left:10px; margin-top:7px; padding:0 10px; border:1px dashed #ff4e00;
+	height:23px; line-height:23px; overflow:hidden; float:left; display:inline; margin-left:10px; margin-top:7px; padding:0 10px; border:1px dashed #ff4e00;cursor:pointer;
 }
 .n_ch font{
 	color:#ff3200;
@@ -1375,8 +1468,16 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 	color:#ff4e00;
 }
 
+
+.qball{
+	color:#555555;
+}
+.qball:hover{
+	color:#ff4e00;
+}
+
 .l_history{
-	width:209px; overflow:hidden; float:left; border:1px solid #eaeaea;
+	width:14%; overflow:hidden; float:left; border:1px solid #eaeaea;
 }
 .his_t{
 	height:38px; line-height:38px; overflow:hidden; background:url(../images/h_t.gif) no-repeat 10px center; color:#ff4e00; font-size:16px; padding-left:22px; padding-right:10px; border-bottom:1px solid #eaeaea;
@@ -1434,11 +1535,17 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 .list_c ul{
 	overflow:hidden;
 }
+
+
+.l_list2{
+	width:83%; overflow:hidden; float:right; padding-bottom:30px;
+}
+
 ul.cate_list{
 	padding:5px 0;
 }
 ul.cate_list li{
-	width:232px; height:316px; overflow:hidden; float:left; display:inline; margin:0 5px;
+	width:210px; height:316px; overflow:hidden; float:left; display:inline; margin:0 5px;
 }
 ul.cate_list li:hover{
 	background-color:#FFF; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;  
@@ -1455,41 +1562,71 @@ ul.cate_list li .price font{
 ul.cate_list li .price span{
 	font-size:18px;
 }
+ul.cate_list li .price2{
+	width:208px; height:25px; line-height:25px; overflow:hidden; color:#999999; text-transform:uppercase; margin-top:10px;margin-left: 5%;
+}
+ul.cate_list li .price2 font{
+	color:#ff4e00; font-size:14px;
+}
+ul.cate_list li .price2 span{
+	font-size:18px;
+}
 ul.cate_list li .name{
-	width:208px; height:25px; line-height:25px; overflow:hidden; font-size:14px;
+	height:25px; line-height:25px; overflow:hidden; font-size:14px;padding-left: 4%;
 }
 ul.cate_list li .carbg{
 	width:209px; height:30px; overflow:hidden; font-family:"宋体"; margin-top:15px;
 }
 ul.cate_list li .carbg a.ss{
-	width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+	cursor:pointer;width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
 }
 ul.cate_list li .carbg a.ss:hover{
-	color:#888888; background:url(../images/heart_h.png) no-repeat 10px center;
-}
-ul.cate_list li:hover .carbg a.ss{
-	color:#888888; background:url(../images/heart_h.png) no-repeat 10px center;
+	color:#ff4e00;  background:url(../images/heart_h.png) no-repeat 10px center;
 }
 ul.cate_list li .carbg a.j_car{
-	width:138px; height:28px; line-height:28px; overflow:hidden; background:url(../images/cars.png) no-repeat 24px center; color:#ff4e00; text-indent:47px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+	width:138px; height:28px; line-height:28px; overflow:hidden;
+	background:url(../images/cars.png) no-repeat 24px center;
+	color:#ff4e00;
+	text-indent:47px;
+	float:left;
+	display:inline;
+	margin-right:-1px; border:1px solid #cccccc;
 }
 ul.cate_list li .carbg a.j_car:hover{
-	color:#FFF; background:url(../images/cars_h.png) no-repeat 24px center; background-color:#ff4e00; border:1px solid #ff4e00;
-}
-ul.cate_list li:hover .carbg a.j_car{
-	color:#FFF; background:url(../images/cars_h.png) no-repeat 24px center; background-color:#ff4e00; border:1px solid #ff4e00;
+	color:#FFF; background:url(../images/cars_h.png) no-repeat 24px center; background-color:#ff4e00; border:1px solid #ff4e00;cursor:pointer;
 }
 
 .pages{
 	overflow:hidden; color:#888888; padding:20px 10px; text-align:right; font-size:16px; font-family:"宋体"; margin-top:20px;
 }
 .pages a{
-	height:36px; line-height:36px; overflow:hidden; color:#666666; font-size:16px; text-align:center; display:inline-block; padding:0 12px; margin:0 4px; border:1px solid #cccccc; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
+	height:36px;
+	line-height:36px;
+	overflow:hidden;
+	color:#666666;
+	font-size:16px;
+	text-align:center;
+	display:inline-block;
+	padding:0 12px;
+	margin:0 4px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
+	cursor:pointer;
 }
-.pages a:hover, .pages a.cur{
+.pages .pages_a{
+	height:36px; line-height:36px; overflow:hidden; color:#666666; font-size:16px; text-align:center; display:inline-block; padding:0 12px; margin:0 4px; border:1px solid #cccccc; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;cursor:pointer;
+}
+.pages .p_pn:hover, .pages .pages_a.cur{
 	color:#FFF; background-color:#ff4e00; border:1px solid #ff4e00;
 }
 .pages a.p_pre:hover{
+	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
+}
+.pages a.p_next:hover{
+	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
+}
+.pages a.p_jump:hover{
 	background-color:#eaeaea; color:#555555; border:1px solid #cccccc;
 }
 
@@ -1542,7 +1679,13 @@ ul.brand li .name span{
 	color:#3e3e3e; font-size:18px; font-weight:bold; margin:0; padding:0;
 }
 .des_price{
-	height:64px; line-height:32px; overflow:hidden; font-family:"宋体"; margin-top:25px; margin-bottom:20px;
+	height:64px; line-height:32px; overflow:hidden; font-family:"宋体"; margin-top:25px; margin-bottom:5px;
+}
+.des_rough_weight{
+	height: 34px;
+	line-height: 32px;
+	overflow: hidden;
+	font-family: "宋体";
 }
 .des_price b{
 	color:#ff3200; font-size:18px; font-family:"Microsoft YaHei";
@@ -1564,6 +1707,10 @@ ul.brand li .name span{
 }
 .des_choice ul li.checked{
 	height:26px; line-height:26px; padding:0 14px; overflow:hidden; border:2px solid #ff4e00;
+}
+
+.des_choice ul li.disabled{
+	height:26px; line-height:26px; padding:0 14px; overflow:hidden; border:2px solid #9f9f9f;
 }
 .des_choice ul li.checked .ch_img{
 	display:block;
@@ -1850,31 +1997,31 @@ ul.p_sell li .times{
 .sell_ban{
 	width:300px; height:352px; overflow:hidden; padding:10px; margin-top:40px; border:1px solid #eaeaea;
 }
-.sell_ban #imgPlays{
+.sell_ban .imgPlays{
 	width:300px; height:352px; overflow:hidden; margin:0 auto; zoom:1; position:relative;
 }
-.sell_ban #imgPlays .imgs img{
+.sell_ban .imgPlays .imgs img{
 	width:300px;
 }
-.sell_ban #imgPlays .imgs li{
+.sell_ban .imgPlays .imgs li{
 	position:relative; float:left; width:300px; height:352px;
 }
-.sell_ban #imgPlays .imgs{
+.sell_ban .imgPlays .imgs{
 	width: 5760px;
 }
-.sell_ban #imgPlays .btn{
+.sell_ban .imgPlays .btn{
 	width:112px; height:29px; overflow:hidden; text-indent:-9999px; position:absolute; right:12px; bottom:12px;
 }
-.sell_ban #imgPlays .btn a{
+.sell_ban .imgPlays .btn a{
 	width:46px; height:71px; overflow:hidden; display:block; background: url(../images/b_left.png) no-repeat;
 }
-.sell_ban #imgPlays .btn a:hover{
+.sell_ban .imgPlays .btn a:hover{
 	background: url(../images/b_left.png) no-repeat;
 }
-.sell_ban #imgPlays .prev_s{
+.sell_ban .imgPlays .prev_s{
 	width:32px; height:60px; overflow:hidden; background: url(../images/b_left.png) no-repeat; cursor:pointer; text-indent:-9999px; position:absolute; left:0; top:145px;
 }
-.sell_ban #imgPlays .next_s{
+.sell_ban .imgPlays .next_s{
 	width:32px; height:60px; overflow:hidden; background: url(../images/b_right.png) no-repeat; cursor:pointer; text-indent:-9999px; position:absolute; right:0; top:145px;
 }
 
@@ -2164,6 +2311,86 @@ table.order_tab tr td{
 .order_tab .jslct dl dd.noborder {
 	border:none!important
 }
+
+
+table.default_tab{
+	border-collapse:collapse; border:1px solid #eaeaea;
+}
+table.default_tab tr td{
+	border-collapse:collapse; border:1px solid #eaeaea; padding:5px 10px;
+}
+
+.default_tab .jslct{
+	width:188px; height:23px; line-height:23px; display:inline-block; *display:inline; zoom:1; color:#555555; font-size:12px; font-family:"Microsoft YaHei"; position:relative; z-index:0; vertical-align:middle; cursor:default; background:url(../images/d_arrow.png) no-repeat 170px center; background-color:#f6f6f6; float:left; border:1px solid #d9d9d9;
+}
+.default_tab .jslct_hover {
+	border:1px solid #d9d9d9;
+}
+.default_tab .jslct div.jslct_t{
+	padding:0 25px 0 5px;
+	line-height:23px;
+	height:23px;
+	position:relative;
+	z-index:2;
+	*display:block!important;
+	*display:inline;
+	zoom:1;
+}
+.default_tab .jslct em {
+	font-style:normal;
+	margin:0;
+	padding:0;
+	line-height:23px;
+	display:block;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+}
+.default_tab .jslct dl, .default_tab .jslct dl dd {
+	padding:0;
+	margin:0;
+	list-style:none
+}
+.default_tab .jslct dl {
+	background:#f6f6f6;
+	position:absolute;
+	top:23px;
+	left:-1px;
+	border:1px solid #d9d9d9;
+	cursor:default;
+	line-height:22px;
+	padding:4px 4px 4px 4px;
+	z-index:1;
+	display:none;
+	width:180px;
+}
+.default_tab .jslct_hover dl {
+	border:1px solid #d9d9d9!important
+}
+.default_tab .jslct dl dd {
+	padding:0px 4px 2px 4px;
+	*padding:2px 4px 0 4px;
+	border-top:1px dotted #ccc!important;
+	border-top:1px dotted #d9d9d9;
+	white-space:nowrap;
+	background:#f6f6f6;
+	cursor:pointer;
+	*border-left:1px solid #fff;
+}
+.default_tab .jslct dl dd.hover {
+	background:#666;
+	color:#fff;
+}
+.default_tab .jslct .jslcted {
+	background:#efefef;
+}
+.default_tab .jslct dl dd.noborder {
+	border:none!important
+}
+
+
+
+
 .btn_u{
 	width:90px; height:25px; line-height:25px; overflow:hidden; background-color:#ff4e00; color:#FFF; font-size:12px; font-family:"宋体"; text-align:center; margin-left:10px; border:0; cursor:pointer;
 }

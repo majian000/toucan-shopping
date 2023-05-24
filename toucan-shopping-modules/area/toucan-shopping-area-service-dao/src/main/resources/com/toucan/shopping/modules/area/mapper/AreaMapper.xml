@@ -20,6 +20,10 @@
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="big_area_name" jdbcType="VARCHAR" property="bigAreaName" />
+        <result column="big_area_code" jdbcType="VARCHAR" property="bigAreaCode" />
+        <result column="country_name" jdbcType="VARCHAR" property="countryName" />
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode" />
     </resultMap>
 
     <resultMap id="areaVOMap" type="com.toucan.shopping.modules.area.vo.AreaVO" extends="areaMap">
@@ -34,6 +38,25 @@
 
         <if test="name!=null and name!=''">
             and ( t.province  like concat('%',#{name},'%') or t.city  like concat('%',#{name},'%') or t.area  like concat('%',#{name},'%') )
+        </if>
+
+        <if test="type!=null">
+            and t.type = #{type}
+        </if>
+
+        <if test="cityNameList!=null and cityNameList.size>0 ">
+            and t.city in
+            <foreach item="item" index="index" collection="cityNameList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="codeList!=null and codeList.size>0 ">
+            and t.code in
+            <foreach item="item" index="index" collection="codeList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
     </sql>
 
@@ -122,9 +145,17 @@
     </select>
 
 
+    <select id="queryOneChildCountByPid" resultType="java.lang.Long" >
+        select count(*) from t_area t
+        <where>
+            1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0
+        </where>
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
-        values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+        insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id,big_area_name,big_area_code,country_name,country_code)
+        values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId},#{bigAreaName},#{bigAreaCode},#{countryName},#{countryCode})
     </insert>
 
 
@@ -145,9 +176,13 @@
     <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Area">
         update t_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
         ,type=#{type},remark=#{remark},pid=#{pid},
-        update_admin_id=#{updateAdminId},update_date=#{updateDate}
+        update_admin_id=#{updateAdminId},update_date=#{updateDate},big_area_name=#{bigAreaName},big_area_code=#{bigAreaCode},
+        country_name=#{countryName},country_code=#{countryCode}
           where id=#{id}
     </update>
+
+
+
 
     <select id="queryByParentCode" resultMap="areaMap" >
         select t.* from t_area t

@@ -27,6 +27,11 @@
     <resultMap id="columnVOMap" type="com.toucan.shopping.modules.column.vo.ColumnVO" extends="columnMap" >
     </resultMap>
 
+    <resultMap id="pcIndexColumnVOMap" type="com.toucan.shopping.modules.column.vo.PcIndexColumnVO" extends="columnVOMap" >
+    </resultMap>
+
+
+
 
 
 
@@ -49,10 +54,10 @@
         </if>
 
         <if test="startShowDate!=null">
-            <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
         <if test="endShowDate!=null">
-            <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
 
 
@@ -84,9 +89,6 @@
     </insert>
 
 
-    <select id="queryById" resultMap="columnMap" parameterType="java.lang.Long">
-        select * from t_column where id=#{id} and delete_status=0
-    </select>
 
 
     <update id="deleteById">
@@ -102,7 +104,8 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
-        update t_column set title=#{title},content=#{content},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update t_column set title=#{title},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        column_type_code=#{columnTypeCode},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
@@ -141,8 +144,27 @@
         </where>
     </select>
 
+
+
+    <select id="queryPcIndexColumns" resultMap="pcIndexColumnVOMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
+        select t.* from t_column t
+        <where>
+            1=1
+            and t.app_code = #{appCode}
+            and t.column_type_code = #{columnTypeCode}
+            and t.show_status = #{showStatus}
+            and t.position = #{position}
+            and t.delete_status = 0
+            and t.type = #{type}
+            <![CDATA[ and t.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+
+        </where>
+            order by t.column_sort desc
+    </select>
+
     <select id="findById" resultMap="columnVOMap" parameterType="java.lang.Long">
-        select t.* from t_column t where t.id = #{id} where t.delete_status=0 limit 0,1
+        select t.* from t_column t where t.id = #{id} and t.delete_status=0 limit 0,1
     </select>
 
 </mapper>

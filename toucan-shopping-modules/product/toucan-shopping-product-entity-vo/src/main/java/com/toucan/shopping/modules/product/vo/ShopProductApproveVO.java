@@ -114,4 +114,11 @@ public class ShopProductApproveVO extends ShopProductApprove {
      */
     private String shopProductApproveDescriptionJson="{}";
 
+
+    /**
+     * 运费模板名称
+     */
+    private String freightTemplateName;
+
+
 }

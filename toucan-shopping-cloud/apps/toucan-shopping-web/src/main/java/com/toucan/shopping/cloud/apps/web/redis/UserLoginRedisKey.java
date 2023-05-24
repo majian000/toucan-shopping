@@ -61,4 +61,17 @@ public class UserLoginRedisKey {
     {
         return "TOUCAN_SHOPPING_WEB:APPS:SHOPPING_WEB:FINDPASSWORD"+appCode +"_"+ methodType +"_"+mobile;
     }
+
+
+    /**
+     * 修改密码键
+     * @param userId
+     * @return
+     */
+    public static String getModifyPasswordKey(String userId)
+    {
+        return "TOUCAN_SHOPPING_WEB:APPS:SHOPPING_WEB:MODIFYPASSWORD"+appCode +"_"+ methodType +"_"+userId;
+    }
+
+
 }

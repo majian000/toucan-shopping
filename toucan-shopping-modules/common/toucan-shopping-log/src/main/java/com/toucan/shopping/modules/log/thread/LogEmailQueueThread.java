@@ -29,7 +29,6 @@ public class LogEmailQueueThread extends Thread {
             try {
                 LogEmailMessage logEmailMessage = logEmailQueue.pop();
                 if (logEmailMessage != null) {
-                    logger.info("从日志邮件队列中拿到对象 {}", JSONObject.toJSONString(logEmailMessage));
                     if(logEmailMessage.getEmail()!=null) {
                         EmailHelper.send(logEmailMessage.getEmail());
                     }

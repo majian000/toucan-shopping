@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
+@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 @EnableDiscoveryClient
-@MapperScan({"com.toucan.shopping"})
+@MapperScan({"com.toucan.shopping.modules.common.persistence.event.mapper"})
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
 @EnableHystrix

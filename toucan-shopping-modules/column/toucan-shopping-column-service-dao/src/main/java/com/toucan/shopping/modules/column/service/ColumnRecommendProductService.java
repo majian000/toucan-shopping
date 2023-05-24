@@ -13,6 +13,8 @@ public interface ColumnRecommendProductService {
 
     int deleteByColumnId(Long columnId);
 
-    List<ColumnRecommendProductVO> queryListSortDescByColumnId(Long columnId);
+    List<ColumnRecommendProductVO> queryListCreateDateAscByColumnId(Long columnId);
+
+    List<ColumnRecommendProductVO> queryListCreateDateAscByColumnIds(List<Long> columnIds);
 
 }

@@ -208,7 +208,7 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("请输入6至15位的密码");
+            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
 
@@ -372,7 +372,7 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(userLoginVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("请输入6至15位的密码");
+            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
             return resultObjectVO;
         }
         try {

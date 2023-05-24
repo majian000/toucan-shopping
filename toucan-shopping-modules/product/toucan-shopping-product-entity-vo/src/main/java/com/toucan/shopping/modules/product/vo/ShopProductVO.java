@@ -97,6 +97,10 @@ public class ShopProductVO extends ShopProduct {
      */
     private List<Long> ids;
 
+    /**
+     * 指定属性路径查询
+     */
+    private String attrPath;
 
 
 }

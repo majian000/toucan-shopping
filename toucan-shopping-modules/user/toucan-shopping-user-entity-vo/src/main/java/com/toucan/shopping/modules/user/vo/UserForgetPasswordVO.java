@@ -16,4 +16,9 @@ public class UserForgetPasswordVO extends UserVO {
      */
     private List<UserApp> userApps;
 
+    /**
+     * 验证方式 0:手机号 1:邮箱验证 2:身份证验证
+     */
+    private int verifyMethod;
+
 }

@@ -14,4 +14,7 @@ public interface ColumnRecommendLabelService {
     int deleteByColumnId(Long columnId);
 
     List<ColumnRecommendLabelVO> queryListByColumnId(Long columnId);
+
+    List<ColumnRecommendLabelVO> queryListByColumnIds(List<Long> columnIds);
+
 }

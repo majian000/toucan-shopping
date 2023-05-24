@@ -1,9 +1,12 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.service.SmsService;
+import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +42,56 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
     }
 
     @Override
+    public int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode) {
+        return consigneeAddressMapper.deleteByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
+    }
+
+    @Override
+    public ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode) {
+        return consigneeAddressMapper.findByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
+    }
+
+
+    @Override
+    public ConsigneeAddressVO findDefaultByUserMainIdAndAppCode(Long userMainId,String appCode){
+        return consigneeAddressMapper.findDefaultByUserMainIdAndAppCode(userMainId,appCode);
+    }
+
+
+    @Override
+    public ConsigneeAddressVO findNewestOneByUserMainIdAndAppCode(Long userMainId,String appCode){
+        return consigneeAddressMapper.findNewestOneByUserMainIdAndAppCode(userMainId,appCode);
+    }
+
+
+    @Override
+    public int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode) {
+        return consigneeAddressMapper.setDefaultByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
+    }
+
+    @Override
+    public int setCancelDefaultByUserMainIdAndAppCode(Long userMainId, String appCode) {
+        return consigneeAddressMapper.setCancelDefaultByUserMainIdAndAppCode(userMainId,appCode);
+    }
+
+    @Override
     public int update(ConsigneeAddress entity) {
         return consigneeAddressMapper.update(entity);
     }
 
     @Override
-    public List<ConsigneeAddress> findListByEntity(ConsigneeAddress query) {
+    public List<ConsigneeAddress> findListByEntity(ConsigneeAddressVO query) {
         return consigneeAddressMapper.findListByEntity(query);
     }
 
+
+
+    @Override
+    public PageInfo<ConsigneeAddress> queryListPage(ConsigneeAddressPageInfo queryPageInfo) {
+        PageInfo<ConsigneeAddress> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(consigneeAddressMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(consigneeAddressMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
+    }
 }

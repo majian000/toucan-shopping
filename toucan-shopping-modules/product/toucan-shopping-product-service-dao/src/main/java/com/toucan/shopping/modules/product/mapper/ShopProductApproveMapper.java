@@ -16,6 +16,8 @@ public interface ShopProductApproveMapper {
 
     int insert(ShopProductApprove entity);
 
+    List<ShopProductApproveVO> queryNewestListByShopId(Long shopId,Integer limit);
+
     int updateForRepublish(ShopProductApprove entity);
 
     int deleteById(Long id);
@@ -53,4 +55,5 @@ public interface ShopProductApproveMapper {
     ShopProductApproveVO findById(Long id);
 
     int updateShopProductId(Long id, Long shopProductId);
+
 }

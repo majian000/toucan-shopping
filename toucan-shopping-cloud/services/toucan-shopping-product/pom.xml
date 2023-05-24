@@ -54,11 +54,6 @@
         </dependency>
 
 
-        <!--kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
 
 
         <!--对sleuth链路追踪支持 -->
@@ -101,6 +96,10 @@
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-service-dao</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-controller</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -126,6 +125,10 @@
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-kafka</artifactId>
+        </dependency>
 
     </dependencies>
 

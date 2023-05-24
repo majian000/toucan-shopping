@@ -1,13 +1,10 @@
 package com.toucan.shopping.cloud.order.kafka.listener.sk;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
-import com.toucan.shopping.modules.order.entity.Order;
-import com.toucan.shopping.modules.order.entity.OrderItem;
-import com.toucan.shopping.modules.order.kafka.constant.OrderMessageTopicConstant;
-import com.toucan.shopping.modules.order.message.CreateOrderMessage;
+import com.toucan.shopping.cloud.order.kafka.constant.OrderMessageTopicConstant;
+import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -19,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -93,22 +89,22 @@ public class CreateOrderListener {
                 }
             }
 
-            Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
-            if(order.getId()==null)
-            {
-                throw new IllegalArgumentException("订单创建失败");
-            }
-            logger.info("保存订单 提交本地事务{}",JSONObject.toJSONString(order));
-            List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap,order);
-            if(CollectionUtils.isEmpty(orderItems))
-            {
-                throw new IllegalArgumentException("子订单创建失败");
-            }
-            logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//            Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
+//            if(order.getId()==null)
+//            {
+//                throw new IllegalArgumentException("订单创建失败");
+//            }
+//            logger.info("保存订单 提交本地事务{}",JSONObject.toJSONString(order));
+//            List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap,order);
+//            if(CollectionUtils.isEmpty(orderItems))
+//            {
+//                throw new IllegalArgumentException("子订单创建失败");
+//            }
+//            logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
 
             //修改为已处理
-            eventProcess.setStatus((short)1); //已处理
-            eventProcessService.updateStatus(eventProcess);
+//            eventProcess.setStatus((short)1); //已处理
+//            eventProcessService.updateStatus(eventProcess);
 
 
         }catch(Exception e)

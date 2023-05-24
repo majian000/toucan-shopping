@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+<#assign leftMenuName = "consigneeAddress">
+
+<!------------main---------------->
+<div class="main">
+
+    <div class="current-position">
+        <h2>
+            <a href="${basePath}/page/user/info">账号管理</a>
+            &gt;
+            <a href="#">收货地址</a>
+        </h2>
+    </div>
+    <div class="user-content">
+
+        <div class="user-menu">
+            <#include "/user/info_left.html"/>
+        </div>
+
+        <div class="user-right">
+            <div class="toucan-form">
+                <div class="toucan-form-title">
+                    <h3 style="font-size:20px;float:left;">收货信息</h3>
+                    &nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+            <br/>
+            <a href="${basePath}/page/user/consigneeAddress/add" ><img src="${basePath}/static/images/add_ad.png" style="width:100px;height:30px;margin-left: 2%;"></a>
+            <br/>
+
+            <table border="0" class="default_tab" style="width:930px;margin-top: 20px;" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <td align="center" style="width:5%">序号</td>
+                        <td align="center" style="width:10%">状态</td>
+                        <td align="center" style="width:10%">姓名</td>
+                        <td align="center" style="width:15%">地址</td>
+                        <td align="center" style="width:10%">电话</td>
+                        <td align="center" style="width:10%">省/直辖市</td>
+                        <td align="center" style="width:10%">地市</td>
+                        <td align="center" style="width:10%">区县</td>
+                        <td align="center" style="width:20%">操作</td>
+                    </tr>
+                </thead>
+                <tbody id="consigneeAddressTable">
+
+                </tbody>
+            </table>
+
+
+            <div class="pagination" id="pagination">
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <#include "/footer.html"/>
+
+</body>
+
+
+<#include "/common/confirm.html">
+
+
+<link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
+<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/list.js"></script>
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+    });
+
+
+</script>
+
+
+</html>

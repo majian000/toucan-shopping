@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="shopSearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">模板ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="id" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">模板名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">掌柜ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">店铺ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">是否包邮</label>
+                            <div class="layui-input-inline">
+                                <select id="freightStatus"  name="freightStatus"  lay-search="" >
+                                    <option value="-1">全部</option>
+                                    <option value="1">自定义运费</option>
+                                    <option value="2">包邮</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">计价方式</label>
+                            <div class="layui-input-inline">
+                                <select id="valuationMethod"  name="valuationMethod"  lay-search="" >
+                                    <option value="-1">全部</option>
+                                    <option value="1">按件数</option>
+                                    <option value="2">按重量</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">运费规则</label>
+                            <div class="layui-input-inline">
+                                <select id="oneTransportModel"  name="oneTransportModel"  lay-search="" >
+                                    <option value="-1">全部</option>
+                                    <option value="1">快递</option>
+                                    <option value="2">EMS</option>
+                                    <option value="3">平邮</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+            </div>
+        </script>
+
+        <table class="layui-hide" id="freightTemplateTable" lay-filter="freightTemplateTableFilter"></table>
+
+        <script type="text/html" id="freightTemplateTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/layarea/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        layarea: 'layarea' //定义该组件模块名
+    }).use(['form', 'table','tree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var loadding;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#shopSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#freightTemplateTable',
+            url: "[[@{/}]]freightTemplate/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id',width: 200,  title: '模板ID'},
+                    {field: 'userMainId',width: 200, title: '掌柜ID'},
+                    {field: 'shopId',width: 200, title: '店铺ID'},
+                    {field: 'name',width: 200, title: '名称'},
+                    {field: 'deliverProvinceName',width: 200, title: '发货地',
+                        templet: function (row) {
+                            var deliverArea="";
+                            if(row.deliverProvinceName!=null&&row.deliverProvinceName!="")
+                            {
+                                deliverArea+=row.deliverProvinceName;
+                            }
+                            if(row.deliverCityName!=null&&row.deliverCityName!="")
+                            {
+                                deliverArea+="/"+row.deliverCityName;
+                            }
+                            if(row.deliverAreaName!=null&&row.deliverAreaName!="")
+                            {
+                                deliverArea+="/"+row.deliverAreaName;
+                            }
+                            return deliverArea;
+                        }},
+                    {field: 'freightStatus',width: 200, title: '是否包邮',
+                        templet: function (row) {
+                            var freightStatusName="";
+                            if(row.freightStatus!=null&&row.freightStatus=="1")
+                            {
+                                freightStatusName="自定义运费";
+                            }else if(row.freightStatus!=null&&row.freightStatus=="2")
+                            {
+                                freightStatusName="包邮";
+                            }
+                            return freightStatusName;
+                        }},
+                    {field: 'transportModel',width: 200, title: '运送方式',
+                        templet: function (row) {
+                            var transportModelName=row.transportModel;
+                            if(transportModelName==null) {
+                                transportModelName="";
+                            }
+                            transportModelName = transportModelName.replace('1', '快递');
+                            transportModelName = transportModelName.replace('2', 'EMS');
+                            transportModelName = transportModelName.replace('3', '平邮');
+                            transportModelName = transportModelName.replaceAll(",", "/");
+                            return transportModelName;
+                        }},
+                    {field: 'valuationMethod',width: 200, title: '计价方式',
+                        templet: function (row) {
+                            var valuationMethodName=row.valuationMethod;
+                            if(valuationMethodName==null)
+                            {
+                                valuationMethodName="";
+                            }
+                            valuationMethodName+="";
+
+                            valuationMethodName = valuationMethodName.replace('1', '按件数');
+                            valuationMethodName = valuationMethodName.replace('2', '按重量');
+                            valuationMethodName = valuationMethodName.replaceAll(",", "/");
+
+                            return valuationMethodName;
+                        }},
+                    {field: 'createDate',width: 200, title: '发布时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#freightTemplateTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('freightTemplateTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#shopSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+        function reloadTable(data)
+        {
+            //执行搜索重载
+            table.reload('freightTemplateTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+        }
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(freightTemplateTableFilter)', function (obj) {
+            if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('freightTemplateTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除模板?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]freightTemplate/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            reloadTable(data);
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(freightTemplateTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(freightTemplateTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                var index = layer.open({
+                    title: '查看模板',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]freightTemplate/detailPage/"+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除该模板?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]freightTemplate/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            reloadTable(data);
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

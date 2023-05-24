@@ -16,6 +16,7 @@
  | message                                        | 消息                                                          |
  | order                                          | 订单                                                          |
  | product                                        | 商品                                                          |
+ | search                                         | 搜索                                                          |
  | seller                                         | 卖家                                                        |
  | skylark                                        | 云雀分布式锁                                                 |
  | stock                                          | 库存                                                         |

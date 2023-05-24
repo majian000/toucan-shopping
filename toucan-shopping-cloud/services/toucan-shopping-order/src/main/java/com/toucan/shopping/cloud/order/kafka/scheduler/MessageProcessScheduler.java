@@ -1,13 +1,10 @@
 package com.toucan.shopping.cloud.order.kafka.scheduler;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
-import com.toucan.shopping.modules.order.entity.Order;
-import com.toucan.shopping.modules.order.entity.OrderItem;
-import com.toucan.shopping.modules.order.kafka.constant.OrderMessageTopicConstant;
-import com.toucan.shopping.modules.order.message.CreateOrderMessage;
+import com.toucan.shopping.cloud.order.kafka.constant.OrderMessageTopicConstant;
+import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -92,10 +89,10 @@ public class MessageProcessScheduler {
                             }
                         }
 
-                        Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
-                        logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
-                        List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap, order);
-                        logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//                        Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
+//                        logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
+//                        List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap, order);
+//                        logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
 
                         eventProcess.setStatus((short)1); //已处理
                         eventProcessService.updateStatus(eventProcess);

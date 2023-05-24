@@ -422,5 +422,40 @@ public class CategoryController extends UIController {
 
 
 
+    /**
+     * 查询树的子节点列表
+     * @param areaTreeVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, CategoryTreeVO areaTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryTreeVO areaVO = new CategoryTreeVO();
+            areaVO.setParentId(areaTreeVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            resultObjectVO = feignCategoryService.queryTreeChildByPid(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
+                for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
+                {
+                    categoryTreeVO.setIcon(null);
+                }
+                resultObjectVO.setData(categoryTreeVOS);
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }
 

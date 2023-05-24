@@ -30,6 +30,9 @@ public interface FeignPcIndexColumnService {
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID删除
      * @param requestJsonVO
@@ -38,6 +41,14 @@ public interface FeignPcIndexColumnService {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询PC端首页栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/pc/index/columns",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryPcIndexColumns(@RequestBody RequestJsonVO requestVo);
 
 
     /**

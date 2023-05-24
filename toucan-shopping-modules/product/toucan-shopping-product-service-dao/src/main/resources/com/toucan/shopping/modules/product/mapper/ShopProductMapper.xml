@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
+        <result column="freight_template_id" jdbcType="BIGINT" property="freightTemplateId" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
@@ -58,11 +59,24 @@
         </if>
 
         <if test="name!=null and name!='' ">
-            and t.name  like concat(#{name},'%')
+            <!-- 这种不走索引但是为了用户体验只能如此-->
+            and t.name  like concat('%',#{name},'%')
         </if>
 
         <if test="id!=null and id!=-1">
             and t.id = #{id}
+        </if>
+
+        <if test="startDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ >= ]]>  #{startDateYMDHS}
+        </if>
+
+        <if test="endDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ <= ]]>  #{endDateYMDHS}
+        </if>
+
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
         </if>
 
         <if test="uuid!=null and uuid!='' ">
@@ -100,6 +114,17 @@
             </foreach>
         </if>
 
+        <if test="shopId!=null and shopId!=-1">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="freightTemplateId!=null and freightTemplateId!=-1">
+            and t.freight_template_id = #{freightTemplateId}
+        </if>
+
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
 
         and t.delete_status = 0
     </sql>
@@ -110,9 +135,9 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct"  >
-        insert into t_shop_product(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
+        insert into t_shop_product(id,category_id,shop_category_id,freight_template_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
             create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,give_invoice,change_or_return,etract_method,article_number,brand_id,product_approve_id)
-        values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
+        values(#{id},#{categoryId},#{shopCategoryId},#{freightTemplateId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
             #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{productApproveId})
     </insert>
 
@@ -147,6 +172,14 @@
     </select>
 
 
+    <select id="findByIdAndStatus" resultMap="shopProductVOMap" >
+        select t.* from t_shop_product t
+        where t.id = #{id} and t.delete_status=0
+        <if test="status!=-1">
+            and t.status = #{status}
+        </if>
+        limit 1
+    </select>
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
@@ -170,5 +203,18 @@
 
         </where>
     </select>
+
+
+
+    <select id="queryOne" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductVO">
+        select t.* from t_shop_product t
+        <where>
+            1=1
+            <include refid="queryListWhere" ></include>
+        </where>
+        limit 0,1
+    </select>
+
+
 
 </mapper>

@@ -1,0 +1,93 @@
+#======================== 开发环境====================================
+
+server:
+  port: 8106
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: toucan-shopping-search #应用名称
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  mvc: #启动初始化servletdispatcher
+    servlet:
+      load-on-startup: 100
+  cloud:
+    nacos:
+      discovery:
+        ip: ${toucan.ip}    #使用IP地址注册
+        port: ${server.port}
+        server-addr: http://${toucan.nacos.ip}:${toucan.nacos.port}
+        metadata:
+          preserved.heart.beat.interval: 4000 #心跳间隔。时间单位:秒。心跳间隔
+          preserved.heart.beat.timeout: 4500 #心跳暂停。时间单位:秒。 即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例设为不健康：
+          preserved.ip.delete.timeout: 4500 #Ip删除超时。时间单位:秒。即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例删除：
+
+#eureka:
+#  instance:
+#    lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
+#    lease-renewal-interval-in-seconds: 3 #心跳3秒
+#    prefer-ip-address: true
+#    instance-id: 127.0.0.1:${server.port}    #使用IP地址注册
+#  client:
+#    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+#    serviceUrl:
+#      defaultZone: http://localhost:8081/eureka
+
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 120000
+        readTimeout: 120000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000 #请求时间超过2分钟生熔断
+      circuitBreaker:
+        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+
+
+
+toucan:
+  machine-id: 2201 #机器编码
+  app-code: 10001002 #应用编码
+  #雪花算法ID相关
+  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  datacenterId: 0 #数据中心ID (0~31)
+  modules:
+    log: #日志模块
+      email:
+        enabled: false
+        title: ——搜索服务——异常邮件
+        ignore-exception-list[0]: javax.mail.MessagingException
+        protocol: smtp
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
+          port: 465
+          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-fallback: false
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian
+  plugins:
+    xss-filter:
+      enabled: true
+      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)

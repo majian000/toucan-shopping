@@ -1,7 +1,21 @@
 <div class="search">
-    <form>
-        <input type="text" value="" class="s_ipt" />
-        <input type="submit" value="搜索" class="s_btn" />
+    <form class="s_form" method="get">
+        <input type="text" name="keyword" value="${keyword!''}" class="s_ipt" />
+        <input type="hidden" id="qkeyword" value="${keyword!''}" />
+        <input type="hidden" id="cid" value="${cid!''}" />
+        <input type="hidden" id="ebids" value="${ebids!''}" />
+        <input type="hidden" id="qbs" value="${qbs!''}" />
+        <input type="button" value="搜索" class="s_btn" />
     </form>
-    <span class="fl"><a href="#">咖啡</a><a href="#">iphone 6S</a><a href="#">新鲜美食</a><a href="#">蛋糕</a><a href="#">日用品</a><a href="#">连衣裙</a></span>
+    <span class="fl ">
+        <a  class="q_labels">手机</a>
+        <a  class="q_labels">电脑</a>
+        <a  class="q_labels">新鲜美食</a>
+        <a  class="q_labels">蛋糕</a>
+        <a  class="q_labels">日用品</a>
+        <a  class="q_labels">连衣裙</a>
+    </span>
 </div>
+
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/search/product/search.js"></script>

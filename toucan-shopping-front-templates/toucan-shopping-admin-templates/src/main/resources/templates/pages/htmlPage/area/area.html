@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container" style="height:100%">
+    <div class="layuimini-main" >
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <!--<li class="layui-this">预览文件</li>-->
+                <li class="layui-this" >最终效果</li>
+            </ul>
+            <div class="layui-tab-content" >
+
+                <!--<div class="layui-tab-item layui-show">-->
+                    <!--<span th:each="pb : ${previewTabButtons}" th:utext="${pb}"></span>-->
+
+                    <!--<div class="layui-tab">-->
+                        <!--<ul class="layui-tab-title">-->
+                            <!--<li th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>-->
+                        <!--</ul>-->
+                        <!--<div class="layui-tab-content">-->
+                            <!--<div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:utext="${rhg.content}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="layui-tab-item layui-show ">
+                    <span th:each="rb : ${releaseTabButtons}" th:utext="${rb}"></span>
+                    <div class="layui-tab">
+                        <ul class="layui-tab-title">
+                            <li th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:utext="${rhg.content}">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).use(['form', 'table','element'], function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //生成预览
+        // $("#preview_btn").click(function() {
+        //     var loadding = layer.load();
+        //     $.ajax({
+        //         url:"[[@{/}]]index/html/generate/preview",
+        //         type:'POST',
+        //         success:function(data){
+        //             layer.msg(data.msg);
+        //             if(data.code=="1")
+        //             {
+        //                 window.location.reload();
+        //             }
+        //         },
+        //         complete:function(data){
+        //             layer.close(loadding);
+        //         }
+        //     });
+        // });
+
+        //生成最终文件
+        $("#release_btn").click(function() {
+            var loadding = layer.load();
+            $.ajax({
+                url:"[[@{/}]]area/html/generate/release",
+                type:'POST',
+                success:function(data){
+                    layer.msg(data.msg);
+                    if(data.code=="1")
+                    {
+                        window.location.reload();
+                    }
+                },
+                complete:function(data){
+                    layer.close(loadding);
+                }
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>

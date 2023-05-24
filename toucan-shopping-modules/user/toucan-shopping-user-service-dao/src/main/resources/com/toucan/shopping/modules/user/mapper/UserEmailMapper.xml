@@ -11,21 +11,25 @@
 
     </resultMap>
 
+    <!-- 在这里不带delete_status查询 -->
+    <sql id="queryListWhere">
+        <if test="id!=null">
+            and bu.id = #{id}
+        </if>
+        <if test="email!=null and email!='' ">
+            and bu.email = #{email}
+        </if>
+        <if test="userMainId!=null  ">
+            and bu.user_main_id = #{userMainId}
+        </if>
+    </sql>
 
     <select id="findListByEntity" resultMap="userEmailMap" parameterType="com.toucan.shopping.modules.user.entity.UserEmail">
         select * from t_user_email bu
         <where>
             1=1
-            <if test="id!=null">
-                and bu.id = #{id}
-            </if>
-            <if test="email!=null and email!='' ">
-                and bu.email = #{email}
-            </if>
-            <if test="userMainId!=null  ">
-                and bu.user_main_id = #{userMainId}
-            </if>
-                and bu.delete_status = 0
+            and bu.delete_status = 0
+            <include refid="queryListWhere" />
         </where>
 
     </select>
@@ -81,6 +85,11 @@
     </update>
 
 
+    <update id="updateDeleteStatusById" >
+        update t_user_email set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and email=#{email} and id=#{id}
+    </update>
+
 
 
 
@@ -88,15 +97,7 @@
         select * from t_user_email bu
         <where>
             1=1
-            <if test="id!=null">
-                and bu.id = #{id}
-            </if>
-            <if test="email!=null and email!='' ">
-                and bu.email = #{email}
-            </if>
-            <if test="userMainId!=null  ">
-                and bu.user_main_id = #{userMainId}
-            </if>
+            <include refid="queryListWhere" />
         </where>
 
     </select>
@@ -137,6 +138,11 @@
     <update id="deleteByUserMainId" >
         update t_user_email set delete_status=1  where user_main_id =#{userMainId}
     </update>
+
+
+    <select id="findByUserMainId" resultMap="userEmailMap" parameterType="java.lang.Long">
+        select * from t_user_email t where  t.user_main_id =#{userMainId} and t.delete_status = 0 limit 0,1
+    </select>
 
 
 

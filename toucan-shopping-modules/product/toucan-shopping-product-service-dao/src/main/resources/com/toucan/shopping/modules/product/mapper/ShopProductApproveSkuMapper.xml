@@ -9,7 +9,7 @@
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         <result column="attribute_value_group" jdbcType="VARCHAR" property="attributeValueGroup" />
-        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
         <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
@@ -19,7 +19,7 @@
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
-        <result column="brank_id" jdbcType="BIGINT" property="brankId" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="only_name" jdbcType="VARCHAR" property="onlyName" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
@@ -28,6 +28,8 @@
         <result column="product_id" jdbcType="BIGINT" property="productId" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
+        <result column="rough_weight" jdbcType="DECIMAL" property="roughWeight" />
+        <result column="suttle" jdbcType="DECIMAL" property="suttle" />
 
     </resultMap>
 
@@ -74,24 +76,32 @@
                 and t.app_code = #{appCode}
             </if>
 
+
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
+                and t.product_approve_id in
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
             and t.delete_status = 0
 
         </where>
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveSku"  >
-        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
-        values(#{id},#{uuid},#{productApproveUuid},#{productApproveId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId})
+        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brand_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,rough_weight,suttle)
+        values(#{id},#{uuid},#{productApproveUuid},#{productApproveId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brandId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId},#{roughWeight},#{suttle})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
+        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brand_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,rough_weight,suttle)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.uuid},#{entity.productApproveUuid},#{entity.productApproveId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
-            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId})
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brandId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId},#{entity.roughWeight},#{entity.suttle})
         </foreach>
 
     </insert>

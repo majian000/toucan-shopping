@@ -9,7 +9,10 @@ import java.util.regex.Pattern;
 public class EmailUtils {
 
 
-    private static String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+    /**
+     * 长度限制2-50位
+     */
+    private static String regEx1 = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,50}";
     private static Pattern p = Pattern.compile(regEx1);
 
     /**

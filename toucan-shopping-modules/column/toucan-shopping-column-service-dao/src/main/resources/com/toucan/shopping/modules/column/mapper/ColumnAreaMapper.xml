@@ -15,6 +15,10 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
     </resultMap>
 
+    <resultMap id="columnAreaVOMap" type="com.toucan.shopping.modules.column.vo.ColumnAreaVO" extends="columnAreaMap">
+
+    </resultMap>
+
     <select id="queryList" resultMap="columnAreaMap" parameterType="com.toucan.shopping.modules.column.entity.ColumnArea">
         select tc.* from t_column_area tc
         <where>
@@ -53,5 +57,17 @@
 
 
 
+    <select id="queryListByColumnId" resultMap="columnAreaVOMap">
+        select * from t_column_area where delete_status = 0 and column_id = #{columnId}
+    </select>
+
+
+    <select id="queryListByColumnIds" resultMap="columnAreaVOMap">
+        select * from t_column_area where delete_status = 0
+        and column_id in
+        <foreach item="item" index="index" collection="columnIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

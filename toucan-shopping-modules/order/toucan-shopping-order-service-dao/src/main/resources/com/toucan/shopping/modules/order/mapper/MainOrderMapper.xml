@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.order.mapper.MainOrderMapper">
+
+    <resultMap id="orderMap" type="com.toucan.shopping.modules.order.entity.MainOrder" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+        <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+        <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount" />
+        <result column="red_package_amount" jdbcType="DECIMAL" property="redPackageAmount" />
+        <result column="coupon_amount" jdbcType="DECIMAL" property="couponAmount" />
+        <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
+        <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
+        <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
+        <result column="pay_type" jdbcType="SMALLINT" property="payType" />
+        <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
+        <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+        <result column="payment_deadline_time" jdbcType="TIMESTAMP" property="paymentDeadlineTime" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
+        <result column="cancel_remark" jdbcType="VARCHAR" property="cancelRemark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <resultMap id="orderVOMap" type="com.toucan.shopping.modules.order.vo.MainOrderVO" extends="orderMap">
+
+    </resultMap>
+
+
+
+    <sql id="queryMainOrderListByPayTimeoutPageWhere">
+        and t.delete_status=0
+        and t.pay_method=1
+        and t.pay_status=0
+        and t.trade_status=0
+
+        <if test="userId!=null">
+            and t.user_id = #{userId}
+        </if>
+
+        <if test="appCode!=null">
+            and t.app_code = #{appCode}
+        </if>
+
+        <![CDATA[
+            and t.payment_deadline_time<= #{systemDate}
+         ]]>
+    </sql>
+
+
+    <sql id="queryByVOWhere">
+        and t.delete_status = 0
+        <if test="orderNo!=null and orderNo!='' ">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="userId!=null and userId!='' ">
+            and t.user_id = #{userId}
+        </if>
+
+    </sql>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.MainOrder"  >
+        insert into t_main_order(id,order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
+        pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status)
+
+         values(#{id},#{orderNo},#{userId},#{orderAmount},#{payAmount},#{paymentDeadlineTime},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
+         #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
+
+    </insert>
+
+    <update id="finishMainOrder" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
+        update t_main_order set pay_status=1 , outer_trade_no=#{outerTradeNo} , pay_date=#{payDate}  where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
+    </update>
+
+
+    <update id="cancelMainOrder" >
+        update t_main_order set trade_status=2 ,pay_status=4,cancel_date=sysdate()  where order_no=#{orderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
+    </update>
+
+
+    <update id="cancelMainOrderAndSaveCancelRemark" >
+        update t_main_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark=#{cancelRemark}  where order_no=#{orderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
+    </update>
+
+    <select id="queryMainOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.entity.MainOrder">
+        select t.* from t_main_order t
+        where 1=1 and t.delete_status=0 and t.pay_method=1 and t.app_code=#{appCode} and t.pay_status=0 and t.trade_status=0
+         <![CDATA[
+            and t.create_date<#{createDate}
+         ]]>
+    </select>
+
+    <select id="queryOneByVO" resultMap="orderMap" parameterType="com.toucan.shopping.modules.order.vo.MainOrderVO" >
+        select t.* from t_main_order t
+        where 1=1
+        <include refid="queryByVOWhere" />
+
+        limit 0,1
+    </select>
+
+
+
+    <select id="queryMainOrderListByPayTimeoutPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select t.* from t_main_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryMainOrderListByPayTimeoutPageWhere" />
+
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryMainOrderListByPayTimeoutPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
+        select count(*) from t_main_order t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryMainOrderListByPayTimeoutPageWhere" />
+
+        </where>
+
+    </select>
+
+</mapper>

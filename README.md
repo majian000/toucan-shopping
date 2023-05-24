@@ -1,6 +1,7 @@
 # 犀鸟电商平台
 
     犀鸟电商平台致力于快速搭建属于自己的电商网站
+    开源协议采用MIT协议,任何人都可以用这个项目进行商用以及二次开发
 
 #### 标准版
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
@@ -8,9 +9,25 @@
 #### 微服务版
     采用技术spring cloud、spring config、lombok、mybatis、nacos、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
+### 产品预览图
+   
+    百度网盘
+    https://pan.baidu.com/s/1a92-dhro8CnIvMobWdH1bg?pwd=uqnw
+    由于没有合适的图床,所以将预览图存储在网盘中
+
 
 ### 访问
-    http://8.140.187.184:8083/ 商城网站
+
+    商城端
+    http://8.140.187.184:8083/ 
+    账号:18701601893
+    密码:123456
+    
+    卖家端
+    http://8.140.187.184:8101/ 
+    账号:18701601893
+    密码:123456
+    
 
     权限管理中心 
     http://8.140.187.184:8098/
@@ -21,7 +38,11 @@
     http://8.140.187.184:8088/
     账号(只读):testuser001
     密码(只读):test123
-
+    
+    账号(只允许添加):testuser002
+    密码(只允许添加):test123
+    
+    注:可以私信我要最高管理员权限
 
 ### 数据库
     表结构存放在resources/数据库备份目录下
@@ -35,3 +56,4 @@
     1.majian
     2.niuyuxiao
     3.fenghuimin
+    4.M_Y

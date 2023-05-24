@@ -108,6 +108,17 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         return categoryVOList;
     }
 
+    @Override
+    public List<CategoryTreeVO> queryCategoryMiniTree() {
+        Object redisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getMiniTreeKey());
+        List<CategoryTreeVO> categoryVOList=null;
+        if(redisObject!=null) {
+            categoryVOList=JSONArray.parseArray(String.valueOf(redisObject), CategoryTreeVO.class);
+        }else{
+            categoryVOList=new ArrayList<CategoryTreeVO>();
+        }
+        return categoryVOList;
+    }
 
     @Override
     public boolean clearWebIndexCache() {

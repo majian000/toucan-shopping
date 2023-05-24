@@ -4,6 +4,7 @@ const loading = {
     _tipItem:null,
     _tipLabel:null,
     _showTip:true,
+    _hideSleep:500,
     _type:1,
     showLoading(config){
         if(this._loadItem){
@@ -108,6 +109,10 @@ const loading = {
         this._loadItem.appendTo($('body'));
     },
     hideLoading(){
+        // if(this._hideSleep>0)
+        // {
+        //     toucan_sleep(this._hideSleep);
+        // }
         this._loadItem.remove();
         this.resetData();
     },

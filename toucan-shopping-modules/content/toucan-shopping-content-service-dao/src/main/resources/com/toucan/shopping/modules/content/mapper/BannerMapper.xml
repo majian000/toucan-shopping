@@ -113,7 +113,7 @@
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.content.entity.Banner">
-        update t_banner set title=#{title},img_path=#{imgPath},position=#{position},banner_sort=#{bannerSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
+        update t_banner set title=#{title},click_path=#{clickPath},img_path=#{imgPath},position=#{position},banner_sort=#{bannerSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
           show_status=#{showStatus},remark=#{remark},update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

@@ -19,6 +19,11 @@ public class Seller {
     private Integer shopCategoryMaxCount;
 
     /**
+     * 运费模板最大数量
+     */
+    private Integer freightTemplateMaxCount;
+
+    /**
      * 店铺默认图标
      */
     private String defaultShopLogo = "";

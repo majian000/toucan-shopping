@@ -35,7 +35,7 @@ public class ColumnBanner {
     private String createAdminId; //创建人ID
     private String updateAdminId; //修改人ID
     private String remark; //备注
-    private Integer position; //位置 1顶部 2左侧 3右侧顶部 4右侧底部
+    private Integer position; //位置 1顶部 2左侧 3右侧顶部 4右侧底部 5底部
     private String appCode; //所属应用
 
     private String title; //标题

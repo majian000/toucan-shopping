@@ -1,0 +1,107 @@
+
+<style>
+
+
+    /*begin  mask layer  begin*/
+    .black_overlay{
+        width:100%; height:100%; background:url(/static/images/box_bg.png) repeat center top; display:none; position:fixed; top:0%; left:0%; z-index:900;
+    }
+    .white_content{
+        width:540px; height:auto !important; min-height:100px; height:100px; background:url(/static/images/box.png) repeat center top; display:none; position:fixed; top:30%; left:50%; margin-left:-270px; z-index:901;
+    }
+    .white_d{
+        width:520px; overflow:hidden; background-color:#FFF; margin:10px; padding-bottom:50px;
+    }
+    .notice_t{
+        width:500px; height:30px; line-height:30px; overflow:hidden; font-size:16px; font-family:"Microsoft YaHei"; margin:1px auto;
+    }
+    .notice_c{
+        width:480px; overflow:hidden; margin-top:10px;
+    }
+    .b_sure{
+        width:120px; height:40px; line-height:40px; overflow:hidden; background-color:#ff4e00; color:#FFF; font-size:14px; font-family:"Microsoft YaHei"; text-align:center; float:left; display:inline; margin-right:10px; border:0;
+    }
+    .b_sure:hover{
+        color:#FFF;
+    }
+    .cm_cancel{
+        width:118px; height:38px; line-height:38px; overflow:hidden; background-color:#f6f6f6; color:#ff4e00; font-size:14px; font-family:"Microsoft YaHei"; text-align:center; float:left; display:inline; margin-right:10px; border:1px solid #eaeaea;
+    }
+    .cm_cancel:hover{
+        color:#ff4e00;
+    }
+    /*end  mask layer  end*/
+
+
+</style>
+
+<div id="ConfirmMessageDialogFadeClear" class="black_overlay"></div>
+<div id="ConfirmMessageDialog" class="white_content">
+    <div class="white_d">
+        <div class="notice_t">
+            <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv_1('ConfirmMessageDialog','ConfirmMessageDialogFadeClear')"><img src="${basePath}/static/images/close.gif" /></span>
+        </div>
+        <div class="notice_c">
+            <div id="cmd_extp" style="display:none">
+
+            </div>
+
+            <table border="0" align="center" style="font-size:16px;width: 100%;" cellspacing="0" cellpadding="0">
+                <tr valign="top">
+                    <td style="text-align: center;" id="ConfirmMessageDialogContent">确定要删除吗？</td>
+                </tr>
+                <tr height="50" valign="bottom">
+                    <td>
+                        <a  class="b_sure mcar_clear" style="cursor:pointer;margin-left: 25%;">确定</a>
+                        <a  style="cursor:pointer;" onclick="CloseDiv_1('ConfirmMessageDialog','ConfirmMessageDialogFadeClear')"  class="cm_cancel">取消</a>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // JavaScript Document
+
+    function ShowDiv_1(show_div,bg_div){
+        document.getElementById(show_div).style.display='block';
+        document.getElementById(bg_div).style.display='block' ;
+        var bgdiv = document.getElementById(bg_div);
+        bgdiv.style.width = document.body.scrollWidth;
+        // bgdiv.style.height = $(document).height();
+        $("#"+bg_div).height($(document).height());
+    }
+    function CloseDiv_1(show_div,bg_div)
+    {
+        document.getElementById(show_div).style.display='none';
+        document.getElementById(bg_div).style.display='none';
+    }
+
+
+    var confirmMessageDialog = {
+         init:function(content,yesCallback){
+             if(content!=null) {
+                 $("#ConfirmMessageDialogContent").html(content);
+             }
+             $(".b_sure").unbind();
+             $(".b_sure").click(function(){
+                  yesCallback();
+             });
+        },
+        setContentText:function(){
+            if(content!=null) {
+                $("#ConfirmMessageDialogContent").html(content);
+            }
+        },
+        show:function(){
+            ShowDiv_1('ConfirmMessageDialog','ConfirmMessageDialogFadeClear');
+        },
+        hide:function(){
+            CloseDiv_1('ConfirmMessageDialog','ConfirmMessageDialogFadeClear');
+        }
+    };
+
+</script>

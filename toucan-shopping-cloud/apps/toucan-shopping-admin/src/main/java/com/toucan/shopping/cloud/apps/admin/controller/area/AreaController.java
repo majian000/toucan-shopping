@@ -6,8 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.area.enums.BigAreaCodeEnum;
+import com.toucan.shopping.modules.area.enums.CountryCodeEnum;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -16,6 +20,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +58,8 @@ public class AreaController extends UIController {
     @Autowired
     private FeignFunctionService feignFunctionService;
 
-
+    @Autowired
+    private FeignAdminService feignAdminService;
 
 
 
@@ -147,6 +153,8 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -175,6 +183,8 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -247,7 +257,7 @@ public class AreaController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
@@ -256,6 +266,54 @@ public class AreaController extends UIController {
             queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignAreaService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    List<AreaTreeVO> list = resultObjectVO.formatDataList(AreaTreeVO.class);
+                    //查询创建人和修改人
+                    List<String> adminIdList = new ArrayList<String>();
+                    for(int i=0;i<list.size();i++)
+                    {
+                        AreaTreeVO vo = list.get(i);
+                        if(vo.getCreateAdminId()!=null) {
+                            adminIdList.add(vo.getCreateAdminId());
+                        }
+                        if(vo.getUpdateAdminId()!=null)
+                        {
+                            adminIdList.add(vo.getUpdateAdminId());
+                        }
+                    }
+                    String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                    adminIdList.toArray(createOrUpdateAdminIds);
+                    AdminVO queryAdminVO = new AdminVO();
+                    queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+                        if(!CollectionUtils.isEmpty(adminVOS))
+                        {
+                            for(AreaTreeVO vo:list)
+                            {
+                                for(AdminVO adminVO:adminVOS)
+                                {
+                                    if(vo.getCreateAdminId()!=null&&vo.getCreateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        vo.setCreateAdminName(adminVO.getUsername());
+                                    }
+                                    if(vo.getUpdateAdminId()!=null&&vo.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        vo.setUpdateAdminName(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    resultObjectVO.setData(list);
+                }
+            }
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -284,6 +342,34 @@ public class AreaController extends UIController {
             areaVO.setPid(pid);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = feignAreaService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询树的子节点列表
+     * @param areaTreeVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, AreaTreeVO areaTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaTreeVO areaVO = new AreaTreeVO();
+            areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            areaVO.setPid(areaTreeVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            resultObjectVO = feignAreaService.queryTreeChildByPid(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {

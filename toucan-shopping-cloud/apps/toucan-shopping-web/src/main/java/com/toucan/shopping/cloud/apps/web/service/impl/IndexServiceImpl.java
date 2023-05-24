@@ -7,6 +7,9 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
@@ -16,6 +19,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.entity.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -51,6 +56,15 @@ public class IndexServiceImpl implements IndexService {
 
     @Autowired
     private CategoryRedisService categoryRedisService;
+
+    @Autowired
+    private FeignPcIndexColumnService feignPcIndexColumnService;
+
+    @Autowired
+    private FeignHotProductService feignHotProductService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 查询轮播图
@@ -178,6 +192,107 @@ public class IndexServiceImpl implements IndexService {
             return new ArrayList<CategoryVO>();
         }
 
+    }
+
+    @Override
+    public List<PcIndexColumnVO> queryColumns() {
+        try {
+            ColumnVO query = new ColumnVO();
+            query.setAppCode(toucan.getAppCode());
+            query.setShowStatus(1);
+            query.setType(1);
+            query.setPosition(1);
+            query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryPcIndexColumns(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                List<PcIndexColumnVO> pcIndexColumnVOS = resultObjectVO.formatDataList(PcIndexColumnVO.class);
+                if(!CollectionUtils.isEmpty(pcIndexColumnVOS)) {
+                    for (PcIndexColumnVO pcIndexColumnVO : pcIndexColumnVOS) {
+
+                        //顶部预览图
+                        if(pcIndexColumnVO.getTopBanner()!=null)
+                        {
+                            pcIndexColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getTopBanner().getImgPath());
+                        }
+
+                        //左侧轮播图
+                        if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnLeftBannerVOS()))
+                        {
+                            for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
+                            {
+                                columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
+                            }
+                        }
+
+                        //右侧顶部预览图
+                        if(pcIndexColumnVO.getRightTopBanner()!=null)
+                        {
+                            pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
+                        }
+
+                        //右侧底部预览图
+                        if(pcIndexColumnVO.getRightBottomBanner()!=null)
+                        {
+                            pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                        }
+
+                        //底部预览图
+                        if(pcIndexColumnVO.getBottomBanner()!=null)
+                        {
+                            pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                        }
+
+                        //推荐商品
+                        if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+                        {
+                            for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
+                            {
+                                columnRecommendProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnRecommendProductVO.getImgPath());
+                            }
+                        }
+
+                    }
+                }
+
+                return pcIndexColumnVOS;
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public List<HotProductVO> queryHotProduces() {
+        try{
+            HotProductVO query = new HotProductVO();
+            query.setAppCode(toucan.getAppCode());
+            query.setShowStatus(1);
+            query.setType(1);
+            query.setPosition(1);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+            ResultObjectVO resultObjectVO = feignHotProductService.queryPcIndexHotProducts(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<HotProductVO> hotProductVOS = resultObjectVO.formatDataList(HotProductVO.class);
+                if(!CollectionUtils.isEmpty(hotProductVOS))
+                {
+                    for(HotProductVO hotProductVO:hotProductVOS)
+                    {
+                        hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+hotProductVO.getImgPath());
+                    }
+                }
+                return hotProductVOS;
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return null;
+        }
+        return null;
     }
 
 }

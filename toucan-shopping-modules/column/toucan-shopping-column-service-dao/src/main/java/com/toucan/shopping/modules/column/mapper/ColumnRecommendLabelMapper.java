@@ -22,4 +22,6 @@ public interface ColumnRecommendLabelMapper {
 
     List<ColumnRecommendLabelVO> queryListByColumnId(Long columnId);
 
+    List<ColumnRecommendLabelVO> queryListByColumnIds(List<Long> columnIds);
+
 }

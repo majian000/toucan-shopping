@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.common.util;
 
 
+import com.toucan.shopping.modules.common.exception.InvalidAdminHeaderException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ public class AuthHeaderUtil {
     public static String getAdminId(String appCode,String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
-            throw new IllegalArgumentException("请求头参数无效");
+            throw new InvalidAdminHeaderException("请求头参数无效");
 
         }
 
@@ -52,7 +53,7 @@ public class AuthHeaderUtil {
     public static String getToken(String appCode,String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
-            throw new IllegalArgumentException("请求头参数无效");
+            throw new InvalidAdminHeaderException("请求头参数无效");
 
         }
 

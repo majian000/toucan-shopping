@@ -30,6 +30,7 @@ spring:
                             classpath:/config/services/secondKill,\
                             classpath:/config/services/commonData,\
                             classpath:/config/services/content,\
+                            classpath:/config/services/search,\
                             classpath:/config/services/column,\
                             classpath:/config/services/stock,\
                             classpath:/config/services/user,\

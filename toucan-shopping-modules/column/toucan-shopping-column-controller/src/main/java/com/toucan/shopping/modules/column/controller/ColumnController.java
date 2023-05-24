@@ -26,7 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户端栏目操作
+ * 栏目控制器
+ * @author majian
  */
 @RestController
 @RequestMapping("/column")

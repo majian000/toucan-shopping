@@ -53,27 +53,43 @@
             <#include "/user/info_left.html"/>
         </div>
 
+
         <div class="user-right">
-            <br>
-            <br>
-            <br>
-            <div style="width:100%;text-align:center">
-                <img src="${basePath}/static/images/true_name_approve_faild.png" />
-            </div>
-            <div  style="width:100%;text-align:center">
-                <a style="font-size:25px;" target="_blank">审核失败</a>
-                <br>
-                <br>
-                <a style="font-size:15px;" target="_blank">${rejectText!""}</a>&nbsp;&nbsp;<a style="font-size:15px;color:blue" href="${basePath}/page/user/true/name/approve/update"><b>重新编辑</b></a>
-                <br>
-            </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+            <form id="utnform" method="post">
+                <div class="toucan-form">
+                    <div class="toucan-form-title">
+                        <h3 style="font-size:20px;">实名信息</h3>
+                    </div>
+                    <div class="toucan-form-body">
+
+                        <div class="user-right">
+                            <br>
+                            <br>
+                            <br>
+                            <div style="width:100%;text-align:center">
+                                <img src="${basePath}/static/images/true_name_approve_faild.png" />
+                            </div>
+                            <div  style="width:100%;text-align:center">
+                                <a style="font-size:25px;" target="_blank">审核失败</a>
+                                <br>
+                                <br>
+                                <a style="font-size:15px;" target="_blank">${rejectText!""}</a>&nbsp;&nbsp;<a style="font-size:15px;color:blue" href="${basePath}/page/user/true/name/approve/update"><b>重新编辑</b></a>
+                                <br>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
         </div>
+
+
     </div>
 
 
@@ -82,7 +98,7 @@
 </body>
 
 <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
-<script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/common/toucan-form-validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/truename.js"></script>
 <script>
     $(function () {

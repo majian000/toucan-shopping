@@ -65,4 +65,10 @@ public class AreaTreeVO extends AreaVO {
      */
     private Boolean haveChild = false;
 
+
+    /**
+     * 是否是父节点
+     */
+    private Boolean isParent=true;
+
 }

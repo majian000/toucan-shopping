@@ -105,6 +105,7 @@ public class ShopProductApproveController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/shopProductApprove/listPage",feignFunctionService);
+        request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductApprovePreviewPage());
         return "pages/product/shopProductApprove/list.html";
     }
 
@@ -887,6 +888,9 @@ public class ShopProductApproveController extends UIController {
                         {
                             if(productSkuVO.getProductPreviewPath()!=null) {
                                 productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+                            }
+                            if(productSkuVO.getDescriptionImgFilePath()!=null) {
+                                productSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getDescriptionImgFilePath());
                             }
                         }
 

@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
+import com.toucan.shopping.cloud.apps.seller.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -149,7 +150,7 @@ public class ShopApiController extends BaseController {
 
 
             //保存生成验证码到缓存
-            String code = NumberUtil.random(6);
+            String code = MobilePhoneVCodeUtil.genCode(6);
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了店铺注册,验证码是"+code);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
@@ -158,8 +159,8 @@ public class ShopApiController extends BaseController {
             {
                 //将验证码保存到缓存
                 toucanStringRedisService.set(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
-                //默认1分钟过期
-                toucanStringRedisService.expire(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
+                //默认2分钟过期
+                toucanStringRedisService.expire(ShopRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*2, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {

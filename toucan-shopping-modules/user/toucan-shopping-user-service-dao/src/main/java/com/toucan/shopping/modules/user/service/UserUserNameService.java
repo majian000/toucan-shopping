@@ -47,6 +47,7 @@ public interface UserUserNameService {
 
     int updateDeleteStatus(Short deleteStatus,Long userMainId,String username);
 
+    int updateDeleteStatusById(Short deleteStatus,Long userMainId,String username,Long id);
 
     /**
      * 删除指定用户ID下所有关联用户名

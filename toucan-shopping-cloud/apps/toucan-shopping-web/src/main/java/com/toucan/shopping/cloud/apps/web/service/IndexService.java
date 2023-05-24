@@ -1,5 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.service;
 
+import com.toucan.shopping.modules.column.vo.HotProductVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 
@@ -30,5 +32,17 @@ public interface IndexService {
      */
 
     List<CategoryVO> queryNavigationCategorys();
+
+    /**
+     * 查询首页商品推荐栏目
+     * @return
+     */
+    List<PcIndexColumnVO> queryColumns();
+
+    /**
+     * 查询首页热门商品
+     * @return
+     */
+    List<HotProductVO> queryHotProduces();
 
 }

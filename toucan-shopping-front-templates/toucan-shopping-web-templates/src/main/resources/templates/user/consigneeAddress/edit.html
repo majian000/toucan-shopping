@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+<#assign leftMenuName = "consigneeAddress">
+
+<!------------main---------------->
+<div class="main">
+
+    <div class="current-position">
+        <h2>
+            <a href="${basePath}/page/user/info">账号管理</a>
+            &gt;
+            <a href="#">收货地址</a>
+        </h2>
+    </div>
+    <div class="user-content">
+
+        <div class="user-menu">
+            <#include "/user/info_left.html"/>
+        </div>
+
+        <div class="user-right">
+                <form id="consigneeAddressForm" method="post" onsubmit="return false;">
+                    <input type="hidden" id="id" name="id" value="${id!'-1'}" />
+                    <div class="toucan-form">
+                        <div class="toucan-form-title" style="height: 25px;">
+                            <h3 style="font-size:20px;width: 90%;float: left;">修改信息</h3>
+                            <a style="float:right;color:#0400ff;font-size: 15px;"  href="${basePath}/page/user/consigneeAddress/list">返回列表</a>
+                        </div>
+                        <div class="toucan-form-body">
+
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>收货人姓名：</span>
+                                <div class="field">
+                                    <input type="text" id="name" name="name" maxlength="30" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required"  />
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>联系电话：</span>
+                                <div class="field">
+                                    <input type="text" id="phone" name="phone" maxlength="20" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required"  />
+                                </div>
+                            </div><!--item end-->
+
+                            <div class="item">
+                                <span class="label msc_l"><span class="red">*</span>所在城市：</span>
+                                <div class="field">
+                                    <input name="" id="ms_city" style="width:40%" type="text" lay-verify="required" placeholder="请选择" class="l_ipt" autocomplete="off"  readonly="true">
+                                    <input type="hidden" id="province" name="provinceName" />
+                                    <input type="hidden" id="city" name="cityName"  />
+                                    <input type="hidden" id="area" name="areaName"   />
+                                    <input type="hidden" id="province_code" name="provinceCode"   />
+                                    <input type="hidden" id="city_code" name="cityCode"   />
+                                    <input type="hidden" id="area_code" name="areaCode" />
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>详细地址：</span>
+                                <div class="field">
+                                    <textarea id="address" name="address" class="l_ipt"  maxlength="300"  tabindex="2" style="width: 334px; height: 85px;"  lay-verify="required"  ></textarea>
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>验证码：</span>
+                                <div class="field" >
+                                    <span style="float:left;">
+                                        <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" lay-verify="required"  MaxLength="4" tabindex="6" />
+                                    </span>
+                                    <span style="float:left;margin-left:5px;">
+                                        <img id="refreshCaptcha"  src="${basePath}/api/vcode/gen" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
+                                    </span>
+                                </div>
+                            </div><!--item end-->
+
+                                <br>
+                                <br>
+                            <div>
+                                <div class="item" style="width:150px;">
+                                    <input type="button" value="保存" class="log_btn" id="caibtn" style="font-size:15px;" />
+                                </div><!--item end-->
+                            </div>
+
+                        </div>
+                </form>
+        </div>
+    </div>
+
+
+    <#include "/footer.html"/>
+
+</body>
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/edit.js"></script>
+
+<div id="pcaDiv">
+</div>
+<script>
+
+    $(function () {
+
+        loading.showLoading({
+            type:1,
+            tip:"加载中..."
+        });
+
+        $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
+
+            $("#pcaDiv").html(data);
+
+            loadConsigneeAddressInfo();
+
+            $("#ms_city").click(function (e) {
+                SelCity(this,e);
+            });
+            $(".msc_l").click(function (e) {
+                SelCity(document.getElementById("ms_city"),e);
+            });
+        });
+    });
+
+</script>
+
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+    });
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.order.mapper.OrderConsigneeAddressMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+
+    </resultMap>
+
+
+    <resultMap id="entityVOMap" type="com.toucan.shopping.modules.order.vo.OrderConsigneeAddressVO">
+
+    </resultMap>
+
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress" >
+        insert into t_order_consignee_address(id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
+        values(#{id},#{userMainId},#{orderId},#{orderNo},#{mainOrderNo},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode})
+    </insert>
+
+
+    <select id="findByOrderNos" resultMap="entityVOMap">
+        select * from t_order_consignee_address t where
+        t.order_no in
+        <foreach item="item" index="index" collection="orderNos" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        and t.delete_status=0
+    </select>
+
+
+    <insert id="inserts" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress"  >
+        insert into t_order_consignee_address
+        (id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.userMainId},#{entity.orderId},#{entity.orderNo},#{entity.mainOrderNo},#{entity.name},#{entity.address},#{entity.phone},#{entity.provinceCode},#{entity.cityCode},
+            #{entity.areaCode},#{entity.createDate},#{entity.deleteStatus},#{entity.provinceName},#{entity.cityName},#{entity.areaName},#{entity.appCode})
+        </foreach>
+
+    </insert>
+
+
+    <select id="queryOneByOrderNo" resultMap="entityVOMap">
+        select * from t_order_consignee_address t where t.order_no = #{orderNo} and t.delete_status=0 limit 0,1
+    </select>
+
+
+
+
+</mapper>

@@ -41,6 +41,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryPcIndexList(category);
     }
 
+    @Override
+    public Long queryOneChildCountByPid(Long pid) {
+        return categoryMapper.queryOneChildCountByPid(pid);
+    }
+
 
     @Override
     public int save(Category category) {
@@ -152,6 +157,24 @@ public class CategoryServiceImpl implements CategoryService {
 
 
 
+    public void complementChildren(CategoryTreeVO currentNode) {
+        for (CategoryTreeVO categoryTreeVO : currentNode.getChildren()) {
+            categoryTreeVO.setTitle(categoryTreeVO.getName());
+            categoryTreeVO.setText(categoryTreeVO.getName());
+            categoryTreeVO.setPid(currentNode.getId());
+            categoryTreeVO.setParentId(currentNode.getId());
+            if(currentNode.getPath()!=null) {
+                categoryTreeVO.setPath(currentNode.getPath() +"》"+categoryTreeVO.getName());
+            }
+
+            if(CollectionUtils.isNotEmpty(categoryTreeVO.getChildren())) {
+                //查找当前节点的子节点
+                complementChildren(categoryTreeVO);
+            }
+        }
+    }
+
+
     @Override
     public List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo) {
         return categoryMapper.findTreeTableByPageInfo(queryTreeInfo);
@@ -230,14 +253,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void setPath(CategoryTreeVO categoryTreeVO) {
-        if(categoryTreeVO.getParentId()!=null&&categoryTreeVO.getParentId().longValue()!=-1)
+    public void setPath(CategoryTreeVO categoryTreeVO,Long parentId) {
+        if(parentId!=null&&parentId.longValue()!=-1)
         {
-            Category parentCategory = this.queryById(categoryTreeVO.getParentId());
+            Category parentCategory = this.queryById(parentId);
             if(parentCategory!=null) {
                 categoryTreeVO.setPath(parentCategory.getName()+"》"+categoryTreeVO.getName());
-                categoryTreeVO.setParentId(parentCategory.getParentId());
-                this.setPath(categoryTreeVO);
+                categoryTreeVO.getIdPath().add(parentCategory.getId());
+                this.setPath(categoryTreeVO,parentCategory.getParentId());
             }
         }
     }

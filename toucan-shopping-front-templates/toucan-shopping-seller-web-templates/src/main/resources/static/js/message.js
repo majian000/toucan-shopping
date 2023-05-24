@@ -24,6 +24,7 @@ $.extend({
           type:'success',
           showClose:false,
           autoClose:true,
+          zIndex:9999,
           onClose:function(){}
       };
       
@@ -64,7 +65,12 @@ $.extend({
       //居中
       $message.css({
           'margin-left':'-'+$message.width()/2+'px'
-      })
+      });
+      //默认css文件里就是9999
+      if(defaults.zIndex!=9999)
+      {
+          $(".c-message").css("z-index",defaults.zIndex);
+      }
       //去除动画类
       $message.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',function(){
           $message.removeClass('messageFadeInDown');

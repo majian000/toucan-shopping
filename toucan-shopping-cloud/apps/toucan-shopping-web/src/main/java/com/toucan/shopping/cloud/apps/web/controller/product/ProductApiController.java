@@ -4,39 +4,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
-import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.order.no.OrderNoService;
-import com.toucan.shopping.modules.order.vo.CreateOrderVo;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.ProductSpuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductDescriptionImgVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductVO;
-import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.stock.entity.ProductSkuStock;
-import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
-import com.toucan.shopping.modules.stock.vo.InventoryReductionVo;
-import com.toucan.shopping.modules.stock.vo.RestoreStockVo;
-import com.toucan.shopping.cloud.apps.web.vo.BuyResultVo;
-import com.toucan.shopping.cloud.apps.web.vo.BuyVo;
+import com.toucan.shopping.modules.product.vo.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -54,38 +32,261 @@ public class ProductApiController {
     private FeignProductSkuService feignProductSkuService;
 
     @Autowired
-    private FeignOrderService feignOrderService;
-
-    @Autowired
-    private FeignProductSkuStockService feignProductSkuStockService;
-
-    @Autowired
-    private SkylarkLock skylarkLock;
-
-    @Autowired
-    private EventProcessService eventProcessService;
-
-    @Autowired
-    private OrderNoService orderNoService;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
+
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
-    public ResultObjectVO detail(@RequestBody ProductSkuVO shopProductSkuVO)
+    public ResultObjectVO detail(@RequestBody ProductSkuVO productSkuVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            ProductSkuVO queryShopProductSku = new ProductSkuVO();
+            queryShopProductSku.setId(productSkuVO.getId());;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductSku);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFront(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+
+                    if(productSkuVO.getMainPhotoFilePath()!=null) {
+                        productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getMainPhotoFilePath());
+                    }
+
+                    if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getPreviewPhotoPaths())) {
+                        productSkuVO.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath:productSkuVO.getPreviewPhotoPaths())
+                        {
+                            productSkuVO.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                        }
+                    }
+
+                    if(productSkuVO.getShopProductDescriptionVO()!=null) {
+                        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
+                            }
+                        }
+                    }
+                    if(productSkuVO.getProductPreviewPath()!=null) {
+                        productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+                    }
+
+                    setAttributeDisabled(productSkuVO);
+
+                    retObject.setData(productSkuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
+
+    /**
+     * 设置属性禁用状态
+     * @param productSkuVO
+     */
+    private void setAttributeDisabled(ProductSkuVO productSkuVO)
+    {
+        //将全部属性转换成对象
+        Map<String, JSONArray> allAttributeMap = JSONObject.parseObject(productSkuVO.getProductAttributes(),Map.class);
+        if(allAttributeMap.size()>0) {
+            Object[] attributeKeys = allAttributeMap.keySet().toArray();
+            int elementSize = allAttributeMap.get(attributeKeys[0]).size();
+            String[][] attributeValueArray = new String[attributeKeys.length][elementSize];
+            //填充属性二维数组
+            for(int i=0;i<attributeKeys.length;i++)
+            {
+                for(int j=0;j<elementSize;j++)
+                {
+                    attributeValueArray[i][j] = String.valueOf(allAttributeMap.get(attributeKeys[i]).get(j));
+                }
+            }
+            List<AttributeValueStatusVO> attributeValueStatusVOS = new LinkedList<>();
+            int hier= 0; //层数
+            for(int p=0;p<attributeValueArray[0].length;p++)
+            {
+                AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
+                attributeValueStatusVO.setStatus(1);
+                attributeValueStatusVO.setValue(attributeValueArray[0][p]);
+                attributeValueStatusVO.setValuePath(attributeValueArray[0][p]);
+                if((hier+1)<attributeValueArray.length)
+                {
+                    //填充这个属性值树结构
+                    fillAttributeValueTree(attributeValueStatusVO,hier+1,attributeValueArray);
+                }
+                attributeValueStatusVOS.add(attributeValueStatusVO);
+            }
+
+            //判断属性节点是否可以点击
+            boolean isDisabled;
+            List<ProductSkuStatusVO> skuBuyStatusVOS = productSkuVO.getSkuStatusList();
+            for (int i = 0; i < skuBuyStatusVOS.size(); i++) {
+                ProductSkuStatusVO productSkuStatusVO = skuBuyStatusVOS.get(i);
+                isDisabled = false;
+
+                if (productSkuStatusVO.getStatus() != null && productSkuStatusVO.getStatus().intValue() == 0) {
+                    isDisabled = true;
+                }
+                if (productSkuStatusVO.getStockNum() != null && productSkuStatusVO.getStockNum().intValue() <= 0) {
+                    isDisabled = true;
+                }
+                if(isDisabled) {
+                    AttributeValueStatusVO attributeValueStatusVO = getAttributeValueTreeNode(productSkuStatusVO.getAttributeValueGroup(), attributeValueStatusVOS);
+                    if (attributeValueStatusVO != null) {
+                        //设置禁用
+                        if (productSkuStatusVO.getStatus() != null && productSkuStatusVO.getStatus().intValue() == 0) {
+                            attributeValueStatusVO.setStatus(0);
+                            attributeValueStatusVO.setStatusCode(2);
+                        }
+                        if (productSkuStatusVO.getStockNum() != null && productSkuStatusVO.getStockNum().intValue() <= 0) {
+                            attributeValueStatusVO.setStatus(0);
+                            attributeValueStatusVO.setStatusCode(1);
+                        }
+                    }
+                }
+            }
+
+            //设置禁用数量
+            for(int i=0;i<attributeValueStatusVOS.size();i++)
+            {
+                setAttributeValueTreeDisabledCount(attributeValueStatusVOS.get(i),attributeValueStatusVOS.get(i).getChildren(),attributeValueStatusVOS);
+            }
+
+            //设置禁用状态
+            for(int i=0;i<attributeValueStatusVOS.size();i++) {
+                setAttributeValueTreeDisabledStatus(attributeValueStatusVOS.get(i));
+            }
+
+            productSkuVO.setAttributeValueStatusVOS(attributeValueStatusVOS);
+            productSkuVO.setSkuStatusList(null);
+        }
+    }
+
+    /**
+     * 拿到属性值树节点
+     * @param attributeValueGroup
+     * @param attributeValueStatusVOS
+     * @return
+     */
+    public AttributeValueStatusVO getAttributeValueTreeNode(String attributeValueGroup,List<AttributeValueStatusVO> attributeValueStatusVOS)
+    {
+        AttributeValueStatusVO ret = null;
+        if (CollectionUtils.isNotEmpty(attributeValueStatusVOS)&&ret==null) {
+            for (AttributeValueStatusVO attributeValueStatusVO : attributeValueStatusVOS) {
+                if (attributeValueGroup.equals(attributeValueStatusVO.getValuePath())) {
+                    ret = attributeValueStatusVO;
+                    break;
+                } else {
+                    ret = getAttributeValueTreeNode( attributeValueGroup, attributeValueStatusVO.getChildren());
+                    if(ret!=null)
+                    {
+                        return ret;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * 填充属性值树结构
+     * @param parent
+     */
+    public void fillAttributeValueTree(AttributeValueStatusVO parent,int hier,String[][] attributeValueArray)
+    {
+        if(parent.getChildren()==null)
+        {
+            parent.setChildren(new LinkedList<>());
+        }
+        for(int s=0;s<attributeValueArray[hier].length;s++)
+        {
+            AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
+            attributeValueStatusVO.setStatus(1);
+            attributeValueStatusVO.setValue(attributeValueArray[hier][s]);
+            attributeValueStatusVO.setValuePath(parent.getValuePath()+"_"+attributeValueStatusVO.getValue());
+            if((hier+1)<attributeValueArray.length)
+            {
+                //填充这个属性值树结构
+                fillAttributeValueTree(attributeValueStatusVO,hier+1,attributeValueArray);
+            }
+            attributeValueStatusVO.setParentValuePath(parent.getValuePath());
+            parent.getChildren().add(attributeValueStatusVO);
+        }
+    }
+
+    /**
+     * 设置子节点禁用数量
+     * @param current
+     */
+    public void setAttributeValueTreeDisabledCount(AttributeValueStatusVO current,List<AttributeValueStatusVO> children,List<AttributeValueStatusVO> attributeValueStatusVOS)
+    {
+        if(CollectionUtils.isNotEmpty(children))
+        {
+            for(AttributeValueStatusVO child:children) {
+                setAttributeValueTreeDisabledCount(child,child.getChildren(),attributeValueStatusVOS);
+                if(child.getParentValuePath()!=null&&child.getDisabledChildCount().intValue()>0
+                        &&child.getDisabledChildCount().intValue()==child.getChildren().size()) {
+                    AttributeValueStatusVO parent = getAttributeValueTreeNode(child.getParentValuePath(), attributeValueStatusVOS);
+                    if(parent!=null) {
+                        Integer disabledChildCount = parent.getDisabledChildCount();
+                        disabledChildCount++;
+                        parent.setDisabledChildCount(disabledChildCount);
+                    }
+                }
+            }
+        }else{
+            if(current.getStatus().intValue()==0)
+            {
+                if(current.getParentValuePath()!=null) {
+                    AttributeValueStatusVO parent = getAttributeValueTreeNode(current.getParentValuePath(), attributeValueStatusVOS);
+                    if(parent!=null) {
+                        Integer disabledChildCount = parent.getDisabledChildCount();
+                        disabledChildCount++;
+                        parent.setDisabledChildCount(disabledChildCount);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    /**
+     * 设置子节点禁用状态
+     * @param current
+     */
+    public void setAttributeValueTreeDisabledStatus(AttributeValueStatusVO current)
+    {
+        if(CollectionUtils.isNotEmpty(current.getChildren()))
+        {
+            if(current.getDisabledChildCount().intValue()==current.getChildren().size())
+            {
+                current.setStatus(0);
+            }
+            for(AttributeValueStatusVO child:current.getChildren()) {
+                setAttributeValueTreeDisabledStatus(child);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/preview",method = RequestMethod.POST)
+    public ResultObjectVO preview(@RequestBody ProductSkuVO shopProductSkuVO)
     {
         ResultObjectVO retObject = new ResultObjectVO();
         try {
             ProductSkuVO queryShopProductSku = new ProductSkuVO();
             queryShopProductSku.setId(shopProductSkuVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductSku);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFront(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFrontPreview(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -128,9 +329,8 @@ public class ProductApiController {
         return retObject;
     }
 
-
     /**
-     * 根据商品主表ID查询1个预览的SKU
+     * 根据商品主表ID查询1个SKU
      * @param shopProductVO
      * @return
      */
@@ -141,8 +341,71 @@ public class ProductApiController {
         try {
             ShopProductVO queryShopProduct = new ShopProductVO();
             queryShopProduct.setId(shopProductVO.getId());;
+            if(StringUtils.isNotEmpty(shopProductVO.getAttrPath()))
+            {
+                queryShopProduct.setAttrPath(shopProductVO.getAttrPath());
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
             ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFront(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    ProductSkuVO productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+
+                    if(productSkuVO.getMainPhotoFilePath()!=null) {
+                        productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getMainPhotoFilePath());
+                    }
+
+                    if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getPreviewPhotoPaths())) {
+                        productSkuVO.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath:productSkuVO.getPreviewPhotoPaths())
+                        {
+                            productSkuVO.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                        }
+                    }
+
+                    if(productSkuVO.getShopProductDescriptionVO()!=null) {
+                        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
+                            }
+                        }
+                    }
+                    if(productSkuVO.getProductPreviewPath()!=null) {
+                        productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+                    }
+
+                    setAttributeDisabled(productSkuVO);
+
+                    retObject.setData(productSkuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
+
+
+
+    /**
+     * 根据商品主表ID查询1个预览的SKU
+     * @param shopProductVO
+     * @return
+     */
+    @RequestMapping(value = "/preview/pid",method = RequestMethod.POST)
+    public ResultObjectVO previewByProductId(@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            ShopProductVO queryShopProduct = new ShopProductVO();
+            queryShopProduct.setId(shopProductVO.getId());;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFrontPreview(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -186,10 +449,8 @@ public class ProductApiController {
     }
 
 
-
-
     /**
-     * 根据商品审核主表ID查询1个预览的SKU
+     * 根据商品主表ID查询1个预览的SKU
      * @param shopProductVO
      * @return
      */
@@ -218,222 +479,7 @@ public class ProductApiController {
         return retObject;
     }
 
-    /**
-     * TODO:订单30分钟未支付 恢复预扣库存数量,支付宝回调刷新订单状态 如果失败创建本地事件以便事务补偿回滚
-     * @param buyVo
-     * @return
-     */
-    @RequestMapping(value="/buy",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO buy(@RequestBody BuyVo buyVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        logger.info("购买商品: param:"+ JSONObject.toJSONString(buyVo));
-        if(buyVo==null||buyVo.getUserId()==null)
-        {
-            logger.info("没有找到用户: param:"+ JSONObject.toJSONString(buyVo));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到用户!");
-            return resultObjectVO;
-        }
-        if(buyVo==null|| CollectionUtils.isEmpty(buyVo.getProductSkuList()))
-        {
-            logger.info("没有找到要购买的商品: param:"+ JSONObject.toJSONString(buyVo));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到要购买的商品!");
-            return resultObjectVO;
-        }
-        //锁住当前购买所有商品
-        List<String> lockKeys= new ArrayList<String>();
 
-        System.out.println(DateUtils.currentDate().getTime());
-        String userId = buyVo.getUserId();
-        //订单号
-        String orderNo= orderNoService.generateOrderNo();
-        String globalTransactionId = UUID.randomUUID().toString().replace("-","");
-        String appCode = toucan.getAppCode();
-
-        try {
-            for(ProductSku productSku : buyVo.getProductSkuList())
-            {
-                if(productSku!=null) {
-                    if (StringUtils.isEmpty(productSku.getUuid())) {
-                        logger.warn("sku uuid is null params: {} ", JSONObject.toJSONString(productSku));
-                        throw new IllegalArgumentException("没有找到商品");
-                    }
-                    String productBuyKey = ProductRedisKeyUtil.getProductBuyKey(appCode, productSku.getUuid());
-                    boolean lockStatus = skylarkLock.lock(productBuyKey, userId);
-                    while (!lockStatus) {
-                        lockStatus = skylarkLock.lock(productBuyKey, userId);
-                    }
-                    lockKeys.add(productBuyKey);
-                }
-            }
-
-            //可购买商品列表
-            List<ProductSku> releaseProductSkuList = new ArrayList<ProductSku>();
-            //库存不够商品列表
-            List<ProductSku> faildProductSkuList = new ArrayList<ProductSku>();
-
-            //查询商品
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
-            resultObjectVO = feignProductSkuService.queryByIdList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultVO.SUCCESS.intValue()) {
-                List<ProductSku> queryProductSkuList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
-
-                //调用库存服务查询库存
-                if(!CollectionUtils.isEmpty(queryProductSkuList))
-                {
-                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuList);
-                    resultObjectVO = feignProductSkuStockService.queryStockCacheBySkuUuidList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
-                    //如果查询库存缓存失败 商品数量全部设置为0
-                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
-                    {
-                        for (ProductSku productSku : queryProductSkuList) {
-                            productSku.setStockNum(0);
-                        }
-                    }else{
-                        List<ProductSkuStock> productSkuStocks = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ProductSkuStock.class);
-                        if(!CollectionUtils.isEmpty(productSkuStocks))
-                        {
-                            //设置预扣库存
-                            for(ProductSkuStock productSkuStock:productSkuStocks)
-                            {
-                                if(productSkuStock!=null&&StringUtils.isNotEmpty(productSkuStock.getSkuUuid()))
-                                {
-                                    for (ProductSku productSku : queryProductSkuList) {
-                                        if(productSku!=null&&StringUtils.isNotEmpty(productSku.getUuid()))
-                                        {
-                                            if(productSku.getUuid().equals(productSkuStock.getSkuUuid()))
-                                            {
-                                                productSku.setStockNum(productSkuStock.getStockNum());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
-                //判断商品数量
-                for (ProductSku productSku : queryProductSkuList) {
-                    if (productSku.getStockNum().intValue() <= 0) {
-                        faildProductSkuList.add(productSku);
-                        continue;
-                    }
-                    releaseProductSkuList.add(productSku);
-                }
-                //设置最终可购买的所以商品
-                buyVo.setProductSkuList(releaseProductSkuList);
-
-                //如果当前要购买的商品全部都有库存
-                if (!CollectionUtils.isEmpty(buyVo.getProductSkuList())) {
-                    //预扣库存对象
-
-                    InventoryReductionVo inventoryReductionVo = new InventoryReductionVo();
-                    inventoryReductionVo.setAppCode(appCode);
-                    inventoryReductionVo.setUserId(userId);
-                    inventoryReductionVo.setProductSkuList(buyVo.getProductSkuList());
-
-                    //预扣库存
-                    logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
-                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
-                    resultObjectVO = feignProductSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
-                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-
-                        List<EventProcess> restoreStock = new ArrayList<EventProcess>();
-                        //创建本地补偿事务消息
-                        for (ProductSku productSku : buyVo.getProductSkuList()) {
-
-                            //还原库存对象
-                            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
-                            RestoreStockVo restoreStockVo = new RestoreStockVo();
-                            restoreStockVo.setAppCode(appCode);
-                            restoreStockVo.setUserId(userId);
-                            List<ProductSku> productSkuList = new ArrayList<ProductSku>();
-                            productSkuList.add(productSku);
-                            restoreStockVo.setProductSkuList(productSkuList);
-                            requestJsonVO.setEntityJson(JSONObject.toJSONString(restoreStockVo));
-
-                            EventProcess eventProcess = new EventProcess();
-                            eventProcess.setCreateDate(new Date());
-                            eventProcess.setBusinessId(String.valueOf(productSku.getId()));
-                            eventProcess.setRemark("还原预扣库存 skuId:" + productSku.getId());
-                            eventProcess.setTableName(null);
-                            eventProcess.setTransactionId(globalTransactionId);
-                            eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
-                            eventProcess.setStatus((short) 0); //待处理
-                            eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
-                            eventProcessService.insert(eventProcess);
-
-                            restoreStock.add(eventProcess);
-                        }
-
-
-                        //扣库存成功后创建订单
-                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
-                        CreateOrderVo createOrderVo = new CreateOrderVo();
-                        createOrderVo.setAppCode(appCode);
-                        createOrderVo.setUserId(userId);
-                        createOrderVo.setOrderNo(orderNo);
-                        createOrderVo.setPayMethod(1);
-                        createOrderVo.setProductSkuList(buyVo.getProductSkuList());
-                        createOrderVo.setBuyMap(buyVo.getBuyMap());
-                        requestJsonVO.setEntityJson(JSONObject.toJSONString(createOrderVo));
-
-                        resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
-
-                        //如果订单创建成功 将上面回滚事件取消掉
-                        if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
-                            for (EventProcess eventProcess : restoreStock) {
-                                eventProcess.setStatus((short) 1);
-                                eventProcessService.updateStatus(eventProcess);
-                            }
-                        }
-                        //订单创建失败 将回滚库存
-                        if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
-
-                            for (EventProcess eventProcess : restoreStock) {
-                                ResultObjectVO restoreStockResultObjectVO = feignProductSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
-                                if (restoreStockResultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
-                                    eventProcess.setStatus((short) 1);
-                                    eventProcessService.updateStatus(eventProcess);
-                                }
-                            }
-                        }
-                        if (!CollectionUtils.isEmpty(faildProductSkuList)) {
-                            resultObjectVO.setCode(BuyResultVo.BUY_SOME_NOT_STOCK);
-                            resultObjectVO.setMsg("对不起,您购买的部分商品已售罄!");
-                            resultObjectVO.setData(faildProductSkuList);
-                        }
-                    }else{
-                        resultObjectVO.setCode(BuyResultVo.BUY_ALL_NOT_STOCK);
-                        resultObjectVO.setMsg("对不起,您购买的商品已售罄!");
-                        resultObjectVO.setData(faildProductSkuList);
-                    }
-                } else { //购买商品没有库存了
-                    resultObjectVO.setCode(BuyResultVo.BUY_ALL_NOT_STOCK);
-                    resultObjectVO.setMsg("对不起,您购买的商品已售罄!");
-                    resultObjectVO.setData(faildProductSkuList);
-
-                }
-            }
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("购买失败,请重试!");
-        }finally{
-            //释放所有商品锁
-            for(String lockKey:lockKeys) {
-                skylarkLock.unLock(lockKey, userId);
-            }
-        }
-
-        return resultObjectVO;
-    }
 
 
 

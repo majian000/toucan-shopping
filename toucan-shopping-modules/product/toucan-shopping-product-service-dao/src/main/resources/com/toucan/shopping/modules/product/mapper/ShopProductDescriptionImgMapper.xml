@@ -6,6 +6,8 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
         <result column="shop_product_description_id" jdbcType="BIGINT" property="shopProductDescriptionId" />
+        <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
+        <result column="type" jdbcType="SMALLINT" property="type" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
         <result column="width" jdbcType="VARCHAR" property="width" />
         <result column="width_unit" jdbcType="VARCHAR" property="widthUnit" />
@@ -30,14 +32,20 @@
 
 
     <insert id="inserts"  keyProperty="id" >
-        insert into t_shop_product_description_img(id,shop_product_id,shop_product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id,delete_status)
+        insert into t_shop_product_description_img(id,shop_product_id,product_sku_id,type,shop_product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.shopProductId},#{entity.shopProductDescriptionId},#{entity.filePath},#{entity.width},#{entity.widthUnit},#{entity.title},#{entity.link},#{entity.imgSort},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
+            (#{entity.id},#{entity.shopProductId},#{entity.productSkuId},#{entity.type},#{entity.shopProductDescriptionId},#{entity.filePath},#{entity.width},#{entity.widthUnit},#{entity.title},#{entity.link},#{entity.imgSort},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
         </foreach>
 
     </insert>
 
+    <insert id="insert"  keyProperty="id" >
+        insert into t_shop_product_description_img(id,shop_product_id,product_sku_id,type,shop_product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id)
+        values
+        (#{id},#{shopProductId},#{productSkuId},#{type},#{shopProductDescriptionId},#{filePath},#{width},#{widthUnit},#{title},#{link},#{imgSort},#{createDate},#{appCode},#{createUserId})
+
+    </insert>
 
     <select id="queryByIdList" resultMap="shopProductDescriptionImgMap">
         select * from t_shop_product_description_img t
@@ -93,6 +101,34 @@
 
     </select>
 
+    <select id="queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc" resultMap="shopProductDescriptionImgVOMap" >
+        select t.* from t_shop_product_description_img t
+        <where>
+            1=1
+            and shop_product_id = #{shopProductId}
+            and shop_product_description_id = #{descriptionId}
+            and t.delete_status = 0
+            and t.type=#{type}
+        </where>
+        order by t.img_sort desc
+
+
+    </select>
+
+    <select id="queryVOListBySkuIdAndDescriptionIdOrderBySortDesc" resultMap="shopProductDescriptionImgVOMap" >
+        select t.* from t_shop_product_description_img t
+        <where>
+            1=1
+            and product_sku_id = #{skuId}
+            and shop_product_description_id = #{descriptionId}
+            and t.delete_status = 0
+        </where>
+        order by t.img_sort desc
+
+
+    </select>
+
+
 
     <update id="deleteByShopProductId">
         update t_shop_product_description_img  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
@@ -107,6 +143,12 @@
         </foreach>
     </update>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.ShopProductDescriptionImg">
+        update t_shop_product_description_img set file_path=#{filePath},width=#{width},width_unit=#{widthUnit},title=#{title},link=#{link},img_sort=#{imgSort} where id =#{id}
+    </update>
 
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_shop_product_description_img set delete_status=1 where id=#{id}
+    </update>
 
 </mapper>

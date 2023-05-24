@@ -64,6 +64,10 @@
         <module>common/toucan-shopping-exception</module>
         <!--短信发送模块 -->
         <module>common/toucan-shopping-sms</module>
+        <!--邮件发送模块-->
+        <module>common/toucan-shopping-email</module>
+        <!--kafka公共模块 -->
+        <module>common/toucan-shopping-kafka</module>
 
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
@@ -71,6 +75,8 @@
         <module>user/toucan-shopping-user-service-dao</module>
         <!--用户登录缓存 -->
         <module>user/toucan-shopping-user-login-cache</module>
+        <!--用户控制层 -->
+        <module>user/toucan-shopping-user-controller</module>
 
 
         <!--地区编码实体和VO -->
@@ -133,6 +139,8 @@
         <module>order/toucan-shopping-order-entity-vo</module>
         <!--订单Service和DAO -->
         <module>order/toucan-shopping-order-service-dao</module>
+        <!--订单控制层-->
+        <module>order/toucan-shopping-order-controller</module>
         <!-- 订单编号生成 -->
         <module>order/toucan-shopping-order-no</module>
 
@@ -141,17 +149,27 @@
         <module>product/toucan-shopping-product-entity-vo</module>
         <!--商品Service和DAO -->
         <module>product/toucan-shopping-product-service-dao</module>
+        <!--商品控制层 -->
+        <module>product/toucan-shopping-product-controller</module>
 
+        <!--搜索模块 -->
+        <module>search/toucan-shopping-search-common</module>
+        <!--es搜索 -->
+        <module>search/toucan-shopping-search-elasticsearch</module>
 
         <!--库存实体和VO -->
         <module>stock/toucan-shopping-stock-entity-vo</module>
         <!--库存Service和DAO -->
         <module>stock/toucan-shopping-stock-service-dao</module>
+        <!--库存控制层 -->
+        <module>stock/toucan-shopping-stock-controller</module>
 
         <!--消息实体和VO -->
         <module>message/toucan-shopping-message-entity-vo</module>
         <!--消息Service和DAO -->
         <module>message/toucan-shopping-message-service-dao</module>
+        <!--消息控制器层-->
+        <module>message/toucan-shopping-message-controller</module>
         <!--消息的redis -->
         <module>message/toucan-shopping-message-redis</module>
 
@@ -159,6 +177,8 @@
         <module>seller/toucan-shopping-seller-entity-vo</module>
         <!--卖家Service和DAO -->
         <module>seller/toucan-shopping-seller-service-dao</module>
+        <!--卖家控制层 -->
+        <module>seller/toucan-shopping-seller-controller</module>
 
         <!--颜色表实体和VO -->
         <module>colorTable/toucan-shopping-color-table-entity-vo</module>
@@ -253,7 +273,12 @@
                 <scope>compile</scope>
             </dependency>
 
-
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-email</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-common-persistence-event</artifactId>
@@ -286,6 +311,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.order</groupId>
                 <artifactId>toucan-shopping-order-no</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -445,6 +477,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.product</groupId>
+                <artifactId>toucan-shopping-product-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.modules.area</groupId>
                 <artifactId>toucan-shopping-area-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
@@ -454,6 +493,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.user</groupId>
                 <artifactId>toucan-shopping-user-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-user-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -469,6 +515,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.stock</groupId>
                 <artifactId>toucan-shopping-stock-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.stock</groupId>
+                <artifactId>toucan-shopping-stock-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -497,6 +550,20 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.user</groupId>
                 <artifactId>toucan-shopping-message-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-redis</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -592,6 +659,12 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.seller</groupId>
+                <artifactId>toucan-shopping-seller-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
@@ -614,6 +687,26 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.search</groupId>
+                <artifactId>toucan-shopping-search-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.search</groupId>
+                <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-kafka</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +153,36 @@ public class FeignShopProductApproveServiceFallbackFactory implements FallbackFa
                     return resultObjectVO;
                 }
                 logger.warn("FeignShopProductApproveService deleteByProductApproveIdAndShopId faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryNewestListByShopId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductApproveService queryNewestListByShopId faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findOneUnderReviewByFreightTemplateId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductApproveService findOneUnderReviewByFreightTemplateId faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

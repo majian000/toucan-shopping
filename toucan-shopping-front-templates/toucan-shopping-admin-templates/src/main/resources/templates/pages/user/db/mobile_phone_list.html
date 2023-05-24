@@ -166,9 +166,10 @@
                 }
                 layer.confirm("确定"+optText+"该手机号?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/mobile/phone/disabled/enabled/"+data.userMainId+"/"+data.mobilePhone,
+                        url:"[[@{/}]]user/mobile/phone/disabled/enabled",
                         contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
+                        data: JSON.stringify({id:data.id,userMainId:data.userMainId,mobilePhone:data.mobilePhone}),
+                        type:'POST',
                         success:function(data){
                             layer.msg(data.msg);
 

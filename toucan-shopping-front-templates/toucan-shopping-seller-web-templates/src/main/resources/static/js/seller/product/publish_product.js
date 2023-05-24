@@ -161,6 +161,27 @@ $(function () {
             }
         }
 
+        var roughWeights = $(".roughWeights");
+        if(roughWeights.length>0)
+        {
+            for(var i=0;i<roughWeights.length;i++)
+            {
+                var roughWeightVal = $(roughWeights[i]).val();
+                if(roughWeightVal!=null&&roughWeightVal!="")
+                {
+                    if((!checkInput.decimal3w[0].test(roughWeightVal)))
+                    {
+                        $.message({
+                            message: "销售规格中的毛重"+checkInput.decimal3w[1],
+                            type: 'error'
+                        });
+                        $(roughWeights[i]).focus();
+                        return ;
+                    }
+                }
+            }
+        }
+
         if(result) {
             $("#step5").hide();
             $("#step4").hide();
@@ -196,12 +217,15 @@ $(function () {
     });
 
     $("#step4Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
-        $("#step5").show();
-        $("#step4").hide();
-        $("#step3").hide();
-        $("#step2").hide();
-        $("#step1").hide();
+        var result = checkInputFunctionByContainerId("step4",2);
+        if(result) {
+            $("#refreshCaptcha").attr("src", basePath + "/api/shop/product/approve/vcode?" + new Date().getTime());
+            $("#step5").show();
+            $("#step4").hide();
+            $("#step3").hide();
+            $("#step2").hide();
+            $("#step1").hide();
+        }
     });
 
 
@@ -211,6 +235,16 @@ $(function () {
         $("#step3").hide();
         $("#step2").hide();
         $("#step1").hide();
+    });
+
+    $("#selectFreightTemplate").bind( 'click' ,function(){
+
+        openSelectFreightTemplateDialog();
+        initFreightTemplatePagination();
+    });
+
+    $(".addFreigtTemplateButton").bind( 'click' ,function(){
+        window.open(basePath+"/page/freightTemplate/add");
     });
 
     appendDescriptionTableRow();
@@ -270,6 +304,20 @@ $("#ppfbtn").click(function() {
         }
     }
 
+    //删除SKU表格中没有介绍图片的控件
+    var skuTableDescriptionUploadFiles = $(".skuTableDescriptionUploadFiles");
+    if(skuTableDescriptionUploadFiles.length>0)
+    {
+        for(var i=0;i<skuTableDescriptionUploadFiles.length;i++)
+        {
+            var skuTableDescriptionTableUploadFile=$(skuTableDescriptionUploadFiles[i]);
+            if(skuTableDescriptionTableUploadFile.val()==null||skuTableDescriptionTableUploadFile.val()=="")
+            {
+                skuTableDescriptionTableUploadFile.remove();
+            }
+        }
+    }
+
     loading.showLoading({
         type:6,
         tip:"发布中..."
@@ -317,7 +365,7 @@ function appendDescriptionTableRow()
         "\n" +
         "                                                                <div class=\"description-table-uploading-img\">\n" +
         "                                                                    <ul class=\"picView-magnify-list\">\n" +
-        "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+        "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
         "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
         "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\"/static/lib/tupload/images/imgadd.png\" style=\"width:100%;height:100%\">            </div>\n" +
         "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +

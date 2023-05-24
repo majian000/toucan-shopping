@@ -3,7 +3,18 @@
     犀鸟电商平台致力于快速搭建属于自己的电商网站
 
 #### 介绍
-    采用技术spring cloud、spring config、lombok、nacos、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
+    采用技术
+    spring cloud
+    spring config
+    lombok
+    nacos
+    hystrix
+    elasticsearch
+    kafka
+    shardingsphere
+    redis
+    mysql
+    canal
 
 #### 软件架构
 
@@ -34,6 +45,7 @@
     5.elasticsearch-7.10.2
     6.FastDFS_v5.08
     7.nacos-server-2.0.4 下载地址:https://github.com/alibaba/nacos/releases
+    8.canal.deployer-1.1.7
 
 ##### 第三方配置
 
@@ -106,6 +118,7 @@
  | services/toucan-shopping-message             | 8103                  | 消息服务                                           |
  | services/toucan-shopping-common-data         | 8104                  | 公共数据服务                                       |
  | services/toucan-shopping-content             | 8105                  | 内容服务                                           |
+ | services/toucan-shopping-search             | 8106                  | 搜索服务                                           |
 
     
 

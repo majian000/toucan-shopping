@@ -6,10 +6,6 @@ package com.toucan.shopping.modules.user.redis;
 public class UserCenterConsigneeAddressKey {
 
 
-
-
-
-
     /**
      * 保存收货人信息
      * @param userMainId
@@ -20,5 +16,16 @@ public class UserCenterConsigneeAddressKey {
         return "TOUCAN_SHOPPING_WEB:USER_CENTER:INDEX:CONSIGNEE_ADDRESS:SAVE:"+userMainId+"_LOCK";
     }
 
+
+
+    /**
+     * 修改收货人信息
+     * @param userMainId
+     * @return
+     */
+    public static String getUpdateLockKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:INDEX:CONSIGNEE_ADDRESS:UPDATE:"+userMainId+"_LOCK";
+    }
 
 }

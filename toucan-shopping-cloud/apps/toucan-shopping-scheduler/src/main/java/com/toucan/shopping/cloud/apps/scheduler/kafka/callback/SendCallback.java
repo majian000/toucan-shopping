@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.scheduler.kafka.callback;
 
-import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
+//import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class SendCallback implements ProducerListener<String, Object> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private EventPublishService eventPublishService;
+//    @Autowired
+//    private EventPublishService eventPublishService;
 
     @Override
     public void onSuccess(String topic, Integer partition, String key, Object value, RecordMetadata recordMetadata) {

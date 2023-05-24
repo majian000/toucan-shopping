@@ -26,6 +26,9 @@ public interface AreaMapper {
 
     int update(Area area);
 
+    Long queryOneChildCountByPid(Long pid,String appCode);
+
+
     List<AreaVO> queryByCode(String code);
 
     /**

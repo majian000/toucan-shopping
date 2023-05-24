@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.product.api.feign.fallback.FeignShopProductAppr
 import com.toucan.shopping.cloud.product.api.feign.fallback.FeignShopProductServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,5 +96,26 @@ public interface FeignShopProductApproveService {
      */
     @RequestMapping(value="/delete/id/shopId",produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 查询这个店铺最新发布的那几条审核
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/newest/list/shopId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryNewestListByShopId(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
+    /**
+     * 根据运费模板ID查询审核中的信息(一条)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/one/underReview/by/freightTemplateId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findOneUnderReviewByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

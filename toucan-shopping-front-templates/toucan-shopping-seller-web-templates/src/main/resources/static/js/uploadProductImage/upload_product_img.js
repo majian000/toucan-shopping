@@ -41,7 +41,6 @@ function clear_file_ipt(fileId,tipsId,toolbarId,imgPreviewId,fileGroupId)
 
 function deleteProductImage(fileId,tipsId,toolbarId,imgPreviewId,fileGroupId)
 {
-    alert("1");
     $("#"+fileGroupId).html("");
     $("#"+fileGroupId).html("<input id='"+fileId+"' name='"+fileId+"' accept='image/*' type='file' style='display: none' />");
     $("#"+imgPreviewId).attr("src", basePath+"/static/images/defaultImgUp.png");

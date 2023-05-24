@@ -23,6 +23,16 @@ public interface ShopProductDescriptionImgMapper {
 
     List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdOrderBySortDesc(Long shopProductId, Long descriptionId);
 
+    List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(Long shopProductId, Long descriptionId,Integer type);
+
+    List<ShopProductDescriptionImgVO> queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(Long skuId, Long descriptionId);
+
     int updateResumeByIdList(List<Long> idList);
+
+    int update(ShopProductDescriptionImg entity);
+
+    int deleteById(Long id);
+
+    int insert(ShopProductDescriptionImg entity);
 
 }

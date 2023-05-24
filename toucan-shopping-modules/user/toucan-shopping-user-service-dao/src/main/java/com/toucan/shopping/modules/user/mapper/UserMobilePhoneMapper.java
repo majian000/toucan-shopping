@@ -34,6 +34,9 @@ public interface UserMobilePhoneMapper {
 
     int updateDeleteStatus(Short deleteStatus, Long userMainId, String mobilePhone);
 
+    int updateDeleteStatusById(Short deleteStatus, Long userMainId, String mobilePhone,Long id);
+
     int deleteByUserMainId(Long userMainId);
 
+    UserMobilePhone findByUserMainId(Long userMainId);
 }

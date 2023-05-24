@@ -1,7 +1,10 @@
 package com.toucan.shopping.cloud.apps.web.util;
 
 
+import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class VCodeUtil {
 
@@ -19,6 +22,11 @@ public class VCodeUtil {
             vcode=vcode.substring(0,vcode.indexOf(";"));
         }
         return vcode;
+    }
+
+    public static String getVerifyCodeKey(String appCode,HttpServletRequest request) throws Exception
+    {
+        return VerifyCodeRedisKey.getVerifyCodeKey(appCode,getClientVCodeId(request.getHeader("Cookie")));
     }
 
 }

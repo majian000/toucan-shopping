@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
@@ -31,9 +32,12 @@ import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.search.service.ProductSearchService;
+import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 商品SKU管理
@@ -88,6 +93,8 @@ public class ProductSkuController extends UIController {
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
+    @Autowired
+    private ProductSearchService productSearchService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -104,6 +111,7 @@ public class ProductSkuController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/productSku/listPage",feignFunctionService);
+        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
         return "pages/product/productSku/list.html";
     }
 
@@ -399,7 +407,9 @@ public class ProductSkuController extends UIController {
                     }
                 }
             }
-            pageInfo.setOrderColumn("update_date");
+            pageInfo.setOrderColumns(new LinkedList<>());
+            pageInfo.getOrderColumns().add("update_date");
+            pageInfo.getOrderColumns().add("create_date");
             pageInfo.setOrderSort("desc");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);
@@ -536,6 +546,7 @@ public class ProductSkuController extends UIController {
     }
 
 
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     @ResponseBody
@@ -578,6 +589,159 @@ public class ProductSkuController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+            queryProductSkuVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductSkuVO);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                ProductSkuVO productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
+                if(ObjectUtils.isNotEmpty(productSkuVO)) {
+                    Long[] categoryIds = new Long[1];
+                    Long[] shopCategoryIds = new Long[1];
+                    List<Long> brandIdList = new LinkedList<>();
+                    List<Long> shopIdList =new LinkedList<>();
+
+                    categoryIds[0] = productSkuVO.getCategoryId();
+
+                    //设置品牌ID
+                    if(productSkuVO.getBrandId()!=null) {
+                        brandIdList.add(productSkuVO.getBrandId());
+                    }
+
+
+                    //设置店铺分类ID
+                    if(productSkuVO.getShopCategoryId()!=null) {
+                        shopCategoryIds[0] = productSkuVO.getShopCategoryId();
+                    }
+
+
+
+                    //设置店铺ID
+                    if(productSkuVO.getShopId()!=null) {
+                        shopIdList.add(productSkuVO.getShopId());
+                    }
+
+
+                    productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+
+                    List<ProductSkuVO> list = new LinkedList<>();
+                    list.add(productSkuVO);
+
+                    //查询类别名称
+                    this.queryCategory(list,categoryIds);
+
+
+                    //查询店铺类别名称
+                    this.queryShopCategory(list,shopCategoryIds);
+
+                    //查询品牌名称
+                    this.queryBrand(list,brandIdList);
+
+                    //查询店铺名称
+                    this.queryShop(list,shopIdList);
+
+
+                    request.setAttribute("model", list.get(0));
+                }else{
+                    request.setAttribute("model", new ProductSkuVO());
+                }
+            }
+        }catch(Exception e)
+        {
+            request.setAttribute("model", new ProductSkuVO());
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/productSku/detail.html";
+    }
+
+
+
+
+    /**
+     * 店铺商品 上架/下架
+     * @param shopProductVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/shelves",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(shopProductVO.getId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空");
+                return resultObjectVO;
+            }
+            if(shopProductVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+            resultObjectVO = feignProductSkuService.shelves(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("操作失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * SKU同步搜索缓存
+     * @param shopProductVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/flush/search",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushSearch(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(shopProductVO.getProductSkuVOList()))
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("要同步的商品ID不能为空");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO.getProductSkuVOList());
+            resultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSkuVO> productSkuVOS = resultObjectVO.formatDataList(ProductSkuVO.class);
+                if(CollectionUtils.isNotEmpty(productSkuVOS))
+                {
+                    for(ProductSkuVO productSkuVO:productSkuVOS)
+                    {
+                        SearchUtils.flushToSearch(productSkuVO);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("操作失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

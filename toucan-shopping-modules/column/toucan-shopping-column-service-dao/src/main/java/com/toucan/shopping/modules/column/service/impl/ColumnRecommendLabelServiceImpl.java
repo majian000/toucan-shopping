@@ -32,4 +32,9 @@ public class ColumnRecommendLabelServiceImpl implements ColumnRecommendLabelServ
     public List<ColumnRecommendLabelVO> queryListByColumnId(Long columnId) {
         return columnRecommendLabelMapper.queryListByColumnId(columnId);
     }
+
+    @Override
+    public List<ColumnRecommendLabelVO> queryListByColumnIds(List<Long> columnIds) {
+        return columnRecommendLabelMapper.queryListByColumnIds(columnIds);
+    }
 }

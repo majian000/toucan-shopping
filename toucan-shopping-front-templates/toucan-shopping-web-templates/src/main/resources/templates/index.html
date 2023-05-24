@@ -65,11 +65,11 @@
                                         <#list category.children as cc>
                                             <#if cc.showStatus?? && cc.showStatus==1>
                                                 <div class="zj_l_c">
-                                                    <h2><a href="${cc.href!'#'}">${cc.name!}</a></h2>
+                                                    <h2><a href="${cc.href!'/api/product/g/search?cid='+cc.id?c}" class="cals">${cc.name!}</a></h2>
                                                     <div style="padding-left: 10px;">
                                                     <#list cc.children as ccc>
                                                         <#if ccc.showStatus?? && ccc.showStatus==1>
-                                                             <a href="${ccc.href!'#'}" class="ac" >${ccc.name!}</a>|
+                                                             <a href="${ccc.href!'/api/product/g/search?cid='+ccc.id?c}" class="ac cals" >${ccc.name!}</a>|
                                                          </#if>
                                                      </#list>
                                                     </div>
@@ -170,7 +170,7 @@
     <!--End 热门商品 End -->
 
     <!--Begin 限时特卖 Begin -->
-        <#include "/limited_time_sale.html"/>
+     <#include "/limited_time_sale.html"/>
     <!--End 限时特卖 End -->
 
 
@@ -179,7 +179,7 @@
     <!--End 栏目列表 End -->
     <!--Begin 猜你喜欢 Begin-->
 
-        <#include "/like_product.html"/>
+    <#--   <#include "/like_product.html"/> -->
     <!--End 猜你喜欢 End-->
 
     <#include "/footer.html"/>
@@ -187,7 +187,8 @@
 
 
 <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/index/banner.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/index/banner.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/index/index.js"></script>
 
 </body>
 

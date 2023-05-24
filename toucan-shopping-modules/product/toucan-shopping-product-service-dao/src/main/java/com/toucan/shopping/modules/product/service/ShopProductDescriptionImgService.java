@@ -11,7 +11,14 @@ public interface ShopProductDescriptionImgService {
 
     int saves(List<ShopProductDescriptionImg> entitys);
 
+    int save(ShopProductDescriptionImg entity);
+
     int deleteByShopProductId(Long shopProductId);
+
+    int deleteById(Long id);
+
+
+    int update(ShopProductDescriptionImg entity);
 
     /**
      * 根据商品审核ID和商品介绍ID查询
@@ -21,6 +28,20 @@ public interface ShopProductDescriptionImgService {
      */
     List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdOrderBySortDesc(Long productId, Long descriptionId);
 
+
+    /**
+     * 根据商品审核ID和商品介绍ID查询
+     * @param productId
+     * @param descriptionId
+     * @return
+     */
+    List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdAndTypeOrderBySortDesc(Long productId, Long descriptionId,Integer type);
+    /**
+     * 根据商品SKU的ID和商品介绍ID查询
+     * @param descriptionId
+     * @return
+     */
+    List<ShopProductDescriptionImgVO> queryVOListBySkuIdAndDescriptionIdOrderBySortDesc(Long skuId, Long descriptionId);
 
     int updateResumeByIdList(List<Long> idList);
 

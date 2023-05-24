@@ -1,6 +1,7 @@
 
 var g_goApproveSecond=3;
 var delFilePos=new Array();
+var delSkuDescriptionImgs= new Array();
 var g_descriptionTablePos=0;
 
 
@@ -89,9 +90,8 @@ function showSetp3Page()
 {
     var result = checkInputFunctionByContainerId("step2",2);
 
-    var skuTablePhotos = $(".skuTablePhotos");
-    var skuTableImgPaths = $(".skuTableImgPaths");
-    if(skuTablePhotos==null||skuTablePhotos.length<=0)
+    var skuTablePreviewPhotoImgs = $(".skuTablePreviewPhotoImgs");
+    if(skuTablePreviewPhotoImgs==null||skuTablePreviewPhotoImgs.length<=0)
     {
         $.message({
             message: "请选择商品属性",
@@ -99,19 +99,40 @@ function showSetp3Page()
         });
         return ;
     }
-    if(skuTablePhotos.length>0)
+    if(skuTablePreviewPhotoImgs.length>0)
     {
-        for(var i=0;i<skuTablePhotos.length;i++)
+        for(var i=0;i<skuTablePreviewPhotoImgs.length;i++)
         {
-            var skuTablePhoto = $(skuTablePhotos[i]).val();
-            var skuTableImgPath =  $(skuTableImgPaths[i]).val();
-            if((skuTablePhoto==null||skuTablePhoto=="")&&(skuTableImgPath==null||skuTableImgPath==""))
+            var skuTablePhoto = $(skuTablePreviewPhotoImgs[i]).attr("src");
+
+            if((skuTablePhoto==null||skuTablePhoto=="")||skuTablePhoto.indexOf("/static/lib/tupload/images/imgadd.png")!=-1)
             {
                 $.message({
                     message: "请上传销售规格中的商品图片",
                     type: 'error'
                 });
                 return ;
+            }
+        }
+    }
+
+    var roughWeights = $(".roughWeights");
+    if(roughWeights.length>0)
+    {
+        for(var i=0;i<roughWeights.length;i++)
+        {
+            var roughWeightVal = $(roughWeights[i]).val();
+            if(roughWeightVal!=null&&roughWeightVal!="")
+            {
+                if((!checkInput.decimal3w[0].test(roughWeightVal)))
+                {
+                    $.message({
+                        message: "销售规格中的毛重"+checkInput.decimal3w[1],
+                        type: 'error'
+                    });
+                    $(roughWeights[i]).focus();
+                    return ;
+                }
             }
         }
     }
@@ -289,9 +310,23 @@ function setSkuTableValue()
 
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
+                        if(skuVo.roughWeight!=null&&skuVo.roughWeight!="") {
+                            $("#productSkuVOList_" + skuRowIndex + "_roughWeight").val(skuVo.roughWeight);
+                        }
+                        if(skuVo.suttle!=null&&skuVo.suttle!="") {
+                            $("#productSkuVOList_" + skuRowIndex + "_suttle").val(skuVo.suttle);
+                        }
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
                         $("#skuPreviewPath_"+skuRowIndex).val(skuVo.productPreviewPath);
                         $("#skuTableuploading-tip" + skuRowIndex).show();
+
+                        if(skuVo.httpDescriptionImgPath!=null&&skuVo.httpDescriptionImgPath!="")
+                        {
+                            $("#skuDescriptionImg"+skuRowIndex).attr("src",skuVo.httpDescriptionImgPath);
+                            $("#skuDescriptionImgPath_"+skuRowIndex).val(skuVo.descriptionImgFilePath);
+                            $("#skuTableDescriptionuploading-tip" + skuRowIndex).show();
+
+                        }
 
                         $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
@@ -416,6 +451,9 @@ function initProductPublishForm(productApprove)
     if(productApprove.etractMethod!=null) {
         $(":checkbox[name='etractMethod'][value='" + productApprove.etractMethod + "']").prop("checked", "checked");
     }
+
+    $("#freightTemplateIdHidden").val(productApprove.freightTemplateId);
+    $("#selectFreightTemplate").val(productApprove.freightTemplateName);
 
     //设置选择店铺分类默认值
     if(productApprove.shopCategoryId!=null) {
@@ -589,6 +627,15 @@ $(function () {
     });
 
 
+    $("#selectFreightTemplate").bind( 'click' ,function(){
+
+        openSelectFreightTemplateDialog();
+        initFreightTemplatePagination();
+    });
+
+    $(".addFreigtTemplateButton").bind( 'click' ,function(){
+        window.open(basePath+"/page/freightTemplate/add");
+    });
 
 });
 
@@ -649,6 +696,19 @@ $("#ppfbtn").click(function() {
         }
     }
 
+    //删除SKU表格中没有商品介绍图的控件
+    var skuTableDescriptionUploadFiles = $(".skuTableDescriptionUploadFiles");
+    if(skuTableDescriptionUploadFiles.length>0)
+    {
+        for(var i=0;i<skuTableDescriptionUploadFiles.length;i++)
+        {
+            var skuTableUploadFile=$(skuTableDescriptionUploadFiles[i]);
+            if(skuTableUploadFile.val()==null||skuTableUploadFile.val()=="")
+            {
+                skuTableUploadFile.remove();
+            }
+        }
+    }
 
     //删除商品介绍表格中没有文件上传的控件
     var descriptionTableUploadFiles = $(".descriptionTableUploadFile");
@@ -668,6 +728,13 @@ $("#ppfbtn").click(function() {
     if($("#mainPhotoFile").val()==null||$("#mainPhotoFile").val()=="")
     {
         $("#mainPhotoFile").remove();
+    }
+
+
+    var skuDescriptionPhotoDelIdsArrayHidden = $("#skuDescriptionPhotoDelIdsArray");
+    if(skuDescriptionPhotoDelIdsArrayHidden!=null)
+    {
+        skuDescriptionPhotoDelIdsArrayHidden.val(delSkuDescriptionImgs.join(","));
     }
 
     $('#productReleaseForm').ajaxSubmit({
@@ -722,7 +789,7 @@ function appendDescriptionTableRow(descriptionImg)
             "\n" +
             "                                                                <div class=\"description-table-uploading-img\">\n" +
             "                                                                    <ul class=\"picView-magnify-list\">\n" +
-            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
             "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\""+descriptionImg.httpFilePath+"\" data-caption=\"图片预览\">\n" +
             "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\""+descriptionImg.httpFilePath+"\" style=\"width:100%;height:100%\">            </div>\n" +
             "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
@@ -752,7 +819,7 @@ function appendDescriptionTableRow(descriptionImg)
             "\n" +
             "                                                                <div class=\"description-table-uploading-img\">\n" +
             "                                                                    <ul class=\"picView-magnify-list\">\n" +
-            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片上传\">\n" +
             "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
             "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\"/static/lib/tupload/images/imgadd.png\" style=\"width:100%;height:100%\">            </div>\n" +
             "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +

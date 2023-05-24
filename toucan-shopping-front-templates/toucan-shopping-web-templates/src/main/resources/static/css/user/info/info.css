@@ -150,7 +150,7 @@
 }
 
 .form-group .input-k .jzzt a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -162,7 +162,7 @@
     font-size:16px;
     line-height:32px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
     FONT-FAMILY: "Microsoft Yahei";
 }
 
@@ -286,6 +286,7 @@
     width:970px;
     float:right;
     overflow:hidden;
+    min-height:700px;
 }
 
 .user-right .personal-tou{
@@ -355,7 +356,7 @@
 }
 
 .user-right .personal-tou .personal-info p span a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .personal-tou .personal-info p i{
@@ -406,7 +407,7 @@
 }
 
 .user-right .info-list a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .info-list dl dt{
@@ -435,7 +436,7 @@
 }
 
 .user-right .info-list dl dt a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .info-list dl dd{
@@ -509,12 +510,12 @@
     font-size:14px;
     line-height:30px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color: #ff471a;
 }
 
 .info-list .user-order-list .user-order-btn a:hover{
     color:#fff;
-    background-color:#0768cb;
+    background-color: #ff3200;
 }
 
 .user-right dl dt .dt-L{
@@ -529,6 +530,19 @@
     width:485px;
     overflow:hidden;
     border-right:solid 1px #dfdfdf;
+}
+
+
+.uc_bcars li{
+    width:170px;
+}
+.uc_bcars .mp_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    overflow:hidden;
+    -webkit-box-orient: vertical;
 }
 
 .user-right dl dd .dt-L-div li{
@@ -587,7 +601,7 @@
 }
 
 .user-right-title span .active{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 /*payment.html*/
 .payment-con{
@@ -772,13 +786,13 @@
 
 .box-ft .next{
     color:#fff;
-    border:solid 1px #1d7ad9;
-    background-color:#1d7ad9;
+    border:solid 1px #ff4e00;
+    background-color:#ff4e00;
 }
 
 .box-ft .next:hover{
-    border:solid 1px #0864c2;
-    background-color:#0864c2;
+    border:solid 1px #ff4e00;
+    background-color:#ff4e00;
 }
 
 /* checkout.HTML */
@@ -936,7 +950,7 @@
 }
 
 .e-invoice-tip a{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -961,7 +975,7 @@
 }
 
 .checkout-box .box-bd .invoice-info-0 dl a{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -1039,7 +1053,7 @@
 }
 
 .box-bd .checkout-goods-list dd .item-row a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -1445,8 +1459,8 @@
     margin-top:5px;
     margin-right:10px;
     padding-left:40px;
-    background-color:#1d7ad9;
-    border:solid 1px #1d7ad9;
+    background-color:#ff4e00;
+    border:solid 1px #ff4e00;
     background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
     background-position: 18px center;
@@ -1467,8 +1481,8 @@
     margin:auto;
     margin-top:5px;
     padding-left:40px;
-    background-color:#1d7ad9;
-    border:solid 1px #1d7ad9;
+    background-color:#ff4e00;
+    border:solid 1px #ff4e00;
 }
 
 .favorite .hidden-btn .btn3:hover{
@@ -1655,7 +1669,7 @@
     margin-right:30px;
     line-height:42px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
 }
 
 a.review-btn-tj{
@@ -1932,7 +1946,7 @@ a.review-btn-tj{
     padding-left:30px;
     margin-left:30px;
     _margin-left:15px;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
     FONT-FAMILY: "Microsoft Yahei";
     background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
@@ -2081,7 +2095,7 @@ a.review-btn-tj{
     font-size:14px;
     line-height:32px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
 }
 
 .order dd .order-btn .lifk-btn:hover{
@@ -2560,4 +2574,33 @@ a.review-btn-tj{
     color:#999;
     font-weight:bold;
     background-color:#ededed;
+}
+
+.modifyPwd-sendVC{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+.modifyPwd-sendVC:hover{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+
+.bindEmail-sendVC{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
+}
+
+.bindEmail-sendVC:hover{
+    color:blue;
+    cursor: pointer;
+    font-size: 13px;
+    FONT-FAMILY: "Microsoft Yahei";
 }

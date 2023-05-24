@@ -9,7 +9,7 @@
         <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         <result column="attribute_value_group" jdbcType="VARCHAR" property="attributeValueGroup" />
-        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
         <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
@@ -19,7 +19,7 @@
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
-        <result column="brank_id" jdbcType="BIGINT" property="brankId" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="only_name" jdbcType="VARCHAR" property="onlyName" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
@@ -29,7 +29,17 @@
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
         <result column="product_no" jdbcType="VARCHAR" property="productNo" />
+        <result column="rough_weight" jdbcType="DECIMAL" property="roughWeight" />
+        <result column="suttle" jdbcType="DECIMAL" property="suttle" />
+        <result column="last_restore_transaction_id" jdbcType="VARCHAR" property="lastRestoreTransactionId" />
 
+    </resultMap>
+
+    <resultMap id="productSkuBuyStatusVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuStatusVO">
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="attribute_value_group" jdbcType="VARCHAR" property="attributeValueGroup" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
     </resultMap>
 
     <resultMap id="productSkuVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuVO" extends="productSkuMap">
@@ -43,60 +53,117 @@
             and t.shop_product_id = #{shopProductId}
         </if>
 
+        <if test="shopProductUuid!=null and shopProductUuid!=''">
+            and t.shop_product_uuid = #{shopProductUuid}
+        </if>
+
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+        <if test="uuid!=null and uuid!=''">
+            and t.uuid = #{uuid}
+        </if>
+
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="name!=null and name!='' ">
+            <!-- 这种不走索引但是为了用户体验只能如此-->
+            and t.name  like concat('%',#{name},'%')
+        </if>
 
 
         and t.delete_status = 0
 
     </sql>
 
+    <sql id="queryListWhere">
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="status!=null">
+            and t.status = #{status}
+        </if>
+
+        <if test="shopProductId!=null">
+            and t.shop_product_id = #{shopProductId}
+        </if>
+
+        <if test="shopProductUuid!=null">
+            and t.shop_product_uuid = #{shopProductUuid}
+        </if>
+
+        <if test="shopId!=null">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="shopProductIdList!=null and shopProductIdList.size>0">
+            and t.shop_product_id in
+            <foreach item="item" index="index" collection="shopProductIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="appCode!=null">
+            and t.app_code = #{appCode}
+        </if>
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
+
+        and t.delete_status = 0
+    </sql>
 
     <select id="queryList" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuVO">
         select t.* from t_product_sku t
         <where>
             1=1
-
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-
-            <if test="status!=null">
-                 and t.status = #{status}
-            </if>
-
-            <if test="shopProductId!=null">
-                and t.shop_product_id = #{shopProductId}
-            </if>
-
-            <if test="shopProductUuid!=null">
-                and t.shop_product_uuid = #{shopProductUuid}
-            </if>
-
-            <if test="appCode!=null">
-                and t.app_code = #{appCode}
-            </if>
-
-            and t.delete_status = 0
-
+            <include refid="queryListWhere" />
         </where>
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no)
-        values(#{id},#{uuid},#{productUuid},#{productId},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId},#{productNo})
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brand_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no,rough_weight,suttle)
+        values(#{id},#{uuid},#{productUuid},#{productId},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brandId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId},#{productNo},#{roughWeight},#{suttle})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no)
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brand_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no,rough_weight,suttle)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.uuid},#{entity.productUuid},#{entity.productId},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
-            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId},#{entity.productNo})
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brandId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId},#{entity.productNo},#{entity.roughWeight},#{entity.suttle})
         </foreach>
 
     </insert>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.ProductSku">
+        update t_product_sku set attributes=#{attributes} , attribute_value_group=#{attributeValueGroup},price=#{price},
+        status=#{status},remark=#{remark},update_date=sysdate(),update_user_id=#{updateUserId},brand_id=#{brandId},
+        name=#{name},only_name=#{onlyName},stock_num=#{stockNum},product_preview_path=#{productPreviewPath},
+        category_id=#{categoryId},shop_category_id=#{shopCategoryId},product_no=#{productNo},
+        rough_weight=#{roughWeight},suttle=#{suttle}
+         where id = #{id} and delete_status = 0
+    </update>
 
 
     <select id="queryListPage" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.page.ProductSkuPageInfo">
@@ -113,7 +180,16 @@
                 </if>
             </when>
             <otherwise>
-                order by t.id desc
+                <if test="orderColumns!=null and orderColumns.size>0 ">
+                    order by
+                    <foreach item="item" index="index" collection="orderColumns" open=""  close="" separator=",">
+                        t.${item}
+                    </foreach>
+
+                    <if test="orderSort!=null and orderSort!=''">
+                        ${orderSort}
+                    </if>
+                </if>
             </otherwise>
         </choose>
 
@@ -132,7 +208,7 @@
 
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
-        select * from t_product_sku where id=#{skuId} for update
+        select * from t_product_sku where id=#{skuId} and delete_status = 0  for update
     </select>
 
 
@@ -150,6 +226,15 @@
         select * from t_product_sku where shop_product_id=#{shopProductId} and delete_status=0 and status=1
     </select>
 
+    <select id="queryVOListByShopProductIdAndStatus" resultMap="productSkuVOMap" >
+        select * from t_product_sku where
+         shop_product_id=#{shopProductId}
+         and delete_status=0
+        <if test="status!=-1">
+            and status = #{status}
+        </if>
+    </select>
+
 
     <update id="deleteByShopProductId">
         update t_product_sku  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
@@ -161,11 +246,97 @@
         select * from t_product_sku where id=#{skuId} and delete_status=0 and status = 1 limit 0,1
     </select>
 
+    <select id="queryVOById" resultMap="productSkuVOMap" parameterType="java.lang.Long">
+        select * from t_product_sku where id=#{id} and delete_status=0  limit 0,1
+    </select>
+
+    <select id="queryVOByIdAndStatus" resultMap="productSkuVOMap" >
+        select * from t_product_sku where
+        id=#{id}
+        and delete_status=0
+        <if test="status!=-1">
+            and status = #{status}
+        </if>
+         limit 0,1
+    </select>
+
 
 
     <select id="queryFirstOneByShopProductId" resultMap="productSkuVOMap" parameterType="java.lang.Long">
         select * from t_product_sku where shop_product_id=#{shopProductId}  and delete_status=0 and status = 1 order by create_date asc limit 0,1
     </select>
 
+    <select id="queryFirstOneByShopProductIdAndAttrPath" resultMap="productSkuVOMap" >
+        select * from t_product_sku where shop_product_id=#{shopProductId}
+         and delete_status=0
+         and status = 1
+         and stock_num  <![CDATA[ > ]]> 0
 
+        <if test="attrPath!=null and attrPath!=''">
+            and attribute_value_group like concat(#{attrPath},'%')
+        </if>
+         order by create_date asc limit 0,1
+    </select>
+
+
+    <select id="queryFirstOneByShopProductIdAndStatus" resultMap="productSkuVOMap" >
+        select * from t_product_sku where shop_product_id=#{shopProductId}  and delete_status=0
+        <if test="status!=-1">
+            and t.status = #{status}
+        </if>
+        order by create_date asc limit 0,1
+    </select>
+
+
+    <select id="queryProductSkuListByShopProductUuid" resultMap="productSkuVOMap" parameterType="java.lang.String" >
+        select * from t_product_sku where shop_product_uuid=#{shopProductUuid}  and delete_status=0 order by create_date asc
+    </select>
+
+    <select id="queryProductSkuListByShopProductId" resultMap="productSkuVOMap" parameterType="java.lang.Long" >
+        select * from t_product_sku where shop_product_id=#{shopProductId}  and delete_status=0 order by create_date asc
+    </select>
+
+
+    <update id="updateStatusByShopProductId" >
+        update t_product_sku  set status=#{status} where shop_product_id=#{shopProductId} and shop_id=#{shopId} and delete_status=0
+    </update>
+
+    <update id="updateStatusById" >
+        update t_product_sku  set status=#{status} where id=#{id} and shop_id=#{shopId} and delete_status=0
+    </update>
+
+    <select id="queryShelvesListByIdList" resultMap="productSkuMap">
+        select * from t_product_sku t
+         where
+          t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+           and t.delete_status=0 and t.status = 1
+    </select>
+
+    <update id="updateStock" >
+        update t_product_sku set stock_num=#{stockNum} where id=#{id} and delete_status=0
+    </update>
+
+    <update id="updatePrice" >
+        update t_product_sku set price=#{price} where id=#{id} and delete_status=0
+    </update>
+
+    <update id="inventoryReduction" >
+        update t_product_sku set stock_num=stock_num-#{stockNum} where id=#{skuId} and delete_status=0 and status=1 and stock_num>0
+    </update>
+
+    <update id="restoreStock" >
+        update t_product_sku set stock_num=stock_num+#{stockNum} where id=#{skuId} and delete_status=0
+    </update>
+
+    <select id="queryShelvesCountByShopProductId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select count(*) from t_product_sku where shop_product_id=#{shopProductId} and delete_status=0 and status=1
+    </select>
+
+
+    <select id="queryShelvesBuyStatus" resultMap="productSkuBuyStatusVOMap">
+      select t.id,t.attribute_value_group,t.stock_num,t.status from t_product_sku t where   t.delete_status=0   and t.shop_product_id = #{shopProductId}
+    </select>
 </mapper>

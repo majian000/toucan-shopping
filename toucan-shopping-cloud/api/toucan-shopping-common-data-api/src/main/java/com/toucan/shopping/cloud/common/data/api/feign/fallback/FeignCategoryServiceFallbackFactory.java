@@ -83,6 +83,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
+            public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryTreeChildByPid faild params:{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO findIdPathById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
@@ -168,6 +183,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryMiniTree(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryMiniTree faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
@@ -319,6 +349,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryNextOneLevelChildListByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryNextOneLevelChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;

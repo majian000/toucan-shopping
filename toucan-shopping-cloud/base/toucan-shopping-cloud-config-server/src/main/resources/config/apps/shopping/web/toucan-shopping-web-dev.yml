@@ -2,6 +2,11 @@
 
 server:
   port: 8083
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
 spring:
   application:
     name: toucan-shopping-web #应用名称
@@ -70,6 +75,11 @@ feign:
         connectTimeout: 30000
         readTimeout: 30000
 hystrix:
+  threadpool:
+    default:
+      coreSize: 80 #最大并发数
+      maxQueueSize: 1500 #最大队列长度
+      queueSizeRejectionThreshold: 1000
   command:
     default:
       execution:
@@ -104,6 +114,9 @@ ribbon:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
+  #雪花算法ID相关
+  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端配置
     pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
     freemarker:
@@ -146,11 +159,23 @@ toucan:
       enabled: true
       exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
   modules:
+    email: #邮件模块
+      enabled: true
+      protocol: smtp
+      smtp: #smtp服务器配置
+        host: smtp.163.com #SMTP服务器
+        auth: true #SMTP认证
+        port: 465
+        socketFactory-class: javax.net.ssl.SSLSocketFactory
+        socketFactory-fallback: false
+      sender: mmdrss@163.com #发件人
+      sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
     log: #日志模块
       email:
         enabled: false
         title: ——商城PC端——异常邮件
         ignore-exception-list[0]: javax.mail.MessagingException
+        ignore-exception-list[1]: com.toucan.shopping.modules.exception.user.UserHeaderException
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器

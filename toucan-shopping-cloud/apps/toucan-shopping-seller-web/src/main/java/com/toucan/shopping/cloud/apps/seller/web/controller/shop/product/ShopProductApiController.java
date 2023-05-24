@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
@@ -22,6 +23,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
@@ -81,7 +83,6 @@ public class ShopProductApiController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
-
 
     private String[] imageExtScope = new String[]{".JPG", ".JPEG", ".PNG"};
 
@@ -164,6 +165,10 @@ public class ShopProductApiController extends BaseController {
                             for (int i = 0; i < list.size(); i++) {
                                 ShopProductVO shopProductVO = list.get(i);
 
+                                if(StringUtils.isNotEmpty(shopProductVO.getMainPhotoFilePath()))
+                                {
+                                    shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
+                                }
 
                                 //设置店铺分类ID
                                 categoryExists = false;
@@ -246,6 +251,47 @@ public class ShopProductApiController extends BaseController {
             resultObjectVO.setMsg("查询失败,请稍后重试");
         }
 
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 删除
+     * @param queryShopProductApproveVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO deleteByApproveId(HttpServletRequest request,@RequestBody ShopProductApproveVO queryShopProductApproveVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            String userMainId="-1";
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            //查询店铺
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
+                    ShopProductVO shopProductVO = new ShopProductVO();
+                    shopProductVO.setId(queryShopProductApproveVO.getId());
+                    shopProductVO.setShopId(sellerShopVORet.getId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductVO);
+                    resultObjectVO = feignShopProductService.deleteById(requestJsonVO);
+
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("删除失败,请稍后重试");
+        }
         return resultObjectVO;
     }
 

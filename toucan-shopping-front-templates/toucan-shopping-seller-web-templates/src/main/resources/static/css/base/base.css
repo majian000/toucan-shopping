@@ -12,7 +12,7 @@ img{border:0;vertical-align: middle;}
 .clear{clear:both;line-height:0;font-size:0;height:0}
 .clearfix:after{display:block;visibility:hidden;clear:both;height:0;content:"."}
 .w1200 { width:90%; height:auto; display:table; margin:0 auto; position:relative; }
-.body_box { width:90%; height:auto; display:table; padding-bottom:25px; margin:0 auto; }
+.body_box { width:90%; height:auto; display:table; padding-bottom:25px; margin:0 auto;min-height: 700px; }
 .right_content { width:80%; height:auto; display:table; padding-left:1%; }
 .right_bg { width:100%; height:auto; display:table; background:#fff; }
 .chec_text { color:#999; }
@@ -133,7 +133,7 @@ img{border:0;vertical-align: middle;}
 
 /*最新审核产品*/
 .to_new_product { width:100%; height:auto; display:table; padding-bottom:20px; padding-left:20px; }
-.to_new_product ul li { width:227px; padding:10px; height:auto; display:table; float:left; border-left:1px solid #eee; border-top:1px solid #eee; border-bottom:1px solid #eee; }
+.to_new_product ul li { width:227px; padding:10px; height:auto; display:table; float:left; border-left:1px solid #eee; border-top:1px solid #eee; border-bottom:1px solid #eee;margin-left: 2%; }
 .to_new_product ul li .pic_box { width:207px; height:207px; display:block; position:relative; overflow:hidden; background:#000; }
 .to_new_product ul li .pic_box .btn { bottom:-36px; left:50%; margin-left:-49px; position:absolute; padding:.2rem 1.4rem; }
 .to_new_product ul li img { width:207px; height:207px; }

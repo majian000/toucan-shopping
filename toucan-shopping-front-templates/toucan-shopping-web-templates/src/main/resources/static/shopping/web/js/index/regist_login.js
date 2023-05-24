@@ -22,6 +22,8 @@ $(function () {
                 }
                 $("#userInfo").show();
                 $("#messageCenterMenu").show();
+
+                showBuyCarPanel();
             } else {
 
                 $("#registOrLogin").show();
@@ -49,3 +51,12 @@ $(function () {
         }
     });
 });
+
+function showBuyCarPanel()
+{
+    var buyCarLoginTip = $(".buy_car_login_tip");
+    if(buyCarLoginTip!=null&&buyCarLoginTip.length>0)
+    {
+        $(buyCarLoginTip).html("加载中...");
+    }
+}

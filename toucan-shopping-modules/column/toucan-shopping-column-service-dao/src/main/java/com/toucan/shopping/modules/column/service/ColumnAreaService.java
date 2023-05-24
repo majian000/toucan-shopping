@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.service;
 
 import com.toucan.shopping.modules.column.entity.ColumnArea;
+import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 
 import java.util.List;
 
@@ -13,5 +14,9 @@ public interface ColumnAreaService {
 
 
     int deleteByColumnId(Long columnId);
+
+    List<ColumnAreaVO> queryListByColumnId(Long columnId);
+
+    List<ColumnAreaVO> queryListByColumnIds(List<Long> columnIds);
 
 }
