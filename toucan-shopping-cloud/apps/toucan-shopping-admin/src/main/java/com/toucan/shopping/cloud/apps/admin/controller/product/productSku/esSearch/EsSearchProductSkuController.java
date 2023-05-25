@@ -55,7 +55,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/product/productSku/esSearch")
-public class ESProductSkuController extends UIController {
+public class EsSearchProductSkuController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
