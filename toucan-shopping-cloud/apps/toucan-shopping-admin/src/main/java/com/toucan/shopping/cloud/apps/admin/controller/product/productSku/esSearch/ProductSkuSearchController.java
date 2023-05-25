@@ -54,8 +54,8 @@ import java.util.*;
  * @author majian
  */
 @Controller
-@RequestMapping("/product/productSku/esSearch")
-public class EsSearchProductSkuController extends UIController {
+@RequestMapping("/product/productSku/search")
+public class ProductSkuSearchController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -109,9 +109,9 @@ public class EsSearchProductSkuController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/productSku/esSearch/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/productSku/search/listPage",feignFunctionService);
         request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
-        return "pages/product/productSku/esSearch/list.html";
+        return "pages/product/productSku/search/list.html";
     }
 
 

@@ -182,7 +182,7 @@
 
         table.render({
             elem: '#productSkuTable',
-            url: "[[@{/}]]product/productSku/list",
+            url: "[[@{/}]]product/productSku/search/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -259,7 +259,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                url:"[[@{/}]]product/productSku/search/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -295,7 +295,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/productSku/es/query/category/tree/pid",
+                url:"[[@{/}]]product/productSku/search/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
@@ -315,44 +315,6 @@
          * toolbar监听事件
          */
         table.on('toolbar(productSkuTableFilter)', function (obj) {
-             if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
-                var checkStatus = table.checkStatus('productSkuTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                var reqData= new Array();
-                for(var i=0;i<data.length;i++)
-                {
-                    reqData.push({id:data[i].id});
-                }
-                layer.confirm('确定同步到搜索?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]product/productSku/flush/search",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify({productSkuVOList:reqData}),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('productSkuTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }
         });
 
 
@@ -379,7 +341,7 @@
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/productSku/detailPage/'+id
+                content: '[[@{/}]]product/productSku/search/detailPage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);
