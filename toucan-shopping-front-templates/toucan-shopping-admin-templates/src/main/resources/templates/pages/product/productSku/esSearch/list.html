@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+        .ztree *{
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
+    </style>
+
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layui-layout">
+    <div class="layui-side ">
+
+        <div class="layuimini-container" style="height:90%">
+            <div class="layuimini-main">
+                <div class="layui-card">
+                    <div class="layui-card-header">分类树</div>
+                    <div class="layui-card-body" >
+                        <ul id="categoryTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-body">
+
+        <div class="layuimini-container">
+            <div class="layuimini-main">
+
+                <fieldset class="table-search-fieldset">
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                            <input type="hidden" id="categoryId" name="categoryId">
+                            <div class="layui-form-item">
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">SKU ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="id" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">SKU UUID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="uuid" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">上架状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="status"  name="status" lay-search="">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="0" >未上架</option>
+                                            <option value="1" >已上架</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺商品ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopProductId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width:140px;">店铺商品UUID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopProductUuid" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">商品名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <script type="text/html" id="toolbarDemo">
+                    <div class="layui-btn-container">
+                        <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                    </div>
+                </script>
+
+                <table class="layui-hide" id="productSkuTable" lay-filter="productSkuTableFilter"></table>
+
+                <script type="text/html" id="productSkuTableBar">
+                    <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="pcProductSkuPreviewPage" th:value="${pcProductSkuPreviewPage}"/>
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree','dtree','jquery'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var loaddingTree;
+        var dtree = layui.dtree;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+
+        table.render({
+            elem: '#productSkuTable',
+            url: "[[@{/}]]product/productSku/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id',  title: '商品SKUID', hide:true, width: 260},
+                    {field: 'httpMainPhoto',width:150,  title: '商品主图',
+                        templet: function (row) {
+                            if(row.httpMainPhoto!=null) {
+                                return "<a href='" + row.httpMainPhoto + "' target='_blank'><img src='" + row.httpMainPhoto + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
+                        templet: function (row) {
+                            return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
+                        }},
+                    {field: 'price', width: 150, title: '价格'},
+                    {field: 'stockNum', width: 150, title: '库存数量'},
+                    {field: 'status',width: 150,   title: '上架状态',
+                        templet: function (row) {
+                            if(row.status == null){
+                                return "";
+                            }
+                            if(row.status == "0"){
+                                return "<a style='color:red'>未上架</a>";
+                            }
+                            if(row.status == "1"){
+                                return "<a style='color:green'>已上架</a>";
+                            }
+                            return row.status;
+                        }
+                    },
+                    {field: 'createDate', width: 200, title: '发布时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#productSkuTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('productSkuTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#categoryId").val("");
+            $("#userSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: categoryTreeClick
+            }
+        };
+
+        function categoryTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+            $("#categoryId").val(treeNode.id);
+            $("#queryButton").click();
+        }
+
+        initCategoryTree();
+
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
+        //初始化树
+        function initCategoryTree(){
+
+            loaddingTree = layer.load();
+            $.ajax({
+                url:"[[@{/}]]product/productSku/es/query/category/tree/pid",
+                type:"POST",
+                dataType: "json",
+                success: function(data){
+                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingTree);
+                }
+            });
+        }
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(productSkuTableFilter)', function (obj) {
+             if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
+                var checkStatus = table.checkStatus('productSkuTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                var reqData= new Array();
+                for(var i=0;i<data.length;i++)
+                {
+                    reqData.push({id:data[i].id});
+                }
+                layer.confirm('确定同步到搜索?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/productSku/flush/search",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:JSON.stringify({productSkuVOList:reqData}),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('productSkuTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+
+        //监听表格复选框选择
+        table.on('checkbox(productSkuTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(productSkuTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'detail') {
+                openDetailDialog(data.id);
+            }
+        });
+
+
+        function openDetailDialog(id)
+        {
+            var index = layer.open({
+                title: '商品详情',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]product/productSku/detailPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
+
+
+        function previewPc(data)
+        {
+            var pcProductSkuPreviewPage = $("#pcProductSkuPreviewPage").val();
+            window.open(pcProductSkuPreviewPage+data.id)
+        }
+
+
+    });
+</script>
+
+
+</body>
+</html>

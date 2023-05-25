@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.app.config;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.content.constant.BannerRedisKey;
@@ -22,7 +23,7 @@ import javax.annotation.PostConstruct;
 public class AfterStartConfig {
 
     @Autowired
-    public ProductSearchService productSearchService;
+    public FeignProductSearchService feignProductSearchService;
 
     @Autowired
     public Toucan toucan;
@@ -40,7 +41,7 @@ public class AfterStartConfig {
     public void initAppCode()
     {
         SearchUtils.toucan=toucan;
-        SearchUtils.productSearchService=productSearchService;
+        SearchUtils.feignProductSearchService=feignProductSearchService;
         SearchUtils.feignCategoryService=feignCategoryService;
         SearchUtils.feignBrandService=feignBrandService;
     }

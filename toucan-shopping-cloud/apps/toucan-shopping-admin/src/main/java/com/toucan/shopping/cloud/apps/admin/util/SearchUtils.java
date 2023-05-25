@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.util;
 
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -22,7 +23,7 @@ import java.util.List;
 public class SearchUtils {
 
 
-    public static ProductSearchService productSearchService;
+    public static FeignProductSearchService feignProductSearchService;
 
     public static Toucan toucan;
 
@@ -42,7 +43,14 @@ public class SearchUtils {
                 && productSkuVO.getStatus() != null
                 && productSkuVO.getStatus().intValue() == 1
                 && productSkuVO.getStockNum().intValue() > 0) {
-            List<ProductSearchResultVO> productSearchResultVOS = productSearchService.queryBySkuId(productSkuVO.getId());
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuVO.getId());
+            ResultObjectVO resultObjectVO  = feignProductSearchService.queryBySkuId(requestJsonVO);
+            if(!resultObjectVO.isSuccess())
+            {
+                throw new IllegalArgumentException(resultObjectVO.getMsg());
+            }
+            List<ProductSearchResultVO> productSearchResultVOS = resultObjectVO.formatDataList(ProductSearchResultVO.class);
             ProductSearchResultVO productSearchResultVO = new ProductSearchResultVO();
             productSearchResultVO.setId(productSkuVO.getId());
             productSearchResultVO.setSkuId(productSkuVO.getId());
@@ -57,8 +65,8 @@ public class SearchUtils {
             //查询品牌信息
             BrandVO queryBrand = new BrandVO();
             queryBrand.setId(productSkuVO.getBrandId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
-            ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
+            resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
                 if (CollectionUtils.isNotEmpty(brands)) {
@@ -94,14 +102,16 @@ public class SearchUtils {
             }
 
             if (CollectionUtils.isEmpty(productSearchResultVOS)) {
-                productSearchService.save(productSearchResultVO);
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO);
+                feignProductSearchService.save(requestJsonVO);
             } else {
-                productSearchService.update(productSearchResultVO);
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO);
+                feignProductSearchService.update(requestJsonVO);
             }
         }else if(productSkuVO.getDeleteStatus().intValue() == 1)
         {
-            List<Long> deleteFaildList = new ArrayList<>();
-            productSearchService.removeById(productSkuVO.getId(),deleteFaildList);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuVO.getId());
+            feignProductSearchService.removeById(requestJsonVO);
         }
 
     }
