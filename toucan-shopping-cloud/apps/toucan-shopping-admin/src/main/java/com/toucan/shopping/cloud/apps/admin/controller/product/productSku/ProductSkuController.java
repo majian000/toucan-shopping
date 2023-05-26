@@ -32,7 +32,6 @@ import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
-import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -93,8 +92,6 @@ public class ProductSkuController extends UIController {
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
-    @Autowired
-    private ProductSearchService productSearchService;
 
     @Autowired
     private EventPublishService eventPublishService;

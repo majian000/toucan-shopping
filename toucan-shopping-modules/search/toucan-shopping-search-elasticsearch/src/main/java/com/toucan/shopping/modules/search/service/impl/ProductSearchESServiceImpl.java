@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.search.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
@@ -163,6 +164,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             pageInfo.setList(queryResult);
             pageInfo.setPage(productSearchVO.getPage());
             pageInfo.setSize(productSearchVO.getSize());
+            pageInfo.setTotal(0L);
             return pageInfo;
         }
 
@@ -285,6 +287,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
     @Override
     public void save(ProductSearchResultVO productSearchResultVO) throws IOException {
+        productSearchResultVO.setCreateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
         IndexRequest request = new IndexRequest(ProductIndex.PRODUCT_SKU_INDEX).id(String.valueOf(productSearchResultVO.getSkuId())).source(JSONObject.toJSONString(productSearchResultVO), XContentType.JSON);
 
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
@@ -299,6 +302,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             field.setAccessible(true);
             updateBody.field(field.getName(),field.get(productSearchResultVO));
         }
+        productSearchResultVO.setUpdateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
         updateBody.endObject();
         request.doc(updateBody);
         UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);

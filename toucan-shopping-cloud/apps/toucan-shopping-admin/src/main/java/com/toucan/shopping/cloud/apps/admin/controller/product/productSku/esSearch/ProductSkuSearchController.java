@@ -12,6 +12,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -19,6 +20,7 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
@@ -34,7 +36,8 @@ import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
-import com.toucan.shopping.modules.search.service.ProductSearchService;
+import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
+import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -69,37 +72,14 @@ public class ProductSkuSearchController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
-
-    @Autowired
     private FeignCategoryService feignCategoryService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private FeignProductSearchService feignProductSearchService;
 
-    @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
-
-    @Autowired
-    private FeignSellerShopService feignSellerShopService;
-
-    @Autowired
-    private FeignProductSkuService feignProductSkuService;
-
-    @Autowired
-    private FeignProductSpuService feignProductSpuService;
-
-    @Autowired
-    private ProductSearchService productSearchService;
-
-    @Autowired
-    private EventPublishService eventPublishService;
-
-    @Autowired
-    private FeignMessageUserService feignMessageUserService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -112,6 +92,47 @@ public class ProductSkuSearchController extends UIController {
         super.initButtons(request,toucan,"/product/productSku/search/listPage",feignFunctionService);
         request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
         return "pages/product/productSku/search/list.html";
+    }
+
+
+
+    /**
+     * 查询列表
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO list(HttpServletRequest request, ProductSearchVO productSearchVO)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchVO);
+            ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);
+                tableVO.setCount(pageInfo.getTotal());
+                List<ProductSearchResultVO> list = pageInfo.formatDataList(ProductSearchResultVO.class);
+                if(CollectionUtils.isNotEmpty(list))
+                {
+                    for(ProductSearchResultVO productSearchResultVO:list)
+                    {
+                        productSearchResultVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSearchResultVO.getProductPreviewPath());
+                    }
+                }
+                if (tableVO.getCount() > 0) {
+                    tableVO.setData((List) list);
+                }
+
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
     }
 
 

@@ -10,7 +10,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

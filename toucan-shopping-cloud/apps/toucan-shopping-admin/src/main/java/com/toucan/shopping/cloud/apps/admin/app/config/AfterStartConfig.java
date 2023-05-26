@@ -8,7 +8,6 @@ import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchServ
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.content.constant.BannerRedisKey;
-import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

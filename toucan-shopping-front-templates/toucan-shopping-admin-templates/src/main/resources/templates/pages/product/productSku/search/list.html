@@ -52,53 +52,13 @@
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
                         <form class="layui-form layui-form-pane" id="userSearchForm" action="">
-                            <input type="hidden" id="categoryId" name="categoryId">
-                            <div class="layui-form-item">
-
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">SKU ID</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="id" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">SKU UUID</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="uuid" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">店铺ID</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">上架状态</label>
-                                    <div class="layui-input-inline">
-                                        <select id="status"  name="status" lay-search="">
-                                            <option value="-1" selected>全部</option>
-                                            <option value="0" >未上架</option>
-                                            <option value="1" >已上架</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="hidden" id="categoryId" name="cid">
                             <div class="layui-form-item">
 
                                 <div class="layui-inline">
                                     <label class="layui-form-label">店铺商品ID</label>
                                     <div class="layui-input-inline">
                                         <input type="text" name="shopProductId" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label" style="width:140px;">店铺商品UUID</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="shopProductUuid" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -198,10 +158,10 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '商品SKUID', hide:true, width: 260},
-                    {field: 'httpMainPhoto',width:150,  title: '商品主图',
+                    {field: 'httpProductPreviewPath',width:150,  title: '商品主图',
                         templet: function (row) {
-                            if(row.httpMainPhoto!=null) {
-                                return "<a href='" + row.httpMainPhoto + "' target='_blank'><img src='" + row.httpMainPhoto + "' width='100' height='100'  /></a>";
+                            if(row.httpProductPreviewPath!=null) {
+                                return "<a href='" + row.httpProductPreviewPath + "' target='_blank'><img src='" + row.httpProductPreviewPath + "' width='100' height='100'  /></a>";
                             }
                             return "";
                         }},
@@ -210,22 +170,13 @@
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
                         }},
                     {field: 'price', width: 150, title: '价格'},
-                    {field: 'stockNum', width: 150, title: '库存数量'},
-                    {field: 'status',width: 150,   title: '上架状态',
-                        templet: function (row) {
-                            if(row.status == null){
-                                return "";
-                            }
-                            if(row.status == "0"){
-                                return "<a style='color:red'>未上架</a>";
-                            }
-                            if(row.status == "1"){
-                                return "<a style='color:green'>已上架</a>";
-                            }
-                            return row.status;
-                        }
-                    },
-                    {field: 'createDate', width: 200, title: '发布时间'},
+                    {field: 'brandName', width: 150, title: '品牌名称'},
+                    {field: 'brandId', width: 150, title: '品牌ID'},
+                    {field: 'categoryName', width: 150, title: '分类名称'},
+                    {field: 'categoryId', width: 150, title: '分类ID'},
+                    {field: 'attributeValueGroup', width: 150, title: '属性值'},
+                    {field: 'createDate', width: 240, title: '创建时间'},
+                    {field: 'updateDate', width: 240, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#productSkuTableBar', align: "center"}
                 ]
             ],

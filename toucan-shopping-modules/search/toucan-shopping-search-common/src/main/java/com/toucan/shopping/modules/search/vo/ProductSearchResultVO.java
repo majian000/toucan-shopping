@@ -37,4 +37,9 @@ public class ProductSearchResultVO {
 
     private String httpProductPreviewPath; //商品图片预览
 
+    private String createDate; //创建时间
+
+    private String updateDate; //修改时间
+
+
 }
