@@ -138,6 +138,7 @@ public class CanalListener {
                                     if (CollectionUtils.isEmpty(productSearchResultVOS)) {
                                         productSearchService.save(productSearchResultVO);
                                     } else {
+                                        productSearchResultVO.setCreateDate(productSearchResultVOS.get(0).getCreateDate());
                                         productSearchService.update(productSearchResultVO);
                                     }
                                 }else if(productSkuVO.getDeleteStatus().intValue() == 1)

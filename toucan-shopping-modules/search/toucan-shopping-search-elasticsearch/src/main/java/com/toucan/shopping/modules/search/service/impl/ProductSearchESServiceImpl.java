@@ -295,6 +295,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
     @Override
     public void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException {
+        productSearchResultVO.setUpdateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
         UpdateRequest request = new UpdateRequest(ProductIndex.PRODUCT_SKU_INDEX,String.valueOf(productSearchResultVO.getId()));
         XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
         Field[] declaredFields = productSearchResultVO.getClass().getDeclaredFields();
@@ -302,7 +303,6 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             field.setAccessible(true);
             updateBody.field(field.getName(),field.get(productSearchResultVO));
         }
-        productSearchResultVO.setUpdateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
         updateBody.endObject();
         request.doc(updateBody);
         UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);

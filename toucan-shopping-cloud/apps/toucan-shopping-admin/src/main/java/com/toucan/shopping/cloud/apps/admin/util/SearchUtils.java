@@ -104,6 +104,7 @@ public class SearchUtils {
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO);
                 feignProductSearchService.save(requestJsonVO);
             } else {
+                productSearchResultVO.setCreateDate(productSearchResultVOS.get(0).getCreateDate());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO);
                 feignProductSearchService.update(requestJsonVO);
             }
