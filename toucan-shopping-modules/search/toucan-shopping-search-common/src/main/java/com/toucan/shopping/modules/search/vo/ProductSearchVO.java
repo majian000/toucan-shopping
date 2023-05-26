@@ -23,4 +23,11 @@ public class ProductSearchVO extends SearchVO{
 
     private String qbs="t"; //是否先查询品牌 f:不查询 t:查询
 
+    private String productName; //商品名称
+
+    private String brandName; //品牌名称
+
+    private String categoryName; //分类名称
+
+
 }

@@ -179,6 +179,27 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
             sourceBuilder.query(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
         }
+        //商品名称查询
+        if(StringUtils.isNotEmpty(productSearchVO.getProductName()))
+        {
+            sourceBuilder.query(QueryBuilders
+                    .multiMatchQuery(productSearchVO.getProductName(), new String[]{"name"})
+            );
+        }
+        //品牌名称查询
+        if(StringUtils.isNotEmpty(productSearchVO.getBrandName()))
+        {
+            sourceBuilder.query(QueryBuilders
+                    .multiMatchQuery(productSearchVO.getBrandName(), new String[]{"brandName"})
+            );
+        }
+        //品牌名称查询
+        if(StringUtils.isNotEmpty(productSearchVO.getCategoryName()))
+        {
+            sourceBuilder.query(QueryBuilders
+                    .multiMatchQuery(productSearchVO.getCategoryName(), new String[]{"categoryName"})
+            );
+        }
         //品牌查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
             sourceBuilder.query(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
