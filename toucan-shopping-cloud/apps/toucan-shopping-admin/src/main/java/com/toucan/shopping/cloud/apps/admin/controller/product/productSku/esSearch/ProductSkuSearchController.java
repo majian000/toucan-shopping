@@ -177,6 +177,34 @@ public class ProductSkuSearchController extends UIController {
 
 
 
+    /**
+     * 根据ID从缓存中删除
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/deleteById",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,@RequestBody ProductSearchResultVO productSearchResultVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(productSearchResultVO.getSkuId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchResultVO.getSkuId());
+            resultObjectVO = feignProductSearchService.removeById(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("操作失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 
 }
