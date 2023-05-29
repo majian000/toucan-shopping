@@ -266,6 +266,39 @@
          * toolbar监听事件
          */
         table.on('toolbar(productSkuTableFilter)', function (obj) {
+            if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('productSkuTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定从搜索中删除?(注:不会影响商品,可再次进行同步搜索)', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/productSku/search/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('productSkuTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
         });
 
 
@@ -279,9 +312,47 @@
             var data = obj.data;
             if (obj.event == 'detail') {
                 openDetailDialog(data.id);
+            }else if (obj.event == 'previewPc') {
+                previewPc(data);
+            }else if (obj.event == 'delete') {
+                deleteById(data);
             }
         });
 
+
+        function deleteById(row)
+        {
+            layer.confirm("确定要将【"+row.name+"】从搜索中删除?(注:不会影响商品,可再次进行同步搜索)", function (index) {
+                $.ajax({
+                    url:"[[@{/}]]product/productSku/search/deleteById",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:JSON.stringify({skuId:row.id}),
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('productSkuTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function previewPc(data)
+        {
+            var pcProductSkuPreviewPage = $("#pcProductSkuPreviewPage").val();
+            window.open(pcProductSkuPreviewPage+data.id)
+        }
 
         function openDetailDialog(id)
         {
@@ -299,13 +370,6 @@
             });
             return false;
 
-        }
-
-
-        function previewPc(data)
-        {
-            var pcProductSkuPreviewPage = $("#pcProductSkuPreviewPage").val();
-            window.open(pcProductSkuPreviewPage+data.id)
         }
 
 

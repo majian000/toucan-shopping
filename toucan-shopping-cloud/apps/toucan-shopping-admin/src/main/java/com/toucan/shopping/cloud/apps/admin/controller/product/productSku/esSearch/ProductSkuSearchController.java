@@ -207,5 +207,41 @@ public class ProductSkuSearchController extends UIController {
 
 
 
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ProductSearchResultVO> productSearchResultVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(productSearchResultVOS))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            for(ProductSearchResultVO productSearchResultVO:productSearchResultVOS) {
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO.getSkuId());
+                resultObjectVO = feignProductSearchService.removeById(requestJsonVO);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
 }
 
