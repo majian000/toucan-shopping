@@ -90,7 +90,7 @@ public class ProductSkuSearchController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/productSku/search/listPage",feignFunctionService);
-        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
+        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuDetailPage());
         return "pages/product/productSku/search/list.html";
     }
 

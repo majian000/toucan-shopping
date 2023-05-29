@@ -100,6 +100,7 @@ toucan:
     product-detail-page: /page/product/detail/pid/ #商品详情
     product-preview-page: /page/product/preview/pid/ #商品详情
     product-sku-preview-page: /page/product/preview/ #SKU商品预览
+    product-sku-detail-page: /page/product/detail/ #SKU商品预览
   shopping-seller-web-pc: #PC端页面静态化
     ip-list: localhost:8101,127.0.0.1:8101 #多个用,分割
   admin-auth:
