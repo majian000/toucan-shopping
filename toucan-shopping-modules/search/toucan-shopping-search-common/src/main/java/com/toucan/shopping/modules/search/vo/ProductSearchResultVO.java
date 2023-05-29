@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.search.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,8 +14,12 @@ import java.util.List;
 @Data
 public class ProductSearchResultVO {
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //SKU ID
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long skuId; //SKU ID
 
     private String name; //商品名称
@@ -21,12 +28,16 @@ public class ProductSearchResultVO {
 
     private String brandName; //品牌名称
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
 
     private String categoryName; //分类名称
 
     private List<String> categoryIds; //分类ID路径列表
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //分类ID
 
     private BigDecimal randk; //权重值

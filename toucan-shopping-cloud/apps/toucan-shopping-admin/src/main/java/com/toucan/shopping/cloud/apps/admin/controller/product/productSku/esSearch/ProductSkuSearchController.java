@@ -214,7 +214,7 @@ public class ProductSkuSearchController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ProductSearchResultVO> productSearchResultVOS)
     {

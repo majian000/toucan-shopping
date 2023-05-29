@@ -274,12 +274,17 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
+                var reqData= new Array();
+                for(var i=0;i<data.length;i++)
+                {
+                    reqData.push({skuId:data[i].id});
+                }
                 layer.confirm('确定从搜索中删除?(注:不会影响商品,可再次进行同步搜索)', function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/productSku/search/delete/ids",
                         contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        data:JSON.stringify(data),
+                        type:'POST',
+                        data:JSON.stringify(reqData),
                         success:function(data){
                             layer.msg(data.msg);
 
