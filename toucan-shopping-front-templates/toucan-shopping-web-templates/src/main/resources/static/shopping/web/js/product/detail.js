@@ -1,11 +1,11 @@
 
 var g_productVo;
-
+var ptype ="";
 $(function(){
     tabsEvent();
     bindProductNumEvent();
     var id = getProductId();
-    var ptype = $("#ptype").val();
+    ptype = $("#ptype").val();
     if(id!=null&&id!="") {
         var type= getShopProductPreviewType();
         var params = {"id": id};
@@ -115,7 +115,9 @@ function drawAttributeList(productVO)
             rowIndex++;
         }
         $(".attributeList").append(attributeHtml);
-        disabledAttribute(productVO);
+        if(ptype=="detail") {
+            disabledAttribute(productVO);
+        }
         bindAttributeCheckboxEvent();
     }
 }
@@ -221,12 +223,12 @@ function bindAttributeCheckboxEvent()
                     if(sku.attributeValueGroup==attributeValueGroup)
                     {
                         //已下架
-                        if(sku.status==0)
+                        if(sku.status==0 && ptype=="detail")
                         {
                             break;
                         }
                         //已售罄
-                        if(sku.stockNum<=0)
+                        if(sku.stockNum<=0 && ptype=="detail")
                         {
                             break;
                         }
@@ -469,7 +471,6 @@ function bindProductNumEvent()
 
 function saveUserCar()
 {
-    var ptype = $("#ptype").val();
     if(ptype=="preview")
     {
         return;
