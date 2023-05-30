@@ -475,6 +475,25 @@ function saveUserCar()
     {
         return;
     }
+
+    //已下架
+    if(g_productVo.status==0)
+    {
+        $.message({
+            message: "该商品已下架",
+            type: 'error'
+        });
+        return;
+    }
+    //已售罄
+    if(g_productVo.stockNum<=0)
+    {
+        $.message({
+            message: "该商品已售罄",
+            type: 'error'
+        });
+        return;
+    }
     loading.showLoading({
         type:1,
         tip:"提交中..."
