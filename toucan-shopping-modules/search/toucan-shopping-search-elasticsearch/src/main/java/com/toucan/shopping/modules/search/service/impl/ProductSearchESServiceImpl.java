@@ -195,7 +195,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     .multiMatchQuery(productSearchVO.getBrandName(), new String[]{"brandName"})
             );
         }
-        //品牌名称查询
+        //分类名称查询
         if(StringUtils.isNotEmpty(productSearchVO.getCategoryName()))
         {
             sourceBuilder.query(QueryBuilders
