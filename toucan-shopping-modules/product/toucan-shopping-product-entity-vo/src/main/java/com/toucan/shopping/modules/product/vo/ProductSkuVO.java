@@ -126,4 +126,9 @@ public class ProductSkuVO  extends ProductSku {
      */
     private List<Long> shopProductIdList;
 
+    /**
+     * 分类品牌路径
+     */
+    private List<ProductSkuCategoryBrandVO> categoryBrands;
+
 }

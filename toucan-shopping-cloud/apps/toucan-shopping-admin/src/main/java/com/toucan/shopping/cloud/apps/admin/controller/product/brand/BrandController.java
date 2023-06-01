@@ -232,29 +232,13 @@ public class BrandController extends UIController {
                 throw new RuntimeException("LOGO上传失败");
             }
             BrandVO brandVO = new BrandVO();
-            if(brandId!=null&&brandId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID
-                brandVO.setId(brandId);
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), brandVO);
-                ResultObjectVO brandResultVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
-                if (brandResultVO.isSuccess()) {
-                    brandVO = brandResultVO.formatData(BrandVO.class);
-                    brandVO.setLogoPath(groupPath);
+            brandVO.setLogoPath(groupPath);
 
-                    //设置预览头像
-                    if (brandVO.getLogoPath() != null) {
-                        brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix() + brandVO.getLogoPath());
-                    }
-                    resultObjectVO.setData(brandVO);
-                }
-            }else{
-                brandVO.setLogoPath(groupPath);
-
-                //设置预览头像
-                if (brandVO.getLogoPath() != null) {
-                    brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix() + brandVO.getLogoPath());
-                }
-                resultObjectVO.setData(brandVO);
+            //设置预览头像
+            if (brandVO.getLogoPath() != null) {
+                brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix() + brandVO.getLogoPath());
             }
+            resultObjectVO.setData(brandVO);
         }catch (Exception e)
         {
             resultObjectVO.setCode(1);
