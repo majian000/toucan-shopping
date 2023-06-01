@@ -327,6 +327,9 @@
                 previewPc(data);
             }else if (obj.event == 'delete') {
                 deleteById(data);
+            }else if(obj.event=="openDetailDialogDevent")
+            {
+                openDetailDialog(data.id);
             }
         });
 

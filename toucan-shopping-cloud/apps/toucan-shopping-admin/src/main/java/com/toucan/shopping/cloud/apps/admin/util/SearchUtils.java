@@ -57,6 +57,7 @@ public class SearchUtils {
             productSearchResultVO.setPrice(productSkuVO.getPrice());
             productSearchResultVO.setProductPreviewPath(productSkuVO.getProductPreviewPath());
             productSearchResultVO.setBrandId(productSkuVO.getBrandId());
+            productSearchResultVO.setShopId(productSkuVO.getShopId());
             productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
             productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
 

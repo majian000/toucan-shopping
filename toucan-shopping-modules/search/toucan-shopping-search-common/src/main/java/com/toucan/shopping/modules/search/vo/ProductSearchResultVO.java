@@ -32,6 +32,8 @@ public class ProductSearchResultVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
 
+    private Long shopId; //店铺ID
+
     private String categoryName; //分类名称
 
     private List<String> categoryIds; //分类ID路径列表
@@ -52,5 +54,6 @@ public class ProductSearchResultVO {
 
     private String updateDate; //修改时间
 
+    private String categoryPath; //类别路径
 
 }

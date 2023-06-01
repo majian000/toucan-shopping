@@ -206,6 +206,92 @@ public class ProductSkuSearchController extends UIController {
     }
 
 
+    /**
+     * 查询类别信息
+     * @param list
+     * @param categoryIds
+     */
+    void queryCategory(List<ProductSearchResultVO> list,Long[] categoryIds)
+    {
+        try {
+            //查询类别名称
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setIdArray(categoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                    for (ProductSearchResultVO productSearchResultVO : list) {
+                        for (CategoryVO categoryVO : categoryVOS) {
+                            if (productSearchResultVO.getCategoryId() != null && productSearchResultVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                productSearchResultVO.setCategoryName(categoryVO.getName());
+                                productSearchResultVO.setCategoryPath(categoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),id);
+            ResultObjectVO resultObjectVO = feignProductSearchService.queryBySkuId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSearchResultVO> productSearchResultVOS = resultObjectVO.formatDataList(ProductSearchResultVO.class);
+                if(CollectionUtils.isNotEmpty(productSearchResultVOS)) {
+                    ProductSearchResultVO productSearchResultVO = productSearchResultVOS.get(0);
+                    if (ObjectUtils.isNotEmpty(productSearchResultVO)) {
+                        Long[] categoryIds = new Long[1];
+                        List<Long> brandIdList = new LinkedList<>();
+                        List<Long> shopIdList = new LinkedList<>();
+
+                        categoryIds[0] = productSearchResultVO.getCategoryId();
+
+                        //设置品牌ID
+                        if (productSearchResultVO.getBrandId() != null) {
+                            brandIdList.add(productSearchResultVO.getBrandId());
+                        }
+
+
+                        //设置店铺ID
+                        if (productSearchResultVO.getShopId() != null) {
+                            shopIdList.add(productSearchResultVO.getShopId());
+                        }
+                        productSearchResultVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + productSearchResultVO.getProductPreviewPath());
+
+                        List<ProductSearchResultVO> list = new LinkedList<>();
+                        list.add(productSearchResultVO);
+
+                        //查询类别名称
+                        this.queryCategory(list,categoryIds);
+
+                        request.setAttribute("model", list.get(0));
+                    } else {
+                        request.setAttribute("model", new ProductSearchResultVO());
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            request.setAttribute("model", new ProductSearchResultVO());
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/productSku/search/detail.html";
+    }
+
+
 
 
     /**
