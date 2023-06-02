@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.product.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -8,7 +11,8 @@ import lombok.Data;
 @Data
 public class ProductSkuCategoryBrandVO {
 
-
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //ID
 
     private String name; //名称

@@ -287,6 +287,7 @@ function drawProductPage(productVO)
         initMagicZomm();
         initProductPhotoPreview();
 
+        drawCategoryBrandPosition(productVO.categoryBrands);
 
         drawAttributeList(productVO);
 
@@ -536,4 +537,27 @@ function saveUserCar()
     });
 
 }
+
+function drawCategoryBrandPosition(categoryBrands)
+{
+    var categoryBrandHtml="";
+    if(categoryBrands!=null&&categoryBrands.length>0)
+    {
+        for(var i=0;i<categoryBrands.length;i++)
+        {
+            if(categoryBrands[i].type==1) {
+                categoryBrandHtml += "<a href='/api/product/g/search?cid="+categoryBrands[i].id+"'>" + categoryBrands[i].name + "</a>";
+            }else if(categoryBrands[i].type==2){
+                categoryBrandHtml += "<a href='/api/product/g/search?bid="+categoryBrands[i].id+"'>" + categoryBrands[i].name + "</a>";
+            }
+            if(i+1<categoryBrands.length)
+            {
+                categoryBrandHtml+=" > ";
+            }
+        }
+    }
+    $(".c_b_position").html(categoryBrandHtml);
+
+}
+
 

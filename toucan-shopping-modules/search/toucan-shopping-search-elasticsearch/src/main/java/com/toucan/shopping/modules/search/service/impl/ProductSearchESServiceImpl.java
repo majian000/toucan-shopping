@@ -206,6 +206,11 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
             sourceBuilder.query(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
         }
+        //品牌查询
+        if(StringUtils.isNotEmpty(productSearchVO.getBid()))
+        {
+            sourceBuilder.query(QueryBuilders.termQuery("brandId",productSearchVO.getBid()));
+        }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
         sourceBuilder.size(productSearchVO.getSize());
