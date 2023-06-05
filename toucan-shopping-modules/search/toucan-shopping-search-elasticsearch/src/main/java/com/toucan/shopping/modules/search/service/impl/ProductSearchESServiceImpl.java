@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
+import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.awt.image.ImageWatched;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -236,7 +238,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         //属性查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getAttributes()))
         {
-            sourceBuilder.query(QueryBuilders.termQuery("attributes",productSearchVO.getAttributes()));
+            List<String> attributeNames=new LinkedList<>();
+            List<String> attributeValues = new LinkedList<>();
+            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getAttributes()) {
+                attributeNames.add(productSearchAttributeVO.getName());
+                attributeValues.add(productSearchAttributeVO.getValue());
+            }
+            sourceBuilder.query(QueryBuilders.termQuery("attributes.name", attributeNames));
+            sourceBuilder.query(QueryBuilders.termQuery("attributes.value", attributeValues));
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));

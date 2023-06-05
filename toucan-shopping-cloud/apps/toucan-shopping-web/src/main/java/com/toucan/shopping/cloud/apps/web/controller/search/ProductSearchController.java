@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
+import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -103,7 +104,13 @@ public class ProductSearchController {
             if(StringUtils.isNotEmpty(productSearchVO.getAb()))
             {
                 productSearchVO.setAttributes(new LinkedList<>());
-                Collections.addAll(productSearchVO.getAttributes(),productSearchVO.getAb().split(","));
+                String[] attributeStringArray = productSearchVO.getAb().split(",");
+                for(String attributeString:attributeStringArray)
+                {
+                    String[] attributeObj = attributeString.split(":");
+                    ProductSearchAttributeVO productSearchAttributeVO=new ProductSearchAttributeVO(attributeObj[0],attributeObj[1]);
+                    productSearchVO.getAttributes().add(productSearchAttributeVO);
+                }
             }
 
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
