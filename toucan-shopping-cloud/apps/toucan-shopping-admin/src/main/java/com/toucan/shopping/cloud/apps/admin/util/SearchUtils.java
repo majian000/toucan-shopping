@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
@@ -14,10 +15,7 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SearchUtils {
 
@@ -60,7 +58,12 @@ public class SearchUtils {
             productSearchResultVO.setShopId(productSkuVO.getShopId());
             productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
             productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
-
+            productSearchResultVO.setAttributes(new LinkedList<>());
+            productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
+            Set<String> keys = productSkuVO.getAttributeMap().keySet();
+            for(String key:keys){
+                productSearchResultVO.getAttributes().add(key+":"+productSkuVO.getAttributeMap().get(key));
+            }
 
             //查询品牌信息
             BrandVO queryBrand = new BrandVO();

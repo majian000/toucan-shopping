@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,6 +98,12 @@ public class ProductSearchController {
                         productSearchVO.setBrandIds(releaseBrands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
                     }
                 }
+            }
+
+            if(StringUtils.isNotEmpty(productSearchVO.getAb()))
+            {
+                productSearchVO.setAttributes(new LinkedList<>());
+                Collections.addAll(productSearchVO.getAttributes(),productSearchVO.getAb().split(","));
             }
 
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());

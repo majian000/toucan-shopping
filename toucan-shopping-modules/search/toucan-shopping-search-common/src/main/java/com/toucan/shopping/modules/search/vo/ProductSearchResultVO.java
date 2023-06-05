@@ -56,4 +56,6 @@ public class ProductSearchResultVO {
 
     private String categoryPath; //类别路径
 
+    private List<String> attributes; //属性键值对
+
 }

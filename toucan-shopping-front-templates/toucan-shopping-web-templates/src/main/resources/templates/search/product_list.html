@@ -72,7 +72,7 @@
                     <td class="td_a">
                         <#if attributeKey.values??>
                             <#list attributeKey.values as attributeValue>
-                                <a href="#">${attributeValue.attributeValue}</a>
+                                <a class="qb_labels" attr-kv="${attributeKey.attributeName!''}:${attributeValue.attributeValue}">${attributeValue.attributeValue}</a>
                             </#list>
                         </#if>
                     </td>

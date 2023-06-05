@@ -28,10 +28,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class CanalListener {
@@ -81,6 +78,12 @@ public class CanalListener {
                                     productSearchResultVO.setShopId(productSkuVO.getShopId());
                                     productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
                                     productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
+                                    productSearchResultVO.setAttributes(new LinkedList<>());
+                                    productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
+                                    Set<String> keys = productSkuVO.getAttributeMap().keySet();
+                                    for(String key:keys){
+                                        productSearchResultVO.getAttributes().add(key+":"+productSkuVO.getAttributeMap().get(key));
+                                    }
 
                                     ProductSearchResultVO productSearchResultVOResult = null;
                                     if (!CollectionUtils.isEmpty(productSearchResultVOS)) {

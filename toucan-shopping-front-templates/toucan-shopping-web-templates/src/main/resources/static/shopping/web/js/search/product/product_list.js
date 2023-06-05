@@ -11,6 +11,8 @@ $(function(){
 
     bindRemoveBrandEvent();
 
+    bindAttributeEvent();
+
 });
 
 
@@ -44,6 +46,24 @@ function drawPageJumpBtns()
 }
 
 
+function bindAttributeEvent(){
+    $(".qb_labels").bind("click", function () {
+        doSearchByProductList(this,1);
+    });
+}
+
+
+function doSearchByProductList(eventSrcObj,type)
+{
+    var keywrd=$(".s_ipt").val();
+    var params ="?keyword="+keywrd;
+    if(type==1)
+    {
+        var attrKV = $(eventSrcObj).attr("attr-kv");
+        params+="&ab="+attrKV;
+    }
+    window.location.href=searchGetPath+params;
+}
 
 function bindAddBuyCar(){
     $(".p_l_ac").bind("click", function () {

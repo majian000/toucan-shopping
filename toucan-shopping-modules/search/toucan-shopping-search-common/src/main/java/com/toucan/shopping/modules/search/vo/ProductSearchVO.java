@@ -31,5 +31,8 @@ public class ProductSearchVO extends SearchVO{
 
     private String categoryName; //分类名称
 
+    private String ab; //属性集合字符串 多个用,分割
+
+    private List<String> attributes; //属性集合
 
 }
