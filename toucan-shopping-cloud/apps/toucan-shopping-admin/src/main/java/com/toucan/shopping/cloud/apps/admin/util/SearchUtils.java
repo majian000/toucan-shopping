@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +63,8 @@ public class SearchUtils {
             productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
             Set<String> keys = productSkuVO.getAttributeMap().keySet();
             for(String key:keys){
-                productSearchResultVO.getAttributes().add(key+":"+productSkuVO.getAttributeMap().get(key));
+                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO(key,productSkuVO.getAttributeMap().get(key));
+                productSearchResultVO.getAttributes().add(productSearchAttributeVO);
             }
 
             //查询品牌信息
