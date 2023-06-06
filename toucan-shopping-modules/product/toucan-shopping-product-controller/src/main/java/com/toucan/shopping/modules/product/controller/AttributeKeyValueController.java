@@ -176,4 +176,39 @@ public class AttributeKeyValueController {
     }
 
 
+
+
+    /**
+     * 根据SPUID和SKU中的分类ID以及属性 查询可被搜索的属性列表
+     * 注:同一级分类下属性名称不允许重复
+     * 例如：手机分类下有颜色属性，游戏手机分类下也允许有颜色属性
+     * 结构:
+     *      手机 颜色属性
+     *      手机》游戏手机 颜色属性
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO querySearchAttributeList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 }
