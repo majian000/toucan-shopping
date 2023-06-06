@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -9,8 +10,7 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.product.vo.BrandVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,6 +28,8 @@ public class SearchUtils {
     public static FeignCategoryService feignCategoryService;
 
     public static FeignBrandService feignBrandService;
+
+    public static FeignAttributeKeyValueService feignAttributeKeyValueService;
 
     /**
      * 刷新到搜索
@@ -64,11 +66,44 @@ public class SearchUtils {
             //设置属性列表
             productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
             Set<String> keys = productSkuVO.getAttributeMap().keySet();
+            List<String> queryAttributeKeys = new LinkedList<>();
+            queryAttributeKeys.addAll(keys);
+            List<String> queryAttributeValues = new LinkedList<>();
             for(String key:keys){
                 ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
                 productSearchAttributeVO.setName(key);
                 productSearchAttributeVO.setValue(productSkuVO.getAttributeMap().get(key));
+                queryAttributeValues.add(productSkuVO.getAttributeMap().get(key));
                 productSearchResultVO.getAttributes().add(productSearchAttributeVO);
+            }
+
+            //设置搜索属性列表
+            AttributeKeyValueVO attributeKeyValueVO=new AttributeKeyValueVO();
+            attributeKeyValueVO.setProductSpuId(productSkuVO.getProductId());
+            attributeKeyValueVO.setCategoryId(productSkuVO.getCategoryId());
+            attributeKeyValueVO.setAttributeKeyList(queryAttributeKeys);
+            attributeKeyValueVO.setAttributeValueList(queryAttributeValues);
+            resultObjectVO = feignAttributeKeyValueService.querySearchAttributeList(RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyValueVO));
+            if(resultObjectVO.isSuccess())
+            {
+                List<AttributeKeyVO> attributeKeys = resultObjectVO.formatDataList(AttributeKeyVO.class);
+                if(CollectionUtils.isNotEmpty(attributeKeys)){
+                    productSearchResultVO.setSearchAttributes(new LinkedList<>());
+                    for(AttributeKeyVO attributeKeyVO:attributeKeys)
+                    {
+                        if(CollectionUtils.isNotEmpty(attributeKeyVO.getValues()))
+                        {
+                            for(AttributeValueVO attributeValueVO:attributeKeyVO.getValues()) {
+                                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
+                                productSearchAttributeVO.setNameId(attributeKeyVO.getId());
+                                productSearchAttributeVO.setName(attributeKeyVO.getAttributeName());
+                                productSearchAttributeVO.setValueId(attributeValueVO.getId());
+                                productSearchAttributeVO.setValue(attributeValueVO.getAttributeValue());
+                                productSearchResultVO.getSearchAttributes().add(productSearchAttributeVO);
+                            }
+                        }
+                    }
+                }
             }
 
             //查询品牌信息

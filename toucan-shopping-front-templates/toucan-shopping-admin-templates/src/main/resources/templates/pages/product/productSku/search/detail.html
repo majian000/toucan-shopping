@@ -136,6 +136,22 @@
                         </div>
 
 
+                        <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >属性列表</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea"  th:text="${model.attributes}" ></textarea>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >搜索属性</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea"  th:text="${model.searchAttributes}" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -280,7 +280,7 @@ public class AttributeKeyValueController {
                             {
                                 AttributeValueVO attributeValueVO=new AttributeValueVO();
                                 attributeValueVO.setAttributeValue(av.getAttributeValue());
-                                attributeValueVO.setId(av.getAttributeValueId());
+                                attributeValueVO.setId(av.getId());
                                 attributeKeyVO.getValues().add(attributeValueVO);
                             }
                         }
