@@ -102,4 +102,6 @@ public class AttributeKeyVO extends AttributeKey {
 
     private List<Long> categoryIdList; //分类ID列表
 
+    private List<String> attributeNameList; //属性名列表
+
 }

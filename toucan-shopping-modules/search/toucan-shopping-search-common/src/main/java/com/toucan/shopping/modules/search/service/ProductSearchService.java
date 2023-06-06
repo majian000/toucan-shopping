@@ -37,7 +37,7 @@ public interface ProductSearchService {
      * @param productSearchResultVO
      * @throws IOException
      */
-    void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException;
+    void update(ProductSearchResultVO productSearchResultVO) throws Exception;
 
     /**
      * 移除商品

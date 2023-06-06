@@ -327,7 +327,7 @@ public class AttributeValueController {
                 return resultObjectVO;
             }
 
-            productSpuAttributeValueService.updateShowStatusAndSearchStatus(entity.getId(),entity.getShowStatus(),entity.getQueryStatus());
+            productSpuAttributeValueService.updateShowStatusAndSearchStatus(entity.getId(),entity.getAttributeValue(),entity.getShowStatus(),entity.getQueryStatus());
 
             resultObjectVO.setData(entity);
 

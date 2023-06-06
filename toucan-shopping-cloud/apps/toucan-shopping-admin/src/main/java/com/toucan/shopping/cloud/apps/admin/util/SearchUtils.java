@@ -60,10 +60,14 @@ public class SearchUtils {
             productSearchResultVO.setCategoryId(productSkuVO.getCategoryId());
             productSearchResultVO.setAttributeValueGroup(productSkuVO.getAttributeValueGroup());
             productSearchResultVO.setAttributes(new LinkedList<>());
+
+            //设置属性列表
             productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
             Set<String> keys = productSkuVO.getAttributeMap().keySet();
             for(String key:keys){
-                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO(key,productSkuVO.getAttributeMap().get(key));
+                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
+                productSearchAttributeVO.setName(key);
+                productSearchAttributeVO.setValue(productSkuVO.getAttributeMap().get(key));
                 productSearchResultVO.getAttributes().add(productSearchAttributeVO);
             }
 

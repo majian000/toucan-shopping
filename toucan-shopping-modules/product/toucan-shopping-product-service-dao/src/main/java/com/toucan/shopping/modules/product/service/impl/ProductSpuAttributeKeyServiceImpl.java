@@ -39,8 +39,8 @@ public class ProductSpuAttributeKeyServiceImpl implements ProductSpuAttributeKey
     }
 
     @Override
-    public int updateShowStatusAndSearchStatus(Long attributeKeyId, Short showStatus, Short queryStatus) {
-        return productSpuAttributeKeyMapper.updateShowStatusAndSearchStatus(attributeKeyId,showStatus,queryStatus);
+    public int updateShowStatusAndSearchStatus(Long attributeKeyId,String attributeKeyName, Short showStatus, Short queryStatus) {
+        return productSpuAttributeKeyMapper.updateShowStatusAndSearchStatus(attributeKeyId,attributeKeyName,showStatus,queryStatus);
     }
 
 

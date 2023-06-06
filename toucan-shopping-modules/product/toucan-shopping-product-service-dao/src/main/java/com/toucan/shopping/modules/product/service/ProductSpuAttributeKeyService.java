@@ -52,7 +52,7 @@ public interface ProductSpuAttributeKeyService {
      * @param queryStatus
      * @return
      */
-    int updateShowStatusAndSearchStatus(Long attributeKeyId,Short showStatus,Short queryStatus);
+    int updateShowStatusAndSearchStatus(Long attributeKeyId,String attributeKeyName,Short showStatus,Short queryStatus);
 
 
 }

@@ -108,7 +108,9 @@ public class ProductSearchController {
                 for(String attributeString:attributeStringArray)
                 {
                     String[] attributeObj = attributeString.split(":");
-                    ProductSearchAttributeVO productSearchAttributeVO=new ProductSearchAttributeVO(attributeObj[0],attributeObj[1]);
+                    ProductSearchAttributeVO productSearchAttributeVO=new ProductSearchAttributeVO();
+                    productSearchAttributeVO.setName(attributeObj[0]);
+                    productSearchAttributeVO.setValue(attributeObj[1]);
                     productSearchVO.getSearchAttributes().add(productSearchAttributeVO);
                 }
             }

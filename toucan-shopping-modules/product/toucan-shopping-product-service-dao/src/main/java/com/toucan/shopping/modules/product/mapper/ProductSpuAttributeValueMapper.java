@@ -23,6 +23,6 @@ public interface ProductSpuAttributeValueMapper {
 
     List<ProductSpuAttributeValueVO> queryListBySortDesc(ProductSpuAttributeValueVO entity);
 
-    int updateShowStatusAndSearchStatus(Long attributeValueId,Short showStatus,Short queryStatus);
+    int updateShowStatusAndSearchStatus(Long attributeValueId,String attributeValueName,Short showStatus,Short queryStatus);
 
 }

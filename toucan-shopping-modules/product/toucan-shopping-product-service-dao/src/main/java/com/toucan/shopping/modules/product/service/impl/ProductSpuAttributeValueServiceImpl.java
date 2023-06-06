@@ -76,8 +76,8 @@ public class ProductSpuAttributeValueServiceImpl implements ProductSpuAttributeV
     }
 
     @Override
-    public int updateShowStatusAndSearchStatus(Long attributeValueId, Short showStatus, Short queryStatus) {
-        return attributeValueMapper.updateShowStatusAndSearchStatus(attributeValueId,showStatus,queryStatus);
+    public int updateShowStatusAndSearchStatus(Long attributeValueId,String attributeValueName, Short showStatus, Short queryStatus) {
+        return attributeValueMapper.updateShowStatusAndSearchStatus(attributeValueId,attributeValueName,showStatus,queryStatus);
     }
 
 

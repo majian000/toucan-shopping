@@ -33,6 +33,7 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -159,9 +160,21 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
                         builder.startObject("properties");
                         {
+                            builder.startObject("nameId");
+                            {
+                                builder.field("type", "long");
+                            }
+                            builder.endObject();
+
                             builder.startObject("name");
                             {
                                 builder.field("type", "text");
+                            }
+                            builder.endObject();
+
+                            builder.startObject("valueId");
+                            {
+                                builder.field("type", "long");
                             }
                             builder.endObject();
 
@@ -358,20 +371,10 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     }
 
     @Override
-    public void update(ProductSearchResultVO productSearchResultVO) throws IOException, IllegalAccessException {
-        productSearchResultVO.setUpdateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
-        UpdateRequest request = new UpdateRequest(ProductIndex.PRODUCT_SKU_INDEX,String.valueOf(productSearchResultVO.getId()));
-        XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
-        Field[] declaredFields = productSearchResultVO.getClass().getDeclaredFields();
-        for(Field field:declaredFields){
-            field.setAccessible(true);
-            updateBody.field(field.getName(),field.get(productSearchResultVO));
-        }
-        updateBody.endObject();
-        request.doc(updateBody);
-        UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
-        //强制刷新
-        updateResponse.forcedRefresh();
+    public void update(ProductSearchResultVO productSearchResultVO) throws Exception {
+        List<Long> deleteFaildList = new ArrayList<>();
+        this.removeById(productSearchResultVO.getSkuId(),deleteFaildList);
+        this.save(productSearchResultVO);
     }
 
     @Override

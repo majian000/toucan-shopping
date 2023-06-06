@@ -22,7 +22,7 @@ public interface ProductSpuAttributeKeyMapper {
 
     List<ProductSpuAttributeKeyVO> queryListBySortDesc(ProductSpuAttributeKeyVO entity);
 
-    int updateShowStatusAndSearchStatus(Long attributeKeyId,Short showStatus,Short queryStatus);
+    int updateShowStatusAndSearchStatus(Long attributeKeyId,String attributeKeyName,Short showStatus,Short queryStatus);
 
 
 }

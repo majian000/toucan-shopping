@@ -35,5 +35,6 @@ public class AttributeValueVO extends AttributeValue {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long attributeValueId;
 
+    private List<String> attributeValueList; //属性值列表
 
 }

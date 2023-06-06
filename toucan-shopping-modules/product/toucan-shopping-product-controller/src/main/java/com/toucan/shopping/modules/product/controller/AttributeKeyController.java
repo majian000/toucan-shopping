@@ -787,7 +787,7 @@ public class AttributeKeyController {
             }
 
             //刷新SPU与属性关联中间表的状态
-            productSpuAttributeKeyService.updateShowStatusAndSearchStatus(entity.getId(),entity.getShowStatus(),entity.getQueryStatus());
+            productSpuAttributeKeyService.updateShowStatusAndSearchStatus(entity.getId(),entity.getAttributeName(),entity.getShowStatus(),entity.getQueryStatus());
 
             resultObjectVO.setData(entity);
 

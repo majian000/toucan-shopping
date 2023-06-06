@@ -56,7 +56,7 @@ public interface ProductSpuAttributeValueService {
      * @param queryStatus
      * @return
      */
-    int updateShowStatusAndSearchStatus(Long attributeValueId,Short showStatus,Short queryStatus);
+    int updateShowStatusAndSearchStatus(Long attributeValueId,String attributeValueName,Short showStatus,Short queryStatus);
 
 
 
