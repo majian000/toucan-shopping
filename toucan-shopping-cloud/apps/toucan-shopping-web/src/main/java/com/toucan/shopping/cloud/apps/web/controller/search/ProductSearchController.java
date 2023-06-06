@@ -103,13 +103,13 @@ public class ProductSearchController {
 
             if(StringUtils.isNotEmpty(productSearchVO.getAb()))
             {
-                productSearchVO.setAttributes(new LinkedList<>());
+                productSearchVO.setSearchAttributes(new LinkedList<>());
                 String[] attributeStringArray = productSearchVO.getAb().split(",");
                 for(String attributeString:attributeStringArray)
                 {
                     String[] attributeObj = attributeString.split(":");
                     ProductSearchAttributeVO productSearchAttributeVO=new ProductSearchAttributeVO(attributeObj[0],attributeObj[1]);
-                    productSearchVO.getAttributes().add(productSearchAttributeVO);
+                    productSearchVO.getSearchAttributes().add(productSearchAttributeVO);
                 }
             }
 
@@ -150,7 +150,7 @@ public class ProductSearchController {
                     resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
-                        httpServletRequest.setAttribute("attributes",resultObjectVO .formatDataList(AttributeKeyVO.class));
+                        httpServletRequest.setAttribute("searchAttributes",resultObjectVO .formatDataList(AttributeKeyVO.class));
                     }
                 }
             }

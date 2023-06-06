@@ -88,4 +88,8 @@
     </select>
 
 
+    <update id="updateShowStatusAndSearchStatus">
+        update t_product_spu_attribute_value  set show_status=#{showStatus} , query_status=#{queryStatus} where attribute_value_id=#{attributeValueId}  and delete_status=0
+    </update>
+
 </mapper>

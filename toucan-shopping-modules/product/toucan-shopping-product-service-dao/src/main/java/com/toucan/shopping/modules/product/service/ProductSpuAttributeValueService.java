@@ -46,4 +46,18 @@ public interface ProductSpuAttributeValueService {
      * @param parentAttributeTree
      */
     void queryAttributeTree(List<ProductSpuAttributeKeyValueVO> allList, ProductSpuAttributeKeyValueTreeVO parentAttributeTree);
+
+
+
+    /**
+     * 刷新显示状态和搜索状态
+     * @param attributeValueId
+     * @param showStatus
+     * @param queryStatus
+     * @return
+     */
+    int updateShowStatusAndSearchStatus(Long attributeValueId,Short showStatus,Short queryStatus);
+
+
+
 }

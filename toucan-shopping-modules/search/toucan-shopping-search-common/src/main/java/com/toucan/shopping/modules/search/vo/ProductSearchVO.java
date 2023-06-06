@@ -33,6 +33,6 @@ public class ProductSearchVO extends SearchVO{
 
     private String ab; //属性集合字符串 多个用,分割
 
-    private List<ProductSearchAttributeVO> attributes; //属性集合
+    private List<ProductSearchAttributeVO> searchAttributes; //属性集合
 
 }

@@ -65,8 +65,8 @@
                 <td class="td_a"><a href="#" class="now">香奈儿（Chanel）</a><a href="#">迪奥（Dior）</a><a href="#">范思哲（VERSACE）</a><a href="#">菲拉格慕（Ferragamo）</a><a href="#">兰蔻（LANCOME）</a><a href="#">爱马仕（HERMES）</a><a href="#">卡文克莱（Calvin Klein）</a><a href="#">古驰（GUCCI）</a><a href="#">宝格丽（BVLGARI）</a><a href="#">阿迪达斯（Adidas）</a><a href="#">卡尔文·克莱恩（CK）</a><a href="#">凌仕（LYNX）</a><a href="#">大卫杜夫（Davidoff）</a><a href="#">安娜苏（Anna sui）</a><a href="#">阿玛尼（ARMANI）</a><a href="#">娇兰（Guerlain）</a></td>
             </tr>
 
-            <#if attributes??>
-                <#list attributes as attributeKey>
+            <#if searchAttributes??>
+                <#list searchAttributes as attributeKey>
                 <tr valign="top">
                     <td style="width:8%">&nbsp; ${attributeKey.attributeName!''}：</td>
                     <td class="td_a">

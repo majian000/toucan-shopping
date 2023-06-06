@@ -38,5 +38,10 @@ public class ProductSpuAttributeKeyServiceImpl implements ProductSpuAttributeKey
         return productSpuAttributeKeyMapper.deleteByProductSpuId(productSpuId);
     }
 
+    @Override
+    public int updateShowStatusAndSearchStatus(Long attributeKeyId, Short showStatus, Short queryStatus) {
+        return productSpuAttributeKeyMapper.updateShowStatusAndSearchStatus(attributeKeyId,showStatus,queryStatus);
+    }
+
 
 }

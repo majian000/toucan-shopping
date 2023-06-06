@@ -152,6 +152,29 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+                    //搜索属性
+                    builder.startObject("searchAttributes");
+                    {
+                        builder.field("type", "object");
+
+                        builder.startObject("properties");
+                        {
+                            builder.startObject("name");
+                            {
+                                builder.field("type", "text");
+                            }
+                            builder.endObject();
+
+                            builder.startObject("value");
+                            {
+                                builder.field("type", "text");
+                            }
+                            builder.endObject();
+                        }
+                        builder.endObject();
+                    }
+                    builder.endObject();
+
                     //品牌ID
                     builder.startObject("brandId");
                     {
@@ -236,11 +259,11 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             sourceBuilder.query(QueryBuilders.termQuery("brandId",productSearchVO.getBid()));
         }
         //属性查询
-        if(CollectionUtils.isNotEmpty(productSearchVO.getAttributes()))
+        if(CollectionUtils.isNotEmpty(productSearchVO.getSearchAttributes()))
         {
             List<String> attributeNames=new LinkedList<>();
             List<String> attributeValues = new LinkedList<>();
-            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getAttributes()) {
+            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getSearchAttributes()) {
                 attributeNames.add(productSearchAttributeVO.getName());
                 attributeValues.add(productSearchAttributeVO.getValue());
             }

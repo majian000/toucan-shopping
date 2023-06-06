@@ -20,6 +20,9 @@ public class ProductSpuAttributeValue {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
+    /**
+     * SPU与属性KEY中间表的主键
+     */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productSpuAttributeKeyId;

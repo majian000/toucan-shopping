@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.AttributeValueService;
+import com.toucan.shopping.modules.product.service.ProductSpuAttributeKeyService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import org.apache.commons.beanutils.BeanUtils;
@@ -41,6 +42,9 @@ public class AttributeKeyController {
 
     @Autowired
     private AttributeValueService attributeValueService;
+
+    @Autowired
+    private ProductSpuAttributeKeyService productSpuAttributeKeyService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -781,6 +785,10 @@ public class AttributeKeyController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+
+            //刷新SPU与属性关联中间表的状态
+            productSpuAttributeKeyService.updateShowStatusAndSearchStatus(entity.getId(),entity.getShowStatus(),entity.getQueryStatus());
+
             resultObjectVO.setData(entity);
 
         }catch(Exception e)
