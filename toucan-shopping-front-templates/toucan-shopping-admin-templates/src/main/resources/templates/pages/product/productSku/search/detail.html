@@ -140,14 +140,47 @@
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >属性列表</label>
                                 <div class="layui-input-block">
-                                    <textarea class="layui-textarea"  th:text="${model.attributes}" ></textarea>
+                                    <table class="layui-table">
+                                        <thead>
+                                        <tr>
+                                            <th lay-data="width:100}">属性名ID</th>
+                                            <th lay-data="width:100}">属性名</th>
+                                            <th lay-data="minWidth: 100}">属性值ID</th>
+                                            <th lay-data="minWidth: 100}">属性值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="attribute : ${model.attributes}">
+                                            <td th:text="${attribute.nameId}"></td>
+                                            <td th:text="${attribute.name}"></td>
+                                            <td th:text="${attribute.valueId}"></td>
+                                            <td th:text="${attribute.value}"></td>
+                                        </tbody>
+                                    </table>
+                                    <!--<textarea class="layui-textarea"  th:text="${model.attributes}" ></textarea>-->
                                 </div>
                             </div>
 
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >搜索属性</label>
                                 <div class="layui-input-block">
-                                    <textarea class="layui-textarea"  th:text="${model.searchAttributes}" ></textarea>
+                                    <table class="layui-table">
+                                        <thead>
+                                        <tr>
+                                            <th lay-data="width:100}">属性名ID</th>
+                                            <th lay-data="width:100}">属性名</th>
+                                            <th lay-data="minWidth: 100}">属性值ID</th>
+                                            <th lay-data="minWidth: 100}">属性值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="attribute : ${model.searchAttributes}">
+                                            <td th:text="${attribute.nameId}"></td>
+                                            <td th:text="${attribute.name}"></td>
+                                            <td th:text="${attribute.valueId}"></td>
+                                            <td th:text="${attribute.value}"></td>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
