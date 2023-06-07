@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -31,6 +32,8 @@ import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.script.Script;
@@ -133,19 +136,19 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     //属性数组
                     builder.startObject("attributes");
                     {
-                        builder.field("type", "object");
+                        builder.field("type", "nested");
 
                         builder.startObject("properties");
                         {
                             builder.startObject("name");
                             {
-                                builder.field("type", "text");
+                                builder.field("type", "keyword");
                             }
                             builder.endObject();
 
                             builder.startObject("value");
                             {
-                                builder.field("type", "text");
+                                builder.field("type", "keyword");
                             }
                             builder.endObject();
                         }
@@ -156,7 +159,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     //搜索属性
                     builder.startObject("searchAttributes");
                     {
-                        builder.field("type", "object");
+                        builder.field("type", "nested");
 
                         builder.startObject("properties");
                         {
@@ -168,7 +171,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
                             builder.startObject("name");
                             {
-                                builder.field("type", "text");
+                                builder.field("type", "keyword");
                             }
                             builder.endObject();
 
@@ -180,7 +183,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
                             builder.startObject("value");
                             {
-                                builder.field("type", "text");
+                                builder.field("type", "keyword");
                             }
                             builder.endObject();
                         }
@@ -274,14 +277,16 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         //属性查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getSearchAttributes()))
         {
-            List<String> attributeNames=new LinkedList<>();
-            List<String> attributeValues = new LinkedList<>();
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
             for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getSearchAttributes()) {
-                attributeNames.add(productSearchAttributeVO.getName());
-                attributeValues.add(productSearchAttributeVO.getValue());
+                BoolQueryBuilder attributeQuery = QueryBuilders.boolQuery();
+                attributeQuery.must(QueryBuilders.termQuery("searchAttributes.name", productSearchAttributeVO.getName()));
+                attributeQuery.must(QueryBuilders.termQuery("searchAttributes.value", productSearchAttributeVO.getValue()));
+                NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("searchAttributes", attributeQuery, ScoreMode.None);
+                boolQuery.filter(nestedQuery);
             }
-            sourceBuilder.query(QueryBuilders.termQuery("attributes.name", attributeNames));
-            sourceBuilder.query(QueryBuilders.termQuery("attributes.value", attributeValues));
+            sourceBuilder.query(boolQuery);
+
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
