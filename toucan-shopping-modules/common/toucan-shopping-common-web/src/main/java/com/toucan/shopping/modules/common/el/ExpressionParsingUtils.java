@@ -9,9 +9,7 @@ import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * EL表达式处理
@@ -47,5 +45,14 @@ public class ExpressionParsingUtils {
         Map<String,Object> parms = new HashMap<>();
         parms.put("status","false");
         System.out.println(ExpressionParsingUtils.expressionParsing("${status=='true'}",parms,"${","}"));
+
+
+        List<String> users=new LinkedList<>();
+        users.add("a");
+        users.add("b");
+        users.add("c");
+        parms.put("users",users);
+        parms.put("u","c");
+        System.out.println(ExpressionParsingUtils.expressionParsing("${#users.contains(#u)}",parms,"${","}"));
     }
 }
