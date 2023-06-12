@@ -4,6 +4,7 @@ var g_um_cpage=1;
 
 $(function(){
 
+    loadPageBefore();
 
     drawPageJumpBtns();
 
@@ -14,6 +15,22 @@ $(function(){
     bindAttributeEvent();
 
 });
+
+
+function loadPageBefore()
+{
+    var abids = $("#abids").val();
+    if(abids!=null)
+    {
+        var abisArray = abids.split(",");
+        for(var i=0;i<abisArray.length;i++)
+        {
+            if(abisArray[i]!=null&&abisArray[i]!="") {
+                $(".atis_" + abisArray[i]).hide();
+            }
+        }
+    }
+}
 
 
 function drawPageJumpBtns()
@@ -61,6 +78,15 @@ function doSearchByProductList(eventSrcObj,type)
     {
         var attrKV = $(eventSrcObj).attr("attr-kv");
         params+="&ab="+attrKV;
+
+        var abids = $("#abids").val();
+        if(abids==null||abids=="")
+        {
+            abids=$(eventSrcObj).attr("attr-key-id");
+        }else{
+            abids+=","+$(eventSrcObj).attr("attr-key-id");
+        }
+        params+="&abids="+abids;
     }
     window.location.href=searchGetPath+params;
 }

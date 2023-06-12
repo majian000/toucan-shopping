@@ -119,6 +119,7 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("cid",productSearchVO.getCid());
             httpServletRequest.setAttribute("ebids",productSearchVO.getEbids());
             httpServletRequest.setAttribute("qbs",productSearchVO.getQbs());
+            httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
 
             productSearchVO.setSize(20);
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);

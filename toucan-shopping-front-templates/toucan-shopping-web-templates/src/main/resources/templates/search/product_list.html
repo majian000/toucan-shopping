@@ -67,12 +67,12 @@
 
             <#if searchAttributes??>
                 <#list searchAttributes as attributeKey>
-                <tr valign="top">
+                <tr valign="top" class="atis_${attributeKey.id?c}">
                     <td style="width:8%">&nbsp; ${attributeKey.attributeName!''}：</td>
                     <td class="td_a">
                         <#if attributeKey.values??>
                             <#list attributeKey.values as attributeValue>
-                                <a class="qb_labels" attr-kv="${attributeKey.attributeName!''}:${attributeValue.attributeValue}">${attributeValue.attributeValue}</a>
+                                <a class="qb_labels" attr-kv="${attributeKey.attributeName!''}:${attributeValue.attributeValue}" attr-key-id="${attributeKey.id?c}">${attributeValue.attributeValue}</a>
                             </#list>
                         </#if>
                     </td>
