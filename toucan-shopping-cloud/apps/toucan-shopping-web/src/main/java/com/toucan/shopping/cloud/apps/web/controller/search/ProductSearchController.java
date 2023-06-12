@@ -101,17 +101,22 @@ public class ProductSearchController {
                 }
             }
 
-            if(StringUtils.isNotEmpty(productSearchVO.getAb()))
+            //选择的查询属性
+            if(StringUtils.isNotEmpty(productSearchVO.getAb())&&StringUtils.isNotEmpty(productSearchVO.getAbids()))
             {
                 productSearchVO.setSearchAttributes(new LinkedList<>());
-                String[] attributeStringArray = productSearchVO.getAb().split(",");
-                for(String attributeString:attributeStringArray)
+                String[] abArray = productSearchVO.getAb().split(",");
+                String[] abidsArray = productSearchVO.getAbids().split(",");
+                if(abArray!=null&&abidsArray!=null&&abidsArray.length==abidsArray.length)
                 {
-                    String[] attributeObj = attributeString.split(":");
-                    ProductSearchAttributeVO productSearchAttributeVO=new ProductSearchAttributeVO();
-                    productSearchAttributeVO.setName(attributeObj[0]);
-                    productSearchAttributeVO.setValue(attributeObj[1]);
-                    productSearchVO.getSearchAttributes().add(productSearchAttributeVO);
+                    for(int i=0;i<abArray.length;i++) {
+                        String[] akv = abArray[i].split(":");
+                        ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
+                        productSearchAttributeVO.setName(akv[0]);
+                        productSearchAttributeVO.setValue(akv[1]);
+                        productSearchAttributeVO.setNameId(Long.parseLong(abidsArray[i]));
+                        productSearchVO.getSearchAttributes().add(productSearchAttributeVO);
+                    }
                 }
             }
 
@@ -120,6 +125,8 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("ebids",productSearchVO.getEbids());
             httpServletRequest.setAttribute("qbs",productSearchVO.getQbs());
             httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
+            httpServletRequest.setAttribute("ab",productSearchVO.getAb());
+
 
             productSearchVO.setSize(20);
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
@@ -153,7 +160,32 @@ public class ProductSearchController {
                     resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
-                        httpServletRequest.setAttribute("searchAttributes",resultObjectVO .formatDataList(AttributeKeyVO.class));
+                        List<AttributeKeyVO> attributes= resultObjectVO .formatDataList(AttributeKeyVO.class);
+                        if(CollectionUtils.isEmpty(productSearchVO.getSearchAttributes()))
+                        {
+                            httpServletRequest.setAttribute("searchAttributes",attributes);
+                        }else {
+                            List<AttributeKeyVO> releaseAttributes = new LinkedList<>();
+                            boolean isSelectAttribute=false;
+                            if (CollectionUtils.isNotEmpty(attributes)) {
+                                for (AttributeKeyVO akv : attributes) {
+                                    isSelectAttribute=false;
+                                    for(ProductSearchAttributeVO selectSearchAttribute:productSearchVO.getSearchAttributes())
+                                    {
+                                        if(selectSearchAttribute.getNameId().equals(akv.getId()))
+                                        {
+                                            isSelectAttribute=true;
+                                            break;
+                                        }
+                                    }
+                                    if(!isSelectAttribute)
+                                    {
+                                        releaseAttributes.add(akv);
+                                    }
+                                }
+                            }
+                            httpServletRequest.setAttribute("searchAttributes",releaseAttributes);
+                        }
                     }
                 }
             }

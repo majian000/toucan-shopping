@@ -19,17 +19,7 @@ $(function(){
 
 function loadPageBefore()
 {
-    var abids = $("#abids").val();
-    if(abids!=null)
-    {
-        var abisArray = abids.split(",");
-        for(var i=0;i<abisArray.length;i++)
-        {
-            if(abisArray[i]!=null&&abisArray[i]!="") {
-                $(".atis_" + abisArray[i]).hide();
-            }
-        }
-    }
+
 }
 
 
@@ -77,7 +67,14 @@ function doSearchByProductList(eventSrcObj,type)
     if(type==1)
     {
         var attrKV = $(eventSrcObj).attr("attr-kv");
-        params+="&ab="+attrKV;
+        var ab = $("#ab").val();
+        if(ab==null||ab=="")
+        {
+            ab=attrKV;
+        }else{
+            ab+=","+attrKV;
+        }
+        params+="&ab="+ab;
 
         var abids = $("#abids").val();
         if(abids==null||abids=="")
