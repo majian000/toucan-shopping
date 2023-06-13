@@ -76,7 +76,7 @@
                     <td style="width:8%">&nbsp; 品牌：</td>
                     <td class="td_a">
                     <#list searchBrands as searchBrand>
-                        <a href="#" class="now">${searchBrand.name}</a>
+                        <a class="abb_labels" attr-id="${searchBrand.id?c}" attr-name="${searchBrand.name}">${searchBrand.name}</a>
                     </#list>
                     </td>
                 </tr>

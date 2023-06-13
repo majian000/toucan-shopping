@@ -16,7 +16,7 @@ $(function(){
 });
 
 
-function doSearch()
+function doSearch(extParams)
 {
     // $(".s_form").attr("action","/api/product/g/search");
     // $(".s_form").submit();
@@ -25,6 +25,10 @@ function doSearch()
     var cid=$("#cid").val();
     var ebids=$("#ebids").val();
     var qbs=$("#qbs").val();
+    var ab = $("#ab").val();
+    var abids = $("#abids").val();
+    var bid = $("#bid").val();
+    var brandName = $("#brandName").val();
     var params ="?keyword="+keywrd;
     if(cid!=null&&cid!="")
     {
@@ -41,6 +45,25 @@ function doSearch()
     if(qbs!=null&&qbs!='')
     {
         params+="&qbs="+qbs;
+    }
+    if(ab!=null&&ab!='') {
+        params += "&ab=" + ab;
+    }
+    if(abids!=null&&abids!='') {
+        params += "&abids=" + abids;
+    }
+    if(bid!=null&&bid!='')
+    {
+        params += "&bid=" + bid;
+    }
+    if(brandName!=null&&brandName!='')
+    {
+        params += "&brandName=" + brandName;
+    }
+
+    if(extParams!=null&&extParams!='')
+    {
+        params+=extParams;
     }
 
     window.location.href=searchGetPath+params;

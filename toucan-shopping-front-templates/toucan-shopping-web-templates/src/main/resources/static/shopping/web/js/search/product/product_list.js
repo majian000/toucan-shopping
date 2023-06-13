@@ -42,9 +42,7 @@ function drawPageJumpBtns()
         totalPageCount: totalPage,        //总页数
         callback: function (pageNum) {
             if (g_um_cpage != pageNum) {
-                var keyword=$(".s_ipt").val();
-                var searchUrl=searchGetPath+"?keyword="+keyword;
-                window.location=searchUrl+"&page="+pageNum;
+                doSearch("&page="+pageNum);
             }
         }
     });
@@ -54,10 +52,47 @@ function drawPageJumpBtns()
 
 
 function bindAttributeEvent(){
+
     $(".qb_labels").bind("click", function () {
         doSearchByProductList(this,1);
     });
 
+    //品牌名称条件查询
+    $(".abb_labels").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var attrName = $(this).attr("attr-name");
+        var ebids=$("#ebids").val();
+        //将这个品牌条件从排除的品牌ID列表中移除
+        if(ebids!=null&&ebids!="")
+        {
+            var ebidsArray = ebids.split(",");
+            var releaseArray =new Array();
+            for(var i=0;i<ebidsArray.length;i++)
+            {
+                if(ebidsArray[i]!=attrId)
+                {
+                    releaseArray.push(ebidsArray[i]);
+                }
+            }
+            if(releaseArray.length>0) {
+                $("#ebids").val(releaseArray.join(","));
+            }else{
+                $("#ebids").val("");
+            }
+        }
+        $("#bid").val(attrId);
+        $("#brandName").val(attrName);
+        doSearch();
+    });
+
+
+    $(".bcb").bind("click", function () {
+        $("#bid").val("");
+        $("#brandName").val("");
+        doSearch();
+    });
+
+    //属性条件查询
     $(".rpab").bind("click", function () {
         var attrKV=$(this).attr("attr-kv");
         var attrKeyId=$(this).attr("attr-key-id");
@@ -103,14 +138,13 @@ function bindAttributeEvent(){
 
 
 /**
- *
+ * 查询商品列表
  * @param eventSrcObj
  * @param type 1:属性查询 0:默认查询
  */
 function doSearchByProductList(eventSrcObj,type)
 {
-    var keywrd=$(".s_ipt").val();
-    var params ="?keyword="+keywrd;
+    var params="";
     var ab = $("#ab").val();
     var abids = $("#abids").val();
     if(type==1)
@@ -122,6 +156,7 @@ function doSearchByProductList(eventSrcObj,type)
         }else{
             ab+=","+attrKV;
         }
+        $("#ab").val(ab);
 
         if(abids==null||abids=="")
         {
@@ -129,10 +164,9 @@ function doSearchByProductList(eventSrcObj,type)
         }else{
             abids+=","+$(eventSrcObj).attr("attr-key-id");
         }
+        $("#abids").val(abids);
     }
-    params+="&ab="+ab;
-    params+="&abids="+abids;
-    window.location.href=searchGetPath+params;
+    doSearch(params);
 }
 
 function bindAddBuyCar(){
@@ -182,6 +216,9 @@ function bindAddBuyCar(){
 }
 
 
+/**
+ * 移除品牌条件
+ */
 function bindRemoveBrandEvent()
 {
     $(".bcb").bind("click", function () {
@@ -190,10 +227,11 @@ function bindRemoveBrandEvent()
         var ebidArray = new Array();
         if(ebids!=null&&ebids!='')
         {
-            ebidArray.addAll(ebids.split(","));
+            ebidArray.push(ebids.split(","));
         }
         ebidArray.push(bid);
         $("#ebids").val(ebidArray.join(","));
+        $("#qbs").val("f");
 
         doSearch();
     });

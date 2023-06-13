@@ -99,11 +99,20 @@ public class ProductSearchController {
                         }
                     }
                     if (CollectionUtils.isNotEmpty(hitBrands)) {
-                        httpServletRequest.setAttribute("hitBrands", hitBrands);
                         productSearchVO.setBrandIds(hitBrands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
                     }
                 }
             }
+
+            if(StringUtils.isNotEmpty(productSearchVO.getBid())&&StringUtils.isNotEmpty(productSearchVO.getBrandName()))
+            {
+                BrandVO brandVO = new BrandVO();
+                brandVO.setId(Long.parseLong(productSearchVO.getBid()));
+                brandVO.setName(productSearchVO.getBrandName());
+                hitBrands.add(brandVO);
+            }
+
+            httpServletRequest.setAttribute("hitBrands", hitBrands);
 
             //选择的查询属性
             if(StringUtils.isNotEmpty(productSearchVO.getAb())&&StringUtils.isNotEmpty(productSearchVO.getAbids()))
@@ -131,6 +140,8 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
             httpServletRequest.setAttribute("ab",productSearchVO.getAb());
             httpServletRequest.setAttribute("selectSearchAttributes",productSearchVO.getSearchAttributes());
+            httpServletRequest.setAttribute("bid",productSearchVO.getBid());
+            httpServletRequest.setAttribute("brandName",productSearchVO.getBrandName());
 
 
             productSearchVO.setSize(20);
