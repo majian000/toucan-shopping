@@ -126,6 +126,7 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("qbs",productSearchVO.getQbs());
             httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
             httpServletRequest.setAttribute("ab",productSearchVO.getAb());
+            httpServletRequest.setAttribute("selectSearchAttributes",productSearchVO.getSearchAttributes());
 
 
             productSearchVO.setSize(20);
