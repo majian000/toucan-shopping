@@ -57,34 +57,81 @@ function bindAttributeEvent(){
     $(".qb_labels").bind("click", function () {
         doSearchByProductList(this,1);
     });
+
+    $(".rpab").bind("click", function () {
+        var attrKV=$(this).attr("attr-kv");
+        var attrKeyId=$(this).attr("attr-key-id");
+        var ab = $("#ab").val();
+        var abids = $("#abids").val();
+        if(ab!=null&&ab!="")
+        {
+            var abArray = ab.split(",");
+            var releaseAbArray =new Array();
+            for(var i=0;i<abArray.length;i++)
+            {
+                if(abArray[i]!=attrKV)
+                {
+                    releaseAbArray.push(abArray[i]);
+                }
+            }
+            if(releaseAbArray.length>0) {
+                $("#ab").val(releaseAbArray.join(","));
+            }else{
+                $("#ab").val("");
+            }
+        }
+
+        if(abids!=null&&abids!="") {
+            var abidsArray = abids.split(",");
+            var releaseAbidsArray = new Array();
+            for (var i = 0; i < abidsArray.length; i++) {
+                if (abidsArray[i] != attrKeyId) {
+                    releaseAbidsArray.push(abidsArray[i]);
+                }
+            }
+            if(releaseAbidsArray.length>0) {
+                $("#abids").val(releaseAbidsArray.join(","));
+            }else{
+                $("#abids").val("");
+            }
+        }
+
+        doSearchByProductList(null,0);
+    });
+
 }
 
 
+/**
+ *
+ * @param eventSrcObj
+ * @param type 1:属性查询 0:默认查询
+ */
 function doSearchByProductList(eventSrcObj,type)
 {
     var keywrd=$(".s_ipt").val();
     var params ="?keyword="+keywrd;
+    var ab = $("#ab").val();
+    var abids = $("#abids").val();
     if(type==1)
     {
         var attrKV = $(eventSrcObj).attr("attr-kv");
-        var ab = $("#ab").val();
         if(ab==null||ab=="")
         {
             ab=attrKV;
         }else{
             ab+=","+attrKV;
         }
-        params+="&ab="+ab;
 
-        var abids = $("#abids").val();
         if(abids==null||abids=="")
         {
             abids=$(eventSrcObj).attr("attr-key-id");
         }else{
             abids+=","+$(eventSrcObj).attr("attr-key-id");
         }
-        params+="&abids="+abids;
     }
+    params+="&ab="+ab;
+    params+="&abids="+abids;
     window.location.href=searchGetPath+params;
 }
 
@@ -137,7 +184,7 @@ function bindAddBuyCar(){
 
 function bindRemoveBrandEvent()
 {
-    $(".n_ch").bind("click", function () {
+    $(".bcb").bind("click", function () {
         var bid = $(this).attr("attr-bid");
         var ebids = $("#ebids").val();
         var ebidArray = new Array();

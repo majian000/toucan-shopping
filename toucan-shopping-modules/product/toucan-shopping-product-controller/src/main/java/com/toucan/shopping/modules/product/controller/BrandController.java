@@ -181,42 +181,18 @@ public class BrandController {
         }
 
         try {
-            BrandCategoryPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandCategoryPageInfo.class);
-            if(queryPageInfo.getCategoryId()==null)
+            BrandVO queryBrand = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
+            if(queryBrand.getCategoryId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("分类ID不能为空!");
                 return resultObjectVO;
 
             }
-            PageInfo<BrandCategoryVO> pageInfo =  brandCategoryService.queryListPage(queryPageInfo);
-            List<Long> brandIdList = new ArrayList<Long>();
-            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
-            {
-                for(BrandCategoryVO brandCategoryVO:pageInfo.getList()) {
-                    brandIdList.add(brandCategoryVO.getBrandId());
-                }
-            }
-            List<Brand> brands = brandService.queryByIdList(brandIdList);
-            for(BrandCategoryVO brandCategoryVO:pageInfo.getList()) {
-                for(Brand brand:brands) {
-                    if(brandCategoryVO.getBrandId().longValue()==brand.getId().longValue())
-                    {
-                        if(StringUtils.isNotEmpty(brand.getChineseName())&&StringUtils.isNotEmpty(brand.getEnglishName()))
-                        {
-                            brandCategoryVO.setBrandName(brand.getChineseName()+"/"+brand.getEnglishName());
-                        }else{
-                            if(StringUtils.isNotEmpty(brand.getChineseName()))
-                            {
-                                brandCategoryVO.setBrandName(brand.getChineseName());
-                            }else{
-                                brandCategoryVO.setBrandName(brand.getEnglishName());
-                            }
-                        }
-                    }
-                }
-            }
-            resultObjectVO.setData(pageInfo);
+
+            List<Brand> brands = brandService.queryList(queryBrand);
+            resultObjectVO.setData(brands);
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

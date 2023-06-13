@@ -59,6 +59,11 @@ public class ProductSearchController {
         try {
             RequestJsonVO requestJsonVO =null;
             ResultObjectVO resultObjectVO = null;
+            /**
+             * 优先级先查询品牌,如果关键字能匹配上品牌就查询出该品牌下所有商品
+             * 如果不能匹配上匹配就关键字全量搜索
+             */
+            List<BrandVO> hitBrands = new ArrayList<>();
             if("t".equals(productSearchVO.getQbs())) {
                 BrandVO queryBrandVO = new BrandVO();
                 queryBrandVO.setCategoryId(productSearchVO.getCid());
@@ -68,7 +73,6 @@ public class ProductSearchController {
                 resultObjectVO = feignBrandService.findListByNameAndCategoryIdAndEnabled(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
-                    List<BrandVO> releaseBrands = new ArrayList<>();
                     String[] ebids = null; //不查询这个品牌的商品
                     if (StringUtils.isNotEmpty(productSearchVO.getEbids())) {
                         ebids = productSearchVO.getEbids().split(",");
@@ -86,17 +90,17 @@ public class ProductSearchController {
                             if (ebids != null) {
                                 for (String ebid : ebids) {
                                     if (!ebid.equals(String.valueOf(brandVO.getId()))) {
-                                        releaseBrands.add(brandVO);
+                                        hitBrands.add(brandVO);
                                     }
                                 }
                             } else {
-                                releaseBrands.add(brandVO);
+                                hitBrands.add(brandVO);
                             }
                         }
                     }
-                    if (CollectionUtils.isNotEmpty(releaseBrands)) {
-                        httpServletRequest.setAttribute("brands", releaseBrands);
-                        productSearchVO.setBrandIds(releaseBrands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
+                    if (CollectionUtils.isNotEmpty(hitBrands)) {
+                        httpServletRequest.setAttribute("hitBrands", hitBrands);
+                        productSearchVO.setBrandIds(hitBrands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
                     }
                 }
             }
@@ -189,7 +193,43 @@ public class ProductSearchController {
                         }
                     }
                 }
+
+
+                //查询品牌列表(没有查询到指定品牌),就查询出所有可查询的品牌
+                if(CollectionUtils.isEmpty(hitBrands))
+                {
+                    BrandVO queryBrandVO = new BrandVO();
+                    if(StringUtils.isNotEmpty(productSearchVO.getCid()))
+                    {
+                        queryBrandVO.setCategoryId(productSearchVO.getCid());
+                    }else {
+                        queryBrandVO.setCategoryId(String.valueOf(productResult.get(0).getCategoryId()));
+                    }
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
+                    resultObjectVO = feignBrandService.queryListByCategoryId(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        List<BrandVO> brandVOS= resultObjectVO .formatDataList(BrandVO.class);
+                        if(!CollectionUtils.isEmpty(brandVOS)){
+                            for(BrandVO brandVO:brandVOS) {
+                                if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                    brandVO.setName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
+                                } else {
+                                    if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                                        brandVO.setName(brandVO.getChineseName());
+                                    } else {
+                                        brandVO.setName(brandVO.getEnglishName());
+                                    }
+                                }
+                            }
+                            httpServletRequest.setAttribute("searchBrands",brandVOS);
+                        }
+                    }
+                }
             }
+
+
+
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);

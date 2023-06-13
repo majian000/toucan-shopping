@@ -48,12 +48,12 @@
 <div class="i_bg">
     <div class="postion2">
         <span class="fl"><a class="qball">全部</a> >  </span>
-        <#if brands??>
-            <#list brands as brand>
-                <span class="n_ch" attr-bid="${brand.id?c}" >
-                    <span class="fl"><font>${brand.name!''}（品牌）</font></span>
-                    <a ><img src="${basePath}/static/images/s_close.gif" /></a>
-                </span>
+        <#if hitBrands??>
+            <#list hitBrands as hb>
+                <a class="spab-item" >
+                    <b>${hb.name}（品牌）</b>
+                    <i class="bcb" attr-bid="${hb.id?c}" ></i>
+                </a>
             </#list>
         </#if>
         <#if selectSearchAttributes??>
@@ -61,7 +61,7 @@
                 <a class="spab-item">
                     <b>${ssa.name}:</b>
                     <em>${ssa.value}</em>
-                    <i></i>
+                    <i class="rpab" attr-kv="${ssa.name}:${ssa.value}" attr-key-id="${ssa.nameId?c}"></i>
                 </a>
             </#list>
         </#if>
@@ -70,10 +70,17 @@
     <!--Begin 筛选条件 Begin-->
     <div class="content2 mar_10">
         <table border="0" class="choice" style="width:100%; font-family:'宋体'; margin:0 auto;" cellspacing="0" cellpadding="0">
-            <tr valign="top">
-                <td style="width:8%">&nbsp; 品牌：</td>
-                <td class="td_a"><a href="#" class="now">香奈儿（Chanel）</a><a href="#">迪奥（Dior）</a><a href="#">范思哲（VERSACE）</a><a href="#">菲拉格慕（Ferragamo）</a><a href="#">兰蔻（LANCOME）</a><a href="#">爱马仕（HERMES）</a><a href="#">卡文克莱（Calvin Klein）</a><a href="#">古驰（GUCCI）</a><a href="#">宝格丽（BVLGARI）</a><a href="#">阿迪达斯（Adidas）</a><a href="#">卡尔文·克莱恩（CK）</a><a href="#">凌仕（LYNX）</a><a href="#">大卫杜夫（Davidoff）</a><a href="#">安娜苏（Anna sui）</a><a href="#">阿玛尼（ARMANI）</a><a href="#">娇兰（Guerlain）</a></td>
-            </tr>
+
+            <#if searchBrands??>
+                <tr valign="top">
+                    <td style="width:8%">&nbsp; 品牌：</td>
+                    <td class="td_a">
+                    <#list searchBrands as searchBrand>
+                        <a href="#" class="now">${searchBrand.name}</a>
+                    </#list>
+                    </td>
+                </tr>
+            </#if>
 
             <#if searchAttributes??>
                 <#list searchAttributes as attributeKey>
