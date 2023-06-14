@@ -1516,10 +1516,10 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 .list_t{
 	height:39px; line-height:39px; overflow:hidden; font-family:"宋体"; border-bottom:1px solid #eaeaea;
 }
-.list_or a{
+.list_or .fla{
 	width:68px; height:23px; line-height:23px; overflow:hidden; color:#555555; text-indent:12px; float:left; display:inline; margin-right:-1px; margin-top:6px; border:1px solid #cccccc;
 }
-.list_or a:hover, .list_or a.now{
+.list_or .fla:hover, .list_or .fla.now{
 	color:#FFF; background-color:#ff4e00;
 }
 .list_or .i_up{

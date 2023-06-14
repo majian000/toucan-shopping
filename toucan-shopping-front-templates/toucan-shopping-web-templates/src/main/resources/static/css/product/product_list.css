@@ -47,7 +47,7 @@
 
 
 .search-price {
-    position: relative;
+    /*position: relative;*/
     float: left;
     width: 155px;
     height: 25px;
@@ -94,6 +94,17 @@
     width: 60px;
 }
 
+.search-price-focus .search-price-edit {
+    position: relative;
+    z-index: 5
+}
+
+.search-price-focus .search-price-edit {
+    display: block;
+    zoom:1;
+    top: -7px;
+    left: -7px
+}
 
 .search-price .search-price-set .fl .input-txt .input-txt:focus {
     outline-color: transparent
@@ -101,9 +112,9 @@
 
 .search-price .search-price-edit {
     display: none;
-    width: 135px;
-    height: 25px;
-    padding: 37px 6px 6px;
+    width: 146px;
+    height: 35px;
+    padding: 0px 0px 0px;
     border: 1px solid #999;
     position: absolute;
     background: #fff;
@@ -113,7 +124,7 @@
 
 .search-price .search-price-edit .item1 {
     position: absolute;
-    top: 37px;
+    top: 5px;
     left: 6px;
     width: 36px;
     height: 25px;
@@ -124,7 +135,7 @@
 
 .search-price .search-price-edit .item2 {
     position: absolute;
-    top: 37px;
+    top: 5px;
     right: 7px;
     width: 38px;
     height: 17px;
