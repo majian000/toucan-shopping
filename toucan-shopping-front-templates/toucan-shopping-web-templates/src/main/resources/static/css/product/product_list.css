@@ -43,3 +43,95 @@
     background-color: #e4393c;
     background-position: 7px -158px
 }
+
+
+
+.search-price {
+    position: relative;
+    float: left;
+    width: 155px;
+    height: 25px;
+    margin-right: 12px;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+
+.search-price-set {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.search-price-set .fl {
+    float: left;
+}
+
+
+
+.search-price .search-price-set .fl .input-txt {
+    width: 52px;
+    border-color: #ccc;
+    color: #333;
+}
+
+.search-price .search-price-set em {
+    width: 12px;
+    line-height: 23px;
+    color: #333;
+    text-align: center;
+}
+
+.search-price .search-price-set .fl .input-txt, .search-price .search-price-set em {
+    float: left;
+    display: inline;
+}
+
+.search-price .search-price-set .fl .input-txt {
+    height: 17px;
+    line-height: 17px;
+    border: 1px solid #ccc;
+    padding: 3px;
+    width: 60px;
+}
+
+
+.search-price .search-price-set .fl .input-txt .input-txt:focus {
+    outline-color: transparent
+}
+
+.search-price .search-price-edit {
+    display: none;
+    width: 135px;
+    height: 25px;
+    padding: 37px 6px 6px;
+    border: 1px solid #999;
+    position: absolute;
+    background: #fff;
+    box-shadow: 1px 1px 2px rgb(0 0 0 / 20%);
+}
+
+
+.search-price .search-price-edit .item1 {
+    position: absolute;
+    top: 37px;
+    left: 6px;
+    width: 36px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    color: #005aa0;
+}
+
+.search-price .search-price-edit .item2 {
+    position: absolute;
+    top: 37px;
+    right: 7px;
+    width: 38px;
+    height: 17px;
+    line-height: 17px;
+    padding: 3px;
+    border: 1px solid #ccc;
+    text-align: center;
+    background: #f7f7f7;
+    color: #333
+}

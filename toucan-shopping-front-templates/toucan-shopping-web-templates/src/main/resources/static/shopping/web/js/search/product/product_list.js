@@ -19,7 +19,12 @@ $(function(){
 
 function loadPageBefore()
 {
-
+    $(".search-price").mouseenter(function(){
+        $(".search-price-edit").show();
+    });
+    $(".search-price").mouseleave(function(){
+        $(".search-price-edit").hide();
+    });
 }
 
 

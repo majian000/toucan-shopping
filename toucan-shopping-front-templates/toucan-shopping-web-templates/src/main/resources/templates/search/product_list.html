@@ -51,7 +51,8 @@
         <#if hitBrands??>
             <#list hitBrands as hb>
                 <a class="spab-item" >
-                    <b>${hb.name}（品牌）</b>
+                    <b>品牌:</b>
+                    <em>${hb.name}</em>
                     <i class="bcb" attr-bid="${hb.id?c}" ></i>
                 </a>
             </#list>
@@ -164,8 +165,24 @@
                         <span class="i_down">价格从高到低显示</span>
                     </a>
                     <a href="#">新品</a>
+                    <div class="search-price">
+                        <div class="search-price-set">
+                            <div class="fl">
+                                <input type="text" class="input-txt"   placeholder="¥"  />
+                            </div>
+                            <em>-</em>
+                            <div class="fl">
+                                <input type="text" class="input-txt"   placeholder="¥" />
+                            </div>
+                        </div>
+                        <div class="search-price-edit">
+
+                            <a href="javascript:;" class="item1">清空</a>
+                            <a href="javascript:;" class="item2" >确定</a>
+                        </div>
+                    </div>
                 </span>
-                <span class="fr">共发现120件</span>
+                <span class="fr plcount">共发现${total!'0'}件</span>
             </div>
             <div class="list_c">
 
