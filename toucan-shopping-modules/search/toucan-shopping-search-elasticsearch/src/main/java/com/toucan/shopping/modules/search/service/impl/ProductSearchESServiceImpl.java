@@ -289,13 +289,23 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
         }
 
-        //价格查询 大于等于
-        if(productSearchVO.getPsd()!=null) {
-            sourceBuilder.query(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPsd()));
-        }
-        //价格查询 小于等于
-        if(productSearchVO.getPed()!=null) {
-            sourceBuilder.query(QueryBuilders.rangeQuery("price").gte(productSearchVO.getPed()));
+        if(productSearchVO.getPsd() != null||productSearchVO.getPed() != null) {
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+            /**
+             gt：大于 >
+             gte：大于等于 >=
+             lt：小于  <
+             lte：小于等于  <=
+             */
+            //价格查询 大于等于
+            if (productSearchVO.getPsd() != null) {
+                boolQuery.filter(QueryBuilders.rangeQuery("price").gte(productSearchVO.getPsd()));
+            }
+            //价格查询 小于等于
+            if (productSearchVO.getPed() != null) {
+                boolQuery.filter(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPed()));
+            }
+            sourceBuilder.query(boolQuery);
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));

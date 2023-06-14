@@ -28,8 +28,14 @@ function loadPageBefore()
     $(".spclear").bind("click", function () {
         $("#psi").val("");
         $("#pei").val("");
-
     });
+
+    $(".spbtn").bind("click", function () {
+        $("#ps").val($("#psi").val());
+        $("#pe").val($("#pei").val());
+        doSearch();
+    });
+
 
 }
 
@@ -92,14 +98,14 @@ function bindAttributeEvent(){
             }
         }
         $("#bid").val(attrId);
-        $("#brandName").val(attrName);
+        $("#bn").val(attrName);
         doSearch();
     });
 
 
     $(".bcb").bind("click", function () {
         $("#bid").val("");
-        $("#brandName").val("");
+        $("#bn").val("");
         doSearch();
     });
 

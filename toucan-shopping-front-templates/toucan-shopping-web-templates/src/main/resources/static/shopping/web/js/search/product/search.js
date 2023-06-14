@@ -29,6 +29,8 @@ function doSearch(extParams)
     var abids = $("#abids").val();
     var bid = $("#bid").val();
     var bn = $("#bn").val();
+    var ps = $("#ps").val();
+    var pe = $("#pe").val();
     var params ="?keyword="+keywrd;
     if(cid!=null&&cid!="")
     {
@@ -60,6 +62,15 @@ function doSearch(extParams)
     {
         params += "&bn=" + bn;
     }
+    if(ps!=null&&ps!='')
+    {
+        params += "&ps=" + ps;
+    }
+    if(pe!=null&&pe!='')
+    {
+        params += "&pe=" + pe;
+    }
+
 
     if(extParams!=null&&extParams!='')
     {
