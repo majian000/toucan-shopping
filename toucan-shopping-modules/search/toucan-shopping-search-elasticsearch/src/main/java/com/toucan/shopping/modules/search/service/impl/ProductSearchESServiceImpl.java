@@ -252,10 +252,10 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             );
         }
         //品牌名称查询
-        if(StringUtils.isNotEmpty(productSearchVO.getBrandName()))
+        if(StringUtils.isNotEmpty(productSearchVO.getBn()))
         {
             sourceBuilder.query(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getBrandName(), new String[]{"brandName"})
+                    .multiMatchQuery(productSearchVO.getBn(), new String[]{"brandName"})
             );
         }
         //分类名称查询
@@ -287,6 +287,15 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             }
             sourceBuilder.query(boolQuery);
 
+        }
+
+        //价格查询 大于等于
+        if(productSearchVO.getPsd()!=null) {
+            sourceBuilder.query(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPsd()));
+        }
+        //价格查询 小于等于
+        if(productSearchVO.getPed()!=null) {
+            sourceBuilder.query(QueryBuilders.rangeQuery("price").gte(productSearchVO.getPed()));
         }
 
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));

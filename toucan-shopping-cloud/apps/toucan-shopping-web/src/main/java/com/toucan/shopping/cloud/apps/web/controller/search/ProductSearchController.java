@@ -104,11 +104,11 @@ public class ProductSearchController {
                 }
             }
 
-            if(StringUtils.isNotEmpty(productSearchVO.getBid())&&StringUtils.isNotEmpty(productSearchVO.getBrandName()))
+            if(StringUtils.isNotEmpty(productSearchVO.getBid())&&StringUtils.isNotEmpty(productSearchVO.getBn()))
             {
                 BrandVO brandVO = new BrandVO();
                 brandVO.setId(Long.parseLong(productSearchVO.getBid()));
-                brandVO.setName(productSearchVO.getBrandName());
+                brandVO.setName(productSearchVO.getBn());
                 hitBrands.add(brandVO);
             }
 
@@ -134,15 +134,45 @@ public class ProductSearchController {
             }
 
             httpServletRequest.setAttribute("keyword",productSearchVO.getKeyword());
+            //分类ID
             httpServletRequest.setAttribute("cid",productSearchVO.getCid());
+            //将这些品牌ID排除出查询条件
             httpServletRequest.setAttribute("ebids",productSearchVO.getEbids());
+            //是否先查询品牌
             httpServletRequest.setAttribute("qbs",productSearchVO.getQbs());
+            //属性ID列表
             httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
+            //属性集合字符串
             httpServletRequest.setAttribute("ab",productSearchVO.getAb());
+            //属性集合
             httpServletRequest.setAttribute("selectSearchAttributes",productSearchVO.getSearchAttributes());
+            //品牌ID
             httpServletRequest.setAttribute("bid",productSearchVO.getBid());
-            httpServletRequest.setAttribute("brandName",productSearchVO.getBrandName());
+            //品牌名称
+            httpServletRequest.setAttribute("bn",productSearchVO.getBn());
+            //价格区间
+            httpServletRequest.setAttribute("ps",productSearchVO.getPs());
+            httpServletRequest.setAttribute("pe",productSearchVO.getPe());
 
+            if(StringUtils.isNotEmpty(productSearchVO.getPs()))
+            {
+                try{
+                    productSearchVO.setPsd(Double.parseDouble(productSearchVO.getPs()));
+                }catch(Exception e)
+                {
+                    logger.error(e.getMessage(),e);
+                }
+            }
+
+            if(StringUtils.isNotEmpty(productSearchVO.getPe()))
+            {
+                try{
+                    productSearchVO.setPed(Double.parseDouble(productSearchVO.getPe()));
+                }catch(Exception e)
+                {
+                    logger.error(e.getMessage(),e);
+                }
+            }
 
             productSearchVO.setSize(20);
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);

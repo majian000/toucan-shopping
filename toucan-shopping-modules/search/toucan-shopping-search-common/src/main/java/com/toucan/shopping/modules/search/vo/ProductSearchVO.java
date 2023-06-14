@@ -27,13 +27,22 @@ public class ProductSearchVO extends SearchVO{
 
     private String productName; //商品名称
 
-    private String brandName; //品牌名称
+    private String bn; //品牌名称
 
     private String categoryName; //分类名称
 
     private String ab; //属性集合字符串 多个用,分割
 
     private String abids; //属性ID列表 多个用,分割
+
+    private String ps; //单价开始区间
+
+    private String pe; //单价结束区间
+
+    private Double psd; //单价开始区间
+
+    private Double ped; //单价结束区间
+
 
     private List<ProductSearchAttributeVO> searchAttributes; //属性集合
 

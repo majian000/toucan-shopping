@@ -25,6 +25,12 @@ function loadPageBefore()
     $(".search-price").mouseleave(function(){
         $(".search-price-edit").hide();
     });
+    $(".spclear").bind("click", function () {
+        $("#psi").val("");
+        $("#pei").val("");
+
+    });
+
 }
 
 

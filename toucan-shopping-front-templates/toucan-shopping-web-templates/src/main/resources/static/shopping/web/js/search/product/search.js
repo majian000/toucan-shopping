@@ -28,7 +28,7 @@ function doSearch(extParams)
     var ab = $("#ab").val();
     var abids = $("#abids").val();
     var bid = $("#bid").val();
-    var brandName = $("#brandName").val();
+    var bn = $("#bn").val();
     var params ="?keyword="+keywrd;
     if(cid!=null&&cid!="")
     {
@@ -56,9 +56,9 @@ function doSearch(extParams)
     {
         params += "&bid=" + bid;
     }
-    if(brandName!=null&&brandName!='')
+    if(bn!=null&&bn!='')
     {
-        params += "&brandName=" + brandName;
+        params += "&bn=" + bn;
     }
 
     if(extParams!=null&&extParams!='')
