@@ -52,7 +52,9 @@ function doSearch(extParams)
     }
     if(ebids!=null&&ebids!="")
     {
-        params+="&ebids="+ebids;
+        if(qbs!="f") {
+            params += "&ebids=" + ebids;
+        }
     }
     if(qkeyword!=keywrd)
     {
