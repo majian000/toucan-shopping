@@ -68,6 +68,7 @@ public class ProductSearchController {
             List<BrandVO> hitBrands = new ArrayList<>();
             String keyword = productSearchVO.getKeyword();
             if("t".equals(productSearchVO.getQbs())) {
+
                 productSearchVO.setBn(productSearchVO.getKeyword());
                 productSearchVO.setKeyword(null);
 
@@ -82,34 +83,37 @@ public class ProductSearchController {
                     List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
                     if (CollectionUtils.isNotEmpty(productResult)) {
 
-                        String[] ebids = null; //不查询这个品牌的商品
-                        if (StringUtils.isNotEmpty(productSearchVO.getEbids())) {
-                            ebids = productSearchVO.getEbids().split(",");
-                        }
-                        boolean existsHitBrand=false;
-                        for (ProductSearchResultVO productSearchResultVO : productResult) {
-                            existsHitBrand = false;
-                            for(BrandVO hitBrandVO:hitBrands)
-                            {
-                                if(hitBrandVO!=null&&hitBrandVO.getId().equals(productSearchResultVO.getBrandId()))
-                                {
-                                    existsHitBrand = true;
-                                    break;
-                                }
+                        //没有关键字,默认查询了全部商品,就不回显品牌
+                        if(StringUtils.isNotEmpty(keyword)) {
+                            String[] ebids = null; //不查询这个品牌的商品
+                            if (StringUtils.isNotEmpty(productSearchVO.getEbids())) {
+                                ebids = productSearchVO.getEbids().split(",");
                             }
-                            if(!existsHitBrand) {
-                                BrandVO brandVO = new BrandVO();
-                                brandVO.setName(productSearchResultVO.getBrandName());
-                                brandVO.setId(productSearchResultVO.getBrandId());
-                                if (ebids != null) {
-                                    for (String ebid : ebids) {
-                                        if (!ebid.equals(String.valueOf(brandVO.getId()))) {
+                            boolean existsHitBrand = false;
+                            for (ProductSearchResultVO productSearchResultVO : productResult) {
+                                existsHitBrand = false;
+                                for (BrandVO hitBrandVO : hitBrands) {
+                                    if (hitBrandVO != null && hitBrandVO.getId().equals(productSearchResultVO.getBrandId())) {
+                                        existsHitBrand = true;
+                                        break;
+                                    }
+                                }
+                                if (!existsHitBrand) {
+                                    if (StringUtils.isNotEmpty(productSearchResultVO.getBrandName())) {
+                                        BrandVO brandVO = new BrandVO();
+                                        brandVO.setName(productSearchResultVO.getBrandName());
+                                        brandVO.setId(productSearchResultVO.getBrandId());
+                                        if (ebids != null) {
+                                            for (String ebid : ebids) {
+                                                if (!ebid.equals(String.valueOf(brandVO.getId()))) {
+                                                    hitBrands.add(brandVO);
+                                                    break;
+                                                }
+                                            }
+                                        } else {
                                             hitBrands.add(brandVO);
-                                            break;
                                         }
                                     }
-                                } else {
-                                    hitBrands.add(brandVO);
                                 }
                             }
                         }
@@ -132,10 +136,12 @@ public class ProductSearchController {
                     }
                 }
                 if(!existsHitBrand) {
-                    BrandVO brandVO = new BrandVO();
-                    brandVO.setId(Long.parseLong(productSearchVO.getBid()));
-                    brandVO.setName(productSearchVO.getBn());
-                    hitBrands.add(brandVO);
+                    if(StringUtils.isNotEmpty(productSearchVO.getBn())) {
+                        BrandVO brandVO = new BrandVO();
+                        brandVO.setId(Long.parseLong(productSearchVO.getBid()));
+                        brandVO.setName(productSearchVO.getBn());
+                        hitBrands.add(brandVO);
+                    }
                 }
             }
 

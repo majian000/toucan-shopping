@@ -100,6 +100,7 @@ function bindAttributeEvent(){
         }
         $("#bid").val(attrId);
         $("#bn").val(attrName);
+        $("#qbs").val("f");
         doSearch();
     });
 

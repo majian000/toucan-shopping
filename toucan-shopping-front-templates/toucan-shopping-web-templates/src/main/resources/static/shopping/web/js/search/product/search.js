@@ -3,6 +3,7 @@
 $(function(){
 
     $(".s_btn").bind("click", function () {
+        clearSearchParams();
         doSearch();
     });
 
@@ -14,6 +15,19 @@ $(function(){
     });
 
 });
+
+function clearSearchParams()
+{
+    $("#cid").val("");
+    $("#ebids").val("");
+    $("#qbs").val("");
+    $("#ab").val("");
+    $("#abids").val("");
+    $("#bid").val("");
+    $("#bn").val("");
+    $("#ps").val("");
+    $("#pe").val("");
+}
 
 
 function doSearch(extParams)

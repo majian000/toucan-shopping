@@ -52,7 +52,7 @@
             <#list hitBrands as hb>
                 <a class="spab-item" >
                     <b>品牌:</b>
-                    <em>${hb.name}</em>
+                    <em>${hb.name!''}</em>
                     <i class="bcb" attr-bid="${hb.id?c}" ></i>
                 </a>
             </#list>
