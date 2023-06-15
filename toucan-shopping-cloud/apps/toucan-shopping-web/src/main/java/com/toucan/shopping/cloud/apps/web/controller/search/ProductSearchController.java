@@ -105,6 +105,7 @@ public class ProductSearchController {
                                     for (String ebid : ebids) {
                                         if (!ebid.equals(String.valueOf(brandVO.getId()))) {
                                             hitBrands.add(brandVO);
+                                            break;
                                         }
                                     }
                                 } else {

@@ -248,45 +248,46 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
         //名称查询
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
-            sourceBuilder.query(QueryBuilders
+            boolQueryBuilder.must(QueryBuilders
                     .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName","brandNameCN","brandNameEN", "categoryName"})
             );
         }
         //分类查询
         if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
-            sourceBuilder.query(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
         }
         //商品名称查询
         if(StringUtils.isNotEmpty(productSearchVO.getProductName()))
         {
-            sourceBuilder.query(QueryBuilders
+            boolQueryBuilder.must(QueryBuilders
                     .multiMatchQuery(productSearchVO.getProductName(), new String[]{"name"})
             );
         }
         //品牌名称查询
         if(StringUtils.isNotEmpty(productSearchVO.getBn()))
         {
-            sourceBuilder.query(QueryBuilders
+            boolQueryBuilder.must(QueryBuilders
                     .multiMatchQuery(productSearchVO.getBn(), new String[]{"brandName","brandNameCN","brandNameEN"})
             );
         }
         //分类名称查询
         if(StringUtils.isNotEmpty(productSearchVO.getCategoryName()))
         {
-            sourceBuilder.query(QueryBuilders
+            boolQueryBuilder.must(QueryBuilders
                     .multiMatchQuery(productSearchVO.getCategoryName(), new String[]{"categoryName"})
             );
         }
         //品牌查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
-            sourceBuilder.query(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
+            boolQueryBuilder.must(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
         }
         //品牌查询
         if(StringUtils.isNotEmpty(productSearchVO.getBid()))
         {
-            sourceBuilder.query(QueryBuilders.termQuery("brandId",productSearchVO.getBid()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("brandId",productSearchVO.getBid()));
         }
         //属性查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getSearchAttributes()))
@@ -299,7 +300,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                 NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("searchAttributes", attributeQuery, ScoreMode.None);
                 boolQuery.filter(nestedQuery);
             }
-            sourceBuilder.query(boolQuery);
+            boolQueryBuilder.must(boolQuery);
 
         }
 
@@ -319,9 +320,10 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             if (productSearchVO.getPed() != null) {
                 boolQuery.filter(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPed()));
             }
-            sourceBuilder.query(boolQuery);
+            boolQueryBuilder.must(boolQuery);
         }
 
+        sourceBuilder.query(boolQueryBuilder);
         sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
         sourceBuilder.size(productSearchVO.getSize());
         request.source(sourceBuilder);
