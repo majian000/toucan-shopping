@@ -57,6 +57,7 @@ function drawPageJumpBtns()
         currentPage: cpage,          //当前页码
         totalItemCount: total,    //项目总数,大于0，显示页码总数
         totalPageCount: totalPage,        //总页数
+        isShowTotalCount:false, //是否显示总页数
         callback: function (pageNum) {
             if (g_um_cpage != pageNum) {
                 doSearch("&page="+pageNum);

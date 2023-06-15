@@ -121,6 +121,23 @@
 
                         <div class="layui-form-item" >
                             <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label "  >品牌中文名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.brandNameCN}"  class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >品牌英文名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.brandNameEN}"  class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >店铺ID</label>
                                 <div class="layui-input-block">
                                     <input type="text"  id="shopId" th:value="${model.shopId}"  class="layui-input">

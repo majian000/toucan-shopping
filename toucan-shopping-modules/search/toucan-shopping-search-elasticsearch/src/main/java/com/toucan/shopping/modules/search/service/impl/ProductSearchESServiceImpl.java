@@ -114,6 +114,29 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+
+                    //品牌中文名称
+                    builder.startObject("brandNameCN");
+                    {
+                        builder.field("type", "text")
+                                //插入时分词
+                                .field("analyzer", "ik_max_word")
+                                //搜索时分词
+                                .field("search_analyzer", "ik_smart");
+                    }
+                    builder.endObject();
+
+                    //品牌英文名称
+                    builder.startObject("brandNameEN");
+                    {
+                        builder.field("type", "text")
+                                //插入时分词
+                                .field("analyzer", "ik_max_word")
+                                //搜索时分词
+                                .field("search_analyzer", "ik_smart");
+                    }
+                    builder.endObject();
+
                     //分类名称
                     builder.startObject("categoryName");
                     {
@@ -221,15 +244,6 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception {
 
         List<ProductSearchResultVO> queryResult = new LinkedList<>();
-        if(StringUtils.isEmpty(productSearchVO.getKeyword())&&StringUtils.isEmpty(productSearchVO.getCid()))
-        {
-            PageInfo pageInfo = new PageInfo();
-            pageInfo.setList(queryResult);
-            pageInfo.setPage(productSearchVO.getPage());
-            pageInfo.setSize(productSearchVO.getSize());
-            pageInfo.setTotal(0L);
-            return pageInfo;
-        }
 
         SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
@@ -237,7 +251,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
             sourceBuilder.query(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName", "categoryName"})
+                    .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName","brandNameCN","brandNameEN", "categoryName"})
             );
         }
         //分类查询
@@ -255,7 +269,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         if(StringUtils.isNotEmpty(productSearchVO.getBn()))
         {
             sourceBuilder.query(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getBn(), new String[]{"brandName"})
+                    .multiMatchQuery(productSearchVO.getBn(), new String[]{"brandName","brandNameCN","brandNameEN"})
             );
         }
         //分类名称查询

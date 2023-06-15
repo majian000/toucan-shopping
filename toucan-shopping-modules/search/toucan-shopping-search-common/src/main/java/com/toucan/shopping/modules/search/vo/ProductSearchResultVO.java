@@ -28,6 +28,10 @@ public class ProductSearchResultVO {
 
     private String brandName; //品牌名称
 
+    private String brandNameCN; //品牌中文名称
+
+    private String brandNameEN; //品牌英文名称
+
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID

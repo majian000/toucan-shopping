@@ -144,6 +144,8 @@ public class CanalListener {
                                             List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
                                             if (CollectionUtils.isNotEmpty(brands)) {
                                                 BrandVO brandVO = brands.get(0);
+                                                productSearchResultVO.setBrandNameCN(brandVO.getChineseName());
+                                                productSearchResultVO.setBrandNameEN(brandVO.getEnglishName());
                                                 if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
                                                     productSearchResultVO.setBrandName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
                                                 } else {
