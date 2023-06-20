@@ -1112,13 +1112,11 @@ public class ShopProductApproveController extends UIController {
                     //同步搜索
                     ProductSkuVO queryProductSkuVO = new ProductSkuVO();
                     if(resultShopProductApproveVO.getShopProductId()!=null) {
-                        List<Long> shopProductIdList = new LinkedList<>();
-                        shopProductIdList.add(resultShopProductApproveVO.getShopProductId());
-                        queryProductSkuVO.setShopProductIdList(shopProductIdList);
-                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
-                        resultObjectVO = feignProductSkuService.queryListByShopProductIdList(requestJsonVO);
-                        if (resultObjectVO.isSuccess()) {
-                            List<ProductSkuVO> productSkuVOS = resultObjectVO.formatDataList(ProductSkuVO.class);
+                        queryProductSkuVO.setShopProductId(resultShopProductApproveVO.getShopProductId());
+                        RequestJsonVO querySkuRequestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
+                        ResultObjectVO querySkuResultObjectVO = feignProductSkuService.queryListByShopProductIdList(querySkuRequestJsonVO);
+                        if (querySkuResultObjectVO.isSuccess()) {
+                            List<ProductSkuVO> productSkuVOS = querySkuResultObjectVO.formatDataList(ProductSkuVO.class);
                             if (CollectionUtils.isNotEmpty(productSkuVOS)) {
                                 for (ProductSkuVO productSkuVO : productSkuVOS) {
                                     SearchUtils.flushToSearch(productSkuVO);
@@ -1127,7 +1125,6 @@ public class ShopProductApproveController extends UIController {
                         }
                     }
                 }
-
                 //发送商品审核消息
                 if(resultObjectVO.isSuccess())
                 {
@@ -1174,6 +1171,7 @@ public class ShopProductApproveController extends UIController {
                         }
                     }
                 }
+
 
             }
             return resultObjectVO;
