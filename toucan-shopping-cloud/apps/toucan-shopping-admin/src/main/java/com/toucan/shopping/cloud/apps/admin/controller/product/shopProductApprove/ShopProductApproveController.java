@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
@@ -89,6 +90,8 @@ public class ShopProductApproveController extends UIController {
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -1104,6 +1107,27 @@ public class ShopProductApproveController extends UIController {
             resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
+                if(resultObjectVO.getData()!=null) {
+                    ShopProductApproveVO resultShopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                    //同步搜索
+                    ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+                    if(resultShopProductApproveVO.getShopProductId()!=null) {
+                        List<Long> shopProductIdList = new LinkedList<>();
+                        shopProductIdList.add(resultShopProductApproveVO.getShopProductId());
+                        queryProductSkuVO.setShopProductIdList(shopProductIdList);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
+                        resultObjectVO = feignProductSkuService.queryListByShopProductIdList(requestJsonVO);
+                        if (resultObjectVO.isSuccess()) {
+                            List<ProductSkuVO> productSkuVOS = resultObjectVO.formatDataList(ProductSkuVO.class);
+                            if (CollectionUtils.isNotEmpty(productSkuVOS)) {
+                                for (ProductSkuVO productSkuVO : productSkuVOS) {
+                                    SearchUtils.flushToSearch(productSkuVO);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 //发送商品审核消息
                 if(resultObjectVO.isSuccess())
                 {

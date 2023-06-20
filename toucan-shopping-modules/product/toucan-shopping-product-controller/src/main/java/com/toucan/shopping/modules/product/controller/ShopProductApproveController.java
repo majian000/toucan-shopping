@@ -1389,6 +1389,8 @@ public class ShopProductApproveController {
                 //更新关联店铺商品ID
                 shopProductApproveService.updateShopProductId(shopProductApproveVO.getId(),shopProduct.getId());
 
+                shopProductApproveVO.setShopProductId(shopProduct.getId());
+                resultObjectVO.setData(shopProductApproveVO);
             }else{
                 throw new IllegalArgumentException("保存商品图片失败");
             }
