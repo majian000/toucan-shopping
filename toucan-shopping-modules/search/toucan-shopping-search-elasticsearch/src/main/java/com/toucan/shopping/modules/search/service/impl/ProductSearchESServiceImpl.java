@@ -222,13 +222,15 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
-                    //权重值
-                    builder.startObject("randk");
+                    //新品权重值
+                    builder.startObject("newestRank");
                     {
                         builder.field("type", "double");
                     }
-                    //新品权重值
-                    builder.startObject("newestRank");
+                    builder.endObject();
+
+                    //权重值
+                    builder.startObject("randk");
                     {
                         builder.field("type", "double");
                     }
