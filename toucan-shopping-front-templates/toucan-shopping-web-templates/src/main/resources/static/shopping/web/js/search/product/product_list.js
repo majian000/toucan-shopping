@@ -69,6 +69,7 @@ function drawPageJumpBtns()
 }
 
 
+
 function bindAttributeEvent(){
 
     $(".qb_labels").bind("click", function () {
@@ -107,6 +108,8 @@ function bindAttributeEvent(){
     $(".pfla").bind("click", function () {
         var attrType=$(this).attr("attr-type");
 
+
+
         //默认排序
         if(attrType=="defult")
         {
@@ -117,6 +120,7 @@ function bindAttributeEvent(){
         //价格排序
         if(attrType=="price")
         {
+            $("#pdst").val("");
             var pstVal = $("#pst").val();
             if(pstVal==null||pstVal=="")
             {
@@ -130,16 +134,19 @@ function bindAttributeEvent(){
         }
         if(attrType=="priceAsc")
         {
+            $("#pdst").val("");
             $("#pst").val("asc");
         }
         if(attrType=="priceDesc")
         {
+            $("#pdst").val("");
             $("#pst").val("desc");
         }
 
         //新品排序
         if(attrType=="newest")
         {
+            $("#pst").val("");
             var pdstVal = $("#pdst").val();
             if(pdstVal==null||pdstVal=="")
             {
@@ -153,10 +160,12 @@ function bindAttributeEvent(){
         }
         if(attrType=="newestAsc")
         {
+            $("#pst").val("");
             $("#pdst").val("asc");
         }
         if(attrType=="newestDesc")
         {
+            $("#pst").val("");
             $("#pdst").val("desc");
         }
 
