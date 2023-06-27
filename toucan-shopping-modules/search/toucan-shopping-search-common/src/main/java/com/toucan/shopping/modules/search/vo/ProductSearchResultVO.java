@@ -56,6 +56,8 @@ public class ProductSearchResultVO {
 
     private String createDate; //创建时间
 
+    private BigDecimal newestRank; //新品权重值
+
     private String updateDate; //修改时间
 
     private String categoryPath; //类别路径

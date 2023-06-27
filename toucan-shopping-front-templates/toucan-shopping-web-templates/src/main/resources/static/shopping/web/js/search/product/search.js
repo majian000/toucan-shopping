@@ -18,15 +18,14 @@ $(function(){
 
 function clearSearchParams()
 {
-    $("#cid").val("");
-    $("#ebids").val("");
-    $("#qbs").val("");
-    $("#ab").val("");
-    $("#abids").val("");
-    $("#bid").val("");
-    $("#bn").val("");
-    $("#ps").val("");
-    $("#pe").val("");
+    var psfhs = $(".psfh");
+    if(psfhs!=null&&psfhs.length>0)
+    {
+        for(var i=0;i<psfhs.length;i++)
+        {
+            $(psfhs[i]).val("");
+        }
+    }
 }
 
 
@@ -34,57 +33,44 @@ function doSearch(extParams)
 {
     // $(".s_form").attr("action","/api/product/g/search");
     // $(".s_form").submit();
-    var keywrd=$(".s_ipt").val();
-    var qkeyword=$("#qkeyword").val();
-    var cid=$("#cid").val();
-    var ebids=$("#ebids").val();
-    var qbs=$("#qbs").val();
-    var ab = $("#ab").val();
-    var abids = $("#abids").val();
-    var bid = $("#bid").val();
-    var bn = $("#bn").val();
-    var ps = $("#ps").val();
-    var pe = $("#pe").val();
-    var params ="?keyword="+keywrd;
-    if(cid!=null&&cid!="")
+
+    var psfiMap = new Map();
+    var psfi = $(".psfi");
+    if(psfi!=null&&psfi.length>0)
     {
-        params+="&cid="+cid;
-    }
-    if(ebids!=null&&ebids!="")
-    {
-        if(qbs!="f") {
-            params += "&ebids=" + ebids;
+        for(var i=0;i<psfi.length;i++)
+        {
+            var id=$(psfi[i]).attr("id");
+            var val=$(psfi[i]).val();
+            psfiMap.set(id,(val!=null?val:""));
         }
     }
-    if(qkeyword!=keywrd)
+
+    var params ="?keyword="+psfiMap.get("keyword");
+    if(psfiMap.get("qkeyword")!=psfiMap.get("keyword"))
     {
-        qbs='t';
+        psfiMap.set("qbs","t");
     }
-    if(qbs!=null&&qbs!='')
-    {
-        params+="&qbs="+qbs;
-    }
-    if(ab!=null&&ab!='') {
-        params += "&ab=" + ab;
-    }
-    if(abids!=null&&abids!='') {
-        params += "&abids=" + abids;
-    }
-    if(bid!=null&&bid!='')
-    {
-        params += "&bid=" + bid;
-    }
-    if(bn!=null&&bn!='')
-    {
-        params += "&bn=" + bn;
-    }
-    if(ps!=null&&ps!='')
-    {
-        params += "&ps=" + ps;
-    }
-    if(pe!=null&&pe!='')
-    {
-        params += "&pe=" + pe;
+    for(let item of psfiMap.entries()) {
+        //0:key 1:value
+        if(item[0]=="keywrd")
+        {
+            continue;
+        }
+        if(item[0]=="ebids")
+        {
+            if(item[1]!=null&&item[1]!="") {
+                if (psfiMap.get("qbs") != "f") {
+                    params += "&ebids=" + item[1];
+                }
+            }
+            continue;
+        }
+
+        if(item[1]!=null&&item[1]!="")
+        {
+            params+="&"+item[0]+"="+item[1];
+        }
     }
 
 

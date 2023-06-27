@@ -104,6 +104,65 @@ function bindAttributeEvent(){
         doSearch();
     });
 
+    $(".pfla").bind("click", function () {
+        var attrType=$(this).attr("attr-type");
+
+        //默认排序
+        if(attrType=="defult")
+        {
+            $("#pst").val("");
+            $("#pdst").val("");
+        }
+
+        //价格排序
+        if(attrType=="price")
+        {
+            var pstVal = $("#pst").val();
+            if(pstVal==null||pstVal=="")
+            {
+                $("#pst").val("asc");
+            }else if(pstVal=="asc")
+            {
+                $("#pst").val("desc");
+            }else if(pstVal=="desc"){
+                $("#pst").val("asc");
+            }
+        }
+        if(attrType=="priceAsc")
+        {
+            $("#pst").val("asc");
+        }
+        if(attrType=="priceDesc")
+        {
+            $("#pst").val("desc");
+        }
+
+        //新品排序
+        if(attrType=="newest")
+        {
+            var pdstVal = $("#pdst").val();
+            if(pdstVal==null||pdstVal=="")
+            {
+                $("#pdst").val("asc");
+            }else if(pdstVal=="asc")
+            {
+                $("#pdst").val("desc");
+            }else if(pdstVal=="desc"){
+                $("#pdst").val("asc");
+            }
+        }
+        if(attrType=="newestAsc")
+        {
+            $("#pdst").val("asc");
+        }
+        if(attrType=="newestDesc")
+        {
+            $("#pdst").val("desc");
+        }
+
+        doSearch();
+    });
+
 
     $(".bcb").bind("click", function () {
         $("#bid").val("");

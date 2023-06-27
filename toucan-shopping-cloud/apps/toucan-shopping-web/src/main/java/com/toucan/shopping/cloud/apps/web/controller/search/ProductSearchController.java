@@ -189,6 +189,21 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("ps",productSearchVO.getPs());
             httpServletRequest.setAttribute("pe",productSearchVO.getPe());
 
+            //默认排序
+            httpServletRequest.setAttribute("stt","default");
+            //价格排序
+            httpServletRequest.setAttribute("pst",productSearchVO.getPst());
+            if(StringUtils.isNotEmpty(productSearchVO.getPst()))
+            {
+                httpServletRequest.setAttribute("stt","price");
+            }
+            //新品排序
+            httpServletRequest.setAttribute("pdst",productSearchVO.getPdst());
+            if(StringUtils.isNotEmpty(productSearchVO.getPdst()))
+            {
+                httpServletRequest.setAttribute("stt","newest");
+            }
+
             if(StringUtils.isNotEmpty(productSearchVO.getPs()))
             {
                 try{

@@ -43,6 +43,10 @@ public class ProductSearchVO extends SearchVO{
 
     private Double ped; //单价结束区间
 
+    private String pst; //价格排序 null:默认没排序 desc:从高到低 asc:从低到高
+
+    private String pdst; //时间排序 null:默认没排序 desc:发布时间降序 asc:发布时间升序
+
 
     private List<ProductSearchAttributeVO> searchAttributes; //属性集合
 

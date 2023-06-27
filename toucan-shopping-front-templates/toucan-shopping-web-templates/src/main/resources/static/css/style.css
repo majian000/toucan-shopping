@@ -1520,7 +1520,7 @@ table.choice tr td.td_a a:hover, table.choice tr td.td_a a.now{
 	width:68px; height:23px; line-height:23px; overflow:hidden; color:#555555; text-indent:12px; float:left; display:inline; margin-right:-1px; margin-top:6px; border:1px solid #cccccc;
 }
 .list_or .fla:hover, .list_or .fla.now{
-	color:#FFF; background-color:#ff4e00;
+	color:#FFF; background-color:#ff4e00;cursor:pointer;
 }
 .list_or .i_up{
 	width:15px; height:8px; line-height:8px; overflow:hidden; background:url(../images/i_up.gif) no-repeat center top; text-indent:-9999em; float:right; margin-top:6px; margin-right:8px;

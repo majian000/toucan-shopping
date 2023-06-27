@@ -153,18 +153,37 @@
         <div class="l_list2">
             <div class="list_t">
             	<span class="fl list_or">
-                	<a href="#" class="now fla">默认</a>
-                    <a href="#" class="fla">
-                    	<span class="fl">销量</span>
-                        <span class="i_up">销量从低到高显示</span>
-                        <span class="i_down">销量从高到低显示</span>
-                    </a>
-                    <a href="#" class="fla">
-                    	<span class="fl">价格</span>
-                        <span class="i_up">价格从低到高显示</span>
-                        <span class="i_down">价格从高到低显示</span>
-                    </a>
-                    <a href="#" class="fla">新品</a>
+                    <#if stt?? && stt == "default">
+                	    <a  class="now fla pfla" attr-type="defult">默认</a>
+                    <#else>
+                	    <a  class=" fla pfla" attr-type="defult">默认</a>
+                    </#if>
+                    <#if stt?? && stt == "price">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    </#if>
+                    <#if stt?? && stt == "newest">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                        <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                    </#if>
                     <div class="search-price">
                         <div class="search-price-set">
                             <div class="fl">

@@ -40,6 +40,7 @@ import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -226,6 +227,11 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     {
                         builder.field("type", "double");
                     }
+                    //新品权重值
+                    builder.startObject("newestRank");
+                    {
+                        builder.field("type", "double");
+                    }
                     builder.endObject();
 
                 }
@@ -321,6 +327,28 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                 boolQuery.filter(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPed()));
             }
             boolQueryBuilder.must(boolQuery);
+        }
+
+        //价格排序
+        if(StringUtils.isNotEmpty(productSearchVO.getPst()))
+        {
+            if("asc".equals(productSearchVO.getPst()))
+            {
+                sourceBuilder.sort("price", SortOrder.ASC);
+            }else if("desc".equals(productSearchVO.getPst())){
+                sourceBuilder.sort("price", SortOrder.DESC);
+            }
+        }
+
+        //新品排序
+        if(StringUtils.isNotEmpty(productSearchVO.getPdst()))
+        {
+            if("asc".equals(productSearchVO.getPdst()))
+            {
+                sourceBuilder.sort("newestRank", SortOrder.ASC);
+            }else if("desc".equals(productSearchVO.getPdst())){
+                sourceBuilder.sort("newestRank", SortOrder.DESC);
+            }
         }
 
         sourceBuilder.query(boolQueryBuilder);
