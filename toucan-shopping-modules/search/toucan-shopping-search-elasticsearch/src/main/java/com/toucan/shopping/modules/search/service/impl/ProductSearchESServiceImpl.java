@@ -331,6 +331,12 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
             boolQueryBuilder.must(boolQuery);
         }
 
+        //默认排序,根据rank值最大在最前面
+        if(StringUtils.isEmpty(productSearchVO.getPst())&&StringUtils.isEmpty(productSearchVO.getPdst()))
+        {
+            sourceBuilder.sort("randk", SortOrder.DESC);
+        }
+
         //价格排序
         if(StringUtils.isNotEmpty(productSearchVO.getPst()))
         {
