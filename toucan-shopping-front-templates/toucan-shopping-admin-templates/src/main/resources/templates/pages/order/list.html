@@ -444,6 +444,20 @@
                 }else if(obj.event=="openDetailDialogDevent")
                 {
                     openDetailDialog(data.id);
+                }else if(obj.event=="cancelOrder")
+                {
+                    var index = layer.open({
+                        title: '取消订单',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin:true,
+                        area: ['50%', '50%'],
+                        content: "[[@{/}]]order/cancel/page/"+data.id
+                    });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                    return false;
                 }
             });
         }

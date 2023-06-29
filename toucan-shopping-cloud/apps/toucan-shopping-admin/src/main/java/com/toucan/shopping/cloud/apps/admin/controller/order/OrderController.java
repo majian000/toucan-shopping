@@ -147,5 +147,37 @@ public class OrderController extends UIController {
         return "pages/order/detail.html";
     }
 
+
+
+    /**
+     * 查看
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON)
+    @RequestMapping(value = "/cancel",method = RequestMethod.POST)
+    public ResultObjectVO cancel(@RequestBody OrderVO orderVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 跳转到驳回页面
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/cancel/page/{id}",method = RequestMethod.GET)
+    public String rejectPage(HttpServletRequest request,@PathVariable String id)
+    {
+        request.setAttribute("id",id);
+        return "pages/order/cancel.html";
+    }
 }
 
