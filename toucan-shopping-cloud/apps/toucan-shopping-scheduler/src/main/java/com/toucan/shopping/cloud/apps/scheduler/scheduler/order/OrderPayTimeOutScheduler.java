@@ -124,7 +124,7 @@ public class OrderPayTimeOutScheduler {
                     }
 
                     logger.info("删除锁定库存.....");
-                    orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
+                    resultObjectVO = orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //删除锁定库存事件
