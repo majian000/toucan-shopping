@@ -42,18 +42,25 @@ function doSearch(extParams)
         {
             var id=$(psfi[i]).attr("id");
             var val=$(psfi[i]).val();
-            psfiMap.set(id,(val!=null?val:""));
+            if(val==null||val=="undefined"){
+                val="";
+            }
+            psfiMap.set(id,val);
         }
     }
 
-    var params ="?keyword="+psfiMap.get("keyword");
+    var params ="?keyword="+(psfiMap.get("keyword")!=null?psfiMap.get("keyword"):"");
     if(psfiMap.get("qkeyword")!=psfiMap.get("keyword"))
     {
         psfiMap.set("qbs","t");
     }
     for(let item of psfiMap.entries()) {
         //0:key 1:value
-        if(item[0]=="keywrd")
+        if(item[0]=="keyword")
+        {
+            continue;
+        }
+        if(item[0]=="qkeyword")
         {
             continue;
         }

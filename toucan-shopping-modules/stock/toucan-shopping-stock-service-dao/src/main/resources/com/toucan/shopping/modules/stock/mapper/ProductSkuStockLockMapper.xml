@@ -8,6 +8,7 @@
         <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
         <result column="type" jdbcType="SMALLINT" property="type" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -50,8 +51,8 @@
 
 
     <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
-          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no)
-          values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo})
+          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no,order_no)
+          values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo},#{orderNo})
     </insert>
 
     <select id="queryStockNumByVO" resultMap="productSkuStockLockVOMap">

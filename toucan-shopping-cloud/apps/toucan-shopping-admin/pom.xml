@@ -164,6 +164,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-stock-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-fastdfs</artifactId>
         </dependency>

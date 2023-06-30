@@ -445,6 +445,28 @@ public class OrderApiController {
 
             this.recalculateProductPrice(createOrderVO);
 
+            //在库存锁定中存储子订单编号
+            if(!CollectionUtils.isEmpty(createOrderVO.getMainOrder().getOrders())) {
+                boolean isFind=false;
+                for (ProductSkuStockLockVO productSkuStockLockVO : productSkuStockLocks) {
+                    isFind=false;
+                    for(OrderVO orderVO:createOrderVO.getMainOrder().getOrders())
+                    {
+                        for(OrderItemVO orderItemVO:orderVO.getOrderItems()) {
+                            if (productSkuStockLockVO.getProductSkuId().equals(orderItemVO.getSkuId()))
+                            {
+                                isFind=true;
+                                //设置子订单编号
+                                productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
+                            }
+                        }
+                        if(isFind)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
 
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);

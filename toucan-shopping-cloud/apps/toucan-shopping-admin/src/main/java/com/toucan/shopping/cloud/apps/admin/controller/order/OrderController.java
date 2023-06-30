@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -30,6 +31,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
+import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +69,9 @@ public class OrderController extends UIController {
 
     @Autowired
     private FeignOrderService feignOrderService;
+
+    @Autowired
+    private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -159,6 +164,26 @@ public class OrderController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+//            ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
+//            productSkuStockLockVO.setMainOrderNoList(mainOrderNoList);
+//            productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
+//            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+//            if(resultObjectVO.isSuccess())
+//            {
+//                List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
+//                resultObjectVO = orderPayTimeOutService.restoreStock(globalTransactionId,eventProcess,productSkuStockLocks,productSkuStockLockVO);
+//                if (resultObjectVO.isSuccess()) {
+//                    //完成还原锁定库存事件
+//                    orderPayTimeOutService.finishEvent(eventProcess);
+//                    logger.info("删除锁定库存.....");
+//                    orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
+//                    if(resultObjectVO.isSuccess())
+//                    {
+//                        //删除锁定库存事件
+//                        orderPayTimeOutService.finishEvent(eventProcess);
+//                    }
+//                }
+//            }
 
         }catch(Exception e)
         {

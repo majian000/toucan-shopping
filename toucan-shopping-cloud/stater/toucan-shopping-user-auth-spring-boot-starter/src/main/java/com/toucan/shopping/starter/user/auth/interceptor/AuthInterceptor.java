@@ -185,6 +185,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info(" 校验用户ID和loginToken不一致 {} loginToken {}" ,authHeader,lt);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("登录超时,请重新登录");
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -209,6 +210,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                         logger.info(" 校验loginToken不一致 或用户会话超时 {} loginToken {}" ,authHeader,lt);
                                         resultVO.setCode(ResultVO.HTTPCODE_403);
                                         resultVO.setMsg("登录超时,请重新登录");
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
                                         response.setStatus(HttpStatus.OK.value());
                                         responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;

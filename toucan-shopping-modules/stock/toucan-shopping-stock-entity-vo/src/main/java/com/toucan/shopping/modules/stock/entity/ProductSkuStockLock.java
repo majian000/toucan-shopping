@@ -16,6 +16,7 @@ public class ProductSkuStockLock {
     private Long productSkuId;  //SKU ID
     private Long userMainId; //用户ID
     private String mainOrderNo; //主订单编号
+    private String orderNo; //子订单编号
     private Integer stockNum; //锁定库存数量
     private Short type; //库存计数 1:买家拍下减库存 2:买家付款减库存
     private String remark; //备注
