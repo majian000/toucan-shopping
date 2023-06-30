@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,6 +250,106 @@ public class ProductSkuStockLockController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 根据子订单编号查询锁定库存数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/lock/stock/num/by/orderNo",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findLockStockNumByOrderNo(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuStockLockVO productSkuStockLockVO = requestJsonVO.formatEntity(ProductSkuStockLockVO.class);
+            if(StringUtils.isEmpty(productSkuStockLockVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("订单编号不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询锁定库存出现异常!");
+        }
+
+        return resultObjectVO;
+    }
+
+    /**
+     * 删除锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/lock/stock/by/orderNo",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteLockStockByOrderNo(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+
+        try {
+            ProductSkuStockLockVO productSkuStockLockVO = requestJsonVO.formatEntity(ProductSkuStockLockVO.class);
+            if(StringUtils.isEmpty(productSkuStockLockVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("订单编号不能为空");
+                return resultObjectVO;
+            }
+            productSkuStockLockVO.setType(null);
+            List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
+            if(!CollectionUtils.isEmpty(skuStockLockVO)) {
+                int ret = productSkuStockLockService.deletes(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
+                if (ret <= 0 || ret != skuStockLockVO.size()) {
+                    throw new IllegalArgumentException("删除锁定库存出现异常");
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("删除锁定库存出现异常");
+        }
+
+        return resultObjectVO;
+    }
 
 
     /**

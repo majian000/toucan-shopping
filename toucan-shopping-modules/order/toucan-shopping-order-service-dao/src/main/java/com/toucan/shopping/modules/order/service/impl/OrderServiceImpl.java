@@ -102,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.cancelNoPayOrderByMainOrderNo(mainOrderNo,userId);
     }
 
+    @Transactional
     @Override
     public int cancelNoPayOrderByMainOrderNo(String mainOrderNo, String userId, String cancelRemark) {
         return orderMapper.cancelNoPayOrderByMainOrderNoAndCancelRemark(mainOrderNo,userId,cancelRemark);
@@ -113,6 +114,13 @@ public class OrderServiceImpl implements OrderService {
         //锁住这些记录
         List<Order> orders = orderMapper.queryByMainOrderNo(mainOrderNo,appCode);
         return orderMapper.cancelByMainOrderNo(mainOrderNo,appCode,cancelRemark);
+    }
+
+    @Override
+    public int cancelOrderByOrderNo(String orderNo, String cancelRemark) {
+        //锁住这些记录
+        List<Order> orders = orderMapper.queryByOrderNo(orderNo);
+        return orderMapper.cancelOrderByOrderNo(orderNo,cancelRemark);
     }
 
     @Override

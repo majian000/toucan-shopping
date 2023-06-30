@@ -73,6 +73,14 @@ public interface OrderService {
      */
     int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
 
+    /**
+     * 根据订单编号取消订单
+     * @param mainOrderNo
+     * @param cancelRemark
+     * @return
+     */
+    int cancelOrderByOrderNo(String mainOrderNo,String cancelRemark);
+
 
     /**
      * 查询一个子订单对象

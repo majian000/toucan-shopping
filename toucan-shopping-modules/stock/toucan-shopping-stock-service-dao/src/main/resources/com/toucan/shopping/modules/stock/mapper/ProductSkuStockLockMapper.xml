@@ -25,6 +25,9 @@
 
     <sql id="queryVOListWhere">
 
+        <if test="orderNo!=null and orderNo!=''">
+            and t.order_no = #{orderNo}
+        </if>
 
         <if test="productSkuIdList!=null and productSkuIdList.size>0 ">
             and t.product_sku_id in
@@ -43,6 +46,8 @@
         <if test="type!=null and type!=-1">
             and t.type = #{type}
         </if>
+
+
 
         and t.delete_status = 0
 

@@ -450,9 +450,9 @@
                         title: '取消订单',
                         type: 2,
                         shade: 0.2,
-                        maxmin:true,
+                        maxmin:false,
                         area: ['50%', '50%'],
-                        content: "[[@{/}]]order/cancel/page/"+data.id
+                        content: "[[@{/}]]order/cancel/page/"+data.orderNo
                     });
                     $(window).on("resize", function () {
                         layer.full(index);

@@ -18,9 +18,10 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
+        <input type="hidden" name="orderNo" th:value="${orderNo}">
         <label class="layui-form-label required">取消原因</label>
         <div class="layui-input-block">
-            <textarea name="rejectText" class="layui-textarea" lay-verify="required" maxlength="200" placeholder="请输入取消原因"></textarea>
+            <textarea name="cancelRemark" class="layui-textarea" lay-verify="required" maxlength="200" placeholder="请输入取消原因"></textarea>
         </div>
     </div>
 
@@ -41,7 +42,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/user/true/name/approve/reject}]]",
+                url:"[[@{/order/cancel}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

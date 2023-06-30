@@ -35,6 +35,8 @@ public interface OrderMapper {
 
     int cancelNoPayOrderByMainOrderNoAndCancelRemark(String mainOrderNo,String userId,String cancelRemark);
 
+    int cancelOrderByOrderNo(String orderNo,String cancelRemark);
+
 
     List<OrderVO> queryOrderListByPayTimeoutPage(OrderPageInfo pageInfo);
 
@@ -50,6 +52,8 @@ public interface OrderMapper {
     int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
 
     List<Order> queryByMainOrderNo(String mainOrderNo,String appCode);
+
+    List<Order> queryByOrderNo(String orderNo);
 
     Order queryOneByVO(OrderVO orderVO);
 

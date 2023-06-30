@@ -97,6 +97,39 @@ public class OrderController {
 
 
 
+    /**
+     * 取消订单
+     */
+    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            OrderVO orderVO = requestJsonVO.formatEntity(OrderVO.class);
+            if(StringUtils.isEmpty(orderVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到订单编号");
+                return resultObjectVO;
+            }
+
+            try {
+
+                orderService.cancelOrderByOrderNo(orderVO.getOrderNo(),orderVO.getCancelRemark());
+
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
 
 
     /**

@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
@@ -31,6 +32,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
+import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,10 +45,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -69,6 +68,9 @@ public class OrderController extends UIController {
 
     @Autowired
     private FeignOrderService feignOrderService;
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
     @Autowired
     private FeignProductSkuStockLockService feignProductSkuStockLockService;
@@ -158,32 +160,44 @@ public class OrderController extends UIController {
      * 查看
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/cancel",method = RequestMethod.POST)
+    @ResponseBody
     public ResultObjectVO cancel(@RequestBody OrderVO orderVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-//            ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
-//            productSkuStockLockVO.setMainOrderNoList(mainOrderNoList);
-//            productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-//            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
-//            if(resultObjectVO.isSuccess())
-//            {
-//                List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
-//                resultObjectVO = orderPayTimeOutService.restoreStock(globalTransactionId,eventProcess,productSkuStockLocks,productSkuStockLockVO);
-//                if (resultObjectVO.isSuccess()) {
-//                    //完成还原锁定库存事件
-//                    orderPayTimeOutService.finishEvent(eventProcess);
-//                    logger.info("删除锁定库存.....");
-//                    orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
-//                    if(resultObjectVO.isSuccess())
-//                    {
-//                        //删除锁定库存事件
-//                        orderPayTimeOutService.finishEvent(eventProcess);
-//                    }
-//                }
-//            }
+            ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
+            productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
+            productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
+            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
+                if(!CollectionUtils.isEmpty(productSkuStockLocks))
+                {
+                    List<InventoryReductionVO> inventoryReductions= new LinkedList<>();
+                    for(ProductSkuStockLockVO pssl:productSkuStockLocks)
+                    {
+                        InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
+                        inventoryReductionVO.setProductSkuId(pssl.getProductSkuId());
+                        inventoryReductionVO.setStockNum(pssl.getStockNum());
+                        inventoryReductions.add(inventoryReductionVO);
+                    }
+                    if(!CollectionUtils.isEmpty(inventoryReductions)) {
+                        //保存还原锁定库存事件
+                        resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                    }
+                }
+                if (resultObjectVO.isSuccess()) {
+                    logger.info("删除锁定库存.....");
+                    resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                    if(resultObjectVO.isSuccess())
+                    {
+                        resultObjectVO = feignOrderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
+                    }
+                }
+            }
 
         }catch(Exception e)
         {
@@ -198,10 +212,10 @@ public class OrderController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/cancel/page/{id}",method = RequestMethod.GET)
-    public String rejectPage(HttpServletRequest request,@PathVariable String id)
+    @RequestMapping(value = "/cancel/page/{orderNo}",method = RequestMethod.GET)
+    public String rejectPage(HttpServletRequest request,@PathVariable String orderNo)
     {
-        request.setAttribute("id",id);
+        request.setAttribute("orderNo",orderNo);
         return "pages/order/cancel.html";
     }
 }

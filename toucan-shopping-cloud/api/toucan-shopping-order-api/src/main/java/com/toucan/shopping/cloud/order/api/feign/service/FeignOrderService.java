@@ -63,4 +63,11 @@ public interface FeignOrderService {
     @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 取消订单
+     */
+    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
+    ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO);
+
 }

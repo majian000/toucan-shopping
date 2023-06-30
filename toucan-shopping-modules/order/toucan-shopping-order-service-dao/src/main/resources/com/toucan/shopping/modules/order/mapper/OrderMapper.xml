@@ -166,6 +166,10 @@
     </update>
 
 
+    <update id="cancelOrderByOrderNo" >
+        update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark = #{cancelRemark}  where order_no=#{orderNo}  and pay_status=0  and delete_status=0
+    </update>
+
 
     <select id="queryOrderListByPayTimeoutPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
         select t.* from t_order t
@@ -239,6 +243,9 @@
         limit 0,1
     </select>
 
+    <select id="queryByOrderNo" resultMap="orderMap" >
+        select * from t_order where order_no=#{orderNo} and delete_status=0 for update
+    </select>
 
 
     <select id="queryOneVOByVO" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.vo.OrderVO" >
