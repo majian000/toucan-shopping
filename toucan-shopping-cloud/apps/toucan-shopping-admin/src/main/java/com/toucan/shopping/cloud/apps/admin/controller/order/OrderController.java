@@ -189,13 +189,10 @@ public class OrderController extends UIController {
                         resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                     }
                 }
-                if (resultObjectVO.isSuccess()) {
-                    logger.info("删除锁定库存.....");
-                    resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
-                    if(resultObjectVO.isSuccess())
-                    {
-                        resultObjectVO = feignOrderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
-                    }
+                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                if(resultObjectVO.isSuccess())
+                {
+                    resultObjectVO = feignOrderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
                 }
             }
 
