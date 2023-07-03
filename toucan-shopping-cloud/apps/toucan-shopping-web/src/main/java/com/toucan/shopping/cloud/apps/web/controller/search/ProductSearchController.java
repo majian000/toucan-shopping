@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -89,37 +86,30 @@ public class ProductSearchController {
                             if (StringUtils.isNotEmpty(productSearchVO.getEbids())) {
                                 ebids = productSearchVO.getEbids().split(",");
                             }
-                            boolean existsHitBrand = false;
                             for (ProductSearchResultVO productSearchResultVO : productResult) {
-                                existsHitBrand = false;
-                                for (BrandVO hitBrandVO : hitBrands) {
-                                    if (hitBrandVO != null && hitBrandVO.getId().equals(productSearchResultVO.getBrandId())) {
-                                        existsHitBrand = true;
-                                        break;
-                                    }
-                                }
-                                if (!existsHitBrand) {
-                                    if (StringUtils.isNotEmpty(productSearchResultVO.getBrandName())) {
-                                        BrandVO brandVO = new BrandVO();
-                                        brandVO.setName(productSearchResultVO.getBrandName());
-                                        brandVO.setId(productSearchResultVO.getBrandId());
-                                        if (ebids != null) {
-                                            for (String ebid : ebids) {
-                                                if (!ebid.equals(String.valueOf(brandVO.getId()))) {
-                                                    hitBrands.add(brandVO);
-                                                    break;
-                                                }
+                                if (StringUtils.isNotEmpty(productSearchResultVO.getBrandName())) {
+                                    BrandVO brandVO = new BrandVO();
+                                    brandVO.setName(productSearchResultVO.getBrandName());
+                                    brandVO.setId(productSearchResultVO.getBrandId());
+                                    if (ebids != null) {
+                                        for (String ebid : ebids) {
+                                            if (!ebid.equals(String.valueOf(brandVO.getId()))&&keyword.equals(brandVO.getName())) {
+                                                hitBrands.add(brandVO);
+                                                break;
                                             }
-                                        } else {
-                                            hitBrands.add(brandVO);
                                         }
+                                    }else if(keyword.equals(brandVO.getName())){
+                                        hitBrands.add(brandVO);
                                     }
                                 }
                             }
                         }
                     }
                 }
+
                 if (CollectionUtils.isNotEmpty(hitBrands)) {
+                    hitBrands = hitBrands.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(
+                            () -> new TreeSet<>(Comparator.comparing(BrandVO::getId))), ArrayList::new));
                     productSearchVO.setBrandIds(hitBrands.stream().map(BrandVO::getId).distinct().collect(Collectors.toList()));
                 }
             }
