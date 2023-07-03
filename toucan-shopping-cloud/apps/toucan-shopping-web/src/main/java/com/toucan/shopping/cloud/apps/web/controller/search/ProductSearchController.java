@@ -245,7 +245,9 @@ public class ProductSearchController {
                 {
                     attributeKeyVO.setCategoryId(Long.parseLong(productSearchVO.getCid()));
                 }else {
-                    attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    if(CollectionUtils.isNotEmpty(productResult)) {
+                        attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    }
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
                 resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
@@ -289,7 +291,9 @@ public class ProductSearchController {
                 {
                     queryBrandVO.setCategoryId(productSearchVO.getCid());
                 }else {
-                    queryBrandVO.setCategoryId(String.valueOf(productResult.get(0).getCategoryId()));
+                    if(CollectionUtils.isNotEmpty(productResult)) {
+                        queryBrandVO.setCategoryId(String.valueOf(productResult.get(0).getCategoryId()));
+                    }
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
                 resultObjectVO = feignBrandService.queryListByCategoryId(requestJsonVO);
