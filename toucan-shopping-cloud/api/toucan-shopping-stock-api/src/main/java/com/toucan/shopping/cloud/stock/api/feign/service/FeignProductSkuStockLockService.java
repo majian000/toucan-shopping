@@ -88,4 +88,14 @@ public interface FeignProductSkuStockLockService {
     @RequestMapping(value="/find/lock/stock/list/by/mainOrderNos",produces = "application/json;charset=UTF-8")
     ResultObjectVO findLockStockListByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+
 }

@@ -19,9 +19,14 @@
         <result column="order_create_date" jdbcType="TIMESTAMP" property="orderCreateDate" />
     </resultMap>
 
-    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO">
+    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO" extends="productSkuStockLockMap">
 
     </resultMap>
+
+
+    <sql id="queryListPageWhere">
+
+    </sql>
 
     <sql id="queryVOListWhere">
 
@@ -79,5 +84,30 @@
             #{item}
         </foreach>
     </update>
+
+
+    <select id="queryListPage" resultMap="productSkuStockLockVOMap" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
+        select t.* from t_product_sku_stock_lock t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
+        select count(*) from t_product_sku_stock_lock t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
 
 </mapper>

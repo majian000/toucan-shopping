@@ -2,7 +2,9 @@ package com.toucan.shopping.modules.stock.service;
 
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
+import com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 
 import java.util.List;
@@ -31,4 +33,14 @@ public interface ProductSkuStockLockService {
      * @return
      */
     List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO);
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<ProductSkuStockLockVO> queryListPage(ProductSkuStockLockPageInfo pageInfo);
+
+
 }

@@ -141,6 +141,21 @@ public class FeignProductSkuStockLockServiceFallbackFactory implements FallbackF
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuStockLockService.queryListPage  params {}", JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询锁定失败,请重试!");
+                return resultObjectVO;
+            }
+
 
         };
     }

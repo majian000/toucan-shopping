@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.stock.mapper;
 
 import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
+import com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,5 +19,22 @@ public interface ProductSkuStockLockMapper {
     List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
     List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO);
+
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ProductSkuStockLockVO> queryListPage(ProductSkuStockLockPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(ProductSkuStockLockPageInfo pageInfo);
+
 
 }
