@@ -25,6 +25,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
+import com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -85,7 +86,7 @@ public class ProductSkuStockLockController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ColorTablePageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ProductSkuStockLockPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
