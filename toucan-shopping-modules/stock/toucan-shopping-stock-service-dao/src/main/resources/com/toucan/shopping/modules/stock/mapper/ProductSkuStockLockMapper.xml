@@ -26,6 +26,26 @@
 
     <sql id="queryListPageWhere">
 
+        <if test="orderNo!=null and orderNo!=''">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="productSkuId!=null and productSkuId!=-1 ">
+            and t.product_sku_id=#{productSkuId}
+        </if>
+
+        <if test="userMainId!=null and userMainId!=-1 ">
+            and t.user_main_id=#{userMainId}
+        </if>
+
+        <if test="mainOrderNo!=null and mainOrderNo!='' ">
+            and t.main_order_no =#{mainOrderNo}
+        </if>
+
+        <if test="deleteStatus!=null and deleteStatus!=-1 ">
+            and t.delete_status=#{deleteStatus}
+        </if>
+
     </sql>
 
     <sql id="queryVOListWhere">
@@ -89,7 +109,7 @@
     <select id="queryListPage" resultMap="productSkuStockLockVOMap" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
         select t.* from t_product_sku_stock_lock t
         <where>
-            1=1 and t.delete_status = 0
+            1=1
             <include refid="queryListPageWhere" />
         </where>
         order by t.id desc
@@ -100,7 +120,7 @@
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
         select count(*) from t_product_sku_stock_lock t
         <where>
-            1=1 and t.delete_status = 0
+            1=1
 
             <include refid="queryListPageWhere" />
         </where>

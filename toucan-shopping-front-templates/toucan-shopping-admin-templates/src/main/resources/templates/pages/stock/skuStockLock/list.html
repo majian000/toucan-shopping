@@ -25,9 +25,38 @@
                 <form class="layui-form layui-form-pane" id="searchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">颜色名称</label>
+                            <label class="layui-form-label">SKU ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                                <input type="text" name="productSkuId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">主订单编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="mainOrderNo" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">子订单编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="orderNo" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">删除状态</label>
+                            <div class="layui-input-inline">
+                                <select id="deleteStatus" name="deleteStatus"  lay-search="">
+                                    <option value="-1">全部</option>
+                                    <option value="0">未删除</option>
+                                    <option value="1">已删除</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -133,6 +162,16 @@
                     {field: 'orderCreateDate',  width: 200, title: '订单创建时间'},
                     {field: 'orderNo',  width: 200, title: '子订单编号'},
                     {field: 'remark',   width: 300,title: '备注'},
+                    {field: 'deleteStatus', width: 100,title: '删除状态',templet: function (row) {
+                            if(row.deleteStatus==0)
+                            {
+                                return "未删除";
+                            }else if(row.deleteStatus==1)
+                            {
+                                return "已删除";
+                            }
+                            return row.deleteStatus;
+                        }},
                     {title: '操作', minWidth: 300, toolbar: '#skuStockLockTableBar', align: "center"}
                 ]
             ],

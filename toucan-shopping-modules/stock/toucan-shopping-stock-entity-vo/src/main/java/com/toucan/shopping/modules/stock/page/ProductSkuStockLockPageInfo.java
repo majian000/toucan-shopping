@@ -22,6 +22,13 @@ public class ProductSkuStockLockPageInfo extends PageInfo<ProductSkuStockLockVO>
 
     private Long productSkuId; //商品SKU ID
 
+    private Long userMainId; //用户ID
+
+    private String mainOrderNo; //主订单编号
+
+    private String orderNo; //子订单编号
+
+    private Integer deleteStatus; //删除状态 -1:全部 0:未删除 1:已删除
 
     //==============================================
 
