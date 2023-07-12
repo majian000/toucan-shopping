@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">SKU ID</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${model.productSkuId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">用户ID</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${model.userMainId}" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">主订单编号</label>
+            <div class="layui-input-block">
+                <input type="text" lay-verify="required"  th:value="${model.mainOrderNo}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">子订单编号</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${model.orderNo}" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">锁定库存数量</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${model.stockNum}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label "  >库存计数</label>
+            <div class="layui-input-block" th:if="${model.type eq 1}" >
+                <select   lay-search="">
+                    <option value="1" selected>买家拍下减库存</option>
+                </select>
+            </div>
+            <div class="layui-input-block" th:if="${model.type eq 2}" >
+                <select   lay-search="">
+                    <option value="2" selected>买家付款减库存</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">订单创建时间</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${#dates.format(model.orderCreateDate,'yyyy-MM-dd HH:mm:ss')}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label "  >支付状态</label>
+            <div class="layui-input-block" th:if="${model.payStatus eq 0}" >
+                <select   lay-search="">
+                    <option value="0" selected>未支付</option>
+                </select>
+            </div>
+            <div class="layui-input-block" th:if="${model.payStatus eq 1}" >
+                <select   lay-search="">
+                    <option value="1" selected>已支付</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">创建时间</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${#dates.format(model.createDate,'yyyy-MM-dd HH:mm:ss')}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">修改时间</label>
+            <div class="layui-input-block">
+                <input type="text"  lay-verify="required"  th:value="${#dates.format(model.updateDate,'yyyy-MM-dd HH:mm:ss')}" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">删除状态</label>
+            <div class="layui-input-block" th:if="${model.deleteStatus eq 0}" >
+                <select   lay-search="">
+                    <option value="0" selected>未删除</option>
+                </select>
+            </div>
+            <div class="layui-input-block" th:if="${model.deleteStatus eq 1}" >
+                <select   lay-search="">
+                    <option value="1" selected>已删除</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label required">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="required"  th:value="${model.remark}" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form','tree','dtree','upload','laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        var upload = layui.upload;
+
+
+    });
+</script>
+</body>
+</html>

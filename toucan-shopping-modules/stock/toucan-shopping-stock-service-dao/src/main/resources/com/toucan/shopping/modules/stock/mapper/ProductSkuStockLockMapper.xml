@@ -117,6 +117,11 @@
     </select>
 
 
+
+    <select id="findById" resultMap="productSkuStockLockVOMap" parameterType="java.lang.Long">
+        select t.* from t_product_sku_stock_lock t where  t.id = #{id} limit 0,1
+    </select>
+
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
         select count(*) from t_product_sku_stock_lock t
         <where>

@@ -20,7 +20,7 @@ public interface ProductSkuStockLockMapper {
 
     List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO);
 
-
+    ProductSkuStockLockVO findById(Long id);
 
     /**
      * 查询列表页

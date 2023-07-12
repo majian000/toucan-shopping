@@ -36,6 +36,12 @@ public interface ProductSkuStockLockService {
 
 
     /**
+     * 根据ID查询
+     * @return
+     */
+    ProductSkuStockLockVO findById(Long id);
+
+    /**
      * 查询列表页
      * @param pageInfo
      * @return

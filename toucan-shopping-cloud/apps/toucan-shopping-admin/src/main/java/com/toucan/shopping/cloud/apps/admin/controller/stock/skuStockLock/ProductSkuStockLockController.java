@@ -75,6 +75,33 @@ public class ProductSkuStockLockController extends UIController {
     }
 
 
+    /**
+     * 查看
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ProductSkuStockLockVO query = new ProductSkuStockLockVO();
+            query.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            ResultObjectVO resultObjectVO = feignProductSkuStockLockService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                ProductSkuStockLockVO productSkuStockLockVO = resultObjectVO.formatData(ProductSkuStockLockVO.class);
+                request.setAttribute("model",productSkuStockLockVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/stock/skuStockLock/detail.html";
+    }
+
 
 
 

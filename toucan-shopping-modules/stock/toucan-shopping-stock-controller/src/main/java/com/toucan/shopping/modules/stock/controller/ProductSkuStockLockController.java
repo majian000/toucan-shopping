@@ -145,6 +145,44 @@ public class ProductSkuStockLockController {
 
 
 
+
+    /**
+     * 根据ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/by/id",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            ProductSkuStockLockVO productSkuStockLockVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuStockLockVO.class);
+            resultObjectVO.setData(productSkuStockLockService.findById(productSkuStockLockVO.getId()));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
     /**
      * 删除锁定库存
      * @param requestJsonVO

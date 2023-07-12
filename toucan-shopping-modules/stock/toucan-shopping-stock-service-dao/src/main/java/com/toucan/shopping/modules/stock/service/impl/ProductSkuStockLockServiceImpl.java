@@ -44,6 +44,11 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
     }
 
     @Override
+    public ProductSkuStockLockVO findById(Long id) {
+        return productSkuStockLockMapper.findById(id);
+    }
+
+    @Override
     public PageInfo<ProductSkuStockLockVO> queryListPage(ProductSkuStockLockPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<ProductSkuStockLockVO> pageInfo = new PageInfo();
