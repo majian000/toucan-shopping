@@ -125,7 +125,7 @@
         <div class="layui-inline" style="width:40%">
             <label class="layui-form-label required">备注</label>
             <div class="layui-input-block">
-                <input type="text" name="title" lay-verify="required"  th:value="${model.remark}" class="layui-input">
+                <textarea name="remark" class="layui-textarea" th:text="${model.remark}" ></textarea>
             </div>
         </div>
     </div>
