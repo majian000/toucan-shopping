@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.vo;
+package com.toucan.shopping.modules.pay.vo;
 
 import lombok.Data;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author majian
  */
 @Data
-public class PayVo {
+public class PayCallbackVO {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
