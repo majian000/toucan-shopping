@@ -42,6 +42,10 @@
             <groupId>com.toucan.shopping.modules.skylark</groupId>
             <artifactId>toucan-shopping-skylark-lock</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.pay</groupId>
+            <artifactId>toucan-shopping-pay-entity-vo</artifactId>
+        </dependency>
     </dependencies>
 
 

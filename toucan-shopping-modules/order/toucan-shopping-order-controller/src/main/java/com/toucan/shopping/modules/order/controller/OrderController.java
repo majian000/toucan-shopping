@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.*;
+import com.toucan.shopping.modules.pay.vo.PayCallbackVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
@@ -206,6 +207,30 @@ public class OrderController {
 
 
     /**
+     * 手动完成
+     */
+    @RequestMapping(value="/manual/finish",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO manualFinish(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
+                orderVO.setAppCode(requestJsonVO.getAppCode());
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询支付超时订单页
      */
     @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
@@ -229,9 +254,10 @@ public class OrderController {
         return resultObjectVO;
     }
 
-    /**
-     * 完成订单
-     */
+
+        /**
+         * 完成订单
+         */
     @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO){
@@ -249,7 +275,7 @@ public class OrderController {
 
             try {
                 logger.info("完成订单 params {}",requestJsonVO.getEntityJson());
-                Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
+                PayCallbackVO payCallbackVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),PayCallbackVO.class);
 //                int row = orderService.finishOrder(order);
 //                if(row<1)
 //                {

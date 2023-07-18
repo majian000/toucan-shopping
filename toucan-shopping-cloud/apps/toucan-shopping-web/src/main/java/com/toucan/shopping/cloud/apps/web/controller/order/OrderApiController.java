@@ -934,14 +934,7 @@ public class OrderApiController {
 
         try {
             PayCallbackVO payCallbackVO = JSONObject.parseObject(paramsJson,PayCallbackVO.class);
-            Order order = new Order();
-            order.setOrderNo(payCallbackVO.getOrderNo());
-            order.setUserId(payCallbackVO.getUserId());
-            order.setPayDate(new Date());
-            order.setPayStatus(1);
-            order.setTradeStatus(3);
-            order.setOuterTradeNo("支付宝交易流水号");
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),payCallbackVO.getUserId(),order);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),payCallbackVO);
             //完成订单
             resultObjectVO = feignOrderService.finish(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
 
