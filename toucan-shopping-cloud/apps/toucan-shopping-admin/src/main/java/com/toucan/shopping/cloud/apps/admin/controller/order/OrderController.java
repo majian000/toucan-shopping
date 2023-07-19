@@ -157,7 +157,35 @@ public class OrderController extends UIController {
 
 
     /**
-     * 查看
+     * 修改
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            OrderVO query = new OrderVO();
+            query.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            ResultObjectVO resultObjectVO = feignOrderService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+                request.setAttribute("model",orderVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/order/edit.html";
+    }
+
+
+    /**
+     * 取消
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
@@ -202,6 +230,35 @@ public class OrderController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody OrderVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+//            resultObjectVO = feignOrderService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("修改失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 
     /**

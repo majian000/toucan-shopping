@@ -34,4 +34,5 @@ public class OrderVO extends Order {
     Long timeRemaining; //剩余时间=系统时间-订单创建时间
 
     Long maxPayTime; //最大允许支付的时间
+
 }

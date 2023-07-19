@@ -458,6 +458,8 @@
                         layer.full(index);
                     });
                     return false;
+                }else if (obj.event == 'update') {
+                    openUpdateDialog(data.id);
                 }
             });
         }
@@ -481,6 +483,24 @@
 
         }
 
+
+        function openUpdateDialog(id)
+        {
+            var index = layer.open({
+                title: '修改订单',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]order/editPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
         initOrderTable("tab_index_0_");
 
 
