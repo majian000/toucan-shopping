@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.entity.OrderLog;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.OrderItemService;
+import com.toucan.shopping.modules.order.service.OrderLogService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -37,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderItemService orderItemService;
 
+    @Autowired
+    private OrderLogService orderLogService;
 
 
 
@@ -67,6 +71,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> queryOrderListByPayTimeout(Order order) {
         return orderMapper.queryOrderListByPayTimeout(order);
+    }
+
+    @Override
+    public Order findById(Long id) {
+        return orderMapper.findById(id);
     }
 
     @Override
@@ -131,5 +140,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderVO queryOneVOByVO(OrderVO orderVO) {
         return orderMapper.queryOneVOByVO(orderVO);
+    }
+
+    @Override
+    public void update(OrderVO orderVO) throws Exception {
+
     }
 }

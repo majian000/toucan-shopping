@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.order.service.impl;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.order.entity.OrderLog;
 import com.toucan.shopping.modules.order.mapper.OrderLogMapper;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
@@ -30,4 +31,8 @@ public class OrderLogServiceImpl implements OrderLogService {
     @Autowired
     private OrderLogMapper orderLogMapper;
 
+    @Override
+    public int save(OrderLog orderLog) {
+        return orderLogMapper.insert(orderLog);
+    }
 }

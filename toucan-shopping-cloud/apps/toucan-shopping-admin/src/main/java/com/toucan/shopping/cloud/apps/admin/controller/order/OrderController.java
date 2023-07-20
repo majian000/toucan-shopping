@@ -247,9 +247,9 @@ public class OrderController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-
+            entity.setOperateUserId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignOrderService.update(requestJsonVO);
+            resultObjectVO = feignOrderService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("修改失败,请重试");

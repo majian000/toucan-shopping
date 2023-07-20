@@ -8,12 +8,10 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
+import com.toucan.shopping.modules.order.entity.OrderLog;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
-import com.toucan.shopping.modules.order.service.MainOrderService;
-import com.toucan.shopping.modules.order.service.OrderConsigneeAddressService;
-import com.toucan.shopping.modules.order.service.OrderItemService;
-import com.toucan.shopping.modules.order.service.OrderService;
+import com.toucan.shopping.modules.order.service.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,6 +61,9 @@ public class OrderController {
 
     @Autowired
     private OrderConsigneeAddressService orderConsigneeAddressService;
+
+    @Autowired
+    private OrderLogService orderLogService;
 
     /**
      * 测试分片
@@ -207,18 +209,31 @@ public class OrderController {
 
 
     /**
-     * 手动完成
+     * 更新订单
+     * @param requestJsonVO
+     * @return
      */
-    @RequestMapping(value="/manual/finish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO manualFinish(@RequestBody RequestJsonVO requestJsonVO){
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
 
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
             try {
                 OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
-                orderVO.setAppCode(requestJsonVO.getAppCode());
+                Order oldOrder = orderService.findById(orderVO.getId());
+                OrderLog orderLog = new OrderLog();
+                orderLog.setOperateUserId(orderVO.getOperateUserId());
+                orderLog.setAppCode(requestJsonVO.getAppCode());
+                orderLog.setId(idGenerator.id());
+                orderLog.setCreateDate(new Date());
+                orderLog.setOrderNo(oldOrder.getOrderNo());
+                orderLog.setRemark("修改订单信息");
+                orderLog.loadOldData(oldOrder).loadUpdateData(orderVO).setDataBodyType(1).loadDataBody();
+                orderLogService.save(orderLog);
+
+
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);

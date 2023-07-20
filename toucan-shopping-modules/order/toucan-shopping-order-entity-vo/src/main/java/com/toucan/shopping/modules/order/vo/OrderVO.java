@@ -35,4 +35,6 @@ public class OrderVO extends Order {
 
     Long maxPayTime; //最大允许支付的时间
 
+    String operateUserId; //操作用户
+
 }

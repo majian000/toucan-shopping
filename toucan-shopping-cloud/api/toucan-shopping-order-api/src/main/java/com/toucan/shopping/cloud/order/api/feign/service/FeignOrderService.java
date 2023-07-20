@@ -70,4 +70,14 @@ public interface FeignOrderService {
     @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
     ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 更新订单
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
 }

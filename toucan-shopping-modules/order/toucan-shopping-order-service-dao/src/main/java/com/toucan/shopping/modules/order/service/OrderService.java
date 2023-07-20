@@ -28,6 +28,7 @@ public interface OrderService {
 
     List<Order> queryOrderListByPayTimeout(Order order);
 
+    Order findById(Long id);
 
     /**
      * 查询支付超时列表
@@ -95,4 +96,11 @@ public interface OrderService {
      * @return
      */
     OrderVO queryOneVOByVO(OrderVO orderVO);
+
+    /**
+     * 修改订单信息
+     * @param orderVO
+     * @throws Exception
+     */
+    void update(OrderVO orderVO) throws Exception;
 }

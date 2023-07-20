@@ -3,10 +3,7 @@ package com.toucan.shopping.modules.order.mapper;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -18,14 +15,17 @@ public interface OrderMapper {
 
     int insertByVoList(List<OrderVO> entitys);
 
-    @Select("select * from bbs_order where order_no=#{orderNo}")
+    @Select("select * from t_order where order_no=#{orderNo}")
+    @ResultMap("com.toucan.shopping.modules.order.mapper.OrderMapper.orderMap")
     Order findByOrderNo(String orderNo);
 
 
-    @Update("update bbs_order set delete_status=1 where order_no=#{orderNo} ")
+    @Update("update t_order set delete_status=1 where order_no=#{orderNo} ")
     int deleteByOrderNo(String orderNo);
 
     int finishOrder(Order order);
+
+    Order findById(Long id);
 
     List<Order> queryOrderListByPayTimeout(Order order);
 

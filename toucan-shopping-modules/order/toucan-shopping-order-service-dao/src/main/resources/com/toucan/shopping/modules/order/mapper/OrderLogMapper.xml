@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
         <result column="operate_user_id" jdbcType="VARCHAR" property="operateUserId" />
+        <result column="data_body" jdbcType="VARCHAR" property="dataBody" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
@@ -19,6 +20,11 @@
 
 
 
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderLog" >
+        insert into t_order_log(id,order_no,operate_user_id,data_body,remark,create_date,app_code,delete_status)
+        values(#{id},#{orderNo},#{operateUserId},#{dataBody},#{remark},#{createDate},#{appCode},0)
+    </insert>
 
 
 
