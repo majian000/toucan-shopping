@@ -233,6 +233,9 @@ public class OrderController {
                 orderLog.loadOldData(oldOrder).loadUpdateData(orderVO).setDataBodyType(1).loadDataBody();
                 orderLogService.save(orderLog);
 
+                //修改订单信息
+                orderService.updateById(orderVO);
+
 
             }catch(Exception e)
             {

@@ -102,5 +102,5 @@ public interface OrderService {
      * @param orderVO
      * @throws Exception
      */
-    void update(OrderVO orderVO) throws Exception;
+    int updateById(OrderVO orderVO) throws Exception;
 }

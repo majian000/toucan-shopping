@@ -260,5 +260,24 @@
         limit 0,1
     </select>
 
+    <update id="updateById" parameterType="com.toucan.shopping.modules.order.vo.OrderVO">
+        update t_order set
+         order_amount=#{orderAmount},
+          pay_amount=#{payAmount},
+          total_amount=#{totalAmount},
+          pay_status=#{payStatus},
+          trade_status=#{tradeStatus},
+          pay_method=#{payMethod},
+          pay_type=#{payType},
+          outer_trade_no=#{outerTradeNo},
+          best_date=#{bestDate},
+          pay_date=#{payDate},
+          remark=#{remark},
+          freight_amount=#{freightAmount},
+          red_package_amount=#{redPackageAmount},
+          coupon_amount=#{couponAmount}
+
+         where id=#{id} and delete_status=0
+    </update>
 
 </mapper>

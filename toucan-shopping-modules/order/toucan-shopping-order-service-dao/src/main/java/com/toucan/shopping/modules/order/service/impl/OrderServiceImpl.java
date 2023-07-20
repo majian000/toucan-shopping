@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void update(OrderVO orderVO) throws Exception {
-
+    public int updateById(OrderVO orderVO){
+        return orderMapper.updateById(orderVO);
     }
 }
