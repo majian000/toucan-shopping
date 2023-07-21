@@ -12,4 +12,7 @@ public interface OrderLogService {
 
     int save(OrderLog orderLog);
 
+    int save(String operateUserId,String appCode,String orderNo,String remark,Object oldObj,Object updateObj,Integer logType);
+
+
 }

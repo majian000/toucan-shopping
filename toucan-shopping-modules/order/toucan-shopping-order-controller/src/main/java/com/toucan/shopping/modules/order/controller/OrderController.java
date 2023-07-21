@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.entity.OrderLog;
@@ -223,19 +224,18 @@ public class OrderController {
             try {
                 OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
                 Order oldOrder = orderService.findById(orderVO.getId());
-                OrderLog orderLog = new OrderLog();
-                orderLog.setOperateUserId(orderVO.getOperateUserId());
-                orderLog.setAppCode(requestJsonVO.getAppCode());
-                orderLog.setId(idGenerator.id());
-                orderLog.setCreateDate(new Date());
-                orderLog.setOrderNo(oldOrder.getOrderNo());
-                orderLog.setRemark("修改订单信息");
-                orderLog.loadOldData(oldOrder).loadUpdateData(orderVO).setDataBodyType(1).loadDataBody();
-                orderLogService.save(orderLog);
+                orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),oldOrder.getOrderNo(),
+                        "修改订单信息",oldOrder,orderVO,OrderConstant.ORDER_LOG_TYPE_ORDER);
 
                 //修改订单信息
                 orderService.updateById(orderVO);
 
+                orderVO.getOrderConsigneeAddress().setOrderNo(oldOrder.getOrderNo());
+                orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),oldOrder.getOrderNo(),
+                        "修改收货人信息",orderConsigneeAddressService.queryOneByOrderNo(orderVO.getOrderNo()),
+                        orderVO.getOrderConsigneeAddress(),OrderConstant.ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS);
+
+                orderConsigneeAddressService.updateByOrderNo(orderVO.getOrderConsigneeAddress());
 
             }catch(Exception e)
             {
