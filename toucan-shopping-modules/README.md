@@ -15,6 +15,7 @@
  | content                                        | 内容(轮播图)                                                  |
  | message                                        | 消息                                                          |
  | order                                          | 订单                                                          |
+ | pay                                          | 支付                                                          |
  | product                                        | 商品                                                          |
  | search                                         | 搜索                                                          |
  | seller                                         | 卖家                                                        |
