@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.product;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ql.util.express.DefaultContext;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
@@ -13,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.qlexpress.service.QLExpressService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
@@ -45,6 +48,9 @@ public class ProductApiController {
 
     @Autowired
     private FeignBrandService feignBrandService;
+
+    @Autowired
+    private QLExpressService qlExpressService;
 
 
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
@@ -85,6 +91,8 @@ public class ProductApiController {
                         productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                     }
 
+                    computeProductPrice(productSkuVO);
+
                     setAttributeDisabled(productSkuVO);
 
                     this.setCategoryBrands(productSkuVO);
@@ -100,6 +108,21 @@ public class ProductApiController {
         }
         return retObject;
     }
+
+
+    /**
+     * 通过规则引擎计算商品金额
+     * @param productSkuVO
+     * @throws Exception
+     */
+    void computeProductPrice(ProductSkuVO productSkuVO) throws Exception
+    {
+        DefaultContext<String, Object> context = new DefaultContext<String, Object>();
+        context.put("price", productSkuVO.getPrice());
+        String price = String.valueOf(qlExpressService.execute("price",context));
+        productSkuVO.setPrice(new BigDecimal(price));
+    }
+
 
 
     /**
@@ -445,6 +468,9 @@ public class ProductApiController {
                     if(productSkuVO.getProductPreviewPath()!=null) {
                         productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                     }
+
+
+                    computeProductPrice(productSkuVO);
 
                     setAttributeDisabled(productSkuVO);
 
