@@ -443,6 +443,7 @@
 
 
         function loadConsigneeAddressProvince(){
+            var loadding = layer.load();
             $.ajax({
                 url:"[[@{/area/list/by/parentCode/-1}]]",
                 contentType: "application/json; charset=utf-8",
@@ -472,6 +473,7 @@
                     form.render();
 
                     provinceCityAreaLoadCount++;
+                    layer.close(loadding);
                 }
             });
         }
@@ -495,7 +497,7 @@
         });
 
         function loadConsigneeAddressCity(parentCode){
-
+            var loadding = layer.load();
             $.ajax({
                 url:"[[@{/area/list/by/parentCode/}]]"+parentCode,
                 contentType: "application/json; charset=utf-8",
@@ -523,10 +525,12 @@
                         }
                     }
                     $("#orderConsigneeAddress_cityName").empty();
+                    alert(isMunicipality);
                     if(!isMunicipality) {
                         $("#orderConsigneeAddress_cityName").append(optionHtml);
                     }else{
                         $("#orderConsigneeAddress_cityName").append("<option value='"+data.data[0].code+"' selected='selected'>"+data.data[0].city+"</option>");
+                        $("#orderConsigneeAddress_provinceCode").val(data.data[0].code);
                     }
                     //默认选中第一个
                     if(!isSelect)
@@ -535,6 +539,7 @@
                     }
                     form.render();
                     provinceCityAreaLoadCount++;
+                    layer.close(loadding);
                 }
             });
         }
@@ -544,7 +549,7 @@
         });
 
         function loadConsigneeAddressArea(parentCode){
-
+            var loadding = layer.load();
             $.ajax({
                 url:"[[@{/area/list/by/parentCode/}]]"+parentCode,
                 contentType: "application/json; charset=utf-8",
@@ -572,6 +577,7 @@
                     }
                     form.render();
                     provinceCityAreaLoadCount++;
+                    layer.close(loadding);
                 }
             });
         }
