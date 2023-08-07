@@ -345,13 +345,13 @@
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >省份编码</label>
                                     <div class="layui-input-block">
-                                        <input type="text"  id="orderConsigneeAddress_provinceCode" th:value="${model.orderConsigneeAddress.provinceCode}"  class="layui-input">
+                                        <input type="text"  id="orderConsigneeAddress_provinceCode" th:value="${model.orderConsigneeAddress.provinceCode}" readonly  class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >省份名称</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="orderConsigneeAddress_provinceName"  th:value="${model.orderConsigneeAddress.provinceName}"  class="layui-input">
+                                        <select id="orderConsigneeAddress_provinceName" lay-filter="orderConsigneeAddress_provinceName"></select>
                                     </div>
                                 </div>
                             </div>
@@ -363,13 +363,13 @@
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >地市编码</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="orderConsigneeAddress_cityCode"  th:value="${model.orderConsigneeAddress.cityCode}"  class="layui-input">
+                                        <input type="text" id="orderConsigneeAddress_cityCode"  th:value="${model.orderConsigneeAddress.cityCode}" readonly  class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >地市名称</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="orderConsigneeAddress_cityName"  th:value="${model.orderConsigneeAddress.cityName}"  class="layui-input">
+                                        <select id="orderConsigneeAddress_cityName" lay-filter="orderConsigneeAddress_cityName"></select>
                                     </div>
                                 </div>
                             </div>
@@ -380,13 +380,13 @@
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >区县编码</label>
                                     <div class="layui-input-block">
-                                        <input type="text"  id="orderConsigneeAddress_areaCode" th:value="${model.orderConsigneeAddress.areaCode}"  class="layui-input">
+                                        <input type="text"  id="orderConsigneeAddress_areaCode" th:value="${model.orderConsigneeAddress.areaCode}" readonly  class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-inline" style="width:40%">
                                     <label class="layui-form-label " >区县名称</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="orderConsigneeAddress_areaName" th:value="${model.orderConsigneeAddress.areaName}"  class="layui-input">
+                                        <select id="orderConsigneeAddress_areaName" lay-filter="orderConsigneeAddress_areaName"></select>
                                     </div>
                                 </div>
                             </div>
@@ -417,6 +417,8 @@
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
+
+
     layui.use(['form','element', 'table','carousel','laydate'], function () {
         var $ = layui.jquery,
             table = layui.table,
@@ -426,6 +428,11 @@
         var laydate = layui.laydate;
         var loadding;
         var form = layui.form;
+        var provinceCityAreaLoadCount=0;
+        var orderConsigneeAddress_provinceCode=$("#orderConsigneeAddress_provinceCode").val();
+        var orderConsigneeAddress_cityCode=$("#orderConsigneeAddress_cityCode").val();
+        var orderConsigneeAddress_areaCode=$("#orderConsigneeAddress_areaCode").val();
+        var provinceCache=new Array();
 
 
         //初始化时间控件
@@ -435,9 +442,154 @@
         });
 
 
+        function loadConsigneeAddressProvince(){
+            $.ajax({
+                url:"[[@{/area/list/by/parentCode/-1}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'GET',
+                success:function(data){
+                    var optionHtml="";
+                    provinceCache.splice(0,provinceCache.length);
+                    for(var i=0;i<data.data.length;i++) {
+                        var provinceObj = data.data[i];
+                        var provinceName="";
+                        if(provinceObj.isMunicipality==1)
+                        {
+                            provinceName = provinceObj.city;
+                        }else{
+                            provinceName = provinceObj.province;
+                        }
+                        if(orderConsigneeAddress_provinceCode==provinceObj.code)
+                        {
+                            optionHtml += "<option value='" + provinceObj.code + "' selected='selected'>" + provinceName + "</option>";
+                        }else {
+                            optionHtml += "<option value='" + provinceObj.code + "'>" + provinceName + "</option>";
+                        }
+                        provinceCache.push({provinceName:provinceName,isMunicipality:provinceObj.isMunicipality,code:provinceObj.code});
+                    }
+                    $("#orderConsigneeAddress_provinceName").empty();
+                    $("#orderConsigneeAddress_provinceName").append(optionHtml);
+                    form.render();
+
+                    provinceCityAreaLoadCount++;
+                }
+            });
+        }
+
+        form.on('select(orderConsigneeAddress_provinceName)', function (data) {
+            $("#orderConsigneeAddress_provinceCode").val(data.value);
+            loadConsigneeAddressCity(data.value);
+            //如果是直辖市,选择省,需要在加载区县
+            for(var i=0;i<provinceCache.length;i++)
+            {
+                if(data.value==provinceCache[i].code)
+                {
+                    if(provinceCache[i].isMunicipality==1)
+                    {
+                        loadConsigneeAddressArea(data.value);
+                        break;
+                    }
+                }
+            }
+
+        });
+
+        function loadConsigneeAddressCity(parentCode){
+
+            $.ajax({
+                url:"[[@{/area/list/by/parentCode/}]]"+parentCode,
+                contentType: "application/json; charset=utf-8",
+                type:'GET',
+                success:function(data){
+                    var optionHtml="";
+                    var isSelect=false;
+                    var isMunicipality=false; //是否是直辖市
+                    for(var i=0;i<data.data.length;i++) {
+                        var cityObj = data.data[i];
+                        var provinceName=cityObj.city;
+                        if(orderConsigneeAddress_cityCode==cityObj.code)
+                        {
+                            optionHtml+="<option value='"+cityObj.code+"' selected='selected'>"+provinceName+"</option>";
+                            isSelect=true;
+                        }else{
+                            optionHtml+="<option value='"+cityObj.code+"'>"+provinceName+"</option>";
+                        }
+                        if(!isMunicipality&&i>=1)
+                        {
+                            if(cityObj.city==data.data[i-1].city)
+                            {
+                                isMunicipality=true;
+                            }
+                        }
+                    }
+                    $("#orderConsigneeAddress_cityName").empty();
+                    if(!isMunicipality) {
+                        $("#orderConsigneeAddress_cityName").append(optionHtml);
+                    }else{
+                        $("#orderConsigneeAddress_cityName").append("<option value='"+data.data[0].code+"' selected='selected'>"+data.data[0].city+"</option>");
+                    }
+                    //默认选中第一个
+                    if(!isSelect)
+                    {
+                        $('#orderConsigneeAddress_cityName:selected').val(data.data[0].code);
+                    }
+                    form.render();
+                    provinceCityAreaLoadCount++;
+                }
+            });
+        }
+        form.on('select(orderConsigneeAddress_cityName)', function (data) {
+            $("#orderConsigneeAddress_cityCode").val(data.value);
+            loadConsigneeAddressArea(data.value);
+        });
+
+        function loadConsigneeAddressArea(parentCode){
+
+            $.ajax({
+                url:"[[@{/area/list/by/parentCode/}]]"+parentCode,
+                contentType: "application/json; charset=utf-8",
+                type:'GET',
+                success:function(data){
+                    var optionHtml="";
+                    var isSelect=false;
+                    for(var i=0;i<data.data.length;i++) {
+                        var areaObj = data.data[i];
+                        var areaName=areaObj.area;
+                        if(orderConsigneeAddress_areaCode==areaObj.code)
+                        {
+                            optionHtml += "<option value='" + areaObj.code + "' selected='selected'>" + areaName + "</option>";
+                            isSelect=true;
+                        }else {
+                            optionHtml += "<option value='" + areaObj.code + "'>" + areaName + "</option>";
+                        }
+                    }
+                    $("#orderConsigneeAddress_areaName").empty();
+                    $("#orderConsigneeAddress_areaName").append(optionHtml);
+                    //默认选中第一个
+                    if(!isSelect)
+                    {
+                        $('#orderConsigneeAddress_areaName:selected').val(data.data[0].code);
+                    }
+                    form.render();
+                    provinceCityAreaLoadCount++;
+                }
+            });
+        }
+        form.on('select(orderConsigneeAddress_cityName)', function (data) {
+            $("#orderConsigneeAddress_areaCode").val(data.value);
+        });
+
+        loadConsigneeAddressProvince();
+        loadConsigneeAddressCity(orderConsigneeAddress_provinceCode);
+        loadConsigneeAddressArea(orderConsigneeAddress_cityCode);
 
         //监听提交
         form.on('submit(orderUpdateBtn)', function (data) {
+            if(provinceCityAreaLoadCount<3)
+            {
+                layer.msg("收货人信息没有加载结束，请稍候");
+                return;
+            }
             loadding = layer.load();
             var paramObj = data.field;
             //收货人
@@ -445,11 +597,11 @@
                 name:$("#orderConsigneeAddress_name").val(),
                 phone:$("#orderConsigneeAddress_phone").val(),
                 provinceCode:$("#orderConsigneeAddress_provinceCode").val(),
-                provinceName:$("#orderConsigneeAddress_provinceName").val(),
+                provinceName:$("#orderConsigneeAddress_provinceName").find("option:selected").text(),
                 cityCode:$("#orderConsigneeAddress_cityCode").val(),
-                cityName:$("#orderConsigneeAddress_cityName").val(),
+                cityName:$("#orderConsigneeAddress_cityName").find("option:selected").text(),
                 areaCode:$("#orderConsigneeAddress_areaCode").val(),
-                areaName:$("#orderConsigneeAddress_areaName").val(),
+                areaName:$("#orderConsigneeAddress_areaName").find("option:selected").text(),
                 address:$("#orderConsigneeAddress_address").val()
             };
 

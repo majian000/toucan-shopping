@@ -59,7 +59,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 首页栏目管理
+ * 选择店铺商品
  */
 @Controller
 @RequestMapping("/component/selectShopProduct")
