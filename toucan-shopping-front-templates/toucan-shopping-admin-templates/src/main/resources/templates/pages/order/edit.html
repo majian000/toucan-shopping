@@ -550,6 +550,7 @@
                         $("#orderConsigneeAddress_cityName").append(optionHtml);
                         //默认选中第一个
                         if (!isDefaultSelect) {
+                            orderConsigneeAddress_cityCode = data.data[0].code;
                             $("#orderConsigneeAddress_cityCode").val(data.data[0].code);
                             $('#orderConsigneeAddress_cityName:selected').val(data.data[0].code);
                         }
