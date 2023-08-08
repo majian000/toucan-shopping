@@ -464,6 +464,7 @@
                         if(orderConsigneeAddress_provinceCode==provinceObj.code)
                         {
                             optionHtml += "<option value='" + provinceObj.code + "' selected='selected'>" + provinceName + "</option>";
+                            $("#orderConsigneeAddress_provinceCode").val(provinceObj.code);
                         }else {
                             optionHtml += "<option value='" + provinceObj.code + "'>" + provinceName + "</option>";
                         }
@@ -475,13 +476,14 @@
 
                     provinceCityAreaLoadCount++;
                     layer.close(loadding);
+                    loadConsigneeAddressCity(orderConsigneeAddress_provinceCode);
                 }
             });
         }
 
         form.on('select(orderConsigneeAddress_provinceName)', function (data) {
             $("#orderConsigneeAddress_provinceCode").val(data.value);
-            loadConsigneeAddressCity(data.value);
+            orderConsigneeAddress_provinceCode = data.value;
             //如果是直辖市,选择用当前编码加载区县
             var isMunicipality=false;
             for(var i=0;i<provinceCache.length;i++)
@@ -490,66 +492,75 @@
                 {
                     if(provinceCache[i].isMunicipality==1)
                     {
-                        loadConsigneeAddressArea(data.value);
                         isMunicipality=true;
+                        loadConsigneeAddressArea(data.value);
                         break;
                     }
                 }
             }
+            loadConsigneeAddressCity(data.value);
             //用第一个编码加载区县
             if(!isMunicipality)
             {
+                $("#orderConsigneeAddress_cityCode").val(cityCache[0].code);
                 loadConsigneeAddressArea(cityCache[0].code);
             }
         });
 
+
+
         function loadConsigneeAddressCity(parentCode){
-            var loadding = layer.load();
-            $.ajax({
-                url:"[[@{/area/list/by/parentCode/}]]"+parentCode,
-                contentType: "application/json; charset=utf-8",
-                type:'GET',
-                success:function(data){
-                    var optionHtml="";
-                    var isSelect=false;
-                    var isMunicipality=false; //是否是直辖市
-                    cityCache.splice(0,provinceCache.length);
-                    for(var i=0;i<data.data.length;i++) {
-                        var cityObj = data.data[i];
-                        var cityName=cityObj.city;
-                        if(orderConsigneeAddress_cityCode==cityObj.code)
-                        {
-                            optionHtml+="<option value='"+cityObj.code+"' selected='selected'>"+cityName+"</option>";
-                            isSelect=true;
-                        }else{
-                            optionHtml+="<option value='"+cityObj.code+"'>"+cityName+"</option>";
-                        }
-                        if(!isMunicipality&&i>=1)
-                        {
-                            if(cityObj.city==data.data[i-1].city)
-                            {
-                                isMunicipality=true;
-                            }
-                        }
-                        cityCache.push({cityName:cityName,code:cityObj.code});
-                    }
-                    $("#orderConsigneeAddress_cityName").empty();
-                    if(!isMunicipality) {
-                        $("#orderConsigneeAddress_cityName").append(optionHtml);
-                    }else{
-                        $("#orderConsigneeAddress_cityName").append("<option value='"+data.data[0].code+"' selected='selected'>"+data.data[0].city+"</option>");
-                        $("#orderConsigneeAddress_cityCode").val(data.data[0].code);
-                    }
-                    //默认选中第一个
-                    if(!isSelect)
-                    {
-                        $('#orderConsigneeAddress_cityName:selected').val(data.data[0].code);
-                    }
+            var isMunicipality=false;
+            $("#orderConsigneeAddress_cityName").empty();
+            for(var i=0;i<provinceCache.length;i++)
+            {
+                if(parentCode==provinceCache[i].code&&provinceCache[i].isMunicipality==1)
+                {
+                    isMunicipality=true;
+                    $("#orderConsigneeAddress_cityName").append("<option value='" + provinceCache[i].code + "' selected='selected'>" + provinceCache[i].provinceName + "</option>");
+                    $("#orderConsigneeAddress_cityCode").val(provinceCache[i].code);
+                    orderConsigneeAddress_cityCode = provinceCache[i].code;
+                    loadConsigneeAddressArea(orderConsigneeAddress_cityCode);
                     form.render();
-                    provinceCityAreaLoadCount++;
-                    layer.close(loadding);
+                    break;
                 }
-            });
+            }
+            if(!isMunicipality) { //如果不是直辖市,加载下面的地市
+                var loadding = layer.load();
+                $.ajax({
+                    url: "[[@{/area/list/by/parentCode/}]]" + parentCode,
+                    contentType: "application/json; charset=utf-8",
+                    type: 'GET',
+                    success: function (data) {
+                        var optionHtml = "";
+                        var isDefaultSelect = false;
+                        cityCache.splice(0, provinceCache.length);
+                        for (var i = 0; i < data.data.length; i++) {
+                            var cityObj = data.data[i];
+                            var cityName = cityObj.city;
+                            if (orderConsigneeAddress_cityCode == cityObj.code) {
+                                optionHtml += "<option value='" + cityObj.code + "' selected='selected'>" + cityName + "</option>";
+                                $("#orderConsigneeAddress_cityCode").val(cityObj.code);
+                                isDefaultSelect = true;
+                            } else {
+                                optionHtml += "<option value='" + cityObj.code + "'>" + cityName + "</option>";
+                            }
+                            cityCache.push({cityName: cityName, code: cityObj.code});
+                        }
+                        $("#orderConsigneeAddress_cityName").append(optionHtml);
+                        //默认选中第一个
+                        if (!isDefaultSelect) {
+                            $("#orderConsigneeAddress_cityCode").val(data.data[0].code);
+                            $('#orderConsigneeAddress_cityName:selected').val(data.data[0].code);
+                        }
+                        form.render();
+                        provinceCityAreaLoadCount++;
+                        layer.close(loadding);
+
+                        loadConsigneeAddressArea(orderConsigneeAddress_cityCode);
+                    }
+                });
+            }
         }
         form.on('select(orderConsigneeAddress_cityName)', function (data) {
             $("#orderConsigneeAddress_cityCode").val(data.value);
@@ -564,14 +575,14 @@
                 type:'GET',
                 success:function(data){
                     var optionHtml="";
-                    var isSelect=false;
+                    var isDefaultSelect=false;
                     for(var i=0;i<data.data.length;i++) {
                         var areaObj = data.data[i];
                         var areaName=areaObj.area;
                         if(orderConsigneeAddress_areaCode==areaObj.code)
                         {
                             optionHtml += "<option value='" + areaObj.code + "' selected='selected'>" + areaName + "</option>";
-                            isSelect=true;
+                            isDefaultSelect=true;
                         }else {
                             optionHtml += "<option value='" + areaObj.code + "'>" + areaName + "</option>";
                         }
@@ -579,9 +590,10 @@
                     $("#orderConsigneeAddress_areaName").empty();
                     $("#orderConsigneeAddress_areaName").append(optionHtml);
                     //默认选中第一个
-                    if(!isSelect)
+                    if(!isDefaultSelect)
                     {
                         $('#orderConsigneeAddress_areaName:selected').val(data.data[0].code);
+                        $("#orderConsigneeAddress_areaCode").val(data.data[0].code);
                     }
                     form.render();
                     provinceCityAreaLoadCount++;
@@ -589,13 +601,11 @@
                 }
             });
         }
-        form.on('select(orderConsigneeAddress_cityName)', function (data) {
+        form.on('select(orderConsigneeAddress_areaName)', function (data) {
             $("#orderConsigneeAddress_areaCode").val(data.value);
         });
 
         loadConsigneeAddressProvince();
-        loadConsigneeAddressCity(orderConsigneeAddress_provinceCode);
-        loadConsigneeAddressArea(orderConsigneeAddress_cityCode);
 
         //监听提交
         form.on('submit(orderUpdateBtn)', function (data) {
