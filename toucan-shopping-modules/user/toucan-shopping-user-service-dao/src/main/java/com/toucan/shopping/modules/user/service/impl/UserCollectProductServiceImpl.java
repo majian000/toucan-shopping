@@ -4,10 +4,13 @@ import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.mapper.UserCollectProductMapper;
 import com.toucan.shopping.modules.user.service.UserCollectProductService;
+import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 用户收藏商品
@@ -31,6 +34,11 @@ public class UserCollectProductServiceImpl implements UserCollectProductService 
     @Override
     public int deleteById(Long id) {
         return userCollectProductMapper.deleteById(id);
+    }
+
+    @Override
+    public List<UserCollectProduct> findListByEntity(UserCollectProductVO query) {
+        return userCollectProductMapper.findListByEntity(query);
     }
 
 }

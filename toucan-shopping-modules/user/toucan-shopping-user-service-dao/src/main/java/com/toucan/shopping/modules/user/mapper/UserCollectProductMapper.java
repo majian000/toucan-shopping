@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
+import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,5 +23,6 @@ public interface UserCollectProductMapper {
      */
     int deleteById(Long id);
 
+    List<UserCollectProduct> findListByEntity(UserCollectProductVO query);
 
 }

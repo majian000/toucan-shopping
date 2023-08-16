@@ -42,5 +42,26 @@
 
 
 
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserCollectProductVO">
+        select * from t_user_collect_product t
+        <where>
+            1=1
+            <if test="ids!=null and ids.length>0 ">
+                and t.id in
+                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="userMainId!=null">
+                and t.user_main_id = #{userMainId}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
 
 </mapper>

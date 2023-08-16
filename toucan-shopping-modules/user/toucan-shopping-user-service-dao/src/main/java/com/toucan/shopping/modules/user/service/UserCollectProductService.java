@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
+import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public interface UserCollectProductService {
     int deleteById(Long id);
 
 
+    List<UserCollectProduct> findListByEntity(UserCollectProductVO query);
 
 
 }

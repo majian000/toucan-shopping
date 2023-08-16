@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 收货地址 增删改查
+ * 收货地址
  */
 @RestController
 @RequestMapping("/consignee/address")
