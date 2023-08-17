@@ -171,4 +171,57 @@ public class UserCollectProductController {
 
 
 
+    /**
+     * 查询收藏列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserCollectProductVO userCollectProductVO = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProductVO.class);
+
+            if(userCollectProductVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空");
+                return resultObjectVO;
+            }
+
+            if(StringUtils.isEmpty(userCollectProductVO.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("应用编码不能为空");
+                return resultObjectVO;
+            }
+
+            if(CollectionUtils.isEmpty(userCollectProductVO.getProductSkuIds()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品SKU ID不能为空");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(userCollectProductService.findListByEntity(userCollectProductVO));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 }

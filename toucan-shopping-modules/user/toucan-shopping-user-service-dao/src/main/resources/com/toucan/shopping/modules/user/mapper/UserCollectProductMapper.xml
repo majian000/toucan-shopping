@@ -46,9 +46,9 @@
         select * from t_user_collect_product t
         <where>
             1=1
-            <if test="ids!=null and ids.length>0 ">
-                and t.id in
-                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+            <if test="productSkuIds!=null and productSkuIds.size()>0 ">
+                and t.product_sku_id in
+                <foreach item="item" index="index" collection="productSkuIds" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
@@ -57,6 +57,9 @@
             </if>
             <if test="userMainId!=null">
                 and t.user_main_id = #{userMainId}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
             </if>
             and t.delete_status = 0
         </where>

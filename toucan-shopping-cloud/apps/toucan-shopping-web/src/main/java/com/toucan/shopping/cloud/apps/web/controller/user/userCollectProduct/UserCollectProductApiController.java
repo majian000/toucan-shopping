@@ -132,6 +132,44 @@ public class UserCollectProductApiController extends BaseController {
 
 
 
+    @UserAuth
+    @RequestMapping(value="/isCollect")
+    @ResponseBody
+    public ResultObjectVO isCollect(HttpServletRequest request, @RequestBody UserCollectProductVO consigneeAddressVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (consigneeAddressVO == null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败,没有找到收藏商品");
+            return resultObjectVO;
+        }
+        if (consigneeAddressVO.getProductSkuIds()==null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败,ID不能为空");
+            return resultObjectVO;
+        }
+
+        try {
+            //从请求头中拿到uid
+            consigneeAddressVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
+            consigneeAddressVO.setAppCode(toucan.getAppCode());
+
+            if(consigneeAddressVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,用户ID不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO = feignUserCollectProductService.queryCollectProducts(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
 
 
 }

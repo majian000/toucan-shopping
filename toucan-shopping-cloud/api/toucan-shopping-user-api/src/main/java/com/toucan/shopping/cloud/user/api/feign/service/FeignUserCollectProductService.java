@@ -31,5 +31,12 @@ public interface FeignUserCollectProductService {
     ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询收藏列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo);
 
 }
