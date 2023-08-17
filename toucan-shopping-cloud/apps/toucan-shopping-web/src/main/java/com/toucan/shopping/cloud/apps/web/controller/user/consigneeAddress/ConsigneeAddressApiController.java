@@ -35,7 +35,7 @@ import java.util.Date;
 
 
 /**
- * 用户头像审核
+ * 收货地址
  */
 @RestController("consigneeAddressApiController")
 @RequestMapping("/api/user/consigneeAddress")

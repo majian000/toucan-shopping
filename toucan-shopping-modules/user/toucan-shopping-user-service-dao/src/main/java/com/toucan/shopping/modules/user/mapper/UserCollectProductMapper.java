@@ -25,4 +25,6 @@ public interface UserCollectProductMapper {
 
     List<UserCollectProduct> findListByEntity(UserCollectProductVO query);
 
+    int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode);
+
 }

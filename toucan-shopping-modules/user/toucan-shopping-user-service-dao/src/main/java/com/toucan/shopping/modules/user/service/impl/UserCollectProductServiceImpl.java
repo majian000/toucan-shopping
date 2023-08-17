@@ -41,4 +41,9 @@ public class UserCollectProductServiceImpl implements UserCollectProductService 
         return userCollectProductMapper.findListByEntity(query);
     }
 
+    @Override
+    public int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode) {
+        return userCollectProductMapper.deleteByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
+    }
+
 }

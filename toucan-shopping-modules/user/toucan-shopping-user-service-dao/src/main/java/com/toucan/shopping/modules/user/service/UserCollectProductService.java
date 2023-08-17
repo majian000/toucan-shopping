@@ -29,4 +29,11 @@ public interface UserCollectProductService {
     List<UserCollectProduct> findListByEntity(UserCollectProductVO query);
 
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
+
 }

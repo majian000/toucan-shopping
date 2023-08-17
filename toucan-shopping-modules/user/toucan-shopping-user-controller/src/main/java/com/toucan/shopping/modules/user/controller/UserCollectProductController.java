@@ -150,12 +150,12 @@ public class UserCollectProductController {
                 resultObjectVO.setMsg("应用编码不能为空");
                 return resultObjectVO;
             }
-//            int row = userCollectProductService.deleteByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
-//            if (row < 1) {
-//                resultObjectVO.setCode(ResultVO.FAILD);
-//                resultObjectVO.setMsg("请重试!");
-//                return resultObjectVO;
-//            }
+            int row = userCollectProductService.deleteByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请重试!");
+                return resultObjectVO;
+            }
             resultObjectVO.setData(entity);
 
         }catch(Exception e)
