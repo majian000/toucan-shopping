@@ -14,6 +14,8 @@ $(function(){
 
     bindAttributeEvent();
 
+    bindCollectProductEvent();
+
 });
 
 
@@ -326,5 +328,33 @@ function bindRemoveBrandEvent()
     $(".qball").bind("click", function () {
         $("#qbs").val("f");
         doSearch();
+    });
+}
+
+function bindCollectProductEvent(){
+    var ssdArray = $(".ssd");
+    var productSkuIds = new Array();
+    if(ssdArray!=null&&ssdArray.length>0)
+    {
+        for(var i=0;i<ssdArray.length;i++)
+        {
+            var cbtn = ssdArray[i];
+            productSkuIds.push($(cbtn).attr("attr-v"));
+        }
+    }
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/collect/product/isCollect",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({"productSkuIds":productSkuIds}),
+        dataType: "json",
+        success: function (result) {
+            console.log(result);
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+        }
     });
 }

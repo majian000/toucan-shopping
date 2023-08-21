@@ -1577,6 +1577,20 @@ ul.cate_list li .name{
 ul.cate_list li .carbg{
 	width:209px; height:30px; overflow:hidden; font-family:"宋体"; margin-top:15px;
 }
+
+ul.cate_list li .carbg a.ss_disabled{
+	cursor:pointer;width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+}
+
+ul.cate_list li .carbg a.ss_select{
+	cursor:pointer;width:68px; height:28px; line-height:28px; overflow:hidden;text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+	color:#ff4e00;  background:url(../images/heart_h.png) no-repeat 10px center;
+}
+
+ul.cate_list li .carbg a.ss_select:hover{
+	cursor:pointer;width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
+}
+
 ul.cate_list li .carbg a.ss{
 	cursor:pointer;width:68px; height:28px; line-height:28px; overflow:hidden; background:url(../images/heart.png) no-repeat 10px center; color:#888888; text-indent:33px; float:left; display:inline; margin-right:-1px; border:1px solid #cccccc;
 }
