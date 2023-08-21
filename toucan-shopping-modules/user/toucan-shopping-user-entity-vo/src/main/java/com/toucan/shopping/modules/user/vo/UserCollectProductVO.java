@@ -18,5 +18,9 @@ public class UserCollectProductVO extends UserCollectProduct {
     private List<Long> productSkuIds;
 
 
+    /**
+     * 收藏类型 0:取消 1:收藏
+     */
+    private int type=1;
 
 }

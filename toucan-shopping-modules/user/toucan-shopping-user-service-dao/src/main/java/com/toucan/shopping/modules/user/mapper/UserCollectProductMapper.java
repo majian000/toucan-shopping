@@ -27,4 +27,7 @@ public interface UserCollectProductMapper {
 
     int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode);
 
+    int deleteBySkuIdAndUserMainIdAndAppCode(Long skuId, Long userMainId, String appCode);
+
+
 }

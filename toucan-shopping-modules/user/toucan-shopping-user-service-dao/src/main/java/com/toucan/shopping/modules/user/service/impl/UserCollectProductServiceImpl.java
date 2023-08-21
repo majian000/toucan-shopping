@@ -46,4 +46,9 @@ public class UserCollectProductServiceImpl implements UserCollectProductService 
         return userCollectProductMapper.deleteByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
     }
 
+    @Override
+    public int deleteBySkuIdAndUserMainIdAndAppCode(Long skuId, Long userMainId, String appCode) {
+        return userCollectProductMapper.deleteBySkuIdAndUserMainIdAndAppCode(skuId,userMainId,appCode);
+    }
+
 }

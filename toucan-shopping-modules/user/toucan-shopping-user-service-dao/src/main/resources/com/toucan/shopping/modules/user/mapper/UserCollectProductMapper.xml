@@ -73,6 +73,9 @@
         update t_user_collect_product set delete_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
+    <update id="deleteBySkuIdAndUserMainIdAndAppCode" >
+        update t_user_collect_product set delete_status=1 where product_sku_id = #{skuId} and user_main_id = #{userMainId} and app_code =#{appCode}
+    </update>
 
 
 </mapper>

@@ -14,28 +14,28 @@ public @interface UserAuth {
 	/**
 	 * 校验方式 0本地验证 1用户中心验证
 	 */
-	public static int VERIFYMETHOD_LOCAL =0;
-	public static int VERIFYMETHOD_USER_AUTH =1;
+	 int VERIFYMETHOD_LOCAL =0;
+	 int VERIFYMETHOD_USER_AUTH =1;
 
 	/**
 	 * 请求类型 0 json 1 form
 	 */
-	public static int REQUEST_JSON =0;
-	public static int REQUEST_FORM=1;
-	public static int REQUEST_AJAX=2;
+	 int REQUEST_JSON =0;
+	 int REQUEST_FORM=1;
+	 int REQUEST_AJAX=2;
 
 
 	/**
 	 * 用户类型
 	 */
-	public static int USERTYPE_USER =1;
+	 int USERTYPE_USER =1;
 
 
 	/**
 	 * 校验方式
 	 * @return
 	 */
-	public int verifyMethod() default VERIFYMETHOD_USER_AUTH;
+	int verifyMethod() default VERIFYMETHOD_USER_AUTH;
 
 
 
@@ -43,14 +43,14 @@ public @interface UserAuth {
 	 * 登录校验
 	 * @return
 	 */
-	public boolean login() default true;
+	boolean login() default true;
 
 
 	/**
 	 * 请求类型 0 json 1 form
 	 * @return
 	 */
-	public int requestType() default REQUEST_JSON;
+	int requestType() default REQUEST_JSON;
 
 
 

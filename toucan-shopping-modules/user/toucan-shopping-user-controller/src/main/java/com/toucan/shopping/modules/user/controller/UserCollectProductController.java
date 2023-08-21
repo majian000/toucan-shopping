@@ -9,6 +9,8 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserCollectProductConstant;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
+import com.toucan.shopping.modules.user.redis.UserCenterConsigneeAddressKey;
+import com.toucan.shopping.modules.user.redis.UserCollectProductKey;
 import com.toucan.shopping.modules.user.service.UserCollectProductService;
 import com.toucan.shopping.modules.user.service.UserCollectProductService;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
@@ -72,7 +74,12 @@ public class UserCollectProductController {
         }
         String userMainId = String.valueOf(userCollectProductVO.getUserMainId());
         try {
-            //查询收货人数量
+            boolean lockStatus = skylarkLock.lock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
             UserCollectProductVO queryUserCollectProduct = new UserCollectProductVO();
             queryUserCollectProduct.setUserMainId(userCollectProductVO.getUserMainId());
             queryUserCollectProduct.setAppCode(userCollectProductVO.getAppCode());
@@ -102,6 +109,7 @@ public class UserCollectProductController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }finally{
+            skylarkLock.unLock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -116,9 +124,9 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -126,31 +134,35 @@ public class UserCollectProductController {
             resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
+        UserCollectProduct entity = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProduct.class);
+        if(entity.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("用户ID不能为空");
+            return resultObjectVO;
+        }
+        if(entity.getProductSkuId()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("商品ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(entity.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("应用编码不能为空");
+            return resultObjectVO;
+        }
 
+        String userMainId = String.valueOf(entity.getUserMainId());
         try {
-            UserCollectProduct entity = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProduct.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空");
+            boolean lockStatus = skylarkLock.lock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
-
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
-            int row = userCollectProductService.deleteByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
+            int row = userCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode(entity.getProductSkuId(),entity.getUserMainId(),entity.getAppCode());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
@@ -164,6 +176,8 @@ public class UserCollectProductController {
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

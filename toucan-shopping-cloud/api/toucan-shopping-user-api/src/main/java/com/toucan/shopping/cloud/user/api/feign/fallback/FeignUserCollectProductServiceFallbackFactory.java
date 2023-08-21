@@ -39,7 +39,7 @@ public class FeignUserCollectProductServiceFallbackFactory implements FallbackFa
             }
 
             @Override
-            public ResultObjectVO deleteByIdAndUserMainIdAndAppCode(RequestJsonVO requestVo) {
+            public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -47,7 +47,7 @@ public class FeignUserCollectProductServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserCollectProductService.deleteByIdAndUserMainIdAndAppCode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

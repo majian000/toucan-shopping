@@ -36,4 +36,11 @@ public interface UserCollectProductService {
      */
     int deleteByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
 
+    /**
+     * 根据ID删除
+     * @param skuId
+     * @return
+     */
+    int deleteBySkuIdAndUserMainIdAndAppCode(Long skuId,Long userMainId,String appCode);
+
 }
