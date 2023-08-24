@@ -579,44 +579,18 @@ function bindCollectProductEvent(){
         dataType: "json",
         success: function (result) {
             if(result.code==403){
-                window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
             }else {
 
                 //设置选择样式
                 if (result.data != null && result.data.length > 0) {
                     $(".ucpa_icon").removeClass("d_care_dis");
                     $(".ucpa_icon").addClass("d_care");
+                    $(".ucpa").attr("attr-t", "0");
                 }else{
                     $(".ucpa_icon").removeClass("d_care");
                     $(".ucpa_icon").addClass("d_care_dis");
+                    $(".ucpa").attr("attr-t", "1");
                 }
-
-                $(".ucpa").bind("click", function () {
-                    var type = $(this).attr("attr-t");
-                    if (type == "1") {
-                        $(this).attr("attr-t", "0");
-                        $(".ucpa_icon").removeClass("d_care_dis");
-                        $(".ucpa_icon").addClass("d_care");
-                    } else {
-                        $(this).attr("attr-t", "1");
-                        $(".ucpa_icon").removeClass("d_care");
-                        $(".ucpa_icon").addClass("d_care_dis");
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        url: basePath + "/api/user/collect/product/collect",
-                        contentType: "application/json;charset=utf-8",
-                        data: JSON.stringify({"productSkuId": g_productVo.id, "type": type}),
-                        dataType: "json",
-                        success: function (result) {
-                            if(type=="1") {
-                                ShowDiv('userCollectProductMsg', 'fade');
-                            }
-                        }
-                    });
-                });
-
 
             }
         },
@@ -624,5 +598,37 @@ function bindCollectProductEvent(){
         },
         complete:function(data,status){
         }
+    });
+
+    $(".ucpa").bind("click", function () {
+        var type = $(this).attr("attr-t");
+
+        if (type == "1") {
+            $(this).attr("attr-t", "0");
+            $(".ucpa_icon").removeClass("d_care_dis");
+            $(".ucpa_icon").addClass("d_care");
+        } else {
+            $(this).attr("attr-t", "1");
+            $(".ucpa_icon").removeClass("d_care");
+            $(".ucpa_icon").addClass("d_care_dis");
+        }
+
+        $.ajax({
+            type: "POST",
+            url: basePath + "/api/user/collect/product/collect",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({"productSkuId": g_productVo.id, "type": type}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code==403){
+                    window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
+                }else {
+
+                    if (type == "1") {
+                        ShowDiv('userCollectProductMsg', 'fade');
+                    }
+                }
+            }
+        });
     });
 }
