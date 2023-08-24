@@ -249,6 +249,10 @@ function drawProductPage(productVO)
     if(productVO!=null)
     {
         g_productVo = productVO;
+
+        //收藏商品事件
+        bindCollectProductEvent();
+
         var photoPos = 0;
         $(".productPhotoPreview").empty();
         $(".productPhotoPreview").append("<li onclick=\"showPic("+photoPos+")\" rel=\"MagicZoom\" class=\"tsSelectImg\">" +
@@ -561,3 +565,64 @@ function drawCategoryBrandPosition(categoryBrands)
 }
 
 
+
+function bindCollectProductEvent(){
+
+    var productSkuIds = new Array();
+    productSkuIds.push(g_productVo.id);
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/collect/product/isCollect",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({"productSkuIds":productSkuIds}),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==403){
+                window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
+            }else {
+
+                //设置选择样式
+                if (result.data != null && result.data.length > 0) {
+                    $(".ucpa_icon").removeClass("d_care_dis");
+                    $(".ucpa_icon").addClass("d_care");
+                }else{
+                    $(".ucpa_icon").removeClass("d_care");
+                    $(".ucpa_icon").addClass("d_care_dis");
+                }
+
+                $(".ucpa").bind("click", function () {
+                    var type = $(this).attr("attr-t");
+                    if (type == "1") {
+                        $(this).attr("attr-t", "0");
+                        $(".ucpa_icon").removeClass("d_care_dis");
+                        $(".ucpa_icon").addClass("d_care");
+                    } else {
+                        $(this).attr("attr-t", "1");
+                        $(".ucpa_icon").removeClass("d_care");
+                        $(".ucpa_icon").addClass("d_care_dis");
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: basePath + "/api/user/collect/product/collect",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({"productSkuId": g_productVo.id, "type": type}),
+                        dataType: "json",
+                        success: function (result) {
+                            if(type=="1") {
+                                ShowDiv('userCollectProductMsg', 'fade');
+                            }
+                        }
+                    });
+                });
+
+
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+        }
+    });
+}

@@ -1751,6 +1751,10 @@ ul.brand li .name span{
 	height:27px; line-height:27px; overflow:hidden; background:url(../images/care.png) no-repeat left center; float:left; display:inline; margin-left:50px; padding-left:22px;
 }
 
+.des_share .d_care_dis{
+	height:27px; line-height:27px; overflow:hidden; background:url(../images/heart.png) no-repeat 0px center; float:left; display:inline; margin-left:50px; padding-left:22px;
+}
+
 .des_join{
 	height:45px; overflow:hidden; margin-top:20px;
 }
