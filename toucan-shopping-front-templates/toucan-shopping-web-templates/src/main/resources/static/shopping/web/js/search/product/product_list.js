@@ -378,6 +378,7 @@ function bindCollectProductEvent(){
             $(".cplist").bind("click", function () {
                 var productSkuId = $(this).attr("attr-v");
                 var type = $(this).attr("attr-t");
+                var selectObj = $(this);
 
                 $.ajax({
                     type: "POST",
@@ -390,13 +391,13 @@ function bindCollectProductEvent(){
                             window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
                         }else{
                             if (type == "1") {
-                                $(this).attr("attr-t", "0");
-                                $(this).addClass("ss_select");
-                                $(this).removeClass("ss");
+                                selectObj.attr("attr-t", "0");
+                                selectObj.addClass("ss_select");
+                                selectObj.removeClass("ss");
                             } else {
-                                $(this).attr("attr-t", "1");
-                                $(this).addClass("ss");
-                                $(this).removeClass("ss_select");
+                                selectObj.attr("attr-t", "1");
+                                selectObj.addClass("ss");
+                                selectObj.removeClass("ss_select");
                             }
                         }
                     }

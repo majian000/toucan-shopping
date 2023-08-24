@@ -603,15 +603,6 @@ function bindCollectProductEvent(){
     $(".ucpa").bind("click", function () {
         var type = $(this).attr("attr-t");
 
-        if (type == "1") {
-            $(this).attr("attr-t", "0");
-            $(".ucpa_icon").removeClass("d_care_dis");
-            $(".ucpa_icon").addClass("d_care");
-        } else {
-            $(this).attr("attr-t", "1");
-            $(".ucpa_icon").removeClass("d_care");
-            $(".ucpa_icon").addClass("d_care_dis");
-        }
 
         $.ajax({
             type: "POST",
@@ -623,6 +614,15 @@ function bindCollectProductEvent(){
                 if(result.code==403){
                     window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
                 }else {
+                    if (type == "1") {
+                        $(".ucpa").attr("attr-t", "0");
+                        $(".ucpa_icon").removeClass("d_care_dis");
+                        $(".ucpa_icon").addClass("d_care");
+                    } else {
+                        $(".ucpa").attr("attr-t", "1");
+                        $(".ucpa_icon").removeClass("d_care");
+                        $(".ucpa_icon").addClass("d_care_dis");
+                    }
 
                     if (type == "1") {
                         ShowDiv('userCollectProductMsg', 'fade');
