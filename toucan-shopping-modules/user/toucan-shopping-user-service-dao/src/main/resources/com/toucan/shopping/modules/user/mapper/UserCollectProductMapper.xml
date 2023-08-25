@@ -23,7 +23,7 @@
     <sql id="queryListPageWhere">
         and t.delete_status = 0
 
-        <if test="userMainId!=null and userMainId!=''">
+        <if test="userMainId!=null ">
             and t.user_main_id = #{userMainId}
         </if>
 

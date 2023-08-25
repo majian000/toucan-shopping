@@ -151,7 +151,7 @@ public class UserCollectProductApiController extends BaseController {
     public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody UserCollectProductPageInfo pageInfo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            pageInfo.setUserMainId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            pageInfo.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             resultObjectVO = feignUserCollectProductService.queryListPage(requestJsonVO);

@@ -30,7 +30,7 @@ public class UserCollectProductPageInfo extends PageInfo<UserCollectProductVO> {
     private Long id;
 
     private String appCode; //所属应用
-    private String userMainId; //所属用户
+    private Long userMainId; //所属用户
     private String orderNo; //订单编号
 
 
