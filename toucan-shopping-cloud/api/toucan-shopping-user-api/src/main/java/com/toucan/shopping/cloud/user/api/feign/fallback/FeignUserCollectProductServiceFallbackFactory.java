@@ -32,7 +32,7 @@ public class FeignUserCollectProductServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserCollectProductService.save 失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserCollectProductService.save 失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -47,7 +47,7 @@ public class FeignUserCollectProductServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode 失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -62,7 +62,22 @@ public class FeignUserCollectProductServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserCollectProductService.queryCollectProducts 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserCollectProductService.queryCollectProducts 失败  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserCollectProductService.queryListPage 失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

@@ -3,12 +3,14 @@ package com.toucan.shopping.modules.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserCollectProductConstant;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
+import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterConsigneeAddressKey;
 import com.toucan.shopping.modules.user.redis.UserCollectProductKey;
 import com.toucan.shopping.modules.user.service.UserCollectProductService;
@@ -124,7 +126,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -190,7 +192,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -233,6 +235,36 @@ public class UserCollectProductController {
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 查询列表页
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                UserCollectProductPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserCollectProductPageInfo.class);
+                PageInfo<UserCollectProductVO> listPage = userCollectProductService.queryListPage(pageInfo);
+                resultObjectVO.setData(listPage);
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
         }
         return resultObjectVO;
     }

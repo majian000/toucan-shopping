@@ -23,7 +23,7 @@
     <sql id="queryListPageWhere">
         and t.delete_status = 0
 
-        <if test="userMainId!=null">
+        <if test="userMainId!=null and userMainId!=''">
             and t.user_main_id = #{userMainId}
         </if>
 
@@ -77,5 +77,30 @@
         update t_user_collect_product set delete_status=1 where product_sku_id = #{skuId} and user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
+
+    <select id="queryListPage" resultMap="entityVOMap" parameterType="com.toucan.shopping.modules.user.page.UserCollectProductPageInfo">
+        select t.* from t_user_collect_product t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserCollectProductPageInfo">
+        select count(*) from t_user_collect_product t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
 
 </mapper>

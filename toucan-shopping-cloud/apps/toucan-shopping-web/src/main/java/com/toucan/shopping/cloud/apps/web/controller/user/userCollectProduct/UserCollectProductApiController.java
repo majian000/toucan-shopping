@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -139,6 +140,33 @@ public class UserCollectProductApiController extends BaseController {
 
 
 
-
+    /**
+     * 收藏列表
+     * @param request
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody UserCollectProductPageInfo pageInfo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            pageInfo.setUserMainId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+            pageInfo.setAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            resultObjectVO = feignUserCollectProductService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                pageInfo = resultObjectVO.formatData(UserCollectProductPageInfo.class);
+                resultObjectVO.setData(pageInfo);
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 }

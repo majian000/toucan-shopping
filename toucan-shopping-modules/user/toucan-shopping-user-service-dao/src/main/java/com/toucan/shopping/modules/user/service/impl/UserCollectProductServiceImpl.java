@@ -1,8 +1,10 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.mapper.UserCollectProductMapper;
+import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.service.UserCollectProductService;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.slf4j.Logger;
@@ -34,6 +36,19 @@ public class UserCollectProductServiceImpl implements UserCollectProductService 
     @Override
     public int deleteById(Long id) {
         return userCollectProductMapper.deleteById(id);
+    }
+
+    @Override
+    public PageInfo<UserCollectProductVO> queryListPage(UserCollectProductPageInfo pageInfo) {
+        PageInfo<UserCollectProductVO> pageResult = new PageInfo();
+        pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
+        pageResult.setList(userCollectProductMapper.queryListPage(pageInfo));
+        pageResult.setTotal(userCollectProductMapper.queryListPageCount(pageInfo));
+
+        pageResult.setSize(pageInfo.getSize());
+        pageResult.setLimit(pageInfo.getLimit());
+        pageResult.setPage(pageInfo.getPage());
+        return pageResult;
     }
 
     @Override

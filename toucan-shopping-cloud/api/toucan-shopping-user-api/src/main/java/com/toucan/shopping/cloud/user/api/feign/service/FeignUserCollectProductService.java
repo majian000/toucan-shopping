@@ -27,7 +27,7 @@ public interface FeignUserCollectProductService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -36,7 +36,15 @@ public interface FeignUserCollectProductService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 查询列表页
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 }

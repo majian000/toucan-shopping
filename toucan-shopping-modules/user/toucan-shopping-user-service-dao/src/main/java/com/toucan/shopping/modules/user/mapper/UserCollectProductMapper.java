@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.user.mapper;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
+import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,6 +29,10 @@ public interface UserCollectProductMapper {
     int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode);
 
     int deleteBySkuIdAndUserMainIdAndAppCode(Long skuId, Long userMainId, String appCode);
+
+    List<UserCollectProductVO> queryListPage(UserCollectProductPageInfo pageInfo);
+
+    Long queryListPageCount(UserCollectProductPageInfo pageInfo);
 
 
 }

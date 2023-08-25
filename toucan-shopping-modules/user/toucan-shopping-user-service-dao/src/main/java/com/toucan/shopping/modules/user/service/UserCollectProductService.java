@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
+import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 
@@ -25,6 +26,12 @@ public interface UserCollectProductService {
      */
     int deleteById(Long id);
 
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<UserCollectProductVO> queryListPage(UserCollectProductPageInfo pageInfo);
 
     List<UserCollectProduct> findListByEntity(UserCollectProductVO query);
 
