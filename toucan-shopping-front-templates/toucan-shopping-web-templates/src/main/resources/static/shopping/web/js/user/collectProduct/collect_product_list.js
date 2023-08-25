@@ -17,7 +17,21 @@ function drawCollectProductList(cpage,data)
     {
         $(".collect-product-list-tips").hide();
         $(".collect-product-list-table").show();
-        var orderTableHtml="";
+        var orderTableHtml="<colgroup>\n" +
+            "                                <col class=\"number-col\">\n" +
+            "                                <col class=\"amount-col\">\n" +
+            "                                <col class=\"operate-col\">\n" +
+            "                            </colgroup>\n" +
+            "                            <thead>\n" +
+            "                            <tr>\n" +
+            "                                <th style=\"width:50%\">\n" +
+            "                                    <div class=\"collect-product-detail-txt ac\">商品详情</div>\n" +
+            "                                </th>\n" +
+            "                                <th style=\"width:30%\">金额</th>\n" +
+            "                                <th style=\"width:20%\">操作</th>\n" +
+            "                            </tr>\n" +
+            "\n" +
+            "                            </thead>";
         for(var i=0;i<data.list.length;i++)
         {
             orderTableHtml+="<tr class=\"tr-bd\">\n" +
@@ -63,8 +77,7 @@ function drawCollectProductList(cpage,data)
                 "                                        <div class=\"operate\">\n" +
                 "                                            <div></div>\n" +
                 "                                                <br>\n" +
-                "                                                <a href=\"#\" class=\"btn-again btn-again-show \" target=\"_blank\"><b></b>取消订单</a>|\n" +
-                "                                                <a href=\"http://localhost:8083/page/user/buyCar/pay/?orderNo=2201168863164882000069117\" class=\"btn-again btn-again-show \" target=\"_blank\"><b></b>立即付款</a>\n" +
+                "                                                <a href=\"#\" class=\"btn-again btn-again-show \" target=\"_blank\"><b></b>取消收藏</a>\n" +
                 "                                            <br>\n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +

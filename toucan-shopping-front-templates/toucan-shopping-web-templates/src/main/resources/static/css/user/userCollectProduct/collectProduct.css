@@ -286,7 +286,7 @@
 	display: inline-block;
 	display: block;
 	float: left;
-	width: 255px;
+	width: 90%;
 	margin-right: 10px
 }
 
@@ -317,7 +317,7 @@
 
 .collect-product-tb .goods-item .p-msg {
 	float: left;
-	width: 160px
+	width: 75%;
 }
 
 .collect-product-tb .goods-item .p-name {
