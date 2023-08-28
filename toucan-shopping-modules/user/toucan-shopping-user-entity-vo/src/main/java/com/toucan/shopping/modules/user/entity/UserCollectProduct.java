@@ -30,16 +30,12 @@ public class UserCollectProduct {
 
 
     /**
-     * 商品SKU ID,用该字段分库分表
+     * 商品SKU ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productSkuId;
 
-    /**
-     * 商品UUID
-     */
-    private String productSkuUuid;
 
 
     /**

@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userCollectProduct;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.VerifyCodeService;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -12,10 +13,15 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
+import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -43,6 +51,12 @@ public class UserCollectProductApiController extends BaseController {
     @Autowired
     private FeignUserCollectProductService feignUserCollectProductService;
 
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private Toucan toucan;
@@ -158,6 +172,46 @@ public class UserCollectProductApiController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 pageInfo = resultObjectVO.formatData(UserCollectProductPageInfo.class);
+
+                //查询所有商品
+                if(CollectionUtils.isNotEmpty(pageInfo.getList())) {
+                    List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
+                    for (UserCollectProductVO userCollectProductVO : pageInfo.getList()) {
+                        ProductSkuVO productSkuVO = new ProductSkuVO();
+                        productSkuVO.setId(userCollectProductVO.getProductSkuId());
+                        productSkus.add(productSkuVO);
+                    }
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
+                    ResultObjectVO productResultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                    if(productResultObjectVO.isSuccess())
+                    {
+                        List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
+                        if(CollectionUtils.isNotEmpty(productSkuList))
+                        {
+                            for(ProductSku productSku:productSkuList)
+                            {
+                                for(UserCollectProductVO userCollectProductVO : pageInfo.getList())
+                                {
+                                    if(productSku.getId().longValue()==userCollectProductVO.getProductSkuId().longValue()) {
+                                        userCollectProductVO.setProductSkuName(productSku.getName());
+                                        if(productSku.getStatus().intValue()==0)
+                                        {
+                                            userCollectProductVO.setProductSkuName(userCollectProductVO.getProductSkuName()+" 已下架");
+                                        }
+                                        if(productSku.getStockNum().longValue()<=0)
+                                        {
+                                            userCollectProductVO.setProductSkuName(userCollectProductVO.getProductSkuName()+" 已售罄");
+                                        }
+                                        userCollectProductVO.setProductPrice(productSku.getPrice());
+                                        userCollectProductVO.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
                 resultObjectVO.setData(pageInfo);
             }
         }catch (Exception e)

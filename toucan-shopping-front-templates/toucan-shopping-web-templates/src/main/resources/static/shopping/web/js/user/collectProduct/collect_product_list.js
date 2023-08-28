@@ -1,12 +1,9 @@
 
 
 var g_om_cpage=1;
-var g_query_order_type=-1;
-var g_query_keyword="";
 
 $(function () {
     loadListTable(1);
-    bindTabEvent();
 });
 
 
@@ -34,24 +31,25 @@ function drawCollectProductList(cpage,data)
             "                            </thead>";
         for(var i=0;i<data.list.length;i++)
         {
+            var row = data.list[i];
             orderTableHtml+="<tr class=\"tr-bd\">\n" +
-                "                                    <td>\n" +
-                "                                        <div class=\"goods-item \">\n" +
-                "                                            <div class=\"p-img\">\n" +
-                "                                                <a href=\"http://localhost:8083/page/product/detail/1120741802802937900\" target=\"_blank\">\n" +
-                "                                                    <img class=\"\" src=\"http://8.140.187.184:8049/group1/M00/00/0F/rB5PVWSRWMKAYgnOAAGSoNT8hWc34..JPG\" title=\"Apple iPhone 14 Pro Max (A2896) 256GB 银色 支持移动联通电信5G 双卡双待手机 黑色 8G\" data-lazy-img=\"done\" width=\"60\" height=\"60\">\n" +
-                "                                                </a>\n" +
-                "                                            </div>\n" +
-                "                                            <div class=\"p-msg\">\n" +
-                "                                                <div class=\"p-name\">\n" +
-                "                                                    <a href=\"http://localhost:8083/page/product/detail/1120741802802937900\" class=\"a-link\" target=\"_blank\" title=\"Apple iPhone 14 Pro Max (A2896) 256GB 银色 支持移动联通电信5G 双卡双待手机 黑色 8G\">Apple iPhone 14 Pro Max (A2896) 256GB 银色 支持移动联通电信5G 双卡双待手机 黑色 8G</a>\n" +
-                "                                                </div>\n" +
-                "                                                <div class=\"p-extra\">\n" +
-                "                                                </div>\n" +
-                "\n" +
-                "                                            </div>\n" +
-                "                                        </div>\n" +
-                "                                        \n" +
+            "                                    <td>\n" +
+            "                                        <div class=\"goods-item \">\n" +
+            "                                            <div class=\"p-img\">\n" +
+            "                                                <a href=\""+basePath+"/page/product/detail/"+row.productSkuId+"\" target=\"_blank\">\n" +
+            "                                                    <img class=\"\" src=\""+row.httpProductImgPath+"\" title=\""+row.productSkuName+"\" data-lazy-img=\"done\" width=\"60\" height=\"60\">\n" +
+            "                                                </a>\n" +
+            "                                            </div>\n" +
+            "                                            <div class=\"p-msg\">\n" +
+            "                                                <div class=\"p-name\">\n" +
+            "                                                    <a href=\""+basePath+"/page/product/detail/"+row.productSkuId+"\" class=\"a-link\" target=\"_blank\" title=\""+row.productSkuName+"\">"+row.productSkuName+"</a>\n" +
+            "                                                </div>\n" +
+            "                                                <div class=\"p-extra\">\n" +
+            "                                                </div>\n" +
+            "\n" +
+            "                                            </div>\n" +
+            "                                        </div>\n" +
+            "                                        \n" +
                 "\n" +
                 "\n" +
                 "                                        <div class=\"goods-repair\">\n" +
@@ -68,7 +66,7 @@ function drawCollectProductList(cpage,data)
                 "                                    \n" +
                 "                                    <td rowspan=\"1\">\n" +
                 "                                        <div class=\"amount\">\n" +
-                "                                            <span>¥38197</span> \n" +
+                "                                            <span>¥"+row.productPrice+"</span> \n" +
                 "                                            \n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +
@@ -77,7 +75,7 @@ function drawCollectProductList(cpage,data)
                 "                                        <div class=\"operate\">\n" +
                 "                                            <div></div>\n" +
                 "                                                <br>\n" +
-                "                                                <a href=\"#\" class=\"btn-again btn-again-show \" target=\"_blank\"><b></b>取消收藏</a>\n" +
+                "                                                <a  attr-id='"+row.id+"' class=\"btn-again btn-again-show ccp\" target=\"_blank\"><b></b>取消收藏</a>\n" +
                 "                                            <br>\n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +
@@ -87,6 +85,7 @@ function drawCollectProductList(cpage,data)
         $(".collect-product-list-table").empty();
         $(".collect-product-list-table").append(orderTableHtml);
 
+        bindCancelCollectProduct();
         drawPagination(cpage,data);
 
     }else{
@@ -94,6 +93,39 @@ function drawCollectProductList(cpage,data)
         $(".collect-product-list-table").hide();
         $(".pagination").empty();
     }
+}
+
+function bindCancelCollectProduct()
+{
+    $(".ccp").unbind();
+    $(".ccp").click(function(){
+
+        loading.showLoading({
+            type:1,
+            tip:"取消中..."
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: basePath + "/api/user/collect/product/collect",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({"productSkuId":$(this).attr("attr-id"), "type": 0}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code!=0)
+                {
+                    loadListTable(1);
+                    loading.hideLoading();
+                }
+            },
+            complete:function(data,status){
+                loading.hideLoading();
+            }
+        });
+
+    });
+
 }
 
 /**

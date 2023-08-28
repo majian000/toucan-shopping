@@ -93,6 +93,14 @@ public class UserCollectProductController {
                 return resultObjectVO;
             }
 
+            queryUserCollectProduct.setProductSkuId(userCollectProductVO.getProductSkuId());
+            List<UserCollectProduct> userCollectProductList = userCollectProductService.findListByEntity(queryUserCollectProduct);
+            if(!CollectionUtils.isEmpty(userCollectProductList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("已存在该商品收藏");
+                return resultObjectVO;
+            }
 
             userCollectProductVO.setId(idGenerator.id());
             userCollectProductVO.setDeleteStatus((short)0);
