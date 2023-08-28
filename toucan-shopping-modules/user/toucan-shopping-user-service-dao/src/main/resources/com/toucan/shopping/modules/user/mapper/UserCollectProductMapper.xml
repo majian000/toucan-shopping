@@ -28,6 +28,28 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="productSkuIds!=null and productSkuIds.size()>0 ">
+            and t.product_sku_id in
+            <foreach item="item" index="index" collection="productSkuIds" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+        <if test="productSkuId!=null">
+            and t.product_sku_id = #{productSkuId}
+        </if>
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code = #{appCode}
+        </if>
+    </sql>
+
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserCollectProduct" >
         insert into t_user_collect_product(id,user_main_id,product_sku_id,create_date,delete_status,app_code)
@@ -45,22 +67,8 @@
         select * from t_user_collect_product t
         <where>
             1=1
-            <if test="productSkuIds!=null and productSkuIds.size()>0 ">
-                and t.product_sku_id in
-                <foreach item="item" index="index" collection="productSkuIds" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-            <if test="userMainId!=null">
-                and t.user_main_id = #{userMainId}
-            </if>
-            <if test="appCode!=null and appCode!=''">
-                and t.app_code = #{appCode}
-            </if>
-            and t.delete_status = 0
+
+            <include refid="queryListWhere" />
         </where>
 
     </select>
