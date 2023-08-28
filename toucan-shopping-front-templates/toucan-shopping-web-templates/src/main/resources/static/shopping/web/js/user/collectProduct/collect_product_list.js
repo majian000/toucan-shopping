@@ -75,7 +75,7 @@ function drawCollectProductList(cpage,data)
                 "                                        <div class=\"operate\">\n" +
                 "                                            <div></div>\n" +
                 "                                                <br>\n" +
-                "                                                <a  attr-id='"+row.id+"' class=\"btn-again btn-again-show ccp\" target=\"_blank\"><b></b>取消收藏</a>\n" +
+                "                                                <a  attr-id='"+row.productSkuId+"' class=\"btn-again btn-again-show ccp\" target=\"_blank\"><b></b>取消收藏</a>\n" +
                 "                                            <br>\n" +
                 "                                        </div>\n" +
                 "                                    </td>\n" +
@@ -95,35 +95,44 @@ function drawCollectProductList(cpage,data)
     }
 }
 
+function cancelCollectProduct()
+{
+
+    confirmMessageDialog.hide();
+    var id = $("#caid").val();
+
+    loading.showLoading({
+        type:1,
+        tip:"取消中..."
+    });
+
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/user/collect/product/collect",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({"productSkuId":id, "type": 0}),
+        dataType: "json",
+        success: function (result) {
+            if(result.code!=0)
+            {
+                loadListTable(1);
+                loading.hideLoading();
+            }
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
+
 function bindCancelCollectProduct()
 {
     $(".ccp").unbind();
     $(".ccp").click(function(){
-
-        loading.showLoading({
-            type:1,
-            tip:"取消中..."
-        });
-
-
-        $.ajax({
-            type: "POST",
-            url: basePath + "/api/user/collect/product/collect",
-            contentType: "application/json;charset=utf-8",
-            data: JSON.stringify({"productSkuId":$(this).attr("attr-id"), "type": 0}),
-            dataType: "json",
-            success: function (result) {
-                if(result.code!=0)
-                {
-                    loadListTable(1);
-                    loading.hideLoading();
-                }
-            },
-            complete:function(data,status){
-                loading.hideLoading();
-            }
-        });
-
+        confirmMessageDialog.init("确定要取消收藏吗?",cancelCollectProduct);
+        $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
+        confirmMessageDialog.show();
     });
 
 }

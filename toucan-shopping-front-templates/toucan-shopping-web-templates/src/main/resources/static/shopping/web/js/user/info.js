@@ -2,10 +2,11 @@
 
 $(function () {
 
-
-
-
     loadNonPayOrders();
+
+    loadCollectProduct();
+
+
 });
 
 function bindConsigneeDetailPageEvent()
@@ -171,6 +172,38 @@ function loadNonPayOrders()
             }
         },
         complete:function(data,status){
+        }
+    });
+}
+
+/**
+ * 加载收藏商品
+ */
+function loadCollectProduct(){
+
+    var queryParams = {page:1,limit:2};
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/collect/product/list",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(queryParams),
+        dataType: "json",
+        success: function (result) {
+            if(result!=null&&result.data.total>0)
+            {
+                var collectProductHtmls="";
+                for(var i=0;i<result.data.list.length;i++)
+                {
+                    var row=result.data.list[i];
+                    collectProductHtmls+="<li style=\"height:200px;margin-left: 30px;\">\n" +
+                        "     <a href=\""+basePath+"/page/product/detail/"+row.productSkuId+"\"><img src=\""+row.httpProductImgPath+"\" title=\""+row.productSkuName+"\" width=\"160px\" height=\"160px\"></a>\n" +
+                        "     <a class=\"mp_name\" href=\""+basePath+"/page/product/detail/"+row.productSkuId+"\" title=\""+row.productSkuName+"\">"+row.productSkuName+"</a>\n" +
+                        "   </li>";
+                }
+                $(".uc_cps").html(collectProductHtmls);
+            }else{
+                $(".uc_cps").html("<p class=\"no-news\">您可将喜欢的商品放入收藏夹，方便随时再次查看~<br>当商品享优惠时，还会通知您哟~</p>");
+            }
         }
     });
 }
