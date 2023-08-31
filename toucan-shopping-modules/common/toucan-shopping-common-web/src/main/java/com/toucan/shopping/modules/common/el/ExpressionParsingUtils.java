@@ -18,10 +18,13 @@ import java.util.*;
  */
 public class ExpressionParsingUtils {
 
-    public static Boolean expressionParsing(String skipExpress, Map map,String expressionPrefix,String expressionSuffix){
+    public static Boolean expressionParsing(boolean isTrim,String skipExpress, Map map,String expressionPrefix,String expressionSuffix){
 
         if (StringUtils.isBlank(skipExpress) && map.isEmpty()){
             return false;
+        }
+        if(isTrim){
+            skipExpress = skipExpress.trim();
         }
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
@@ -43,8 +46,8 @@ public class ExpressionParsingUtils {
     public static void main(String[] args)
     {
         Map<String,Object> parms = new HashMap<>();
-        parms.put("status","false");
-        System.out.println(ExpressionParsingUtils.expressionParsing("${status=='true'}",parms,"${","}"));
+        parms.put("status","true");
+        System.out.println(ExpressionParsingUtils.expressionParsing(true," ${status=='true'}        ",parms,"${","}"));
 
 
         List<String> users=new LinkedList<>();
@@ -53,6 +56,6 @@ public class ExpressionParsingUtils {
         users.add("c");
         parms.put("users",users);
         parms.put("u","c");
-        System.out.println(ExpressionParsingUtils.expressionParsing("${#users.contains(#u)}",parms,"${","}"));
+        System.out.println(ExpressionParsingUtils.expressionParsing(false,"${#users.contains(#u)}",parms,"${","}"));
     }
 }
