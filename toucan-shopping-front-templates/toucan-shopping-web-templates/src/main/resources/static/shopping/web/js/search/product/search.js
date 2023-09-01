@@ -14,6 +14,19 @@ $(function(){
         window.location.href=searchGetPath+"?keyword="+$(this).text();
     });
 
+    $(document).keyup(function(event){
+        if(event.keyCode ==13){
+            $(".s_btn").click();
+        }
+    });
+
+    $(".psfi").keydown(function(event){
+        if(event.keyCode ==13){
+            $(".s_btn").click();
+            return false;
+        }
+    });
+
 });
 
 function clearSearchParams()
