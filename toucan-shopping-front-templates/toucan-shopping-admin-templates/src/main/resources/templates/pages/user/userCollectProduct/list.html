@@ -31,12 +31,6 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">真实姓名</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="trueName" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                             <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                         </div>
@@ -52,9 +46,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="userTrueNameApproveTable" lay-filter="userTrueNameApproveTableFilter"></table>
+        <table class="layui-hide" id="userCollectProductTable" lay-filter="userCollectProductTableFilter"></table>
 
-        <script type="text/html" id="userTrueNameApproveTableBar">
+        <script type="text/html" id="userCollectProductTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -103,8 +97,8 @@
         }
 
         table.render({
-            elem: '#userTrueNameApproveTable',
-            url: "[[@{/}]]user/true/name/approve/list",
+            elem: '#userCollectProductTable',
+            url: "[[@{/}]]user/collect/product/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -121,45 +115,12 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
                     {field: 'userMainId', width: 150, title: '用户ID'},
-                    {field: 'trueName',width: 150,  title: '真实姓名'},
-                    {field: 'idCard',  width: 200, title: '证件号码'},
-                    {field: 'idcardImg1', width: 150, title: '证件正面',
-                        templet: function (row) {
-                            return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'idcardImg2', width: 150, title: '证件背面',
-                        templet: function (row) {
-                            return "<a href='"+row.httpIdcardImg2+"' target='_blank'><img src='"+row.httpIdcardImg2+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'idcardType', width: 150, title: '证件类型',
-                        templet: function (row) {
-                            if(row.idcardType == "1"){
-                                return "身份证"
-                            }
-                            if(row.idcardType == "2"){
-                                return "护照"
-                            }
-                            if(row.idcardType == "3"){
-                                return "海外"
-                            }
-                            return row.idcardType;
-                        }},
-                    {field: 'approveStatus', width: 150, title: '审核状态',
-                        templet: function (row) {
-                            if(row.approveStatus == "1"){
-                                return "审核中"
-                            }
-                            if(row.approveStatus == "2"){
-                                return "审核通过"
-                            }
-                            if(row.approveStatus == "3"){
-                                return "审核驳回"
-                            }
-                            return row.approveStatus;
-                        }},
-                    {field: 'rejectText',width: 150,  title: '驳回原因'},
+                    {field: 'productSkuId', width: 150, title: '商品SKU ID'},
+                    {field: 'httpProductImgPath', width: 150, title: '商品预览'},
+                    {field: 'productSkuName', width: 150, title: '商品名称'},
+                    {field: 'productPrice', width: 150, title: '商品价格'},
                     {field: 'createDate', width: 200, title: '创建时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#userTrueNameApproveTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#userCollectProductTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -171,7 +132,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('userTrueNameApproveTable', {
+            table.reload('userCollectProductTable', {
                 page: {
                     curr: 1
                 }
@@ -192,58 +153,18 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(userTrueNameApproveTableFilter)', function (obj) {
+        table.on('toolbar(userCollectProductTableFilter)', function (obj) {
 
         });
 
 
         //监听表格复选框选择
-        table.on('checkbox(userTrueNameApproveTableFilter)', function (obj) {
+        table.on('checkbox(userCollectProductTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(userTrueNameApproveTableFilter)', function (obj) {
+        table.on('tool(userCollectProductTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'pass') {
-                layer.confirm('确定审核通过?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]user/true/name/approve/pass/"+data.id+"/"+data.userMainId,
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('userTrueNameApproveTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event == 'reject') {
-
-                var index = layer.open({
-                    title: '实名驳回',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/true/name/approve/reject/page/"+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            }
         });
 
     });

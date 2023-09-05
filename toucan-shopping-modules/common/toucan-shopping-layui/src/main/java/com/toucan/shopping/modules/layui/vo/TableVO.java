@@ -8,7 +8,7 @@ import java.util.List;
  * 表格对象
  */
 @Data
-public class TableVO {
+public class TableVO<T> {
 
     public static int SUCCESS=0;
     public static int FAILD=1;
@@ -16,7 +16,7 @@ public class TableVO {
     private int code;
     private String msg;
     private Long count;
-    private List<Object> data;
+    private List<T> data;
 
 
     /**
