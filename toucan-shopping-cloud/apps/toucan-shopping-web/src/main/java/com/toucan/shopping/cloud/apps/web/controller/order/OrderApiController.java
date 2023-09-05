@@ -262,6 +262,12 @@ public class OrderApiController {
             boolean isProductIsDel = true;
             for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
             {
+                if(userBuyCarItemVO.getBuyCount()==null||userBuyCarItemVO.getBuyCount().intValue()<=0)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(userBuyCarItemVO.getProductSkuName() + " 购买数量不能为0");
+                    return resultObjectVO;
+                }
                 isProductIsDel = true;
                 for (ProductSkuVO productSku : queryProductSkuList) {
                     if(userBuyCarItemVO.getShopProductSkuId().longValue()==productSku.getId().longValue())
