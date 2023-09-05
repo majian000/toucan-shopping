@@ -15,6 +15,17 @@
 </head>
 <body>
 
+
+<style>
+    .layui-table-cell {
+        height: auto !important;
+        white-space: normal;
+    }
+    .ztree *{
+        font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+    }
+</style>
+
 <span th:replace="common_page::common"></span>
 
 <div class="layuimini-container">
@@ -116,8 +127,11 @@
                     {field: 'id', width: 150, title: '主键'},
                     {field: 'userMainId', width: 150, title: '用户ID'},
                     {field: 'productSkuId', width: 150, title: '商品SKU ID'},
-                    {field: 'httpProductImgPath', width: 150, title: '商品预览'},
-                    {field: 'productSkuName', width: 150, title: '商品名称'},
+                    {field: 'httpProductImgPath', width: 150, title: '商品预览',
+                        templet: function (row) {
+                            return "<a href='"+row.httpProductImgPath+"' target='_blank'><img src='"+row.httpProductImgPath+"' width='100' height='100'  /></a>";
+                        }},
+                    {field: 'productSkuName', width: 250, title: '商品名称'},
                     {field: 'productPrice', width: 150, title: '商品价格'},
                     {field: 'createDate', width: 200, title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#userCollectProductTableBar', align: "center"}
