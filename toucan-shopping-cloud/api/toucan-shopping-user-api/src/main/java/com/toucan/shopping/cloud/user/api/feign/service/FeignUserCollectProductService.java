@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 用户收藏商品
@@ -30,6 +31,15 @@ public interface FeignUserCollectProductService {
     @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 删除指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 查询收藏列表

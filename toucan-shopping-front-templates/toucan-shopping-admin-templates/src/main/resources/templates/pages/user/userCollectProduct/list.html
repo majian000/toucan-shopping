@@ -42,6 +42,12 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">商品SKU ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="productSkuId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                             <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                         </div>
@@ -133,7 +139,7 @@
                         }},
                     {field: 'productSkuName', width: 250, title: '商品名称'},
                     {field: 'productPrice', width: 150, title: '商品价格'},
-                    {field: 'createDate', width: 200, title: '创建时间'},
+                    {field: 'createDate', width: 200, title: '收藏时间'},
                     {title: '操作', minWidth: 300, toolbar: '#userCollectProductTableBar', align: "center"}
                 ]
             ],
@@ -179,6 +185,31 @@
 
         table.on('tool(userCollectProductTableFilter)', function (obj) {
             var data = obj.data;
+            if (obj.event == 'delete') {
+                layer.confirm('确定删除该收藏,商品【'+data.productSkuName+'】?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]user/collect/product/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('userCollectProductTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
         });
 
     });

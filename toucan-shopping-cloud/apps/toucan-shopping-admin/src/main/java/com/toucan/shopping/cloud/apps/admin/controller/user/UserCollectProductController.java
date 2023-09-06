@@ -27,6 +27,7 @@ import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.user.entity.UserCollectProduct;
 import com.toucan.shopping.modules.user.page.UserCollectProductPageInfo;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
@@ -154,6 +155,43 @@ public class UserCollectProductController extends UIController {
         return tableVO;
     }
 
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            UserCollectProduct userCollectProduct =new UserCollectProduct();
+            userCollectProduct.setId(Long.parseLong(id));
+
+            String entityJson = JSONObject.toJSONString(userCollectProduct);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignUserCollectProductService.deleteById(requestVo);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

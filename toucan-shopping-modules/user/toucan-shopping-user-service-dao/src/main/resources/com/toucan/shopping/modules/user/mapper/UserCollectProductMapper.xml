@@ -26,6 +26,10 @@
             and t.user_main_id = #{userMainId}
         </if>
 
+        <if test="productSkuId!=null ">
+            and t.product_sku_id = #{productSkuId}
+        </if>
+
     </sql>
 
     <sql id="queryListWhere">
