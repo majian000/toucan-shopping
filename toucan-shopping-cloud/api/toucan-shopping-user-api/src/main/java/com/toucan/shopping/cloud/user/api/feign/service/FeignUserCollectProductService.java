@@ -55,6 +55,17 @@ public interface FeignUserCollectProductService {
      * 查询列表页
      */
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
+
 
 }
