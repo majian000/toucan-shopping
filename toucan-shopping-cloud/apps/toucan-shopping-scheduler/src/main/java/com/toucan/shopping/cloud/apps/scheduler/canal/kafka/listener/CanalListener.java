@@ -158,6 +158,10 @@ public class CanalListener {
                                                 }
                                             }
                                         }
+                                    }else{
+                                        productSearchResultVO.setBrandNameEN(productSearchResultVOResult.getBrandNameEN());
+                                        productSearchResultVO.setBrandNameCN(productSearchResultVOResult.getBrandNameCN());
+                                        productSearchResultVO.setBrandName(productSearchResultVOResult.getBrandName());
                                     }
 
                                     //查询分类名称
@@ -180,6 +184,9 @@ public class CanalListener {
                                             }
                                             productSearchResultVO.setCategoryName(categoryVO.getName());
                                         }
+                                    }else{
+                                        productSearchResultVO.setCategoryIds(productSearchResultVOResult.getCategoryIds());
+                                        productSearchResultVO.setCategoryName(productSearchResultVOResult.getCategoryName());
                                     }
 
                                     if (CollectionUtils.isEmpty(productSearchResultVOS)) {
