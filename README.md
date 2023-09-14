@@ -9,13 +9,7 @@
 #### 微服务版
     采用技术spring cloud、spring config、lombok、mybatis、nacos、canal、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
-### 产品预览图
    
-    百度网盘
-    https://pan.baidu.com/s/1a92-dhro8CnIvMobWdH1bg?pwd=uqnw
-    由于没有合适的图床,所以将预览图存储在网盘中
-
-
 ### 访问
 
     商城端
@@ -51,6 +45,27 @@
     邮箱:mmdrss@163.com
     QQ:695391446
 
+
+
+### 产品预览图
+   
+   * C端首页
+   ![输入图片说明](resources/预览图/C端首页.png)
+
+   * 卖家中心首页
+   ![输入图片说明](resources/预览图/卖家中心首页.png)
+
+   * 后台管理-商品审核
+   ![输入图片说明](resources/预览图/后台管理-商品审核.png)
+   
+   * 后台管理-用户列表
+   ![输入图片说明](resources/预览图/后台管理-用户列表.png)
+   
+   * 商品审核列表
+   ![输入图片说明](resources/预览图/商品审核列表.png)
+   
+   * 商品详情
+   ![输入图片说明](resources/预览图/商品详情.png)
 
 ### 参与贡献
     
