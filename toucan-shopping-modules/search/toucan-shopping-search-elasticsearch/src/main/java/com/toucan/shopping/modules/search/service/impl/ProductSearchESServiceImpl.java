@@ -288,6 +288,15 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     .multiMatchQuery(productSearchVO.getCategoryName(), new String[]{"categoryName"})
             );
         }
+
+
+        //SKU ID查询
+        if(StringUtils.isNotEmpty(productSearchVO.getSkuId()))
+        {
+            boolQueryBuilder.must(QueryBuilders.termQuery("skuId",productSearchVO.getSkuId()));
+        }
+
+
         //品牌查询
         if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
             boolQueryBuilder.must(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));

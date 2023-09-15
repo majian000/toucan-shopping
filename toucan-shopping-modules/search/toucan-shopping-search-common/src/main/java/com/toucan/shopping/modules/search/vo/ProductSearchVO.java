@@ -47,6 +47,7 @@ public class ProductSearchVO extends SearchVO{
 
     private String pdst; //时间排序 null:默认没排序 desc:发布时间降序 asc:发布时间升序
 
+    private String skuId; //SKU ID
 
     private List<ProductSearchAttributeVO> searchAttributes; //属性集合
 
