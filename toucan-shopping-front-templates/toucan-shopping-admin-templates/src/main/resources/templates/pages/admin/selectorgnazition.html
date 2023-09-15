@@ -214,7 +214,7 @@
                             done: function (res, $ul, first) {
                                 if (first) {
                                     if(idArray!=null&&idArray.length>0) {
-                                        dtree.chooseDataInit("orgTree", idArray); //"001001,001002"被选中的子节点id
+                                        dtree.chooseDataInit("orgTree",  idArray.join(",")); //"001001,001002"被选中的子节点id
                                         dtree.initNoAllCheck("orgTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
                                     }
                                 }
