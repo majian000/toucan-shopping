@@ -345,6 +345,7 @@ public class OrgnazitionController extends UIController {
                 //查询要操作账户的所有组织机构关联
                 AdminOrgnazition queryAdminOrgnazition = new AdminOrgnazition();
                 queryAdminOrgnazition.setAdminId(entity.getAdminId());
+                queryAdminOrgnazition.setAppCode(entity.getAppCode());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminOrgnazition);
                 resultObjectVO = feignAdminOrgnazitionService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
                 if(resultObjectVO.isSuccess())
