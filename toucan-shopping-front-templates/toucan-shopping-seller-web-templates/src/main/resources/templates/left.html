@@ -77,8 +77,13 @@
             <#else>
                 <li><a href="${basePath}/page/shop/edit"><span class="menu-item-cls">店铺设置</span></a></li>
             </#if>
-            <li><a href="renovation.html"><span class="menu-item-cls">店铺装修</span></a></li>
 
+
+            <#if leftName??&&leftName=="pcIndexDesigner">
+                <li class="active"><a href="${basePath}/page/designer/pc/index"><span class="menu-item-cls">PC首页装修</span></a></li>
+            <#else>
+                <li><a href="${basePath}/page/designer/pc/index"><span class="menu-item-cls">PC首页装修</span></a></li>
+            </#if>
             <#if leftName??&&leftName=="shopCategory">
                 <li class="active"><a href="${basePath}/page/shop/category/list"><span class="menu-item-cls">店铺分类</span></a></li>
             <#else>
