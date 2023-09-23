@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/designer/pc/index/font-awesome.5.81.all.css">
     <link rel="stylesheet" href="${basePath}/static/lib/designer/pc/index/style.css">
     <link rel="stylesheet" href="${basePath}/static/lib/designer/pc/index/ui-container.css">
+    <link rel="stylesheet" href="${basePath}/static/lib/designer/css/dp-style.css">
 
     <#include "/title.html"/>
 
@@ -92,61 +93,24 @@
                                 </section>
                                 <aside class="el-aside main-left" style="width: 250px;">
                                     <div class="el-tabs el-tabs--top" style="margin-top: -4px;">
-                                        <div class="el-tabs__header is-top">
-                                            <div class="el-tabs__nav-wrap is-top">
-                                                <div class="el-tabs__nav-scroll">
-                                                    <div role="tablist" class="el-tabs__nav is-top" style="transform: translateX(0px);">
-                                                        <div id="tab-second" aria-controls="pane-second" role="tab" tabindex="0" class="el-tabs__item is-top is-active" aria-selected="true">组件属性</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="el-tabs__content">
 
-                                            <div role="tabpanel" id="pane-second" aria-labelledby="tab-second" class="el-tab-pane" style="">
-                                                <div data-v-545b3402="">
-                                                    <form data-v-545b3402="" class="el-form el-form--label-top">
-                                                        <div data-v-545b3402="" class="el-form-item form-borderbottom el-form-item--mini">
-                                                            <label class="el-form-item__label">标签对齐方式</label>
-                                                            <div class="el-form-item__content">
-                                                                <div data-v-545b3402="" role="radiogroup" class="el-radio-group">
-                                                                    <div data-v-545b3402="" class="positon-group">
-                                                                        <label data-v-545b3402="" role="radio" tabindex="0" class="el-radio is-checked" aria-checked="true">
-														<span class="el-radio__input is-checked">
-															<span class="el-radio__inner"></span>
-															<input type="radio" aria-hidden="true" tabindex="-1" class="el-radio__original" value="right">
-														</span>
-                                                                            <span class="el-radio__label">右对齐(默认值)
-                                                                                <!---->
-														</span>
-                                                                        </label>
-                                                                        <label data-v-545b3402="" role="radio" tabindex="-1" class="el-radio">
-														<span class="el-radio__input">
-															<span class="el-radio__inner"></span>
-															<input type="radio" aria-hidden="true" tabindex="-1" class="el-radio__original" value="top">
-														</span>
-                                                                            <span class="el-radio__label">顶部对齐
-                                                                                <!---->
-														</span>
-                                                                        </label>
-                                                                        <label data-v-545b3402="" role="radio" tabindex="-1" class="el-radio">
-														<span class="el-radio__input">
-															<span class="el-radio__inner"></span>
-															<input type="radio" aria-hidden="true" tabindex="-1" class="el-radio__original" value="left">
-														</span>
-                                                                            <span class="el-radio__label">左对齐
-                                                                                <!---->
-														</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <!---->
-                                                            </div>
-                                                        </div>
-                                                    </form>
+
+                                        <div class="mt-tabpage" id="designerProperty">
+                                            <div class="mt-tabpage-title">
+                                                <a href="javascript:;" attr-page="mtc1" class="mt-tabpage-item mt-tabpage-item-cur">页面设置</a>
+                                                <a href="javascript:;" attr-page="mtc2" class="mt-tabpage-item">组件属性</a>
+                                            </div>
+                                            <div class="mt-tabpage-count">
+                                                <div class="mt-tabpage-content mtc1" >
+                                                        111111111111111111111
+                                                </div>
+                                                <div class="mt-tabpage-content mtc2" >
+                                                        222222222222222222222
                                                 </div>
                                             </div>
                                         </div>
+
+
                                     </div>
                                 </aside>
                             </section>
@@ -171,6 +135,7 @@
 <script src="${basePath}/static/js/jquery/jquery-ui-1.11.0.js"></script>
 <script src='${basePath}/static/js/jquery/jquery.ui.touch-punch.min.js'></script>
 <script src="${basePath}/static/js/designer/pc/indexScript.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/designer/index.js"></script>
 </body>
 
 </html>
