@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Bootstrap Grid -->
+    <link rel="stylesheet" href="${basePath}/static/css/bootstrap-grid.min.css">
+    <!-- General Style -->
+    <link rel="stylesheet" href="${basePath}/static//css/general.css">
+    <!-- Elegant Font Icon -->
+    <link rel="stylesheet" href="${basePath}/static//css/elegant-font.css">
+    <!-- ContentBox Style -->
+    <link rel="stylesheet" href="${basePath}/static//css/contentbox.css">
+    <!-- Google Font -->
+    <link href="${basePath}/static//css/css2.css" rel="stylesheet">
+
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "pageDesigner">
+
+
+
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">页面装修</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>页面装修</span></div>
+                <div class="right_panel">
+                    <main id="page">
+                        <div class="space5"></div>
+                        <!-- START Content Box 1 -->
+                        <section>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Start Content Box -->
+                                        <div class="content-box-1">
+                                            <div class="content-box-1-icon-wrapper">
+                                                <div class="content-box-1-circle">
+                                                    <div class="content-box-1-circle-bullet"></div>
+                                                </div>
+                                                <div class="content-box-1-circle">
+                                                    <div class="content-box-1-circle-bullet"></div>
+                                                </div>
+                                                <span class="content-box-1-icon">
+								<i class="icon_adjust-horiz"></i>
+							</span>
+                                            </div>
+                                            <div class="content-box-1-content-wrapper">
+                                                <h3 class="content-box-1-title"><a  href="${basePath}/page/designer/pc/index" style="font-size:22px;color:#343a40;">PC首页装修</a></h3>
+                                                <div class="content-box-1-content">设计在PC端看到的店铺首页，赶快试试吧~</div>
+                                            </div>
+                                            <a class="content-box-1-button" href="${basePath}/page/designer/pc/index">去装修》</a>
+                                        </div>
+                                        <!-- End Content Box -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+                        <!-- END Content Box 1 -->
+
+
+                    </main>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<#include "/footer.html"/>
+
+
+
+
+</body>
+
+</html>
