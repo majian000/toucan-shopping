@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="${basePath}/static/lib/designer/pc/index/style.css">
     <link rel="stylesheet" href="${basePath}/static/lib/designer/pc/index/ui-container.css">
     <link rel="stylesheet" href="${basePath}/static/lib/designer/css/dp-style.css">
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/spectrum/spectrum.css">
 
     <#include "/title.html"/>
 
@@ -102,7 +103,22 @@
                                             </div>
                                             <div class="mt-tabpage-count">
                                                 <div class="mt-tabpage-content mtc1" >
-                                                        111111111111111111111
+                                                    <form action="">
+                                                        <div class="form-group">
+                                                            <label for="pageTitle">页面标题</label>
+                                                            <input type="text" class="form-control" placeholder="请输入页面标题" id="pageTitle">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>背景色</label>
+                                                            <br>
+                                                            <input type="hidden" class="selectColorControlVal" />
+                                                            <input id="selectColorControl" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label >背景图片</label>
+
+                                                        </div>
+                                                    </form>
                                                 </div>
                                                 <div class="mt-tabpage-content mtc2" >
                                                         222222222222222222222
@@ -135,6 +151,9 @@
 <script src="${basePath}/static/js/jquery/jquery-ui-1.11.0.js"></script>
 <script src='${basePath}/static/js/jquery/jquery.ui.touch-punch.min.js'></script>
 <script src="${basePath}/static/js/designer/pc/indexScript.js"></script>
+<script src="${basePath}/static/lib/spectrum/spectrum.js"></script>
+<script src="${basePath}/static/lib/spectrum/script.js"></script>
+
 <script type="text/javascript" src="${basePath}/static/js/designer/index.js"></script>
 </body>
 

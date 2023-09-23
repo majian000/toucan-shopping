@@ -56,4 +56,8 @@ svg{
 .mt-tabpage-content{
 	width:100%;
 	display:none;
+	padding-top:20px;
+}
+.mt-tabpage-content label{
+	font-size:15px;
 }
