@@ -13,6 +13,7 @@ function doChange(color){
         hexColor = color.toHexString();
     }
     $(".selectColorControlVal").val(hexColor);
+    $(".flexgrid-container").css("background-color","#"+hexColor);
 }
 
 $(function() {
