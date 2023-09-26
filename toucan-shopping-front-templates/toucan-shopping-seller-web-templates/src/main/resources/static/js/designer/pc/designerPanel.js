@@ -549,6 +549,7 @@ $(function() {
 					
 				},
 				receive: function(event, ui) {
+					redrawComponent(ui.item);
 					var zoneCol = $(this);
 					var zoneInner = zoneCol.closest('.flexgrid-grid');
 					var re = zoneInner.resetVars();
@@ -938,12 +939,12 @@ $(function() {
 	var zone = $('.flexgrid-container');
 	var zoneInner = zone.find('.flexgrid-grid');
 	zoneInner.setFlexGrid({
-		cols: 20, 
-		rows: 18, 
+		cols: 20,
+		rows: 20,
 		defaultHeight: 2,
 		defaultWidth: 2,
 		minWidth: 1, 
-		minHeight: 1,
+		minHeight: 1
 	});
 	// console.log(zoneInner.getOption());
 	zoneInner.buildGrid();
@@ -1073,3 +1074,16 @@ $(function() {
 	});
 	
 });
+
+/**
+ * 替换在设计器面板上控件样式
+ * @param compoentObj
+ */
+function redrawComponent(compoentObj){
+	if(compoentObj.hasClass("designer-component-banner")){
+		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
+		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
+		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
+		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
+	}
+}

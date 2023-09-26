@@ -44,12 +44,16 @@
 	float: left;
 }
 .custom-widget .fg-widget-inner {
-	background: #409eff;
 	font-size: 15px;
     color: #fff;
     padding-left: 25%;
     padding-top: 2px;
 }
+
+.custom-widget .fg-widget-inner-bg-color{
+	background: #409eff;
+}
+
 .inner-icon {
 	position: absolute;
 	left: 50%;

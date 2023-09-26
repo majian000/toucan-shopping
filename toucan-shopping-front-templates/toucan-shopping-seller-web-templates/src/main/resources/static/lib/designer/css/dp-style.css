@@ -61,3 +61,13 @@ svg{
 .mt-tabpage-content label{
 	font-size:15px;
 }
+
+.designer-component-banner{
+
+}
+.designer-component-banner-hover{
+	background-image: url("/static/images/designer/pc/sd-component-banner.png");
+	background-repeat: no-repeat;
+	moz-background-size:100% 100%;
+	background-size:100% 100%;
+}
