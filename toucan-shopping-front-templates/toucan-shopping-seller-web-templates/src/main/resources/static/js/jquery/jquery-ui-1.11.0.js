@@ -3712,7 +3712,7 @@
                 i = 0; t.length > i; i++)
                     s = e.trim(t[i]),
                     a = "ui-resizable-" + s,
-                    n = e("<div class='ui-resizable-handle " + a + "'></div>"),
+                    n = e("<div class='ui-resizable-handle " + a + "' title='调整大小'></div>"),
                     n.css({
                         zIndex: r.zIndex
                     }),

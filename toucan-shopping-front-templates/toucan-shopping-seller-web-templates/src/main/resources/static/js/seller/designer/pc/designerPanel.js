@@ -549,7 +549,7 @@ $(function() {
 					
 				},
 				receive: function(event, ui) {
-					redrawComponent(ui.item);
+					doAppendPanel(ui.item);
 					var zoneCol = $(this);
 					var zoneInner = zoneCol.closest('.flexgrid-grid');
 					var re = zoneInner.resetVars();
@@ -957,13 +957,14 @@ $(function() {
 	});
 	$(document).on('click', '.fg-add-widget', function() {
 		// widget.find('.fg-widget-inner').css('background', options.background != null ? options.background[Math.floor(Math.random() * options.background.length)] : '');
-		var widget = $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget"></i><i class="fa fa-times fg-remove-widget" title="删除"></i><i class="fas fa-arrows-alt move-widget fg-widget-handle"></i><div class="fg-widget-inner" style="background: #406fff !important;"></div></div>');
+		var widget = $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget"></i><i class="fa fa-times fg-remove-widget" title="移除"></i><i class="fas fa-arrows-alt move-widget fg-widget-handle"></i><div class="fg-widget-inner" style="background: #406fff !important;"></div></div>');
 		zoneInner.addWidget({widget:widget});
 	});
 	$(document).on('click', '.fg-remove-widget', function() {
 		var widget = $(this).closest('.fg-widget');
 		$(widget).find(".fg-widget-inner").css("font-size","15px");
 		zoneInner.removeWidget(widget);
+		doRemove($(widget));
 	});
 	$(document).on('click', '.togglegridlines', function() {
 		zoneInner.toggleGridlines();
@@ -1079,11 +1080,24 @@ $(function() {
  * 替换在设计器面板上控件样式
  * @param compoentObj
  */
-function redrawComponent(compoentObj){
-	if(compoentObj.hasClass("designer-component-banner")){
+function doAppendPanel(compoentObj){
+	if(compoentObj.attr("attr-compoent-type")=="banner"){
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
+	}
+}
+
+/**
+ * 当移除时
+ * @param compoentObj
+ */
+function doRemove(compoentObj){
+	if(compoentObj.attr("attr-compoent-type")=="banner"){
+		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("轮播图");
+		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
+		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
+		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
 	}
 }
