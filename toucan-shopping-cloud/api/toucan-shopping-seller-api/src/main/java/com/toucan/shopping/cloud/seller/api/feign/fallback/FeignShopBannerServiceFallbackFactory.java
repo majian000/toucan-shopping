@@ -24,6 +24,20 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
         logger.warn(throwable.getMessage(),throwable);
         return new FeignShopBannerService(){
 
+            @Override
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopBannerService.queryListPage失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询轮播图列表失败");
+                return resultObjectVO;
+            }
         };
     }
 }

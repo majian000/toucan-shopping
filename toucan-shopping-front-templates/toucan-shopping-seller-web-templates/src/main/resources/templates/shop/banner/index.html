@@ -61,27 +61,18 @@
             <div class="right_panel">
 
                 <div class="bootstrap-frm" style="width:100%;max-width:100%;"  >
-                    <form id="productApproveForm">
+                    <form id="shopBannerForm">
                         <label style="width:40%;float: left;">
-                            <span>商品名称 :</span>
-                            <input type="text" id="name" maxlength="25"  name="name"   tabindex="1"  style="width:50%" />
+                            <span>标题 :</span>
+                            <input type="text" id="title" maxlength="25"  name="title"   tabindex="1"  style="width:50%" />
                         </label>
                         <label style="width:40%;float: left;">
                             <span>发布日期 :</span>
-                            <input type="text" id="startDate"  style="width:30%" />
+                            <input type="text" id="startShowDate"  style="width:30%" />
                             至
-                            <input type="text" id="endDate"   style="width:30%" />
+                            <input type="text" id="endShowDate"   style="width:30%" />
                         </label>
-                        <label style="width:40%;float: left;">
-                            <span>审核状态 :</span>
-                            <select id="approveStatus">
-                                <option value="-1">全部</option>
-                                <option value="1">审核中</option>
-                                <option value="3">审核驳回</option>
-                                <option value="2">审核通过</option>
-                            </select>
-                        </label>
-                        <div style="width:40%;float: left;">
+                        <div style="width:40%;float: left;text-align: center;margin-bottom: 2%;">
                             <input type="button" id="queryBtn" class="button" style="width:100px;" value="查询"  />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="button" id="resetBtn" class="button" style="width:100px;" value="重置"  />
@@ -89,8 +80,8 @@
                     </form>
                 </div>
                 <div class="pageToolbar">
-                    <table id="productApproveTable" class="freezeTable" border="1" width="900">
-                        <tbody id="productApproveTableBody">
+                    <table id="shopBannerTable" class="freezeTable" border="1" width="900">
+                        <tbody id="shopBannerTableBody">
                         </tbody>
                     </table>
                 </div>

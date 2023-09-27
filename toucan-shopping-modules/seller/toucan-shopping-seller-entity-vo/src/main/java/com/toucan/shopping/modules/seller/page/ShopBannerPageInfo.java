@@ -44,6 +44,23 @@ public class ShopBannerPageInfo extends PageInfo<ShopBannerVO> {
 
     private Long[] idArray; //ID数组
 
+    private Long shopId; //店铺ID
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    private Date startDateYMDHS; //开始日期
+
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    private Date endDateYMDHS; //结束日期
+
+    private String orderColumn; //排序列
+
+    private String orderSort; //升序还是降序
+
+
     //==============================================
 
 }

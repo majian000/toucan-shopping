@@ -5,19 +5,19 @@ var pagegizationConfigObject={
     per_num:10,//每页条目数
     current_page:1//当前页
 };
-var g_product_approve_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
+var g_shop_banner_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 function doPage()
 {
     loading.showLoading({
         type:6,
         tip:"查询中..."
     });
-    g_product_approve_query_obj.page = pagegizationConfigObject.current_page;
+    g_shop_banner_query_obj.page = pagegizationConfigObject.current_page;
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/product/approve/list",
+        url: basePath+"/api/shop/banner/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_product_approve_query_obj),
+        data:  JSON.stringify(g_shop_banner_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -53,10 +53,8 @@ function drawTable(pageResult)
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
-        "                            <td style=\"width:100px;\" >审核状态</td>\n" +
-        "                            <td style=\"width:100px;\" >商品预览</td>\n" +
-        "                            <td style=\"width:300px;\">商品名称</td>\n" +
-        "                            <td style=\"width:150px;\" >商品分类</td>\n" +
+        "                            <td style=\"width:100px;\" >图片预览</td>\n" +
+        "                            <td style=\"width:300px;\">标题</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
@@ -66,62 +64,39 @@ function drawTable(pageResult)
         {
             var row = pageResult.list[i];
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
-            tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
-            if(row.approveStatus==1)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\">审核中</div></td>\n" ;
-            }else if(row.approveStatus==2)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:green;\">审核通过</a></div></td>\n" ;
-            }else if(row.approveStatus==3)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:red;\">审核驳回</a></div></td>\n" ;
-            }
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpMainPhotoFilePath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            if(row.approveStatus==3)
-            {
-                tableHtml+=     "                                &nbsp;<a href=\""+basePath+"/page/shop/product/approve/rejected/"+row.id+"\" style=\"color:red\">驳回原因</a>\n" ;
-                tableHtml+=     "                                &nbsp;\n" ;
-                tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新发布</a>\n" ;
-                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
-            }else if(row.approveStatus==1)
-            {
-                tableHtml+=     "                                &nbsp;<a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新编辑</a>\n" ;
-                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
-            }
-            tableHtml+=     "                                &nbsp;<a class=\"approveListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"bannerListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
 
     }
-    $("#productApproveTableBody").html(tableHtml);
-    $("#productApproveTable").FrozenTable(2,0,0);
+    $("#shopBannerTableBody").html(tableHtml);
+    $("#shopBannerTable").FrozenTable(2,0,0);
     bindApproveDelEvent();
     bindApprovePreviewEvent();
 }
 
 function bindApprovePreviewEvent()
 {
-    $(".approvePreviewRow").unbind("click");
+    $(".bannerPreviewRow").unbind("click");
     //SKU信息
-    $(".approvePreviewRow").bind("click", function () {
+    $(".bannerPreviewRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
 
-        window.open(shoppingPcPath+productApprovePreviewPage+attrId);
+        window.open(shoppingPcPath+shopBannerPreviewPage+attrId);
     });
 }
 
 function bindApproveDelEvent()
 {
-    $(".approveListDelRow").unbind("click");
+    $(".bannerListDelRow").unbind("click");
     //SKU信息
-    $(".approveListDelRow").bind("click", function () {
+    $(".bannerListDelRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         layer.confirm('确定删除?', {
             btn: ['确定','关闭'], //按钮
@@ -130,7 +105,7 @@ function bindApproveDelEvent()
             // $("#descriptionTableTr" +attrIndex ).remove();
             $.ajax({
                 type: "POST",
-                url: basePath+"/api/shop/product/approve/delete",
+                url: basePath+"/api/shop/banner/delete",
                 contentType: "application/json;charset=utf-8",
                 data:  JSON.stringify({id:attrId}),
                 dataType: "json",
@@ -173,8 +148,8 @@ function bindApproveDelEvent()
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"productApproveTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
-        "                        <tbody id=\"productApproveTableBody\">\n" +
+    $(".pageToolbar").html("<table id=\"shopBannerTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
+        "                        <tbody id=\"shopBannerTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");
 
@@ -185,9 +160,9 @@ function initPagination()
 
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/product/approve/list",
+        url: basePath+"/api/shop/banner/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_product_approve_query_obj),
+        data:  JSON.stringify(g_shop_banner_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -224,24 +199,24 @@ $(function () {
 
     $("#queryBtn").bind( 'click' ,function(){
         pagegizationConfigObject.current_page = 1;
-        g_product_approve_query_obj.page = 1;
-        g_product_approve_query_obj.name=$("#name").val();
-        g_product_approve_query_obj.startDateYMDHS=$("#startDate").val();
-        g_product_approve_query_obj.endDateYMDHS=$("#endDate").val();
-        g_product_approve_query_obj.approveStatus=$("#approveStatus option:selected").val();
+        g_shop_banner_query_obj.page = 1;
+        g_shop_banner_query_obj.name=$("#name").val();
+        g_shop_banner_query_obj.startShowDateYMDHS=$("#startShowDate").val();
+        g_shop_banner_query_obj.endShowDateYMDHS=$("#endShowDate").val();
+        g_shop_banner_query_obj.bannerStatus=$("#bannerStatus option:selected").val();
 
         initPagination();
     });
 
 
     $("#resetBtn").bind( 'click' ,function(){
-        $("#productApproveForm").resetForm();
+        $("#shopBannerForm").resetForm();
     });
 
-    $('#startDate').datetimepicker({
+    $('#startShowDate').datetimepicker({
         format:'Y-m-d H:i'
     });//初始化
-    $('#endDate').datetimepicker({
+    $('#endShowDate').datetimepicker({
         format:'Y-m-d H:i'
     });//初始化
 
