@@ -1086,6 +1086,8 @@ function doAppendPanel(compoentObj){
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
+		compoentObj.find(".fg-remove-widget").show();
+		compoentObj.find(".ui-resizable-handle").show();
 	}
 }
 
@@ -1099,5 +1101,7 @@ function doRemove(compoentObj){
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
+		compoentObj.find(".fg-remove-widget").hide();
+		compoentObj.find(".ui-resizable-handle").hide();
 	}
 }
