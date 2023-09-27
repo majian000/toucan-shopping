@@ -54,4 +54,12 @@ public class ShopBannerPageController extends BaseController {
 
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/add")
+    public String add(HttpServletRequest request){
+
+        return "shop/banner/add";
+    }
+
+
 }

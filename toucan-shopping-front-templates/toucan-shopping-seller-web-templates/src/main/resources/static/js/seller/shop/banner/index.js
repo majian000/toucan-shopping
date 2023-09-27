@@ -77,11 +77,11 @@ function drawTable(pageResult)
     }
     $("#shopBannerTableBody").html(tableHtml);
     $("#shopBannerTable").FrozenTable(2,0,0);
-    bindApproveDelEvent();
-    bindApprovePreviewEvent();
+    bindShopBannerDelEvent();
+    bindShopBannerPreviewEvent();
 }
 
-function bindApprovePreviewEvent()
+function bindShopBannerPreviewEvent()
 {
     $(".bannerPreviewRow").unbind("click");
     //SKU信息
@@ -92,7 +92,7 @@ function bindApprovePreviewEvent()
     });
 }
 
-function bindApproveDelEvent()
+function bindShopBannerDelEvent()
 {
     $(".bannerListDelRow").unbind("click");
     //SKU信息
@@ -209,18 +209,17 @@ $(function () {
     });
 
 
+    $('#addShopBannerBtn').on('click', function(){
+        window.location.href=basePath+"/page/shop/banner/add";
+    });
+
     $("#resetBtn").bind( 'click' ,function(){
         $("#shopBannerForm").resetForm();
     });
 
-    $('#startShowDate').datetimepicker({
-        format:'Y-m-d H:i'
-    });//初始化
-    $('#endShowDate').datetimepicker({
-        format:'Y-m-d H:i'
-    });//初始化
-
-    $.datetimepicker.setLocale('zh');//使用中文
+    jeDate("#startShowDate",{
+        format: "YYYY-MM-DD hh:mm:ss"
+    });
 
     initPagination();
 });
