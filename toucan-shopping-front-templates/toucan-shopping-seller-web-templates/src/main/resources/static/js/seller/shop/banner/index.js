@@ -221,5 +221,9 @@ $(function () {
         format: "YYYY-MM-DD hh:mm:ss"
     });
 
+    jeDate("#endShowDate",{
+        format: "YYYY-MM-DD hh:mm:ss"
+    });
+
     initPagination();
 });
