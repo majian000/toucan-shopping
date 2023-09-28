@@ -109,8 +109,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.ShopBanner"  keyProperty="id" >
-        insert into  t_shop_banner(id,shop_id,title,img_path,click_path,position,banner_sort,start_show_date,end_show_date,show_status,remark,app_code,create_date,update_date,creater_id,updater_id)
-        values(#{id},#{shopId},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{startShowDate},#{endShowDate},#{showStatus},#{remark},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId})
+        insert into  t_shop_banner(id,shop_id,title,img_path,click_path,position,banner_sort,start_show_date,end_show_date,show_status,remark,app_code,create_date,update_date,creater_id,updater_id,delete_status)
+        values(#{id},#{shopId},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{startShowDate},#{endShowDate},#{showStatus},#{remark},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.ShopBanner">

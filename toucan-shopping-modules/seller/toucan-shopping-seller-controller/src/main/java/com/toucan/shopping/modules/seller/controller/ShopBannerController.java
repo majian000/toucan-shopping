@@ -64,13 +64,13 @@ public class ShopBannerController {
         Long bannerId = -1L;
         try {
             bannerId = idGenerator.id();
-            ShopBannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopBannerVO.class);
 
-
+            ShopBannerVO bannerVO = requestJsonVO.formatEntity(ShopBannerVO.class);
             ShopBanner shopBanner = new ShopBanner();
             BeanUtils.copyProperties(shopBanner,bannerVO);
             shopBanner.setId(bannerId);
             shopBanner.setCreateDate(new Date());
+            shopBanner.setDeleteStatus((short)0);
             int row = shopBannerService.save(shopBanner);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -83,7 +83,6 @@ public class ShopBannerController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
-
         }
         return resultObjectVO;
     }

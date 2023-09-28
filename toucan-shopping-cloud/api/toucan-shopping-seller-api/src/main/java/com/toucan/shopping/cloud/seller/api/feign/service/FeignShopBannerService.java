@@ -22,4 +22,14 @@ public interface FeignShopBannerService {
     @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 保存轮播图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+
 }

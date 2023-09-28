@@ -48,32 +48,32 @@ function saveShopBanner()
         });
     }
 
-    // loading.showLoading({
-    //     type:6,
-    //     tip:"保存中..."
-    // });
-    // $('#usform').ajaxSubmit({
-    //     url: basePath+'/api/user/shop/banner/save',
-    //     dataType:"json",
-    //     contentType:"application/json;charset=utf-8",
-    //     success: function (data) {
-    //         loading.hideLoading();
-    //         if(data.code==401)
-    //         {
-    //             window.location.href=basePath+data.data;
-    //         }else  if(data.code<=0)
-    //         {
-    //             $.message({
-    //                 time:'4000',
-    //                 message: data.msg,
-    //                 type: 'error'
-    //             });
-    //         }else if(data.code==1)
-    //         {
-    //             window.location.href=basePath+"/page/shop/banner/list";
-    //         }
-    //     }
-    // });
+    loading.showLoading({
+        type:6,
+        tip:"保存中..."
+    });
+    $('#shopBannerForm').ajaxSubmit({
+        url: basePath+'/api/user/shop/banner/save',
+        dataType:"json",
+        contentType:"application/json;charset=utf-8",
+        success: function (data) {
+            loading.hideLoading();
+            if(data.code==401)
+            {
+                window.location.href=basePath+data.data;
+            }else  if(data.code<=0)
+            {
+                $.message({
+                    time:'4000',
+                    message: data.msg,
+                    type: 'error'
+                });
+            }else if(data.code==1)
+            {
+                window.location.href=basePath+"/page/shop/banner/list";
+            }
+        }
+    });
 
 
 }
