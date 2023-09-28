@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
     <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
-    <link rel="stylesheet" href="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/jeDate/skin/jedate.css">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
     <div class="right_content">
         <div class="right_bg mb-15" style="width:100%">
             <div class="index_top_left" style="width:100%">
-                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>店铺设置</span></div>
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加轮播图</span></div>
                 <div class="right_panel">
 
                     <form action="" id="usform" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
@@ -63,13 +63,13 @@
                             <input type="hidden" id="isUpload" value="1"/>
                             <input type="file" name="bannerImgFile" id="bannerImg" />
                         </label>
-                        <label>
+                        <label style="margin-top:20px">
                             <span><font color="#ff4e00">*</font>开始展示时间 :</span>
-                            <input type="text" id="startShowDate" readonly style="width:30%" />
+                            <input type="text" id="startShowDate" readonly lay-verify="required"  style="width:30%" />
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>结束展示时间 :</span>
-                            <input type="text" id="endShowDate"  readonly style="width:30%" />
+                            <input type="text" id="endShowDate"  readonly lay-verify="required"  style="width:30%" />
                         </label>
                         <div style="width:100%;text-align:center;">
                             <input type="button" class="button" value="保存" id="shopBannerBtn"  onclick="saveShopBanner();"/>
@@ -87,7 +87,7 @@
 
 
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/jeDate/src/jedate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/shop/banner/add.js"></script>
 <script>
     $(function () {
@@ -95,15 +95,13 @@
         bindFileUpload();
 
 
+        jeDate("#startShowDate",{
+            format: "YYYY-MM-DD hh:mm:ss"
+        });
 
-        $('#startShowDate').datetimepicker({
-            format:'Y-m-d H:i:s'
-        });//初始化
-        $('#endShowDate').datetimepicker({
-            format:'Y-m-d H:i:s'
-        });//初始化
-
-        $.datetimepicker.setLocale('zh');//使用中文
+        jeDate("#endShowDate",{
+            format: "YYYY-MM-DD hh:mm:ss"
+        });
 
     });
 
