@@ -94,7 +94,17 @@ public class ShopBannerApiController extends BaseController {
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
                     resultObjectVO = feignShopBannerService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
-
+                        ShopBannerPageInfo shopBannerPageInfo = resultObjectVO.formatData(ShopBannerPageInfo.class);
+                        if(shopBannerPageInfo!=null&&shopBannerPageInfo.getList()!=null)
+                        {
+                            for(ShopBannerVO shopBannerVO:shopBannerPageInfo.getList())
+                            {
+                                if(shopBannerVO.getImgPath()!=null) {
+                                    shopBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+shopBannerVO.getImgPath());
+                                }
+                            }
+                        }
+                        resultObjectVO.setData(shopBannerPageInfo);
                     }
                 }
             }
@@ -111,11 +121,11 @@ public class ShopBannerApiController extends BaseController {
 
 
     /**
-     * 个人店铺编辑
+     * 添加轮播图
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
-    @RequestMapping(value="/edit")
+    @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO edit(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
     {
@@ -142,6 +152,13 @@ public class ShopBannerApiController extends BaseController {
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("标题不能为空");
+                return resultObjectVO;
+            }
+
+            if(StringUtils.isEmpty(shopBannerVO.getPosition()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("显示位置不能为空");
                 return resultObjectVO;
             }
 

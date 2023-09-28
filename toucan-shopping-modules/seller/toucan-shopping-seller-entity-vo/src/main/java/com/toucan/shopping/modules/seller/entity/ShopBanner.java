@@ -41,7 +41,7 @@ public class ShopBanner {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endShowDate; //结束展示时间
 
-    private Short showStatus; //显示状态
+    private Short showStatus; //显示状态 1:显示 0:隐藏
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

@@ -33,6 +33,12 @@ function bindFileUpload()
     });
 }
 
+
+function backShopBanner()
+{
+    window.location.href=basePath+"/page/shop/banner/list";
+}
+
 function saveShopBanner()
 {
     if(!checkInputFunction($('#shopBannerBtn'),2)){
@@ -48,12 +54,25 @@ function saveShopBanner()
         });
     }
 
+    var positionVals =[];
+    $('input[name="position"]:checked').each(function(){
+        positionVals.push($(this).val());
+    });
+
+    if(positionVals==null||positionVals.length<=0){
+        $.message({
+            time:'4000',
+            message: "请选择显示位置",
+            type: 'error'
+        });
+    }
+
     loading.showLoading({
         type:6,
         tip:"保存中..."
     });
     $('#shopBannerForm').ajaxSubmit({
-        url: basePath+'/api/user/shop/banner/save',
+        url: basePath+'/api/shop/banner/save',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (data) {
