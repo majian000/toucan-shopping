@@ -55,6 +55,10 @@
 
                     <form action="" id="usform" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
                         <label>
+                            <span><font color="#ff4e00">*</font>标题 :</span>
+                            <input type="text" id="title" maxlength="25"  name="title"  lay-verify="required" tabindex="1"  />
+                        </label>
+                        <label>
                             <span><font color="#ff4e00">*</font>图片预览 :</span>
                             <img src="" id="pic" style="width:155px;height:150px;" />
                         </label>
@@ -70,6 +74,25 @@
                         <label>
                             <span><font color="#ff4e00">*</font>结束展示时间 :</span>
                             <input type="text" id="endShowDate"  readonly lay-verify="required"  style="width:30%" />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>点击连接 :</span>
+                            <input type="text" id="clickPath" maxlength="25"  name="clickPath"  lay-verify="required" tabindex="1"  />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>显示位置 :</span>
+                            <div style="width:80%;height: 50px;padding-top: 12px;">
+                                <div style="width:90px;float: left;">
+                                    <input type="checkbox" name="position" id="position_pc_index" value="PC_INDEX" style="float:left"/>
+                                    <label for="position_pc_index" style="float:left;margin-left: 5px;">PC首页</label>
+                                </div>
+                                <div style="width:90px;float: left;">
+                                    <input type="checkbox" name="position"  id="position_h5_index" value="H5_INDEX" style="float:left" />
+                                    <label for="position_h5_index" style="float:left;margin-left: 5px;">H5首页</label>
+                                </div>
+                            </div>
+                        </label>
+                        <label>
                         </label>
                         <div style="width:100%;text-align:center;">
                             <input type="button" class="button" value="保存" id="shopBannerBtn"  onclick="saveShopBanner();"/>
