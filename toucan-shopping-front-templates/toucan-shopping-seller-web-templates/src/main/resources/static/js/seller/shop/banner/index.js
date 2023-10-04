@@ -105,9 +105,9 @@ function bindShopBannerDelEvent()
             // $("#descriptionTableTr" +attrIndex ).remove();
             $.ajax({
                 type: "POST",
-                url: basePath+"/api/shop/banner/delete",
+                url: basePath+"/api/shop/banner/delete/"+attrId,
                 contentType: "application/json;charset=utf-8",
-                data:  JSON.stringify({id:attrId}),
+                data:  null,
                 dataType: "json",
                 success: function (result) {
                     if(result.code<=0)
