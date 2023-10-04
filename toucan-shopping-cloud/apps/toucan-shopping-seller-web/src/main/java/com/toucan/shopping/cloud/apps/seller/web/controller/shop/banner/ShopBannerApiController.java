@@ -119,6 +119,18 @@ public class ShopBannerApiController extends BaseController {
     }
 
 
+    private SellerShopVO queryByShop(String userMainId) throws Exception
+    {
+        SellerShop querySellerShop = new SellerShop();
+        querySellerShop.setUserMainId(Long.parseLong(userMainId));
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            return sellerShopVO;
+        }
+        return null;
+    }
 
     /**
      * 添加轮播图
@@ -207,6 +219,45 @@ public class ShopBannerApiController extends BaseController {
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("添加失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 根据ID删除
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/delete/{id}",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,@PathVariable Long id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            SellerShopVO sellerShopVO = queryByShop(userMainId);
+            if(sellerShopVO==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有查询到店铺");
+                return resultObjectVO;
+            }
+            ShopBannerVO shopBannerVO = new ShopBannerVO();
+            shopBannerVO.setId(id);
+            shopBannerVO.setShopId(sellerShopVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO);
+            resultObjectVO = feignShopBannerService.deleteById(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

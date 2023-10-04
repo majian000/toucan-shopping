@@ -1316,10 +1316,13 @@ public class FreightTemplateController {
             }
 
 
+            //查询出这个掌柜关联的店铺
             SellerShop sellerShopEntity = sellerShopService.findByUserMainId(freightTemplate.getUserMainId());
             if(sellerShopEntity!=null)
             {
                 freightTemplate.setShopId(sellerShopEntity.getId());
+                //删除掌柜ID
+                freightTemplate.setUserMainId(null);
             }
 
             if(freightTemplate.getShopId()==null)
