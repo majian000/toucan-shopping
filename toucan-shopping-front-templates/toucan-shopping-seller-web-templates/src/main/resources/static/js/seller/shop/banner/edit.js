@@ -45,15 +45,6 @@ function saveShopBanner()
         return false;
     }
 
-    var bannerImgVal = $("#bannerImg").val();
-    if(bannerImgVal==null||bannerImgVal==""){
-        $.message({
-            time:'4000',
-            message: "请上传图片",
-            type: 'error'
-        });
-        return ;
-    }
 
     var positionVals =[];
     $('input[name="position"]:checked').each(function(){
@@ -73,7 +64,7 @@ function saveShopBanner()
         tip:"保存中..."
     });
     $('#shopBannerForm').ajaxSubmit({
-        url: basePath+'/api/shop/banner/save',
+        url: basePath+'/api/shop/banner/update',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (data) {

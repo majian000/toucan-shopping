@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 店铺轮播图
@@ -264,5 +265,114 @@ public class ShopBannerApiController extends BaseController {
     }
 
 
+
+
+
+    /**
+     * 修改轮播图
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/update")
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+
+            if(bannerImgFile!=null) {
+                if (!ImageUtils.isImage(bannerImgFile.getOriginalFilename())) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
+                    resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
+                    return resultObjectVO;
+                }
+            }
+
+            if(StringUtils.isEmpty(shopBannerVO.getTitle()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("标题不能为空");
+                return resultObjectVO;
+            }
+
+            if(StringUtils.isEmpty(shopBannerVO.getPosition()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("显示位置不能为空");
+                return resultObjectVO;
+            }
+
+            shopBannerVO.setStartShowDate(DateUtils.FORMATTER_SS.get().parse(shopBannerVO.getStartShowDateString()));
+            shopBannerVO.setEndShowDate(DateUtils.FORMATTER_SS.get().parse(shopBannerVO.getEndShowDateString()));
+
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            //判断是个人店铺还是企业店铺
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVORet!=null&&sellerShopVORet.getEnableStatus().intValue()!=1)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("店铺已被禁用");
+                    return resultObjectVO;
+                }
+
+                shopBannerVO.setShopId(sellerShopVORet.getId());
+                shopBannerVO.setCreaterId(userMainId);
+
+                //图片上传
+                if(bannerImgFile!=null) {
+                    String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
+                    if (logoImgExt.indexOf(".") != -1) {
+                        logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                    }
+                    String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
+                    shopBannerVO.setImgPath(logoImgFilePath);
+                }
+
+                ShopBannerVO queryShopBannerVO = new ShopBannerVO();
+                queryShopBannerVO.setId(shopBannerVO.getId());
+                resultObjectVO = feignShopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                if(resultObjectVO.isSuccess()) {
+                    ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);
+                    if (resultShopBannerVO != null && resultShopBannerVO.getShopId().equals(sellerShopVORet.getId())) {
+                        if(StringUtils.isEmpty(shopBannerVO.getImgPath()))
+                        {
+                            shopBannerVO.setImgPath(resultShopBannerVO.getImgPath());
+                            shopBannerVO.setUpdaterId(userMainId);
+                            shopBannerVO.setUpdateDate(new Date());
+                        }else{
+                            imageUploadService.deleteFile(resultShopBannerVO.getImgPath());
+                        }
+                        resultObjectVO = feignShopBannerService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopBannerVO));
+                        if (!resultObjectVO.isSuccess()) {
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                            resultObjectVO.setMsg("修改失败,请稍后重试");
+                        }
+                    }else{
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("修改失败,请稍后重试");
+                    }
+                }else{
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("修改失败,请稍后重试");
+                }
+
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("修改失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }

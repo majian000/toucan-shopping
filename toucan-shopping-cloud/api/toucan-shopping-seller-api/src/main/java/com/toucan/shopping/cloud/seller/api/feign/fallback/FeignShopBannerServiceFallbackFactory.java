@@ -83,6 +83,21 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("删除轮播图失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO update(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopBannerService.update失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改轮播图失败");
+                return resultObjectVO;
+            }
         };
     }
 }

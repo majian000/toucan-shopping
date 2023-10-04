@@ -60,6 +60,7 @@ function drawTable(pageResult)
         "                            <td style=\"width:100px;\">显示状态</td>\n" +
         "                            <td style=\"width:100px;\">开始展示时间</td>\n" +
         "                            <td style=\"width:100px;\">结束展示时间</td>\n" +
+        "                            <td style=\"width:100px;\">创建时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
@@ -79,6 +80,7 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.showStatus!=null&&row.showStatus==1?"显示":"隐藏")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.startShowDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.endShowDate+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
             tableHtml+=     "                                &nbsp;<a class=\"bannerEditRow\" attr-id=\""+row.id+"\"  style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
             tableHtml+=     "                                &nbsp;<a class=\"bannerDelRow\" attr-id=\""+row.id+"\"  attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;

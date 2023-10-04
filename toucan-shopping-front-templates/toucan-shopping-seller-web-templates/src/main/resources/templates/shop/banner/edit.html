@@ -28,6 +28,8 @@
 <#assign leftName = "shopBanner">
 <#assign menuType = "shopSetting">
 
+<#setting number_format="#">
+
 <div class="body_box">
 
     <ol class="breadcrumb breadcrumb-arrow">
@@ -54,6 +56,7 @@
                 <div class="right_panel">
 
                     <form action="" id="shopBannerForm" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
+                        <input type="hidden" name="id" id="id" value="${shopBanner.id!''}" />
                         <label>
                             <span><font color="#ff4e00">*</font>标题 :</span>
                             <input type="text" id="title" maxlength="80"  name="title"  lay-verify="required" tabindex="1" value="${shopBanner.title!''}" />
@@ -147,7 +150,7 @@
 
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/jeDate/src/jedate.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/shop/banner/add.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/shop/banner/edit.js"></script>
 <script>
     $(function () {
 
