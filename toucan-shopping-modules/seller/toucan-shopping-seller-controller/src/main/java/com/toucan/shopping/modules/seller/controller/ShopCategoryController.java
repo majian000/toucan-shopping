@@ -2125,7 +2125,7 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            int row = shopCategoryService.deleteById(shopCategory.getId());
+            int row = shopCategoryService.deleteByIdAndShopId(shopCategory.getId(),shopCategory.getShopId());
             if (row <=0) {
                 //释放锁
                 skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);

@@ -1336,7 +1336,7 @@ public class FreightTemplateController {
                 return resultObjectVO;
             }
 
-            int row = freightTemplateService.deleteByIdAndUserMainId(freightTemplate.getId(),freightTemplate.getUserMainId());
+            int row = freightTemplateService.deleteByIdAndShopId(freightTemplate.getId(),freightTemplate.getShopId());
             if (row <=0) {
                 //释放锁
                 skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);

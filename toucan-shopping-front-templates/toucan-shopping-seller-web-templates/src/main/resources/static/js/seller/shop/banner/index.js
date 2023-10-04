@@ -79,7 +79,7 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.updateDate!=null?row.updateDate:"")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            tableHtml+=     "                                &nbsp;<a class=\"bannerListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"bannerListDelRow\" attr-id=\""+row.id+"\" attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
@@ -98,7 +98,8 @@ function bindShopBannerDelEvent()
     //SKU信息
     $(".bannerListDelRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
-        layer.confirm('确定删除?', {
+        var attrTitle = $(this).attr("attr-title");
+        layer.confirm("确定删除"+attrTitle+"?", {
             btn: ['确定','关闭'], //按钮
             title:'提示信息'
         }, function(index) {

@@ -172,6 +172,9 @@
         update t_freight_template  set delete_status=1 where id=#{id} and user_main_id = #{userMainId}   and delete_status=0
     </update>
 
+    <update id="deleteByIdAndShopId" >
+        update t_freight_template  set delete_status=1 where id=#{id} and shop_id = #{shopId}   and delete_status=0
+    </update>
 
     <select id="findByIdAndUserMainId"  resultMap="entityMap">
         select * from t_freight_template where id=#{id} and user_main_id=#{userMainId}  and delete_status=0
