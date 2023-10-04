@@ -56,11 +56,10 @@ function drawTable(pageResult)
         "                            <td style=\"width:100px;\">标题</td>\n" +
         "                            <td style=\"width:100px;\" >图片预览</td>\n" +
         "                            <td style=\"width:100px;\">跳转地址</td>\n" +
+        "                            <td style=\"width:100px;\">显示位置</td>\n" +
         "                            <td style=\"width:100px;\">显示状态</td>\n" +
         "                            <td style=\"width:100px;\">开始展示时间</td>\n" +
         "                            <td style=\"width:100px;\">结束展示时间</td>\n" +
-        "                            <td style=\"width:100px;\" >创建时间</td>\n" +
-        "                            <td style=\"width:100px;\" >修改时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
@@ -68,16 +67,18 @@ function drawTable(pageResult)
         for(var i=0;i<pageResult.list.length;i++)
         {
             var row = pageResult.list[i];
+            var positionVal=row.position;
+            positionVal = positionVal.replace("PC_INDEX","PC首页");
+            positionVal = positionVal.replace("H5_INDEX","H5首页");
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.title+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpImgPath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.clickPath+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a href=\""+row.clickPath+"\" target=\"_blank\">"+row.clickPath+"</a></div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+positionVal+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.showStatus!=null&&row.showStatus==1?"显示":"隐藏")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.startShowDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.endShowDate+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.updateDate!=null?row.updateDate:"")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
             tableHtml+=     "                                &nbsp;<a class=\"bannerListDelRow\" attr-id=\""+row.id+"\" attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 

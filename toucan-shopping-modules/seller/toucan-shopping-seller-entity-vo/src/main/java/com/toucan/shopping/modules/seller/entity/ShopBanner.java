@@ -30,7 +30,7 @@ public class ShopBanner {
     private String title; //标题
     private String imgPath; //图片路径
     private String clickPath; //点击路径
-    private String position; //位置(多个用,分割) 0:PC首页 1:H5首页
+    private String position; //位置(多个用,分割) PC_INDEX:PC首页 H5_INDEX:H5首页
     private Integer bannerSort; //排序 从大到小
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
