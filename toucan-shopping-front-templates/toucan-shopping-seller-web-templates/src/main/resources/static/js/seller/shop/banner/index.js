@@ -80,7 +80,8 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.startShowDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.endShowDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            tableHtml+=     "                                &nbsp;<a class=\"bannerListDelRow\" attr-id=\""+row.id+"\" attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"bannerEditRow\" attr-id=\""+row.id+"\"  style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"bannerDelRow\" attr-id=\""+row.id+"\"  attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
@@ -89,15 +90,16 @@ function drawTable(pageResult)
     }
     $("#shopBannerTableBody").html(tableHtml);
     $("#shopBannerTable").FrozenTable(2,0,0);
+    bindShopBannerEditEvent();
     bindShopBannerDelEvent();
 }
 
 
 function bindShopBannerDelEvent()
 {
-    $(".bannerListDelRow").unbind("click");
+    $(".bannerDelRow").unbind("click");
     //SKU信息
-    $(".bannerListDelRow").bind("click", function () {
+    $(".bannerDelRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         var attrTitle = $(this).attr("attr-title");
         layer.confirm("确定删除"+attrTitle+"?", {
@@ -146,6 +148,14 @@ function bindShopBannerDelEvent()
 }
 
 
+function bindShopBannerEditEvent()
+{
+    //SKU信息
+    $(".bannerEditRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        window.location.href=basePath+"/page/shop/banner/edit/"+attrId
+    });
+}
 
 function initPagination()
 {

@@ -9,9 +9,14 @@ import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +48,9 @@ public class ShopBannerPageController extends BaseController {
     @Autowired
     private FeignSellerShopService feignSellerShopService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
+
 
     @ShopAuth
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -61,5 +69,62 @@ public class ShopBannerPageController extends BaseController {
         return "shop/banner/add";
     }
 
+
+
+    private SellerShopVO queryByShop(String userMainId) throws Exception
+    {
+        SellerShop querySellerShop = new SellerShop();
+        querySellerShop.setUserMainId(Long.parseLong(userMainId));
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            return sellerShopVO;
+        }
+        return null;
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/edit/{id}")
+    public String edit(HttpServletRequest request,@PathVariable Long id){
+
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            SellerShopVO sellerShopVO = queryByShop(userMainId);
+            if(sellerShopVO!=null)
+            {
+                ShopBannerVO shopBannerVO = new ShopBannerVO();
+                shopBannerVO.setId(id);
+                ResultObjectVO resultObjectVO = feignShopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                if(resultObjectVO.isSuccess())
+                {
+                    ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);
+                    if(resultShopBannerVO!=null&&resultShopBannerVO.getShopId().equals(sellerShopVO.getId()))
+                    {
+                        if(resultShopBannerVO.getImgPath()!=null) {
+                            resultShopBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+resultShopBannerVO.getImgPath());
+                        }
+                        if(resultShopBannerVO.getStartShowDate()!=null)
+                        {
+                            resultShopBannerVO.setStartShowDateString(DateUtils.FORMATTER_SS.get().format(resultShopBannerVO.getStartShowDate()));
+                        }
+
+                        if(resultShopBannerVO.getEndShowDate()!=null)
+                        {
+                            resultShopBannerVO.setEndShowDateString(DateUtils.FORMATTER_SS.get().format(resultShopBannerVO.getEndShowDate()));
+                        }
+
+                        request.setAttribute("shopBanner",resultShopBannerVO);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+
+        return "shop/banner/edit";
+    }
 
 }

@@ -33,7 +33,7 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopBannerService.queryListPage失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopBannerService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询轮播图列表失败");
                 return resultObjectVO;
@@ -48,7 +48,7 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopBannerService.save失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopBannerService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询轮播图列表失败");
                 return resultObjectVO;
@@ -63,7 +63,22 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopBannerService.deleteById失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopBannerService.deleteById失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("删除轮播图失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findById(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopBannerService.findById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("删除轮播图失败");
                 return resultObjectVO;
