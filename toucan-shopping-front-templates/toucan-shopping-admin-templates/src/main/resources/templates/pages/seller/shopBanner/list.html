@@ -31,6 +31,12 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                             <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                         </div>
@@ -115,14 +121,15 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  width: 200, title: '主键'},
                     {field: 'shopId', width: 150, title: '店铺ID'},
+                    {field: 'title', width: 150, title: '标题'},
                     {field: 'httpImgPath',  width: 100, title: '图片预览',
                         templet: function (row) {
                             return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
                         }},
-                    {field: 'clickPath',  width: 100, title: '点击路径'},
-                    {field: 'startShowDate',  width: 100, title: '开始展示时间'},
-                    {field: 'endShowDate',  width: 100, title: '结束展示时间'},
-                    {field: 'showStatus',  width: 100, title: '显示状态',
+                    {field: 'clickPath',  width: 150, title: '点击路径'},
+                    {field: 'startShowDate',  width: 150, title: '开始展示时间'},
+                    {field: 'endShowDate',  width: 150, title: '结束展示时间'},
+                    {field: 'showStatus',  width: 150, title: '显示状态',
                         templet: function (row) {
                             if(row.showStatus == 1){
                                 return "显示"
@@ -132,17 +139,17 @@
                             }
                             return row.showStatus;
                         }},
-                    {field: 'position',  width: 100, title: '显示位置',
+                    {field: 'position',  width: 150, title: '显示位置',
                         templet: function (row) {
                             var positionVal=row.position;
                             positionVal = positionVal.replace("PC_INDEX","PC首页");
                             positionVal = positionVal.replace("H5_INDEX","H5首页");
                             return positionVal;
                         }},
-                    {field: 'createDate',  width: 100, title: '创建时间'},
-                    {field: 'createrId',  width: 100, title: '创建人'},
-                    {field: 'updateDate',  width: 100, title: '修改时间'},
-                    {field: 'updaterId',  width: 100, title: '修改人'},
+                    {field: 'createDate',  width: 150, title: '创建时间'},
+                    {field: 'createrId',  width: 150, title: '创建人'},
+                    {field: 'updateDate',  width: 150, title: '修改时间'},
+                    {field: 'updaterId',  width: 150, title: '修改人'},
                     {title: '操作', minWidth: 300, toolbar: '#shopBannerTableBar', align: "center"}
                 ]
             ],
@@ -171,6 +178,16 @@
             layui.form.render();
         });
 
+        function reloadTable(data)
+        {
+            //执行搜索重载
+            table.reload('shopBannerTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+        }
 
 
         //监听表格复选框选择
@@ -179,6 +196,29 @@
         });
 
 
+        table.on('tool(shopBannerTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'delete') {
+                layer.confirm("确定删除"+data.title+"?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]seller/shopBanner/delete/"+data.id+"/"+data.shopId,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            reloadTable(data);
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
     });
 </script>
 
