@@ -14,10 +14,13 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.page.ShopBannerPageInfo;
+import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,9 @@ public class ShopBannerController extends UIController {
     @Autowired
     private FeignShopBannerService feignShopBannerService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -85,7 +91,16 @@ public class ShopBannerController extends UIController {
                 if(shopBannerPageInfo!=null)
                 {
                     tableVO.setCount(shopBannerPageInfo.getTotal());
-                    tableVO.setData(pageInfo.getList());
+                    if(CollectionUtils.isNotEmpty(shopBannerPageInfo.getList()))
+                    {
+                        for(ShopBannerVO shopBannerVO:shopBannerPageInfo.getList())
+                        {
+                            if(shopBannerVO.getImgPath()!=null) {
+                                shopBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+shopBannerVO.getImgPath());
+                            }
+                        }
+                    }
+                    tableVO.setData(shopBannerPageInfo.getList());
                 }
             }
         }catch(Exception e)

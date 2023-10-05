@@ -114,16 +114,35 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  width: 200, title: '主键'},
-                    {field: 'ip', width: 150, title: '登录地址'},
-                    {field: 'userMainId',  width: 200, title: '掌柜ID'},
-                    {field: 'loginSrcType', width: 150, title: '登录源',
+                    {field: 'shopId', width: 150, title: '店铺ID'},
+                    {field: 'httpImgPath',  width: 100, title: '图片预览',
                         templet: function (row) {
-                            if(row.loginSrcType == "1"){
-                                return "PC端"
+                            return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
+                        }},
+                    {field: 'clickPath',  width: 100, title: '点击路径'},
+                    {field: 'startShowDate',  width: 100, title: '开始展示时间'},
+                    {field: 'endShowDate',  width: 100, title: '结束展示时间'},
+                    {field: 'showStatus',  width: 100, title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus == 1){
+                                return "显示"
                             }
-                            return row.loginSrcType;
-                    }},
-                    {field: 'createDate', width: 200, title: '创建时间'},
+                            if(row.showStatus == 0){
+                                return "隐藏"
+                            }
+                            return row.showStatus;
+                        }},
+                    {field: 'position',  width: 100, title: '显示位置',
+                        templet: function (row) {
+                            var positionVal=row.position;
+                            positionVal = positionVal.replace("PC_INDEX","PC首页");
+                            positionVal = positionVal.replace("H5_INDEX","H5首页");
+                            return positionVal;
+                        }},
+                    {field: 'createDate',  width: 100, title: '创建时间'},
+                    {field: 'createrId',  width: 100, title: '创建人'},
+                    {field: 'updateDate',  width: 100, title: '修改时间'},
+                    {field: 'updaterId',  width: 100, title: '修改人时间'}
                 ]
             ],
             limits: [15,30,100,200],
