@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -217,7 +219,7 @@ public class ShopBannerController extends UIController {
                 return resultObjectVO;
             }
 
-            if(bannerImgFile!=null) {
+            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
                 if (!ImageUtils.isImage(bannerImgFile.getOriginalFilename())) {
                     resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
                     resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
@@ -243,7 +245,7 @@ public class ShopBannerController extends UIController {
             shopBannerVO.setEndShowDate(DateUtils.FORMATTER_SS.get().parse(shopBannerVO.getEndShowDateString()));
 
 
-            if(bannerImgFile!=null) {
+            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
                 ShopBannerVO banner = new ShopBannerVO();
                 banner.setId(shopBannerVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
@@ -270,6 +272,10 @@ public class ShopBannerController extends UIController {
                 }
             }
 
+            shopBannerVO.setUpdateDate(new Date());
+            shopBannerVO.setUpdaterId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, shopBannerVO);
+            resultObjectVO = feignShopBannerService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

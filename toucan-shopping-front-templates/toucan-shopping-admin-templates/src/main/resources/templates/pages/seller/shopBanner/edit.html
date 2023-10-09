@@ -18,7 +18,7 @@
 <body>
 
 <span th:replace="common_page::common"></span>
-<form class="layui-form" action="[[@{/}]]seller/shopBanner/update" method="post" enctype="multipart/form-data" >
+<form class="layui-form layuimini-form"  id="shopBannerForm"  >
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <input type="hidden" name="shopId"  th:value="${model.shopId}">
     <div class="layui-form-item">
@@ -52,14 +52,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">开始展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${model.startShowDateString}" readonly >
+            <input type="text" id="startShowDate" name="startShowDateString" class="layui-input" lay-verify="required" th:value="${model.startShowDateString}" readonly >
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">结束展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${model.endShowDateString}" readonly >
+            <input type="text" id="endShowDate" name="endShowDateString" class="layui-input" lay-verify="required" th:value="${model.endShowDateString}" readonly >
         </div>
     </div>
 
@@ -155,10 +155,42 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
+            if(data.field.position==null||data.field.position=="")
+            {
+                layer.msg("请选择显示位置");
+                return false;
+            }
+
+            var formData = new FormData($('#shopBannerForm')[0]);
+            $.ajax({
+                url:"[[@{/seller/shopBanner/update}]]",
+                type:'POST',
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
             return false;
         });
 
     });
+
 </script>
 </body>
 </html>

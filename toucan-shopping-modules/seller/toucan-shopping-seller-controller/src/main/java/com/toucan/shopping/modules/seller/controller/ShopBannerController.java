@@ -368,6 +368,12 @@ public class ShopBannerController {
 
         try {
             ShopBannerVO bannerVO = requestJsonVO.formatEntity(ShopBannerVO.class);
+            if(bannerVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空");
+                return resultObjectVO;
+            }
             ShopBanner shopBanner = new ShopBanner();
             BeanUtils.copyProperties(shopBanner,bannerVO);
             int row = shopBannerService.update(shopBanner);
