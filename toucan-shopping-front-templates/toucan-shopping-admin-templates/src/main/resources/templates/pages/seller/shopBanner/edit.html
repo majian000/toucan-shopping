@@ -9,8 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -20,102 +18,86 @@
 <body>
 
 <span th:replace="common_page::common"></span>
+<form class="layui-form" action="[[@{/}]]seller/shopBanner/update" method="post" enctype="multipart/form-data" >
+    <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="shopId"  th:value="${model.shopId}">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" th:value="${model.title}" class="layui-input">
+        </div>
+    </div>
 
-<div class="layui-form layuimini-form">
-    <form action="" id="shopBannerForm" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="id" id="id" th:value="${model.id}">
-        <input type="hidden" name="shopId"  th:value="${model.shopId}">
-        <div class="layui-form-item">
-            <label class="layui-form-label required">标题</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" th:value="${model.title}" class="layui-input">
-                <tip>填写标题。</tip>
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">点击跳转</label>
+        <div class="layui-input-block">
+            <input type="text" name="clickPath" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入点击跳转" th:value="${model.clickPath}"  class="layui-input">
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">点击跳转</label>
-            <div class="layui-input-block">
-                <input type="text" name="clickPath" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入点击跳转" th:value="${model.clickPath}"  class="layui-input">
-            </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">图片上传</label>
+        <div class="layui-input-block">
+           <input type="file"  id="uploadImg" name="bannerImgFile" />
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">预览图</label>
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn" id="uploadBannerImg">
-                    <i class="layui-icon">&#xe67c;</i>上传图片
-                </button>
-            </div>
-            <input type="hidden" id="imgPath" name="imgPath" th:value="${model.imgPath}" >
+        <input type="hidden" id="imgPath" name="imgPath" th:value="${model.imgPath}" >
+        <input type="hidden" id="httpImgPath"  th:value="${model.httpImgPath}" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览图</label>
+        <div class="layui-input-block">
+            <img  id="previewBannerImg" th:src="${model.httpImgPath}" th:width="240" th:height="220">
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">预览</label>
-            <div class="layui-input-block">
-                <img  id="previewBannerImg" th:src="${model.httpImgPath}" th:width="240" th:height="220">
-            </div>
-        </div>
+    </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label required">开始展示时间</label>
-            <div class="layui-input-block">
-                <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${model.startShowDateString}" readonly >
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${model.startShowDateString}" readonly >
         </div>
+    </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label required">结束展示时间</label>
-            <div class="layui-input-block">
-                <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${model.endShowDateString}" readonly >
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${model.endShowDateString}" readonly >
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">显示状态</label>
-            <div class="layui-input-block" th:if="${model.showStatus eq 1}">
-                <select name="showStatus" lay-verify="required" lay-search="">
-                    <option value="1" selected>显示</option>
-                    <option value="0">隐藏</option>
-                </select>
-            </div>
-            <div class="layui-input-block" th:if="${model.showStatus eq 0}">
-                <select name="showStatus" lay-verify="required" lay-search="">
-                    <option value="1" >显示</option>
-                    <option value="0" selected>隐藏</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">位置</label>
-            <div class="layui-input-block" th:if="${model.position eq 'PC_INDEX'}" >
-                <input type="checkbox" name="position" value="PC_INDEX" title="门户首页" checked="checked">
-                <input type="checkbox" name="position" value="H5_INDEX" title="H5首页" >
-            </div>
-            <div class="layui-input-block" th:if="${model.position eq 'H5_INDEX'}" >
-                <input type="checkbox" name="position" value="PC_INDEX" title="门户首页">
-                <input type="checkbox" name="position" value="H5_INDEX" title="H5首页"  checked="checked" >
-            </div>
-        </div>
+    </div>
 
-
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block" th:if="${model.showStatus eq 1}">
+            <input type="radio" name="showStatus" value="1" title="显示" checked="checked">
+            <input type="radio" name="showStatus" value="0" title="隐藏">
         </div>
-    </form>
-</div>
+        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
+            <input type="radio" name="showStatus" value="1" title="显示" >
+            <input type="radio" name="showStatus" value="0" title="隐藏" checked="checked">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置</label>
+        <div class="layui-input-block" >
+            <input type="hidden" id="positionValues" th:value="${model.position}"/>
+            <input type="checkbox" name="position" value="PC_INDEX" id="position_PC_INDEX" title="门户首页">
+            <input type="checkbox" name="position" value="H5_INDEX" id="position_H5_INDEX" title="H5首页" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</form>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form','tree','dtree','upload','laydate'], function () {
+    layui.use(['form','laydate'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
-        var upload = layui.upload;
         var laydate = layui.laydate;
-
 
         //初始化时间控件
         laydate.render({
@@ -129,41 +111,52 @@
             ,type: 'datetime'
         });
 
+        var positionValues = $("#positionValues").val();
+        if(positionValues!=null)
+        {
+            var positionValueArray = positionValues.split(",");
+            for(var i=0;i<positionValueArray.length;i++)
+            {
+                $("#position_"+positionValueArray[i]).prop('checked', true);
+            }
+        }
+
+        form.render();
+
+
+
+        $("#uploadImg").on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#previewBannerImg").attr("src",$("#httpImgPath").val());
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#previewBannerImg").attr("src",this.result);
+                }
+
+            }
+
+        });
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            if(data.field.imgPath==null||data.field.imgPath=="")
-            {
-                layer.msg("请上传轮播图");
-                return false;
-            }
-
-            $('#shopBannerForm').ajaxSubmit({
-                url: '[[@{}]]/shop/banner/update',
-                dataType:"json",
-                contentType:"application/json;charset=utf-8",
-                success: function (data) {
-                    if(data.code<=0) {
-                        layer.msg(data.msg);
-                        return false;
-                    }
-                    var index = layer.alert(data.msg, {
-                        title: '提示信息'
-                    }, function () {
-                        // 关闭弹出层
-                        layer.close(index);
-                        var iframeIndex = parent.layer.getFrameIndex(window.name);
-                        parent.location.reload();
-                        parent.layer.close(iframeIndex);
-
-                    });
-                }
-            });
-
             return false;
         });
-
-
 
     });
 </script>

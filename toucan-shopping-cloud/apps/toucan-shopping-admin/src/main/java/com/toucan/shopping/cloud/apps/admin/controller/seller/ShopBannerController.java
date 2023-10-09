@@ -171,11 +171,9 @@ public class ShopBannerController extends UIController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<ShopBannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ShopBannerVO.class);
-                    if(!CollectionUtils.isEmpty(bannerVOS))
+                    banner = resultObjectVO.formatData(ShopBannerVO.class);
+                    if(banner!=null)
                     {
-                        banner = bannerVOS.get(0);
-                        
                         banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
                         if(banner.getStartShowDate()!=null) {
                             banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
@@ -184,7 +182,6 @@ public class ShopBannerController extends UIController {
                         if(banner.getEndShowDate()!=null) {
                             banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
                         }
-
 
                         request.setAttribute("model",banner);
                     }
@@ -195,7 +192,7 @@ public class ShopBannerController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/banner/edit.html";
+        return "pages/seller/shopBanner/edit.html";
     }
 
 
@@ -205,9 +202,9 @@ public class ShopBannerController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value="/save")
+    @RequestMapping(value="/update")
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
+    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -246,31 +243,31 @@ public class ShopBannerController extends UIController {
             shopBannerVO.setEndShowDate(DateUtils.FORMATTER_SS.get().parse(shopBannerVO.getEndShowDateString()));
 
 
-            ShopBannerVO banner = new ShopBannerVO();
-            banner.setId(shopBannerVO.getId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            resultObjectVO = feignShopBannerService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<ShopBannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ShopBannerVO.class);
-                    if(!CollectionUtils.isEmpty(bannerVOS))
-                    {
-                        banner = bannerVOS.get(0);
+            if(bannerImgFile!=null) {
+                ShopBannerVO banner = new ShopBannerVO();
+                banner.setId(shopBannerVO.getId());
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
+                resultObjectVO = feignShopBannerService.findById(requestJsonVO);
+                if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
+                    if (resultObjectVO.getData() != null) {
+                        List<ShopBannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ShopBannerVO.class);
+                        if (!CollectionUtils.isEmpty(bannerVOS)) {
+                            banner = bannerVOS.get(0);
 
-                        //LOGO上传
-                        imageUploadService.deleteFile(banner.getImgPath());
+                            //LOGO上传
+                            imageUploadService.deleteFile(banner.getImgPath());
 
-                        String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
-                        if (logoImgExt.indexOf(".") != -1) {
-                            logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                            String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
+                            if (logoImgExt.indexOf(".") != -1) {
+                                logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                            }
+                            String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
+                            shopBannerVO.setImgPath(logoImgFilePath);
+
                         }
-                        String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
-                        shopBannerVO.setImgPath(logoImgFilePath);
-
                     }
-                }
 
+                }
             }
 
         }catch(Exception e)
