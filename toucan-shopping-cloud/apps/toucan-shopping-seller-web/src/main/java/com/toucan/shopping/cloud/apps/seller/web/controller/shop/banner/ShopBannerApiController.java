@@ -140,7 +140,7 @@ public class ShopBannerApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/save")
     @ResponseBody
-    public ResultObjectVO edit(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
+    public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
