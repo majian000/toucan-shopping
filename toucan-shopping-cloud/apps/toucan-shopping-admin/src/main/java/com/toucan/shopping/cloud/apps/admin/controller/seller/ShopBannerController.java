@@ -252,21 +252,24 @@ public class ShopBannerController extends UIController {
                 resultObjectVO = feignShopBannerService.findById(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     if (resultObjectVO.getData() != null) {
-                        List<ShopBannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ShopBannerVO.class);
-                        if (!CollectionUtils.isEmpty(bannerVOS)) {
-                            banner = bannerVOS.get(0);
+                        banner = resultObjectVO.formatData(ShopBannerVO.class);
 
-                            //LOGO上传
-                            imageUploadService.deleteFile(banner.getImgPath());
-
-                            String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
-                            if (logoImgExt.indexOf(".") != -1) {
-                                logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
-                            }
-                            String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
-                            shopBannerVO.setImgPath(logoImgFilePath);
-
+                        if(banner==null)
+                        {
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                            resultObjectVO.setMsg("没有找到该轮播图");
+                            return resultObjectVO;
                         }
+                        //LOGO上传
+                        imageUploadService.deleteFile(banner.getImgPath());
+
+                        String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
+                        if (logoImgExt.indexOf(".") != -1) {
+                            logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                        }
+                        String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
+                        shopBannerVO.setImgPath(logoImgFilePath);
+
                     }
 
                 }
