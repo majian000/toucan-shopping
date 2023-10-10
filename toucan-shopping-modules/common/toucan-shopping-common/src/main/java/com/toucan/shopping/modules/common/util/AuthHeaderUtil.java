@@ -25,6 +25,21 @@ public class AuthHeaderUtil {
         return adminId;
     }
 
+    public static String getAdminIdAndPrefix(String appCode,String authHeader) throws Exception {
+        if(StringUtils.isEmpty(authHeader))
+        {
+            throw new InvalidAdminHeaderException("请求头参数无效");
+
+        }
+
+        String prefix="ADMIN_";
+        String adminId = StringUtils.substringAfter(authHeader,appCode+"_aid=");
+        if(adminId.indexOf(";")!=-1)
+        {
+            adminId=adminId.substring(0,adminId.indexOf(";"));
+        }
+        return prefix+adminId;
+    }
 
     /**
      * 拿到管理员ID

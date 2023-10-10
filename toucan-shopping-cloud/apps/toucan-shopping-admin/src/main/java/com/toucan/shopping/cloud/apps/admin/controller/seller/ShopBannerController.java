@@ -320,7 +320,7 @@ public class ShopBannerController extends UIController {
             }
 
             shopBannerVO.setUpdateDate(new Date());
-            shopBannerVO.setUpdaterId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            shopBannerVO.setUpdaterId(AuthHeaderUtil.getAdminIdAndPrefix(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, shopBannerVO);
             resultObjectVO = feignShopBannerService.update(requestJsonVO);
         }catch(Exception e)

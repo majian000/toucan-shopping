@@ -47,7 +47,7 @@ public class ShopBanner {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateDate; //创建时间
     private String createrId; //创建人ID
-    private String updaterId; //修改人ID
+    private String updaterId; //修改人ID ADMIN_开头是管理员
 
 
 
