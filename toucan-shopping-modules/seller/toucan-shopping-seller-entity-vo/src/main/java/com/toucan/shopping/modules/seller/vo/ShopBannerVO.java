@@ -13,4 +13,8 @@ import java.util.List;
 @Data
 public class ShopBannerVO extends ShopBanner {
 
+    private String createrName;  //创建人名称 店铺所属人ID或者管理员名称
+
+    private String updaterName; //修改人名称 店铺所属人ID或者管理员名称
+
 }
