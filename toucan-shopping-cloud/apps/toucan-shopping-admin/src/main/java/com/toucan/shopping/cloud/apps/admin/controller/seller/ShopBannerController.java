@@ -157,10 +157,12 @@ public class ShopBannerController extends UIController {
     }
 
 
-
-
-
-
+    /**
+     * 编辑页
+     * @param request
+     * @param id
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
@@ -197,6 +199,48 @@ public class ShopBannerController extends UIController {
         return "pages/seller/shopBanner/edit.html";
     }
 
+
+    /**
+     * 查看详情页
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ShopBannerVO banner = new ShopBannerVO();
+            banner.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
+            ResultObjectVO resultObjectVO = feignShopBannerService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    banner = resultObjectVO.formatData(ShopBannerVO.class);
+                    if(banner!=null)
+                    {
+                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
+                        if(banner.getStartShowDate()!=null) {
+                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
+                        }
+
+                        if(banner.getEndShowDate()!=null) {
+                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
+                        }
+
+                        request.setAttribute("model",banner);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/seller/shopBanner/detail.html";
+    }
 
 
     /**

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+<form class="layui-form layuimini-form"  id="shopBannerForm"  >
+    <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="shopId"  th:value="${model.shopId}">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" th:value="${model.title}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">点击跳转</label>
+        <div class="layui-input-block">
+            <input type="text" name="clickPath" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入点击跳转" th:value="${model.clickPath}"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">图片上传</label>
+        <div class="layui-input-block">
+           <input type="file"  id="uploadImg" name="bannerImgFile" />
+        </div>
+        <input type="hidden" id="imgPath" name="imgPath" th:value="${model.imgPath}" >
+        <input type="hidden" id="httpImgPath"  th:value="${model.httpImgPath}" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览图</label>
+        <div class="layui-input-block">
+            <img  id="previewBannerImg" th:src="${model.httpImgPath}" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDateString" class="layui-input" lay-verify="required" th:value="${model.startShowDateString}" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDateString" class="layui-input" lay-verify="required" th:value="${model.endShowDateString}" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block" th:if="${model.showStatus eq 1}">
+            <input type="radio" name="showStatus" value="1" title="显示" checked="checked">
+            <input type="radio" name="showStatus" value="0" title="隐藏">
+        </div>
+        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
+            <input type="radio" name="showStatus" value="1" title="显示" >
+            <input type="radio" name="showStatus" value="0" title="隐藏" checked="checked">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">显示位置</label>
+        <div class="layui-input-block" >
+            <input type="hidden" id="positionValues" th:value="${model.position}"/>
+            <input type="checkbox" name="position" value="PC_INDEX" id="position_PC_INDEX" title="门户首页">
+            <input type="checkbox" name="position" value="H5_INDEX" id="position_H5_INDEX" title="H5首页" >
+        </div>
+    </div>
+
+</form>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        var laydate = layui.laydate;
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        var positionValues = $("#positionValues").val();
+        if(positionValues!=null)
+        {
+            var positionValueArray = positionValues.split(",");
+            for(var i=0;i<positionValueArray.length;i++)
+            {
+                $("#position_"+positionValueArray[i]).prop('checked', true);
+            }
+        }
+
+        form.render();
+
+
+
+        $("#uploadImg").on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#previewBannerImg").attr("src",$("#httpImgPath").val());
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#previewBannerImg").attr("src",this.result);
+                }
+
+            }
+
+        });
+
+
+    });
+
+</script>
+</body>
+</html>

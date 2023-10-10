@@ -231,6 +231,20 @@
                     layer.full(index);
                 });
                 return false;
+            }else if (obj.event == 'detail') {
+
+                var index = layer.open({
+                    title: '查看轮播图',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]seller/shopBanner/detailPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
             }
         });
     });
