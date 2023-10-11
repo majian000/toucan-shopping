@@ -197,6 +197,9 @@
         <!-- 云雀分布式锁-->
         <module>skylark/toucan-shopping-skylark-lock</module>
 
+        <!--卖家中心设计器 -->
+        <module>sellerDesigner/toucan-shopping-seller-designer-common</module>
+
         <!-- ===============================================-->
 
     </modules>
@@ -731,6 +734,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-kafka</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+                <artifactId>toucan-shopping-seller-designer-common</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
