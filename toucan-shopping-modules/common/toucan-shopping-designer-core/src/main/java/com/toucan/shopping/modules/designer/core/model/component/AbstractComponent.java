@@ -26,5 +26,7 @@ public abstract class AbstractComponent implements IComponent {
     private String name; //组件名称
 
 
+    private String title; //标题
+    private String backgroundColor; //背景色
 
 }

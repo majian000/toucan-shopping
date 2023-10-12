@@ -977,15 +977,11 @@ $(function() {
 	});
 	$(document).on('click', '.publish-btn', function() {
 		var grid = zoneInner.saveGrid();
-		var widgets = grid[0]['widgets'];
-		console.log(widgets);
-		console.log(grid);
+		var pageModel = encapsulationModel(grid);
 	});
 	$(document).on('click', '.preview-btn', function() {
 		var grid = zoneInner.saveGrid();
-		var widgets = grid[0]['widgets'];
-		console.log(widgets);
-		console.log(grid);
+		var pageModel = encapsulationModel(grid);
 	});
 
 	// add an array of widgets
@@ -1121,4 +1117,17 @@ function doRemove(compoentObj){
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
 	}
+}
+
+/**
+ * 封装模型
+ */
+function encapsulationModel(grid){
+	var page = new pageContainer();
+	page.title=$("#pageTitle").val();
+	page.backgroundColor=$("#selectColorControl").val();
+	//拿到所有组件
+	var widgets = grid[0]['widgets'];
+	console.log(widgets);
+	console.log(grid);
 }
