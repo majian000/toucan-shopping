@@ -13,7 +13,12 @@ function doChange(color){
         hexColor = color.toHexString();
     }
     $(".selectColorControlVal").val(hexColor);
-    $(".flexgrid-container").css("background-color","#"+hexColor);
+    if(color!=null&&color!="")
+    {
+        $(".flexgrid-container").css("background-color","#"+hexColor);
+    }else{
+        $(".flexgrid-container").css("background-color","");
+    }
 }
 
 $(function() {

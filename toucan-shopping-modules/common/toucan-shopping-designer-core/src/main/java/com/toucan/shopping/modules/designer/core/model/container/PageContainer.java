@@ -1,7 +1,7 @@
-package com.toucan.shopping.modules.designer.core.vo.container;
+package com.toucan.shopping.modules.designer.core.model.container;
 
 
-import com.toucan.shopping.modules.designer.core.vo.component.AbstractComponent;
+import com.toucan.shopping.modules.designer.core.model.component.AbstractComponent;
 import lombok.Data;
 
 import java.util.List;

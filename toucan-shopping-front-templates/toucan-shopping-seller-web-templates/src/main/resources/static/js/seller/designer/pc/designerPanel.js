@@ -918,6 +918,7 @@ $(function() {
 			var widgets = zoneInner.find('.fg-widget');
 			$(widgets).each(function() {
 				var widget = $(this);
+				//填充组件属性
 				array[0]['widgets'].push({
 					data_x: widget.attr('data-fg-x'),
 					data_y: widget.attr('data-fg-y'),
@@ -927,6 +928,8 @@ $(function() {
 					data_minHeight: widget.attr('data-fg-minheight'),
 					data_maxWidth: widget.attr('data-fg-maxwidth'),
 					data_maxHeight: widget.attr('data-fg-maxheight'),
+					type: widget.attr('attr-compoent-type'),
+					name: widget.attr('attr-component-name'),
 					innerHtml: widget.find('.fg-widget-inner').html()
 				});
 			});
@@ -972,7 +975,13 @@ $(function() {
 	$(document).on('click', '.clear-flexgrid', function() {
 		zoneInner.clearGrid();
 	});
-	$(document).on('click', '.save-flexgrid', function() {
+	$(document).on('click', '.publish-btn', function() {
+		var grid = zoneInner.saveGrid();
+		var widgets = grid[0]['widgets'];
+		console.log(widgets);
+		console.log(grid);
+	});
+	$(document).on('click', '.preview-btn', function() {
 		var grid = zoneInner.saveGrid();
 		var widgets = grid[0]['widgets'];
 		console.log(widgets);
@@ -1013,16 +1022,24 @@ $(function() {
 		var height = widgets[i].height;
 		var minHeight = widgets[i].minHeight;
 		var maxHeight = widgets[i].maxHeight;
+		var type = widgets[i].type;
+		var name = widgets[i].name;
 		// var inner = widgets[i].inner ? widgets[i].inner : '';
 		var inner = '<p class="inner-icon">'+width+'x'+height+'</p>';
 
-		var widget = $('<div class="fg-widget custom-blue-widget"><i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i><i class="fa fa-times fg-remove-widget" title="删除"></i><i class="fas fa-arrows-alt move-widget fg-widget-handle"></i><div class="fg-widget-inner" style="background: #406fff !important;">'+inner+'</div></div>');
+		var widget = $('<div class="fg-widget custom-blue-widget" attr-compoent-type="'+type+'"  attr-compoent-type="'+name+'" title="'+name+'">' +
+			'<i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>' +
+			'<i class="fa fa-times fg-remove-widget" title="删除"></i>' +
+			'<i class="fas fa-arrows-alt move-widget fg-widget-handle"></i>' +
+			'<div class="fg-widget-inner" style="background: #406fff !important;">'+inner+'</div>' +
+			'</div>');
 		zoneInner.addWidget({
 			widget: widget,
 			x:x, y:y, 
 			width:width, height:height, 
 			minWidth:minWidth, minHeight: minHeight,
-			maxWidth:maxWidth, maxHeight: maxHeight
+			maxWidth:maxWidth, maxHeight: maxHeight,
+			type:type,name:name
 		});
 	}
 
@@ -1081,7 +1098,7 @@ $(function() {
  * @param compoentObj
  */
 function doAppendPanel(compoentObj){
-	if(compoentObj.attr("attr-compoent-type")=="banner"){
+	if(compoentObj.attr("attr-compoent-type")=="shopBanner"){
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
@@ -1096,8 +1113,8 @@ function doAppendPanel(compoentObj){
  * @param compoentObj
  */
 function doRemove(compoentObj){
-	if(compoentObj.attr("attr-compoent-type")=="banner"){
-		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("轮播图");
+	if(compoentObj.attr("attr-compoent-type")=="shopBanner"){
+		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("店铺轮播图");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
