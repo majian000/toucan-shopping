@@ -197,6 +197,11 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+            <artifactId>toucan-shopping-seller-designer-common</artifactId>
+        </dependency>
+
 
     </dependencies>
 

@@ -116,7 +116,7 @@ $(function() {
 			var data_y = zoneCol.attr('data-fg-row'); // row the widget starts on ~ 0 indexed
 			var data_x = zoneInner.find('.fg-col[data-fg-row="'+data_y+'"]').index(widget.closest('.fg-col[data-fg-row="'+data_y+'"]')); // column # the widget starts on ~ 0 indexed
 			widget.attr({ 'data-fg-width': data_width, 'data-fg-height': data_height, 'data-fg-x': data_x, 'data-fg-y': data_y, 'data-fg-minwidth': data_minWidth, 'data-fg-minheight': data_minHeight, 'data-fg-maxwidth': data_maxWidth, 'data-fg-maxheight': data_maxHeight }); // set these new attributes
-		}
+		};
 		
 		$.fn.setOption = function(option, val) {
 			var widget = $(this);
@@ -920,14 +920,14 @@ $(function() {
 				var widget = $(this);
 				//填充组件属性
 				array[0]['widgets'].push({
-					data_x: widget.attr('data-fg-x'),
-					data_y: widget.attr('data-fg-y'),
-					data_width: widget.attr('data-fg-width'),
-					data_height: widget.attr('data-fg-height'),
-					data_minWidth: widget.attr('data-fg-minwidth'),
-					data_minHeight: widget.attr('data-fg-minheight'),
-					data_maxWidth: widget.attr('data-fg-maxwidth'),
-					data_maxHeight: widget.attr('data-fg-maxheight'),
+					x: widget.attr('data-fg-x'),
+					y: widget.attr('data-fg-y'),
+					width: widget.attr('data-fg-width'),
+					height: widget.attr('data-fg-height'),
+					minWidth: widget.attr('data-fg-minwidth'),
+					minHeight: widget.attr('data-fg-minheight'),
+					maxWidth: widget.attr('data-fg-maxwidth'),
+					maxHeight: widget.attr('data-fg-maxheight'),
 					type: widget.attr('attr-compoent-type'),
 					name: widget.attr('attr-component-name'),
 					innerHtml: widget.find('.fg-widget-inner').html()
@@ -982,6 +982,40 @@ $(function() {
 	$(document).on('click', '.preview-btn', function() {
 		var grid = zoneInner.saveGrid();
 		var pageModel = encapsulationModel(grid);
+
+        loading.showLoading({
+            type:6,
+            tip:"请等待..."
+        });
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/designer/pc/index/preview",
+            contentType: "application/json;charset=utf-8",
+            data:  JSON.stringify(pageModel),
+            dataType: "json",
+            success: function (result) {
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "操作失败,请稍后重试",
+                        type: 'error'
+                    });
+                    return ;
+                }
+            },
+            error: function (result) {
+                $.message({
+                    message: "操作失败,请稍后重试",
+                    type: 'error'
+                });
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+
+        });
+
 	});
 
 	// add an array of widgets
@@ -1123,11 +1157,26 @@ function doRemove(compoentObj){
  * 封装模型
  */
 function encapsulationModel(grid){
-	var page = new pageContainer();
-	page.title=$("#pageTitle").val();
-	page.backgroundColor=$("#selectColorControl").val();
+	var pageContainer = new newPageContainer();
+	pageContainer.title=$("#pageTitle").val();
+	pageContainer.backgroundColor=$("#selectColorControl").val();
+	pageContainer.type="pageContainer";
+	pageContainer.components = new Array();
 	//拿到所有组件
 	var widgets = grid[0]['widgets'];
-	console.log(widgets);
-	console.log(grid);
+	if(widgets!=null&&widgets.length>0)
+	{
+		for(var i=0;i<widgets.length;i++)
+		{
+			var widget = widgets[i];
+			if(widget.type=="shopBanner")
+			{
+				var shopBanner = newShopBannerComponent();
+				objectCopy(shopBanner,widget);
+				pageContainer.shopBannerComponents.push(shopBanner);
+			}
+		}
+	}
+	console.log(pageContainer);
+	return pageContainer;
 }
