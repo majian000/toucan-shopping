@@ -61,28 +61,25 @@ public class DesignerApiController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
 
-    @UserAuth
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/pc/index/preview")
-    @ResponseBody
-    public ResultObjectVO pcIndex(HttpServletRequest request, @RequestBody PageContainer pageContainer){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
+    public String pcIndex(HttpServletRequest request,String pageJson){
         try{
 
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(userMainId))
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("预览失败,请稍后重试");
-                return resultObjectVO;
+                return toucan.getUserAuth().getLoginPage();
             }
 
             //校验模型
+            PageContainer pageContainer=JSONObject.parseObject(pageJson,PageContainer.class);
 
             String shopId = "-1";
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
@@ -91,18 +88,15 @@ public class DesignerApiController extends BaseController {
             }
             if(!"-1".equals(shopId))
             {
-                toucanStringRedisService.set(SellerDesignerRedisKey.getPcIndexPreviewKey(shopId), JSONObject.toJSONString(pageContainer));
+
             }
 
 
         }catch(Exception e)
         {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-            logger.warn(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
         }
-        resultObjectVO.setData(null);
-        return resultObjectVO;
+        return "index";
     }
 
 

@@ -987,35 +987,11 @@ $(function() {
             type:6,
             tip:"请等待..."
         });
-        $.ajax({
-            type: "POST",
-            url: basePath+"/api/designer/pc/index/preview",
-            contentType: "application/json;charset=utf-8",
-            data:  JSON.stringify(pageModel),
-            dataType: "json",
-            success: function (result) {
-                if(result.code<=0)
-                {
-                    $.message({
-                        message: "操作失败,请稍后重试",
-                        type: 'error'
-                    });
-                    return ;
-                }
-            },
-            error: function (result) {
-                $.message({
-                    message: "操作失败,请稍后重试",
-                    type: 'error'
-                });
-            },
-            complete:function()
-            {
-                loading.hideLoading();
-            }
 
-        });
+		$("#pageJson").val(JSON.stringify(pageModel));
 
+		$("#previewForm").attr("action",basePath+"/api/designer/pc/index/preview");
+		$("#previewForm").submit();
 	});
 
 	// add an array of widgets
