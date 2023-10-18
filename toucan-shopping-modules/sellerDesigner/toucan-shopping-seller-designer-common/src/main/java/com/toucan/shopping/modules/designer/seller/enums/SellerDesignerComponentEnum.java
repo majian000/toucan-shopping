@@ -2,12 +2,13 @@ package com.toucan.shopping.modules.designer.seller.enums;
 
 public enum SellerDesignerComponentEnum {
 
-    PAGE_CONTAINER("pageContainer");
+    SHOP_PAGE_CONTAINER("shopPageContainer"),
+    SHOP_BANNER("shopBanner");
 
     private String componentType;
 
-    SellerDesignerComponentEnum(String appCode){
-        this.componentType =appCode;
+    SellerDesignerComponentEnum(String componentType){
+        this.componentType =componentType;
     }
 
 

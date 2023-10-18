@@ -15,7 +15,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.designer.seller.constant.SellerDesignerRedisKey;
-import com.toucan.shopping.modules.designer.seller.model.container.PageContainer;
+import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
@@ -73,7 +73,7 @@ public class DesignerApiController extends BaseController {
             }
 
             //校验模型
-            PageContainer pageContainer=JSONObject.parseObject(pageJson,PageContainer.class);
+            ShopPageContainer shopPageContainer=JSONObject.parseObject(pageJson, ShopPageContainer.class);
 
             String shopId = "-1";
             SellerShop querySellerShop = new SellerShop();

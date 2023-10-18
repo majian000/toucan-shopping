@@ -201,6 +201,8 @@
 
         <!--卖家中心设计器 -->
         <module>sellerDesigner/toucan-shopping-seller-designer-common</module>
+        <!--卖家中心设计器freemarker解析器 -->
+        <module>sellerDesigner/toucan-shopping-seller-designer-freemarker-parser</module>
 
         <!-- ===============================================-->
 
@@ -750,6 +752,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-designer-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+                <artifactId>toucan-shopping-seller-designer-freemarker-parser</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
