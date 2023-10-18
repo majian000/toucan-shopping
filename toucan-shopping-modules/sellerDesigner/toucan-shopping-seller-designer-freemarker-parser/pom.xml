@@ -32,6 +32,11 @@
             <artifactId>toucan-shopping-designer-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-freemarker</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

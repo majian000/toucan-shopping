@@ -202,6 +202,11 @@
             <artifactId>toucan-shopping-seller-designer-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+            <artifactId>toucan-shopping-seller-designer-freemarker-parser</artifactId>
+        </dependency>
+
 
     </dependencies>
 

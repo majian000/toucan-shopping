@@ -14,6 +14,9 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.designer.core.exception.validator.ValidatorException;
+import com.toucan.shopping.modules.designer.core.parser.IPageParser;
+import com.toucan.shopping.modules.designer.core.validator.IPageValidator;
 import com.toucan.shopping.modules.designer.seller.constant.SellerDesignerRedisKey;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
@@ -61,6 +64,12 @@ public class DesignerApiController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
 
+    @Autowired
+    private IPageParser pageParser;
+
+    @Autowired
+    private IPageValidator iPageValidator;
+
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/pc/index/preview")
     public String pcIndex(HttpServletRequest request,String pageJson){
@@ -72,8 +81,20 @@ public class DesignerApiController extends BaseController {
                 return toucan.getUserAuth().getLoginPage();
             }
 
-            //校验模型
             ShopPageContainer shopPageContainer=JSONObject.parseObject(pageJson, ShopPageContainer.class);
+
+
+            try {
+                //校验模型
+                iPageValidator.valid(shopPageContainer);
+            }catch(Exception e)
+            {
+                if(e instanceof ValidatorException)
+                {
+                    request.setAttribute("errorMsg",e.getMessage());
+                }
+                return "";
+            }
 
             String shopId = "-1";
             SellerShop querySellerShop = new SellerShop();
