@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.designer.core.parser;
 
 import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
+import com.toucan.shopping.modules.designer.core.view.PageView;
 
 /**
  * 页面解析器
@@ -19,6 +20,6 @@ public interface IPageParser {
      * @param pageContainer
      * @return
      */
-    Object parse(PageContainer pageContainer);
+    PageView parse(PageContainer pageContainer);
 
 }
