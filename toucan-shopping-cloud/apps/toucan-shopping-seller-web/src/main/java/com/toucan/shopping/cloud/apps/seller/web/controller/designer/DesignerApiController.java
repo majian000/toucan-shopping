@@ -81,10 +81,10 @@ public class DesignerApiController extends BaseController {
                 return toucan.getUserAuth().getLoginPage();
             }
 
-            ShopPageContainer shopPageContainer=JSONObject.parseObject(pageJson, ShopPageContainer.class);
 
 
             try {
+                ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
                 //校验模型
                 iPageValidator.valid(shopPageContainer);
             }catch(Exception e)

@@ -8,7 +8,14 @@ import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
 public interface IPageParser {
 
     /**
-     * 将页面对象转换成页面
+     * 将字符串转换成模型
+     * @param json
+     * @return
+     */
+    PageContainer convertToPageModel(String json);
+
+    /**
+     * 将组件转换成页面
      * @param pageContainer
      * @return
      */

@@ -28,8 +28,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-designer-core</artifactId>
+            <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+            <artifactId>toucan-shopping-seller-designer-common</artifactId>
         </dependency>
 
         <dependency>
