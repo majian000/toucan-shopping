@@ -1137,7 +1137,7 @@ function encapsulationModel(grid){
 	pageContainer.title=$("#pageTitle").val();
 	pageContainer.backgroundColor=$("#selectColorControl").val();
 	pageContainer.type="pageContainer";
-	pageContainer.components = new Array();
+	pageContainer.mapComponents = new Array();
 	//拿到所有组件
 	var widgets = grid[0]['widgets'];
 	if(widgets!=null&&widgets.length>0)
@@ -1149,7 +1149,8 @@ function encapsulationModel(grid){
 			{
 				var shopBanner = newShopBannerComponent();
 				objectCopy(shopBanner,widget);
-				pageContainer.shopBannerComponents.push(shopBanner);
+				shopBanner.innerHtml="";
+				pageContainer.mapComponents.push(shopBanner);
 			}
 		}
 	}

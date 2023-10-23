@@ -4,7 +4,7 @@
  */
 function newContainerComponent(){
     var containerComponent=newComponent();
-    containerComponent.components=new Array();
+    containerComponent.mapComponents=new Array();
     return containerComponent;
 }
 
@@ -14,7 +14,6 @@ function newContainerComponent(){
  */
 function newPageContainer(){
     var container=newContainerComponent();
-    container.shopBannerComponents=new Array();
     return container;
 }
 

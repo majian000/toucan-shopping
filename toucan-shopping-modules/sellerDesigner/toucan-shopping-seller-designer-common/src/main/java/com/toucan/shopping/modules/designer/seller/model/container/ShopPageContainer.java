@@ -21,7 +21,6 @@ public class ShopPageContainer extends PageContainer {
     }
 
 
-    private List<ShopBannerComponent> shopBannerComponents;  //店铺轮播图组件
 
 
 
