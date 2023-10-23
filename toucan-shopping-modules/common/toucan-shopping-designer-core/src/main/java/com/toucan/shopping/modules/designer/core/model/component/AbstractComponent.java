@@ -9,7 +9,7 @@ import lombok.Data;
  * @author majian
  */
 @Data
-public abstract class Component implements IComponent {
+public abstract class AbstractComponent implements IComponent {
 
     //坐标
     private String x;

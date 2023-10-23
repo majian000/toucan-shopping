@@ -20,6 +20,6 @@ public interface IPageParser {
      * @param pageContainer
      * @return
      */
-    PageView parse(PageContainer pageContainer);
+    PageView parse(PageContainer pageContainer)  throws Exception;
 
 }

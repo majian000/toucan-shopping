@@ -3,12 +3,14 @@ package com.toucan.shopping.modules.designer.core.view;
 import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 页面视图对象
  * @author majian
  */
 @Data
-public abstract class PageView {
+public abstract class PageView extends ComponentView{
 
     /**
      * 源类型 1:正式访问 2:预览访问
@@ -16,8 +18,8 @@ public abstract class PageView {
     private Integer srcType;
 
     /**
-     * 页面组件
+     * 组件视图
      */
-    private PageContainer pageContainer;
+    private List<ComponentView> componentViews;
 
 }
