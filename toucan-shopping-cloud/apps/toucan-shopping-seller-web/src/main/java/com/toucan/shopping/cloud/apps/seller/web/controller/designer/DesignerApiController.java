@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.designer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -47,12 +48,15 @@ public class DesignerApiController extends BaseController {
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
+    @Autowired
+    private FeignSellerDesignerPageService feignSellerDesignerPageService;
 
     @Autowired
     private IPageParser pageParser;
 
     @Autowired
     private IPageValidator pageValidator;
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/pc/index/preview")
@@ -65,7 +69,8 @@ public class DesignerApiController extends BaseController {
                 return toucan.getUserAuth().getLoginPage();
             }
 
-
+            //店铺预览地址
+//            request.setAttribute("shopPreviewPage",toucan.getSeller().getDesigner().getShopPreviewPage());
 
 
             String shopId = "-1";
@@ -83,12 +88,13 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
-                    //校验模型
-                    pageValidator.valid(shopPageContainer);
-                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
-                    shopIndexPageView.setSrcType(2);
-                    shopIndexPageView.setShopId(shopId);
-                    request.setAttribute("pageViewJson", JSONObject.toJSONString(shopIndexPageView));
+
+//                    //校验模型
+//                    pageValidator.valid(shopPageContainer);
+//                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
+//                    shopIndexPageView.setSrcType(2);
+//                    shopIndexPageView.setShopId(shopId);
+//                    request.setAttribute("pageViewJson", JSONObject.toJSONString(shopIndexPageView));
                 }catch(Exception e)
                 {
                     if(e instanceof ValidatorException)

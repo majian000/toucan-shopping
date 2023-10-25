@@ -50,7 +50,7 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignShopBannerService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询轮播图列表失败");
+                resultObjectVO.setMsg("保存轮播图失败");
                 return resultObjectVO;
             }
 
