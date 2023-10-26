@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPage;
 import com.toucan.shopping.modules.seller.entity.ShopBanner;
 import com.toucan.shopping.modules.seller.page.ShopBannerPageInfo;
+import com.toucan.shopping.modules.seller.redis.SellerDesignerPageKey;
 import com.toucan.shopping.modules.seller.redis.ShopBannerKey;
 import com.toucan.shopping.modules.seller.service.SellerDesignerPageService;
 import com.toucan.shopping.modules.seller.service.ShopBannerService;
@@ -43,13 +44,13 @@ public class SellerDesignerPageController {
     private SkylarkLock skylarkLock;
 
     /**
-     * 保存轮播图
+     * 只保存1个
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/onlySaveOne",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO onlySaveOne(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -68,20 +69,50 @@ public class SellerDesignerPageController {
         }
 
         Long designerPageId = -1L;
+        String userMainId = "-1";
         try {
-            designerPageId = idGenerator.id();
 
             SellerDesignerPageVO sellerDesignerPageVO = requestJsonVO.formatEntity(SellerDesignerPageVO.class);
-            SellerDesignerPage sellerDesignerPage = new SellerDesignerPage();
-            BeanUtils.copyProperties(sellerDesignerPage,sellerDesignerPageVO);
-            sellerDesignerPage.setId(designerPageId);
-            sellerDesignerPage.setCreateDate(new Date());
-            sellerDesignerPage.setDeleteStatus((short)0);
-            int row = sellerDesignerPageService.save(sellerDesignerPage);
-            if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试!");
+            userMainId = String.valueOf(sellerDesignerPageVO.getUserMainId());
+            boolean lockStatus = skylarkLock.lock(SellerDesignerPageKey.getSaveUpdateLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
                 return resultObjectVO;
+            }
+            SellerDesignerPage query = new SellerDesignerPage();
+            query.setShopId(sellerDesignerPageVO.getShopId());
+            query.setType(sellerDesignerPageVO.getType());
+            query.setPosition(sellerDesignerPageVO.getPosition());
+            SellerDesignerPage sellerDesignerPageRet = sellerDesignerPageService.queryLastOne(query);
+            if(sellerDesignerPageRet==null) {
+                designerPageId = idGenerator.id();
+
+                SellerDesignerPage sellerDesignerPage = new SellerDesignerPage();
+                BeanUtils.copyProperties(sellerDesignerPage, sellerDesignerPageVO);
+                sellerDesignerPage.setId(designerPageId);
+                sellerDesignerPage.setAppCode(requestJsonVO.getAppCode());
+                sellerDesignerPage.setCreateDate(new Date());
+                sellerDesignerPage.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                sellerDesignerPage.setDeleteStatus((short) 0);
+                int row = sellerDesignerPageService.save(sellerDesignerPage);
+                if (row <= 0) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("保存失败,请稍后重试!");
+                    return resultObjectVO;
+                }
+            }else{ //覆盖该最新对象
+                sellerDesignerPageRet.setUpdaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                sellerDesignerPageRet.setUpdateDate(new Date());
+                sellerDesignerPageRet.setPageJson(sellerDesignerPageVO.getPageJson());
+                sellerDesignerPageRet.setDesignerVersion(sellerDesignerPageVO.getDesignerVersion());
+                int row = sellerDesignerPageService.update(sellerDesignerPageRet);
+                if (row <= 0) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("保存失败,请稍后重试!");
+                    return resultObjectVO;
+                }
+
             }
 
         }catch(Exception e)
@@ -89,6 +120,8 @@ public class SellerDesignerPageController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("保存失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(SellerDesignerPageKey.getSaveUpdateLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

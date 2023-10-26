@@ -988,10 +988,28 @@ $(function() {
             tip:"请等待..."
         });
 
-		$("#pageJson").val(JSON.stringify(pageModel));
+		var formData = new FormData();
+		formData.append("pageJson",JSON.stringify(pageModel));
+		formData.append("position",$("#position").val());
+		$.ajax({
+			url:basePath+"/api/designer/pc/index/preview",
+			type:'POST',
+			data:formData,
+			cache: false,
+			processData: false,
+			contentType: false,
+			success:function(data){
+				if(data.code==0) {
+					layer.msg(data.msg);
+					return false;
+				}
+				// window.open(data.data);
+			},
+			complete:function(data,status){
+				loading.hideLoading();
+			}
+		});
 
-		$("#previewForm").attr("action",basePath+"/api/designer/pc/index/preview");
-		$("#previewForm").submit();
 	});
 
 	// add an array of widgets
@@ -1154,6 +1172,6 @@ function encapsulationModel(grid){
 			}
 		}
 	}
-	console.log(pageContainer);
+	// console.log(pageContainer);
 	return pageContainer;
 }

@@ -14,4 +14,9 @@ public interface SellerDesignerPageMapper {
 
     int insert(SellerDesignerPage sellerDesignerPage);
 
+    int update(SellerDesignerPage sellerDesignerPage);
+
+    SellerDesignerPage queryLastOne(SellerDesignerPage sellerDesignerPage);
+
+
 }

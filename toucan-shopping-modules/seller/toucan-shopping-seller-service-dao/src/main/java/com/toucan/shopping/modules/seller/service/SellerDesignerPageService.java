@@ -14,4 +14,9 @@ public interface SellerDesignerPageService {
 
     int save(SellerDesignerPage sellerDesignerPage);
 
+    int update(SellerDesignerPage sellerDesignerPage);
+
+    SellerDesignerPage queryLastOne(SellerDesignerPage sellerDesignerPage);
+
+
 }

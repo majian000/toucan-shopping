@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/seller/designer/page/save",fallbackFactory = FeignSellerDesignerPageServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/seller/designer/page",fallbackFactory = FeignSellerDesignerPageServiceFallbackFactory.class)
 public interface FeignSellerDesignerPageService {
 
 
@@ -19,8 +19,8 @@ public interface FeignSellerDesignerPageService {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+    @RequestMapping(value="/onlySaveOne",produces = "application/json;charset=UTF-8")
+    ResultObjectVO onlySaveOne(@RequestBody RequestJsonVO requestJsonVO);
 
 
 

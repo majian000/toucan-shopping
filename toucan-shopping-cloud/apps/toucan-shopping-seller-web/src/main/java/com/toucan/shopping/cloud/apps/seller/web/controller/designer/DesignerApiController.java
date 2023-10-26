@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.designer.seller.model.container.ShopPageConta
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerPageVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ public class DesignerApiController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/pc/index/preview")
-    public String pcIndex(HttpServletRequest request,String pageJson){
+    public String pcIndex(HttpServletRequest request,String pageJson,String position){
         try{
 
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
@@ -88,9 +89,17 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
+                    //校验模型
+                    pageValidator.valid(shopPageContainer);
+                    SellerDesignerPageVO sellerDesignerPageVO=new SellerDesignerPageVO();
+                    sellerDesignerPageVO.setType("1"); //预览页
+                    sellerDesignerPageVO.setPosition(position);
+                    sellerDesignerPageVO.setShopId(Long.parseLong(shopId));
+                    sellerDesignerPageVO.setDesignerVersion("1.0");
+                    sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
+                    sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
-//                    //校验模型
-//                    pageValidator.valid(shopPageContainer);
+                    resultObjectVO = feignSellerDesignerPageService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
 //                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
 //                    shopIndexPageView.setSrcType(2);
 //                    shopIndexPageView.setShopId(shopId);

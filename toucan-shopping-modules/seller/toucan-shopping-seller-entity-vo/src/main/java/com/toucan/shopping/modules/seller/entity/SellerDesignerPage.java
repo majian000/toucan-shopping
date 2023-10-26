@@ -21,11 +21,19 @@ public class SellerDesignerPage {
     private Long id; //主键
 
     /**
-     * 关联店铺
+     * 关联店铺 ,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
+
+    /**
+     * 所属用户ID
+     */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long userMainId;
+
 
     private String pageJson; //页面json
     private String type; //类型 1:预览页 2:正式页

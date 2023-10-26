@@ -33,4 +33,14 @@ public class SellerDesignerPageServiceImpl implements SellerDesignerPageService 
     public int save(SellerDesignerPage sellerDesignerPage) {
         return sellerDesignerPageMapper.insert(sellerDesignerPage);
     }
+    @Override
+    public int update(SellerDesignerPage sellerDesignerPage) {
+        return sellerDesignerPageMapper.update(sellerDesignerPage);
+    }
+
+
+    @Override
+    public SellerDesignerPage queryLastOne(SellerDesignerPage sellerDesignerPage) {
+        return sellerDesignerPageMapper.queryLastOne(sellerDesignerPage);
+    }
 }

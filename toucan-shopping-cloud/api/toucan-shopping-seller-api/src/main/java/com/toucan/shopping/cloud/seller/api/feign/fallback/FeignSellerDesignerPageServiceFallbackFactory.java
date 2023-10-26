@@ -24,7 +24,7 @@ public class FeignSellerDesignerPageServiceFallbackFactory implements FallbackFa
         logger.warn(throwable.getMessage(),throwable);
         return new FeignSellerDesignerPageService(){
             @Override
-            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+            public ResultObjectVO onlySaveOne(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -32,7 +32,7 @@ public class FeignSellerDesignerPageServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerDesignerPageService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerDesignerPageService.saveOrUpdate失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存设计器页面失败");
                 return resultObjectVO;
