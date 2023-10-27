@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.seller.vo;
 
-import com.toucan.shopping.modules.seller.entity.SellerDesignerPage;
-import com.toucan.shopping.modules.seller.entity.ShopBanner;
+import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import lombok.Data;
 
 /**
@@ -9,7 +8,7 @@ import lombok.Data;
  * @author majian
  */
 @Data
-public class SellerDesignerPageVO extends SellerDesignerPage {
+public class SellerDesignerPageModelVO extends SellerDesignerPageModel {
 
     private String createrName;  //创建人名称 店铺所属人ID或者管理员名称
 

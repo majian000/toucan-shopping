@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.designer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -14,10 +14,9 @@ import com.toucan.shopping.modules.designer.core.exception.validator.ValidatorEx
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
 import com.toucan.shopping.modules.designer.core.validator.IPageValidator;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
-import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
-import com.toucan.shopping.modules.seller.vo.SellerDesignerPageVO;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,7 +49,7 @@ public class DesignerApiController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignSellerDesignerPageService feignSellerDesignerPageService;
+    private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
 
     @Autowired
     private IPageParser pageParser;
@@ -91,7 +90,7 @@ public class DesignerApiController extends BaseController {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
                     //校验模型
                     pageValidator.valid(shopPageContainer);
-                    SellerDesignerPageVO sellerDesignerPageVO=new SellerDesignerPageVO();
+                    SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
                     sellerDesignerPageVO.setType("1"); //预览页
                     sellerDesignerPageVO.setPosition(position);
                     sellerDesignerPageVO.setShopId(Long.parseLong(shopId));
@@ -99,7 +98,7 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
-                    resultObjectVO = feignSellerDesignerPageService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
 //                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
 //                    shopIndexPageView.setSrcType(2);
 //                    shopIndexPageView.setShopId(shopId);

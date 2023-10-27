@@ -14,7 +14,7 @@ import java.util.Date;
  * @author majian
  */
 @Data
-public class SellerDesignerPage {
+public class SellerDesignerPageModel {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

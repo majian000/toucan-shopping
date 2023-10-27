@@ -2,19 +2,13 @@ package com.toucan.shopping.modules.seller.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.seller.entity.SellerDesignerPage;
-import com.toucan.shopping.modules.seller.entity.ShopBanner;
-import com.toucan.shopping.modules.seller.page.ShopBannerPageInfo;
+import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.redis.SellerDesignerPageKey;
-import com.toucan.shopping.modules.seller.redis.ShopBannerKey;
-import com.toucan.shopping.modules.seller.service.SellerDesignerPageService;
-import com.toucan.shopping.modules.seller.service.ShopBannerService;
-import com.toucan.shopping.modules.seller.vo.SellerDesignerPageVO;
-import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
+import com.toucan.shopping.modules.seller.service.SellerDesignerPageModelService;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -29,13 +23,13 @@ import java.util.Date;
  * 设计器页面操作
  */
 @RestController
-@RequestMapping("/seller/designer/page")
-public class SellerDesignerPageController {
+@RequestMapping("/seller/designer/page/model")
+public class SellerDesignerPageModelController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private SellerDesignerPageService sellerDesignerPageService;
+    private SellerDesignerPageModelService sellerDesignerPageModelService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -72,7 +66,7 @@ public class SellerDesignerPageController {
         String userMainId = "-1";
         try {
 
-            SellerDesignerPageVO sellerDesignerPageVO = requestJsonVO.formatEntity(SellerDesignerPageVO.class);
+            SellerDesignerPageModelVO sellerDesignerPageVO = requestJsonVO.formatEntity(SellerDesignerPageModelVO.class);
             userMainId = String.valueOf(sellerDesignerPageVO.getUserMainId());
             boolean lockStatus = skylarkLock.lock(SellerDesignerPageKey.getSaveUpdateLockKey(userMainId), userMainId);
             if (!lockStatus) {
@@ -80,33 +74,33 @@ public class SellerDesignerPageController {
                 resultObjectVO.setMsg("保存失败,请稍后重试");
                 return resultObjectVO;
             }
-            SellerDesignerPage query = new SellerDesignerPage();
+            SellerDesignerPageModel query = new SellerDesignerPageModel();
             query.setShopId(sellerDesignerPageVO.getShopId());
             query.setType(sellerDesignerPageVO.getType());
             query.setPosition(sellerDesignerPageVO.getPosition());
-            SellerDesignerPage sellerDesignerPageRet = sellerDesignerPageService.queryLastOne(query);
-            if(sellerDesignerPageRet==null) {
+            SellerDesignerPageModel sellerDesignerPageModelRet = sellerDesignerPageModelService.queryLastOne(query);
+            if(sellerDesignerPageModelRet ==null) {
                 designerPageId = idGenerator.id();
 
-                SellerDesignerPage sellerDesignerPage = new SellerDesignerPage();
-                BeanUtils.copyProperties(sellerDesignerPage, sellerDesignerPageVO);
-                sellerDesignerPage.setId(designerPageId);
-                sellerDesignerPage.setAppCode(requestJsonVO.getAppCode());
-                sellerDesignerPage.setCreateDate(new Date());
-                sellerDesignerPage.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
-                sellerDesignerPage.setDeleteStatus((short) 0);
-                int row = sellerDesignerPageService.save(sellerDesignerPage);
+                SellerDesignerPageModel sellerDesignerPageModel = new SellerDesignerPageModel();
+                BeanUtils.copyProperties(sellerDesignerPageModel, sellerDesignerPageVO);
+                sellerDesignerPageModel.setId(designerPageId);
+                sellerDesignerPageModel.setAppCode(requestJsonVO.getAppCode());
+                sellerDesignerPageModel.setCreateDate(new Date());
+                sellerDesignerPageModel.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                sellerDesignerPageModel.setDeleteStatus((short) 0);
+                int row = sellerDesignerPageModelService.save(sellerDesignerPageModel);
                 if (row <= 0) {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("保存失败,请稍后重试!");
                     return resultObjectVO;
                 }
             }else{ //覆盖该最新对象
-                sellerDesignerPageRet.setUpdaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
-                sellerDesignerPageRet.setUpdateDate(new Date());
-                sellerDesignerPageRet.setPageJson(sellerDesignerPageVO.getPageJson());
-                sellerDesignerPageRet.setDesignerVersion(sellerDesignerPageVO.getDesignerVersion());
-                int row = sellerDesignerPageService.update(sellerDesignerPageRet);
+                sellerDesignerPageModelRet.setUpdaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                sellerDesignerPageModelRet.setUpdateDate(new Date());
+                sellerDesignerPageModelRet.setPageJson(sellerDesignerPageVO.getPageJson());
+                sellerDesignerPageModelRet.setDesignerVersion(sellerDesignerPageVO.getDesignerVersion());
+                int row = sellerDesignerPageModelService.update(sellerDesignerPageModelRet);
                 if (row <= 0) {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("保存失败,请稍后重试!");
