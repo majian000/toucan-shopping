@@ -58,7 +58,7 @@ public class DesignerApiController extends BaseController {
     private IPageValidator pageValidator;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping("/pc/index/preview")
     @ResponseBody
     public ResultObjectVO pcIndex(HttpServletRequest request,String pageJson,String position){

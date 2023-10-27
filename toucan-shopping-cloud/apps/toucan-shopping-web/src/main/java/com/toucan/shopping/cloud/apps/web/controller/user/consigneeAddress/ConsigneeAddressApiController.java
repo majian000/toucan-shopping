@@ -62,7 +62,7 @@ public class ConsigneeAddressApiController extends BaseController {
     private Toucan toucan;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ConsigneeAddressVO consigneeAddressVO){

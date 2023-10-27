@@ -62,7 +62,7 @@ public class UserCollectProductApiController extends BaseController {
     private Toucan toucan;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/collect")
     @ResponseBody
     public ResultObjectVO collect(HttpServletRequest request, @RequestBody UserCollectProductVO userCollectProductVO){
@@ -159,7 +159,7 @@ public class UserCollectProductApiController extends BaseController {
      * @param request
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody UserCollectProductPageInfo pageInfo){

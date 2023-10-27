@@ -121,7 +121,7 @@ public class OrderApiController {
      * @param createOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO create(HttpServletRequest request, @RequestBody CreateOrderVO createOrderVO){
@@ -993,7 +993,7 @@ public class OrderApiController {
      * @param mainOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/main/order/detail",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryMainOrderDetail(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
@@ -1032,7 +1032,7 @@ public class OrderApiController {
      * @param mainOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/main/order/cancel",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO cancelMainOrder(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
@@ -1058,7 +1058,7 @@ public class OrderApiController {
      * @param orderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/detail",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOrderDetail(HttpServletRequest request,@RequestBody OrderVO orderVO){
@@ -1098,7 +1098,7 @@ public class OrderApiController {
      * @param request
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/query/nonPayment/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryNonPaymentList(HttpServletRequest request){
@@ -1147,7 +1147,7 @@ public class OrderApiController {
      * @param request
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/query/order/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody OrderPageInfo orderPageInfo){

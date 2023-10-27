@@ -137,7 +137,7 @@ public class ShopBannerApiController extends BaseController {
      * 添加轮播图
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
@@ -272,7 +272,7 @@ public class ShopBannerApiController extends BaseController {
      * 修改轮播图
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/update")
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
