@@ -113,7 +113,7 @@ public class UserPageController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/info")
     public String info(HttpServletRequest httpServletRequest)
     {
@@ -141,7 +141,7 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/editInfo")
     public String editInfo(HttpServletRequest httpServletRequest)
     {
@@ -150,7 +150,7 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/modifyPwd")
     public String modifyPwd(HttpServletRequest httpServletRequest)
     {
@@ -159,7 +159,7 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/bindEmail")
     public String bindEmail(HttpServletRequest httpServletRequest)
     {
@@ -168,7 +168,7 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/bindMobilePhone")
     public String bindMobilePhone(HttpServletRequest httpServletRequest)
     {

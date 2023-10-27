@@ -22,8 +22,12 @@ public @interface UserAuth {
 	 */
 	 int REQUEST_JSON =0;
 	 int REQUEST_FORM=1;
-	 int REQUEST_AJAX=2;
 
+	/**
+	 * 响应类型 0 json 1 form
+	 */
+	int RESPONSE_JSON =0;
+	int RESPONSE_FORM=1;
 
 	/**
 	 * 用户类型
@@ -53,7 +57,11 @@ public @interface UserAuth {
 	int requestType() default REQUEST_JSON;
 
 
-
+	/**
+	 * 响应类型
+	 * @return
+	 */
+	int responseType() default RESPONSE_JSON;
 
 
 }

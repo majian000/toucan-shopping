@@ -44,14 +44,14 @@ public class OrderPageController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/list")
     public String orderList()
     {
         return "user/order/order_list";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/detail")
     public String detail(HttpServletRequest httpServletRequest,@RequestParam String docNo)
     {

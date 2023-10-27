@@ -20,13 +20,13 @@ public class DesignerPageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request){
         return "designer/index";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/pc/index")
     public String pcIndex(HttpServletRequest request){
         return "designer/pc/index";

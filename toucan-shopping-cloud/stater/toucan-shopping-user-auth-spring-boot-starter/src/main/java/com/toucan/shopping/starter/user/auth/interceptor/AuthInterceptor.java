@@ -103,7 +103,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             logger.info("权限HTTP请求头为" + toucan.getUserAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader());
                             //ajax请求
-                            if (authAnnotation.requestType() == UserAuth.REQUEST_JSON||authAnnotation.requestType() == UserAuth.REQUEST_AJAX) {
+                            if (authAnnotation.responseType() == UserAuth.RESPONSE_JSON) {
                                 //JSON类型请求
                                 RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
                                 String jsonBody = new String(RequestWrapper.body);
@@ -237,7 +237,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             }
 
                             //如果是直接请求
-                            if (authAnnotation.requestType() == UserAuth.REQUEST_FORM) {
+                            if (authAnnotation.responseType() == UserAuth.RESPONSE_FORM) {
                                 if (StringUtils.isEmpty(authHeader)) {
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
@@ -327,14 +327,14 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
-                if (authAnnotation.requestType() == UserAuth.REQUEST_JSON||authAnnotation.requestType() == UserAuth.REQUEST_AJAX) {
+                if (authAnnotation.responseType() == UserAuth.RESPONSE_JSON) {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("请求失败");
                     response.setContentType("application/json");
                     response.setStatus(HttpStatus.OK.value());
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
-                if (authAnnotation.requestType() == UserAuth.REQUEST_FORM) {
+                if (authAnnotation.responseType() == UserAuth.RESPONSE_FORM) {
                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                         response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                 + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());

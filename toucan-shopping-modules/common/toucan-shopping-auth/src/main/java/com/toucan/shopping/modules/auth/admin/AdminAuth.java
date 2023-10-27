@@ -19,14 +19,20 @@ public @interface AdminAuth {
 	/**
 	 * 校验方式 0本地验证 1权限中台验证
 	 */
-	public static int VERIFYMETHOD_LOCAL =0;
-	public static int VERIFYMETHOD_ADMIN_AUTH =1;
+	public int VERIFYMETHOD_LOCAL =0;
+	public int VERIFYMETHOD_ADMIN_AUTH =1;
 
 	/**
 	 * 请求类型 0 json 1 form
 	 */
-	public static int REQUEST_JSON =0;
-	public static int REQUEST_FORM=1;
+	public int REQUEST_JSON =0;
+	public int REQUEST_FORM=1;
+
+	/**
+	 * 响应类型 0 json 1 form
+	 */
+	public int RESPONSE_JSON =0;
+	public int RESPONSE_FORM=1;
 
 
 	/**
@@ -56,6 +62,11 @@ public @interface AdminAuth {
 	 */
 	public int requestType() default REQUEST_JSON;
 
+	/**
+	 * 响应类型 0 json 1 form
+	 * @return
+	 */
+	public int responseType() default RESPONSE_JSON;
 
 	/**
 	 * 用户类型 0管理员账户 1普通账户

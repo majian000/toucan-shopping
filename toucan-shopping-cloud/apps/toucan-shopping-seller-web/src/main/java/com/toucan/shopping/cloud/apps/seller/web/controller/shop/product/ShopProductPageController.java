@@ -43,7 +43,7 @@ public class ShopProductPageController extends BaseController {
 
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/publishProductDescription")
     public String publishProductDescription(HttpServletRequest request){
 
@@ -51,7 +51,7 @@ public class ShopProductPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/publish")
     public String publish(HttpServletRequest request){
 
@@ -85,7 +85,7 @@ public class ShopProductPageController extends BaseController {
         return "product/publish_product";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request){
 

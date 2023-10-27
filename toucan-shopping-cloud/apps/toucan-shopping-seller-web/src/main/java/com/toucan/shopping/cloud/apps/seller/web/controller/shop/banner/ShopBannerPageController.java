@@ -53,7 +53,7 @@ public class ShopBannerPageController extends BaseController {
 
 
     @ShopAuth
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/list")
     public String list(HttpServletRequest request)
     {
@@ -62,7 +62,7 @@ public class ShopBannerPageController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/add")
     public String add(HttpServletRequest request){
 
@@ -85,7 +85,7 @@ public class ShopBannerPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/edit/{id}")
     public String edit(HttpServletRequest request,@PathVariable Long id){
 

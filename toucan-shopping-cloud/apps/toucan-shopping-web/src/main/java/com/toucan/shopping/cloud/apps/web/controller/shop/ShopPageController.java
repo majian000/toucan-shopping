@@ -34,7 +34,7 @@ public class ShopPageController extends BaseController {
     private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index/preview")
     public String indexPreviewPage()
     {

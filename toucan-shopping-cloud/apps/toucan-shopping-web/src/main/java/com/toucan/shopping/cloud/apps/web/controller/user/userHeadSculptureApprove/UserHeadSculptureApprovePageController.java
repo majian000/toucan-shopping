@@ -47,7 +47,7 @@ public class UserHeadSculptureApprovePageController extends BaseController {
     private LoginUserService loginUserService;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {

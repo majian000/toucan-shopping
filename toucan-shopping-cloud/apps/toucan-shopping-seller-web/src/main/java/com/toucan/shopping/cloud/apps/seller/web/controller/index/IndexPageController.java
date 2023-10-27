@@ -35,7 +35,7 @@ public class IndexPageController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/")
     public String defaultIndex(HttpServletRequest request)
     {
@@ -43,7 +43,7 @@ public class IndexPageController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request)
     {

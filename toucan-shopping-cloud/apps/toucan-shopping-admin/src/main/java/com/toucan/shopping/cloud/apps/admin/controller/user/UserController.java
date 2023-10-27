@@ -61,7 +61,7 @@ public class UserController extends UIController {
     private FeignFunctionService feignFunctionService;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
@@ -71,7 +71,7 @@ public class UserController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/registPage",method = RequestMethod.GET)
     public String registPage()
     {
@@ -83,7 +83,7 @@ public class UserController extends UIController {
      * 手机号列表页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/mobilePhoneListPage/{userMainId}",method = RequestMethod.GET)
     public String mobilePhoneListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -97,7 +97,7 @@ public class UserController extends UIController {
      * 邮箱列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/emailListPage/{userMainId}",method = RequestMethod.GET)
     public String emailListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -111,7 +111,7 @@ public class UserController extends UIController {
      * 用户名列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/userNameListPage/{userMainId}",method = RequestMethod.GET)
     public String userNameListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -125,7 +125,7 @@ public class UserController extends UIController {
      * 关联手机号页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/connectMobilePhonePage/{userMainId}",method = RequestMethod.GET)
     public String connectMobilePhonePage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -138,7 +138,7 @@ public class UserController extends UIController {
      * 关联邮箱页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/connectEmailPage/{userMainId}",method = RequestMethod.GET)
     public String connectEmailPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -151,7 +151,7 @@ public class UserController extends UIController {
      * 跳转到修改用户资料页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/update/detail/page/{userMainId}",method = RequestMethod.GET)
     public String updateDetailPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -190,7 +190,7 @@ public class UserController extends UIController {
      * 查看详情页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/detail/page/{userMainId}",method = RequestMethod.GET)
     public String detailPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -230,7 +230,7 @@ public class UserController extends UIController {
      * 关联用户名页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/connectUserNamePage/{userMainId}",method = RequestMethod.GET)
     public String connectUserNamePage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -243,7 +243,7 @@ public class UserController extends UIController {
      * 重置密码页
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/resetPasswordPage/{userMainId}",method = RequestMethod.GET)
     public String resetPasswordPage(HttpServletRequest request,@PathVariable String userMainId)
     {
@@ -257,7 +257,7 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(UserPageInfo userPageInfo)
@@ -308,7 +308,7 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO mobilePhoneList(UserPageInfo userPageInfo)
@@ -346,7 +346,7 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/email/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO emailList(UserPageInfo userPageInfo)
@@ -383,7 +383,7 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/username/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO usernameList(UserPageInfo userPageInfo)
@@ -965,7 +965,7 @@ public class UserController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/disabled/enabled/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledById(HttpServletRequest request,  @PathVariable String id)
@@ -1000,7 +1000,7 @@ public class UserController extends UIController {
      * 手机号 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/mobile/phone/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO disabledEnabledMobilePhone(@RequestBody UserMobilePhoneVO userMobilePhoneVO)
@@ -1032,7 +1032,7 @@ public class UserController extends UIController {
      * 邮箱 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/email/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO disabledEnabledEmail(@RequestBody UserEmailVO userEmailVO)
@@ -1064,7 +1064,7 @@ public class UserController extends UIController {
      * 用户名 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/username/disabled/enabled",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody UserUserNameVO userUserNameVO)
@@ -1095,7 +1095,7 @@ public class UserController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/disabled/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledByIds(HttpServletRequest request, @RequestBody List<UserVO> userVOS)

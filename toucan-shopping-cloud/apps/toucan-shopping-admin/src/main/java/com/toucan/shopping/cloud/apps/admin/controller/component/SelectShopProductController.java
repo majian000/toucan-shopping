@@ -103,7 +103,7 @@ public class SelectShopProductController extends UIController {
     private FeignFunctionService feignFunctionService;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/shopProductListPage",method = RequestMethod.GET)
     public String spuListPage(HttpServletRequest request,@RequestParam Long categoryId,@RequestParam String selectProductIds)
     {
@@ -677,7 +677,7 @@ public class SelectShopProductController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
     public String detailPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -837,7 +837,7 @@ public class SelectShopProductController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO queryShopProductSkuList(HttpServletRequest request, ProductSkuPageInfo pageInfo)

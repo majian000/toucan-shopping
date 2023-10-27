@@ -25,7 +25,7 @@ public class MessagePageController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/")
     public String page(HttpServletRequest request)
     {
