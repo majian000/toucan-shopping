@@ -59,6 +59,10 @@ public class ShoppingPC {
      * 首页商品栏目编码
      */
     private String pcIndexColumnTypeCode;
+    /**
+     * 店铺首页预览
+     */
+    private String shopPcIndexPreviewPage;
 
     /**
      * 应用编码

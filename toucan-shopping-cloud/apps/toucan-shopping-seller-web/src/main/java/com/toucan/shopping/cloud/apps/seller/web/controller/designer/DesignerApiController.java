@@ -58,26 +58,19 @@ public class DesignerApiController extends BaseController {
     private IPageValidator pageValidator;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping("/pc/index/preview")
-    public String pcIndex(HttpServletRequest request,String pageJson,String position){
+    @ResponseBody
+    public ResultObjectVO pcIndex(HttpServletRequest request,String pageJson,String position){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            if(StringUtils.isEmpty(userMainId))
-            {
-                return toucan.getUserAuth().getLoginPage();
-            }
-
-            //店铺预览地址
-//            request.setAttribute("shopPreviewPage",toucan.getSeller().getDesigner().getShopPreviewPage());
-
 
             String shopId = "-1";
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
@@ -99,6 +92,7 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
                     resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage());
 //                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
 //                    shopIndexPageView.setSrcType(2);
 //                    shopIndexPageView.setShopId(shopId);
@@ -107,9 +101,9 @@ public class DesignerApiController extends BaseController {
                 {
                     if(e instanceof ValidatorException)
                     {
-                        request.setAttribute("errorMsg",e.getMessage());
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg(e.getMessage());
                     }
-                    return "";
                 }
             }
 
@@ -117,8 +111,10 @@ public class DesignerApiController extends BaseController {
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后再试");
         }
-        return "designer/preview";
+        return resultObjectVO;
     }
 
 

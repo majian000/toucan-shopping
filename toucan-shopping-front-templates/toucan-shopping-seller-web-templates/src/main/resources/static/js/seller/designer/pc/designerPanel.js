@@ -1003,7 +1003,7 @@ $(function() {
 					layer.msg(data.msg);
 					return false;
 				}
-				// window.open(data.data);
+				window.open(data.data);
 			},
 			complete:function(data,status){
 				loading.hideLoading();
