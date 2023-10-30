@@ -28,6 +28,7 @@ $(function(){
                     }
                 }
                 if(bannerArray!=null&&bannerArray.length>0) {
+
                     jq('#slider').sliders({
                         imgArr: bannerArray,
                         autoLoop: true,
