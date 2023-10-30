@@ -1,18 +1,16 @@
 package com.toucan.shopping.modules.designer.seller.parser;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toucan.shopping.modules.designer.core.model.component.AbstractComponent;
 import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
 import com.toucan.shopping.modules.designer.core.view.PageView;
 import com.toucan.shopping.modules.designer.seller.enums.SellerDesignerComponentEnum;
-import com.toucan.shopping.modules.designer.seller.enums.SellerViewEnum;
+import com.toucan.shopping.modules.designer.seller.enums.SellerComponentViewEnum;
 import com.toucan.shopping.modules.designer.seller.model.component.ShopBannerComponent;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.designer.seller.view.ShopBannerView;
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
-import lombok.Data;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -47,7 +45,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
     public PageView parse(PageContainer pageContainer) throws Exception{
         ShopIndexPageView pageView=new ShopIndexPageView();
         BeanUtils.copyProperties(pageView,pageContainer);
-        pageView.setType(SellerViewEnum.SHOP_PAGE_VIEW.value());
+        pageView.setType(SellerComponentViewEnum.SHOP_PAGE_VIEW.value());
         pageView.setComponentViews(new LinkedList<>());
         if(CollectionUtils.isNotEmpty(pageContainer.getComponents()))
         {
@@ -58,7 +56,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                 {
                     ShopBannerView shopBannerView = new ShopBannerView();
                     shopBannerView.setTitle(component.getTitle());
-                    shopBannerView.setType(SellerViewEnum.SHOP_BANNER_VIEW.value());
+                    shopBannerView.setType(SellerComponentViewEnum.SHOP_BANNER_VIEW.value());
                     shopBannerView.setWidth(component.getWidth()+"%");
                     shopBannerView.setHeight(component.getHeight()+"%");
                     shopBannerView.setX(component.getX()+"%");

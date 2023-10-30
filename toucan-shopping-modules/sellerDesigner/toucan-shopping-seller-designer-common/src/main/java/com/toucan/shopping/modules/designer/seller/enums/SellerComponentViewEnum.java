@@ -1,13 +1,13 @@
 package com.toucan.shopping.modules.designer.seller.enums;
 
-public enum SellerViewEnum {
+public enum SellerComponentViewEnum {
 
     SHOP_PAGE_VIEW("shopPageView"),
     SHOP_BANNER_VIEW("shopBannerView");
 
     private String componentType;
 
-    SellerViewEnum(String componentType){
+    SellerComponentViewEnum(String componentType){
         this.componentType =componentType;
     }
 

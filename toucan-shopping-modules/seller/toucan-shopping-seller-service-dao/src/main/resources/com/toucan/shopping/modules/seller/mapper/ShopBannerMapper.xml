@@ -34,50 +34,52 @@
 
 
         <if test="startShowDate!=null">
-            <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
         <if test="endShowDate!=null">
-            <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
     </sql>
 
     <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopBannerVO">
-        select ba.* from  t_shop_banner ba
+        select t.* from  t_shop_banner t
         <where>
             1=1
 
             <if test="id!=null">
-                and ba.id = #{id}
+                and t.id = #{id}
             </if>
 
             <if test="startShowDate!=null">
-                 <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+                 <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
             </if>
             <if test="endShowDate!=null">
-                <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+                <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
             </if>
 
             <if test="idArray!=null and idArray.length>0 ">
-                and ba.id in
+                and t.id in
                 <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
 
-              and ba.delete_status = 0
+              and t.delete_status = 0
 
         </where>
     </select>
 
 
     <select id="queryIndexList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopBannerVO">
-        select ba.* from  t_shop_banner ba
+        select t.* from  t_shop_banner t
         <where>
             1=1
-                <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
-                <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
-                and ba.position = 0
-                and ba.delete_status = 0
+                <![CDATA[ and t.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+                <![CDATA[ and t.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+                and FIND_IN_SET(#{position},t.position)
+                and t.show_status=1
+                and t.shop_id=#{shopId}
+                and t.delete_status = 0
 
         </where>
     </select>

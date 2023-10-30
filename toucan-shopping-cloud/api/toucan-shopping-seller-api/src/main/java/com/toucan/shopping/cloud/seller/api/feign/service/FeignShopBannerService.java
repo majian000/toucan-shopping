@@ -76,4 +76,14 @@ public interface FeignShopBannerService {
     @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询首页列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryIndexList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryIndexList(@RequestBody RequestJsonVO requestVo);
+
 }

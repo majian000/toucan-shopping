@@ -11,8 +11,9 @@
     <![endif]-->
     <script type="text/javascript" src="${basePath}/static/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/select.js"></script>
-
+    <script type="text/javascript">
+        var jq = jQuery.noConflict();
+    </script>
 
 
 
@@ -46,6 +47,39 @@
 <!--Begin Menu Begin-->
 <div class="menu_bg">
 
+    <#if pageView??>
+
+        <input type="hidden" id="shopId"  value="${pageView.shopId}" />
+
+        <#list pageView.componentViews as cv>
+            <#if cv?? && cv.type=="shopBannerView">
+
+
+                <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
+                <div id="slider" class="tslider">
+                    <button type="button" class="preBtn" id="preBtn">
+                        &lt;
+                    </button>
+                    <button type="button" class="nextBtn" id="nextBtn">
+                        &gt;
+                    </button>
+
+                    <ul class="pointer" id="defaultBannerPointer">
+
+                    </ul>
+                </div>
+
+                <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
+                <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
+
+
+            </#if>
+        </#list>
+
+
+
+
+    </#if>
 
 
 
@@ -53,9 +87,7 @@
 </div>
 
 
-<script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
-<script type="text/javascript" src="${basePath}/static/shopping/web/js/index/banner.js"></script>
-<script type="text/javascript" src="${basePath}/static/shopping/web/js/index/index.js"></script>
+
 
 </body>
 
