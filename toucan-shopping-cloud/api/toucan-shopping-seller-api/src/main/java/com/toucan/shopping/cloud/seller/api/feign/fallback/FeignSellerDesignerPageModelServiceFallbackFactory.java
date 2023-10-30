@@ -37,6 +37,21 @@ public class FeignSellerDesignerPageModelServiceFallbackFactory implements Fallb
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO queryLastOne(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerDesignerPageModelService.queryLastOne失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存设计器页面失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

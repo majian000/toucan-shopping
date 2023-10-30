@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.designer.core.validator.IPageValidator;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.lang3.StringUtils;
@@ -84,15 +85,15 @@ public class DesignerApiController extends BaseController {
                     //校验模型
                     pageValidator.valid(shopPageContainer);
                     SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
-                    sellerDesignerPageVO.setType("1"); //预览页
-                    sellerDesignerPageVO.setPosition(position);
+                    sellerDesignerPageVO.setType(1); //预览页
+                    sellerDesignerPageVO.setPosition(Integer.parseInt(position));
                     sellerDesignerPageVO.setShopId(Long.parseLong(shopId));
                     sellerDesignerPageVO.setDesignerVersion("1.0");
                     sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
                     resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
-                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage());
+                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage()+"/"+ ShopUtils.encShopId(shopId)+"/"+shopId);
 //                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
 //                    shopIndexPageView.setSrcType(2);
 //                    shopIndexPageView.setShopId(shopId);

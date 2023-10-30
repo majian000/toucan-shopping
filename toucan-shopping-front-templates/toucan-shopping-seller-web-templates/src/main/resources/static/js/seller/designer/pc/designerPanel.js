@@ -985,7 +985,8 @@ $(function() {
 
         loading.showLoading({
             type:6,
-            tip:"请等待..."
+            tip:"请等待...",
+			zIndex:999
         });
 
 		var formData = new FormData();

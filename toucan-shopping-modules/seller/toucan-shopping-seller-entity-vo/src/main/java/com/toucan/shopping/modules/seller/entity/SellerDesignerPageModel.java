@@ -36,8 +36,8 @@ public class SellerDesignerPageModel {
 
 
     private String pageJson; //页面json
-    private String type; //类型 1:预览页 2:正式页
-    private String position; //位置 1:PC首页
+    private Integer type; //类型 1:预览页 2:正式页
+    private Integer position; //位置 1:PC首页
     private String designerVersion; //设计器版本
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
