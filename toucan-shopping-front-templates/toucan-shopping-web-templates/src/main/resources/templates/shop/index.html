@@ -15,23 +15,18 @@
     <script type="text/javascript">
         var jq = jQuery.noConflict();
     </script>
-    <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
 
-
+    <#if pageView??>
+        <#list pageView.componentViewPlugins as cvp>
+            <#if cvp?? && cvp.pluginName=="sliderMe" && cvp.pluginVersion=="1.0">
+                <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
+                <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
+            </#if>
+        </#list>
+    </#if>
 
     <#include "/title.html"/>
 
-    <style>
-        .category_a{
-            color: #ffffff;
-        }
-        a.category_a:hover{
-            color:#ff4e00
-        }
-        .nuw a{
-            color:#ff4e00
-        }
-    </style>
 </head>
 <body>
 <!--Begin Header Begin-->
@@ -58,8 +53,7 @@
             <#if cv?? && cv.type=="shopBannerView">
 
 
-            <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
-            <div id="slider" class="tslider">
+            <div id="slider" class="tslider" style="margin-left:'${cv.x}%';margin-top:'${cv.y}%';width:'${cv.width}%'>
                 <button type="button" class="preBtn" id="preBtn">
                     &lt;
                 </button>

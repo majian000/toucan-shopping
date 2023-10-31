@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.designer.seller.enums.SellerDesignerComponent
 import com.toucan.shopping.modules.designer.seller.enums.SellerComponentViewEnum;
 import com.toucan.shopping.modules.designer.seller.model.component.ShopBannerComponent;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
+import com.toucan.shopping.modules.designer.seller.plugin.ShopBannerViewPlugin;
 import com.toucan.shopping.modules.designer.seller.view.ShopBannerView;
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import org.apache.commons.beanutils.BeanUtils;
@@ -47,6 +48,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
         BeanUtils.copyProperties(pageView,pageContainer);
         pageView.setType(SellerComponentViewEnum.SHOP_PAGE_VIEW.value());
         pageView.setComponentViews(new LinkedList<>());
+        pageView.setComponentViewPlugins(new LinkedList<>());
         if(CollectionUtils.isNotEmpty(pageContainer.getComponents()))
         {
             for(AbstractComponent component:pageContainer.getComponents())
@@ -54,6 +56,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                 //店铺轮播图组件
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(component.getType()))
                 {
+                    //组件视图
                     ShopBannerView shopBannerView = new ShopBannerView();
                     shopBannerView.setTitle(component.getTitle());
                     shopBannerView.setType(SellerComponentViewEnum.SHOP_BANNER_VIEW.value());
@@ -62,6 +65,13 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     shopBannerView.setX(component.getX()+"%");
                     shopBannerView.setY(component.getY()+"%");
                     pageView.getComponentViews().add(shopBannerView);
+
+                    //视图插件
+                    ShopBannerViewPlugin shopBannerViewPlugin=new ShopBannerViewPlugin();
+                    shopBannerViewPlugin.setComponentType(component.getType());
+                    shopBannerViewPlugin.setPluginName("sliderMe");
+                    shopBannerViewPlugin.setPluginVersion("1.0");
+                    pageView.getComponentViewPlugins().add(shopBannerViewPlugin);
                 }
             }
         }
