@@ -23,6 +23,8 @@ import java.util.Map;
 @Component("freemarkerPageParser")
 public class FreemarkerShopIndexPageParser implements IPageParser {
 
+    private final int blockUnit=5; //设计器1个单元块占5%
+
     @Override
     public PageContainer convertToPageModel(String json) throws Exception {
         ShopPageContainer shopPageContainer= JSONObject.parseObject(json, ShopPageContainer.class);
@@ -60,10 +62,18 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     ShopBannerView shopBannerView = new ShopBannerView();
                     shopBannerView.setTitle(component.getTitle());
                     shopBannerView.setType(SellerComponentViewEnum.SHOP_BANNER_VIEW.value());
-                    shopBannerView.setWidth(component.getWidth()+"%");
-                    shopBannerView.setHeight(component.getHeight()+"%");
-                    shopBannerView.setX(component.getX()+"%");
-                    shopBannerView.setY(component.getY()+"%");
+                    Integer width = Integer.parseInt(component.getWidth())*blockUnit;
+                    Integer height = Integer.parseInt(component.getHeight())*blockUnit*10; //单位px
+                    Integer x = Integer.parseInt(component.getX())*blockUnit;
+                    Integer y = Integer.parseInt(component.getY())*blockUnit;
+                    shopBannerView.setWidth(String.valueOf(width));
+                    shopBannerView.setWidthUnit("%");
+                    shopBannerView.setHeight(String.valueOf(height));
+                    shopBannerView.setHeightUnit("px");
+                    shopBannerView.setX(String.valueOf(x));
+                    shopBannerView.setxUnit("%");
+                    shopBannerView.setY(String.valueOf(y));
+                    shopBannerView.setyUnit("%");
                     pageView.getComponentViews().add(shopBannerView);
 
                     //视图插件

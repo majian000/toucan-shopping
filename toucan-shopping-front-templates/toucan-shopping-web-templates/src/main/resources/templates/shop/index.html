@@ -53,7 +53,7 @@
             <#if cv?? && cv.type=="shopBannerView">
 
 
-            <div id="slider" class="tslider" style="margin-left:'${cv.x}%';margin-top:'${cv.y}%';width:'${cv.width}%'>
+            <div id="slider" class="tslider" style="margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
                 <button type="button" class="preBtn" id="preBtn">
                     &lt;
                 </button>
