@@ -40,13 +40,15 @@
 
 
 </div>
+
 <!--End Header End-->
 <!--Begin Menu Begin-->
 <div class="menu_bg">
 </div>
+<div class="shop-index-main-page" >
 <div class="shop-index-main">
     <#if pageView??>
-
+        <input type="hidden" id="backgroundColor" value="${pageView.backgroundColor}" />
         <input type="hidden" id="shopId"  value="${pageView.shopId}" />
 
         <#list pageView.componentViews as cv>
@@ -67,6 +69,7 @@
             </div>
 
             <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
+            <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
 
 
             </#if>
@@ -77,7 +80,7 @@
 
     </#if>
 </div>
-
+</div>
 
 <#include "/footer.html"/>
 
