@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.web.controller.shop;
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -63,6 +64,9 @@ public class ShopPageController extends BaseController {
                     ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
                     shopIndexPageView.setShopId(shopId);
                     request.setAttribute("pageView",shopIndexPageView);
+                    String pageJson = JSONObject.toJSONString(shopIndexPageView);
+                    pageJson = pageJson.replaceAll("\"","'");
+                    request.setAttribute("pageViewJson", pageJson);
                 }
             }
         }catch(Exception e)
