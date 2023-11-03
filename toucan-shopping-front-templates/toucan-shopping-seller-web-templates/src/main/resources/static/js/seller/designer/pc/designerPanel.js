@@ -1143,7 +1143,7 @@ function doAppendPanel(compoentObj){
  */
 function doRemove(compoentObj){
 	if(compoentObj.attr("attr-compoent-type")=="shopBanner"){
-		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("店铺轮播图");
+		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("轮播图");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
