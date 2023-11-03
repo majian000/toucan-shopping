@@ -8,7 +8,6 @@ $(function () {
 function initDesignerProperty()
 {
     $(".mtc1").show();
-
     //监听属性选项卡
     $(".mt-tabpage-item").click(function(){
         var tabTitles = $(".mt-tabpage-item");
