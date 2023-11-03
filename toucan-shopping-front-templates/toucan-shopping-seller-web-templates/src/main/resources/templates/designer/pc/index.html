@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="${basePath}/static/lib/designer/pc/index/ui-container.css">
     <link rel="stylesheet" href="${basePath}/static/lib/designer/css/dp-style.css">
     <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/spectrum/spectrum.css">
+    <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
 
     <#include "/title.html"/>
 
@@ -51,6 +52,7 @@
 
                     <div style="background: white;" >
                         <div>
+                            <form id="designerPanelForm">
                             <section class="el-container container-main">
                                 <aside class="el-aside main-right" style="width: 250px;">
                                     <header class="el-header header-title" style="height: 60px;font-size: 15px;">常用组件</header>
@@ -112,7 +114,7 @@
                                                     <form action="">
                                                         <div class="form-group">
                                                             <label for="pageTitle">页面标题</label>
-                                                            <input type="text" class="form-control" placeholder="请输入页面标题" id="pageTitle">
+                                                            <input type="text" class="form-control" placeholder="请输入页面标题" id="pageTitle" lay-verify="required|shopName" >
                                                         </div>
                                                         <div class="form-group">
                                                             <label>背景色</label>
@@ -136,7 +138,7 @@
                                     </div>
                                 </aside>
                             </section>
-
+                            </form>
                         </div>
                     </div>
 
@@ -164,6 +166,7 @@
 <script src="${basePath}/static/js/message.js"></script>
 <link rel="stylesheet" href="${basePath}/static/css/message.css" />
 
+<script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/designer/pc/index.js"></script>
 </body>
 

@@ -983,6 +983,10 @@ $(function() {
 		var grid = zoneInner.saveGrid();
 		var pageModel = encapsulationModel(grid);
 
+		if(!checkInputFunction($('.preview-btn'),2)){
+			return false;
+		}
+
         loading.showLoading({
             type:6,
             tip:"请等待...",
