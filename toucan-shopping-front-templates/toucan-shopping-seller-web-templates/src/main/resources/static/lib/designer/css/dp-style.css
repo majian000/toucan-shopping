@@ -41,7 +41,7 @@ svg{
 }
 .mt-tabpage-count {
 	position: relative;
-	height: 200px;
+	height: 100%;
 	overflow: hidden;
 }
 .mt-tabpage-cont__wrap {
