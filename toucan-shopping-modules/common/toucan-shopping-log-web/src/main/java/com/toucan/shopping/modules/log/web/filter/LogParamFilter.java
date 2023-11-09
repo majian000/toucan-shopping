@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 
 public class LogParamFilter extends OncePerRequestFilter {
@@ -52,13 +53,33 @@ public class LogParamFilter extends OncePerRequestFilter {
                     &&toucan.getModules().getLog().getRequest()!=null
                     &&toucan.getModules().getLog().getRequest().isEnabled()) {
                 String contentType = request.getContentType();
-                if(StringUtils.isNotEmpty(contentType)) {
-                    List<String> contentTypeList = toucan.getModules().getLog().getRequest().getContentTypeList();
-                    if (CollectionUtils.isNotEmpty(contentTypeList)) {
+                List<String> contentTypeList = toucan.getModules().getLog().getRequest().getContentTypeList();
+                if (CollectionUtils.isNotEmpty(contentTypeList)) {
+                    if(StringUtils.isNotEmpty(contentType)) {
                         for(String ct:contentTypeList) {
                             if (contentType.indexOf(ct.toLowerCase())!=-1) {
                                 byte[] requestBody = req.getContentAsByteArray();
                                 logger.info("request uri:{} method:{} body:{}", request.getRequestURI(), request.getMethod(), new String(requestBody, StandardCharsets.UTF_8));
+                            }
+                        }
+                    }else{
+                        //表单提交
+                        if(contentTypeList.contains("application/x-www-form-urlencoded")) {
+                            if (request.getParameterMap()!=null&&request.getParameterMap().size()>0)
+                            {
+                                StringBuilder builder=new StringBuilder();
+                                for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+                                    builder.append(entry.getKey());
+                                    builder.append("=");
+                                    String values[] = entry.getValue();
+                                    if (values!=null&&values.length>0){
+                                        for (String v : values){
+                                            builder.append(v);
+                                        }
+                                    }
+                                    builder.append(" ");
+                                }
+                                logger.info("request uri:{} method:{} body:{}", request.getRequestURI(), request.getMethod(), builder.toString());
                             }
                         }
                     }
