@@ -59,7 +59,7 @@ public class LogParamFilter extends OncePerRequestFilter {
                         for(String ct:contentTypeList) {
                             if (contentType.indexOf(ct.toLowerCase())!=-1) {
                                 byte[] requestBody = req.getContentAsByteArray();
-                                logger.info("request uri:{} method:{} body:{}", request.getRequestURI(), request.getMethod(), new String(requestBody, StandardCharsets.UTF_8));
+                                logger.info("request uri:{} requestIp:{} method:{} body:{}", request.getRequestURI(), request.getRemoteAddr(),request.getMethod(), new String(requestBody, StandardCharsets.UTF_8));
                             }
                         }
                     }else{
@@ -79,7 +79,7 @@ public class LogParamFilter extends OncePerRequestFilter {
                                     }
                                     builder.append(" ");
                                 }
-                                logger.info("request uri:{} method:{} body:{}", request.getRequestURI(), request.getMethod(), builder.toString());
+                                logger.info("request uri:{} requestIp:{} method:{} body:{}", request.getRequestURI(), request.getRemoteAddr(),request.getMethod(), builder.toString());
                             }
                         }
                     }
@@ -97,7 +97,7 @@ public class LogParamFilter extends OncePerRequestFilter {
                         for(String ct:contentTypeList) {
                             if (contentType.indexOf(ct.toLowerCase())!=-1) {
                                 byte[] responseBody = resp.getContentAsByteArray();
-                                logger.info("response uri:{} body:{}", request.getRequestURI(),new String(responseBody, StandardCharsets.UTF_8));
+                                logger.info("response uri:{} requestIp:{} body:{}", request.getRequestURI(),request.getRemoteAddr(),new String(responseBody, StandardCharsets.UTF_8));
                             }
                         }
                     }
