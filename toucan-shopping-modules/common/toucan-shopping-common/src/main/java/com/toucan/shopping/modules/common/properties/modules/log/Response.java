@@ -23,4 +23,8 @@ public class Response {
      */
     private List<String> contentTypeList;
 
+    /**
+     * 忽略URL
+     */
+    private List<String> ignoreUrls;
 }

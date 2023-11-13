@@ -23,4 +23,9 @@ public class Request {
      */
     private List<String> contentTypeList;
 
+    /**
+     * 忽略URL
+     */
+    private List<String> ignoreUrls;
+
 }
