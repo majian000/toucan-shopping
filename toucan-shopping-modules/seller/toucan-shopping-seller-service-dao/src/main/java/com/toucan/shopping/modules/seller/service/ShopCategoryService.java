@@ -55,6 +55,9 @@ public interface ShopCategoryService {
 
     int deleteById(Long id);
 
+
+    int deleteByIdAndShopId(Long id,Long shopId);
+
     List<ShopCategory> findByParentId(Long parentId);
 
 

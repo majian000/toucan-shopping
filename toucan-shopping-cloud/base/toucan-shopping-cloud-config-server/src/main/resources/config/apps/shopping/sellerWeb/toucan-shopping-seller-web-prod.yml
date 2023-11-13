@@ -108,6 +108,7 @@ toucan:
     product-approve-preview-page: /page/product/approve/preview/paid/ #商品审核预览
     product-detail-page: /page/product/preview/pid/ #商品预览
     product-preview-page: /page/product/preview/pid/ #商品预览
+    shop-pc-index-preview-page: /page/shop/pc/index/preview #店铺首页预览
   shopping-seller-web-pc: #PC端配置
     freemarker:
       release-mapping-url: /htmls/release/**
@@ -139,6 +140,15 @@ toucan:
                               http://123.56.127.178:8102/api/sso/setCookie"
   modules:
     log: #日志模块
+      request:
+        enabled: true
+        content-type-list[0]: application/x-www-form-urlencoded
+        content-type-list[1]: application/json
+        ignore-urls[0]: /api/user/login/password
+      response:
+        enabled: true
+        content-type-list[0]: application/json
+        ignore-urls[0]: /api/user/login/password
       email:
         enabled: true
         title: ——商城卖家端应用——异常邮件

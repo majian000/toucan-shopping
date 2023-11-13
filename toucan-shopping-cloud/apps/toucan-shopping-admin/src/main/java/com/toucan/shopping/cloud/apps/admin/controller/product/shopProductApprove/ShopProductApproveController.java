@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
@@ -89,6 +90,8 @@ public class ShopProductApproveController extends UIController {
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -99,7 +102,7 @@ public class ShopProductApproveController extends UIController {
     @Autowired
     private IdGenerator idGenerator;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
@@ -111,7 +114,7 @@ public class ShopProductApproveController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/spuListPage/{categoryId}",method = RequestMethod.GET)
     public String spuListPage(HttpServletRequest request,@PathVariable Long categoryId)
     {
@@ -123,7 +126,7 @@ public class ShopProductApproveController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/spuDetailPage/{id}",method = RequestMethod.GET)
     public String spuDetailPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -187,7 +190,7 @@ public class ShopProductApproveController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/approvePage/{id}",method = RequestMethod.GET)
     public String approvePage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -541,7 +544,7 @@ public class ShopProductApproveController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/query/product/spu/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO queryProductSpuList(HttpServletRequest request, ProductSpuPageInfo pageInfo)
@@ -712,7 +715,7 @@ public class ShopProductApproveController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(HttpServletRequest request, ShopProductApprovePageInfo pageInfo)
@@ -860,7 +863,7 @@ public class ShopProductApproveController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO queryShopProductApproveSkuList(HttpServletRequest request, ShopProductApproveSkuPageInfo pageInfo)
@@ -911,7 +914,7 @@ public class ShopProductApproveController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryCategoryTree(HttpServletRequest request)
@@ -975,7 +978,7 @@ public class ShopProductApproveController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -1104,6 +1107,24 @@ public class ShopProductApproveController extends UIController {
             resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
+                if(resultObjectVO.getData()!=null) {
+                    ShopProductApproveVO resultShopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                    //同步搜索
+                    ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+                    if(resultShopProductApproveVO.getShopProductId()!=null) {
+                        queryProductSkuVO.setShopProductId(resultShopProductApproveVO.getShopProductId());
+                        RequestJsonVO querySkuRequestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
+                        ResultObjectVO querySkuResultObjectVO = feignProductSkuService.queryListByShopProductIdList(querySkuRequestJsonVO);
+                        if (querySkuResultObjectVO.isSuccess()) {
+                            List<ProductSkuVO> productSkuVOS = querySkuResultObjectVO.formatDataList(ProductSkuVO.class);
+                            if (CollectionUtils.isNotEmpty(productSkuVOS)) {
+                                for (ProductSkuVO productSkuVO : productSkuVOS) {
+                                    SearchUtils.flushToSearch(productSkuVO);
+                                }
+                            }
+                        }
+                    }
+                }
                 //发送商品审核消息
                 if(resultObjectVO.isSuccess())
                 {
@@ -1150,6 +1171,7 @@ public class ShopProductApproveController extends UIController {
                         }
                     }
                 }
+
 
             }
             return resultObjectVO;

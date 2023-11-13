@@ -54,7 +54,7 @@
 <!------------main---------------->
 <div class="i_bg">
     <div class="postion">
-        <span class="fl">全部 > 美妆个护 > 香水 > 迪奥 > 迪奥真我香水</span>
+        <span class="fl c_b_position"></span>
     </div>
     <div class="content">
 
@@ -106,7 +106,7 @@
                         <a href="#"><img src="${basePath}/static/images/sh_5.gif" /></a>
                     </div>
                 </div>
-                <div class="d_care"><a onclick="ShowDiv('MyDiv','fade')">关注商品</a></div>
+                <a class="ucpa" attr-t="1"><div class="d_care_dis ucpa_icon">收藏商品</div></a>
             </div>
             <div class="des_join">
                 <div class="j_nums">
@@ -337,10 +337,10 @@
 
     <!--Begin 弹出层-收藏成功 Begin-->
     <div id="fade" class="black_overlay"></div>
-    <div id="MyDiv" class="white_content">
+    <div id="userCollectProductMsg" class="white_content">
         <div class="white_d">
             <div class="notice_t">
-                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('MyDiv','fade')"><img src="${basePath}/static/images/close.gif" /></span>
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('userCollectProductMsg','fade')"><img src="${basePath}/static/images/close.gif" /></span>
             </div>
             <div class="notice_c">
 
@@ -349,12 +349,12 @@
                         <td width="40"><img src="${basePath}/static/images/suc.png" /></td>
                         <td>
                             <span style="color:#3e3e3e; font-size:18px; font-weight:bold;">您已成功收藏该商品</span><br />
-                            <a href="#">查看我的关注 >></a>
+                            <a href="${basePath}/page/user/collect/product/list" style="font-size:14px;">查看我的收藏 >></a>
                         </td>
                     </tr>
-                    <tr height="50" valign="bottom">
+                    <tr height="80" valign="center">
                         <td>&nbsp;</td>
-                        <td><a href="#" class="b_sure">确定</a></td>
+                        <td><a style="cursor: pointer;" class="b_sure" onclick="CloseDiv('userCollectProductMsg','fade')">确定</a></td>
                     </tr>
                 </table>
 

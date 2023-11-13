@@ -7,7 +7,6 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
-import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
@@ -15,7 +14,6 @@ import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.*;
-import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
@@ -33,6 +31,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.pay.vo.PayCallbackVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
@@ -122,7 +121,7 @@ public class OrderApiController {
      * @param createOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO create(HttpServletRequest request, @RequestBody CreateOrderVO createOrderVO){
@@ -263,6 +262,12 @@ public class OrderApiController {
             boolean isProductIsDel = true;
             for(UserBuyCarItemVO userBuyCarItemVO: createOrderVO.getBuyCarItems())
             {
+                if(userBuyCarItemVO.getBuyCount()==null||userBuyCarItemVO.getBuyCount().intValue()<=0)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(userBuyCarItemVO.getProductSkuName() + " 购买数量不能为0");
+                    return resultObjectVO;
+                }
                 isProductIsDel = true;
                 for (ProductSkuVO productSku : queryProductSkuList) {
                     if(userBuyCarItemVO.getShopProductSkuId().longValue()==productSku.getId().longValue())
@@ -445,6 +450,28 @@ public class OrderApiController {
 
             this.recalculateProductPrice(createOrderVO);
 
+            //在库存锁定中存储子订单编号
+            if(!CollectionUtils.isEmpty(createOrderVO.getMainOrder().getOrders())) {
+                boolean isFind=false;
+                for (ProductSkuStockLockVO productSkuStockLockVO : productSkuStockLocks) {
+                    isFind=false;
+                    for(OrderVO orderVO:createOrderVO.getMainOrder().getOrders())
+                    {
+                        for(OrderItemVO orderItemVO:orderVO.getOrderItems()) {
+                            if (productSkuStockLockVO.getProductSkuId().equals(orderItemVO.getSkuId()))
+                            {
+                                isFind=true;
+                                //设置子订单编号
+                                productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
+                            }
+                        }
+                        if(isFind)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
 
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
@@ -897,121 +924,49 @@ public class OrderApiController {
     }
 
 
-    /**
-     * 调用支付宝
-     * @param payVo
-     * @return
-     */
-    @RequestMapping(value="/alipay",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO pay(@RequestBody PayVo payVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(payVo==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("支付失败,请重试!");
-            return resultObjectVO;
-        }
-        logger.info("支付订单: param:"+ JSONObject.toJSONString(payVo));
-
-        try {
-            String appCode = toucan.getAppCode();
-            //调用第三方,传进去callback接口
-            payService.orderPay(null);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("支付失败,请重试!");
-        }
-
-        return resultObjectVO;
-    }
 
 
     /**
-     * 支付宝回调刷新本地订单状态 实扣库存等
+     * 回调刷新本地订单状态 实扣库存等
      * @param request
      * @return
      */
-    @RequestMapping(value="/alipay/callback")
+    @RequestMapping(value="/pay/callback")
     @ResponseBody
-    public ResultObjectVO buy(HttpServletRequest request){
+    public ResultObjectVO payCallback(HttpServletRequest request){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         Map<String, String> params = HttpParamUtil.convertRequestParamsToMap(request); // 将异步通知中收到的待验证所有参数都存放到map中
         String paramsJson = JSON.toJSONString(params);
-        logger.info("支付宝支付回调: param {}",paramsJson);
 
         try {
-//            AlipayConfig alipayConfig = new AlipayConfig();// 支付宝配置
-//            // 调用SDK验证签名
-//            boolean signVerified = AlipaySignature.rsaCheckV1(params, alipayConfig.getAlipay_public_key(),
-//                    alipayConfig.getCharset(), alipayConfig.getSigntype());
-//            if (signVerified) {
-//                logger.info("支付宝回调签名认证成功");
-//                // 按照支付结果异步通知中的描述，对支付结果中的业务内容进行1\2\3\4二次校验，校验成功后在response中返回success，校验失败返回failure
-//                this.check(params);
-//                // 另起线程处理业务
-//                executorService.execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        AlipayNotifyParam param = buildAlipayNotifyParam(params);
-//                        String trade_status = param.getTradeStatus();
-//                        // 支付成功
-//                        if (trade_status.equals(AlipayTradeStatus.TRADE_SUCCESS.getStatus())
-//                                || trade_status.equals(AlipayTradeStatus.TRADE_FINISHED.getStatus())) {
-//                            // 处理支付成功逻辑
-//                            try {
-            PayVo payVo = JSONObject.parseObject(paramsJson,PayVo.class);
-            Order order = new Order();
-            order.setOrderNo(payVo.getOrderNo());
-            order.setUserId(payVo.getUserId());
-            order.setPayDate(new Date());
-            order.setPayStatus(1);
-            order.setTradeStatus(3);
-            order.setOuterTradeNo("支付宝交易流水号");
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),payVo.getUserId(),order);
+            PayCallbackVO payCallbackVO = JSONObject.parseObject(paramsJson,PayCallbackVO.class);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),payCallbackVO);
             //完成订单
             resultObjectVO = feignOrderService.finish(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
 
             if(resultObjectVO.getCode().intValue()== ResultVO.SUCCESS.intValue()) {
                 String appCode = toucan.getAppCode();
                 QueryOrderVo queryOrderVo = new QueryOrderVo();
-                queryOrderVo.setUserId(payVo.getUserId());
-                queryOrderVo.setOrderNo(payVo.getOrderNo());
+                queryOrderVo.setUserId(payCallbackVO.getUserId());
+                queryOrderVo.setOrderNo(payCallbackVO.getOrderNo());
 
-                requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), payVo.getUserId(), queryOrderVo);
+                requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), payCallbackVO.getUserId(), queryOrderVo);
                 resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
 
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                     //实扣库存对象
                     InventoryReductionVO inventoryReductionVo = new InventoryReductionVO();
                     inventoryReductionVo.setAppCode(appCode);
-                    inventoryReductionVo.setUserId(payVo.getUserId());
+                    inventoryReductionVo.setUserId(payCallbackVO.getUserId());
                     List<ProductSku> productSkus = JSONArray.parseArray(JSONArray.toJSONString(resultObjectVO.getData()), ProductSku.class);
 //                    inventoryReductionVo.setProductSkuList(productSkus);
 
-                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payVo.getUserId(), inventoryReductionVo);
+                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payCallbackVO.getUserId(), inventoryReductionVo);
 //                    resultObjectVO = feignProductSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 
                     resultObjectVO.setMsg("支付完成!");
                 }
             }
-//
-//                            } catch (Exception e) {
-//                                logger.error("支付宝回调业务处理报错,params:" + paramsJson, e);
-//                            }
-//                        } else {
-//                            logger.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
-//                        }
-//                    }
-//                });
-//            } else {
-//                logger.info("支付宝回调签名认证失败，signVerified=false, paramsJson:{}", paramsJson);
-//                resultObjectVO.setCode(ResultVO.FAILD);
-//                resultObjectVO.setMsg("支付宝回调签名认证失败,请重试!");
-//            }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
 
@@ -1038,7 +993,7 @@ public class OrderApiController {
      * @param mainOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/main/order/detail",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryMainOrderDetail(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
@@ -1077,7 +1032,7 @@ public class OrderApiController {
      * @param mainOrderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/main/order/cancel",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO cancelMainOrder(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
@@ -1103,7 +1058,7 @@ public class OrderApiController {
      * @param orderVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/detail",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOrderDetail(HttpServletRequest request,@RequestBody OrderVO orderVO){
@@ -1143,7 +1098,7 @@ public class OrderApiController {
      * @param request
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/query/nonPayment/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryNonPaymentList(HttpServletRequest request){
@@ -1192,7 +1147,7 @@ public class OrderApiController {
      * @param request
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/query/order/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOrderList(HttpServletRequest request,@RequestBody OrderPageInfo orderPageInfo){

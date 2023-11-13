@@ -164,6 +164,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-stock-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-fastdfs</artifactId>
         </dependency>
@@ -234,8 +239,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules.search</groupId>
-            <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+            <groupId>com.toucan.shopping.services</groupId>
+            <artifactId>toucan-shopping-search</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-search-api</artifactId>
         </dependency>
 
     </dependencies>

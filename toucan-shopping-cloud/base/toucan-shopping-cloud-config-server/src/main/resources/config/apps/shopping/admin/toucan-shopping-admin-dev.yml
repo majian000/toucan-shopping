@@ -100,6 +100,7 @@ toucan:
     product-detail-page: /page/product/detail/pid/ #商品详情
     product-preview-page: /page/product/preview/pid/ #商品详情
     product-sku-preview-page: /page/product/preview/ #SKU商品预览
+    product-sku-detail-page: /page/product/detail/ #SKU商品预览
   shopping-seller-web-pc: #PC端页面静态化
     ip-list: localhost:8101,127.0.0.1:8101 #多个用,分割
   admin-auth:
@@ -128,6 +129,13 @@ toucan:
       exclude-paths: /function/update,/function/save  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
   modules:
     log: #日志模块
+      request:
+        enabled: true
+        content-type-list[0]: application/x-www-form-urlencoded
+        content-type-list[1]: application/json
+      response:
+        enabled: true
+        content-type-list[0]: application/json
       email:
         enabled: false
         title: ——商城后台——异常邮件

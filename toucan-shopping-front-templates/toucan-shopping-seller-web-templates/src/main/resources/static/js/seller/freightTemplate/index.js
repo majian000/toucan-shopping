@@ -169,7 +169,7 @@ function bindRowEvent()
                 success: function (data) {
                     if(data.code==1)
                     {
-                        doPage();
+                        $("#queryBtn").click();
                     }else{
                         $.message({
                             message: data.msg,
@@ -180,7 +180,7 @@ function bindRowEvent()
                     layer.close(index);
                 },
                 error: function (result) {
-                    doPage();
+                    $("#queryBtn").click();
                 }
             });
         }, function(){

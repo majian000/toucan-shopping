@@ -65,6 +65,12 @@
     </select>
 
 
+    <update id="updateByOrderNo">
+        update t_order_consignee_address set name=#{name},address=#{address},
+        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},
+        area_code=#{areaCode},province_name=#{provinceName},city_name=#{cityName},
+        area_name=#{areaName} where order_no=#{orderNo} and delete_status=0
+    </update>
 
 
 </mapper>

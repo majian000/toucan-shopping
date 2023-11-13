@@ -2090,10 +2090,13 @@ public class ShopCategoryController {
             }
 
 
+            //查询出当前掌柜关联的店铺
             SellerShop sellerShopEntity = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShopEntity!=null)
             {
                 shopCategory.setShopId(sellerShopEntity.getId());
+                //将掌柜ID设置为空
+                shopCategory.setUserMainId(null);
             }
 
             if(shopCategory.getShopId()==null)
@@ -2106,7 +2109,6 @@ public class ShopCategoryController {
                 resultObjectVO.setMsg("没有查询到关联店铺!");
                 return resultObjectVO;
             }
-
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setParentId(shopCategory.getId());
@@ -2123,7 +2125,7 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            int row = shopCategoryService.deleteById(shopCategory.getId());
+            int row = shopCategoryService.deleteByIdAndShopId(shopCategory.getId(),shopCategory.getShopId());
             if (row <=0) {
                 //释放锁
                 skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);

@@ -77,7 +77,7 @@ public class UserTrueNameApproveController extends UIController {
     private IdGenerator idGenerator;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
@@ -93,7 +93,7 @@ public class UserTrueNameApproveController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(HttpServletRequest request, UserTrueNameApprovePageInfo pageInfo)
@@ -160,7 +160,7 @@ public class UserTrueNameApproveController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/pass/{id}/{userMainId}",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id,@PathVariable Long userMainId)
@@ -215,7 +215,7 @@ public class UserTrueNameApproveController extends UIController {
      * 跳转到驳回页面
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
     public String rejectPage(HttpServletRequest request,@PathVariable String id)
     {
@@ -254,7 +254,7 @@ public class UserTrueNameApproveController extends UIController {
      * @param userTrueNameApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO reject(HttpServletRequest request,@RequestBody UserTrueNameApproveVO userTrueNameApproveVO)

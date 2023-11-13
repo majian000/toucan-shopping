@@ -28,6 +28,7 @@ public interface OrderService {
 
     List<Order> queryOrderListByPayTimeout(Order order);
 
+    Order findById(Long id);
 
     /**
      * 查询支付超时列表
@@ -73,6 +74,14 @@ public interface OrderService {
      */
     int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
 
+    /**
+     * 根据订单编号取消订单
+     * @param mainOrderNo
+     * @param cancelRemark
+     * @return
+     */
+    int cancelOrderByOrderNo(String mainOrderNo,String cancelRemark);
+
 
     /**
      * 查询一个子订单对象
@@ -87,4 +96,11 @@ public interface OrderService {
      * @return
      */
     OrderVO queryOneVOByVO(OrderVO orderVO);
+
+    /**
+     * 修改订单信息
+     * @param orderVO
+     * @throws Exception
+     */
+    int updateById(OrderVO orderVO) throws Exception;
 }

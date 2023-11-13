@@ -2,7 +2,11 @@ package com.toucan.shopping.cloud.apps.web.controller.product;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ql.util.express.DefaultContext;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -10,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.qlexpress.service.QLExpressService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
@@ -36,6 +42,15 @@ public class ProductApiController {
 
     @Autowired
     private FeignProductSpuService feignProductSpuService;
+
+    @Autowired
+    private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignBrandService feignBrandService;
+
+    @Autowired
+    private QLExpressService qlExpressService;
 
 
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
@@ -76,7 +91,11 @@ public class ProductApiController {
                         productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                     }
 
+                    computeProductPrice(productSkuVO);
+
                     setAttributeDisabled(productSkuVO);
+
+                    this.setCategoryBrands(productSkuVO);
 
                     retObject.setData(productSkuVO);
                 }
@@ -88,6 +107,80 @@ public class ProductApiController {
             logger.warn(e.getMessage(),e);
         }
         return retObject;
+    }
+
+
+    /**
+     * 通过规则引擎计算商品金额
+     * @param productSkuVO
+     * @throws Exception
+     */
+    void computeProductPrice(ProductSkuVO productSkuVO) throws Exception
+    {
+        DefaultContext<String, Object> context = new DefaultContext<String, Object>();
+        context.put("price", productSkuVO.getPrice());
+        String price = String.valueOf(qlExpressService.execute("price",context));
+        productSkuVO.setPrice(new BigDecimal(price));
+    }
+
+
+
+    /**
+     * 设置分类品牌路径
+     * @param productSkuVO
+     * @throws Exception
+     */
+    private void setCategoryBrands(ProductSkuVO productSkuVO) throws Exception
+    {
+
+        //查询分类与品牌路径
+        CategoryVO queryCateogry = new CategoryVO();
+        queryCateogry.setId(productSkuVO.getCategoryId());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCateogry);
+        //查询分类
+        ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
+        List<ProductSkuCategoryBrandVO> productSkuCategoryBrands= new LinkedList<>();
+        if(resultCategoryObjectVO.isSuccess())
+        {
+            CategoryVO categoryVO = resultCategoryObjectVO.formatData(CategoryVO.class);
+            if (CollectionUtils.isNotEmpty(categoryVO.getIdPath())&&CollectionUtils.isNotEmpty(categoryVO.getNamePaths())) {
+                for(int i=categoryVO.getIdPath().size()-1;i>=0;i--)
+                {
+                    ProductSkuCategoryBrandVO productSkuCategoryBrandVO=new ProductSkuCategoryBrandVO();
+                    productSkuCategoryBrandVO.setId(categoryVO.getIdPath().get(i));
+                    productSkuCategoryBrandVO.setName(categoryVO.getNamePaths().get(i));
+                    productSkuCategoryBrandVO.setType(1);
+                    productSkuCategoryBrands.add(productSkuCategoryBrandVO);
+                }
+            }
+        }
+
+        BrandVO brandVO = new BrandVO();
+        brandVO.setId(productSkuVO.getBrandId());
+        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), brandVO);
+        ResultObjectVO brandResultVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+        if (brandResultVO.isSuccess()) {
+            List<BrandVO> brandVOS = brandResultVO.formatDataList(BrandVO.class);
+            if(CollectionUtils.isNotEmpty(brandVOS)) {
+                brandVO = brandVOS.get(0);
+                ProductSkuCategoryBrandVO productSkuCategoryBrandVO = new ProductSkuCategoryBrandVO();
+                if (StringUtils.isNotEmpty(brandVO.getChineseName()) && StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                    productSkuCategoryBrandVO.setName(brandVO.getChineseName() + "/" + brandVO.getEnglishName());
+                } else {
+                    if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                        productSkuCategoryBrandVO.setName(brandVO.getChineseName());
+                    }
+                    if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                        productSkuCategoryBrandVO.setName(brandVO.getEnglishName());
+                    }
+                }
+                productSkuCategoryBrandVO.setId(brandVO.getId());
+                productSkuCategoryBrandVO.setType(2);
+                productSkuCategoryBrands.add(productSkuCategoryBrandVO);
+            }
+        }
+
+        productSkuVO.setCategoryBrands(productSkuCategoryBrands);
     }
 
     /**
@@ -376,7 +469,12 @@ public class ProductApiController {
                         productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
                     }
 
+
+                    computeProductPrice(productSkuVO);
+
                     setAttributeDisabled(productSkuVO);
+
+                    this.setCategoryBrands(productSkuVO);
 
                     retObject.setData(productSkuVO);
                 }

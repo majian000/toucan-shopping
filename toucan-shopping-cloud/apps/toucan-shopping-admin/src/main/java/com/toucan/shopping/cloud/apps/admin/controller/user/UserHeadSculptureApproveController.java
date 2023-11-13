@@ -76,7 +76,7 @@ public class UserHeadSculptureApproveController extends UIController {
     private IdGenerator idGenerator;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
@@ -92,7 +92,7 @@ public class UserHeadSculptureApproveController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(HttpServletRequest request, UserHeadSculptureApprovePageInfo pageInfo)
@@ -139,7 +139,7 @@ public class UserHeadSculptureApproveController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/pass/{id}",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id)
@@ -173,7 +173,7 @@ public class UserHeadSculptureApproveController extends UIController {
      * 跳转到驳回页面
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
     public String rejectPage(HttpServletRequest request,@PathVariable String id)
     {
@@ -230,7 +230,7 @@ public class UserHeadSculptureApproveController extends UIController {
      * @param userHeadSculptureApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO reject(HttpServletRequest request,@RequestBody UserHeadSculptureApproveVO userHeadSculptureApproveVO)

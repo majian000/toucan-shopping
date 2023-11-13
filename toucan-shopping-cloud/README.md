@@ -18,20 +18,33 @@
 
 #### 软件架构
 
-##### 公共基础模块
-    toucan-shopping-modules 目录下包含订单编号生成、redis分布式锁、各种工具类等
+##### 公共基础模块 
+    toucan-shopping/toucan-shopping-modules
+    包含订单编号生成、redis分布式锁、各种工具类等
 
-##### 基础服务层
-    base目录下包含配置中心、服务注册中心、网关等
-    
-##### 业务服务层
-    services目录下包含商品服务、订单服务、秒杀服务、类别服务等
-    api目录下包含商品服务、订单服务等feign接口
-    starter目录下包含权限中台的插件
+##### API接入层
+    toucan-shopping/toucan-shopping-cloud/api
+    商品服务、订单服务等feign接口
     
 ##### 应用层
-    apps目录下包含商城pc端接口、商城管理端等
+    toucan-shopping/toucan-shopping-cloud/apps
+    包含商城pc端接口、商城管理端等
 
+##### 基础服务层
+    toucan-shopping/toucan-shopping-cloud/base
+    包含配置中心、服务注册中心、网关等
+
+##### 微服务架构下公共模块层
+    toucan-shopping/toucan-shopping-cloud/modules
+    包含微服务架构下的公共模块,和上面的公共基础模块层有区别(上面的是无关微服务架构还是spring Boot架构)
+    
+##### 微服务层
+    toucan-shopping/toucan-shopping-cloud/services
+    目录下包含商品服务、订单服务、秒杀服务、类别服务等
+    
+##### 插件层  
+    包含权限中台、用户中心、日志邮件的插件等
+    
 
 #### 安装教程
     参考resources/上线相关/微服务版/生产环境.md

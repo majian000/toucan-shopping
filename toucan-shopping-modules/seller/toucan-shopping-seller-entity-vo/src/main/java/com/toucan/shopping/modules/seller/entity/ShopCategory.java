@@ -25,7 +25,7 @@ public class ShopCategory {
     private Long parentId; //上级类别
 
     /**
-     * 所属用户ID,用该字段分库分表
+     * 所属用户ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

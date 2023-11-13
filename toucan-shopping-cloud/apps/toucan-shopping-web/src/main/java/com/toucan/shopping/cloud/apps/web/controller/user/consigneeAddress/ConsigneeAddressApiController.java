@@ -35,7 +35,7 @@ import java.util.Date;
 
 
 /**
- * 用户头像审核
+ * 收货地址
  */
 @RestController("consigneeAddressApiController")
 @RequestMapping("/api/user/consigneeAddress")
@@ -62,7 +62,7 @@ public class ConsigneeAddressApiController extends BaseController {
     private Toucan toucan;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ConsigneeAddressVO consigneeAddressVO){

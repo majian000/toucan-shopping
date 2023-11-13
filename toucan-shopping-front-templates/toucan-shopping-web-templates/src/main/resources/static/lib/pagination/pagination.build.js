@@ -49,13 +49,17 @@
         currentPage: 8,
         totalItemCount: 10,
         totalPageCount: 15,
+        isShowTotalCount:true,
         callback: $.noop
     };
     window.pagination = function(t) {
-        t = $.extend({}, e, t), this.$pagination = t.pagination, this.maxPage = t.maxPage, this.startPage = t.startPage, this.totalItemCount = t.totalItemCount, this.totalPageCount = t.totalPageCount, this.currentPage = t.currentPage, this.callback = t.callback, this.item_count = Math.floor(t.maxPage / 2), this.$pageList = $(""), this.init()
+        t = $.extend({}, e, t), this.$pagination = t.pagination,this.isShowTotalCount=t.isShowTotalCount, this.maxPage = t.maxPage, this.startPage = t.startPage, this.totalItemCount = t.totalItemCount, this.totalPageCount = t.totalPageCount, this.currentPage = t.currentPage, this.callback = t.callback, this.item_count = Math.floor(t.maxPage / 2), this.$pageList = $(""), this.init()
     }, pagination.prototype.init = function() {
         var t = "";
-        this.totalItemCount && (t = '<span class="page-count">当前共有<i class="page-count_num">' + this.totalItemCount + "</i>条</span>");
+        if(this.isShowTotalCount) {
+            t = '<span class="page-count">当前共有<i class="page-count_num">' + this.totalItemCount + "</i>条</span>"
+        }
+        this.totalItemCount && (t);
         var a = this.renderPageItem(),
             e = '<span class="btn-first-page item">上一页</span><div class="pageList-wrap"></div><span class="btn-next-page item">下一页</span>' + t;
         this.$pagination.append(e), $(".pageList-wrap", this.$pagination).append(a), this.addEvent()

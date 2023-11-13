@@ -46,6 +46,8 @@
         <module>common/toucan-shopping-layui</module>
         <!--elasticsearch公共模块 -->
         <module>common/toucan-shopping-elasticsearch</module>
+        <!--QLExpress公共模块 -->
+        <module>common/toucan-shopping-qlexpress</module>
         <!--数据库分片 -->
         <module>common/toucan-shopping-db-sharding</module>
         <!--fastdfs模块 -->
@@ -68,6 +70,10 @@
         <module>common/toucan-shopping-email</module>
         <!--kafka公共模块 -->
         <module>common/toucan-shopping-kafka</module>
+        <!--Apache POI公共模块 -->
+        <module>common/toucan-shopping-poi</module>
+        <!--设计器公共模块 -->
+        <module>common/toucan-shopping-designer-core</module>
 
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
@@ -144,6 +150,8 @@
         <!-- 订单编号生成 -->
         <module>order/toucan-shopping-order-no</module>
 
+        <!--支付实体和VO -->
+        <module>pay/toucan-shopping-pay-entity-vo</module>
 
         <!--商品实体和VO -->
         <module>product/toucan-shopping-product-entity-vo</module>
@@ -190,6 +198,11 @@
 
         <!-- 云雀分布式锁-->
         <module>skylark/toucan-shopping-skylark-lock</module>
+
+        <!--卖家中心设计器 -->
+        <module>sellerDesigner/toucan-shopping-seller-designer-common</module>
+        <!--卖家中心设计器freemarker解析器 -->
+        <module>sellerDesigner/toucan-shopping-seller-designer-freemarker-parser</module>
 
         <!-- ===============================================-->
 
@@ -511,6 +524,13 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-poi</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.stock</groupId>
@@ -703,7 +723,42 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-qlexpress</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.pay</groupId>
+                <artifactId>toucan-shopping-pay-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-kafka</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+                <artifactId>toucan-shopping-seller-designer-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-designer-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+                <artifactId>toucan-shopping-seller-designer-freemarker-parser</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

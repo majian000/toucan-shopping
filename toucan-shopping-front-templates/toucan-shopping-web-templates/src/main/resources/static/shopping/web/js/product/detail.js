@@ -1,11 +1,11 @@
 
 var g_productVo;
-
+var ptype ="";
 $(function(){
     tabsEvent();
     bindProductNumEvent();
     var id = getProductId();
-    var ptype = $("#ptype").val();
+    ptype = $("#ptype").val();
     if(id!=null&&id!="") {
         var type= getShopProductPreviewType();
         var params = {"id": id};
@@ -115,7 +115,9 @@ function drawAttributeList(productVO)
             rowIndex++;
         }
         $(".attributeList").append(attributeHtml);
-        disabledAttribute(productVO);
+        if(ptype=="detail") {
+            disabledAttribute(productVO);
+        }
         bindAttributeCheckboxEvent();
     }
 }
@@ -221,12 +223,12 @@ function bindAttributeCheckboxEvent()
                     if(sku.attributeValueGroup==attributeValueGroup)
                     {
                         //已下架
-                        if(sku.status==0)
+                        if(sku.status==0 && ptype=="detail")
                         {
                             break;
                         }
                         //已售罄
-                        if(sku.stockNum<=0)
+                        if(sku.stockNum<=0 && ptype=="detail")
                         {
                             break;
                         }
@@ -247,6 +249,10 @@ function drawProductPage(productVO)
     if(productVO!=null)
     {
         g_productVo = productVO;
+
+        //收藏商品事件
+        bindCollectProductEvent();
+
         var photoPos = 0;
         $(".productPhotoPreview").empty();
         $(".productPhotoPreview").append("<li onclick=\"showPic("+photoPos+")\" rel=\"MagicZoom\" class=\"tsSelectImg\">" +
@@ -285,6 +291,7 @@ function drawProductPage(productVO)
         initMagicZomm();
         initProductPhotoPreview();
 
+        drawCategoryBrandPosition(productVO.categoryBrands);
 
         drawAttributeList(productVO);
 
@@ -469,9 +476,27 @@ function bindProductNumEvent()
 
 function saveUserCar()
 {
-    var ptype = $("#ptype").val();
     if(ptype=="preview")
     {
+        return;
+    }
+
+    //已下架
+    if(g_productVo.status==0)
+    {
+        $.message({
+            message: "该商品已下架",
+            type: 'error'
+        });
+        return;
+    }
+    //已售罄
+    if(g_productVo.stockNum<=0)
+    {
+        $.message({
+            message: "该商品已售罄",
+            type: 'error'
+        });
         return;
     }
     loading.showLoading({
@@ -517,3 +542,93 @@ function saveUserCar()
 
 }
 
+function drawCategoryBrandPosition(categoryBrands)
+{
+    var categoryBrandHtml="";
+    if(categoryBrands!=null&&categoryBrands.length>0)
+    {
+        for(var i=0;i<categoryBrands.length;i++)
+        {
+            if(categoryBrands[i].type==1) {
+                categoryBrandHtml += "<a href='/api/product/g/search?cid="+categoryBrands[i].id+"'>" + categoryBrands[i].name + "</a>";
+            }else if(categoryBrands[i].type==2){
+                categoryBrandHtml += "<a href='/api/product/g/search?bid="+categoryBrands[i].id+"'>" + categoryBrands[i].name + "</a>";
+            }
+            if(i+1<categoryBrands.length)
+            {
+                categoryBrandHtml+=" > ";
+            }
+        }
+    }
+    $(".c_b_position").html(categoryBrandHtml);
+
+}
+
+
+
+function bindCollectProductEvent(){
+
+    var productSkuIds = new Array();
+    productSkuIds.push(g_productVo.id);
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/collect/product/isCollect",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({"productSkuIds":productSkuIds}),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==403){
+            }else {
+
+                //设置选择样式
+                if (result.data != null && result.data.length > 0) {
+                    $(".ucpa_icon").removeClass("d_care_dis");
+                    $(".ucpa_icon").addClass("d_care");
+                    $(".ucpa").attr("attr-t", "0");
+                }else{
+                    $(".ucpa_icon").removeClass("d_care");
+                    $(".ucpa_icon").addClass("d_care_dis");
+                    $(".ucpa").attr("attr-t", "1");
+                }
+
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+        }
+    });
+
+    $(".ucpa").bind("click", function () {
+        var type = $(this).attr("attr-t");
+
+
+        $.ajax({
+            type: "POST",
+            url: basePath + "/api/user/collect/product/collect",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({"productSkuId": g_productVo.id, "type": type}),
+            dataType: "json",
+            success: function (result) {
+                if(result.code==403){
+                    window.location.href=basePath+result.data+"?redirectUrl="+encodeURIComponent(getCurrentPageUrl());
+                }else {
+                    if (type == "1") {
+                        $(".ucpa").attr("attr-t", "0");
+                        $(".ucpa_icon").removeClass("d_care_dis");
+                        $(".ucpa_icon").addClass("d_care");
+                    } else {
+                        $(".ucpa").attr("attr-t", "1");
+                        $(".ucpa_icon").removeClass("d_care");
+                        $(".ucpa_icon").addClass("d_care_dis");
+                    }
+
+                    if (type == "1") {
+                        ShowDiv('userCollectProductMsg', 'fade');
+                    }
+                }
+            }
+        });
+    });
+}

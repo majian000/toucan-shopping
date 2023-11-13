@@ -120,14 +120,14 @@
                     <dt><h2>未收货订单</h2><a href="#">更多&gt;</a></dt>
                     <dd><p class="no-news">您暂时没有未收货订单。<a href="#">挑挑喜欢的商品去»</a></p></dd>
 
-                    <dt><div class="dt-L"><h2>购物车</h2><a href="${basePath}/page/user/buyCar/index" >更多&gt;</a></div><div class="dt-R"><h2>收藏夹</h2><a href="#">更多&gt;</a></div></dt>
+                    <dt><div class="dt-L"><h2>购物车</h2><a href="${basePath}/page/user/buyCar/index" >更多&gt;</a></div><div class="dt-R"><h2>收藏夹</h2><a href="${basePath}/page/user/collect/product/list" >更多&gt;</a></div></dt>
                     <dd>
                         <!-------购物车------>
                         <ul class="dt-L-div uc_bcars">
                             <p class="no-news">您可将喜欢的商品放入购物车~</p>
                         </ul>
                         <!-------收藏夹------>
-                        <ul class="dt-R-div">
+                        <ul class="dt-R-div uc_cps">
                             <p class="no-news">您可将喜欢的商品放入收藏夹，方便随时再次查看~<br>当商品享优惠时，还会通知您哟~</p>
                         </ul>
                     </dd>
@@ -136,9 +136,10 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/info.js"></script>
+</div>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/info.js"></script>
 
-    <#include "/footer.html"/>
+<#include "/footer.html"/>
 
 </body>
 

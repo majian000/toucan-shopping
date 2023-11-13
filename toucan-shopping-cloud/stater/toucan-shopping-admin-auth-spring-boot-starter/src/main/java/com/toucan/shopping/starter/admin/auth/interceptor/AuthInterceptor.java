@@ -157,7 +157,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
                             //ajax请求
-                            if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
+                            if (authAnnotation.responseType() == AdminAuth.RESPONSE_JSON) {
                                 logger.info("request uri {} " , request.getRequestURI());
                                 //JSON类型请求
                                 RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
@@ -234,7 +234,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             }
 
                             //如果是直接请求
-                            if (authAnnotation.requestType() == AdminAuth.REQUEST_FORM) {
+                            if (authAnnotation.responseType() == AdminAuth.RESPONSE_FORM) {
                                 if (StringUtils.isEmpty(authHeader)) {
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
@@ -283,14 +283,14 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
-                if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
+                if (authAnnotation.responseType() == AdminAuth.RESPONSE_JSON) {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("请求失败");
                     response.setContentType("application/json");
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
-                if (authAnnotation.requestType() == AdminAuth.REQUEST_FORM) {
+                if (authAnnotation.responseType() == AdminAuth.RESPONSE_FORM) {
                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
                 }

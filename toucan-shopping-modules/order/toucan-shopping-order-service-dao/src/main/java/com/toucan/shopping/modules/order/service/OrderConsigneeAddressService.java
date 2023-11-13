@@ -18,4 +18,9 @@ public interface OrderConsigneeAddressService {
     List<OrderConsigneeAddressVO> queryListByOrderNos(List<String> orderNos);
 
     OrderConsigneeAddressVO queryOneByOrderNo(String orderNo);
+
+
+    int updateByOrderNo(OrderConsigneeAddressVO orderConsigneeAddressVO);
+
+
 }

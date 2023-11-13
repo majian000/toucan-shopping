@@ -56,4 +56,55 @@ public interface FeignProductSkuStockLockService {
      */
     @RequestMapping(value="/delete/lock/stock/by/mainOrderNos",produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteLockStockByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
+    /**
+     * 根据子订单编号查询锁定库存数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/lock/stock/num/by/orderNo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findLockStockNumByOrderNo(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 删除锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/lock/stock/by/orderNo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO deleteLockStockByOrderNo(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据主订单编号查询锁定库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/lock/stock/list/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findLockStockListByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/by/id",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
+
 }

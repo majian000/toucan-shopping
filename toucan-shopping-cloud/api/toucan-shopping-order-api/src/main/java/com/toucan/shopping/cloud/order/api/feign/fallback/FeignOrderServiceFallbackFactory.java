@@ -115,6 +115,36 @@ public class FeignOrderServiceFallbackFactory implements FallbackFactory<FeignOr
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO cancel(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignOrderServiceFallbackFactory cancel header {}  params{}:",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO update(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignOrderServiceFallbackFactory update header {}  params{}:",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

@@ -233,6 +233,23 @@
             <artifactId>toucan-shopping-search-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.pay</groupId>
+            <artifactId>toucan-shopping-pay-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-qlexpress</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.sellerDesigner</groupId>
+            <artifactId>toucan-shopping-seller-designer-freemarker-parser</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 

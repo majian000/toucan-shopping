@@ -40,7 +40,7 @@ public class EnterpriseShopPageController extends BaseController {
      * 企业店铺申请
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/shop_regist")
     public String center(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {

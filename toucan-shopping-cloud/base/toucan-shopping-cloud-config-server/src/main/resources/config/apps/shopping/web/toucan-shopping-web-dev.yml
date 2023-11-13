@@ -171,6 +171,15 @@ toucan:
       sender: mmdrss@163.com #发件人
       sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
     log: #日志模块
+      request:
+        enabled: true
+        content-type-list[0]: application/x-www-form-urlencoded
+        content-type-list[1]: application/json
+        ignore-urls[0]: /api/user/login/password
+      response:
+        enabled: true
+        content-type-list[0]: application/json
+        ignore-urls[0]: /api/user/login/password
       email:
         enabled: false
         title: ——商城PC端——异常邮件

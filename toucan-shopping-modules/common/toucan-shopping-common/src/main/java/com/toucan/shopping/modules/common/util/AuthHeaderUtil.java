@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class AuthHeaderUtil {
 
+    private static final String adminPrefix="ADMIN_";
 
     public static String getAdminId(String appCode,String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
@@ -25,6 +26,25 @@ public class AuthHeaderUtil {
         return adminId;
     }
 
+
+    public static String getAdminPrefix(){
+        return adminPrefix;
+    }
+
+    public static String getAdminIdAndPrefix(String appCode,String authHeader) throws Exception {
+        if(StringUtils.isEmpty(authHeader))
+        {
+            throw new InvalidAdminHeaderException("请求头参数无效");
+
+        }
+
+        String adminId = StringUtils.substringAfter(authHeader,appCode+"_aid=");
+        if(adminId.indexOf(";")!=-1)
+        {
+            adminId=adminId.substring(0,adminId.indexOf(";"));
+        }
+        return adminPrefix+adminId;
+    }
 
     /**
      * 拿到管理员ID

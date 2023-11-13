@@ -115,6 +115,10 @@
 
     </sql>
 
+    <select id="findById" parameterType="java.lang.Long" resultMap="orderMap">
+        select * from t_order where id = #{id} and delete_status=0
+    </select>
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.Order"  >
         insert into t_order(id,order_no,main_order_no,user_id,src_type,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,delete_status,shop_id)
@@ -165,6 +169,10 @@
         update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark = #{cancelRemark}  where main_order_no=#{mainOrderNo} and user_id=#{userId} and pay_status=0  and delete_status=0
     </update>
 
+
+    <update id="cancelOrderByOrderNo" >
+        update t_order set trade_status=2 ,pay_status=4,cancel_date=sysdate(),cancel_remark = #{cancelRemark}  where order_no=#{orderNo}  and pay_status=0  and delete_status=0
+    </update>
 
 
     <select id="queryOrderListByPayTimeoutPage" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPageInfo">
@@ -239,6 +247,9 @@
         limit 0,1
     </select>
 
+    <select id="queryByOrderNo" resultMap="orderMap" >
+        select * from t_order where order_no=#{orderNo} and delete_status=0 for update
+    </select>
 
 
     <select id="queryOneVOByVO" resultMap="orderVOMap" parameterType="com.toucan.shopping.modules.order.vo.OrderVO" >
@@ -249,5 +260,24 @@
         limit 0,1
     </select>
 
+    <update id="updateById" parameterType="com.toucan.shopping.modules.order.vo.OrderVO">
+        update t_order set
+         order_amount=#{orderAmount},
+          pay_amount=#{payAmount},
+          total_amount=#{totalAmount},
+          pay_status=#{payStatus},
+          trade_status=#{tradeStatus},
+          pay_method=#{payMethod},
+          pay_type=#{payType},
+          outer_trade_no=#{outerTradeNo},
+          best_date=#{bestDate},
+          pay_date=#{payDate},
+          remark=#{remark},
+          freight_amount=#{freightAmount},
+          red_package_amount=#{redPackageAmount},
+          coupon_amount=#{couponAmount}
+
+         where id=#{id} and delete_status=0
+    </update>
 
 </mapper>

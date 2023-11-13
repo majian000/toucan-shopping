@@ -66,7 +66,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="headSculptureFile",required=false) MultipartFile headSculptureFile){

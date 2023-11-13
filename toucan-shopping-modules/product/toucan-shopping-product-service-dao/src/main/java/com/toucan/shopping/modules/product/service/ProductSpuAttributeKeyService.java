@@ -45,6 +45,14 @@ public interface ProductSpuAttributeKeyService {
     int deleteByProductSpuId(Long productSpuId);
 
 
+    /**
+     * 刷新显示状态和搜索状态
+     * @param attributeKeyId
+     * @param showStatus
+     * @param queryStatus
+     * @return
+     */
+    int updateShowStatusAndSearchStatus(Long attributeKeyId,String attributeKeyName,Short showStatus,Short queryStatus);
 
 
 }

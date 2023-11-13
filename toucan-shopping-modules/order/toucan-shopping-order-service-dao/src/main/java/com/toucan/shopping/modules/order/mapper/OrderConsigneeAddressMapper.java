@@ -20,4 +20,7 @@ public interface OrderConsigneeAddressMapper {
     List<OrderConsigneeAddressVO> findByOrderNos(List<String> orderNos);
 
     OrderConsigneeAddressVO queryOneByOrderNo(String orderNo);
+
+    int updateByOrderNo(OrderConsigneeAddressVO orderConsigneeAddressVO);
+
 }

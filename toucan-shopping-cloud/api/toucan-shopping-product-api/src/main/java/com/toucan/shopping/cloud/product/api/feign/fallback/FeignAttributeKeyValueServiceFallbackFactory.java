@@ -52,6 +52,21 @@ public class FeignAttributeKeyValueServiceFallbackFactory implements FallbackFac
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO querySearchAttributeList(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAttributeKeyValueService querySearchAttributeList faild  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询搜索属性列表失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

@@ -15,6 +15,7 @@
     </script>
     <![endif]-->
 
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_list.css">
     <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
     <link rel="stylesheet" type="text/css" href="${basePath}/static/css/MagicZoom.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
@@ -47,12 +48,22 @@
 <div class="i_bg">
     <div class="postion2">
         <span class="fl"><a class="qball">全部</a> >  </span>
-        <#if brands??>
-            <#list brands as brand>
-                <span class="n_ch" attr-bid="${brand.id?c}" >
-                    <span class="fl"><font>${brand.name!''}（品牌）</font></span>
-                    <a ><img src="${basePath}/static/images/s_close.gif" /></a>
-                </span>
+        <#if hitBrands??>
+            <#list hitBrands as hb>
+                <a class="spab-item" >
+                    <b>品牌:</b>
+                    <em>${hb.name!''}</em>
+                    <i class="bcb" attr-bid="${hb.id?c}" ></i>
+                </a>
+            </#list>
+        </#if>
+        <#if selectSearchAttributes??>
+            <#list selectSearchAttributes as ssa>
+                <a class="spab-item">
+                    <b>${ssa.name}:</b>
+                    <em>${ssa.value}</em>
+                    <i class="rpab" attr-kv="${ssa.name}:${ssa.value}" attr-key-id="${ssa.nameId?c}"></i>
+                </a>
             </#list>
         </#if>
         &nbsp;<b>"${keyword!''}"</b>
@@ -60,19 +71,26 @@
     <!--Begin 筛选条件 Begin-->
     <div class="content2 mar_10">
         <table border="0" class="choice" style="width:100%; font-family:'宋体'; margin:0 auto;" cellspacing="0" cellpadding="0">
-            <tr valign="top">
-                <td style="width:8%">&nbsp; 品牌：</td>
-                <td class="td_a"><a href="#" class="now">香奈儿（Chanel）</a><a href="#">迪奥（Dior）</a><a href="#">范思哲（VERSACE）</a><a href="#">菲拉格慕（Ferragamo）</a><a href="#">兰蔻（LANCOME）</a><a href="#">爱马仕（HERMES）</a><a href="#">卡文克莱（Calvin Klein）</a><a href="#">古驰（GUCCI）</a><a href="#">宝格丽（BVLGARI）</a><a href="#">阿迪达斯（Adidas）</a><a href="#">卡尔文·克莱恩（CK）</a><a href="#">凌仕（LYNX）</a><a href="#">大卫杜夫（Davidoff）</a><a href="#">安娜苏（Anna sui）</a><a href="#">阿玛尼（ARMANI）</a><a href="#">娇兰（Guerlain）</a></td>
-            </tr>
 
-            <#if attributes??>
-                <#list attributes as attributeKey>
+            <#if searchBrands??>
                 <tr valign="top">
+                    <td style="width:8%">&nbsp; 品牌：</td>
+                    <td class="td_a">
+                    <#list searchBrands as searchBrand>
+                        <a class="abb_labels" attr-id="${searchBrand.id?c}" attr-name="${searchBrand.name}">${searchBrand.name}</a>
+                    </#list>
+                    </td>
+                </tr>
+            </#if>
+
+            <#if searchAttributes??>
+                <#list searchAttributes as attributeKey>
+                <tr valign="top" class="atis_${attributeKey.id?c}">
                     <td style="width:8%">&nbsp; ${attributeKey.attributeName!''}：</td>
                     <td class="td_a">
                         <#if attributeKey.values??>
                             <#list attributeKey.values as attributeValue>
-                                <a href="#">${attributeValue.attributeValue}</a>
+                                <a class="qb_labels" attr-kv="${attributeKey.attributeName!''}:${attributeValue.attributeValue}" attr-key-id="${attributeKey.id?c}">${attributeValue.attributeValue}</a>
                             </#list>
                         </#if>
                     </td>
@@ -135,20 +153,54 @@
         <div class="l_list2">
             <div class="list_t">
             	<span class="fl list_or">
-                	<a href="#" class="now">默认</a>
-                    <a href="#">
-                    	<span class="fl">销量</span>
-                        <span class="i_up">销量从低到高显示</span>
-                        <span class="i_down">销量从高到低显示</span>
-                    </a>
-                    <a href="#">
-                    	<span class="fl">价格</span>
-                        <span class="i_up">价格从低到高显示</span>
-                        <span class="i_down">价格从高到低显示</span>
-                    </a>
-                    <a href="#">新品</a>
+                    <#if stt?? && stt == "default">
+                	    <a  class="now fla pfla" attr-type="defult">默认</a>
+                    <#else>
+                	    <a  class=" fla pfla" attr-type="defult">默认</a>
+                    </#if>
+                    <#if stt?? && stt == "price">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    </#if>
+                    <#if stt?? && stt == "newest">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                        <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                    </#if>
+                    <div class="search-price">
+                        <div class="search-price-set">
+                            <div class="fl">
+                                <input type="text" id="psi" class="input-txt"  value="${ps!''}"  placeholder="¥"  />
+                            </div>
+                            <em>-</em>
+                            <div class="fl">
+                                <input type="text" id="pei" class="input-txt"   value="${pe!''}"  placeholder="¥" />
+                            </div>
+                        </div>
+                        <div class="search-price-edit">
+                            <a  class="item1 spclear">清空</a>
+                            <a  class="item2 spbtn" >确定</a>
+                        </div>
+                    </div>
                 </span>
-                <span class="fr">共发现120件</span>
+                <span class="fr plcount">共发现${total!'0'}件</span>
             </div>
             <div class="list_c">
 
@@ -162,7 +214,7 @@
                                 </div>
                                 <div class="name"><a href="${basePath}/page/product/detail/${product.skuId?c}" title="${product.name}"  target="_blank">${product.name}</a></div>
                                 <div class="carbg">
-                                    <a class="ss">收藏</a>
+                                    <a class="ss_disabled cp_${product.skuId?c} cplist" attr-v="${product.skuId?c}" attr-t="1" >收藏</a>
                                     <a  class="j_car p_l_ac" attr-pid="${product.id?c}">加入购物车</a>
                                 </div>
                             </li>

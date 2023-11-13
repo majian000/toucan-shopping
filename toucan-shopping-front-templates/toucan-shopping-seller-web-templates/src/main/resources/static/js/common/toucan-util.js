@@ -27,3 +27,22 @@ function toucan_compareArray(srcArray,destArray)
     }
     return false;
 }
+
+/**
+ * 两个对象进行深拷贝
+ * @param destObj
+ * @param srcObj
+ * @returns {*|{}}
+ */
+function objectCopy(destObj,srcObj){
+    var destObj = destObj || {};
+    for (var i in srcObj) {
+        if (typeof srcObj[i] === 'object') {
+            destObj[i] = (srcObj[i].constructor === Array) ? [] : {};
+            objectCopy(destObj[i], srcObj[i]);
+        } else {
+            destObj[i] = srcObj[i];
+        }
+    }
+    return destObj;
+}

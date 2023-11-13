@@ -21,4 +21,43 @@ public interface FeignProductSearchService {
     ResultObjectVO search(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 保存到搜索
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据SKUID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/queryBySkuId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryBySkuId(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 更新到搜索
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 从搜索中删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/removeById",produces = "application/json;charset=UTF-8")
+    ResultObjectVO removeById(@RequestBody RequestJsonVO requestJsonVO);
+
+
 }

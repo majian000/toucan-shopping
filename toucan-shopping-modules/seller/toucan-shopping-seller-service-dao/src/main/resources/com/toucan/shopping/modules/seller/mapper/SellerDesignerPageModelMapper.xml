@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.SellerDesignerPageModelMapper">
+
+    <resultMap id="sellerDesignerMap" type="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="page_json" jdbcType="VARCHAR" property="pageJson" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="position" jdbcType="INTEGER" property="position" />
+        <result column="designer_version" jdbcType="INTEGER" property="designerVersion" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="creater_id" jdbcType="VARCHAR" property="createrId" />
+        <result column="updater_id" jdbcType="VARCHAR" property="updaterId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+    </resultMap>
+
+
+    <resultMap id="sellerDesignerVOMap" type="com.toucan.shopping.modules.seller.vo.ShopBannerVO" extends="sellerDesignerMap" >
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" keyProperty="id" >
+        insert into  t_seller_designer_page_model(id,shop_id,page_json,position,type,designer_version,user_main_id,app_code,create_date,update_date,creater_id,updater_id,delete_status)
+        values(#{id},#{shopId},#{pageJson},#{position},#{type},#{designerVersion},#{userMainId},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId},#{deleteStatus})
+    </insert>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel">
+        update t_seller_designer_page_model set shop_id=#{shopId} , page_json=#{pageJson} ,
+        position=#{position},type=#{type},designer_version=#{designerVersion},updater_id=#{updaterId} ,
+        update_date=#{updateDate}
+        where id=#{id} and delete_status=0 and shop_id=#{shopId}
+    </update>
+
+    <select id="queryLastOne" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" resultMap="sellerDesignerMap">
+        select * from t_seller_designer_page_model
+         where delete_status=0 and shop_id=#{shopId} and type=#{type} and position=#{position}
+         order by create_date desc limit 0,1
+    </select>
+
+</mapper>

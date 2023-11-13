@@ -214,7 +214,7 @@
                             done: function (res, $ul, first) {
                                 if (first) {
                                     if(idArray!=null&&idArray.length>0) {
-                                        dtree.chooseDataInit("orgTree", idArray); //"001001,001002"被选中的子节点id
+                                        dtree.chooseDataInit("orgTree", idArray.join(",")); //"001001,001002"被选中的子节点id
                                         dtree.initNoAllCheck("orgTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
                                     }
                                 }
@@ -239,6 +239,7 @@
                 layer.msg("请选择组织机构");
                 return false;
             }
+            loadding = layer.load();
             var orgArray =  new Array();
             for (var i = 0; i < selectNodes.length; i++) {
                 var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
@@ -251,12 +252,12 @@
                 type: 'POST',
                 data: JSON.stringify({adminOrgnazitions:orgArray,adminId:$("#adminId").val()}),
                 success: function (data) {
+                    layer.close(loadding);
                     if (data.code == 0) {
                         layer.msg(data.msg);
                         return false;
                     }
                     step.next('#stepForm');
-                    layer.close(index);
                 }
             });
             return false;

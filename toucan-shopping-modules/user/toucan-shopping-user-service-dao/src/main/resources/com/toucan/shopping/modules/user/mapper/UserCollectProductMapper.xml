@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.user.mapper.UserCollectProductMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.user.entity.UserCollectProduct" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+
+    </resultMap>
+
+
+    <resultMap id="entityVOMap" type="com.toucan.shopping.modules.user.vo.UserCollectProductVO">
+
+    </resultMap>
+
+
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+
+        <if test="userMainId!=null ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+        <if test="productSkuId!=null ">
+            and t.product_sku_id = #{productSkuId}
+        </if>
+
+    </sql>
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="productSkuIds!=null and productSkuIds.size()>0 ">
+            and t.product_sku_id in
+            <foreach item="item" index="index" collection="productSkuIds" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+        <if test="productSkuId!=null">
+            and t.product_sku_id = #{productSkuId}
+        </if>
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code = #{appCode}
+        </if>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserCollectProduct" >
+        insert into t_user_collect_product(id,user_main_id,product_sku_id,create_date,delete_status,app_code)
+        values(#{id},#{userMainId},#{productSkuId},#{createDate},#{deleteStatus},#{appCode})
+    </insert>
+
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_user_collect_product set delete_status=1 where id = #{id}
+    </update>
+
+
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserCollectProductVO">
+        select * from t_user_collect_product t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+        </where>
+
+    </select>
+
+
+
+
+    <update id="deleteByIdAndUserMainIdAndAppCode" >
+        update t_user_collect_product set delete_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
+    </update>
+
+    <update id="deleteBySkuIdAndUserMainIdAndAppCode" >
+        update t_user_collect_product set delete_status=1 where product_sku_id = #{skuId} and user_main_id = #{userMainId} and app_code =#{appCode}
+    </update>
+
+
+    <select id="queryListPage" resultMap="entityVOMap" parameterType="com.toucan.shopping.modules.user.page.UserCollectProductPageInfo">
+        select t.* from t_user_collect_product t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserCollectProductPageInfo">
+        select count(*) from t_user_collect_product t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
+
+</mapper>

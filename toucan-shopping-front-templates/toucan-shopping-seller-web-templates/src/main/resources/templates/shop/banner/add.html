@@ -1,0 +1,152 @@
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/jeDate/skin/jedate.css">
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "shopBanner">
+<#assign menuType = "shopSetting">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/shop/banner/list">轮播图</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">添加轮播图</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加轮播图</span></div>
+                <div class="right_panel">
+
+                    <form action="" id="shopBannerForm" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
+                        <label>
+                            <span><font color="#ff4e00">*</font>标题 :</span>
+                            <input type="text" id="title" maxlength="80"  name="title"  lay-verify="required" tabindex="1"  />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>图片预览 :</span>
+                            <img src="" id="pic" style="width:155px;height:150px;" />
+                        </label>
+                        <label>
+                            <span>图片上传 :</span>
+                            <input type="hidden" id="isUpload" value="1"/>
+                            <input type="file" name="bannerImgFile" id="bannerImg" />
+                        </label>
+                        <label style="margin-top:20px">
+                            <span><font color="#ff4e00">*</font>开始展示时间 :</span>
+                            <input type="text" name="startShowDateString" id="startShowDate" readonly lay-verify="required"  style="width:30%" />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>结束展示时间 :</span>
+                            <input type="text" name="endShowDateString" id="endShowDate"  readonly lay-verify="required"  style="width:30%" />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>跳转地址 :</span>
+                            <input type="text" id="clickPath" maxlength="255"  name="clickPath"  tabindex="2"  />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>显示状态 :</span>
+                            <div style="width:80%;height: 40px;padding-top: 12px;">
+                                <div style="width:90px;float: left;">
+                                    <input type="radio" name="showStatus" id="showStatus1" value="1" checked="checked" style="float:left"/>
+                                    <label for="showStatus1" style="float:left;margin-left: 5px;">显示</label>
+                                </div>
+                                <div style="width:90px;float: left;">
+                                    <input type="radio" name="showStatus"  id="showStatus0" value="0" style="float:left" />
+                                    <label for="showStatus0" style="float:left;margin-left: 5px;">隐藏</label>
+                                </div>
+                            </div>
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>显示位置 :</span>
+                            <div style="width:80%;height: 70px;padding-top: 12px;">
+                                <div style="width:90px;float: left;">
+                                    <input type="checkbox" name="position" id="position_pc_index" value="PC_INDEX" style="float:left"/>
+                                    <label for="position_pc_index" style="float:left;margin-left: 5px;">PC首页</label>
+                                </div>
+                                <div style="width:90px;float: left;">
+                                    <input type="checkbox" name="position"  id="position_h5_index" value="H5_INDEX" style="float:left" />
+                                    <label for="position_h5_index" style="float:left;margin-left: 5px;">H5首页</label>
+                                </div>
+                            </div>
+                        </label>
+                        <label>
+                        </label>
+                        <div style="width:100%;text-align:center;">
+                            <input type="button" class="button" value="保存" id="shopBannerBtn"  onclick="saveShopBanner();"/>
+                            <input type="button" class="button" value="返回" id="shopBannerBackBtn"  onclick="backShopBanner();"/>
+                        </div>
+                        <br>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/jeDate/src/jedate.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/shop/banner/add.js"></script>
+<script>
+    $(function () {
+
+        bindFileUpload();
+
+
+        jeDate("#startShowDate",{
+            format: "YYYY-MM-DD hh:mm:ss"
+        });
+
+        jeDate("#endShowDate",{
+            format: "YYYY-MM-DD hh:mm:ss"
+        });
+
+    });
+
+</script>
+
+
+<#include "/footer.html"/>
+
+</body></html>
+
+

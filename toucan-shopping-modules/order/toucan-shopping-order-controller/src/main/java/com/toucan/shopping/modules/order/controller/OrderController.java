@@ -6,18 +6,18 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
+import com.toucan.shopping.modules.order.entity.OrderLog;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
-import com.toucan.shopping.modules.order.service.MainOrderService;
-import com.toucan.shopping.modules.order.service.OrderConsigneeAddressService;
-import com.toucan.shopping.modules.order.service.OrderItemService;
-import com.toucan.shopping.modules.order.service.OrderService;
+import com.toucan.shopping.modules.order.service.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.*;
+import com.toucan.shopping.modules.pay.vo.PayCallbackVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +62,9 @@ public class OrderController {
 
     @Autowired
     private OrderConsigneeAddressService orderConsigneeAddressService;
+
+    @Autowired
+    private OrderLogService orderLogService;
 
     /**
      * 测试分片
@@ -95,6 +99,39 @@ public class OrderController {
     }
 
 
+
+
+    /**
+     * 取消订单
+     */
+    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            OrderVO orderVO = requestJsonVO.formatEntity(OrderVO.class);
+            if(StringUtils.isEmpty(orderVO.getOrderNo()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到订单编号");
+                return resultObjectVO;
+            }
+
+            try {
+
+                orderService.cancelOrderByOrderNo(orderVO.getOrderNo(),orderVO.getCancelRemark());
+
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
 
 
 
@@ -173,6 +210,45 @@ public class OrderController {
 
 
     /**
+     * 更新订单
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
+                Order oldOrder = orderService.findById(orderVO.getId());
+                orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),oldOrder.getOrderNo(),
+                        "修改订单信息",oldOrder,orderVO,OrderConstant.ORDER_LOG_TYPE_ORDER);
+
+                //修改订单信息
+                orderService.updateById(orderVO);
+
+                orderVO.getOrderConsigneeAddress().setOrderNo(oldOrder.getOrderNo());
+                orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),oldOrder.getOrderNo(),
+                        "修改收货人信息",orderConsigneeAddressService.queryOneByOrderNo(orderVO.getOrderNo()),
+                        orderVO.getOrderConsigneeAddress(),OrderConstant.ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS);
+
+                orderConsigneeAddressService.updateByOrderNo(orderVO.getOrderConsigneeAddress());
+
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询支付超时订单页
      */
     @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
@@ -196,9 +272,10 @@ public class OrderController {
         return resultObjectVO;
     }
 
-    /**
-     * 完成订单
-     */
+
+        /**
+         * 完成订单
+         */
     @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO){
@@ -216,7 +293,7 @@ public class OrderController {
 
             try {
                 logger.info("完成订单 params {}",requestJsonVO.getEntityJson());
-                Order order = JSONObject.parseObject(requestJsonVO.getEntityJson(),Order.class);
+                PayCallbackVO payCallbackVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),PayCallbackVO.class);
 //                int row = orderService.finishOrder(order);
 //                if(row<1)
 //                {

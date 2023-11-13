@@ -512,7 +512,7 @@ public class ShopProductApproveApiController extends BaseController {
      * @param publishProductVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping(value = "/publish",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO publish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductApproveVO publishProductVO){
@@ -792,7 +792,7 @@ public class ShopProductApproveApiController extends BaseController {
      * @param republishProductVO
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping(value = "/republish",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO republish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, RePublishProductApproveVO republishProductVO){

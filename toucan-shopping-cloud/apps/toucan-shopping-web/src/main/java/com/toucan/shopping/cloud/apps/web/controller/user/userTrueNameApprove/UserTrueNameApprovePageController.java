@@ -41,13 +41,13 @@ public class UserTrueNameApprovePageController extends BaseController {
     @Autowired
     private FeignUserService feignUserService;
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/submit_success")
     public String submit_success(HttpServletRequest request){
         return "user/trueName/true_name_submit_success";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/update")
     public String updatePage(HttpServletRequest request)
     {
@@ -123,7 +123,7 @@ public class UserTrueNameApprovePageController extends BaseController {
 
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {

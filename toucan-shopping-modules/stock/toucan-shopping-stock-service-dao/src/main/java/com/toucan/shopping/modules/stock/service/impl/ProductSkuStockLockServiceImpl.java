@@ -1,12 +1,13 @@
 package com.toucan.shopping.modules.stock.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
 import com.toucan.shopping.modules.stock.mapper.ProductSkuStockLockMapper;
+import com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo;
 import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,20 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
     @Override
     public List<ProductSkuStockLockVO> queryListByVO(ProductSkuStockLockVO productSkuStockLockVO) {
         return productSkuStockLockMapper.queryListByVO(productSkuStockLockVO);
+    }
+
+    @Override
+    public ProductSkuStockLockVO findById(Long id) {
+        return productSkuStockLockMapper.findById(id);
+    }
+
+    @Override
+    public PageInfo<ProductSkuStockLockVO> queryListPage(ProductSkuStockLockPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<ProductSkuStockLockVO> pageInfo = new PageInfo();
+        pageInfo.setList(productSkuStockLockMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(productSkuStockLockMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 
 

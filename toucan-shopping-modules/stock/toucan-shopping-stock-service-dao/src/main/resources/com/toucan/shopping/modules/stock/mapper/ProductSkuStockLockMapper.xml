@@ -8,6 +8,7 @@
         <result column="product_sku_id" jdbcType="BIGINT" property="productSkuId" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
         <result column="type" jdbcType="SMALLINT" property="type" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -18,12 +19,40 @@
         <result column="order_create_date" jdbcType="TIMESTAMP" property="orderCreateDate" />
     </resultMap>
 
-    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO">
+    <resultMap id="productSkuStockLockVOMap" type="com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO" extends="productSkuStockLockMap">
 
     </resultMap>
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="orderNo!=null and orderNo!=''">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="productSkuId!=null and productSkuId!=-1 ">
+            and t.product_sku_id=#{productSkuId}
+        </if>
+
+        <if test="userMainId!=null and userMainId!=-1 ">
+            and t.user_main_id=#{userMainId}
+        </if>
+
+        <if test="mainOrderNo!=null and mainOrderNo!='' ">
+            and t.main_order_no =#{mainOrderNo}
+        </if>
+
+        <if test="deleteStatus!=null and deleteStatus!=-1 ">
+            and t.delete_status=#{deleteStatus}
+        </if>
+
+    </sql>
+
     <sql id="queryVOListWhere">
 
+        <if test="orderNo!=null and orderNo!=''">
+            and t.order_no = #{orderNo}
+        </if>
 
         <if test="productSkuIdList!=null and productSkuIdList.size>0 ">
             and t.product_sku_id in
@@ -43,6 +72,8 @@
             and t.type = #{type}
         </if>
 
+
+
         and t.delete_status = 0
 
     </sql>
@@ -50,8 +81,8 @@
 
 
     <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
-          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no)
-          values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo})
+          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no,order_no)
+          values(#{id},#{productSkuId},#{userMainId},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo},#{orderNo})
     </insert>
 
     <select id="queryStockNumByVO" resultMap="productSkuStockLockVOMap">
@@ -73,5 +104,35 @@
             #{item}
         </foreach>
     </update>
+
+
+    <select id="queryListPage" resultMap="productSkuStockLockVOMap" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
+        select t.* from t_product_sku_stock_lock t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="findById" resultMap="productSkuStockLockVOMap" parameterType="java.lang.Long">
+        select t.* from t_product_sku_stock_lock t where  t.id = #{id} limit 0,1
+    </select>
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.stock.page.ProductSkuStockLockPageInfo">
+        select count(*) from t_product_sku_stock_lock t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
 
 </mapper>

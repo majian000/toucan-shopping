@@ -152,7 +152,7 @@ public class UserShopApiController extends BaseController {
      * 个人店铺编辑
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth
     @RequestMapping(value="/edit")
     @ResponseBody
     public ResultObjectVO edit(HttpServletRequest request, @RequestParam(value="logoFile",required=false) MultipartFile logoFile, SellerShopVO sellerShopVO)

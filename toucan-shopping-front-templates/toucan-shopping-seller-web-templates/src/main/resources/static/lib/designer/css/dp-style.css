@@ -1,0 +1,73 @@
+@charset "utf-8";
+*{margin: 0; padding: 0; }
+body {
+	font-family: "Microsoft Yahei";
+	font-size: 14px;
+	color: #333;
+	background-color: #E4E1E1;
+}
+a, a:hover { text-decoration: none; color: #333; }
+ul, li { list-style: none; }
+svg{
+	fill: currentColor;
+}
+.mt-tabpage {
+}
+.mt-tabpage-title {
+	height: 44px;
+	font-size: 0;
+	background-color: #fff;
+	width: 94%;
+	margin: auto;
+	background: #fff;
+	border-bottom: 1px solid #f1f1f1;
+}
+.mt-tabpage-title .mt-tabpage-item {
+	display: inline-block;
+	width: 105px;
+	height: 44px;
+	line-height: 44px;
+	text-align: center;
+	color: #666;
+	font-size: 12px;
+}
+.mt-tabpage-title .mt-tabpage-item:hover{
+	color: #409eff;
+}
+.mt-tabpage-title .mt-tabpage-item-cur {
+	color: #409eff;
+	font-size: 14px;
+	border-bottom: 1px solid #2d79ff;
+}
+.mt-tabpage-count {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+.mt-tabpage-cont__wrap {
+	position: absolute;
+}
+.mt-tabpage-count .mt-tabpage-item {
+	height: 200px;
+	line-height: 200px;
+	text-align: center;
+}
+
+.mt-tabpage-content{
+	width:100%;
+	display:none;
+	padding-top:20px;
+}
+.mt-tabpage-content label{
+	font-size:14px;
+}
+
+.designer-component-banner{
+
+}
+.designer-component-banner-hover{
+	background-image: url("/static/images/designer/pc/sd-component-banner.png");
+	background-repeat: no-repeat;
+	moz-background-size:100% 100%;
+	background-size:100% 100%;
+}

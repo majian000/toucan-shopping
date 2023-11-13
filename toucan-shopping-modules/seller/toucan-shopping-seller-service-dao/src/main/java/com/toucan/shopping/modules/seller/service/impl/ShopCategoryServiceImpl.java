@@ -88,12 +88,16 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     public ShopCategory queryByIdAndShopId(Long id, Long shopId) {
         return shopCategoryMapper.queryByIdAndShopId(id,shopId);
     }
-    @Transactional
+
     @Override
     public int deleteById(Long id) {
         return shopCategoryMapper.deleteById(id);
     }
 
+    @Override
+    public int deleteByIdAndShopId(Long id,Long shopId) {
+        return shopCategoryMapper.deleteByIdAndShopId(id,shopId);
+    }
     @Override
     public List<ShopCategory> findByParentId(Long parentId) {
         return shopCategoryMapper.queryByParentId(parentId);

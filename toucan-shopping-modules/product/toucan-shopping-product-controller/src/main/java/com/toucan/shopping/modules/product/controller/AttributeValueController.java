@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.entity.AttributeValue;
 import com.toucan.shopping.modules.product.page.AttributeValuePageInfo;
 import com.toucan.shopping.modules.product.service.AttributeValueService;
+import com.toucan.shopping.modules.product.service.ProductSpuAttributeValueService;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,6 +39,8 @@ public class AttributeValueController {
     @Autowired
     private IdGenerator idGenerator;
 
+    @Autowired
+    private ProductSpuAttributeValueService productSpuAttributeValueService;
 
 
     /**
@@ -323,6 +326,9 @@ public class AttributeValueController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+
+            productSpuAttributeValueService.updateShowStatusAndSearchStatus(entity.getId(),entity.getAttributeValue(),entity.getShowStatus(),entity.getQueryStatus());
+
             resultObjectVO.setData(entity);
 
         }catch(Exception e)

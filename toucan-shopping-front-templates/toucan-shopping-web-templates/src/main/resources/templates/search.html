@@ -1,10 +1,18 @@
 <div class="search">
-    <form class="s_form" method="get">
-        <input type="text" name="keyword" value="${keyword!''}" class="s_ipt" />
-        <input type="hidden" id="qkeyword" value="${keyword!''}" />
-        <input type="hidden" id="cid" value="${cid!''}" />
-        <input type="hidden" id="ebids" value="${ebids!''}" />
-        <input type="hidden" id="qbs" value="${qbs!''}" />
+    <form class="s_form" method="get" onsubmit="return false;">
+        <input type="text" id="keyword" name="keyword" value="${keyword!''}" class="s_ipt psfi" />
+        <input type="hidden" id="qkeyword" class="psfi" value="${keyword!''}" />
+        <input type="hidden" id="cid" class="psfh psfi" value="${cid!''}" />
+        <input type="hidden" id="ebids" class="psfh psfi" value="${ebids!''}" />
+        <input type="hidden" id="qbs" class="psfh psfi" value="${qbs!''}" />
+        <input type="hidden" id="ab" class="psfh psfi" value="${ab!''}" />
+        <input type="hidden" id="bid" class="psfh psfi" value="${bid!''}" />
+        <input type="hidden" id="bn" class="psfh psfi" value="${bn!''}" />
+        <input type="hidden" id="abids" class="psfh psfi" value="${abids!''}" />
+        <input type="hidden" id="ps" class="psfh psfi" value="${ps!''}" />
+        <input type="hidden" id="pe" class="psfh psfi" value="${pe!''}" />
+        <input type="hidden" id="pst" class="psfh psfi" value="${pst!''}" />
+        <input type="hidden" id="pdst" class="psfh psfi" value="${pdst!''}" />
         <input type="button" value="搜索" class="s_btn" />
     </form>
     <span class="fl ">

@@ -88,7 +88,7 @@
         </if>
 
         <if test="categoryId!=null and categoryId!='' ">
-            and t.category_id_cache like binary concat(#{name},'%')
+            and t.category_id_cache like binary concat('%',#{categoryId},'%')
         </if>
 
         <if test="name!=null and name!=''  ">

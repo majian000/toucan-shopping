@@ -150,7 +150,7 @@ function drawPagination(cpage,data)
 {
 
     var totalPage = 1;
-    var total = 0;
+    var total = data.total;
 
     if (data.total % data.size == 0) {
         totalPage = data.total / data.size;

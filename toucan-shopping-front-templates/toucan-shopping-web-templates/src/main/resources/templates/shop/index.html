@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/shop/pc_index.css" />
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+    <script type="text/javascript" src="${basePath}/static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
+    <script type="text/javascript">
+        var jq = jQuery.noConflict();
+    </script>
+
+    <#if pageView??>
+        <#list pageView.componentViewPlugins as cvp>
+            <#if cvp?? && cvp.pluginName=="sliderMe" && cvp.pluginVersion=="1.0">
+                <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
+                <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
+            </#if>
+        </#list>
+    </#if>
+
+    <#include "/title.html"/>
+
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+
+</div>
+
+<!--End Header End-->
+<!--Begin Menu Begin-->
+<div class="menu_bg" style="height:10px;">
+</div>
+<div class="shop-index-main-page" >
+<div class="shop-index-main">
+    <#if pageView??>
+        <input type="hidden" id="shopId"  value="${pageView.shopId}" />
+
+        <#list pageView.componentViews as cv>
+            <#if cv?? && cv.type=="shopBannerView">
+
+
+            <div id="slider" class="tslider" style="margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                <button type="button" class="preBtn" id="preBtn">
+                    &lt;
+                </button>
+                <button type="button" class="nextBtn" id="nextBtn">
+                    &gt;
+                </button>
+
+                <ul class="pointer" id="defaultBannerPointer">
+
+                </ul>
+            </div>
+
+            <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
+
+            <script type="text/javascript">
+                <#if pageViewJson??>
+                    var pageView=${pageViewJson};
+                </#if>
+            </script>
+            <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
+
+
+            </#if>
+        </#list>
+
+
+
+
+    </#if>
+</div>
+</div>
+
+<#include "/footer.html"/>
+
+
+
+</body>
+
+
+</html>

@@ -308,26 +308,26 @@
                         {field: 'payStatus', width: 100, title: '支付状态',
                             templet: function (row) {
                                 if(row.payStatus == "0"){
-                                    return "未支付"
+                                    return "未支付";
                                 }else if(row.payStatus == "1"){
-                                    return "已支付"
+                                    return "<a   style='color: green;'>已支付</a>";
                                 }else if(row.payStatus == "3"){
-                                    return "线下支付已到账"
+                                    return "<a   style='color: green;'>线下支付已到账</a>";
                                 }else if(row.payStatus == "4"){
-                                    return "取消支付"
+                                    return "<a   style='color: red;'>取消支付</a>";
                                 }
                                 return row.payStatus;
                             }},
                         {field: 'tradeStatus', width: 100, title: '交易状态',
                             templet: function (row) {
                                 if(row.tradeStatus == "0"){
-                                    return "待付款"
+                                    return "待付款";
                                 }else if(row.tradeStatus == "1"){
-                                    return "待收货"
+                                    return "待收货";
                                 }else if(row.tradeStatus == "2"){
-                                    return "已取消"
+                                    return "<a   style='color: red;'>已取消</a>";
                                 }else if(row.tradeStatus == "3"){
-                                    return "已完成"
+                                    return "<a   style='color: green;'>已完成</a>";
                                 }
                                 return row.tradeStatus;
                             }},
@@ -444,6 +444,22 @@
                 }else if(obj.event=="openDetailDialogDevent")
                 {
                     openDetailDialog(data.id);
+                }else if(obj.event=="cancelOrder")
+                {
+                    var index = layer.open({
+                        title: '取消订单',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin:false,
+                        area: ['50%', '50%'],
+                        content: "[[@{/}]]order/cancel/page/"+data.orderNo
+                    });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                    return false;
+                }else if (obj.event == 'update') {
+                    openUpdateDialog(data.id);
                 }
             });
         }
@@ -467,6 +483,24 @@
 
         }
 
+
+        function openUpdateDialog(id)
+        {
+            var index = layer.open({
+                title: '修改订单',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]order/editPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
         initOrderTable("tab_index_0_");
 
 

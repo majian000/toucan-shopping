@@ -53,7 +53,7 @@ public class UserShopPageController extends BaseController {
      * 个人店铺申请
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/regist")
     public String regist(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {

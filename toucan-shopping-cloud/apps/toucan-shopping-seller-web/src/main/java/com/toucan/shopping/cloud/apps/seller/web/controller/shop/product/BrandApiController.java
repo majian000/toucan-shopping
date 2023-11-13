@@ -63,7 +63,7 @@ public class BrandApiController {
      * @param pageInfo
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public SelectPageTableVO list(BrandPageInfo pageInfo)

@@ -18,3 +18,5 @@
     5.toucan-shopping-xss-spring-boot-starter
     XSS代码替换
     
+    6.toucan-shopping-admin-auth-log-spring-boot-starter
+    权限中台操作日志插件(用户记录管理员的所有操作)

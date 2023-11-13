@@ -121,13 +121,14 @@ public class OrderPayTimeOutScheduler {
                     if (resultObjectVO.isSuccess()) {
                         //完成还原锁定库存事件
                         orderPayTimeOutService.finishEvent(eventProcess);
-                        logger.info("删除锁定库存.....");
-                        orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
-                        if(resultObjectVO.isSuccess())
-                        {
-                            //删除锁定库存事件
-                            orderPayTimeOutService.finishEvent(eventProcess);
-                        }
+                    }
+
+                    logger.info("删除锁定库存.....");
+                    resultObjectVO = orderPayTimeOutService.deleteLockStockByMainOrderNos(globalTransactionId,eventProcess,productSkuStockLockVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        //删除锁定库存事件
+                        orderPayTimeOutService.finishEvent(eventProcess);
                     }
 
                 }

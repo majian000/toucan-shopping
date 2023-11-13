@@ -38,7 +38,7 @@ public class FreightTemplatePageController extends BaseController {
 
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request){
 
@@ -46,14 +46,14 @@ public class FreightTemplatePageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/add")
     public String add(HttpServletRequest request){
 
         return "freightTemplate/add";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/show/{id}")
     public String show(HttpServletRequest request, @PathVariable String id ){
         request.setAttribute("id",id);
@@ -61,7 +61,7 @@ public class FreightTemplatePageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/edit/{id}")
     public String edit(HttpServletRequest request, @PathVariable String id ){
         request.setAttribute("id",id);

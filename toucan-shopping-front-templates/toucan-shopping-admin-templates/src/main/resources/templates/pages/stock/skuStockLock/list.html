@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="searchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">SKU ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="productSkuId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">主订单编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="mainOrderNo" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">子订单编号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="orderNo" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">删除状态</label>
+                            <div class="layui-input-inline">
+                                <select id="deleteStatus" name="deleteStatus"  lay-search="">
+                                    <option value="-1">全部</option>
+                                    <option value="0">未删除</option>
+                                    <option value="1">已删除</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" > 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+            </div>
+        </script>
+
+        <table class="layui-hide" id="skuStockLockTable" lay-filter="skuStockLockTableFilter"></table>
+
+        <script type="text/html" id="skuStockLockTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.use(['table','form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#searchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#skuStockLockTable',
+            url: "[[@{/}]]stock/productSkuStockLock/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id',  width: 200, title: '主键'},
+                    {field: 'productSkuId',   width: 200,title: 'SKU ID'},
+                    {field: 'userMainId',  width: 200, title: '用户ID'},
+                    {field: 'stockNum', width: 100, title: '锁定库存数量'},
+                    {field: 'mainOrderNo',  width: 300, title: '主订单编号'},
+                    {field: 'createDate',  width: 200, title: '创建时间'},
+                    {field: 'updateDate',  width: 200, title: '更新时间'},
+                    {field: 'type',   width: 200,title: '库存计数',templet: function (row) {
+                        if(row.type==1)
+                        {
+                            return "买家拍下减库存";
+                        }else if(row.type==2)
+                        {
+                            return "买家付款减库存";
+                        }
+                        return row.type;
+                    }},
+                    {field: 'payStatus',   width: 100,title: '支付状态',templet: function (row) {
+                            if(row.payStatus==0)
+                            {
+                                return "未支付";
+                            }else if(row.payStatus==1)
+                            {
+                                return "已支付";
+                            }
+                            return row.payStatus;
+                        }},
+                    {field: 'orderCreateDate',  width: 200, title: '订单创建时间'},
+                    {field: 'orderNo',  width: 200, title: '子订单编号'},
+                    {field: 'remark',   width: 300,title: '备注'},
+                    {field: 'deleteStatus', width: 100,title: '删除状态',templet: function (row) {
+                            if(row.deleteStatus==0)
+                            {
+                                return "未删除";
+                            }else if(row.deleteStatus==1)
+                            {
+                                return "已删除";
+                            }
+                            return row.deleteStatus;
+                        }},
+                    {title: '操作', minWidth: 300, toolbar: '#skuStockLockTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('skuStockLockTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(skuStockLockTableFilter)', function (obj) {
+        });
+
+
+
+
+
+        //监听表格复选框选择
+        table.on('checkbox(skuStockLockTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(skuStockLockTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'detail') {
+                openDetailDialog(data.id);
+            }
+        });
+
+        function openDetailDialog(id)
+        {
+            var index = layer.open({
+                title: '查看详情',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]stock/productSkuStockLock/detailPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
+    });
+</script>
+
+</body>
+</html>

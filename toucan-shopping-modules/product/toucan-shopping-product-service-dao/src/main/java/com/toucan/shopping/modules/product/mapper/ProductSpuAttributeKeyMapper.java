@@ -21,4 +21,8 @@ public interface ProductSpuAttributeKeyMapper {
     int deleteByProductSpuId(Long productSpuId);
 
     List<ProductSpuAttributeKeyVO> queryListBySortDesc(ProductSpuAttributeKeyVO entity);
+
+    int updateShowStatusAndSearchStatus(Long attributeKeyId,String attributeKeyName,Short showStatus,Short queryStatus);
+
+
 }

@@ -23,10 +23,10 @@ import java.util.List;
 @Service
 public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressService {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private OrderConsigneeAddressMapper orderConsigneeAddressMapper;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override
@@ -42,6 +42,11 @@ public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressSe
     @Override
     public OrderConsigneeAddressVO queryOneByOrderNo(String orderNo) {
         return orderConsigneeAddressMapper.queryOneByOrderNo(orderNo);
+    }
+
+    @Override
+    public int updateByOrderNo(OrderConsigneeAddressVO orderConsigneeAddressVO) {
+        return orderConsigneeAddressMapper.updateByOrderNo(orderConsigneeAddressVO);
     }
 
 }

@@ -56,7 +56,7 @@ public class ShopPageController extends BaseController {
      * 店铺信息
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/info")
     public String info(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
@@ -103,7 +103,7 @@ public class ShopPageController extends BaseController {
      * 修改店铺信息
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/edit")
     public String update(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
@@ -186,19 +186,19 @@ public class ShopPageController extends BaseController {
         return "index";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/regist_success")
     public String submitSuccess(HttpServletRequest request){
         return "shop/regist_success";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/update_success")
     public String updateSuccess(HttpServletRequest request){
         return "shop/update_success";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/select_remodel_type")
     public String selectRemodelType(HttpServletRequest request){
         return "shop/select_remodel_type";

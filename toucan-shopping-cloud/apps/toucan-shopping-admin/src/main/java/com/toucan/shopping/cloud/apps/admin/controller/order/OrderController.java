@@ -10,6 +10,8 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -30,6 +32,8 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
+import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
+import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +45,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -68,8 +69,14 @@ public class OrderController extends UIController {
     @Autowired
     private FeignOrderService feignOrderService;
 
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @Autowired
+    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
@@ -85,7 +92,7 @@ public class OrderController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(HttpServletRequest request, OrderPageInfo pageInfo)
@@ -126,7 +133,7 @@ public class OrderController extends UIController {
      * @param id
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
     public String detailPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -147,5 +154,123 @@ public class OrderController extends UIController {
         return "pages/order/detail.html";
     }
 
+
+
+    /**
+     * 修改
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            OrderVO query = new OrderVO();
+            query.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            ResultObjectVO resultObjectVO = feignOrderService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+                request.setAttribute("model",orderVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/order/edit.html";
+    }
+
+
+    /**
+     * 取消
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/cancel",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO cancel(@RequestBody OrderVO orderVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
+            productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
+            productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
+            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
+                if(!CollectionUtils.isEmpty(productSkuStockLocks))
+                {
+                    List<InventoryReductionVO> inventoryReductions= new LinkedList<>();
+                    for(ProductSkuStockLockVO pssl:productSkuStockLocks)
+                    {
+                        InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
+                        inventoryReductionVO.setProductSkuId(pssl.getProductSkuId());
+                        inventoryReductionVO.setStockNum(pssl.getStockNum());
+                        inventoryReductions.add(inventoryReductionVO);
+                    }
+                    if(!CollectionUtils.isEmpty(inventoryReductions)) {
+                        //保存还原锁定库存事件
+                        resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                    }
+                }
+                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                if(resultObjectVO.isSuccess())
+                {
+                    resultObjectVO = feignOrderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
+                }
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody OrderVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setOperateUserId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignOrderService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("修改失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 跳转到驳回页面
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/cancel/page/{orderNo}",method = RequestMethod.GET)
+    public String rejectPage(HttpServletRequest request,@PathVariable String orderNo)
+    {
+        request.setAttribute("orderNo",orderNo);
+        return "pages/order/cancel.html";
+    }
 }
 

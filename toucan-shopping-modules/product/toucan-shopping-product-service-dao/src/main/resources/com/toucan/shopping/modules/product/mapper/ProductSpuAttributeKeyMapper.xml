@@ -98,5 +98,9 @@
         order by t.attribute_sort desc
     </select>
 
+    <update id="updateShowStatusAndSearchStatus">
+        update t_product_spu_attribute_key  set attribute_name=#{attributeKeyName}, show_status=#{showStatus} , query_status=#{queryStatus} where attribute_key_id=#{attributeKeyId}  and delete_status=0
+    </update>
+
 
 </mapper>

@@ -49,7 +49,7 @@ public class ShopProductApprovePageController extends BaseController {
 
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request){
 
@@ -57,14 +57,14 @@ public class ShopProductApprovePageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/rejected/{approveId}")
     public String rejected (HttpServletRequest request, @PathVariable Long approveId){
         request.setAttribute("approveId",String.valueOf(approveId));
         return "product/approve/rejected";
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/republish/{approveId}")
     public String republish (HttpServletRequest request, @PathVariable Long approveId){
         request.setAttribute("approveId",String.valueOf(approveId));

@@ -7,15 +7,9 @@
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
 
 #### 微服务版
-    采用技术spring cloud、spring config、lombok、mybatis、nacos、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
+    采用技术spring cloud、spring config、lombok、mybatis、nacos、canal、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
-### 产品预览图
    
-    百度网盘
-    https://pan.baidu.com/s/1a92-dhro8CnIvMobWdH1bg?pwd=uqnw
-    由于没有合适的图床,所以将预览图存储在网盘中
-
-
 ### 访问
 
     商城端
@@ -23,7 +17,7 @@
     账号:18701601893
     密码:123456
     
-    卖家端
+    卖家管理后台
     http://8.140.187.184:8101/ 
     账号:18701601893
     密码:123456
@@ -38,9 +32,10 @@
     http://8.140.187.184:8088/
     账号(只读):testuser001
     密码(只读):test123
-    
-    账号(只允许添加):testuser002
-    密码(只允许添加):test123
+    账号(可增删改):testuser002
+    密码(可增删改):test123
+    账号(可增删改):testuser003
+    密码(可增删改):test123
     
     注:可以私信我要最高管理员权限
 
@@ -50,6 +45,27 @@
     邮箱:mmdrss@163.com
     QQ:695391446
 
+
+
+### 产品预览图
+   
+   * C端首页
+   ![输入图片说明](resources/预览图/C端首页.png)
+
+   * 卖家中心首页
+   ![输入图片说明](resources/预览图/卖家中心首页.png)
+
+   * 后台管理-商品审核
+   ![输入图片说明](resources/预览图/后台管理-商品审核.png)
+   
+   * 后台管理-用户列表
+   ![输入图片说明](resources/预览图/后台管理-用户列表.png)
+   
+   * 商品审核列表
+   ![输入图片说明](resources/预览图/商品审核列表.png)
+   
+   * 商品详情
+   ![输入图片说明](resources/预览图/商品详情.png)
 
 ### 参与贡献
     
