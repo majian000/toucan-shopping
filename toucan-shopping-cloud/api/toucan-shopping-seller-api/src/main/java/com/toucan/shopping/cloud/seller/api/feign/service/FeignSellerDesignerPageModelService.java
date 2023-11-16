@@ -30,5 +30,13 @@ public interface FeignSellerDesignerPageModelService {
     @RequestMapping(value="/queryLastOne",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryLastOne(@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
+
 
 }

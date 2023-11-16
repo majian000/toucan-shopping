@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.seller.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.mapper.SellerDesignerPageModelMapper;
+import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 import com.toucan.shopping.modules.seller.service.SellerDesignerPageModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,5 +36,14 @@ public class SellerDesignerPageModelServiceImpl implements SellerDesignerPageMod
     @Override
     public SellerDesignerPageModel queryLastOne(SellerDesignerPageModel sellerDesignerPageModel) {
         return sellerDesignerPageModelMapper.queryLastOne(sellerDesignerPageModel);
+    }
+
+    @Override
+    public PageInfo<SellerDesignerPageModel> queryListPage(SellerDesignerPageModelPageInfo queryPageInfo) {
+        PageInfo<SellerDesignerPageModel> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(sellerDesignerPageModelMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(sellerDesignerPageModelMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 }
