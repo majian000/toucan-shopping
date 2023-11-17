@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
+import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,24 +69,23 @@ public class SellerDesignerPageModelController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, SellerLoginHistoryPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, SellerDesignerPageModelPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryListPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<SellerLoginHistory> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerLoginHistory.class);
+                    SellerDesignerPageModelPageInfo retPageInfo = resultObjectVO.formatData(SellerDesignerPageModelPageInfo.class);
+                    tableVO.setCount(retPageInfo.getTotal());
                     if(tableVO.getCount()>0) {
-                        tableVO.setData((List)list);
+                        tableVO.setData(retPageInfo.getList());
                     }
                 }
             }

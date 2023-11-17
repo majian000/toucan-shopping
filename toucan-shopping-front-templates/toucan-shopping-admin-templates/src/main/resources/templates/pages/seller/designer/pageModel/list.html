@@ -25,9 +25,34 @@
                 <form class="layui-form layui-form-pane" id="designerPageModelSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">登录用户ID</label>
+                            <label class="layui-form-label">店铺ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">掌柜ID</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline">
+                                <select id="type"  name="type"  lay-search="" >
+                                    <option value="-1">全部</option>
+                                    <option value="1">预览页</option>
+                                    <option value="2">正式页</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">位置</label>
+                            <div class="layui-input-inline">
+                                <select id="position"  name="position"  lay-search="" >
+                                    <option value="-1">全部</option>
+                                    <option value="1">PC首页</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">

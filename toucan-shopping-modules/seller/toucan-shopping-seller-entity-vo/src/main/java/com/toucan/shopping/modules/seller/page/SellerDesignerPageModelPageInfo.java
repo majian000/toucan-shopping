@@ -32,6 +32,10 @@ public class SellerDesignerPageModelPageInfo extends PageInfo<SellerDesignerPage
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
+    private Integer type; //类型 1:预览页 2:正式页
+
+    private Integer position; //位置 1:PC首页
+
     //==============================================
 
 

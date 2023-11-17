@@ -28,6 +28,12 @@
         <if test="userMainId!=null  ">
             and t.user_main_id = #{userMainId}
         </if>
+        <if test="type!=null and type!=-1 ">
+            and t.type = #{type}
+        </if>
+        <if test="position!=null and position!=-1 ">
+            and t.position = #{position}
+        </if>
     </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" keyProperty="id" >
