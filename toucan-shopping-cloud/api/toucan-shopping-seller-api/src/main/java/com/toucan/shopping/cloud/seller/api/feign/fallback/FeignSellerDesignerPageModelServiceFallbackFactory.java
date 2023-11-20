@@ -67,6 +67,21 @@ public class FeignSellerDesignerPageModelServiceFallbackFactory implements Fallb
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO deleteByIdForAdmin(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerDesignerPageModelService.deleteByIdForAdmin失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询列表页失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

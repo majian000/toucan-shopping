@@ -17,4 +17,13 @@ public class SellerDesignerPageKey {
         return "TOUCAN_SHOPPING_WEB:SELLER:DESIGNER:PAGE:SAVEUPDATE:"+userMainId+"_LOCK";
     }
 
+    /**
+     * 删除锁
+     * @param id
+     * @return
+     */
+    public static String getDeleteLockKey(String id)
+    {
+        return "TOUCAN_SHOPPING_WEB:SELLER:DESIGNER:PAGE:DELETE:"+id+"_LOCK";
+    }
 }

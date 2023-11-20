@@ -34,6 +34,8 @@ public class SellerDesignerPageModel {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
+    private Integer enableStatus; //启用状态 0:禁用 1启用
+
 
     private String pageJson; //页面json
     private Integer type; //类型 1:预览页 2:正式页

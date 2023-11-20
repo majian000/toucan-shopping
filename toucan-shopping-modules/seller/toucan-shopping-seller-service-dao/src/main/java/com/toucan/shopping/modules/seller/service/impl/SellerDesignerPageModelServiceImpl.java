@@ -46,4 +46,9 @@ public class SellerDesignerPageModelServiceImpl implements SellerDesignerPageMod
         pageInfo.setTotal(sellerDesignerPageModelMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public int deleteById(Long id) {
+        return sellerDesignerPageModelMapper.deleteById(id);
+    }
 }

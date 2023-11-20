@@ -17,11 +17,14 @@ import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,6 +99,42 @@ public class SellerDesignerPageModelController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+    }
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/{id}}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            SellerDesignerPageModelVO entity =new SellerDesignerPageModelVO();
+            entity.setId(Long.parseLong(id));
+
+            String entityJson = JSONObject.toJSONString(entity);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignSellerDesignerPageModelService.deleteByIdForAdmin(requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
     }
 
 

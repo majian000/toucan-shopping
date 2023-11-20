@@ -20,5 +20,12 @@ public interface SellerDesignerPageModelMapper {
 
     Long queryListPageCount(SellerDesignerPageModelPageInfo queryPageInfo);
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 
 }

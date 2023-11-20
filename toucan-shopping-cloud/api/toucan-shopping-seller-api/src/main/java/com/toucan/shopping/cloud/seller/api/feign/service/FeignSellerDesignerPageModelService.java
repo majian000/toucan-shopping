@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/seller/designer/page/model",fallbackFactory = FeignSellerDesignerPageModelServiceFallbackFactory.class)
 public interface FeignSellerDesignerPageModelService {
@@ -38,5 +39,13 @@ public interface FeignSellerDesignerPageModelService {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
 }

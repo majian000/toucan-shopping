@@ -21,5 +21,12 @@ public interface SellerDesignerPageModelService {
      */
     PageInfo<SellerDesignerPageModel> queryListPage(SellerDesignerPageModelPageInfo queryPageInfo);
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 
 }

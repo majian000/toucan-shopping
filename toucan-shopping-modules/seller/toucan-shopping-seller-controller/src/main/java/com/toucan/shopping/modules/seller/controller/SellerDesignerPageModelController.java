@@ -91,6 +91,7 @@ public class SellerDesignerPageModelController {
                 sellerDesignerPageModel.setCreateDate(new Date());
                 sellerDesignerPageModel.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
                 sellerDesignerPageModel.setDeleteStatus((short) 0);
+                sellerDesignerPageModel.setEnableStatus(1);
                 int row = sellerDesignerPageModelService.save(sellerDesignerPageModel);
                 if (row <= 0) {
                     resultObjectVO.setCode(ResultVO.FAILD);
@@ -207,6 +208,77 @@ public class SellerDesignerPageModelController {
         }
         return resultObjectVO;
     }
+
+
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        SellerDesignerPageModel sellerDesignerPageModel = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerDesignerPageModel.class);
+
+        if(sellerDesignerPageModel.getId()==null)
+        {
+            logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空!");
+            return resultObjectVO;
+        }
+
+        String id = String.valueOf(sellerDesignerPageModel.getId());
+        try {
+
+            boolean lockStatus = skylarkLock.lock(SellerDesignerPageKey.getDeleteLockKey(id), id);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+
+            int row = sellerDesignerPageModelService.deleteById(sellerDesignerPageModel.getId());
+            if (row <=0) {
+                //释放锁
+                skylarkLock.unLock(SellerDesignerPageKey.getDeleteLockKey(id), id);
+
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("删除失败，请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            //释放锁
+            skylarkLock.unLock(SellerDesignerPageKey.getDeleteLockKey(id), id);
+        }
+        return resultObjectVO;
+    }
+
 
 
 }
