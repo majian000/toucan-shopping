@@ -103,6 +103,7 @@ toucan:
     product-preview-page: /page/product/preview/pid/ #商品预览
     product-sku-preview-page: /page/product/preview/ #SKU商品预览
     product-sku-detail-page: /page/product/detail/ #SKU商品预览
+    shop-pc-index-preview-page: /page/shop/pc/index/preview #店铺首页预览
   shopping-seller-web-pc: #PC端页面静态化
     ip-list: 8.140.187.184:8101,8.140.187.184:8101 #多个用,分割
   admin-auth:

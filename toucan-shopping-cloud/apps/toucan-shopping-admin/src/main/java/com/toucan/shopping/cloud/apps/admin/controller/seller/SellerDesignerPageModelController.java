@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
+import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -121,6 +122,11 @@ public class SellerDesignerPageModelController extends UIController {
                                         }
                                     }
                                 }
+                            }
+                            for(SellerDesignerPageModelVO sellerDesignerPageModelVO:sellerDesignerPageModels)
+                            {
+                                //设置PC首页预览页
+                                sellerDesignerPageModelVO.setPcIndexPreviewPage(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage()+"/"+ ShopUtils.encShopId(String.valueOf(sellerDesignerPageModelVO.getShopId()))+"/"+String.valueOf(sellerDesignerPageModelVO.getShopId()));
                             }
                         }
                         tableVO.setData(sellerDesignerPageModels);
