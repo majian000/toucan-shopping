@@ -37,6 +37,23 @@
         </if>
     </sql>
 
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+        <if test="type!=null and type!=-1 ">
+            and t.type = #{type}
+        </if>
+        <if test="position!=null and position!=-1 ">
+            and t.position = #{position}
+        </if>
+        <if test="enableStatus!=null and enableStatus!=-1 ">
+            and t.enable_status = #{enableStatus}
+        </if>
+    </sql>
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" keyProperty="id" >
         insert into  t_seller_designer_page_model(id,shop_id,page_json,enable_status,position,type,designer_version,user_main_id,app_code,create_date,update_date,creater_id,updater_id,delete_status)
         values(#{id},#{shopId},#{pageJson},#{enableStatus},#{position},#{type},#{designerVersion},#{userMainId},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId},#{deleteStatus})
@@ -51,7 +68,7 @@
 
     <select id="queryLastOne" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" resultMap="sellerDesignerMap">
         select * from t_seller_designer_page_model
-         where delete_status=0 and shop_id=#{shopId} and type=#{type} and position=#{position} and enable_status=1
+         where delete_status=0 and shop_id=#{shopId} and type=#{type} and position=#{position} and enable_status=#{enableStatus}
          order by create_date desc limit 0,1
     </select>
 
@@ -88,6 +105,14 @@
             <include refid="queryListPageWhere" />
         </where>
 
+    </select>
+
+    <select id="queryList" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" resultMap="sellerDesignerMap">
+        select * from t_seller_designer_page_model t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+        </where>
     </select>
 
 

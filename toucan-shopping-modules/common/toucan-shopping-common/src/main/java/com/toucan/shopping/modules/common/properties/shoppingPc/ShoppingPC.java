@@ -63,7 +63,10 @@ public class ShoppingPC {
      * 店铺首页预览
      */
     private String shopPcIndexPreviewPage;
-
+    /**
+     * 店铺首页正式
+     */
+    private String shopPcIndexReleasePage;
     /**
      * 应用编码
      */

@@ -27,5 +27,6 @@ public interface SellerDesignerPageModelMapper {
      */
     int deleteById(Long id);
 
+    List<SellerDesignerPageModel> queryList(SellerDesignerPageModel sellerDesignerPageModel);
 
 }

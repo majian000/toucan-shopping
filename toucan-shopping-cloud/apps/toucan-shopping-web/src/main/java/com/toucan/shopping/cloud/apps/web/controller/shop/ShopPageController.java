@@ -48,13 +48,44 @@ public class ShopPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/pc/index/preview/{encShopId}/{shopId}")
-    public String indexPreviewPage(HttpServletRequest request, @PathVariable String encShopId, @PathVariable String shopId)
+    public String pcIndexPreviewPage(HttpServletRequest request, @PathVariable String encShopId, @PathVariable String shopId)
     {
         try {
             if (ShopUtils.encShopId(shopId).equals(encShopId)) {
                 SellerDesignerPageModelVO query =new SellerDesignerPageModelVO();
                 query.setShopId(Long.parseLong(shopId));
                 query.setType(1);
+                query.setPosition(1);
+                ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+                if(resultObjectVO.isSuccess())
+                {
+                    SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
+                    ShopPageContainer pageContainer = (ShopPageContainer)pageParser.convertToPageModel(shopPageContainer.getPageJson());
+                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
+                    shopIndexPageView.setShopId(shopId);
+                    request.setAttribute("pageView",shopIndexPageView);
+                    String pageJson = JSONObject.toJSONString(shopIndexPageView);
+                    pageJson = pageJson.replaceAll("\"","'");
+                    request.setAttribute("pageViewJson", pageJson);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+        return "shop/index";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/pc/index/release/{encShopId}/{shopId}")
+    public String pcIndexReleasePage(HttpServletRequest request, @PathVariable String encShopId, @PathVariable String shopId)
+    {
+        try {
+            if (ShopUtils.encShopId(shopId).equals(encShopId)) {
+                SellerDesignerPageModelVO query =new SellerDesignerPageModelVO();
+                query.setShopId(Long.parseLong(shopId));
+                query.setType(2);
                 query.setPosition(1);
                 ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
                 if(resultObjectVO.isSuccess())

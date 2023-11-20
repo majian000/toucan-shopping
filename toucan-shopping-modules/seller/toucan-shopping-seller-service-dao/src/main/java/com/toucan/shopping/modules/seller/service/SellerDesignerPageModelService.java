@@ -5,6 +5,8 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 
+import java.util.List;
+
 public interface SellerDesignerPageModelService {
 
 
@@ -20,6 +22,8 @@ public interface SellerDesignerPageModelService {
      * @return
      */
     PageInfo<SellerDesignerPageModel> queryListPage(SellerDesignerPageModelPageInfo queryPageInfo);
+
+    List<SellerDesignerPageModel> queryList(SellerDesignerPageModel sellerDesignerPageModel);
 
     /**
      * 根据ID删除

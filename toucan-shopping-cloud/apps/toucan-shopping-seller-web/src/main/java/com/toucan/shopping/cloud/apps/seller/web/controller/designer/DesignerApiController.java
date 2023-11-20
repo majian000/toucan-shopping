@@ -62,7 +62,7 @@ public class DesignerApiController extends BaseController {
     @UserAuth
     @RequestMapping("/pc/index/preview")
     @ResponseBody
-    public ResultObjectVO pcIndex(HttpServletRequest request,String pageJson,String position){
+    public ResultObjectVO pcIndexPreview(HttpServletRequest request,String pageJson,String position){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
@@ -94,10 +94,6 @@ public class DesignerApiController extends BaseController {
 
                     resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
                     resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage()+"/"+ ShopUtils.encShopId(shopId)+"/"+shopId);
-//                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(shopPageContainer);
-//                    shopIndexPageView.setSrcType(2);
-//                    shopIndexPageView.setShopId(shopId);
-//                    request.setAttribute("pageViewJson", JSONObject.toJSONString(shopIndexPageView));
                 }catch(Exception e)
                 {
                     if(e instanceof ValidatorException)
@@ -118,5 +114,66 @@ public class DesignerApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+    @UserAuth
+    @RequestMapping("/pc/index/saveAndPublish")
+    @ResponseBody
+    public ResultObjectVO pcIndexSaveAndPublish(HttpServletRequest request,String pageJson,String position){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            String shopId = "-1";
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
+                    shopId = String.valueOf(sellerShopVO.getId());
+                }
+            }
+            if(!"-1".equals(shopId))
+            {
+                try {
+                    ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
+                    //校验模型
+                    pageValidator.valid(shopPageContainer);
+                    SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
+                    sellerDesignerPageVO.setType(2); //正式页
+                    sellerDesignerPageVO.setPosition(Integer.parseInt(position));
+                    sellerDesignerPageVO.setShopId(Long.parseLong(shopId));
+                    sellerDesignerPageVO.setDesignerVersion("1.0");
+                    sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
+                    sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
+
+                    resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexReleasePage()+"/"+ ShopUtils.encShopId(shopId)+"/"+shopId);
+
+                    //同步更新预览页
+                    sellerDesignerPageVO.setType(1);
+                    feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+
+                }catch(Exception e)
+                {
+                    if(e instanceof ValidatorException)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg(e.getMessage());
+                    }
+                }
+            }
+
+
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后再试");
+        }
+        return resultObjectVO;
+    }
 
 }

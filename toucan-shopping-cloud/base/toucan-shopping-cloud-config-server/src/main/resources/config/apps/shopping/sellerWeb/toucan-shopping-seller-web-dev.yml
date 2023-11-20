@@ -107,6 +107,7 @@ toucan:
     product-detail-page: /page/product/preview/pid/ #商品预览
     product-preview-page: /page/product/preview/pid/ #商品预览
     shop-pc-index-preview-page: /page/shop/pc/index/preview #店铺首页预览
+    shop-pc-index-release-page: /page/shop/pc/index/release #店铺首页正式
   shopping-seller-web-pc: #卖家PC端配置
     freemarker:
       release-mapping-url: /htmls/release/**

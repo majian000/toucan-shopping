@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 卖家设计器页面
  * @author majian
@@ -45,6 +47,11 @@ public class SellerDesignerPageModelServiceImpl implements SellerDesignerPageMod
         pageInfo.setList(sellerDesignerPageModelMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(sellerDesignerPageModelMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public List<SellerDesignerPageModel> queryList(SellerDesignerPageModel sellerDesignerPageModel) {
+        return sellerDesignerPageModelMapper.queryList(sellerDesignerPageModel);
     }
 
     @Override

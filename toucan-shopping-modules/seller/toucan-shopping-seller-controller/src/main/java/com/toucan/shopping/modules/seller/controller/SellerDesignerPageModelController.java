@@ -16,9 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -80,36 +82,42 @@ public class SellerDesignerPageModelController {
             query.setShopId(sellerDesignerPageVO.getShopId());
             query.setType(sellerDesignerPageVO.getType());
             query.setPosition(sellerDesignerPageVO.getPosition());
-            SellerDesignerPageModel sellerDesignerPageModelRet = sellerDesignerPageModelService.queryLastOne(query);
-            if(sellerDesignerPageModelRet ==null) {
-                designerPageId = idGenerator.id();
+            query.setEnableStatus(0);
+            List<SellerDesignerPageModel> sellerDesignerPageModels = sellerDesignerPageModelService.queryList(query);
+            //如果没有被禁用的话,就刷新数据
+            if(CollectionUtils.isEmpty(sellerDesignerPageModels)) {
+                query.setEnableStatus(1);
+                SellerDesignerPageModel sellerDesignerPageModelRet = sellerDesignerPageModelService.queryLastOne(query);
+                if (sellerDesignerPageModelRet == null) {
+                    designerPageId = idGenerator.id();
 
-                SellerDesignerPageModel sellerDesignerPageModel = new SellerDesignerPageModel();
-                BeanUtils.copyProperties(sellerDesignerPageModel, sellerDesignerPageVO);
-                sellerDesignerPageModel.setId(designerPageId);
-                sellerDesignerPageModel.setAppCode(requestJsonVO.getAppCode());
-                sellerDesignerPageModel.setCreateDate(new Date());
-                sellerDesignerPageModel.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
-                sellerDesignerPageModel.setDeleteStatus((short) 0);
-                sellerDesignerPageModel.setEnableStatus(1);
-                int row = sellerDesignerPageModelService.save(sellerDesignerPageModel);
-                if (row <= 0) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,请稍后重试!");
-                    return resultObjectVO;
-                }
-            }else{ //覆盖该最新对象
-                sellerDesignerPageModelRet.setUpdaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
-                sellerDesignerPageModelRet.setUpdateDate(new Date());
-                sellerDesignerPageModelRet.setPageJson(sellerDesignerPageVO.getPageJson());
-                sellerDesignerPageModelRet.setDesignerVersion(sellerDesignerPageVO.getDesignerVersion());
-                int row = sellerDesignerPageModelService.update(sellerDesignerPageModelRet);
-                if (row <= 0) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,请稍后重试!");
-                    return resultObjectVO;
-                }
+                    SellerDesignerPageModel sellerDesignerPageModel = new SellerDesignerPageModel();
+                    BeanUtils.copyProperties(sellerDesignerPageModel, sellerDesignerPageVO);
+                    sellerDesignerPageModel.setId(designerPageId);
+                    sellerDesignerPageModel.setAppCode(requestJsonVO.getAppCode());
+                    sellerDesignerPageModel.setCreateDate(new Date());
+                    sellerDesignerPageModel.setCreaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                    sellerDesignerPageModel.setDeleteStatus((short) 0);
+                    sellerDesignerPageModel.setEnableStatus(1);
+                    int row = sellerDesignerPageModelService.save(sellerDesignerPageModel);
+                    if (row <= 0) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("保存失败,请稍后重试!");
+                        return resultObjectVO;
+                    }
+                } else { //覆盖该最新对象
+                    sellerDesignerPageModelRet.setUpdaterId(String.valueOf(sellerDesignerPageVO.getUserMainId()));
+                    sellerDesignerPageModelRet.setUpdateDate(new Date());
+                    sellerDesignerPageModelRet.setPageJson(sellerDesignerPageVO.getPageJson());
+                    sellerDesignerPageModelRet.setDesignerVersion(sellerDesignerPageVO.getDesignerVersion());
+                    int row = sellerDesignerPageModelService.update(sellerDesignerPageModelRet);
+                    if (row <= 0) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("保存失败,请稍后重试!");
+                        return resultObjectVO;
+                    }
 
+                }
             }
 
         }catch(Exception e)
@@ -199,6 +207,7 @@ public class SellerDesignerPageModelController {
             }
             SellerDesignerPageModel query = new SellerDesignerPageModel();
             BeanUtils.copyProperties(query,sellerDesignerPageVO);
+            query.setEnableStatus(1);
             resultObjectVO.setData(sellerDesignerPageModelService.queryLastOne(query));
         }catch(Exception e)
         {
