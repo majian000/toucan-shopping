@@ -51,7 +51,7 @@
 
     <select id="queryLastOne" parameterType="com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel" resultMap="sellerDesignerMap">
         select * from t_seller_designer_page_model
-         where delete_status=0 and shop_id=#{shopId} and type=#{type} and position=#{position}
+         where delete_status=0 and shop_id=#{shopId} and type=#{type} and position=#{position} and enable_status=1
          order by create_date desc limit 0,1
     </select>
 
@@ -63,6 +63,7 @@
             t.user_main_id,
             t.type,
             t.position,
+            t.enable_status,
             t.create_date,
             t.creater_id,
             t.update_date,

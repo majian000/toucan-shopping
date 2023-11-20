@@ -14,4 +14,6 @@ public class SellerDesignerPageModelVO extends SellerDesignerPageModel {
 
     private String updaterName; //修改人名称 店铺所属人ID或者管理员名称
 
+    private String shopName; //店铺名称
+
 }

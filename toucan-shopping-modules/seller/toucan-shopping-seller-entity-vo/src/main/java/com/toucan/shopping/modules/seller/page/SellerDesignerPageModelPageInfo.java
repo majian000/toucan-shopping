@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class SellerDesignerPageModelPageInfo extends PageInfo<SellerDesignerPageModel> {
+public class SellerDesignerPageModelPageInfo extends PageInfo<SellerDesignerPageModelVO> {
 
 
     // ===============查询条件===================

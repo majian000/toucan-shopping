@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerLoginHistoryService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -14,10 +15,13 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *  卖家设计器页面模型管理
@@ -54,6 +59,8 @@ public class SellerDesignerPageModelController extends UIController {
     @Autowired
     private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
 
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -88,7 +95,35 @@ public class SellerDesignerPageModelController extends UIController {
                     SellerDesignerPageModelPageInfo retPageInfo = resultObjectVO.formatData(SellerDesignerPageModelPageInfo.class);
                     tableVO.setCount(retPageInfo.getTotal());
                     if(tableVO.getCount()>0) {
-                        tableVO.setData(retPageInfo.getList());
+                        List<SellerDesignerPageModelVO> sellerDesignerPageModels = retPageInfo.getList();
+                        if(CollectionUtils.isNotEmpty(sellerDesignerPageModels))
+                        {
+                            List<Long> shopIdList = sellerDesignerPageModels.stream().map(SellerDesignerPageModelVO::getShopId).collect(Collectors.toList());
+                            if(CollectionUtils.isNotEmpty(shopIdList)) {
+                                SellerShopVO queryShopVO = new SellerShopVO();
+                                queryShopVO.setIdList(shopIdList);
+                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopVO);
+                                resultObjectVO = feignSellerShopService.findByIdList(requestJsonVO);
+                                if(resultObjectVO.isSuccess())
+                                {
+                                    List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
+                                    if(CollectionUtils.isNotEmpty(sellerShopVOS))
+                                    {
+                                        for(SellerDesignerPageModelVO sellerDesignerPageModelVO:sellerDesignerPageModels)
+                                        {
+                                            for(SellerShopVO sellerShopVO:sellerShopVOS)
+                                            {
+                                                if(sellerDesignerPageModelVO.getShopId().longValue()==sellerShopVO.getId().longValue())
+                                                {
+                                                    sellerDesignerPageModelVO.setShopName(sellerShopVO.getName());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        tableVO.setData(sellerDesignerPageModels);
                     }
                 }
             }
@@ -108,7 +143,7 @@ public class SellerDesignerPageModelController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
     {

@@ -186,6 +186,7 @@ public class IndexController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/index/menus",method = RequestMethod.GET)
     @ResponseBody
     public IndexInfo menus(HttpServletRequest request)

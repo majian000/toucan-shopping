@@ -140,8 +140,9 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  width: 200, title: '主键'},
                     {field: 'shopId', width: 150, title: '店铺ID'},
+                    {field: 'shopName', width: 150, title: '店铺名称'},
                     {field: 'userMainId',  width: 200, title: '掌柜ID'},
-                    {field: 'position', width: 150, title: '类型',
+                    {field: 'position', width: 150, title: '位置',
                         templet: function (row) {
                             if(row.position == "1"){
                                 return "PC首页"
@@ -157,6 +158,15 @@
                             }
                             return row.type;
                     }},
+                    {field: 'enableStatus', width: 100, title: '状态',
+                        templet: function (row) {
+                            if(row.enableStatus == "1"){
+                                return "启用"
+                            }else if(row.enableStatus == "0"){
+                                return "停用"
+                            }
+                            return row.enableStatus;
+                        }},
                     {field: 'designerVersion', width: 200, title: '设计器版本'},
                     {field: 'createDate', width: 200, title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#designerPageModelTableBar', align: "center"}
@@ -187,13 +197,60 @@
             layui.form.render();
         });
 
+        function reloadTable(data)
+        {
+            //执行搜索重载
+            table.reload('designerPageModelTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+        }
 
+
+
+        table.on('tool(designerPageModelTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'delete') {
+                var typeName="";
+                var positionName="";
+                if(data.type=="1")
+                {
+                    typeName="预览页";
+                }else if(data.type=="2"){
+                    typeName="正式页";
+                }
+                if(data.position=="1")
+                {
+                    positionName="PC首页";
+                }
+
+                layer.confirm("确定删除店铺“"+data.shopName+"”的"+positionName+""+typeName+"?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]seller/designer/page/model/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            reloadTable(data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
         /**
          * toolbar监听事件
          */
         table.on('toolbar(designerPageModelTableFilter)', function (obj) {
+            var data = obj.data;
             if (obj.event === 'delete') {  // 监听删除操作
-                
             }
         });
 
