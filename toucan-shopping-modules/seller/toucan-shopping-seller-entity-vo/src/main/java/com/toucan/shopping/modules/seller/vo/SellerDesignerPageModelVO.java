@@ -16,7 +16,6 @@ public class SellerDesignerPageModelVO extends SellerDesignerPageModel {
 
     private String shopName; //店铺名称
 
-    private String pcIndexPreviewPage; //PC首页预览页
-    private String pcIndexReleasePage; //PC首页正式页
+    private String pcIndexPage; //PC首页正式页
 
 }

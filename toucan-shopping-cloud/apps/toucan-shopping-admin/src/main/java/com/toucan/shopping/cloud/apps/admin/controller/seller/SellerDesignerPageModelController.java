@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -87,6 +88,9 @@ public class SellerDesignerPageModelController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
+            //排除预览页
+            pageInfo.setExTypes(new LinkedList<>());
+            pageInfo.getExTypes().add(1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -126,7 +130,7 @@ public class SellerDesignerPageModelController extends UIController {
                             for(SellerDesignerPageModelVO sellerDesignerPageModelVO:sellerDesignerPageModels)
                             {
                                 //设置PC首页预览页
-                                sellerDesignerPageModelVO.setPcIndexPreviewPage(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage()+"/"+ ShopUtils.encShopId(String.valueOf(sellerDesignerPageModelVO.getShopId()))+"/"+String.valueOf(sellerDesignerPageModelVO.getShopId()));
+                                sellerDesignerPageModelVO.setPcIndexPage(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexReleasePage()+"/"+ ShopUtils.encShopId(String.valueOf(sellerDesignerPageModelVO.getShopId()))+"/"+String.valueOf(sellerDesignerPageModelVO.getShopId()));
                             }
                         }
                         tableVO.setData(sellerDesignerPageModels);

@@ -149,15 +149,6 @@
                             }
                             return row.position;
                         }},
-                    {field: 'type', width: 150, title: '类型',
-                        templet: function (row) {
-                            if(row.type == "1"){
-                                return "预览页"
-                            }else if(row.type == "2"){
-                                return "正式页"
-                            }
-                            return row.type;
-                    }},
                     {field: 'enableStatus', width: 100, title: '状态',
                         templet: function (row) {
                             if(row.enableStatus == "1"){
@@ -213,20 +204,13 @@
         table.on('tool(designerPageModelTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'delete') {
-                var typeName="";
                 var positionName="";
-                if(data.type=="1")
-                {
-                    typeName="预览页";
-                }else if(data.type=="2"){
-                    typeName="正式页";
-                }
                 if(data.position=="1")
                 {
                     positionName="PC首页";
                 }
 
-                layer.confirm("确定删除店铺“"+data.shopName+"”的"+positionName+""+typeName+"?", function (index) {
+                layer.confirm("确定删除店铺“"+data.shopName+"”的"+positionName+"?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]seller/designer/page/model/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
@@ -243,8 +227,8 @@
                         }
                     });
                 });
-            }else if(obj.event === 'pcIndexPreviewPage'){
-                window.open(data.pcIndexPreviewPage);
+            }else if(obj.event === 'pcIndexPage'){
+                window.open(data.pcIndexPage);
             }
         });
         /**

@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 列表查询页
  */
@@ -36,6 +38,8 @@ public class SellerDesignerPageModelPageInfo extends PageInfo<SellerDesignerPage
     private Integer type; //类型 1:预览页 2:正式页
 
     private Integer position; //位置 1:PC首页
+
+    private List<Integer> exTypes; //排除类型
 
     //==============================================
 

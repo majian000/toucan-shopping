@@ -35,6 +35,13 @@
         <if test="position!=null and position!=-1 ">
             and t.position = #{position}
         </if>
+
+        <if test="exTypes!=null and exTypes.size>0 ">
+            and t.type not in
+            <foreach item="item" index="index" collection="exTypes" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
     </sql>
 
 
