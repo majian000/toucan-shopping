@@ -19,6 +19,10 @@ public class OrderConstant {
      */
     public static final int TRADE_STATUS_NON_PAYMENT=0; // 未付款
 
+    /**
+     * 交易状态
+     */
+    public static final int TRADE_STATUS_CALCEL=2; //已取消
 
     public static final int ORDER_LOG_TYPE_ORDER=1; //订单日志类型
 

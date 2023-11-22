@@ -561,6 +561,8 @@
                         loadConsigneeAddressArea(orderConsigneeAddress_cityCode);
                     }
                 });
+            }else{
+                provinceCityAreaLoadCount++;
             }
         }
         form.on('select(orderConsigneeAddress_cityName)', function (data) {
