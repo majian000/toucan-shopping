@@ -1000,8 +1000,12 @@ $(function() {
 			processData: false,
 			contentType: false,
 			success:function(data){
+				loading.hideLoading();
 				if(data.code==0) {
-					layer.msg(data.msg);
+					$.message({
+						message: data.msg,
+						type: 'error'
+					});
 					return false;
 				}
 				window.open(data.data);
@@ -1036,8 +1040,12 @@ $(function() {
 			processData: false,
 			contentType: false,
 			success:function(data){
+				loading.hideLoading();
 				if(data.code==0) {
-					layer.msg(data.msg);
+					$.message({
+						message: data.msg,
+						type: 'error'
+					});
 					return false;
 				}
 				window.open(data.data);

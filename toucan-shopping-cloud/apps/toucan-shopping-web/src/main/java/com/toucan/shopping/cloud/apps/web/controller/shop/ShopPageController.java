@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +61,15 @@ public class ShopPageController extends BaseController {
                 if(resultObjectVO.isSuccess())
                 {
                     SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
-                    ShopPageContainer pageContainer = (ShopPageContainer)pageParser.convertToPageModel(shopPageContainer.getPageJson());
-                    ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
-                    shopIndexPageView.setShopId(shopId);
-                    request.setAttribute("pageView",shopIndexPageView);
-                    String pageJson = JSONObject.toJSONString(shopIndexPageView);
-                    pageJson = pageJson.replaceAll("\"","'");
-                    request.setAttribute("pageViewJson", pageJson);
+                    if(StringUtils.isNotEmpty(shopPageContainer.getPageJson())) {
+                        ShopPageContainer pageContainer = (ShopPageContainer) pageParser.convertToPageModel(shopPageContainer.getPageJson());
+                        ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
+                        shopIndexPageView.setShopId(shopId);
+                        request.setAttribute("pageView", shopIndexPageView);
+                        String pageJson = JSONObject.toJSONString(shopIndexPageView);
+                        pageJson = pageJson.replaceAll("\"", "'");
+                        request.setAttribute("pageViewJson", pageJson);
+                    }
                 }
             }
         }catch(Exception e)

@@ -93,7 +93,11 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
                     resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
-                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexPreviewPage()+"/"+ ShopUtils.encShopId(shopId)+"/"+shopId);
+                    if(resultObjectVO.isSuccess()) {
+                        resultObjectVO.setData(toucan.getShoppingPC().getBasePath() + toucan.getShoppingPC().getShopPcIndexPreviewPage() + "/" + ShopUtils.encShopId(shopId) + "/" + shopId);
+                    }else{
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    }
                 }catch(Exception e)
                 {
                     if(e instanceof ValidatorException)

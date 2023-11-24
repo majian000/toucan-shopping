@@ -118,6 +118,10 @@ public class SellerDesignerPageModelController {
                     }
 
                 }
+            }else{
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("已被禁用");
+                return resultObjectVO;
             }
 
         }catch(Exception e)
