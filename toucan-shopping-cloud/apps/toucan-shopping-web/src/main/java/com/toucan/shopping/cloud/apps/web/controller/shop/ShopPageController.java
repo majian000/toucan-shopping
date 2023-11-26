@@ -47,7 +47,6 @@ public class ShopPageController extends BaseController {
     private IPageParser pageParser;
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/pc/index/preview/{encShopId}/{shopId}")
     public String pcIndexPreviewPage(HttpServletRequest request, @PathVariable String encShopId, @PathVariable String shopId)
     {
@@ -80,7 +79,6 @@ public class ShopPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/pc/index/release/{encShopId}/{shopId}")
     public String pcIndexReleasePage(HttpServletRequest request, @PathVariable String encShopId, @PathVariable String shopId)
     {
