@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.ShopImageMapper">
+
+    <resultMap id="shopImageMap" type="com.toucan.shopping.modules.seller.entity.ShopImage" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+        <result column="file_size" jdbcType="BIGINT" property="fileSize" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="creater_id" jdbcType="VARCHAR" property="createrId" />
+        <result column="updater_id" jdbcType="VARCHAR" property="updaterId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+    </resultMap>
+
+
+    <resultMap id="imageVOMap" type="com.toucan.shopping.modules.seller.vo.ShopImageVO" extends="shopImageMap" >
+    </resultMap>
+
+
+</mapper>
