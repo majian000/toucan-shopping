@@ -91,7 +91,7 @@ public class ShopImageApiController extends BaseController {
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-//                    resultObjectVO = feignShopImageService.queryListPage(requestJsonVO);
+                    resultObjectVO = feignShopImageService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
                         ShopImagePageInfo shopImagePageInfo = resultObjectVO.formatData(ShopImagePageInfo.class);
                         if(shopImagePageInfo!=null&&shopImagePageInfo.getList()!=null)

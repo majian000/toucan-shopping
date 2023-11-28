@@ -23,6 +23,15 @@ public interface FeignShopImageService {
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+
+
 
 
 }

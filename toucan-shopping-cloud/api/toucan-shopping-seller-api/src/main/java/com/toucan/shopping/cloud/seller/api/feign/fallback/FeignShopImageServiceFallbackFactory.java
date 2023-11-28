@@ -24,6 +24,20 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
         logger.warn(throwable.getMessage(),throwable);
         return new FeignShopImageService(){
 
+            @Override
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopImageService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询店铺图片列表失败");
+                return resultObjectVO;
+            }
 
             @Override
             public ResultObjectVO findById(RequestJsonVO requestVo) {
@@ -36,7 +50,7 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
                 }
                 logger.warn("FeignShopImageService.findById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询轮播图失败");
+                resultObjectVO.setMsg("查询店铺图片失败");
                 return resultObjectVO;
             }
 

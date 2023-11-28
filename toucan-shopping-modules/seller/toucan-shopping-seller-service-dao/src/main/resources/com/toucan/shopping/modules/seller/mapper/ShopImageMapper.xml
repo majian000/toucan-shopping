@@ -23,9 +23,39 @@
     </resultMap>
 
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="title!=null and title!='' ">
+            and t.title  like concat('%',#{title},'%')
+        </if>
+
+    </sql>
+
     <select id="findById" resultMap="shopImageMap" parameterType="java.lang.Long"  >
         select t.* from  t_shop_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
     </select>
 
+
+    <select id="queryListPage" resultMap="imageVOMap" parameterType="com.toucan.shopping.modules.seller.page.ShopImagePageInfo">
+        select t.* from t_shop_image t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.page.ShopImagePageInfo">
+        select count(*) from t_shop_image t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
 
 </mapper>
