@@ -96,6 +96,11 @@
             <#else>
                 <li><a href="${basePath}/page/shop/category/list"><span class="menu-item-cls">店铺分类</span></a></li>
             </#if>
+            <#if leftName??&&leftName=="shopImage">
+                    <li class="active"><a href="${basePath}/page/shop/image/list"><span class="menu-item-cls">店铺图片</span></a></li>
+            <#else>
+                    <li><a href="${basePath}/page/shop/image/list"><span class="menu-item-cls">店铺图片</span></a></li>
+            </#if>
             <li><a href="brand_info.html"><span class="menu-item-cls">品牌资料</span></a></li>
             <li><a href="customer.html"><span class="menu-item-cls">客服设置</span></a></li>
             <li><a href="password.html"><span class="menu-item-cls">修改密码</span></a></li>

@@ -23,4 +23,9 @@
     </resultMap>
 
 
+    <select id="findById" resultMap="shopImageMap" parameterType="java.lang.Long"  >
+        select t.* from  t_shop_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
+    </select>
+
+
 </mapper>

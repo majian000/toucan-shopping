@@ -80,7 +80,7 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignShopBannerService.findById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("删除轮播图失败");
+                resultObjectVO.setMsg("查询轮播图失败");
                 return resultObjectVO;
             }
 
@@ -110,7 +110,7 @@ public class FeignShopBannerServiceFallbackFactory implements FallbackFactory<Fe
                 }
                 logger.warn("FeignShopBannerService.deleteByIdForAdmin失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("修改轮播图失败");
+                resultObjectVO.setMsg("删除轮播图失败");
                 return resultObjectVO;
             }
 

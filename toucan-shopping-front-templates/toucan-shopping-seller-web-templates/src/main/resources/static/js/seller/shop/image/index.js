@@ -5,19 +5,19 @@ var pagegizationConfigObject={
     per_num:10,//每页条目数
     current_page:1//当前页
 };
-var g_shop_images_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
+var g_shop_image_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 function doPage()
 {
     loading.showLoading({
         type:6,
         tip:"查询中..."
     });
-    g_shop_images_query_obj.page = pagegizationConfigObject.current_page;
+    g_shop_image_query_obj.page = pagegizationConfigObject.current_page;
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/images/list",
+        url: basePath+"/api/shop/image/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_shop_images_query_obj),
+        data:  JSON.stringify(g_shop_image_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -55,11 +55,6 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\">标题</td>\n" +
         "                            <td style=\"width:100px;\" >图片预览</td>\n" +
-        "                            <td style=\"width:100px;\">跳转地址</td>\n" +
-        "                            <td style=\"width:100px;\">显示位置</td>\n" +
-        "                            <td style=\"width:100px;\">显示状态</td>\n" +
-        "                            <td style=\"width:100px;\">开始展示时间</td>\n" +
-        "                            <td style=\"width:100px;\">结束展示时间</td>\n" +
         "                            <td style=\"width:100px;\">创建时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
@@ -75,33 +70,28 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.title+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpImgPath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a href=\""+row.clickPath+"\" target=\"_blank\">"+row.clickPath+"</a></div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+positionVal+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.showStatus!=null&&row.showStatus==1?"显示":"隐藏")+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.startShowDate+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.endShowDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            tableHtml+=     "                                &nbsp;<a class=\"imagesEditRow\" attr-id=\""+row.id+"\"  style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
-            tableHtml+=     "                                &nbsp;<a class=\"imagesDelRow\" attr-id=\""+row.id+"\"  attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"imageEditRow\" attr-id=\""+row.id+"\"  style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"imageDelRow\" attr-id=\""+row.id+"\"  attr-title=\""+row.title+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
 
     }
-    $("#shopImagesTableBody").html(tableHtml);
-    $("#shopImagesTable").FrozenTable(2,0,0);
-    bindShopImagesEditEvent();
-    bindShopImagesDelEvent();
+    $("#shopImageTableBody").html(tableHtml);
+    $("#shopImageTable").FrozenTable(2,0,0);
+    bindShopImageEditEvent();
+    bindShopImageDelEvent();
 }
 
 
-function bindShopImagesDelEvent()
+function bindShopImageDelEvent()
 {
-    $(".imagesDelRow").unbind("click");
+    $(".imageDelRow").unbind("click");
     //SKU信息
-    $(".imagesDelRow").bind("click", function () {
+    $(".imageDelRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         var attrTitle = $(this).attr("attr-title");
         layer.confirm("确定删除"+attrTitle+"?", {
@@ -111,7 +101,7 @@ function bindShopImagesDelEvent()
             // $("#descriptionTableTr" +attrIndex ).remove();
             $.ajax({
                 type: "POST",
-                url: basePath+"/api/shop/images/delete/"+attrId,
+                url: basePath+"/api/shop/image/delete/"+attrId,
                 contentType: "application/json;charset=utf-8",
                 data:  null,
                 dataType: "json",
@@ -150,20 +140,20 @@ function bindShopImagesDelEvent()
 }
 
 
-function bindShopImagesEditEvent()
+function bindShopImageEditEvent()
 {
     //SKU信息
-    $(".imagesEditRow").bind("click", function () {
+    $(".imageEditRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
-        window.location.href=basePath+"/page/shop/images/edit/"+attrId
+        window.location.href=basePath+"/page/shop/image/edit/"+attrId
     });
 }
 
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"shopImagesTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
-        "                        <tbody id=\"shopImagesTableBody\">\n" +
+    $(".pageToolbar").html("<table id=\"shopImageTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
+        "                        <tbody id=\"shopImageTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");
 
@@ -174,9 +164,9 @@ function initPagination()
 
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/images/list",
+        url: basePath+"/api/shop/image/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_shop_images_query_obj),
+        data:  JSON.stringify(g_shop_image_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -213,22 +203,19 @@ $(function () {
 
     $("#queryBtn").bind( 'click' ,function(){
         pagegizationConfigObject.current_page = 1;
-        g_shop_images_query_obj.page = 1;
-        g_shop_images_query_obj.name=$("#name").val();
-        g_shop_images_query_obj.startShowDateYMDHS=$("#startShowDate").val();
-        g_shop_images_query_obj.endShowDateYMDHS=$("#endShowDate").val();
-        g_shop_images_query_obj.imagesStatus=$("#imagesStatus option:selected").val();
+        g_shop_image_query_obj.page = 1;
+        g_shop_image_query_obj.name=$("#name").val();
 
         initPagination();
     });
 
 
-    $('#addShopImagesBtn').on('click', function(){
-        window.location.href=basePath+"/page/shop/images/add";
+    $('#addShopImageBtn').on('click', function(){
+        window.location.href=basePath+"/page/shop/image/add";
     });
 
     $("#resetBtn").bind( 'click' ,function(){
-        $("#shopImagesForm").resetForm();
+        $("#shopImageForm").resetForm();
     });
 
     jeDate("#startShowDate",{
