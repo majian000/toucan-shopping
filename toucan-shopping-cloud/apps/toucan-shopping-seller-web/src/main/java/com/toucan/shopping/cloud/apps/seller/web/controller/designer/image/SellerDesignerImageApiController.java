@@ -156,6 +156,12 @@ public class SellerDesignerImageApiController extends BaseController {
                     resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                     return resultObjectVO;
                 }
+                if(imageImgFile.getOriginalFilename()!=null&&imageImgFile.getOriginalFilename().length()>50)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
+                    resultObjectVO.setMsg("文件名最大长度不能超过50");
+                    return resultObjectVO;
+                }
             }
 
             if(StringUtils.isEmpty(shopImageVO.getTitle()))
@@ -193,6 +199,8 @@ public class SellerDesignerImageApiController extends BaseController {
                 }
                 String logoImgFilePath = imageUploadService.uploadFile(imageImgFile.getBytes(), logoImgExt);
                 shopImageVO.setImgPath(logoImgFilePath);
+                shopImageVO.setFileName(imageImgFile.getOriginalFilename());
+                shopImageVO.setFileSize(imageImgFile.getSize());
                 resultObjectVO = feignSellerDesignerImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(!resultObjectVO.isSuccess())
                 {
@@ -273,6 +281,12 @@ public class SellerDesignerImageApiController extends BaseController {
                     resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                     return resultObjectVO;
                 }
+                if(imageImgFile.getOriginalFilename()!=null&&imageImgFile.getOriginalFilename().length()>50)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
+                    resultObjectVO.setMsg("文件名最大长度不能超过50");
+                    return resultObjectVO;
+                }
             }
 
             if(StringUtils.isEmpty(shopImageVO.getTitle()))
@@ -311,6 +325,8 @@ public class SellerDesignerImageApiController extends BaseController {
                     }
                     String logoImgFilePath = imageUploadService.uploadFile(imageImgFile.getBytes(), logoImgExt);
                     shopImageVO.setImgPath(logoImgFilePath);
+                    shopImageVO.setFileName(imageImgFile.getOriginalFilename());
+                    shopImageVO.setFileSize(imageImgFile.getSize());
                 }
 
                 SellerDesignerImageVO queryShopImageVO = new SellerDesignerImageVO();
@@ -322,6 +338,8 @@ public class SellerDesignerImageApiController extends BaseController {
                         if(StringUtils.isEmpty(shopImageVO.getImgPath()))
                         {
                             shopImageVO.setImgPath(resultShopImageVO.getImgPath());
+                            shopImageVO.setFileName(resultShopImageVO.getFileName());
+                            shopImageVO.setFileSize(resultShopImageVO.getFileSize());
                             shopImageVO.setUpdaterId(userMainId);
                             shopImageVO.setUpdateDate(new Date());
                         }else{
