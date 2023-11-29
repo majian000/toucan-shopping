@@ -55,7 +55,7 @@ public class SellerDesignerImagePageController extends BaseController {
     @RequestMapping("/list")
     public String list(HttpServletRequest request)
     {
-        return "shop/image/index";
+        return "designer/image/index";
     }
 
 
@@ -64,7 +64,7 @@ public class SellerDesignerImagePageController extends BaseController {
     @RequestMapping("/add")
     public String add(HttpServletRequest request){
 
-        return "shop/image/add";
+        return "designer/image/add";
     }
 
 
@@ -122,7 +122,7 @@ public class SellerDesignerImagePageController extends BaseController {
             logger.error(e.getMessage(),e);
         }
 
-        return "shop/image/edit";
+        return "designer/image/edit";
     }
 
 }
