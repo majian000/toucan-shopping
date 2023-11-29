@@ -33,12 +33,12 @@
     </sql>
 
     <select id="findById" resultMap="shopImageMap" parameterType="java.lang.Long"  >
-        select t.* from  t_shop_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
+        select t.* from  t_seller_designer_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
     </select>
 
 
     <select id="queryListPage" resultMap="imageVOMap" parameterType="com.toucan.shopping.modules.seller.page.SellerDesignerImagePageInfo">
-        select t.* from t_shop_image t
+        select t.* from t_seller_designer_image t
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -49,7 +49,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.page.SellerDesignerImagePageInfo">
-        select count(*) from t_shop_image t
+        select count(*) from t_seller_designer_image t
         <where>
             1=1 and t.delete_status = 0
 
