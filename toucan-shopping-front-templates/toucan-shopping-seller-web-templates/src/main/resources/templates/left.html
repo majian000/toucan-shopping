@@ -86,25 +86,35 @@
             <#else>
                 <li><a href="${basePath}/page/shop/banner/list"><span class="menu-item-cls">轮播图设置</span></a></li>
             </#if>
-            <#if leftName??&&leftName=="pageDesigner">
-                <li class="active"><a href="${basePath}/page/designer/index"><span class="menu-item-cls">页面装修</span></a></li>
-            <#else>
-                <li><a href="${basePath}/page/designer/index"><span class="menu-item-cls">页面装修</span></a></li>
-            </#if>
             <#if leftName??&&leftName=="shopCategory">
                 <li class="active"><a href="${basePath}/page/shop/category/list"><span class="menu-item-cls">店铺分类</span></a></li>
             <#else>
                 <li><a href="${basePath}/page/shop/category/list"><span class="menu-item-cls">店铺分类</span></a></li>
             </#if>
-            <#if leftName??&&leftName=="shopImage">
-                    <li class="active"><a href="${basePath}/page/shop/image/list"><span class="menu-item-cls">店铺图片</span></a></li>
-            <#else>
-                    <li><a href="${basePath}/page/shop/image/list"><span class="menu-item-cls">店铺图片</span></a></li>
-            </#if>
             <li><a href="brand_info.html"><span class="menu-item-cls">品牌资料</span></a></li>
             <li><a href="customer.html"><span class="menu-item-cls">客服设置</span></a></li>
             <li><a href="password.html"><span class="menu-item-cls">修改密码</span></a></li>
             <li><a href="invoice.html"><span class="menu-item-cls">发票管理</span></a></li>
+        </ul>
+    </li>
+
+    <li class="nav-item">
+        <a href="javascript:;"><i class="coolc nav-icon icon-shezhi"></i><span>店铺装修</span><i class="coolc nav-more"></i></a>
+            <#if menuType??&&menuType=="shopDesigner">
+                <ul style="">
+            <#else>
+                <ul style="display: none;">
+            </#if>
+            <#if leftName??&&leftName=="pageDesigner">
+                <li class="active"><a href="${basePath}/page/designer/index"><span class="menu-item-cls">页面装修</span></a></li>
+            <#else>
+                <li><a href="${basePath}/page/designer/index"><span class="menu-item-cls">页面装修</span></a></li>
+            </#if>
+            <#if leftName??&&leftName=="designerImage">
+                    <li class="active"><a href="${basePath}/page/designer/image/list"><span class="menu-item-cls">装修图片</span></a></li>
+            <#else>
+                    <li><a href="${basePath}/page/designer/image/list"><span class="menu-item-cls">装修图片</span></a></li>
+            </#if>
         </ul>
     </li>
 </ul>

@@ -1,16 +1,11 @@
 package com.toucan.shopping.modules.seller.page;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
-import com.toucan.shopping.modules.seller.vo.ShopImageVO;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * 列表查询页对象
@@ -19,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class ShopImagePageInfo extends PageInfo<ShopImageVO> {
+public class SellerDesignerImagePageInfo extends PageInfo<SellerDesignerImageVO> {
 
 
     // ===============查询条件===================

@@ -1,8 +1,7 @@
 package com.toucan.shopping.cloud.seller.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopImageService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
@@ -15,14 +14,14 @@ import org.springframework.stereotype.Component;
  * 店铺图片
  */
 @Component
-public class FeignShopImageServiceFallbackFactory implements FallbackFactory<FeignShopImageService> {
+public class FeignShopImageServiceFallbackFactory implements FallbackFactory<FeignSellerDesignerImageService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignShopImageService create(Throwable throwable) {
+    public FeignSellerDesignerImageService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignShopImageService(){
+        return new FeignSellerDesignerImageService(){
 
             @Override
             public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
@@ -33,7 +32,7 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopImageService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerDesignerImageService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询店铺图片列表失败");
                 return resultObjectVO;
@@ -48,7 +47,7 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopImageService.findById失败  params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerDesignerImageService.findById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询店铺图片失败");
                 return resultObjectVO;

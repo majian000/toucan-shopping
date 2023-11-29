@@ -1,9 +1,8 @@
-package com.toucan.shopping.cloud.apps.seller.web.controller.shop.image;
+package com.toucan.shopping.cloud.apps.seller.web.controller.designer.image;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopImageService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -27,16 +26,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 店铺图片
+ * 店铺装修图片
  */
-@Controller("imagePageController")
-@RequestMapping("/page/shop/image")
-public class ShopImagePageController extends BaseController {
+@Controller("sellerDesignerImagePageController")
+@RequestMapping("/page/designer/image")
+public class SellerDesignerImagePageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignShopImageService feignShopImageService;
+    private FeignSellerDesignerImageService feignSellerDesignerImageService;
 
     @Autowired
     private Toucan toucan;
@@ -95,7 +94,7 @@ public class ShopImagePageController extends BaseController {
             {
                 ShopBannerVO shopBannerVO = new ShopBannerVO();
                 shopBannerVO.setId(id);
-                ResultObjectVO resultObjectVO = feignShopImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
                 if(resultObjectVO.isSuccess())
                 {
                     ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);

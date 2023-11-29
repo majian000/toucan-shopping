@@ -6,35 +6,27 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.seller.entity.ShopBanner;
-import com.toucan.shopping.modules.seller.page.ShopBannerPageInfo;
-import com.toucan.shopping.modules.seller.page.ShopImagePageInfo;
-import com.toucan.shopping.modules.seller.redis.ShopBannerKey;
-import com.toucan.shopping.modules.seller.service.ShopBannerService;
-import com.toucan.shopping.modules.seller.service.ShopImageService;
-import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
-import com.toucan.shopping.modules.seller.vo.ShopImageVO;
+import com.toucan.shopping.modules.seller.page.SellerDesignerImagePageInfo;
+import com.toucan.shopping.modules.seller.service.SellerDesignerImageService;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 
 /**
  * 店铺图片
  */
 @RestController
-@RequestMapping("/shop/image")
-public class ShopImageController {
+@RequestMapping("/seller/designer/image")
+public class SellerDesignerImageController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ShopImageService shopImageService;
+    private SellerDesignerImageService sellerDesignerImageService;
 
 
     @Autowired
@@ -62,7 +54,7 @@ public class ShopImageController {
         }
 
         try {
-            ShopImageVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopImageVO.class);
+            SellerDesignerImageVO entity = JSONObject.parseObject(requestVo.getEntityJson(), SellerDesignerImageVO.class);
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -70,7 +62,7 @@ public class ShopImageController {
                 return resultObjectVO;
             }
 
-            resultObjectVO.setData(shopImageService.findById(entity.getId()));
+            resultObjectVO.setData(sellerDesignerImageService.findById(entity.getId()));
 
         }catch(Exception e)
         {
@@ -111,8 +103,8 @@ public class ShopImageController {
             return resultObjectVO;
         }
         try {
-            ShopImagePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopImagePageInfo.class);
-            PageInfo<ShopImageVO> pageInfo =  shopImageService.queryListPage(queryPageInfo);
+            SellerDesignerImagePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerDesignerImagePageInfo.class);
+            PageInfo<SellerDesignerImageVO> pageInfo =  sellerDesignerImageService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

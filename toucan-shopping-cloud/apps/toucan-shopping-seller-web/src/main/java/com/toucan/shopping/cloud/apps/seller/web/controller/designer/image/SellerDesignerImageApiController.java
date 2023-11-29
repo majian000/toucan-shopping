@@ -1,21 +1,20 @@
-package com.toucan.shopping.cloud.apps.seller.web.controller.shop.image;
+package com.toucan.shopping.cloud.apps.seller.web.controller.designer.image;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopImageService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
-import com.toucan.shopping.modules.seller.page.ShopImagePageInfo;
+import com.toucan.shopping.modules.seller.page.SellerDesignerImagePageInfo;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import com.toucan.shopping.modules.seller.vo.ShopImageVO;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,12 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
- * 店铺图片
+ * 店铺装修图片
  * @author majian
  */
-@Controller("shopImageApiController")
-@RequestMapping("/api/shop/image")
-public class ShopImageApiController extends BaseController {
+@Controller("sellerDesignerImageApiController")
+@RequestMapping("/api/designer/image")
+public class SellerDesignerImageApiController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -45,7 +44,7 @@ public class ShopImageApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private FeignShopImageService feignShopImageService;
+    private FeignSellerDesignerImageService feignSellerDesignerImageService;
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
@@ -62,13 +61,13 @@ public class ShopImageApiController extends BaseController {
     @UserAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO list(HttpServletRequest httpServletRequest,@RequestBody ShopImagePageInfo pageInfo)
+    public ResultObjectVO list(HttpServletRequest httpServletRequest,@RequestBody SellerDesignerImagePageInfo pageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             if(pageInfo==null)
             {
-                pageInfo = new ShopImagePageInfo();
+                pageInfo = new SellerDesignerImagePageInfo();
             }
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(userMainId))
@@ -91,19 +90,19 @@ public class ShopImageApiController extends BaseController {
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-                    resultObjectVO = feignShopImageService.queryListPage(requestJsonVO);
+                    resultObjectVO = feignSellerDesignerImageService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
-                        ShopImagePageInfo shopImagePageInfo = resultObjectVO.formatData(ShopImagePageInfo.class);
-                        if(shopImagePageInfo!=null&&shopImagePageInfo.getList()!=null)
+                        SellerDesignerImagePageInfo sellerDesignerImagePageInfo = resultObjectVO.formatData(SellerDesignerImagePageInfo.class);
+                        if(sellerDesignerImagePageInfo !=null&& sellerDesignerImagePageInfo.getList()!=null)
                         {
-                            for(ShopImageVO shopImageVO:shopImagePageInfo.getList())
+                            for(SellerDesignerImageVO shopImageVO: sellerDesignerImagePageInfo.getList())
                             {
                                 if(shopImageVO.getImgPath()!=null) {
                                     shopImageVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+shopImageVO.getImgPath());
                                 }
                             }
                         }
-                        resultObjectVO.setData(shopImagePageInfo);
+                        resultObjectVO.setData(sellerDesignerImagePageInfo);
                     }
                 }
             }
@@ -138,7 +137,7 @@ public class ShopImageApiController extends BaseController {
     @UserAuth
     @RequestMapping(value="/save")
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="imageImgFile",required=false) MultipartFile imageImgFile, ShopImageVO shopImageVO)
+    public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="imageImgFile",required=false) MultipartFile imageImgFile, SellerDesignerImageVO shopImageVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -196,7 +195,7 @@ public class ShopImageApiController extends BaseController {
                 shopImageVO.setImgPath(logoImgFilePath);
 
 
-//                resultObjectVO = feignShopImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
+//                resultObjectVO = feignSellerDesignerImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(!resultObjectVO.isSuccess())
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -238,11 +237,11 @@ public class ShopImageApiController extends BaseController {
                 resultObjectVO.setMsg("没有查询到店铺");
                 return resultObjectVO;
             }
-            ShopImageVO shopImageVO = new ShopImageVO();
+            SellerDesignerImageVO shopImageVO = new SellerDesignerImageVO();
             shopImageVO.setId(id);
             shopImageVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO);
-//            resultObjectVO = feignShopImageService.deleteById(requestJsonVO);
+//            resultObjectVO = feignSellerDesignerImageService.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -264,7 +263,7 @@ public class ShopImageApiController extends BaseController {
     @UserAuth
     @RequestMapping(value="/update")
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="imageImgFile",required=false) MultipartFile imageImgFile, ShopImageVO shopImageVO)
+    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="imageImgFile",required=false) MultipartFile imageImgFile, SellerDesignerImageVO shopImageVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -316,11 +315,11 @@ public class ShopImageApiController extends BaseController {
                     shopImageVO.setImgPath(logoImgFilePath);
                 }
 
-                ShopImageVO queryShopImageVO = new ShopImageVO();
+                SellerDesignerImageVO queryShopImageVO = new SellerDesignerImageVO();
                 queryShopImageVO.setId(shopImageVO.getId());
-                resultObjectVO = feignShopImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
+                resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(resultObjectVO.isSuccess()) {
-                    ShopImageVO resultShopImageVO = resultObjectVO.formatData(ShopImageVO.class);
+                    SellerDesignerImageVO resultShopImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
                     if (resultShopImageVO != null && resultShopImageVO.getShopId().equals(sellerShopVORet.getId())) {
                         if(StringUtils.isEmpty(shopImageVO.getImgPath()))
                         {
@@ -330,7 +329,7 @@ public class ShopImageApiController extends BaseController {
                         }else{
                             imageUploadService.deleteFile(resultShopImageVO.getImgPath());
                         }
-//                        resultObjectVO = feignShopImageService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
+//                        resultObjectVO = feignSellerDesignerImageService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
                         if (!resultObjectVO.isSuccess()) {
                             resultObjectVO.setCode(ResultObjectVO.FAILD);
                             resultObjectVO.setMsg("修改失败,请稍后重试");

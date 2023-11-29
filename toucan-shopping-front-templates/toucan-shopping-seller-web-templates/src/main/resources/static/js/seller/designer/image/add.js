@@ -36,12 +36,12 @@ function bindFileUpload()
 
 function backShopImage()
 {
-    window.location.href=basePath+"/page/shop/image/list";
+    window.location.href=basePath+"/page/designer/image/list";
 }
 
 function saveShopImage()
 {
-    if(!checkInputFunction($('#shopImageBtn'),2)){
+    if(!checkInputFunction($('#designerImageBtn'),2)){
         return false;
     }
 
@@ -60,8 +60,8 @@ function saveShopImage()
         type:6,
         tip:"保存中..."
     });
-    $('#shopImageForm').ajaxSubmit({
-        url: basePath+'/api/shop/image/save',
+    $('#designerImageForm').ajaxSubmit({
+        url: basePath+'/api/designer/image/save',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (data) {
@@ -78,7 +78,7 @@ function saveShopImage()
                 });
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/image/list";
+                window.location.href=basePath+"/page/designer/image/list";
             }
         }
     });

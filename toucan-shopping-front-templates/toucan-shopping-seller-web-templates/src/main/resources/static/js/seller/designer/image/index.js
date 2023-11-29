@@ -15,7 +15,7 @@ function doPage()
     g_shop_image_query_obj.page = pagegizationConfigObject.current_page;
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/image/list",
+        url: basePath+"/api/designer/image/list",
         contentType: "application/json;charset=utf-8",
         data:  JSON.stringify(g_shop_image_query_obj),
         dataType: "json",
@@ -80,8 +80,8 @@ function drawTable(pageResult)
         }
 
     }
-    $("#shopImageTableBody").html(tableHtml);
-    $("#shopImageTable").FrozenTable(2,0,0);
+    $("#designerImageTableBody").html(tableHtml);
+    $("#designerImageTable").FrozenTable(2,0,0);
     bindShopImageEditEvent();
     bindShopImageDelEvent();
 }
@@ -101,7 +101,7 @@ function bindShopImageDelEvent()
             // $("#descriptionTableTr" +attrIndex ).remove();
             $.ajax({
                 type: "POST",
-                url: basePath+"/api/shop/image/delete/"+attrId,
+                url: basePath+"/api/designer/image/delete/"+attrId,
                 contentType: "application/json;charset=utf-8",
                 data:  null,
                 dataType: "json",
@@ -145,15 +145,15 @@ function bindShopImageEditEvent()
     //SKU信息
     $(".imageEditRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
-        window.location.href=basePath+"/page/shop/image/edit/"+attrId
+        window.location.href=basePath+"/page/designer/image/edit/"+attrId
     });
 }
 
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"shopImageTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
-        "                        <tbody id=\"shopImageTableBody\">\n" +
+    $(".pageToolbar").html("<table id=\"designerImageTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
+        "                        <tbody id=\"designerImageTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");
 
@@ -164,7 +164,7 @@ function initPagination()
 
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/image/list",
+        url: basePath+"/api/designer/image/list",
         contentType: "application/json;charset=utf-8",
         data:  JSON.stringify(g_shop_image_query_obj),
         dataType: "json",
@@ -211,11 +211,11 @@ $(function () {
 
 
     $('#addShopImageBtn').on('click', function(){
-        window.location.href=basePath+"/page/shop/image/add";
+        window.location.href=basePath+"/page/designer/image/add";
     });
 
     $("#resetBtn").bind( 'click' ,function(){
-        $("#shopImageForm").resetForm();
+        $("#designerImageForm").resetForm();
     });
 
     jeDate("#startShowDate",{

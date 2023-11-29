@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/shop/image",fallbackFactory = FeignShopImageServiceFallbackFactory.class)
-public interface FeignShopImageService {
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/seller/designer/image",fallbackFactory = FeignShopImageServiceFallbackFactory.class)
+public interface FeignSellerDesignerImageService {
 
 
 
