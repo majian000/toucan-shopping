@@ -63,9 +63,6 @@ function drawTable(pageResult)
         for(var i=0;i<pageResult.list.length;i++)
         {
             var row = pageResult.list[i];
-            var positionVal=row.position;
-            positionVal = positionVal.replace("PC_INDEX","PC首页");
-            positionVal = positionVal.replace("H5_INDEX","H5首页");
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.title+"</div></td>\n" ;
@@ -142,7 +139,6 @@ function bindShopImageDelEvent()
 
 function bindShopImageEditEvent()
 {
-    //SKU信息
     $(".imageEditRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         window.location.href=basePath+"/page/designer/image/edit/"+attrId
@@ -218,13 +214,6 @@ $(function () {
         $("#designerImageForm").resetForm();
     });
 
-    jeDate("#startShowDate",{
-        format: "YYYY-MM-DD hh:mm:ss"
-    });
-
-    jeDate("#endShowDate",{
-        format: "YYYY-MM-DD hh:mm:ss"
-    });
 
     initPagination();
 });
