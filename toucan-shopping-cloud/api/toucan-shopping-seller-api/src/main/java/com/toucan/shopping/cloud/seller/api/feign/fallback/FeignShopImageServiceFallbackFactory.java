@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 店铺图片
+ * 装修图片
  */
 @Component
 public class FeignShopImageServiceFallbackFactory implements FallbackFactory<FeignSellerDesignerImageService> {
@@ -34,7 +34,52 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
                 }
                 logger.warn("FeignSellerDesignerImageService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询店铺图片列表失败");
+                resultObjectVO.setMsg("查询装修图片列表失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerDesignerImageService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存装修图片失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerDesignerImageService.deleteById失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("删除装修图片失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO update(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerDesignerImageService.update失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改装修图片失败");
                 return resultObjectVO;
             }
 
@@ -49,7 +94,7 @@ public class FeignShopImageServiceFallbackFactory implements FallbackFactory<Fei
                 }
                 logger.warn("FeignSellerDesignerImageService.findById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询店铺图片失败");
+                resultObjectVO.setMsg("查询装修图片失败");
                 return resultObjectVO;
             }
 

@@ -32,6 +32,35 @@ public interface FeignSellerDesignerImageService {
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 保存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
+    /**
+     * 修改轮播图
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
+
 
 
 }

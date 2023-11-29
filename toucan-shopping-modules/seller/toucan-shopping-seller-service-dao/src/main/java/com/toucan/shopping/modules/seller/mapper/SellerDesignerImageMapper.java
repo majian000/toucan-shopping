@@ -18,6 +18,7 @@ public interface SellerDesignerImageMapper {
     SellerDesignerImage findById(Long id);
 
 
+    int insert(SellerDesignerImage entity);
 
 
     /**
@@ -33,5 +34,9 @@ public interface SellerDesignerImageMapper {
      * @return
      */
     Long queryListPageCount(SellerDesignerImagePageInfo pageInfo);
-    
+
+    int deleteById(Long id);
+
+    int update(SellerDesignerImage sellerDesignerImage);
+
 }

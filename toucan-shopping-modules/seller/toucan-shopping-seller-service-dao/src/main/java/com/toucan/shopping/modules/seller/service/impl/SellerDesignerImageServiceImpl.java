@@ -29,4 +29,19 @@ public class SellerDesignerImageServiceImpl implements SellerDesignerImageServic
         pageInfo.setTotal(sellerDesignerImageMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public int save(SellerDesignerImage entity) {
+        return sellerDesignerImageMapper.insert(entity);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return sellerDesignerImageMapper.deleteById(id);
+    }
+
+    @Override
+    public int update(SellerDesignerImage entity) {
+        return sellerDesignerImageMapper.update(entity);
+    }
 }

@@ -193,9 +193,7 @@ public class SellerDesignerImageApiController extends BaseController {
                 }
                 String logoImgFilePath = imageUploadService.uploadFile(imageImgFile.getBytes(), logoImgExt);
                 shopImageVO.setImgPath(logoImgFilePath);
-
-
-//                resultObjectVO = feignSellerDesignerImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
+                resultObjectVO = feignSellerDesignerImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(!resultObjectVO.isSuccess())
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -241,7 +239,7 @@ public class SellerDesignerImageApiController extends BaseController {
             shopImageVO.setId(id);
             shopImageVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO);
-//            resultObjectVO = feignSellerDesignerImageService.deleteById(requestJsonVO);
+            resultObjectVO = feignSellerDesignerImageService.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -329,7 +327,7 @@ public class SellerDesignerImageApiController extends BaseController {
                         }else{
                             imageUploadService.deleteFile(resultShopImageVO.getImgPath());
                         }
-//                        resultObjectVO = feignSellerDesignerImageService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
+                        resultObjectVO = feignSellerDesignerImageService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
                         if (!resultObjectVO.isSuccess()) {
                             resultObjectVO.setCode(ResultObjectVO.FAILD);
                             resultObjectVO.setMsg("修改失败,请稍后重试");
