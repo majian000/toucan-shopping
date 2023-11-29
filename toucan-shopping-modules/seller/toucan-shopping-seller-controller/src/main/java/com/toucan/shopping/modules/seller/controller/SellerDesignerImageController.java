@@ -12,9 +12,9 @@ import com.toucan.shopping.modules.seller.redis.SellerDesignerImageKey;
 import com.toucan.shopping.modules.seller.service.SellerDesignerImageService;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -149,14 +149,14 @@ public class SellerDesignerImageController {
             return resultObjectVO;
         }
 
-        Long bannerId = -1L;
+        Long entityId = -1L;
         try {
-            bannerId = idGenerator.id();
+            entityId = idGenerator.id();
 
             SellerDesignerImageVO sellerDesignerImageVO = requestJsonVO.formatEntity(SellerDesignerImageVO.class);
             SellerDesignerImage sellerDesignerImage = new SellerDesignerImage();
             BeanUtils.copyProperties(sellerDesignerImage,sellerDesignerImageVO);
-            sellerDesignerImage.setId(bannerId);
+            sellerDesignerImage.setId(entityId);
             sellerDesignerImage.setCreateDate(new Date());
             sellerDesignerImage.setDeleteStatus((short)0);
             int row = sellerDesignerImageService.save(sellerDesignerImage);
