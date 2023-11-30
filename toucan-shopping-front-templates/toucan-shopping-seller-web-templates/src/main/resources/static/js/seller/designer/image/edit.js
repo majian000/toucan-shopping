@@ -45,7 +45,6 @@ function saveDesignerImage()
         return false;
     }
 
-
     loading.showLoading({
         type:6,
         tip:"保存中..."
