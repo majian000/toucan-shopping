@@ -57,6 +57,7 @@ function saveShopBanner()
             message: "请选择显示位置",
             type: 'error'
         });
+        return false;
     }
 
     loading.showLoading({
