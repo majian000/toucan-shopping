@@ -39,6 +39,11 @@ public class ShopBannerServiceImpl implements ShopBannerService {
     }
 
     @Override
+    public int deleteByIdAndShopId(Long id,Long shopId){
+        return shopBannerMapper.deleteByIdAndShopId(id,shopId);
+    }
+
+    @Override
     public int update(ShopBanner banner) {
         return shopBannerMapper.update(banner);
     }

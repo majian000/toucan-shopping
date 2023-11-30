@@ -24,6 +24,8 @@ public interface ShopBannerService {
 
     int deleteById(Long id);
 
+    int deleteByIdAndShopId(Long id,Long shopId);
+
     int update(ShopBanner banner);
 
     ShopBanner findById(Long id);

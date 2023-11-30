@@ -37,6 +37,8 @@ public interface SellerDesignerImageMapper {
 
     int deleteById(Long id);
 
+    int deleteByIdAndShopId(Long id,Long shopId) ;
+
     int update(SellerDesignerImage sellerDesignerImage);
 
 }

@@ -41,6 +41,10 @@ public class SellerDesignerImageServiceImpl implements SellerDesignerImageServic
     }
 
     @Override
+    public int deleteByIdAndShopId(Long id,Long shopId) {
+        return sellerDesignerImageMapper.deleteByIdAndShopId(id,shopId);
+    }
+    @Override
     public int update(SellerDesignerImage entity) {
         return sellerDesignerImageMapper.update(entity);
     }

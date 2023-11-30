@@ -3,13 +3,13 @@
 
 function bindFileUpload()
 {
-    $("#bannerImg").on("change", function(){
+    $("#designerImg").on("change", function(){
         // Get a reference to the fileList
         var files = !!this.files ? this.files : [];
 
         // If no files were selected, or no FileReader support, return
         if (!files.length || !window.FileReader) {
-            $("#pic").attr("src",$("#bannerImgPreview").val());
+            $("#pic").attr("src",$("#designerImgPreview").val());
             $("#isUpload").val("0");
             return;
         }
@@ -34,14 +34,14 @@ function bindFileUpload()
 }
 
 
-function backShopBanner()
+function backDesignerImage()
 {
-    window.location.href=basePath+"/page/shop/banner/list";
+    window.location.href=basePath+"/page/designer/image/list";
 }
 
-function saveShopBanner()
+function saveDesignerImage()
 {
-    if(!checkInputFunction($('#shopBannerBtn'),2)){
+    if(!checkInputFunction($('#designerImageBtn'),2)){
         return false;
     }
 
@@ -63,8 +63,8 @@ function saveShopBanner()
         type:6,
         tip:"保存中..."
     });
-    $('#shopBannerForm').ajaxSubmit({
-        url: basePath+'/api/shop/banner/update',
+    $('#designerImageForm').ajaxSubmit({
+        url: basePath+'/api/designer/image/update',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (data) {
@@ -81,7 +81,7 @@ function saveShopBanner()
                 });
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/banner/list";
+                window.location.href=basePath+"/page/designer/image/list";
             }
         }
     });

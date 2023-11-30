@@ -25,7 +25,9 @@
 <#include "/top.html"/>
 
 <#assign leftName = "designerImage">
-<#assign menuType = "shopDesigner">
+<#assign menuType = "shopSetting">
+
+<#setting number_format="#">
 
 <div class="body_box">
 
@@ -37,7 +39,7 @@
             <a href="${basePath}/page/designer/image/list">装修图片</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="javascript:;">添加图片</a>
+            <a href="javascript:;">修改图片</a>
         </li>
     </ol>
 
@@ -53,24 +55,28 @@
                 <div class="right_panel">
 
                     <form action="" id="designerImageForm" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
+                        <input type="hidden" name="id" id="id" value="${designerImage.id!''}" />
                         <label>
                             <span><font color="#ff4e00">*</font>标题 :</span>
-                            <input type="text" id="title" maxlength="80"  name="title"  lay-verify="required" tabindex="1"  />
+                            <input type="text" id="title" maxlength="80"  name="title"  lay-verify="required" tabindex="1" value="${designerImage.title!''}" />
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>图片预览 :</span>
-                            <img src="" id="pic" style="width:155px;height:150px;" />
+                            <img src="${designerImage.httpImgPath!''}" id="pic" style="width:155px;height:150px;" />
                         </label>
                         <label>
                             <span>图片上传 :</span>
                             <input type="hidden" id="isUpload" value="1"/>
-                            <input type="file" name="imageImgFile" id="imageImg" />
+                            <input type="file" name="designerImgFile" id="designerImg" />
+                            <input type="hidden" id="designerImgPreview" value="${designerImage.httpImgPath!''}"/>
+                        </label>
+                        <label>
                         </label>
                         <br>
                         <br>
                         <div style="width:100%;text-align:center;">
-                            <input type="button" class="button" value="保存" id="designerImageBtn"  onclick="saveShopImage();"/>
-                            <input type="button" class="button" value="返回" id="designerImageBackBtn"  onclick="backShopImage();"/>
+                            <input type="button" class="button" value="保存" id="designerImageBtn"  onclick="saveDesignerImage();"/>
+                            <input type="button" class="button" value="返回" id="designerImageBackBtn"  onclick="backDesignerImage();"/>
                         </div>
                         <br>
                     </form>
@@ -85,12 +91,11 @@
 
 
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/designer/image/add.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/designer/image/edit.js"></script>
 <script>
     $(function () {
 
         bindFileUpload();
-
 
     });
 

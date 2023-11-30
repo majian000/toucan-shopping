@@ -76,4 +76,10 @@
         update  t_seller_designer_image  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
+
+    <update id="deleteByIdAndShopId">
+        update  t_seller_designer_image  set delete_status=1 where id=#{id} and shop_id=#{shopId}  and delete_status=0
+    </update>
+
+
 </mapper>

@@ -238,7 +238,7 @@ public class SellerDesignerImageController {
 
 
 
-            int row = sellerDesignerImageService.deleteById(sellerDesignerImage.getId());
+            int row = sellerDesignerImageService.deleteByIdAndShopId(sellerDesignerImage.getId(),sellerDesignerImage.getShopId());
             if (row <=0) {
                 //释放锁
                 skylarkLock.unLock(SellerDesignerImageKey.getDeleteLockKey(shopId), shopId);

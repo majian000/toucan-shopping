@@ -126,4 +126,7 @@
         update  t_shop_banner  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
+    <update id="deleteByIdAndShopId">
+        update  t_shop_banner  set delete_status=1 where id=#{id} and shop_id=#{shopId} and delete_status=0
+    </update>
 </mapper>

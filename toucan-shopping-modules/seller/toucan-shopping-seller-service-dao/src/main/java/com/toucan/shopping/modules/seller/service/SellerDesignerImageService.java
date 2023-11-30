@@ -30,6 +30,8 @@ public interface SellerDesignerImageService {
 
     int deleteById(Long id);
 
+    int deleteByIdAndShopId(Long id,Long shopId);
+
     int update(SellerDesignerImage entity);
 
 

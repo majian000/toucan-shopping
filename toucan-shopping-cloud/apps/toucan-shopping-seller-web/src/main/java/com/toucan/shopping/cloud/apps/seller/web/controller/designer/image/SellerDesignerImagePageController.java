@@ -14,8 +14,8 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,28 +92,19 @@ public class SellerDesignerImagePageController extends BaseController {
             SellerShopVO sellerShopVO = queryByShop(userMainId);
             if(sellerShopVO!=null)
             {
-                ShopBannerVO shopBannerVO = new ShopBannerVO();
-                shopBannerVO.setId(id);
-                ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
+                sellerDesignerImageVO.setId(id);
+                ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerImageVO));
                 if(resultObjectVO.isSuccess())
                 {
-                    ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);
-                    if(resultShopBannerVO!=null&&resultShopBannerVO.getShopId().equals(sellerShopVO.getId()))
+                    SellerDesignerImageVO resultDesignerImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
+                    if(resultDesignerImageVO!=null&&resultDesignerImageVO.getShopId().equals(sellerShopVO.getId()))
                     {
-                        if(resultShopBannerVO.getImgPath()!=null) {
-                            resultShopBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+resultShopBannerVO.getImgPath());
-                        }
-                        if(resultShopBannerVO.getStartShowDate()!=null)
-                        {
-                            resultShopBannerVO.setStartShowDateString(DateUtils.FORMATTER_SS.get().format(resultShopBannerVO.getStartShowDate()));
+                        if(resultDesignerImageVO.getImgPath()!=null) {
+                            resultDesignerImageVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+resultDesignerImageVO.getImgPath());
                         }
 
-                        if(resultShopBannerVO.getEndShowDate()!=null)
-                        {
-                            resultShopBannerVO.setEndShowDateString(DateUtils.FORMATTER_SS.get().format(resultShopBannerVO.getEndShowDate()));
-                        }
-
-                        request.setAttribute("shopImage",resultShopBannerVO);
+                        request.setAttribute("designerImage",resultDesignerImageVO);
                     }
                 }
             }

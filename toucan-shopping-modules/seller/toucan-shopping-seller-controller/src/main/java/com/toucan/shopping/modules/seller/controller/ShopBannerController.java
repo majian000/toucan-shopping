@@ -154,7 +154,7 @@ public class ShopBannerController {
 
 
 
-            int row = shopBannerService.deleteById(shopBanner.getId());
+            int row = shopBannerService.deleteByIdAndShopId(shopBanner.getId(),shopBanner.getShopId());
             if (row <=0) {
                 //释放锁
                 skylarkLock.unLock(ShopBannerKey.getDeleteLockKey(shopId), shopId);
