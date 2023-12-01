@@ -22,7 +22,7 @@
 
         <fieldset class="table-search-fieldset">
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" id="shopBannerSearchForm" action="">
+                <form class="layui-form layui-form-pane" id="designerImageSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">店铺ID</label>
@@ -52,9 +52,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="shopBannerTable" lay-filter="shopBannerTableFilter"></table>
+        <table class="layui-hide" id="designerImageTable" lay-filter="designerImageTableFilter"></table>
 
-        <script type="text/html" id="shopBannerTableBar">
+        <script type="text/html" id="designerImageTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -98,12 +98,12 @@
 
         function getFormParam()
         {
-            var formParam = $("#shopBannerSearchForm").serializeJson();
+            var formParam = $("#designerImageSearchForm").serializeJson();
             return formParam;
         }
 
         table.render({
-            elem: '#shopBannerTable',
+            elem: '#designerImageTable',
             url: "[[@{/}]]seller/designer/image/list",
             method:'POST',
             where:getFormParam(),
@@ -130,7 +130,7 @@
                     {field: 'createrName',  width: 150, title: '创建人'},
                     {field: 'updateDate',  width: 150, title: '修改时间'},
                     {field: 'updaterName',  width: 150, title: '修改人'},
-                    {title: '操作', minWidth: 300, toolbar: '#shopBannerTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#designerImageTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -142,7 +142,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('shopBannerTable', {
+            table.reload('designerImageTable', {
                 page: {
                     curr: 1
                 }
@@ -154,14 +154,14 @@
 
 
         $("#data-reset-btn").click(function(){
-            $("#shopBannerSearchForm")[0].reset();
+            $("#designerImageSearchForm")[0].reset();
             layui.form.render();
         });
 
         function reloadTable(data)
         {
             //执行搜索重载
-            table.reload('shopBannerTable', {
+            table.reload('designerImageTable', {
                 page: {
                     curr: 1
                 }
@@ -171,12 +171,12 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(shopBannerTableFilter)', function (obj) {
+        table.on('checkbox(designerImageTableFilter)', function (obj) {
             console.log(obj)
         });
 
 
-        table.on('tool(shopBannerTableFilter)', function (obj) {
+        table.on('tool(designerImageTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'delete') {
                 layer.confirm("确定删除"+data.title+"?", function (index) {
