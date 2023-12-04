@@ -104,9 +104,13 @@ public class SellerDesignerImageController extends UIController {
                         }
                     }
 
-                    for (SellerDesignerImageVO bannerVO : shopBannerPageInfo.getList()) {
-                        bannerVO.setCreaterName(bannerVO.getCreaterId());
-                        bannerVO.setUpdaterName(bannerVO.getUpdaterId());
+                    for (SellerDesignerImageVO sellerDesignerImageVO : shopBannerPageInfo.getList()) {
+                        if(!sellerDesignerImageVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
+                            sellerDesignerImageVO.setCreaterName("掌柜ID:"+sellerDesignerImageVO.getCreaterId());
+                        }
+                        if(!sellerDesignerImageVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
+                            sellerDesignerImageVO.setUpdaterName("掌柜ID:"+sellerDesignerImageVO.getUpdaterId());
+                        }
                     }
 
 
@@ -134,7 +138,7 @@ public class SellerDesignerImageController extends UIController {
                         resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
                         if (resultObjectVO.isSuccess()) {
                             List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
-                            if (!org.springframework.util.CollectionUtils.isEmpty(adminVOS)) {
+                            if (!CollectionUtils.isEmpty(adminVOS)) {
                                 for (SellerDesignerImageVO bannerVO : shopBannerPageInfo.getList()) {
                                     for (AdminVO adminVO : adminVOS) {
                                         if (bannerVO.getCreaterId() != null && bannerVO.getCreaterId().equals(AuthHeaderUtil.getAdminPrefix()+adminVO.getAdminId())) {
