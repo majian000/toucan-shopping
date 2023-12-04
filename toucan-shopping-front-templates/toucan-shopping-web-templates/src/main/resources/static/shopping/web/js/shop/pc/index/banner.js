@@ -33,8 +33,7 @@ $(function(){
                         imgArr: bannerArray,
                         autoLoop: true,
                         current: 1,
-                        time: 3000,
-                        vWidth: 740
+                        time: 3000
                     });
                 }
             }
