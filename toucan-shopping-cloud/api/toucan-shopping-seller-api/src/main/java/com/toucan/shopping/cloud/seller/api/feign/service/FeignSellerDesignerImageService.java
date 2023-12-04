@@ -62,5 +62,13 @@ public interface FeignSellerDesignerImageService {
 
 
 
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO);
+
 
 }

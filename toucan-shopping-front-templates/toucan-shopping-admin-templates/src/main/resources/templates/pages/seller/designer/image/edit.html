@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+<form class="layui-form layuimini-form"  id="shopBannerForm"  >
+    <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="shopId"  th:value="${model.shopId}">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" th:value="${model.title}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">图片上传</label>
+        <div class="layui-input-block">
+           <input type="file"  id="uploadImg" name="bannerImgFile" />
+        </div>
+        <input type="hidden" id="imgPath" name="imgPath" th:value="${model.imgPath}" >
+        <input type="hidden" id="httpImgPath"  th:value="${model.httpImgPath}" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览图</label>
+        <div class="layui-input-block">
+            <img  id="previewBannerImg" th:src="${model.httpImgPath}" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</form>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        form.render();
+
+
+
+        $("#uploadImg").on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#previewBannerImg").attr("src",$("#httpImgPath").val());
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#previewBannerImg").attr("src",this.result);
+                }
+
+            }
+
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+
+            var formData = new FormData($('#shopBannerForm')[0]);
+            $.ajax({
+                url:"[[@{/seller/designer/image/update}]]",
+                type:'POST',
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
+
+    });
+
+</script>
+</body>
+</html>

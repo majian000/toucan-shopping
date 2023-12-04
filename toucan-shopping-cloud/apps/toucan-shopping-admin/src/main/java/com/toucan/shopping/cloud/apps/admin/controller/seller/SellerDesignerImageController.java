@@ -191,7 +191,7 @@ public class SellerDesignerImageController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-//            resultObjectVO = feignSellerDesignerImageService.deleteByIdForAdmin(requestVo);
+            resultObjectVO = feignSellerDesignerImageService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -248,18 +248,18 @@ public class SellerDesignerImageController extends UIController {
     public String detailPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            SellerDesignerImageVO banner = new SellerDesignerImageVO();
-            banner.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
+            SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
+            sellerDesignerImageVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
             ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    banner = resultObjectVO.formatData(SellerDesignerImageVO.class);
-                    if(banner!=null)
+                    sellerDesignerImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
+                    if(sellerDesignerImageVO!=null)
                     {
-                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
-                        request.setAttribute("model",banner);
+                        sellerDesignerImageVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + sellerDesignerImageVO.getImgPath());
+                        request.setAttribute("model",sellerDesignerImageVO);
                     }
                 }
 
@@ -279,7 +279,7 @@ public class SellerDesignerImageController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value="/update")
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, SellerDesignerImageVO shopBannerVO)
+    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, SellerDesignerImageVO sellerDesignerImageVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -300,7 +300,7 @@ public class SellerDesignerImageController extends UIController {
                 }
             }
 
-            if(StringUtils.isEmpty(shopBannerVO.getTitle()))
+            if(StringUtils.isEmpty(sellerDesignerImageVO.getTitle()))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("标题不能为空");
@@ -311,7 +311,7 @@ public class SellerDesignerImageController extends UIController {
 
             if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
                 SellerDesignerImageVO banner = new SellerDesignerImageVO();
-                banner.setId(shopBannerVO.getId());
+                banner.setId(sellerDesignerImageVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
                 resultObjectVO = feignSellerDesignerImageService.findById(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
@@ -332,16 +332,16 @@ public class SellerDesignerImageController extends UIController {
                             logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
                         }
                         String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
-                        shopBannerVO.setImgPath(logoImgFilePath);
+                        sellerDesignerImageVO.setImgPath(logoImgFilePath);
 
                     }
 
                 }
             }
 
-            shopBannerVO.setUpdateDate(new Date());
-            shopBannerVO.setUpdaterId(AuthHeaderUtil.getAdminIdAndPrefix(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, shopBannerVO);
+            sellerDesignerImageVO.setUpdateDate(new Date());
+            sellerDesignerImageVO.setUpdaterId(AuthHeaderUtil.getAdminIdAndPrefix(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
             resultObjectVO = feignSellerDesignerImageService.update(requestJsonVO);
         }catch(Exception e)
         {

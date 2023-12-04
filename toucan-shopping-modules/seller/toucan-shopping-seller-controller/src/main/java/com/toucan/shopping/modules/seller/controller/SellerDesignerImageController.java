@@ -317,5 +317,88 @@ public class SellerDesignerImageController {
 
 
 
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        SellerDesignerImageVO sellerDesignerImageVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerDesignerImageVO.class);
+
+        if(sellerDesignerImageVO.getId()==null)
+        {
+            logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空!");
+            return resultObjectVO;
+        }
+
+        String shopId = String.valueOf(sellerDesignerImageVO.getShopId());
+        try {
+
+            boolean lockStatus = skylarkLock.lock(SellerDesignerImageKey.getDeleteLockKey(shopId), shopId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+
+
+            if(sellerDesignerImageVO.getShopId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(SellerDesignerImageKey.getDeleteLockKey(shopId), shopId);
+
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(sellerDesignerImageVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有查询到关联店铺!");
+                return resultObjectVO;
+            }
+
+
+
+            int row = sellerDesignerImageService.deleteById(sellerDesignerImageVO.getId());
+            if (row <=0) {
+                //释放锁
+                skylarkLock.unLock(SellerDesignerImageKey.getDeleteLockKey(shopId), shopId);
+
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("删除失败，请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            //释放锁
+            skylarkLock.unLock(SellerDesignerImageKey.getDeleteLockKey(shopId), shopId);
+        }
+        return resultObjectVO;
+    }
+
+
 
 }
