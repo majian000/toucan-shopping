@@ -80,6 +80,7 @@ public class SellerDesignerImageApiController extends BaseController {
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            querySellerShop.setEnableStatus((short)1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
@@ -115,6 +116,8 @@ public class SellerDesignerImageApiController extends BaseController {
 
         return resultObjectVO;
     }
+
+
 
 
     private SellerShopVO queryByShop(String userMainId) throws Exception
