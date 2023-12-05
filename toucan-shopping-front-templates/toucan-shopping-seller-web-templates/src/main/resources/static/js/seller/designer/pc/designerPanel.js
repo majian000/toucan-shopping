@@ -1167,13 +1167,16 @@ $(function() {
  * @param compoentObj
  */
 function doAppendPanel(compoentObj){
-	if(compoentObj.attr("attr-compoent-type")=="shopBanner"){
+	var attrComponentType = compoentObj.attr("attr-compoent-type");
+	if(attrComponentType=="shopBanner"){
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
 		compoentObj.find(".fg-remove-widget").show();
 		compoentObj.find(".ui-resizable-handle").show();
+	}else if(attrComponentType=="image"){
+
 	}
 }
 
@@ -1187,6 +1190,13 @@ function doRemove(compoentObj){
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
+		compoentObj.find(".fg-remove-widget").hide();
+		compoentObj.find(".ui-resizable-handle").hide();
+	}else if(compoentObj.attr("attr-compoent-type")=="image"){
+		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("轮播图");
+		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-banner-hover");
+		compoentObj.find(".designer-component-image-bg").removeClass("fg-widget-inner-bg-color");
+		compoentObj.find(".designer-component-image-bg").addClass("fg-widget-inner-bg-color");
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
 	}
@@ -1214,6 +1224,12 @@ function encapsulationModel(grid){
 				objectCopy(shopBanner,widget);
 				shopBanner.innerHtml="";
 				pageContainer.mapComponents.push(shopBanner);
+			}else if(widget.type=="image")
+			{
+				var image = newImageComponent();
+				objectCopy(image,widget);
+				image.innerHtml="";
+				pageContainer.mapComponents.push(image);
 			}
 		}
 	}

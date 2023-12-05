@@ -53,3 +53,13 @@ function newShopBannerComponent(){
 
     return shopBannerComponent;
 }
+
+/**
+ * 图片组件
+ * @returns {{minHeight: null, x: null, width: null, name: null, y: null, minWidth: null, type: null, height: null}}
+ */
+function newImageComponent(){
+    var imageComponent=newBaseComponent();
+
+    return imageComponent;
+}

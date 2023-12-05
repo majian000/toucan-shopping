@@ -57,7 +57,7 @@
                                     <header class="el-header header-title" style="height: 60px;font-size: 15px;">常用组件</header>
                                     <div class="draggable-container">
                                         <div class="widget-holder " style="height:600px;">
-                                            <div class="fg-widget custom-widget custom-widget-handle " attr-compoent-type="shopBanner" attr-component-name="店铺轮播图" title="店铺轮播图">
+                                            <div class="fg-widget custom-widget custom-widget-handle components" attr-compoent-type="shopBanner" attribute-panel="mtc2" attr-component-name="店铺轮播图" title="店铺轮播图">
                                                 <i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>
                                                 <i class="fa fa-times fg-remove-widget" title="移除"></i>
                                                 <i class="fas fa-arrows-alt move-widget fg-widget-handle" title="移动"></i>
@@ -65,23 +65,23 @@
                                                     <label class="fg-widget-handle" style="widht:100%;height:100%" >轮播图</label>
                                                 </div>
                                             </div>
-                                            <div class="fg-widget custom-widget custom-widget-handle ">
+                                            <div class="fg-widget custom-widget custom-widget-handle components">
                                                 <i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>
                                                 <i class="fa fa-times fg-remove-widget" title="remove this widget"></i>
                                                 <i class="fas fa-arrows-alt move-widget fg-widget-handle"></i>
                                                 <div class="fg-widget-inner fg-widget-inner-bg-color"><label class="fg-widget-handle" style="widht:100%;height:100%">店铺分类</label></div>
                                             </div>
-                                            <div class="fg-widget custom-widget custom-widget-handle ">
+                                            <div class="fg-widget custom-widget custom-widget-handle components">
                                                 <i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>
                                                 <i class="fa fa-times fg-remove-widget" title="remove this widget"></i>
                                                 <i class="fas fa-arrows-alt move-widget fg-widget-handle"></i>
                                                 <div class="fg-widget-inner fg-widget-inner-bg-color"><label class="fg-widget-handle" style="widht:100%;height:100%">热门商品</label></div>
                                             </div>
-                                            <div class="fg-widget custom-widget custom-widget-handle " attr-compoent-type="shopImage" attr-component-name="图片" title="图片">
+                                            <div class="fg-widget custom-widget custom-widget-handle components" attr-compoent-type="image"  attribute-panel="mtc2" attr-component-name="图片" title="图片">
                                                 <i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>
                                                 <i class="fa fa-times fg-remove-widget" title="移除"></i>
                                                 <i class="fas fa-arrows-alt move-widget fg-widget-handle" title="移动"></i>
-                                                <div class="fg-widget-inner fg-widget-inner-bg-color designer-component-banner-bg">
+                                                <div class="fg-widget-inner fg-widget-inner-bg-color designer-component-image-bg">
                                                     <label class="fg-widget-handle" style="widht:100%;height:100%" >图片</label>
                                                 </div>
                                             </div>
@@ -145,7 +145,18 @@
                                                     </form>
                                                 </div>
                                                 <div class="mt-tabpage-content mtc2" >
-                                                        222222222222222222222
+                                                    <form action="" id="imageAttribute" component-id="image" class="component-attributes">
+                                                        <div class="form-group">
+                                                            <label for="clickPath">点击跳转</label>
+                                                            <input type="text" class="form-control" placeholder="请输入点击跳转" id="clickPath"  >
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>背景图片</label>
+                                                            <br>
+                                                            <input type="button" />
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
