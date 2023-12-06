@@ -375,9 +375,19 @@ $(function() {
 			zoneCol.modCols('enable');
 			var originalContainer = widget.data('originalContainer') != undefined || widget.data('originalContainer') != null ? widget.data('originalContainer') : zoneCol;
 			if (!originalContainer.hasClass('fg-col')) { // if the widget came from a different container
+				var componentConfig = g_componentConfig.get(widget.attr('attr-compoent-type'));
 				var de = widget.detach();
-				originalContainer.append(de);
-				de.css({'width':widget.data('ogWidth'), 'height':widget.data('ogHeight'), 'min-width':'', 'min-height':'', 'max-width':'', 'max-height':''});
+				de.css({
+					'width': widget.data('ogWidth'),
+					'height': widget.data('ogHeight'),
+					'min-width': '',
+					'min-height': '',
+					'max-width': '',
+					'max-height': ''
+				});
+				if(componentConfig.instanceType!=null&&componentConfig.instanceType=="single") {
+					originalContainer.append(de);
+				}
 			} else {
 				widget.remove();
 			}
@@ -1181,7 +1191,15 @@ function doAppendPanel(compoentObj){
 	var componentConfig =g_componentConfig.get(attrComponentType);
 	if(componentConfig.instanceType!=null&&componentConfig.instanceType=="multi")
 	{
-
+		var componentHtml="<div class=\"fg-widget custom-widget custom-widget-handle components\" attr-compoent-type=\""+componentConfig.type+"\"  title=\""+componentConfig.name+"\">\n" +
+			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+			"    <div class=\"fg-widget-inner fg-widget-inner-bg-color designer-component-"+componentConfig.type+"-bg\">\n" +
+			"        <label class=\"fg-widget-handle\" style=\"widht:100%;height:100%\" >"+componentConfig.name+"</label>\n" +
+			"    </div>\n" +
+			"</div>\n";
+		$(".widget-holder").append(componentHtml);
 	}
 }
 
