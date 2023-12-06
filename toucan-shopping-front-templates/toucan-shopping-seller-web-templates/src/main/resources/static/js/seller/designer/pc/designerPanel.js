@@ -918,6 +918,7 @@ $(function() {
 			var widgets = zoneInner.find('.fg-widget');
 			$(widgets).each(function() {
 				var widget = $(this);
+				var componentConfig = g_componentConfig.get(widget.attr('attr-compoent-type'));
 				//填充组件属性
 				array[0]['widgets'].push({
 					x: widget.attr('data-fg-x'),
@@ -929,7 +930,7 @@ $(function() {
 					maxWidth: widget.attr('data-fg-maxwidth'),
 					maxHeight: widget.attr('data-fg-maxheight'),
 					type: widget.attr('attr-compoent-type'),
-					name: widget.attr('attr-component-name'),
+					name: componentConfig.name,
 					innerHtml: widget.find('.fg-widget-inner').html()
 				});
 			});
@@ -937,7 +938,7 @@ $(function() {
 		}
 		
 		// end
-	}
+	};
 
 	var zone = $('.flexgrid-container');
 	var zoneInner = zone.find('.flexgrid-grid');
@@ -1104,8 +1105,8 @@ $(function() {
 			'</div>');
 		zoneInner.addWidget({
 			widget: widget,
-			x:x, y:y, 
-			width:width, height:height, 
+			x:x, y:y,
+			width:width, height:height,
 			minWidth:minWidth, minHeight: minHeight,
 			maxWidth:maxWidth, maxHeight: maxHeight,
 			type:type,name:name
@@ -1169,13 +1170,17 @@ $(function() {
 function doAppendPanel(compoentObj){
 	var attrComponentType = compoentObj.attr("attr-compoent-type");
 	if(attrComponentType=="shopBanner"){
+		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
-		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
-		compoentObj.find(".fg-remove-widget").show();
-		compoentObj.find(".ui-resizable-handle").show();
 	}else if(attrComponentType=="image"){
+	}
+	compoentObj.find(".fg-remove-widget").show();
+	compoentObj.find(".ui-resizable-handle").show();
+	var componentConfig =g_componentConfig.get(attrComponentType);
+	if(componentConfig.instanceType!=null&&componentConfig.instanceType=="multi")
+	{
 
 	}
 }
@@ -1193,8 +1198,8 @@ function doRemove(compoentObj){
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
 	}else if(compoentObj.attr("attr-compoent-type")=="image"){
-		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("轮播图");
-		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-banner-hover");
+		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("图片");
+		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-image-hover");
 		compoentObj.find(".designer-component-image-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-image-bg").addClass("fg-widget-inner-bg-color");
 		compoentObj.find(".fg-remove-widget").hide();

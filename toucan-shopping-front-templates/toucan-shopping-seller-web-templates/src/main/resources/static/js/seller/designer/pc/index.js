@@ -24,7 +24,8 @@ function initDesignerProperty()
         var attrCompoentType= $(this).attr("attr-compoent-type");
         if(attrCompoentType!=null)
         {
-            var attributePanel =$(this).attr("attribute-panel");
+            var componentConfig = g_componentConfig.get(attrCompoentType);
+            var attributePanel =componentConfig.propertyPanel;
             var tabPageItems = $(".mt-tabpage-item");
             for(var j=0;j<tabPageItems.length;j++)
             {
@@ -36,12 +37,12 @@ function initDesignerProperty()
                 }
             }
 
-            var componentAttributes = $(".component-attributes");
+            var componentAttributes = $(".component-propertys");
             for(var i=0;i<componentAttributes.length;i++) {
-                if(componentAttributes[i].attr("component-id")!=attrCompoentType) {
-                    componentAttributes[i].hide();
+                if($(componentAttributes[i]).attr("component-id")!=attrCompoentType) {
+                    $(componentAttributes[i]).hide();
                 }else{
-                    componentAttributes[i].show();
+                    $(componentAttributes[i]).show();
                 }
             }
         }
