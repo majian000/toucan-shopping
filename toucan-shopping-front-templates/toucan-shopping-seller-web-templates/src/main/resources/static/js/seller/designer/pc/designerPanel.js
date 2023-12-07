@@ -34,22 +34,22 @@ $(function() {
 			var item = $(this);
 			var minWidth = parseInt(item.css('min-width'));
 			return minWidth;
-		}
+		};
 		$.fn.minHeight = function(minHeight) { // get the min-height value of something
 			var item = $(this);
 			var minHeight = parseInt(item.css('min-height'));
 			return minHeight;
-		}
+		};
 		$.fn.maxWidth = function(maxWidth) { // get the min-width value of something
 			var item = $(this);
 			var maxWidth = parseInt(item.css('max-width'));
 			return maxWidth;
-		}
+		};
 		$.fn.maxHeight = function(maxHeight) { // get the min-height value of something
 			var item = $(this);
 			var maxHeight = parseInt(item.css('max-height'));
 			return maxHeight;
-		}
+		};
 
 		// setup variables to be used in calculations in multiple functions
 		$.fn.resetVars = function() {
@@ -63,7 +63,7 @@ $(function() {
 
 			var res = { zone: zone, zW: zoneWidth, zH: zoneHeight, cW: colWidth, rH: rowHeight };
 			return res;
-		}
+		};
 		var re = zoneInner.resetVars(); // reset zone variables
 		
 		// CREATE COLS
@@ -93,7 +93,7 @@ $(function() {
 				'width': (re.cW * options.cols) + 15 // add a little bezzel
 			});
 			enableSortable();
-		}
+		};
 
 		var re = zoneInner.resetVars(); // reset zone variables
 
@@ -166,7 +166,7 @@ $(function() {
 			}
 			widget.attr(toggle, val);
 			widget.setData();
-		}
+		};
 
 		// enable or disable columns depending on the function parameter...
 		$.fn.modCols = function(modifier) {
@@ -188,7 +188,7 @@ $(function() {
 					if (modifier == 'disable') { self.removeClass('fg-enabled-col').addClass('fg-disabled-col'); }
 				}
 			}
-		}
+		};
 
 		$.fn.zoneOverflow = function() {
 			var col = $(this);
@@ -263,7 +263,7 @@ $(function() {
 			res = {obj: col};
 			
 			return res;
-		}
+		};
 
 		// pass in parameters such as: x, y, width, height to position and size the widget
 		$.fn.addWidget = function(params) {
@@ -330,7 +330,7 @@ $(function() {
 
 			resize(widget);
 			enableSortable();
-		}
+		};
 		
 		function findNextColumn(axis, zoneInner, x, y) {
 			var goHere;
@@ -392,7 +392,7 @@ $(function() {
 				widget.remove();
 			}
 			zoneCol.sortable('refresh');
-		}
+		};
 
 		$.fn.createRow = function() { // add a row to the grid ~ used internally
 			var zoneInner = $(this);
@@ -1201,6 +1201,11 @@ function doAppendPanel(compoentObj){
 			"</div>\n";
 		$(".widget-holder").append(componentHtml);
 	}
+
+	var componentInstance =createComponentInstance(attrComponentType);
+	compoentObj.attr("component-instance-id",componentInstance.instanceId);
+	g_components.push(componentInstance);
+	g_current_component =componentInstance;
 }
 
 /**
