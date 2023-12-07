@@ -1228,6 +1228,7 @@ function doRemove(compoentObj){
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
 	}
+	removeComponentInstanceByInstanceId(compoentObj.attr("component-instance-id"));
 }
 
 /**

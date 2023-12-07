@@ -63,4 +63,20 @@ function createImageInstance(){
     return componentInstance;
 }
 
+/**
+ * 删除组件实例
+ * @param instanceId
+ */
+function removeComponentInstanceByInstanceId(instanceId){
+    if(g_components!=null&&g_components.length>0)
+    {
+        for(var i=0;i<g_components.length;i++)
+        {
+            if(g_components[i].instanceId=instanceId){
+                g_components[i].splice(i, 1);
+            }
+        }
+    }
+}
+
 initComponentConfig();
