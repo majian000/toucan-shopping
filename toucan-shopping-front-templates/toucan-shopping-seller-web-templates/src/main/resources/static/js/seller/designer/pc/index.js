@@ -20,33 +20,9 @@ function initDesignerProperty()
         $("."+$(this).attr("attr-page")).show();
     });
 
-    $(".components").click(function(){
-        var attrCompoentType= $(this).attr("attr-compoent-type");
-        if(attrCompoentType!=null)
-        {
-            var componentConfig = g_componentConfig.get(attrCompoentType);
-            var attributePanel =componentConfig.propertyPanel;
-            var tabPageItems = $(".mt-tabpage-item");
-            for(var j=0;j<tabPageItems.length;j++)
-            {
-                var tabPanel = $(tabPageItems[j]);
-                if(tabPanel.attr("attr-page")==attributePanel)
-                {
-                    tabPanel.click();
-                    tabPanel.addClass("mt-tabpage-item-cur");
-                }
-            }
+    bindComponentClick();
 
-            var componentAttributes = $(".component-propertys");
-            for(var i=0;i<componentAttributes.length;i++) {
-                if($(componentAttributes[i]).attr("component-id")!=attrCompoentType) {
-                    $(componentAttributes[i]).hide();
-                }else{
-                    $(componentAttributes[i]).show();
-                }
-            }
-        }
-    });
+    bindPropertyEvent();
 
     //背景样式
     $("#bgType1").click(function(){
@@ -60,3 +36,4 @@ function initDesignerProperty()
 
 
 }
+

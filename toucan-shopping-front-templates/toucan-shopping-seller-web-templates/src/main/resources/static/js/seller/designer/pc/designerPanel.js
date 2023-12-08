@@ -1200,7 +1200,10 @@ function doAppendPanel(compoentObj){
 			"    </div>\n" +
 			"</div>\n";
 		$(".widget-holder").append(componentHtml);
+		//绑定组件属性事件
+		bindComponentInstanceClick($(this));
 	}
+
 
 	var componentInstance =createComponentInstance(attrComponentType);
 	compoentObj.attr("component-instance-id",componentInstance.instanceId);
@@ -1228,6 +1231,8 @@ function doRemove(compoentObj){
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
 	}
+	//解除绑定事件
+	$(compoentObj).unbind("click");
 	//移除组件实例对象
 	removeComponentInstanceByInstanceId(compoentObj.attr("component-instance-id"));
 }

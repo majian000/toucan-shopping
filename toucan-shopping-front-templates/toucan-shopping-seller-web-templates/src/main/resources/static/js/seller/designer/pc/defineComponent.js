@@ -58,7 +58,8 @@ function createComponentInstance(type){
  */
 function createImageInstance(){
     var componentInstance={
-        type:"image"
+        type:"image",
+        propertys:new Array()
     };
     return componentInstance;
 }
@@ -77,6 +78,24 @@ function removeComponentInstanceByInstanceId(instanceId){
             }
         }
     }
+}
+
+/**
+ * 根据实例ID查询
+ * @param instanceId
+ * @returns {*}
+ */
+function getComponentInstanceByInstanceId(instanceId){
+    if(g_components!=null&&g_components.length>0)
+    {
+        for(var i=0;i<g_components.length;i++)
+        {
+            if(g_components[i].instanceId=instanceId){
+                return g_components[i];
+            }
+        }
+    }
+    return null;
 }
 
 initComponentConfig();
