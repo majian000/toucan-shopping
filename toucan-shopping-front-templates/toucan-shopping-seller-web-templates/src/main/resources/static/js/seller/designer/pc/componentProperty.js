@@ -16,6 +16,8 @@ function bindComponentInstanceClick(obj){
 function componentClickCallback(obj){
     var compoentType= $(obj).attr("compoent-type");
     var componentInstanceId= $(obj).attr("component-instance-id");
+    var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
+    console.log(componentInstance);
     if(compoentType!=null)
     {
         var componentConfig = g_componentConfig.get(compoentType);
@@ -31,8 +33,6 @@ function componentClickCallback(obj){
             }
         }
 
-        var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
-        console.log(componentInstance);
         var componentAttributes = $(".component-propertys");
         for(var i=0;i<componentAttributes.length;i++) {
             if($(componentAttributes[i]).attr("component-ref")!=compoentType) {
@@ -40,9 +40,11 @@ function componentClickCallback(obj){
             }else{
                 if(componentInstance!=null) {
                     $(".component-propertys-form")[0].reset();
-                    componentInstance.propertys.forEach(function(element) {
-                        $(componentAttributes[i]).find("#" + element.name).val(element.value);
-                    });
+                    if(componentInstance.propertys!=null&&componentInstance.propertys.length>0) {
+                        componentInstance.propertys.forEach(function (element) {
+                            $(componentAttributes[i]).find("#" + element.name).val(element.value);
+                        });
+                    }
                     $(componentAttributes[i]).attr("component-instance-ref",componentInstanceId);
                     $(componentAttributes[i]).show();
                 }
@@ -62,7 +64,6 @@ function bindInputPropertyEvent(){
         var propertyValue = $(this).val();
         var existsProperty = false;
         var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
-        console.log(g_components);
         if(componentInstance!=null) {
             if (componentInstance.propertys != null && componentInstance.propertys.length > 0) {
                 for (var i = 0; i < componentInstance.propertys.length; i++) {
@@ -76,5 +77,6 @@ function bindInputPropertyEvent(){
                 componentInstance.propertys.push({"name": propertyName, "value": propertyValue});
             }
         }
+        console.log(g_components);
     });
 }

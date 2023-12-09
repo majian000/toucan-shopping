@@ -1205,7 +1205,6 @@ function doAppendPanel(compoentObj){
 	var componentInstance =createComponentInstance(attrComponentType);
 	compoentObj.attr("component-instance-id",componentInstance.instanceId);
 
-	//使其组件获得焦点
 	//绑定组件属性事件
 	bindComponentInstanceClick(compoentObj);
 }
