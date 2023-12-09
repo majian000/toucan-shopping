@@ -20,9 +20,7 @@ function initDesignerProperty()
         $("."+$(this).attr("attr-page")).show();
     });
 
-    bindComponentClick();
-
-    bindPropertyEvent();
+    bindInputPropertyEvent();
 
     //背景样式
     $("#bgType1").click(function(){

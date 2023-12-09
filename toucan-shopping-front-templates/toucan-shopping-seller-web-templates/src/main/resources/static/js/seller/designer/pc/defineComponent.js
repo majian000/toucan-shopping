@@ -1,6 +1,5 @@
 var g_componentConfig=new Map(); //组件配置
 var g_components=new Array(); //组件实例
-var g_current_component=null; //当前组件
 
 /**
  * 初始化组件配置
@@ -50,6 +49,7 @@ function createComponentInstance(type){
         componentInstance = createImageInstance();
     }
     componentInstance.instanceId = toucan_uuid();
+    g_components.push(componentInstance);
     return componentInstance;
 }
 
@@ -74,7 +74,7 @@ function removeComponentInstanceByInstanceId(instanceId){
         for(var i=0;i<g_components.length;i++)
         {
             if(g_components[i].instanceId=instanceId){
-                g_components[i].splice(i, 1);
+                g_components.splice(i, 1);
             }
         }
     }

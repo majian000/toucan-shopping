@@ -375,7 +375,7 @@ $(function() {
 			zoneCol.modCols('enable');
 			var originalContainer = widget.data('originalContainer') != undefined || widget.data('originalContainer') != null ? widget.data('originalContainer') : zoneCol;
 			if (!originalContainer.hasClass('fg-col')) { // if the widget came from a different container
-				var componentConfig = g_componentConfig.get(widget.attr('attr-compoent-type'));
+				var componentConfig = g_componentConfig.get(widget.attr('compoent-type'));
 				var de = widget.detach();
 				de.css({
 					'width': widget.data('ogWidth'),
@@ -928,7 +928,7 @@ $(function() {
 			var widgets = zoneInner.find('.fg-widget');
 			$(widgets).each(function() {
 				var widget = $(this);
-				var componentConfig = g_componentConfig.get(widget.attr('attr-compoent-type'));
+				var componentConfig = g_componentConfig.get(widget.attr('compoent-type'));
 				//填充组件属性
 				array[0]['widgets'].push({
 					x: widget.attr('data-fg-x'),
@@ -939,7 +939,7 @@ $(function() {
 					minHeight: widget.attr('data-fg-minheight'),
 					maxWidth: widget.attr('data-fg-maxwidth'),
 					maxHeight: widget.attr('data-fg-maxheight'),
-					type: widget.attr('attr-compoent-type'),
+					type: widget.attr('compoent-type'),
 					name: componentConfig.name,
 					innerHtml: widget.find('.fg-widget-inner').html()
 				});
@@ -1107,7 +1107,7 @@ $(function() {
 		// var inner = widgets[i].inner ? widgets[i].inner : '';
 		var inner = '<p class="inner-icon">'+width+'x'+height+'</p>';
 
-		var widget = $('<div class="fg-widget custom-blue-widget" attr-compoent-type="'+type+'"  attr-compoent-type="'+name+'" title="'+name+'">' +
+		var widget = $('<div class="fg-widget custom-blue-widget" compoent-type="'+type+'"  compoent-type="'+name+'" title="'+name+'">' +
 			'<i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>' +
 			'<i class="fa fa-times fg-remove-widget" title="删除"></i>' +
 			'<i class="fas fa-arrows-alt move-widget fg-widget-handle"></i>' +
@@ -1178,20 +1178,21 @@ $(function() {
  * @param compoentObj
  */
 function doAppendPanel(compoentObj){
-	var attrComponentType = compoentObj.attr("attr-compoent-type");
+	var attrComponentType = compoentObj.attr("compoent-type");
 	if(attrComponentType=="shopBanner"){
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
 	}else if(attrComponentType=="image"){
+
 	}
 	compoentObj.find(".fg-remove-widget").show();
 	compoentObj.find(".ui-resizable-handle").show();
 	var componentConfig =g_componentConfig.get(attrComponentType);
 	if(componentConfig.instanceType!=null&&componentConfig.instanceType=="multi")
 	{
-		var componentHtml="<div class=\"fg-widget custom-widget custom-widget-handle components\" attr-compoent-type=\""+componentConfig.type+"\"  title=\""+componentConfig.name+"\">\n" +
+		var componentHtml="<div class=\"fg-widget custom-widget custom-widget-handle components\" compoent-type=\""+componentConfig.type+"\"  title=\""+componentConfig.name+"\">\n" +
 			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
 			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
 			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
@@ -1200,15 +1201,13 @@ function doAppendPanel(compoentObj){
 			"    </div>\n" +
 			"</div>\n";
 		$(".widget-holder").append(componentHtml);
-		//绑定组件属性事件
-		bindComponentInstanceClick($(this));
 	}
-
-
 	var componentInstance =createComponentInstance(attrComponentType);
 	compoentObj.attr("component-instance-id",componentInstance.instanceId);
-	g_components.push(componentInstance);
-	g_current_component =componentInstance;
+
+	//使其组件获得焦点
+	//绑定组件属性事件
+	bindComponentInstanceClick(compoentObj);
 }
 
 /**
@@ -1216,14 +1215,14 @@ function doAppendPanel(compoentObj){
  * @param compoentObj
  */
 function doRemove(compoentObj){
-	if(compoentObj.attr("attr-compoent-type")=="shopBanner"){
+	if(compoentObj.attr("compoent-type")=="shopBanner"){
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("轮播图");
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
-	}else if(compoentObj.attr("attr-compoent-type")=="image"){
+	}else if(compoentObj.attr("compoent-type")=="image"){
 		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("图片");
 		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-image-hover");
 		compoentObj.find(".designer-component-image-bg").removeClass("fg-widget-inner-bg-color");
