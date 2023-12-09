@@ -512,7 +512,7 @@ $(function() {
 				tolerance: 'intersect',
 				start: function(event, ui) {
 					var zoneCol = $(this);
-					var zoneInner = zoneCol.closest('.flexgrid-grid')
+					var zoneInner = zoneCol.closest('.flexgrid-grid');
 					var sibs = zoneCol.siblings('.fg-col');
 
 					var widget = zoneCol.find('.fg-widget');

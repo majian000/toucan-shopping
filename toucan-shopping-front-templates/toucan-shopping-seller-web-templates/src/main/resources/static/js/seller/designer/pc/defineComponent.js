@@ -47,6 +47,10 @@ function createComponentInstance(type){
     if(type=="image")
     {
         componentInstance = createImageInstance();
+    }if(type=="shopBanner"){
+        componentInstance = createShopBannerInstance();
+    }else{
+
     }
     componentInstance.instanceId = toucan_uuid();
     g_components.push(componentInstance);
@@ -64,6 +68,16 @@ function createImageInstance(){
     return componentInstance;
 }
 
+/**
+ * 创建轮播图实例
+ */
+function createShopBannerInstance(){
+    var componentInstance={
+        type:"shopBanner",
+        propertys:new Array()
+    };
+    return componentInstance;
+}
 /**
  * 删除组件实例
  * @param instanceId
