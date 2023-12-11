@@ -1200,7 +1200,7 @@ function doAppendPanel(compoentObj){
 				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
 				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
 				"    <div class=\"fg-widget-inner fg-widget-inner-bg-color designer-component-" + componentConfig.type + "-bg\">\n" +
-				"        <label class=\"fg-widget-handle\" style=\"widht:100%;height:100%\" >" + componentConfig.name + "</label>\n" +
+				"        <label class=\"fg-widget-handle fg-widget-handle-label\" >" + componentConfig.name + "</label>\n" +
 				"    </div>\n" +
 				"</div>\n";
 			$(".widget-holder").append(componentHtml);
