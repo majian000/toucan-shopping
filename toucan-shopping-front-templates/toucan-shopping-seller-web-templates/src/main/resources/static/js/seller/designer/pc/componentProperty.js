@@ -1,21 +1,22 @@
 
 
-function bindComponentInstanceClick(componentClass){
-    $("."+componentClass).unbind("click");
+function bindComponentInstanceClick(clickId){
+    console.log(clickId);
+    $("#"+clickId).unbind("click");
     //点击组件实例时
-    $("."+componentClass).click(function(){
+    $("#"+clickId).click(function(){
         var components = $(".components");
         for(var i=0;i<components.length;i++) {
             $(components[i]).css("border", "");
         }
         $(this).css("border", "1px solid #7dabff");
-        componentClickCallback($(this).attr("component-instance-id"));
+        componentClickCallback($(this));
     });
 }
 
-function componentClickCallback(componentClass){
-    var compoentType= $("."+componentClass).attr("compoent-type");
-    var componentInstanceId= $("."+componentClass).attr("component-instance-id");
+function componentClickCallback(clickObj){
+    var compoentType= $(clickObj).attr("compoent-type");
+    var componentInstanceId= $(clickObj).attr("component-instance-id");
     var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
     console.log(componentInstance);
     if(compoentType!=null)

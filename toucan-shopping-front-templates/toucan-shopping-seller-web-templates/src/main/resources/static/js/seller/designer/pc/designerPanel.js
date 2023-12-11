@@ -1204,10 +1204,10 @@ function doAppendPanel(compoentObj){
 	}
 	var componentInstance =createComponentInstance(attrComponentType);
 	compoentObj.attr("component-instance-id",componentInstance.instanceId);
-	compoentObj.addClass("component-instance-id"+componentInstance.instanceId);
+	compoentObj.attr("id",componentInstance.instanceId);
 
 	//绑定组件属性事件
-	bindComponentInstanceClick("component-instance-id"+componentInstance.instanceId);
+	bindComponentInstanceClick(componentInstance.instanceId);
 }
 
 /**
