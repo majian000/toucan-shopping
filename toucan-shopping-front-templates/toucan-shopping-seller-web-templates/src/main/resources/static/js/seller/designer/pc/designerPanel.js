@@ -1179,6 +1179,7 @@ $(function() {
  */
 function doAppendPanel(compoentObj){
 	var attrComponentType = compoentObj.attr("compoent-type");
+	var componentInstId = compoentObj.attr("component-instance-id");
 	if(attrComponentType=="shopBanner"){
 		compoentObj.find(".designer-component-banner-bg").removeClass("designer-component-banner-hover");
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
@@ -1192,22 +1193,27 @@ function doAppendPanel(compoentObj){
 	var componentConfig =g_componentConfig.get(attrComponentType);
 	if(componentConfig.instanceType!=null&&componentConfig.instanceType=="multi")
 	{
-		var componentHtml="<div class=\"fg-widget custom-widget custom-widget-handle components\" compoent-type=\""+componentConfig.type+"\"  title=\""+componentConfig.name+"\">\n" +
-			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
-			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
-			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
-			"    <div class=\"fg-widget-inner fg-widget-inner-bg-color designer-component-"+componentConfig.type+"-bg\">\n" +
-			"        <label class=\"fg-widget-handle\" style=\"widht:100%;height:100%\" >"+componentConfig.name+"</label>\n" +
-			"    </div>\n" +
-			"</div>\n";
-		$(".widget-holder").append(componentHtml);
+		var componentItem = $(".widget-holder").find(".components-"+componentConfig.type);
+		if(componentItem==null||componentItem.length<=0) {
+			var componentHtml = "<div class=\"fg-widget custom-widget custom-widget-handle components components-"+componentConfig.type+"\" compoent-type=\"" + componentConfig.type + "\"  title=\"" + componentConfig.name + "\">\n" +
+				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+				"    <div class=\"fg-widget-inner fg-widget-inner-bg-color designer-component-" + componentConfig.type + "-bg\">\n" +
+				"        <label class=\"fg-widget-handle\" style=\"widht:100%;height:100%\" >" + componentConfig.name + "</label>\n" +
+				"    </div>\n" +
+				"</div>\n";
+			$(".widget-holder").append(componentHtml);
+		}
 	}
-	var componentInstance =createComponentInstance(attrComponentType);
-	compoentObj.attr("component-instance-id",componentInstance.instanceId);
-	compoentObj.attr("id",componentInstance.instanceId);
+	if(componentInstId==null||componentInstId=="") {
+		var componentInstance = createComponentInstance(attrComponentType);
+		compoentObj.attr("component-instance-id", componentInstance.instanceId);
+		compoentObj.attr("id", componentInstance.instanceId);
 
-	//绑定组件属性事件
-	bindComponentInstanceClick(componentInstance.instanceId);
+		//绑定组件属性事件
+		bindComponentInstanceClick(componentInstance.instanceId);
+	}
 }
 
 /**
@@ -1229,6 +1235,7 @@ function doRemove(compoentObj){
 		compoentObj.find(".designer-component-image-bg").addClass("fg-widget-inner-bg-color");
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
+		compoentObj.remove();
 	}
 	//解除绑定事件
 	$(compoentObj).unbind("click");
