@@ -7,11 +7,12 @@ var pagegizationConfigObject={
 };
 var g_image_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 var g_selectImageDialogHandler;
+var g_selectRowCallbackHandler=null;
 
 /**
  * 打开选择图片对话框
  */
-function openSelectImageDialog()
+function openSelectImageDialog(comInstId,selectRowCallback)
 {
 
     var imageTableHtml="  <div class=\"pageToolbar\" style='margin-top:2%'>\n" +
@@ -20,7 +21,8 @@ function openSelectImageDialog()
         "                        </tbody>\n" +
         "                    </table>\n" +
         "                </div>";
-
+    imageTableHtml+="<input type=\"hidden\" id=\"imageDialog_componentInstanceId\" value=\""+comInstId+"\" />";
+    g_selectRowCallbackHandler = selectRowCallback;
     g_selectImageDialogHandler = layer.open({
         type: 1,
         title:"选择图片",
@@ -131,7 +133,8 @@ function drawImageTable(pageResult)
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
-        "                            <td style=\"width:100px;\" >名称</td>\n" +
+        "                            <td style=\"width:100px;\" >标题</td>\n" +
+        "                            <td style=\"width:100px;\" >预览</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
@@ -144,9 +147,10 @@ function drawImageTable(pageResult)
 
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.title+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img style=\"width:100px;height:100px;\" src=\""+row.httpImgPath+"\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-name='"+row.name+"' class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-img-path=\""+row.httpImgPath+"\"  class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -163,10 +167,14 @@ function bindRowEvent()
 
     $(".selectRow").unbind("click");
     $(".selectRow").bind("click", function () {
-        // var attrId = $(this).attr("attr-id");
-        // var attrName = $(this).attr("attr-name");
-        // $("#imageIdHidden").val(attrId);
-        // $("#selectFreightTemplate").val(attrName);
+        if(g_selectRowCallbackHandler!=null)
+        {
+            var row={
+                id:$(this).attr("attr-id"),
+                httpImgPath:$(this).attr("attr-img-path")
+            };
+            g_selectRowCallbackHandler(row);
+        }
         layer.close(g_selectImageDialogHandler);
     });
 
