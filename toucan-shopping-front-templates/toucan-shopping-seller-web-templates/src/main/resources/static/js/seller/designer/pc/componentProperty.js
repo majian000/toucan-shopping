@@ -121,4 +121,9 @@ function bindImagePropertyBtnEvent(){
         var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
         componentInstance.propertys.splice(0, componentInstance.propertys.length);
     });
+    $("#image_selectBackgroundImageBtn").unbind("click");
+    $("#image_selectBackgroundImageBtn").bind("click", function() {
+        openSelectImageDialog();
+        initImagePagination();
+    });
 }

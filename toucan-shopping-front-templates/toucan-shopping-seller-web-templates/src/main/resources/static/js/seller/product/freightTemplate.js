@@ -9,7 +9,7 @@ var g_freightTemplate_query_obj={page:pagegizationConfigObject.current_page,limi
 
 
 /**
- * 打开选择收货人对话框
+ * 打开选择运费模板对话框
  */
 function openSelectFreightTemplateDialog()
 {
