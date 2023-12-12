@@ -40,11 +40,13 @@ function componentClickCallback(clickObj){
                 $(componentAttributes[i]).hide();
             }else{
                 if(componentInstance!=null) {
-                    $(".component-propertys-form")[0].reset();
-                    if(componentInstance.propertys!=null&&componentInstance.propertys.length>0) {
-                        componentInstance.propertys.forEach(function (element) {
-                            $(componentAttributes[i]).find("#" + element.name).val(element.value);
-                        });
+                    var propertyForm = $(".component-propertys-form-"+compoentType);
+                    if(propertyForm!=null) {
+                        propertyForm[0].reset();
+                    }
+                    if(compoentType=="image")
+                    {
+                        loadImageProperty(componentInstance);
                     }
                     $(componentAttributes[i]).attr("component-instance-ref",componentInstanceId);
                     $(componentAttributes[i]).show();
@@ -54,30 +56,69 @@ function componentClickCallback(clickObj){
     }
 }
 
+
 /**
- * 绑定输入类型属性事件
+ * 加载图片组件属性窗口
+ * @param componentInstance
  */
-function bindInputPropertyEvent(){
-    $(".component-propertys-input").off("blur");
-    $(".component-propertys-input").blur(function(){
-        var propertyName = $(this).attr("property-name");
-        var componentInstanceId = $(this).parents(".component-propertys").attr("component-instance-ref");
-        var propertyValue = $(this).val();
-        var existsProperty = false;
-        var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
-        if(componentInstance!=null) {
-            if (componentInstance.propertys != null && componentInstance.propertys.length > 0) {
-                for (var i = 0; i < componentInstance.propertys.length; i++) {
-                    if (componentInstance.propertys[i].name = propertyName) {
-                        componentInstance.propertys[i].value = propertyValue;
-                        existsProperty = true;
-                    }
+function loadImageProperty(componentInstance){
+
+    if(componentInstance.propertys!=null&&componentInstance.propertys.length>0) {
+        componentInstance.propertys.forEach(function (element) {
+            if(element.name=="clickPath")
+            {
+                $("#image_clickPath").val(element.value);
+            }
+        });
+    }
+}
+
+/**
+ * 绑定属性事件
+ */
+function bindPropertyBtnEvent(){
+    bindImagePropertyBtnEvent();
+}
+
+/**
+ * 设置组件属性
+ * @param componentInstance
+ * @param propertyName
+ * @param propertyValue
+ */
+function setComponentPorperty(componentInstance,propertyName,propertyValue){
+    var existsProperty = false;
+    if(componentInstance!=null) {
+        if (componentInstance.propertys != null && componentInstance.propertys.length > 0) {
+            for (var i = 0; i < componentInstance.propertys.length; i++) {
+                if (componentInstance.propertys[i].name = propertyName) {
+                    componentInstance.propertys[i].value = propertyValue;
+                    existsProperty = true;
                 }
             }
-            if (!existsProperty) {
-                componentInstance.propertys.push({"name": propertyName, "value": propertyValue});
-            }
         }
-        console.log(g_components);
+        if (!existsProperty) {
+            componentInstance.propertys.push({"name": propertyName, "value": propertyValue});
+        }
+    }
+}
+
+/**
+ * 绑定图片属性事件
+ */
+function bindImagePropertyBtnEvent(){
+    $("#image_SaveProperty").unbind("click");
+    $("#image_SaveProperty").bind("click", function() {
+        var componentInstanceId = $(this).parents(".component-propertys").attr("component-instance-ref");
+        var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
+        var propertyValue = $("#image_clickPath").val();
+        setComponentPorperty(componentInstance,"clickPath",propertyValue);
+    });
+    $("#image_ResetProperty").unbind("click");
+    $("#image_ResetProperty").bind("click", function() {
+        $(this).parents(".component-propertys-form-image")[0].reset();
+        var componentInstanceId = $(this).parents(".component-propertys").attr("component-instance-ref");
+        var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
+        componentInstance.propertys.splice(0, componentInstance.propertys.length);
     });
 }
