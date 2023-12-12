@@ -63,7 +63,10 @@ function createComponentInstance(type){
 function createImageInstance(){
     var componentInstance={
         type:"image",
-        propertys:new Array()
+        propertys:new Array(),
+        setComponentPorperty:function(propertyName,propertyValue){
+            setComponentPorperty(this,propertyName,propertyValue)
+        }
     };
     return componentInstance;
 }
@@ -74,10 +77,38 @@ function createImageInstance(){
 function createShopBannerInstance(){
     var componentInstance={
         type:"shopBanner",
-        propertys:new Array()
+        propertys:new Array(),
+        setComponentPorperty:function(propertyName,propertyValue){
+            setComponentPorperty(this,propertyName,propertyValue)
+        }
     };
     return componentInstance;
 }
+
+
+/**
+ * 设置组件属性
+ * @param componentInstance
+ * @param propertyName
+ * @param propertyValue
+ */
+function setComponentPorperty(componentInstance,propertyName,propertyValue){
+    var existsProperty = false;
+    if(componentInstance!=null) {
+        if (componentInstance.propertys != null && componentInstance.propertys.length > 0) {
+            for (var i = 0; i < componentInstance.propertys.length; i++) {
+                if (componentInstance.propertys[i].name = propertyName) {
+                    componentInstance.propertys[i].value = propertyValue;
+                    existsProperty = true;
+                }
+            }
+        }
+        if (!existsProperty) {
+            componentInstance.propertys.push({"name": propertyName, "value": propertyValue});
+        }
+    }
+}
+
 /**
  * 删除组件实例
  * @param instanceId

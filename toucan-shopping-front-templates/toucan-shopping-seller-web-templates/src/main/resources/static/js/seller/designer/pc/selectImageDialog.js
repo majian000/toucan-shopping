@@ -150,7 +150,7 @@ function drawImageTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.title+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img style=\"width:100px;height:100px;\" src=\""+row.httpImgPath+"\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-img-path=\""+row.httpImgPath+"\"  class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-httpImgPath=\""+row.httpImgPath+"\" attr-imgPath=\""+row.imgPath+"\"  class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -171,7 +171,9 @@ function bindRowEvent()
         {
             var row={
                 id:$(this).attr("attr-id"),
-                httpImgPath:$(this).attr("attr-img-path")
+                componentInstanceId:$("#imageDialog_componentInstanceId").val(),
+                httpImgPath:$(this).attr("attr-httpImgPath"),
+                imgPath:$(this).attr("attr-imgPath")
             };
             g_selectRowCallbackHandler(row);
         }

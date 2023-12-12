@@ -11,6 +11,8 @@ function loadImageProperty(componentInstance){
             if(element.name=="clickPath")
             {
                 $("#image_clickPath").val(element.value);
+            }else if(element.name=="httpImgPath"){
+                $("#image_selectBackgroundImagePreview").attr("src",element.value);
             }
         });
     }
@@ -18,6 +20,9 @@ function loadImageProperty(componentInstance){
 
 function selectImageCallback(row){
     $("#image_selectBackgroundImagePreview").attr("src",row.httpImgPath);
+    var componentInstance = getComponentInstanceByInstanceId(row.componentInstanceId);
+    componentInstance.setComponentPorperty("imgPath",row.imgPath);
+    componentInstance.setComponentPorperty("httpImgPath",row.httpImgPath);
 }
 
 /**
@@ -29,7 +34,7 @@ function bindImagePropertyBtnEvent(){
         var componentInstanceId = $(this).parents(".component-propertys").attr("component-instance-ref");
         var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
         var propertyValue = $("#image_clickPath").val();
-        setComponentPorperty(componentInstance,"clickPath",propertyValue);
+        componentInstance.setComponentPorperty("clickPath",propertyValue);
     });
     $("#image_ResetProperty").unbind("click");
     $("#image_ResetProperty").bind("click", function() {
