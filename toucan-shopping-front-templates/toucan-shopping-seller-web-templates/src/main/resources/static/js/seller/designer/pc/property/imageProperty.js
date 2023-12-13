@@ -23,6 +23,15 @@ function selectImageCallback(row){
     var componentInstance = getComponentInstanceByInstanceId(row.componentInstanceId);
     componentInstance.setComponentPorperty("imgPath",row.imgPath);
     componentInstance.setComponentPorperty("httpImgPath",row.httpImgPath);
+    componentInstance.setComponentPorperty("imgRefId",row.id);
+
+
+    //替换组件的背景为所选图片
+    $("#"+componentInstance.instanceId).find(".designer-component-image-bg").removeClass("designer-component-image-hover");
+    $("#"+componentInstance.instanceId).find(".designer-component-image-bg").find(".fg-widget-handle").html("");
+    $("#"+componentInstance.instanceId).find(".designer-component-image-bg").removeClass("fg-widget-inner-bg-color");
+    $("#"+componentInstance.instanceId).find(".designer-component-image-bg").addClass("designer-component-image-hover");
+    $("#"+componentInstance.instanceId).find(".designer-component-image-bg").css("background-image", "url('"+row.httpImgPath+"')");
 }
 
 /**
@@ -43,6 +52,10 @@ function bindImagePropertyBtnEvent(){
         var componentInstanceId = $(this).parents(".component-propertys").attr("component-instance-ref");
         var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
         componentInstance.propertys.splice(0, componentInstance.propertys.length);
+        //清空选择的图片
+        $("#"+componentInstance.instanceId).find(".designer-component-image-bg").removeClass("designer-component-image-hover");
+        $("#"+componentInstance.instanceId).find(".designer-component-image-bg").addClass("fg-widget-inner-bg-color");
+        $("#"+componentInstance.instanceId).find(".designer-component-image-bg").css("background-image", "");
     });
     $("#image_selectBackgroundImageBtn").unbind("click");
     $("#image_selectBackgroundImageBtn").bind("click", function() {

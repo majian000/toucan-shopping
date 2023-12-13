@@ -24,13 +24,14 @@ svg{
 }
 .mt-tabpage-title .mt-tabpage-item {
 	display: inline-block;
-	width: 105px;
+	width: 45%;
 	height: 44px;
 	line-height: 44px;
 	text-align: center;
 	color: #666;
 	font-size: 12px;
 }
+
 .mt-tabpage-title .mt-tabpage-item:hover{
 	color: #409eff;
 }
@@ -72,6 +73,11 @@ svg{
 	background-size:100% 100%;
 }
 
+.designer-component-image-hover{
+	background-repeat: no-repeat;
+	moz-background-size:100% 100%;
+	background-size:100% 100%;
+}
 .component-propertys{
 	display:none
 }

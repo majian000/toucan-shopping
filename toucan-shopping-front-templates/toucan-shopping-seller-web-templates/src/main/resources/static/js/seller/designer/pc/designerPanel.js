@@ -1211,6 +1211,7 @@ function doAppendPanel(compoentObj){
 		compoentObj.attr("component-instance-id", componentInstance.instanceId);
 		compoentObj.attr("id", componentInstance.instanceId);
 
+
 		//绑定组件属性事件
 		bindComponentInstanceClick(componentInstance.instanceId);
 	}
