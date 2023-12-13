@@ -24,6 +24,7 @@ function selectImageCallback(row){
     componentInstance.setComponentPorperty("imgPath",row.imgPath);
     componentInstance.setComponentPorperty("httpImgPath",row.httpImgPath);
     componentInstance.setComponentPorperty("imgRefId",row.id);
+    console.log(componentInstance);
 
 
     //替换组件的背景为所选图片

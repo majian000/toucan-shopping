@@ -93,11 +93,11 @@ function createShopBannerInstance(){
  * @param propertyValue
  */
 function setComponentPorperty(componentInstance,propertyName,propertyValue){
-    var existsProperty = false;
     if(componentInstance!=null) {
+        var existsProperty = false;
         if (componentInstance.propertys != null && componentInstance.propertys.length > 0) {
             for (var i = 0; i < componentInstance.propertys.length; i++) {
-                if (componentInstance.propertys[i].name = propertyName) {
+                if (componentInstance.propertys[i].name == propertyName) {
                     componentInstance.propertys[i].value = propertyValue;
                     existsProperty = true;
                 }
