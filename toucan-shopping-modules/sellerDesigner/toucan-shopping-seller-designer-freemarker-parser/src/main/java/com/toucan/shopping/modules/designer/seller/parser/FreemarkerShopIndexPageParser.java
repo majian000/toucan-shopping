@@ -2,14 +2,18 @@ package com.toucan.shopping.modules.designer.seller.parser;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.designer.core.model.component.AbstractComponent;
+import com.toucan.shopping.modules.designer.core.model.component.IComponent;
 import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
+import com.toucan.shopping.modules.designer.core.view.ComponentView;
 import com.toucan.shopping.modules.designer.core.view.PageView;
 import com.toucan.shopping.modules.designer.seller.enums.SellerDesignerComponentEnum;
 import com.toucan.shopping.modules.designer.seller.enums.SellerComponentViewEnum;
+import com.toucan.shopping.modules.designer.seller.model.component.ImageComponent;
 import com.toucan.shopping.modules.designer.seller.model.component.ShopBannerComponent;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.designer.seller.plugin.ShopBannerViewPlugin;
+import com.toucan.shopping.modules.designer.seller.view.ImageView;
 import com.toucan.shopping.modules.designer.seller.view.ShopBannerView;
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import org.apache.commons.beanutils.BeanUtils;
@@ -33,12 +37,16 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
         {
             for(Map mapComponent:shopPageContainer.getMapComponents())
             {
+                AbstractComponent component = null ;
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(mapComponent.get("type")))
                 {
-                    ShopBannerComponent shopBannerComponent=new ShopBannerComponent();
-                    BeanUtils.populate(shopBannerComponent, mapComponent);
-                    shopPageContainer.getComponents().add(shopBannerComponent);
+                    component=new ShopBannerComponent();
+                }else if(SellerDesignerComponentEnum.IMAGE.value().equals(mapComponent.get("type")))
+                {
+                    component=new ImageComponent();
                 }
+                BeanUtils.populate(component, mapComponent);
+                shopPageContainer.getComponents().add(component);
             }
         }
         return shopPageContainer;
@@ -55,33 +63,38 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
         {
             for(AbstractComponent component:pageContainer.getComponents())
             {
+                ComponentView componentView = null;
+                Integer width = Integer.parseInt(component.getWidth())*blockUnit;
+                Integer height = Integer.parseInt(component.getHeight())*blockUnit*10; //单位px
+                Integer x = Integer.parseInt(component.getX())*blockUnit;
+                Integer y = Integer.parseInt(component.getY())*blockUnit;
                 //店铺轮播图组件
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(component.getType()))
                 {
-                    //组件视图
-                    ShopBannerView shopBannerView = new ShopBannerView();
-                    shopBannerView.setTitle(component.getTitle());
-                    shopBannerView.setType(SellerComponentViewEnum.SHOP_BANNER_VIEW.value());
-                    Integer width = Integer.parseInt(component.getWidth())*blockUnit;
-                    Integer height = Integer.parseInt(component.getHeight())*blockUnit*10; //单位px
-                    Integer x = Integer.parseInt(component.getX())*blockUnit;
-                    Integer y = Integer.parseInt(component.getY())*blockUnit;
-                    shopBannerView.setWidth(String.valueOf(width));
-                    shopBannerView.setWidthUnit("%");
-                    shopBannerView.setHeight(String.valueOf(height));
-                    shopBannerView.setHeightUnit("px");
-                    shopBannerView.setX(String.valueOf(x));
-                    shopBannerView.setxUnit("%");
-                    shopBannerView.setY(String.valueOf(y));
-                    shopBannerView.setyUnit("%");
-                    pageView.getComponentViews().add(shopBannerView);
+                    componentView = new ShopBannerView();
+                    componentView.setTitle(component.getTitle());
+                    componentView.setType(SellerComponentViewEnum.SHOP_BANNER_VIEW.value());
 
-                    //视图插件
+                    //插件
                     ShopBannerViewPlugin shopBannerViewPlugin=new ShopBannerViewPlugin();
                     shopBannerViewPlugin.setComponentType(component.getType());
                     shopBannerViewPlugin.setPluginName("sliderMe");
                     shopBannerViewPlugin.setPluginVersion("1.0");
                     pageView.getComponentViewPlugins().add(shopBannerViewPlugin);
+                }else if(SellerDesignerComponentEnum.IMAGE.value().equals(component.getType())){
+                    componentView =  new ImageView();
+                }
+
+                if(componentView!=null) {
+                    componentView.setWidth(String.valueOf(width));
+                    componentView.setWidthUnit("%");
+                    componentView.setHeight(String.valueOf(height));
+                    componentView.setHeightUnit("px");
+                    componentView.setX(String.valueOf(x));
+                    componentView.setxUnit("%");
+                    componentView.setY(String.valueOf(y));
+                    componentView.setyUnit("%");
+                    pageView.getComponentViews().add(componentView);
                 }
             }
         }

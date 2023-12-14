@@ -8,7 +8,6 @@ import lombok.Data;
  * 图片组件
  * @author majian
  */
-@Data
 public class ImageComponent extends BaseComponent {
 
     private String imgPath; //图片路径
@@ -18,5 +17,27 @@ public class ImageComponent extends BaseComponent {
     private String imgRefId; //图片ID
 
 
+    public String getImgPath() {
+        return imgPath;
+    }
 
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public String getHttpImgPath() {
+        return httpImgPath;
+    }
+
+    public void setHttpImgPath(String httpImgPath) {
+        this.httpImgPath = httpImgPath;
+    }
+
+    public String getImgRefId() {
+        return imgRefId;
+    }
+
+    public void setImgRefId(String imgRefId) {
+        this.imgRefId = imgRefId;
+    }
 }

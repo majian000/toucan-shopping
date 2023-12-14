@@ -3,7 +3,9 @@ package com.toucan.shopping.modules.designer.seller.enums;
 public enum SellerDesignerComponentEnum {
 
     SHOP_PAGE_CONTAINER("shopPageContainer"),
-    SHOP_BANNER("shopBanner");
+    SHOP_BANNER("shopBanner"),
+    IMAGE("image")
+    ;
 
     private String componentType;
 
