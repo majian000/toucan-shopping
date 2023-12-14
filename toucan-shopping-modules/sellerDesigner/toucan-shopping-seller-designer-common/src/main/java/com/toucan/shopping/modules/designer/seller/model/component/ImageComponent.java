@@ -16,6 +16,15 @@ public class ImageComponent extends BaseComponent {
 
     private String imgRefId; //图片ID
 
+    private String clickPath; //点击路径
+
+    public String getClickPath() {
+        return clickPath;
+    }
+
+    public void setClickPath(String clickPath) {
+        this.clickPath = clickPath;
+    }
 
     public String getImgPath() {
         return imgPath;

@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 public class ShopPageContainer extends PageContainer {
 
+    private String imageHttpPrefix=""; //图片组件前缀
 
     public ShopPageContainer(){
         this.setType(SellerDesignerComponentEnum.SHOP_PAGE_CONTAINER.value());

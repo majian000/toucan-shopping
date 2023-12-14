@@ -34,6 +34,7 @@ public abstract class ComponentView {
 
     private String yUnit;
 
+
     public String getType() {
         return type;
     }

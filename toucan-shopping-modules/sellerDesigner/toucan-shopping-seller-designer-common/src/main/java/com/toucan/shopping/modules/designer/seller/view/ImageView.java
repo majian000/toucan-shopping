@@ -11,6 +11,16 @@ public class ImageView extends ComponentView {
 
     private String src; //图片路径
 
+    private String clickPath; //单击路径
+
+    public String getClickPath() {
+        return clickPath;
+    }
+
+    public void setClickPath(String clickPath) {
+        this.clickPath = clickPath;
+    }
+
     public String getSrc() {
         return src;
     }

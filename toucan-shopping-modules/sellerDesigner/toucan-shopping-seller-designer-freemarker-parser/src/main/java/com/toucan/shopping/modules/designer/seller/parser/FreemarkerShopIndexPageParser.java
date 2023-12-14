@@ -82,7 +82,16 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     shopBannerViewPlugin.setPluginVersion("1.0");
                     pageView.getComponentViewPlugins().add(shopBannerViewPlugin);
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(component.getType())){
-                    componentView =  new ImageView();
+                    ImageComponent imageComponent = (ImageComponent)component;
+                    ImageView imageComponentView = new ImageView();
+                    componentView.setType(SellerComponentViewEnum.IMAGE_VIEW.value());
+                    if(pageContainer instanceof ShopPageContainer) {
+                        imageComponentView.setSrc(((ShopPageContainer) pageContainer).getImageHttpPrefix()+imageComponent.getHttpImgPath());
+                    }else{
+                        imageComponentView.setSrc(imageComponent.getImgPath());
+                    }
+                    imageComponentView.setClickPath(imageComponent.getClickPath());
+                    componentView =  imageComponentView;
                 }
 
                 if(componentView!=null) {

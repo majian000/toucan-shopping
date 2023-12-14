@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.designer.core.exception.validator.ValidatorEx
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
 import com.toucan.shopping.modules.designer.core.validator.IPageValidator;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
@@ -58,6 +59,9 @@ public class DesignerApiController extends BaseController {
     @Autowired
     private IPageValidator pageValidator;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
+
 
     @UserAuth
     @RequestMapping("/pc/index/preview")
@@ -82,6 +86,7 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
+                    shopPageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                     //校验模型
                     pageValidator.valid(shopPageContainer);
                     SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
@@ -143,6 +148,7 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
+                    shopPageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                     //校验模型
                     pageValidator.valid(shopPageContainer);
                     SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
