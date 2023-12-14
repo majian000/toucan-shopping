@@ -86,7 +86,6 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
-                    shopPageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                     //校验模型
                     pageValidator.valid(shopPageContainer);
                     SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
@@ -105,11 +104,9 @@ public class DesignerApiController extends BaseController {
                     }
                 }catch(Exception e)
                 {
-                    if(e instanceof ValidatorException)
-                    {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg(e.getMessage());
-                    }
+                    logger.error(e.getMessage(),e);
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
                 }
             }
 
@@ -148,7 +145,6 @@ public class DesignerApiController extends BaseController {
             {
                 try {
                     ShopPageContainer shopPageContainer = (ShopPageContainer)pageParser.convertToPageModel(pageJson);
-                    shopPageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                     //校验模型
                     pageValidator.valid(shopPageContainer);
                     SellerDesignerPageModelVO sellerDesignerPageVO=new SellerDesignerPageModelVO();
@@ -168,11 +164,9 @@ public class DesignerApiController extends BaseController {
 
                 }catch(Exception e)
                 {
-                    if(e instanceof ValidatorException)
-                    {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg(e.getMessage());
-                    }
+                    logger.error(e.getMessage(),e);
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
                 }
             }
 

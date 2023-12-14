@@ -940,6 +940,7 @@ $(function() {
 					maxWidth: widget.attr('data-fg-maxwidth'),
 					maxHeight: widget.attr('data-fg-maxheight'),
 					type: widget.attr('compoent-type'),
+					componentInstanceId:widget.attr('component-instance-id'),
 					name: componentConfig.name,
 					innerHtml: widget.find('.fg-widget-inner').html()
 				});
@@ -1260,18 +1261,19 @@ function encapsulationModel(grid){
 		for(var i=0;i<widgets.length;i++)
 		{
 			var widget = widgets[i];
+			var component=null;
 			if(widget.type=="shopBanner")
 			{
-				var shopBanner = newShopBannerComponent();
-				objectCopy(shopBanner,widget);
-				shopBanner.innerHtml="";
-				pageContainer.mapComponents.push(shopBanner);
+				component = newShopBannerComponent();
 			}else if(widget.type=="image")
 			{
-				var image = newImageComponent();
-				objectCopy(image,widget);
-				image.innerHtml="";
-				pageContainer.mapComponents.push(image);
+				component = newImageComponent();
+			}
+			objectCopy(component,widget);
+			if(component!=null) {
+				component.innerHtml = "";
+				objectCopy(component, getComponentInstanceByInstanceId(widget.componentInstanceId));
+				pageContainer.mapComponents.push(component);
 			}
 		}
 	}

@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.designer.seller.parser;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.designer.core.model.component.AbstractComponent;
+import com.toucan.shopping.modules.designer.core.model.component.ComponentProperty;
 import com.toucan.shopping.modules.designer.core.model.component.IComponent;
 import com.toucan.shopping.modules.designer.core.model.container.PageContainer;
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
@@ -20,7 +22,9 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,12 +42,28 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
             for(Map mapComponent:shopPageContainer.getMapComponents())
             {
                 AbstractComponent component = null ;
+                Map<String,String> propertys = new HashMap<>();
+                if(mapComponent.get("propertys")!=null){
+                    List<ComponentProperty> componentPropertyArray = JSONArray.parseArray(String.valueOf(mapComponent.get("propertys")),ComponentProperty.class);
+                    if(CollectionUtils.isNotEmpty(componentPropertyArray)) {
+                        for(ComponentProperty componentProperty:componentPropertyArray) {
+                            propertys.put(componentProperty.getName(),componentProperty.getValue());
+                        }
+                    }
+                    mapComponent.remove("propertys");
+                }
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(mapComponent.get("type")))
                 {
                     component=new ShopBannerComponent();
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(mapComponent.get("type")))
                 {
-                    component=new ImageComponent();
+                    ImageComponent imageComponent=new ImageComponent();
+                    imageComponent.setImgPath(propertys.get("imgPath"));
+                    imageComponent.setHttpImgPath(propertys.get("httpImgPath"));
+                    imageComponent.setImgRefId(propertys.get("imgRefId"));
+                    imageComponent.setClickPath(propertys.get("clickPath"));
+                    component = imageComponent;
+
                 }
                 BeanUtils.populate(component, mapComponent);
                 shopPageContainer.getComponents().add(component);
@@ -84,9 +104,9 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(component.getType())){
                     ImageComponent imageComponent = (ImageComponent)component;
                     ImageView imageComponentView = new ImageView();
-                    componentView.setType(SellerComponentViewEnum.IMAGE_VIEW.value());
+                    imageComponentView.setType(SellerComponentViewEnum.IMAGE_VIEW.value());
                     if(pageContainer instanceof ShopPageContainer) {
-                        imageComponentView.setSrc(((ShopPageContainer) pageContainer).getImageHttpPrefix()+imageComponent.getHttpImgPath());
+                        imageComponentView.setSrc(((ShopPageContainer) pageContainer).getImageHttpPrefix()+imageComponent.getImgPath());
                     }else{
                         imageComponentView.setSrc(imageComponent.getImgPath());
                     }

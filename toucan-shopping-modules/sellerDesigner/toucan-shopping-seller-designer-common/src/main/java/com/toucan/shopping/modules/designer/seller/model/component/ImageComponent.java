@@ -18,6 +18,17 @@ public class ImageComponent extends BaseComponent {
 
     private String clickPath; //点击路径
 
+    public ImageComponent(String imgPath, String httpImgPath, String imgRefId, String clickPath) {
+        this.imgPath = imgPath;
+        this.httpImgPath = httpImgPath;
+        this.imgRefId = imgRefId;
+        this.clickPath = clickPath;
+    }
+
+    public ImageComponent() {
+
+    }
+
     public String getClickPath() {
         return clickPath;
     }

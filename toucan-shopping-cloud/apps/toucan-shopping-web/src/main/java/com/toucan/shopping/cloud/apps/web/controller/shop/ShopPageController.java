@@ -92,6 +92,7 @@ public class ShopPageController extends BaseController {
                     SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
                     if(StringUtils.isNotEmpty(shopPageContainer.getPageJson())) {
                         ShopPageContainer pageContainer = (ShopPageContainer) pageParser.convertToPageModel(shopPageContainer.getPageJson());
+                        pageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                         ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
                         shopIndexPageView.setShopId(shopId);
                         request.setAttribute("pageView", shopIndexPageView);
@@ -124,6 +125,7 @@ public class ShopPageController extends BaseController {
             {
                 SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
                 ShopPageContainer pageContainer = (ShopPageContainer)pageParser.convertToPageModel(shopPageContainer.getPageJson());
+                pageContainer.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
                 ShopIndexPageView shopIndexPageView = (ShopIndexPageView) pageParser.parse(pageContainer);
                 shopIndexPageView.setShopId(shopId);
                 request.setAttribute("pageView",shopIndexPageView);

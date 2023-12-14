@@ -65,33 +65,32 @@
         <#list pageView.componentViews as cv>
             <#if cv?? && cv.type=="shopBannerView">
 
+                    <div id="slider" class="tslider" style="margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                        <button type="button" class="preBtn" id="preBtn">
+                            &lt;
+                        </button>
+                        <button type="button" class="nextBtn" id="nextBtn">
+                            &gt;
+                        </button>
 
-            <div id="slider" class="tslider" style="margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
-                <button type="button" class="preBtn" id="preBtn">
-                    &lt;
-                </button>
-                <button type="button" class="nextBtn" id="nextBtn">
-                    &gt;
-                </button>
+                        <ul class="pointer" id="defaultBannerPointer">
 
-                <ul class="pointer" id="defaultBannerPointer">
+                        </ul>
+                    </div>
 
-                </ul>
-            </div>
+                    <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
 
-            <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
+                    <script type="text/javascript">
+                        <#if pageViewJson??>
+                            var pageView=${pageViewJson};
+                        </#if>
+                    </script>
+                    <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
 
-            <script type="text/javascript">
-                <#if pageViewJson??>
-                    var pageView=${pageViewJson};
-                </#if>
-            </script>
-            <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
-
-
+            <#elseif cv?? && cv.type=="imageView">
+                    <img style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};" src="${cv.src}" />
             </#if>
-            <#if cv?? && cv.type=="imageView">
-            </#if>
+
         </#list>
 
 
