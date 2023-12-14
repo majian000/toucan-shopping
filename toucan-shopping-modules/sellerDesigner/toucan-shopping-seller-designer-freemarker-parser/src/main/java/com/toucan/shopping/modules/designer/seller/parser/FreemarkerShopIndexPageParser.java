@@ -43,14 +43,17 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
             {
                 AbstractComponent component = null ;
                 Map<String,String> propertys = new HashMap<>();
+                List<ComponentProperty> componentPropertyArray = null;
+                Object propertysJson=null;
                 if(mapComponent.get("propertys")!=null){
-                    List<ComponentProperty> componentPropertyArray = JSONArray.parseArray(String.valueOf(mapComponent.get("propertys")),ComponentProperty.class);
+                    componentPropertyArray = JSONArray.parseArray(String.valueOf(mapComponent.get("propertys")),ComponentProperty.class);
                     if(CollectionUtils.isNotEmpty(componentPropertyArray)) {
                         for(ComponentProperty componentProperty:componentPropertyArray) {
                             propertys.put(componentProperty.getName(),componentProperty.getValue());
                         }
                     }
-                    mapComponent.remove("propertys");
+                    propertysJson = mapComponent.get("propertys");
+                    mapComponent.put("propertys",componentPropertyArray);
                 }
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(mapComponent.get("type")))
                 {
@@ -66,6 +69,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
 
                 }
                 BeanUtils.populate(component, mapComponent);
+                mapComponent.put("propertys",propertysJson);
                 shopPageContainer.getComponents().add(component);
             }
         }

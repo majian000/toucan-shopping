@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.designer.core.model.component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,13 +12,13 @@ public class BaseComponent extends AbstractComponent {
     /**
      * 属性键值对
      */
-    private Map<String,String> propertys;
+    private List<ComponentProperty> propertys;
 
-    public Map<String, String> getPropertys() {
+    public List<ComponentProperty> getPropertys() {
         return propertys;
     }
 
-    public void setPropertys(Map<String, String> propertys) {
+    public void setPropertys(List<ComponentProperty> propertys) {
         this.propertys = propertys;
     }
 }

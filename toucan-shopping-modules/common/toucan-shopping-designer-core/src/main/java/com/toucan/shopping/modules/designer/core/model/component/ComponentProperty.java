@@ -1,9 +1,12 @@
 package com.toucan.shopping.modules.designer.core.model.component;
 
+import lombok.Data;
+
 /**
  * 组件属性
  * @author majian
  */
+@Data
 public class ComponentProperty {
 
     private String name; //属性名
