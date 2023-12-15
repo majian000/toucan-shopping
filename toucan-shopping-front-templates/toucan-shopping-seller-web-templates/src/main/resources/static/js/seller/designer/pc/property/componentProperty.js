@@ -1,7 +1,6 @@
 
 
 function bindComponentInstanceClick(clickId){
-    console.log(clickId);
     $("#"+clickId).unbind("click");
     //点击组件实例时
     $("#"+clickId).click(function(){
@@ -18,7 +17,6 @@ function componentClickCallback(clickObj){
     var compoentType= $(clickObj).attr("compoent-type");
     var componentInstanceId= $(clickObj).attr("component-instance-id");
     var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
-    console.log(componentInstance);
     if(compoentType!=null)
     {
         var componentConfig = g_componentConfig.get(compoentType);
@@ -40,12 +38,11 @@ function componentClickCallback(clickObj){
                 $(propertyPanel[i]).hide();
             }else{
                 if(componentInstance!=null) {
-                    var propertyForm = $(".component-propertys-form-"+compoentType);
-                    if(propertyForm!=null) {
-                        propertyForm[0].reset();
-                    }
                     if(compoentType=="image")
                     {
+                        //清空属性面板
+                        clearImageProperty(compoentType);
+                        //加载属性面板
                         loadImageProperty(componentInstance);
                     }
                     $(propertyPanel[i]).attr("component-instance-ref",componentInstanceId);
@@ -56,6 +53,21 @@ function componentClickCallback(clickObj){
     }
 }
 
+/**
+ * 选中页面属性设置
+ */
+function selectPageProperty(){
+    var tabPageItems = $(".mt-tabpage-item");
+    for(var j=0;j<tabPageItems.length;j++)
+    {
+        var tabPanel = $(tabPageItems[j]);
+        if(tabPanel.attr("attr-page")=="mtc1")
+        {
+            tabPanel.click();
+            tabPanel.addClass("mt-tabpage-item-cur");
+        }
+    }
+}
 
 
 /**

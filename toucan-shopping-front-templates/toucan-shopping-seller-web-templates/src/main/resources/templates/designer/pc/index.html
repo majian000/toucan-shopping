@@ -107,35 +107,9 @@
                                             </div>
                                             <div class="mt-tabpage-count">
                                                 <div class="mt-tabpage-content mtc1" >
-                                                    <form action="">
-                                                        <div class="form-group">
-                                                            <label for="pageTitle">页面标题</label>
-                                                            <input type="text" class="form-control" placeholder="请输入页面标题" id="pageTitle" lay-verify="required|shopName" >
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label>背景样式</label>
-                                                            <br>
-                                                            &nbsp;&nbsp;
-                                                            <input type="radio" name="bgType" id="bgType1" value="1" checked="checked"/>&nbsp;<label for="bgType1">背景色</label>
-                                                            &nbsp;&nbsp;&nbsp;
-                                                            <input type="radio" name="bgType" id="bgType2" value="2" />&nbsp;<label for="bgType2">背景图片</label>
-                                                        </div>
-                                                        <div class="form-group bgTypeColor" style="display:block">
-                                                            <label>背景色</label>
-                                                            <br>
-                                                            <input type="hidden" class="selectColorControlVal" />
-                                                            <input id="selectColorControl" />
-                                                        </div>
-                                                        <div class="form-group bgTypeImg" style="display:none">
-                                                            <label >背景图片</label>
-
-                                                        </div>
-                                                    </form>
+                                                    <#include "/designer/pc/property/pageProperty.html"/>
                                                 </div>
                                                 <div class="mt-tabpage-content mtc2" >
-
-
                                                     <#include "/designer/pc/property/imageProperty.html"/>
                                                 </div>
                                             </div>

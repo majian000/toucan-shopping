@@ -1032,6 +1032,7 @@ $(function() {
 		var pageModel = encapsulationModel(grid);
 
 		if(!checkInputFunction($('.preview-btn'),2)){
+			selectPageProperty();
 			return false;
 		}
 

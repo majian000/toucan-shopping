@@ -18,6 +18,13 @@ function loadImageProperty(componentInstance){
     }
 }
 
+function clearImageProperty(compoentType){
+    var propertyForm = $(".component-propertys-form-"+compoentType);
+    if(propertyForm!=null) {
+        propertyForm[0].reset();
+    }
+}
+
 function selectImageCallback(row){
     $("#image_selectBackgroundImagePreview").attr("src",row.httpImgPath);
     $("#image_imgPath").val(row.imgPath);
