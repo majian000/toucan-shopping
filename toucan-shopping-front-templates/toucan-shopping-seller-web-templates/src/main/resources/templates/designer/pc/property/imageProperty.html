@@ -1,10 +1,13 @@
 <!--图片属性面板-->
-<div component-ref="image" class="component-propertys" component-instance-ref="">
+<div component-ref="image" class="component-propertys" id="image_propertyPanel" component-instance-ref="">
     <form action="" class="component-propertys-form-image" >
 
         <div class="form-group">
             <label>背景预览</label>
             <br>
+            <input type="hidden" id="image_imgPath" />
+            <input type="hidden" id="image_httpImgPath" />
+            <input type="hidden" id="image_imgRefId" />
             <img id="image_selectBackgroundImagePreview" style="width:100px;height:100px;" src="/static/images/designer/pc/imageBackgroundDefault.png">
         </div>
         <div class="form-group">

@@ -34,10 +34,10 @@ function componentClickCallback(clickObj){
             }
         }
 
-        var componentAttributes = $(".component-propertys");
-        for(var i=0;i<componentAttributes.length;i++) {
-            if($(componentAttributes[i]).attr("component-ref")!=compoentType) {
-                $(componentAttributes[i]).hide();
+        var propertyPanel = $(".component-propertys");
+        for(var i=0;i<propertyPanel.length;i++) {
+            if($(propertyPanel[i]).attr("component-ref")!=compoentType) {
+                $(propertyPanel[i]).hide();
             }else{
                 if(componentInstance!=null) {
                     var propertyForm = $(".component-propertys-form-"+compoentType);
@@ -48,8 +48,8 @@ function componentClickCallback(clickObj){
                     {
                         loadImageProperty(componentInstance);
                     }
-                    $(componentAttributes[i]).attr("component-instance-ref",componentInstanceId);
-                    $(componentAttributes[i]).show();
+                    $(propertyPanel[i]).attr("component-instance-ref",componentInstanceId);
+                    $(propertyPanel[i]).show();
                 }
             }
         }

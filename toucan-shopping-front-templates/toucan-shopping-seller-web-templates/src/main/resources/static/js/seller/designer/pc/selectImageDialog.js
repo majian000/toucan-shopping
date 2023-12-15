@@ -39,6 +39,7 @@ function openSelectImageDialog(comInstId,selectRowCallback)
 function initImagePagination()
 {
 
+    var dialogIndex = layer.zIndex;
     $(".pageToolbar").html("<table id=\"imageTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
         "                        <tbody id=\"imageTableBody\">\n" +
         "                        </tbody>\n" +
@@ -46,7 +47,8 @@ function initImagePagination()
 
     loading.showLoading({
         type:6,
-        tip:"查询中..."
+        tip:"查询中...",
+        zIndex:dialogIndex+1
     });
 
     $.ajax({
@@ -88,9 +90,11 @@ function initImagePagination()
 
 function doImagePage()
 {
+    var dialogIndex = layer.zIndex;
     loading.showLoading({
         type:6,
-        tip:"查询中..."
+        tip:"查询中...",
+        zIndex:dialogIndex+1
     });
     g_image_query_obj.page = pagegizationConfigObject.current_page;
     $.ajax({
@@ -164,7 +168,6 @@ function drawImageTable(pageResult)
 
 function bindRowEvent()
 {
-
     $(".selectRow").unbind("click");
     $(".selectRow").bind("click", function () {
         if(g_selectRowCallbackHandler!=null)
