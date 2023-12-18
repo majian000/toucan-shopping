@@ -180,4 +180,41 @@ public class DesignerApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+    @UserAuth
+    @RequestMapping("/pc/index/load")
+    @ResponseBody
+    public ResultObjectVO loadPcIndex(HttpServletRequest request){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            String shopId = "-1";
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
+                    shopId = String.valueOf(sellerShopVO.getId());
+                }
+            }
+            if(!"-1".equals(shopId))
+            {
+                SellerDesignerPageModelVO query =new SellerDesignerPageModelVO();
+                query.setShopId(Long.parseLong(shopId));
+                query.setType(2);
+                query.setPosition(1);
+                resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后再试");
+        }
+        return resultObjectVO;
+    }
 }

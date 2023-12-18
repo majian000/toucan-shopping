@@ -304,7 +304,7 @@ $(function() {
 			if (goHere.length == 0) console.error('Parent column does not exist.');
 
 			var nested = options.nested == true ? $('<div class="fg-nested-container"></div>') : $('');
-			var widget = noParams ? $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i><i class="fa fa-times fg-remove-widget" title="删除"></i><div class="fg-widget-inner fg-widget-handle"><div class="zone-txt text-center"></div></div></div>') : params.widget === undefined || params.widget === null ? $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i><i class="fa fa-times remove-widget" title="删除"></i><div class="fg-widget-inner fg-widget-handle"><div class="zone-txt text-center"></div></div></div>') : params.widget;
+			var widget = noParams ? $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i><i class="fa fa-times fg-remove-widget" title="移除"></i><div class="fg-widget-inner fg-widget-handle"><div class="zone-txt text-center"></div></div></div>') : params.widget === undefined || params.widget === null ? $('<div class="fg-widget"><i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i><i class="fa fa-times remove-widget" title="删除"></i><div class="fg-widget-inner fg-widget-handle"><div class="zone-txt text-center"></div></div></div>') : params.widget;
 			widget.find('.fg-widget-inner').append(nested);
 
 			widget.css({ // set widget style options
@@ -1070,59 +1070,106 @@ $(function() {
 
 	});
 
-	// add an array of widgets
-	//初始化
-	var widgets = [
-		/*{
-			width: 2,
-			height: 2,
-			minHeight: 2,
-			minWidth: 2,
-			x: 0,
-			y: 0
-		},
-		{
-			width: 3,
-			height: 3,
-			x: 0,
-			y: 0
-		},
-		{
-			width: 1,
-			height: 2,
-			x: 2,
-			y: 0
-		}*/
-	];
-	
-	for (var i = 0; i < widgets.length; i++) {
-		var x = widgets[i].x;
-		var y = widgets[i].y;
-		var width = widgets[i].width;
-		var minWidth = widgets[i].minWidth;
-		var maxWidth = widgets[i].maxWidth;
-		var height = widgets[i].height;
-		var minHeight = widgets[i].minHeight;
-		var maxHeight = widgets[i].maxHeight;
-		var type = widgets[i].type;
-		var name = widgets[i].name;
-		// var inner = widgets[i].inner ? widgets[i].inner : '';
-		var inner = '<p class="inner-icon">'+width+'x'+height+'</p>';
 
-		var widget = $('<div class="fg-widget custom-blue-widget" compoent-type="'+type+'"  compoent-type="'+name+'" title="'+name+'">' +
-			'<i class="fa fa-chevron-right fg-resize-widget" aria-hidden="true"></i>' +
-			'<i class="fa fa-times fg-remove-widget" title="删除"></i>' +
-			'<i class="fas fa-arrows-alt move-widget fg-widget-handle"></i>' +
-			'<div class="fg-widget-inner" style="background: #406fff !important;">'+inner+'</div>' +
-			'</div>');
-		zoneInner.addWidget({
-			widget: widget,
-			x:x, y:y,
-			width:width, height:height,
-			minWidth:minWidth, minHeight: minHeight,
-			maxWidth:maxWidth, maxHeight: maxHeight,
-			type:type,name:name
+
+	loadPage();
+
+	/**
+	 * 加载页面
+	 */
+	function loadPage(){
+
+		loading.showLoading({
+			type:6,
+			tip:"请等待...",
+			zIndex:999
 		});
+
+		$.ajax({
+			url:basePath+"/api/designer/pc/index/load",
+			type:'GET',
+			data:null,
+			cache: false,
+			processData: false,
+			contentType: false,
+			success:function(resp){
+				loading.hideLoading();
+
+				if(resp.code!=0) {
+					drawPanel(JSON.parse(resp.data.pageJson))
+				}
+			},
+			complete:function(data,status){
+				loading.hideLoading();
+			}
+		});
+	}
+
+	/**
+	 * 绘制面板
+	 */
+	function drawPanel(pageModel){
+		//初始化
+		if(pageModel!=null&&pageModel.components!=null&&pageModel.components.length>0) {
+			for (var i = 0; i < pageModel.components.length; i++) {
+				var component = pageModel.components[i];
+				var x = component.x;
+				var y = component.y;
+				var width = component.width;
+				var minWidth = component.minWidth;
+				var maxWidth = component.maxWidth;
+				var height = component.height;
+				var minHeight = component.minHeight;
+				var maxHeight = component.maxHeight;
+				var type = component.type;
+				var name = component.name;
+
+				zoneInner.addWidget({
+					widget: createPanelComponentObject(component),
+					x: x, y: y,
+					width: width, height: height,
+					minWidth: minWidth, minHeight: minHeight,
+					maxWidth: maxWidth, maxHeight: maxHeight,
+					type: type, name: name
+				});
+			}
+		}
+	}
+
+	/**
+	 * 创建面板组件对象
+	 * @param component
+	 * @returns {string}
+	 */
+	function createPanelComponentObject(component){
+		var componentObj="";
+		if(component.type=="shopBanner") //店铺轮播图
+		{
+			componentObj = $("<div class=\"fg-widget custom-widget custom-widget-handle components components-"+component.type+"\"" +
+				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
+				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+				"    <div class=\"fg-widget-inner designer-component-banner-hover designer-component-" + component.type + "-bg\">\n" +
+				"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
+				"    </div>\n" +
+				"</div>\n");
+
+			$(".widget-holder").find(".components-shopBanner").hide();
+
+		}else if(component.type=="image"){ //图片组件
+			componentObj = $("<div class=\"fg-widget custom-widget custom-widget-handle components components-"+component.type+"\"" +
+				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
+				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+				"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url(\""+component.httpImgPath+"\")\">\n" +
+				"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
+				"    </div>\n" +
+				"</div>\n");
+		}
+		bindComponentInstanceClick(component.instanceId);
+		return componentObj;
 	}
 
 	$(document).on('resizestop', '.custom-blue-widget', function() {

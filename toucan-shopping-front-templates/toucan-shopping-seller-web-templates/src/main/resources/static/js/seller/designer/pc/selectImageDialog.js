@@ -27,7 +27,8 @@ function openSelectImageDialog(comInstId,selectRowCallback)
         type: 1,
         title:"选择图片",
         area: ['55%', '60%'], //宽高
-        content: imageTableHtml
+        content: imageTableHtml,
+        zIndex:1000
     });
 }
 
