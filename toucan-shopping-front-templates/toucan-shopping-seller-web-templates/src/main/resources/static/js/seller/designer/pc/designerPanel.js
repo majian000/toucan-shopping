@@ -1130,7 +1130,7 @@ $(function() {
 					width: width, height: height,
 					minWidth: minWidth, minHeight: minHeight,
 					maxWidth: maxWidth, maxHeight: maxHeight,
-					type: type, name: name
+					type: type, name: name,nested:false
 				});
 			}
 		}
@@ -1145,7 +1145,7 @@ $(function() {
 		var componentObj="";
 		if(component.type=="shopBanner") //店铺轮播图
 		{
-			componentObj = $("<div class=\"fg-widget custom-widget custom-widget-handle components components-"+component.type+"\"" +
+			componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
 				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
 				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
 				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
@@ -1158,7 +1158,7 @@ $(function() {
 			$(".widget-holder").find(".components-shopBanner").hide();
 
 		}else if(component.type=="image"){ //图片组件
-			componentObj = $("<div class=\"fg-widget custom-widget custom-widget-handle components components-"+component.type+"\"" +
+			componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
 				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
 				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
 				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
@@ -1278,6 +1278,8 @@ function doRemove(compoentObj){
 		compoentObj.find(".designer-component-banner-bg").addClass("fg-widget-inner-bg-color");
 		compoentObj.find(".fg-remove-widget").hide();
 		compoentObj.find(".ui-resizable-handle").hide();
+		//显示工具类中的组件
+		$(".widget-holder").find(".components-shopBanner").show();
 	}else if(compoentObj.attr("compoent-type")=="image"){
 		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("图片");
 		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-image-hover");

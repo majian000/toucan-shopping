@@ -29,4 +29,6 @@ public abstract class AbstractComponent implements IComponent {
     private String title; //标题
     private String backgroundColor; //背景色
 
+    private String instanceId; //实例ID
+
 }
