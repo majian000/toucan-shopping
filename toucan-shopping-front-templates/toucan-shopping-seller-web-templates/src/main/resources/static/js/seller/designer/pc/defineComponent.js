@@ -38,6 +38,22 @@ function initImageConfig(){
 }
 
 /**
+ * 填充全局组件集合
+ */
+function loadGlobalComponents(components){
+    if(components!=null&&components.length>0)
+    {
+        for(var i=0;i<components.length;i++)
+        {
+            var component = components[i];
+            var newComponent = createComponentInstance(component.type);
+            objectCopy(newComponent,component);
+            g_components.push(newComponent);
+        }
+    }
+}
+
+/**
  * 创建组件实例
  * @param type
  * @returns {*}

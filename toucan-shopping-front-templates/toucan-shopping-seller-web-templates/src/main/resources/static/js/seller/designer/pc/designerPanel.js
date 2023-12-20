@@ -1097,7 +1097,7 @@ $(function() {
 
 				if(resp.code!=0) {
 					var pageModel = JSON.parse(resp.data.pageJson);
-					g_components = pageModel.components;
+					loadGlobalComponents(pageModel.components);
 					loadPageProperty(pageModel);
 					drawPanel(pageModel);
 				}
@@ -1135,6 +1135,7 @@ $(function() {
 					maxWidth: maxWidth, maxHeight: maxHeight,
 					type: type, name: name,nested:false
 				});
+				bindComponentInstanceClick(component.instanceId);
 			}
 		}
 	}
@@ -1181,12 +1182,11 @@ $(function() {
 				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
 				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
 				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
-				"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url(\""+component.httpImgPath+"\")\">\n" +
+				"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url('"+component.httpImgPath+"')\">\n" +
 				"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
 				"    </div>\n" +
 				"</div>\n");
 		}
-		bindComponentInstanceClick(component.instanceId);
 		return componentObj;
 	}
 
