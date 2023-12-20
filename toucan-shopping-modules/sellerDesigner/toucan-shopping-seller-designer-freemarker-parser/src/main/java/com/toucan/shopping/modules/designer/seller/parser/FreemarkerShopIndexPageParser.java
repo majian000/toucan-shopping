@@ -58,9 +58,11 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(mapComponent.get("type")))
                 {
                     component=new ShopBannerComponent();
+                    BeanUtils.populate(component, mapComponent);
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(mapComponent.get("type")))
                 {
                     ImageComponent imageComponent=new ImageComponent();
+                    BeanUtils.populate(imageComponent, mapComponent);
                     imageComponent.setImgPath(propertys.get("imgPath"));
                     imageComponent.setHttpImgPath(propertys.get("httpImgPath"));
                     imageComponent.setImgRefId(propertys.get("imgRefId"));
@@ -68,7 +70,6 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     component = imageComponent;
 
                 }
-                BeanUtils.populate(component, mapComponent);
                 mapComponent.put("propertys",propertysJson);
                 shopPageContainer.getComponents().add(component);
             }

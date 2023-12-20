@@ -1329,18 +1329,10 @@ function encapsulationModel(grid){
 		for(var i=0;i<widgets.length;i++)
 		{
 			var widget = widgets[i];
-			var component=null;
-			if(widget.type=="shopBanner")
-			{
-				component = newShopBannerComponent();
-			}else if(widget.type=="image")
-			{
-				component = newImageComponent();
-			}
+			var component=getComponentInstanceByInstanceId(widget.componentInstanceId);
 			objectCopy(component,widget);
 			if(component!=null) {
 				component.innerHtml = "";
-				objectCopy(component, getComponentInstanceByInstanceId(widget.componentInstanceId));
 				pageContainer.mapComponents.push(component);
 			}
 		}
