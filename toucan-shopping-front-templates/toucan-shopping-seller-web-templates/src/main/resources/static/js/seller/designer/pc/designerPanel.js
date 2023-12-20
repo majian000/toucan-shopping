@@ -1096,7 +1096,10 @@ $(function() {
 				loading.hideLoading();
 
 				if(resp.code!=0) {
-					drawPanel(JSON.parse(resp.data.pageJson))
+					var pageModel = JSON.parse(resp.data.pageJson);
+					g_components = pageModel.components;
+					loadPageProperty(pageModel);
+					drawPanel(pageModel);
 				}
 			},
 			complete:function(data,status){
@@ -1133,6 +1136,21 @@ $(function() {
 					type: type, name: name,nested:false
 				});
 			}
+		}
+	}
+
+	/**
+	 * 加载页面设置
+	 * @param pageModel
+	 */
+	function loadPageProperty(pageModel){
+		$("#pageTitle").val(pageModel.title);
+		if(pageModel.backgroundColor!=null&&pageModel.backgroundColor!="")
+		{
+			$("#bgType1").click();
+			var hexColor = pageModel.backgroundColor.toHexString();
+			$(".selectColorControlVal").val(hexColor);
+			$(".flexgrid-container").css("background-color","#"+hexColor);
 		}
 	}
 
