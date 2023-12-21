@@ -1096,9 +1096,11 @@ $(function() {
 				loading.hideLoading();
 
 				if(resp.code!=0) {
-					g_pageContainer = JSON.parse(resp.data.pageJson);
-					loadPageProperty(g_pageContainer);
-					drawPanel(g_pageContainer);
+					if(resp.data!=null&&resp.data.pageJson!=null&&resp.data.pageJson!="") {
+						g_pageContainer = JSON.parse(resp.data.pageJson);
+						loadPageProperty(g_pageContainer);
+						drawPanel(g_pageContainer);
+					}
 				}
 			},
 			complete:function(data,status){

@@ -18,6 +18,7 @@ function initDesignerProperty()
         $(this).addClass("mt-tabpage-item-cur");
         $(".mt-tabpage-content").hide();
         $("."+$(this).attr("attr-page")).show();
+        $("."+$(this).attr("attr-page")).find(".component-propertys").show();
     });
 
     bindPropertyBtnEvent();
