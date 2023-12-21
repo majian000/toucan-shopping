@@ -3,6 +3,8 @@
  */
 function bindPagePropertyBtnEvent(){
 
+    initSpectrum("#ffffff");
+
     //选择背景色/背景图片
     $("#bgType1").click(function(){
         $(".bgTypeColor").show();
@@ -51,5 +53,7 @@ function loadPageProperty(pageModel){
         $(".selectColorControlVal").val(pageModel.backgroundColor);
         $(".flexgrid-container").css("background-color",pageModel.backgroundColor);
         $(".sp-preview-inner").css("background-color",pageModel.backgroundColor);
+        //重新初始化颜色选择器
+        initSpectrum(pageModel.backgroundColor);
     }
 }

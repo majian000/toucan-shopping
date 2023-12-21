@@ -21,11 +21,15 @@ function doChange(color){
     }
 }
 
-$(function() {
+/**
+ * 初始化颜色选择器
+ * @param color
+ */
+function initSpectrum(color) {
 
     $("#selectColorControl").spectrum({
         allowEmpty:true,
-        color: "#ffffff",
+        color: color,
         showInput: true,
         containerClassName: "full-spectrum",
         showInitial: true,
@@ -422,4 +426,4 @@ $(function() {
     });
 
 
-});
+}

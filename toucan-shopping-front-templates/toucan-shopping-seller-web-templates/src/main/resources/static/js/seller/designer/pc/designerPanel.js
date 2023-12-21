@@ -1094,7 +1094,7 @@ $(function() {
 			contentType: false,
 			success:function(resp){
 				loading.hideLoading();
-
+				initDesignerProperty();
 				if(resp.code!=0) {
 					if(resp.data!=null&&resp.data.pageJson!=null&&resp.data.pageJson!="") {
 						g_pageContainer = JSON.parse(resp.data.pageJson);
@@ -1102,6 +1102,7 @@ $(function() {
 						drawPanel(g_pageContainer);
 					}
 				}
+
 			},
 			complete:function(data,status){
 				loading.hideLoading();
