@@ -1,12 +1,22 @@
 var g_componentConfig=new Map(); //组件配置
-var g_components=new Array(); //组件实例
 
 /**
  * 初始化组件配置
  */
 function initComponentConfig(){
+    initPageConfig();
     initShopBannerConfig();
     initImageConfig();
+}
+
+function initPageConfig(){
+    var pageConfig={
+        type:"page",
+        name:"页面",
+        propertyPanel:"mtc1",
+        instanceType:"single"
+    };
+    g_componentConfig.set(pageConfig.type,pageConfig);
 }
 
 
@@ -37,21 +47,6 @@ function initImageConfig(){
     g_componentConfig.set(componentConfig.type,componentConfig);
 }
 
-/**
- * 填充全局组件集合
- */
-function loadGlobalComponents(components){
-    if(components!=null&&components.length>0)
-    {
-        for(var i=0;i<components.length;i++)
-        {
-            var component = components[i];
-            var newComponent = createComponentInstance(component.type);
-            objectCopy(newComponent,component);
-            g_components.push(newComponent);
-        }
-    }
-}
 
 /**
  * 创建组件实例
@@ -69,7 +64,7 @@ function createComponentInstance(type){
 
     }
     componentInstance.instanceId = toucan_uuid();
-    g_components.push(componentInstance);
+    g_pageContainer.components.push(componentInstance);
     return componentInstance;
 }
 
@@ -130,12 +125,12 @@ function setComponentPorperty(componentInstance,propertyName,propertyValue){
  * @param instanceId
  */
 function removeComponentInstanceByInstanceId(instanceId){
-    if(g_components!=null&&g_components.length>0)
+    if(g_pageContainer.components!=null&&g_pageContainer.components.length>0)
     {
-        for(var i=0;i<g_components.length;i++)
+        for(var i=0;i<g_pageContainer.components.length;i++)
         {
-            if(g_components[i].instanceId==instanceId){
-                g_components.splice(i, 1);
+            if(g_pageContainer.components[i].instanceId==instanceId){
+                g_pageContainer.components.splice(i, 1);
             }
         }
     }
@@ -147,12 +142,12 @@ function removeComponentInstanceByInstanceId(instanceId){
  * @returns {*}
  */
 function getComponentInstanceByInstanceId(instanceId){
-    if(g_components!=null&&g_components.length>0)
+    if(g_pageContainer.components!=null&&g_pageContainer.components.length>0)
     {
-        for(var i=0;i<g_components.length;i++)
+        for(var i=0;i<g_pageContainer.components.length;i++)
         {
-            if(g_components[i].instanceId==instanceId){
-                return g_components[i];
+            if(g_pageContainer.components[i].instanceId==instanceId){
+                return g_pageContainer.components[i];
             }
         }
     }

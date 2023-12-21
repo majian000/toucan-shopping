@@ -1096,10 +1096,9 @@ $(function() {
 				loading.hideLoading();
 
 				if(resp.code!=0) {
-					var pageModel = JSON.parse(resp.data.pageJson);
-					loadGlobalComponents(pageModel.components);
-					loadPageProperty(pageModel);
-					drawPanel(pageModel);
+					g_pageContainer = JSON.parse(resp.data.pageJson);
+					loadPageProperty(g_pageContainer);
+					drawPanel(g_pageContainer);
 				}
 			},
 			complete:function(data,status){
@@ -1140,20 +1139,6 @@ $(function() {
 		}
 	}
 
-	/**
-	 * 加载页面设置
-	 * @param pageModel
-	 */
-	function loadPageProperty(pageModel){
-		$("#pageTitle").val(pageModel.title);
-		if(pageModel.backgroundColor!=null&&pageModel.backgroundColor!="")
-		{
-			$("#bgType1").click();
-			var hexColor = pageModel.backgroundColor.toHexString();
-			$(".selectColorControlVal").val(hexColor);
-			$(".flexgrid-container").css("background-color","#"+hexColor);
-		}
-	}
 
 	/**
 	 * 创建面板组件对象
@@ -1317,11 +1302,10 @@ function doRemove(compoentObj){
  * 封装模型
  */
 function encapsulationModel(grid){
-	var pageContainer = new newPageContainer();
-	pageContainer.title=$("#pageTitle").val();
-	pageContainer.backgroundColor=$("#selectColorControl").val();
-	pageContainer.type="pageContainer";
-	pageContainer.mapComponents = new Array();
+	g_pageContainer.title=$("#pageTitle").val();
+	g_pageContainer.backgroundColor=$("#selectColorControl").val();
+	g_pageContainer.type="pageContainer";
+	g_pageContainer.mapComponents = new Array();
 	//拿到所有组件
 	var widgets = grid[0]['widgets'];
 	if(widgets!=null&&widgets.length>0)
@@ -1333,10 +1317,10 @@ function encapsulationModel(grid){
 			objectCopy(component,widget);
 			if(component!=null) {
 				component.innerHtml = "";
-				pageContainer.mapComponents.push(component);
+				g_pageContainer.mapComponents.push(component);
 			}
 		}
 	}
-	// console.log(pageContainer);
-	return pageContainer;
+	console.log(g_pageContainer);
+	return g_pageContainer;
 }

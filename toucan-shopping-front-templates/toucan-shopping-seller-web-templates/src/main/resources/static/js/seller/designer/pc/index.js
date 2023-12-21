@@ -22,15 +22,6 @@ function initDesignerProperty()
 
     bindPropertyBtnEvent();
 
-    //背景样式
-    $("#bgType1").click(function(){
-        $(".bgTypeColor").show();
-        $(".bgTypeImg").hide();
-    });
-    $("#bgType2").click(function(){
-        $(".bgTypeImg").show();
-        $(".bgTypeColor").hide();
-    });
 
 
 }

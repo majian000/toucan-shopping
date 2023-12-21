@@ -1,3 +1,6 @@
+
+var g_pageContainer = newPageContainer(); //页面容器
+
 /**
  * 容器组件
  * @returns {{minHeight: null, x: null, width: null, name: null, y: null, minWidth: null, type: null, height: null}}
@@ -5,6 +8,7 @@
 function newContainerComponent(){
     var containerComponent=newComponent();
     containerComponent.mapComponents=new Array();
+    containerComponent.components=new Array();
     return containerComponent;
 }
 
@@ -14,6 +18,7 @@ function newContainerComponent(){
  */
 function newPageContainer(){
     var container=newContainerComponent();
+    container.instanceId=toucan_uuid();
     return container;
 }
 
@@ -30,6 +35,7 @@ function newComponent(){
         minHeight:null,
         minWidth:null,
         type:null, //组件类型
+        instanceId:null, //实例ID
         name:null //组件名称
     };
     return abstractComponent;

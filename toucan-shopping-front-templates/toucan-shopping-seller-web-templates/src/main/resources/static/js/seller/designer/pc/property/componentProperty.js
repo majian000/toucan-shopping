@@ -74,6 +74,7 @@ function selectPageProperty(){
  * 绑定属性事件
  */
 function bindPropertyBtnEvent(){
+    bindPagePropertyBtnEvent();
     bindImagePropertyBtnEvent();
 }
 
