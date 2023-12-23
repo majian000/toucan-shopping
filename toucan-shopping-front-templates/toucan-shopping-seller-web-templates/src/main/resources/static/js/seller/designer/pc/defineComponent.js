@@ -70,8 +70,7 @@ function initImageConfig(){
  */
 function createComponentInstance(type){
     var componentInstance= null;
-    if(type=="image")
-    {
+    if(type=="image"){
         componentInstance = createImageInstance();
     }else if(type=="shopBanner"){
         componentInstance = createShopBannerInstance();

@@ -1370,7 +1370,7 @@ function encapsulationModel(grid){
 	g_pageContainer.title=$("#pageTitle").val();
 	g_pageContainer.backgroundColor=$("#selectColorControl").val();
 	g_pageContainer.type="pageContainer";
-	g_pageContainer.mapComponents = new Array();
+	g_pageContainer.requestComponents = new Array();
 	//拿到所有组件
 	var widgets = grid[0]['widgets'];
 	if(widgets!=null&&widgets.length>0)
@@ -1382,7 +1382,7 @@ function encapsulationModel(grid){
 			objectCopy(component,widget);
 			if(component!=null) {
 				component.innerHtml = "";
-				g_pageContainer.mapComponents.push(component);
+				g_pageContainer.requestComponents.push(component);
 			}
 		}
 	}

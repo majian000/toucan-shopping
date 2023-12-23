@@ -4,6 +4,7 @@ public enum SellerDesignerComponentEnum {
 
     SHOP_PAGE_CONTAINER("shopPageContainer"),
     SHOP_BANNER("shopBanner"),
+    SHOP_CATEGORY("shopCategory"),
     IMAGE("image")
     ;
 

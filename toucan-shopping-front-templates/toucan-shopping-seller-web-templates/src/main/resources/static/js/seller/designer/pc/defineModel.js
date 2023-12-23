@@ -7,7 +7,7 @@ var g_pageContainer = newPageContainer(); //页面容器
  */
 function newContainerComponent(){
     var containerComponent=newComponent();
-    containerComponent.mapComponents=new Array();
+    containerComponent.requestComponents=new Array();
     containerComponent.components=new Array();
     return containerComponent;
 }

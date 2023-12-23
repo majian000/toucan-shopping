@@ -13,7 +13,7 @@ import java.util.Map;
 @Data
 public abstract class Container extends AbstractComponent implements IContainer{
 
-    private List<Map<String,String>> mapComponents; //组件列表
+    private List<Map<String,String>> requestComponents; //接收组件
 
     private List<AbstractComponent> components; //组件列表
 

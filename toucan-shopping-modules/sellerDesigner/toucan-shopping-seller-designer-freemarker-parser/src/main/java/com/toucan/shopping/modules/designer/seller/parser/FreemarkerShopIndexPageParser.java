@@ -13,10 +13,12 @@ import com.toucan.shopping.modules.designer.seller.enums.SellerDesignerComponent
 import com.toucan.shopping.modules.designer.seller.enums.SellerComponentViewEnum;
 import com.toucan.shopping.modules.designer.seller.model.component.ImageComponent;
 import com.toucan.shopping.modules.designer.seller.model.component.ShopBannerComponent;
+import com.toucan.shopping.modules.designer.seller.model.component.ShopCategoryComponent;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.designer.seller.plugin.ShopBannerViewPlugin;
 import com.toucan.shopping.modules.designer.seller.view.ImageView;
 import com.toucan.shopping.modules.designer.seller.view.ShopBannerView;
+import com.toucan.shopping.modules.designer.seller.view.ShopCategoryView;
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,9 +39,9 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
     public PageContainer convertToPageModel(String json) throws Exception {
         ShopPageContainer shopPageContainer= JSONObject.parseObject(json, ShopPageContainer.class);
         shopPageContainer.setComponents(new LinkedList<>());
-        if(CollectionUtils.isNotEmpty(shopPageContainer.getMapComponents()))
+        if(CollectionUtils.isNotEmpty(shopPageContainer.getRequestComponents()))
         {
-            for(Map mapComponent:shopPageContainer.getMapComponents())
+            for(Map mapComponent:shopPageContainer.getRequestComponents())
             {
                 AbstractComponent component = null ;
                 Map<String,String> propertys = new HashMap<>();
@@ -58,6 +60,10 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(mapComponent.get("type")))
                 {
                     component=new ShopBannerComponent();
+                    BeanUtils.populate(component, mapComponent);
+                }else if(SellerDesignerComponentEnum.SHOP_CATEGORY.value().equals(mapComponent.get("type")))
+                {
+                    component=new ShopCategoryComponent();
                     BeanUtils.populate(component, mapComponent);
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(mapComponent.get("type")))
                 {
@@ -106,6 +112,12 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     shopBannerViewPlugin.setPluginName("sliderMe");
                     shopBannerViewPlugin.setPluginVersion("1.0");
                     pageView.getComponentViewPlugins().add(shopBannerViewPlugin);
+                }else if(SellerDesignerComponentEnum.SHOP_CATEGORY.value().equals(component.getType()))
+                {
+                    componentView = new ShopCategoryView();
+                    componentView.setTitle(component.getTitle());
+                    componentView.setType(SellerComponentViewEnum.SHOP_CATEGORY_VIEW.value());
+
                 }else if(SellerDesignerComponentEnum.IMAGE.value().equals(component.getType())){
                     ImageComponent imageComponent = (ImageComponent)component;
                     ImageView imageComponentView = new ImageView();

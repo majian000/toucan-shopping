@@ -4,6 +4,7 @@ public enum SellerComponentViewEnum {
 
     SHOP_PAGE_VIEW("shopPageView"),
     SHOP_BANNER_VIEW("shopBannerView"),
+    SHOP_CATEGORY_VIEW("shopCategoryView"),
     IMAGE_VIEW("imageView");
 
     private String componentType;
