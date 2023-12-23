@@ -331,7 +331,24 @@ $(function() {
 			resize(widget);
 			enableSortable();
 		};
-		
+
+		$.fn.moveWidget = function(component) {
+			var parentDiv = $("#"+component.instanceId).parent(".fg-disabled-col");
+			var y = 0;
+			var x = 0;
+			if(component.y==0){
+				y = 0;
+			}else{
+				y = component.y*40;
+			}
+			if(component.x==0){
+				x = 0;
+			}else{
+				x = component.x*40;
+			}
+			parentDiv.css("top",(y+"px"));
+			parentDiv.css("left",(x+"px"));
+		};
 		function findNextColumn(axis, zoneInner, x, y) {
 			var goHere;
 			switch(axis) {
@@ -1137,6 +1154,7 @@ $(function() {
 					maxWidth: maxWidth, maxHeight: maxHeight,
 					type: type, name: name,nested:false
 				});
+				zoneInner.moveWidget(component);
 				bindComponentInstanceClick(component.instanceId);
 			}
 		}
