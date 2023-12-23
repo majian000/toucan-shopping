@@ -64,7 +64,7 @@
 
         <#list pageView.componentViews as cv>
             <#if cv?? && cv.type=="shopBannerView">
-                    <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};">
+                    <div style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};">
                         <div id="slider" class="tslider" style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
                             <button type="button" class="preBtn" id="preBtn">
                                 &lt;
@@ -77,7 +77,7 @@
 
                             </ul>
                         </div>
-                    </span>
+                    </div>
 
                     <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
 
@@ -89,18 +89,18 @@
                     <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
 
             <#elseif cv?? && cv.type=="imageView">
-                <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                <div style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
                     <a href="${cv.clickPath}"><img style="width:100%;height:100%;" src="${cv.src}" /></a>
-                </span>
+                </div>
             <#elseif cv?? && cv.type=="shopCategoryView">
                 <link href="${basePath}/static/css/shop/pcIndex/modern-menu.css" type="text/css" rel="stylesheet">
-                <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                <div style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
                     <div class="shopCategory" style="height:${cv.height}${cv.heightUnit};">
                         <ul class="menu-top">
 
                         </ul>
                     </div>
-                </span>
+                </div>
                 <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/category.js"></script>
 
              </#if>
