@@ -64,19 +64,20 @@
 
         <#list pageView.componentViews as cv>
             <#if cv?? && cv.type=="shopBannerView">
+                    <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};">
+                        <div id="slider" class="tslider" style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                            <button type="button" class="preBtn" id="preBtn">
+                                &lt;
+                            </button>
+                            <button type="button" class="nextBtn" id="nextBtn">
+                                &gt;
+                            </button>
 
-                    <div id="slider" class="tslider" style="margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
-                        <button type="button" class="preBtn" id="preBtn">
-                            &lt;
-                        </button>
-                        <button type="button" class="nextBtn" id="nextBtn">
-                            &gt;
-                        </button>
+                            <ul class="pointer" id="defaultBannerPointer">
 
-                        <ul class="pointer" id="defaultBannerPointer">
-
-                        </ul>
-                    </div>
+                            </ul>
+                        </div>
+                    </span>
 
                     <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
 
@@ -88,28 +89,24 @@
                     <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
 
             <#elseif cv?? && cv.type=="imageView">
-                    <a href="${cv.clickPath}"><img style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};" src="${cv.src}" /></a>
-            </#if>
+                <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                    <a href="${cv.clickPath}"><img style="width:100%;height:100%;" src="${cv.src}" /></a>
+                </span>
+            <#elseif cv?? && cv.type=="shopCategoryView">
+                <link href="${basePath}/static/css/shop/pcIndex/modern-menu.css" type="text/css" rel="stylesheet">
+                <span style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
+                    <div class="shopCategory" style="height:${cv.height}${cv.heightUnit};">
+                        <ul class="menu-top">
 
+                        </ul>
+                    </div>
+                </span>
+                <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/category.js"></script>
+
+             </#if>
         </#list>
 
     </#if>
-
-        <div class="shopCategory">
-            <link href="${basePath}/static/css/shop/pcIndex/modern-menu.css" type="text/css" rel="stylesheet">
-            <ul class="menu-top">
-                <li><a href="#" class="menu-button"><span class="menu-label">电脑</span></a></li>
-                <li><a href="#" class="menu-button menu-drop"><span class="menu-label">手机</span></a>
-                    <div class="menu-dropdown menu-dropdown1">
-                        <ul class="menu-sub">
-                            <li><a href="#" class="menu-subbutton"><span class="menu-label">5G手机</span></a></li>
-                            <li><a href="#" class="menu-subbutton"><span class="menu-label">游戏手机</span></a></li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-
-        </div>
 
 </div>
 </div>
