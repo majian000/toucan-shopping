@@ -1144,36 +1144,78 @@ $(function() {
 
 
 	/**
+	 * 创建店铺轮播图组件
+	 * @returns {jQuery|HTMLElement}
+	 */
+	function createShopBannerComponent(component){
+
+		var componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
+			" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
+			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+			"    <div class=\"fg-widget-inner designer-component-banner-hover designer-component-" + component.type + "-bg\">\n" +
+			"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
+			"    </div>\n" +
+			"</div>\n");
+
+		$(".widget-holder").find(".components-shopBanner").hide();
+		return componentObj;
+	}
+
+	/**
+	 * 创建图片组件
+	 * @returns {jQuery|HTMLElement}
+	 */
+	function createImageComponent(component){
+		var componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
+			" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
+			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+			"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url('"+component.httpImgPath+"')\">\n" +
+			"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
+			"    </div>\n" +
+			"</div>\n");
+		return componentObj;
+	}
+
+	/**
+	 * 创建店铺分类组件
+	 * @param component
+	 * @returns {jQuery|HTMLElement}
+	 */
+	function createShopCategoryComponent(component){
+
+		var componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
+			" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
+			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
+			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
+			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
+			"    <div class=\"fg-widget-inner designer-component-category-hover designer-component-" + component.type + "-bg\">\n" +
+			"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
+			"    </div>\n" +
+			"</div>\n");
+
+		$(".widget-holder").find(".components-shopCategory").hide();
+		return componentObj;
+	}
+
+	/**
 	 * 创建面板组件对象
 	 * @param component
 	 * @returns {string}
 	 */
 	function createPanelComponentObject(component){
-		var componentObj="";
+		var componentObj=null;
 		if(component.type=="shopBanner") //店铺轮播图
 		{
-			componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
-				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
-				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
-				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
-				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
-				"    <div class=\"fg-widget-inner designer-component-banner-hover designer-component-" + component.type + "-bg\">\n" +
-				"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
-				"    </div>\n" +
-				"</div>\n");
-
-			$(".widget-holder").find(".components-shopBanner").hide();
-
+			componentObj=createShopBannerComponent(component);
+		}else if(component.type=="shopCategory") //店铺分类
+		{
+			componentObj = createShopCategoryComponent(component);
 		}else if(component.type=="image"){ //图片组件
-			componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
-				" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
-				"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
-				"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
-				"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
-				"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url('"+component.httpImgPath+"')\">\n" +
-				"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
-				"    </div>\n" +
-				"</div>\n");
+			componentObj = createImageComponent(component);
 		}
 		return componentObj;
 	}
@@ -1240,6 +1282,14 @@ function doAppendPanel(compoentObj){
 		compoentObj.find(".designer-component-banner-bg").find(".fg-widget-handle").html("");
 		compoentObj.find(".designer-component-banner-bg").removeClass("fg-widget-inner-bg-color");
 		compoentObj.find(".designer-component-banner-bg").addClass("designer-component-banner-hover");
+	}else if(attrComponentType=="shopCategory"){
+		compoentObj.find(".designer-component-category-bg").removeClass("designer-component-category-hover");
+		compoentObj.find(".designer-component-category-bg").find(".fg-widget-handle").html("");
+		compoentObj.find(".designer-component-category-bg").removeClass("fg-widget-inner-bg-color");
+		compoentObj.find(".designer-component-category-bg").addClass("designer-component-category-hover");
+		compoentObj.find(".move-widget").css("color","#878787");
+		compoentObj.find(".fg-remove-widget").css("color","#878787");
+		compoentObj.find(".fg-resize-widget").css("color","#878787");
 	}else if(attrComponentType=="image"){
 
 	}
@@ -1286,6 +1336,18 @@ function doRemove(compoentObj){
 		compoentObj.find(".ui-resizable-handle").hide();
 		//显示工具类中的组件
 		$(".widget-holder").find(".components-shopBanner").show();
+	}else if(compoentObj.attr("compoent-type")=="shopCategory"){
+		compoentObj.find(".designer-component-category-bg").find(".fg-widget-handle").html("店铺分类");
+		compoentObj.find(".designer-component-category-bg").removeClass("designer-component-category-hover");
+		compoentObj.find(".designer-component-category-bg").removeClass("fg-widget-inner-bg-color");
+		compoentObj.find(".designer-component-category-bg").addClass("fg-widget-inner-bg-color");
+		compoentObj.find(".move-widget").css("color","");
+		compoentObj.find(".fg-remove-widget").css("color","");
+		compoentObj.find(".fg-resize-widget").css("color","");
+		compoentObj.find(".fg-remove-widget").hide();
+		compoentObj.find(".ui-resizable-handle").hide();
+		//显示工具类中的组件
+		$(".widget-holder").find(".components-shopCategory").show();
 	}else if(compoentObj.attr("compoent-type")=="image"){
 		compoentObj.find(".designer-component-image-bg").find(".fg-widget-handle").html("图片");
 		compoentObj.find(".designer-component-image-bg").removeClass("designer-component-image-hover");

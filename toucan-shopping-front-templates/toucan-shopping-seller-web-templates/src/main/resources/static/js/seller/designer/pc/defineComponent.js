@@ -6,6 +6,7 @@ var g_componentConfig=new Map(); //组件配置
 function initComponentConfig(){
     initPageConfig();
     initShopBannerConfig();
+    initShopCategoryConfig();
     initImageConfig();
 }
 
@@ -27,6 +28,20 @@ function initShopBannerConfig(){
     var componentConfig={
         type:"shopBanner",
         name:"店铺轮播图",
+        propertyPanel:"mtc2",
+        instanceType:"single"
+    };
+    g_componentConfig.set(componentConfig.type,componentConfig);
+}
+
+
+/**
+ * 初始化分类
+ */
+function initShopCategoryConfig(){
+    var componentConfig={
+        type:"shopCategory",
+        name:"店铺分类",
         propertyPanel:"mtc2",
         instanceType:"single"
     };
@@ -58,8 +73,10 @@ function createComponentInstance(type){
     if(type=="image")
     {
         componentInstance = createImageInstance();
-    }if(type=="shopBanner"){
+    }else if(type=="shopBanner"){
         componentInstance = createShopBannerInstance();
+    }else if(type=="shopCategory"){
+        componentInstance = createShopCategoryInstance();
     }else{
 
     }
@@ -97,6 +114,20 @@ function createShopBannerInstance(){
 }
 
 
+/**
+ * 创建店铺分类实例
+ * @returns {{propertys: any[], setComponentPorperty: setComponentPorperty, type: string}}
+ */
+function createShopCategoryInstance(){
+    var componentInstance={
+        type:"shopCategory",
+        propertys:new Array(),
+        setComponentPorperty:function(propertyName,propertyValue){
+            setComponentPorperty(this,propertyName,propertyValue)
+        }
+    };
+    return componentInstance;
+}
 /**
  * 设置组件属性
  * @param componentInstance

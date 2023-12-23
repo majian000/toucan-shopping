@@ -71,6 +71,15 @@ function newImageComponent(){
 }
 
 /**
+ * 店铺分配组件
+ * @returns {{minHeight: null, x: null, width: null, name: null, y: null, minWidth: null, type: null, height: null}}
+ */
+function newShopCategoryComponent(){
+    var shopCategoryComponent=newBaseComponent();
+
+    return shopCategoryComponent;
+}
+/**
  * 初始化全局页面容器
  * @param pageJson
  */

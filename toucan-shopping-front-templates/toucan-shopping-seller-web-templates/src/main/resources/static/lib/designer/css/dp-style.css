@@ -73,6 +73,13 @@ svg{
 	background-size:100% 100%;
 }
 
+.designer-component-category-hover{
+	background-image: url("/static/images/designer/pc/shopCategoryPreview.jpg");
+	background-repeat: no-repeat;
+	moz-background-size:100% 100%;
+	background-size:100% 100%;
+}
+
 .designer-component-image-hover{
 	background-repeat: no-repeat;
 	moz-background-size:100% 100%;
