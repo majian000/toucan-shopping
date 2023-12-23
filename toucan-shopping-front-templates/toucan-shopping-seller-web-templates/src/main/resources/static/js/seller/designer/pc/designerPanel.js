@@ -1097,7 +1097,7 @@ $(function() {
 				initDesignerProperty();
 				if(resp.code!=0) {
 					if(resp.data!=null&&resp.data.pageJson!=null&&resp.data.pageJson!="") {
-						g_pageContainer = JSON.parse(resp.data.pageJson);
+						initGlobalPageContainer(resp.data.pageJson);
 						loadPageProperty(g_pageContainer);
 						drawPanel(g_pageContainer);
 					}

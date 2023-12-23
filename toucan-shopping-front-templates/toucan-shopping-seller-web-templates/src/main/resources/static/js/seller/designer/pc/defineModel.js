@@ -69,3 +69,20 @@ function newImageComponent(){
 
     return imageComponent;
 }
+
+/**
+ * 初始化全局页面容器
+ * @param pageJson
+ */
+function initGlobalPageContainer(pageJson){
+    g_pageContainer = JSON.parse(pageJson);
+    if(g_pageContainer.components!=null&&g_pageContainer.components.length>0)
+    {
+        for(var i=0;i<g_pageContainer.components.length;i++)
+        {
+            g_pageContainer.components[i].setComponentPorperty=function(propertyName,propertyValue){
+                setComponentPorperty(this,propertyName,propertyValue)
+            }
+        }
+    }
+}
