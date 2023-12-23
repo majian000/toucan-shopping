@@ -176,8 +176,10 @@ function getComponentInstanceByInstanceId(instanceId){
     {
         for(var i=0;i<g_pageContainer.components.length;i++)
         {
-            if(g_pageContainer.components[i].instanceId==instanceId){
-                return g_pageContainer.components[i];
+            if(g_pageContainer.components[i]!=null) {
+                if (g_pageContainer.components[i].instanceId == instanceId) {
+                    return g_pageContainer.components[i];
+                }
             }
         }
     }
