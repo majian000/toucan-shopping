@@ -1154,7 +1154,6 @@ $(function() {
 					maxWidth: maxWidth, maxHeight: maxHeight,
 					type: type, name: name,nested:false
 				});
-				zoneInner.moveWidget(component);
 				bindComponentInstanceClick(component.instanceId);
 			}
 		}
