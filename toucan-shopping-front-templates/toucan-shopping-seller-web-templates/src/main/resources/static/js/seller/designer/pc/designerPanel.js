@@ -297,7 +297,7 @@ $(function() {
 				var findNext = findNextColumn('x', zoneInner, params.x, params.y);
 				goHere = findNext.goHere;
 			} else {
-				var findNext = findNextColumn(nextAxis, zoneInner, params.x, params.y);
+				var findNext = getMoveColumn(zoneInner, params.x, params.y);
 				goHere = findNext.goHere;
 			}
 			
@@ -317,6 +317,10 @@ $(function() {
 			});
 
 			goHere.append(widget); // append the widget
+			console.log("111111111111111");
+			console.log(goHere.attr("data-fg-eq"));
+			console.log(goHere.attr("data-fg-row"));
+			console.log("111111111111111");
 			widget.setData(); // reset the widget attributes
 
 			// DETECT ZONE OVERFLOW
@@ -333,22 +337,36 @@ $(function() {
 		};
 
 		$.fn.moveWidget = function(component) {
-			var parentDiv = $("#"+component.instanceId).parent(".fg-disabled-col");
-			var y = 0;
-			var x = 0;
-			if(component.y==0){
-				y = 0;
-			}else{
-				y = component.y*40;
-			}
-			if(component.x==0){
-				x = 0;
-			}else{
-				x = component.x*40;
-			}
-			parentDiv.css("top",(y+"px"));
-			parentDiv.css("left",(x+"px"));
+			// var widget = $("#"+component.instanceId);
+			// var parentDiv = widget.parent(".fg-disabled-col");
+			// var y = 0;
+			// var x = 0;
+			// if(component.y==0){
+			// 	y = 0;
+			// }else{
+			// 	y = component.y*40;
+			// }
+			// if(component.x==0){
+			// 	x = 0;
+			// }else{
+			// 	x = component.x*40;
+			// }
+			// parentDiv.css("top",(y+"px"));
+			// parentDiv.css("left",(x+"px"));
+			// widget.attr("data-fg-x",component.x);
+			// widget.attr("data-fg-y",component.y);
 		};
+		function getMoveColumn(zoneInner, x, y){
+			var goHere;
+			zoneInner.find('.fg-col').each(function() {
+				var colsObj = $(this);
+				if(colsObj.attr("data-fg-row")==x&&colsObj.attr("data-fg-eq")==y) {
+					goHere = $(this);
+				}
+			});
+			var result = res = {goHere: goHere};
+			return result;
+		}
 		function findNextColumn(axis, zoneInner, x, y) {
 			var goHere;
 			switch(axis) {
