@@ -317,10 +317,6 @@ $(function() {
 			});
 
 			goHere.append(widget); // append the widget
-			console.log("111111111111111");
-			console.log(goHere.attr("data-fg-eq"));
-			console.log(goHere.attr("data-fg-row"));
-			console.log("111111111111111");
 			widget.setData(); // reset the widget attributes
 
 			// DETECT ZONE OVERFLOW
