@@ -337,24 +337,6 @@ $(function() {
 		};
 
 		$.fn.moveWidget = function(component) {
-			// var widget = $("#"+component.instanceId);
-			// var parentDiv = widget.parent(".fg-disabled-col");
-			// var y = 0;
-			// var x = 0;
-			// if(component.y==0){
-			// 	y = 0;
-			// }else{
-			// 	y = component.y*40;
-			// }
-			// if(component.x==0){
-			// 	x = 0;
-			// }else{
-			// 	x = component.x*40;
-			// }
-			// parentDiv.css("top",(y+"px"));
-			// parentDiv.css("left",(x+"px"));
-			// widget.attr("data-fg-x",component.x);
-			// widget.attr("data-fg-y",component.y);
 		};
 		function getMoveColumn(zoneInner, x, y){
 			var goHere;
