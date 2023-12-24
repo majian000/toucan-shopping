@@ -342,7 +342,7 @@ $(function() {
 			var goHere;
 			zoneInner.find('.fg-col').each(function() {
 				var colsObj = $(this);
-				if(colsObj.attr("data-fg-row")==x&&colsObj.attr("data-fg-eq")==y) {
+				if(colsObj.attr("data-fg-row")==y&&colsObj.attr("data-fg-eq")==x) {
 					goHere = $(this);
 				}
 			});
