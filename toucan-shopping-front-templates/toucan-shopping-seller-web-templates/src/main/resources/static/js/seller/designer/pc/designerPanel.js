@@ -1181,15 +1181,23 @@ $(function() {
 	 * @returns {jQuery|HTMLElement}
 	 */
 	function createImageComponent(component){
-		var componentObj = $("<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
+		var componentHtml="<div class=\"fg-widget fg-widget-handle custom-widget custom-widget-handle components components-"+component.type+"\"" +
 			" component-instance-id=\""+component.instanceId+"\" id=\""+component.instanceId+"\" compoent-type=\"" + component.type + "\"  title=\"" + component.name + "\">\n" +
 			"    <i class=\"fa fa-chevron-right fg-resize-widget\" aria-hidden=\"true\"></i>\n" +
 			"    <i class=\"fa fa-times fg-remove-widget\" title=\"移除\"></i>\n" +
-			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" +
-			"    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url('"+component.httpImgPath+"')\">\n" +
-			"        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n" +
-			"    </div>\n" +
-			"</div>\n");
+			"    <i class=\"fas fa-arrows-alt move-widget fg-widget-handle\" title=\"移动\"></i>\n" ;
+		if(component.httpImgPath!=null&&component.httpImgPath!="")
+		{
+			componentHtml+="    <div class=\"fg-widget-inner designer-component-image-hover designer-component-" + component.type + "-bg\" style=\"background-image:url('"+component.httpImgPath+"')\">\n" ;
+			componentHtml+="        <label class=\"fg-widget-handle fg-widget-handle-label\" ></label>\n";
+			componentHtml+="    </div>\n" ;
+		}else{
+			componentHtml+="    <div class=\"fg-widget-inner fg-widget-inner-bg-color designer-component-" + component.type + "-bg\" >\n" ;
+			componentHtml+="        <label class=\"fg-widget-handle fg-widget-handle-label\" >图片</label>\n";
+			componentHtml+="    </div>\n" ;
+		}
+		componentHtml+="</div>\n";
+		var componentObj = $(componentHtml);
 		return componentObj;
 	}
 

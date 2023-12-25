@@ -64,3 +64,6 @@
     margin-top: 2%;
 }
 
+.component-block{
+    white-space: nowrap;
+}
