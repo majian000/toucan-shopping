@@ -1,6 +1,6 @@
 
 
-$(function(){
+function initBannerPluginSliders(){
     var shopId=$("#shopId").val();
     $.ajax({
         type: "POST",
@@ -39,5 +39,4 @@ $(function(){
             }
         }
     });
-
-});
+}
