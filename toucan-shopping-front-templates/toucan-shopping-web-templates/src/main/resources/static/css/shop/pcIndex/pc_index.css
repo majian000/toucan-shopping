@@ -29,7 +29,7 @@
     float:left;
 }
 .shop-index-top-right-shop-collect-icon{
-    background: url(../../images/seller/collect-shop.png) 0 7px no-repeat;
+    background: url(../../../images/seller/collect-shop.png) 0 7px no-repeat;
 }
 
 .shop-index-top-right-shop-collect{
@@ -47,23 +47,22 @@
 }
 
 .shop-index-main {
-    clear: both;
     width: 1200px;
-    margin: auto;
-    min-height:700px;
-    overflow: hidden;
+    height:1300px;
+    position: relative;
+    display: inline-block;
+    border-radius: 5px;
 }
 
 
 .shop-index-main-page {
     clear: both;
-    width: 100%;
     margin: auto;
-    min-height:700px;
     overflow: hidden;
     margin-top: 2%;
+    text-align: center;
 }
 
-.component-block{
-    white-space: nowrap;
+.com-block{
+    position: absolute !important;
 }

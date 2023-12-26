@@ -62,54 +62,60 @@
     <#if pageView??>
         <input type="hidden" id="shopId"  value="${pageView.shopId}" />
 
-        <#list pageView.componentViews as cv>
-            <#if cv?? && cv.type=="shopBannerView">
-                    <div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};">
-                        <div id="slider" class="tslider" style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
-                            <button type="button" class="preBtn" id="preBtn">
-                                &lt;
-                            </button>
-                            <button type="button" class="nextBtn" id="nextBtn">
-                                &gt;
-                            </button>
+        <!--<#list pageView.componentViews as cv>-->
+            <!--<#if cv?? && cv.type=="shopBannerView">-->
+                    <!--<div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};">-->
+                        <!--<div id="slider" class="tslider" style="width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">-->
+                            <!--<button type="button" class="preBtn" id="preBtn">-->
+                                <!--&lt;-->
+                            <!--</button>-->
+                            <!--<button type="button" class="nextBtn" id="nextBtn">-->
+                                <!--&gt;-->
+                            <!--</button>-->
 
-                            <ul class="pointer" id="defaultBannerPointer">
+                            <!--<ul class="pointer" id="defaultBannerPointer">-->
 
-                            </ul>
-                        </div>
-                    </div>
+                            <!--</ul>-->
+                        <!--</div>-->
 
-                    <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>
+                        <!--<script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/banner.js"></script>-->
 
-                    <script type="text/javascript">
-                        <#if pageViewJson??>
-                            var pageView=${pageViewJson};
-                        </#if>
-                    </script>
-                    <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
+                        <!--<script type="text/javascript">-->
+                            <!--<#if pageViewJson??>-->
+                            <!--var pageView=${pageViewJson};-->
+                            <!--</#if>-->
+                        <!--</script>-->
+                        <!--<script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>-->
+                    <!--</div>-->
 
-            <#elseif cv?? && cv.type=="imageView">
-                <div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
-                    <a href="${cv.clickPath}"><img style="width:100%;height:100%;" src="${cv.src}" /></a>
-                </div>
-            <#elseif cv?? && cv.type=="shopCategoryView">
-                <link href="${basePath}/static/css/shop/pcIndex/modern-menu.css" type="text/css" rel="stylesheet">
-                <div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">
-                    <div class="shopCategory" style="height:${cv.height}${cv.heightUnit};">
-                        <ul class="menu-top">
 
-                        </ul>
-                    </div>
-                </div>
-                <script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/category.js"></script>
+            <!--<#elseif cv?? && cv.type=="imageView">-->
+                <!--<div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">-->
+                    <!--<a href="${cv.clickPath}"><img style="width:100%;height:100%;" src="${cv.src}" /></a>-->
+                <!--</div>-->
+            <!--<#elseif cv?? && cv.type=="shopCategoryView">-->
+                <!--<div class="component-block" style="padding-top:0px;margin-left:${cv.x}${cv.xUnit};margin-top:${cv.y}${cv.yUnit};width:${cv.width}${cv.widthUnit};height:${cv.height}${cv.heightUnit};">-->
+                    <!--<link href="${basePath}/static/css/shop/pcIndex/modern-menu.css" type="text/css" rel="stylesheet">-->
+                    <!--<div class="shopCategory" style="height:${cv.height}${cv.heightUnit};">-->
+                        <!--<ul class="menu-top">-->
 
-             </#if>
-        </#list>
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <!--<script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/category.js"></script>-->
+                <!--</div>-->
+
+
+             <!--</#if>-->
+        <!--</#list>-->
 
     </#if>
 
+
+
 </div>
 </div>
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/shop/pc/index/index.js"></script>
 
 <#include "/footer.html"/>
 
