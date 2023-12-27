@@ -1,3 +1,5 @@
+var blockUnit = 5;
+
 /**
  * 绘制组件格子
  */
@@ -11,7 +13,7 @@ function drawComponentBlock() {
         for (var j = 0; j < col; j++) {
             var componentBlockHtml="<div class=\"com-block com-block-"+i+"-"+j+"\" " +
                 "data-row=\""+i+"\" data-col=\""+j+"\" " +
-                "style=\"min-width: 40px; min-height: 40px; width:5%;height:5%;top:"+(i*5)+"%; left: "+(j*5)+"%; \" ></div>";
+                "style=\"min-width: 40px; min-height: 40px; width:5%;height:5%;top:"+(i*blockUnit)+"%; left: "+(j*blockUnit)+"%; \" ></div>";
             componentBlockHtmls+=componentBlockHtml;
         }
     }
@@ -51,8 +53,10 @@ function drawPage(){
  * @param componentView
  */
 function drawBannerView(componentView){
-    console.log(componentView);
-    var bannerHtml="  <div id=\"slider\" class=\"tslider\" style=\"\">\n" +
+
+    var width = componentView.width*100;
+    var height = componentView.height*100;
+    var bannerHtml="  <div id=\"slider\" class=\"tslider\" style=\"width:"+width+"%;height:"+height+"%\">\n" +
         "            <button type=\"button\" class=\"preBtn\" id=\"preBtn\">\n" +
         "                &lt;\n" +
         "            </button>\n" +

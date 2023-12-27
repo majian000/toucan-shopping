@@ -95,10 +95,10 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
             for(AbstractComponent component:pageContainer.getComponents())
             {
                 ComponentView componentView = null;
-                Integer width = Integer.parseInt(component.getWidth())*blockUnit;
-                Integer height = Integer.parseInt(component.getHeight())*blockUnit*10; //单位px
-                Integer x = Integer.parseInt(component.getX())*blockUnit;
-                Integer y = Integer.parseInt(component.getY())*blockUnit;
+                Integer width = Integer.parseInt(component.getWidth());
+                Integer height = Integer.parseInt(component.getHeight());
+                Integer x = Integer.parseInt(component.getX());
+                Integer y = Integer.parseInt(component.getY());
                 //店铺轮播图组件
                 if(SellerDesignerComponentEnum.SHOP_BANNER.value().equals(component.getType()))
                 {
@@ -135,7 +135,7 @@ public class FreemarkerShopIndexPageParser implements IPageParser {
                     componentView.setWidth(String.valueOf(width));
                     componentView.setWidthUnit("%");
                     componentView.setHeight(String.valueOf(height));
-                    componentView.setHeightUnit("px");
+                    componentView.setHeightUnit("$");
                     componentView.setX(String.valueOf(x));
                     componentView.setxUnit("%");
                     componentView.setY(String.valueOf(y));

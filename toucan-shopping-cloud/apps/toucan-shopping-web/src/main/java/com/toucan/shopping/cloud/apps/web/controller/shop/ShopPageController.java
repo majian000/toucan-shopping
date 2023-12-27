@@ -97,7 +97,6 @@ public class ShopPageController extends BaseController {
                         shopIndexPageView.setShopId(shopId);
                         request.setAttribute("pageView", shopIndexPageView);
                         String pageJson = JSONObject.toJSONString(shopIndexPageView);
-                        pageJson = pageJson.replaceAll("\"", "'");
                         request.setAttribute("pageViewJson", pageJson);
                     }
                 }
