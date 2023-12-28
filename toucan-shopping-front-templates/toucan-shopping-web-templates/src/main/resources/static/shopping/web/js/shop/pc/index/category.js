@@ -1,5 +1,5 @@
 
-$(function(){
+function loadCategoryMenu(){
     var shopId=$("#shopId").val();
     $.ajax({
         type: "POST",
@@ -33,7 +33,7 @@ $(function(){
         }
     });
 
-});
+}
 
 /**
  * 拿到分类html

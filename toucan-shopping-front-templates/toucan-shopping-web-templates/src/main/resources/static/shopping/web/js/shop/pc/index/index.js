@@ -30,7 +30,9 @@ function drawComponents(){
         {
             var componentView = pageView.componentViews[i];
             if(componentView.type=="shopBannerView") {
-                drawBannerView(componentView);
+                renderBannerView(componentView);
+            }else if(componentView.type=="shopCategoryView") {
+                renderCategoryView(componentView);
             }
         }
     }
@@ -49,10 +51,10 @@ function drawPage(){
 }
 
 /**
- * 绘制轮播图
+ * 渲染轮播图视图
  * @param componentView
  */
-function drawBannerView(componentView){
+function renderBannerView(componentView){
 
     var width = componentView.width*100;
     var height = componentView.height*100;
@@ -66,8 +68,23 @@ function drawBannerView(componentView){
         "            <ul class=\"pointer\" id=\"defaultBannerPointer\">\n" +
         "            </ul>\n" +
         "        </div>";
-    $(".com-block-"+componentView.x+"-"+componentView.y).append(bannerHtml);
+    $(".com-block-"+componentView.y+"-"+componentView.x).append(bannerHtml);
     initBannerPluginSliders();
+}
+
+/**
+ * 渲染分类视图
+ * @param componentView
+ */
+function renderCategoryView(componentView){
+    var width = componentView.width*100;
+    var height = componentView.height*60;
+    var categoryMenuHtml="<div class=\"shopCategory\" style=\"width:"+width+"%;height:"+height+"%\">\n" +
+        "            <ul class=\"menu-top\">\n" +
+        "            </ul>\n" +
+        "        </div>";
+    $(".com-block-"+componentView.y+"-"+componentView.x).append(categoryMenuHtml);
+    loadCategoryMenu();
 }
 
 $(function(){
