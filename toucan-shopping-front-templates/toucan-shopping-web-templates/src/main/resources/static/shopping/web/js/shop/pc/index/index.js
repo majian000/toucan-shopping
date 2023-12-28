@@ -33,6 +33,8 @@ function drawComponents(){
                 renderBannerView(componentView);
             }else if(componentView.type=="shopCategoryView") {
                 renderCategoryView(componentView);
+            }else if(componentView.type=="imageView"){
+                renderImageView(componentView);
             }
         }
     }
@@ -85,6 +87,17 @@ function renderCategoryView(componentView){
         "        </div>";
     $(".com-block-"+componentView.y+"-"+componentView.x).append(categoryMenuHtml);
     loadCategoryMenu();
+}
+
+/**
+ * 渲染图片视图
+ * @param componentView
+ */
+function renderImageView(componentView){
+    var width = componentView.width*100;
+    var height = componentView.height*100;
+    var imageHtml="<a href=\""+componentView.clickPath+"\"><img style=\"width:"+width+"%;height:"+height+"%;\" src=\""+componentView.src+"\" /></a>";
+    $(".com-block-"+componentView.y+"-"+componentView.x).append(imageHtml);
 }
 
 $(function(){
