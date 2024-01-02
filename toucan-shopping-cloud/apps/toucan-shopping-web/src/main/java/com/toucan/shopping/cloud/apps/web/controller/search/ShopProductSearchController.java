@@ -328,9 +328,9 @@ public class ShopProductSearchController {
                 }
             }
 
-            if(StringUtils.isNotEmpty(productSearchVO.getScid())) {
+            if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
                 SellerShop entity = new SellerShop();
-                entity.setId(Long.parseLong(productSearchVO.getScid()));
+                entity.setId(Long.parseLong(productSearchVO.getSid()));
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
                 resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
                 if(resultObjectVO.isSuccess())
@@ -338,7 +338,12 @@ public class ShopProductSearchController {
                     List<SellerShopVO> sellerShops = resultObjectVO.formatDataList(SellerShopVO.class);
                     if(CollectionUtils.isNotEmpty(sellerShops))
                     {
-                        httpServletRequest.setAttribute("shop",sellerShops.get(0));
+                        SellerShopVO sellerShopVO = sellerShops.get(0);
+                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
+                        {
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+sellerShopVO.getLogo());
+                        }
+                        httpServletRequest.setAttribute("shop",sellerShopVO);
                     }
                 }
             }
@@ -364,9 +369,12 @@ public class ShopProductSearchController {
         {
             productSearchVO = new ProductSearchVO();
         }
-        if(StringUtils.isEmpty(productSearchVO.getCid())) {
-            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+        if(StringUtils.isEmpty(productSearchVO.getCid())&&StringUtils.isEmpty(productSearchVO.getScid())) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword())) {
                 productSearchVO.setKeyword("手机"); //默认关键字
+            }else if(productSearchVO.getKeyword().length() > 50)
+            {
+                productSearchVO.setKeyword(productSearchVO.getKeyword().substring(0,50)); //截取字符
             }
         }
         return this.doSearch(productSearchVO,httpServletRequest);
@@ -386,9 +394,12 @@ public class ShopProductSearchController {
         {
             productSearchVO = new ProductSearchVO();
         }
-        if(StringUtils.isEmpty(productSearchVO.getCid())) {
-            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+        if(StringUtils.isEmpty(productSearchVO.getCid())&&StringUtils.isEmpty(productSearchVO.getScid())) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword())) {
                 productSearchVO.setKeyword("手机"); //默认关键字
+            }else if(productSearchVO.getKeyword().length() > 50)
+            {
+                productSearchVO.setKeyword(productSearchVO.getKeyword().substring(0,50)); //截取字符
             }
         }
         return this.doSearch(productSearchVO,httpServletRequest);

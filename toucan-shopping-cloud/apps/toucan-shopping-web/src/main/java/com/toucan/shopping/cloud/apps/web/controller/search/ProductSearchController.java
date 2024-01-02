@@ -339,8 +339,11 @@ public class ProductSearchController {
             productSearchVO = new ProductSearchVO();
         }
         if(StringUtils.isEmpty(productSearchVO.getCid())) {
-            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword())) {
                 productSearchVO.setKeyword("手机"); //默认关键字
+            }else if(productSearchVO.getKeyword().length() > 50)
+            {
+                productSearchVO.setKeyword(productSearchVO.getKeyword().substring(0,50)); //截取字符
             }
         }
         return this.doSearch(productSearchVO,httpServletRequest);
@@ -361,8 +364,11 @@ public class ProductSearchController {
             productSearchVO = new ProductSearchVO();
         }
         if(StringUtils.isEmpty(productSearchVO.getCid())) {
-            if (StringUtils.isEmpty(productSearchVO.getKeyword()) || productSearchVO.getKeyword().length() > 50) {
+            if (StringUtils.isEmpty(productSearchVO.getKeyword())) {
                 productSearchVO.setKeyword("手机"); //默认关键字
+            }else if(productSearchVO.getKeyword().length() > 50)
+            {
+                productSearchVO.setKeyword(productSearchVO.getKeyword().substring(0,50)); //截取字符
             }
         }
         return this.doSearch(productSearchVO,httpServletRequest);
