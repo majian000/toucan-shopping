@@ -3,9 +3,11 @@ package com.toucan.shopping.cloud.apps.web.controller.search;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -14,6 +16,8 @@ import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,6 +54,9 @@ public class ShopProductSearchController {
 
     @Autowired
     private FeignBrandService feignBrandService;
+
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
 
     private String doSearch(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest)
     {
@@ -317,6 +324,21 @@ public class ShopProductSearchController {
                             }
                         }
                         httpServletRequest.setAttribute("searchBrands",brandVOS);
+                    }
+                }
+            }
+
+            if(StringUtils.isNotEmpty(productSearchVO.getScid())) {
+                SellerShop entity = new SellerShop();
+                entity.setId(Long.parseLong(productSearchVO.getScid()));
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
+                resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<SellerShopVO> sellerShops = resultObjectVO.formatDataList(SellerShopVO.class);
+                    if(CollectionUtils.isNotEmpty(sellerShops))
+                    {
+                        httpServletRequest.setAttribute("shop",sellerShops.get(0));
                     }
                 }
             }

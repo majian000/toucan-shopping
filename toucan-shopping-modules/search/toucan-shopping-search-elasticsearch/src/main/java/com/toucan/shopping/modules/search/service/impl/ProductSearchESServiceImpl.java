@@ -267,6 +267,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
             boolQueryBuilder.must(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
         }
+        //店铺分类查询
+        if(StringUtils.isNotEmpty(productSearchVO.getScid())) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("shopCategoryId",productSearchVO.getScid()));
+        }
+        //店铺查询
+        if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("shopId",productSearchVO.getSid()));
+        }
         //商品名称查询
         if(StringUtils.isNotEmpty(productSearchVO.getProductName()))
         {
