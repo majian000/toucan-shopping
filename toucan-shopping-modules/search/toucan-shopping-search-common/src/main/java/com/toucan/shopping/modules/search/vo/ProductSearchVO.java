@@ -17,6 +17,10 @@ public class ProductSearchVO extends SearchVO{
 
     private String cid; //分类ID
 
+    private String scid; //店铺分类ID
+
+    private String sid; //店铺ID
+
     private List<Long> brandIds; //品牌ID
 
     private String bid; //品牌ID

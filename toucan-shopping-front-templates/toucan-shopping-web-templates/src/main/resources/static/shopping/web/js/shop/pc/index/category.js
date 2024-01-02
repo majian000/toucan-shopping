@@ -10,22 +10,14 @@ function loadCategoryMenu(){
         success: function (result) {
             if(result.code>0)
             {
-                var categoryHtml="" +
-                    "                            <li><a href=\"#\" class=\"menu-button menu-drop\"><span class=\"menu-label\">手机</span></a>\n" +
-                    "                                <div class=\"menu-dropdown menu-dropdown1\">\n" +
-                    "                                    <ul class=\"menu-sub\">\n" +
-                    "                                        <li><a href=\"#\" class=\"menu-subbutton\"><span class=\"menu-label\">5G手机</span></a></li>\n" +
-                    "                                        <li><a href=\"#\" class=\"menu-subbutton\"><span class=\"menu-label\">游戏手机</span></a></li>\n" +
-                    "                                    </ul>\n" +
-                    "                                </div>\n" +
-                    "                            </li>";
+                var categoryHtml="";
 
                 if(result.data!=null&&result.data.length>0)
                 {
                     for(var i=0;i<result.data.length;i++)
                     {
                         var category = result.data[i];
-                        categoryHtml+=getCategoryHtml(category);
+                        categoryHtml+=getCategoryHtml(category,shopId);
                     }
                 }
                 $(".menu-top").append(categoryHtml);
@@ -39,20 +31,22 @@ function loadCategoryMenu(){
  * 拿到分类html
  * @param category
  */
-function getCategoryHtml(category){
+function getCategoryHtml(category,shopId){
     var href="";
     if(category.href!=null)
     {
         href=category.href;
     }else{
-        //TODO:跳转到商品列表
-        href="/productListByCategoryId?categoryId="+category.id;
+        href="/api/shop/product/g/search?scid="+category.id+"&sid="+shopId;
     }
-    var categoryHtml="<li><a href=\""+href+"\" class=\"menu-button\"><span class=\"menu-label\">"+category.name+"</span></a>";
-    if(category.children!=null&&category.children.length>0)
+    var categoryHtml="";
+    if(category.children==null||category.children.length<=0)
     {
-        categoryHtml+="                                <div class=\"menu-dropdown menu-dropdown1\">\n" +
-        "                                    <ul class=\"menu-sub\">\n" ;
+        categoryHtml+="<li><a href=\""+href+"\" class=\"menu-button\"><span class=\"menu-label\">"+category.name+"</span></a></li>";
+    }else{
+        categoryHtml+=" <li><a href=\""+href+"\" class=\"menu-button menu-drop\"><span class=\"menu-label\">"+category.name+"</span></a>";
+        categoryHtml+="<div class=\"menu-dropdown menu-dropdown1\">" +
+            "                <ul class=\"menu-sub\">";
         for(var j=0;j<category.children.length;j++)
         {
             var categoryChild = category.children[j];
@@ -61,13 +55,14 @@ function getCategoryHtml(category){
             {
                 href=categoryChild.href;
             }else{
-                //TODO:跳转到商品列表
-                href="/productListByCategoryId?categoryId="+categoryChild.id;
+                href="/api/shop/product/g/search?scid="+categoryChild.id+"&sid="+shopId;
             }
-            categoryHtml+="  <li><a href=\""+href+"\" class=\"menu-subbutton\"><span class=\"menu-label\">"+categoryChild.name+"</span></a></li>\n";
+            categoryHtml+="<li><a href=\""+href+"\" class=\"menu-subbutton\"><span class=\"menu-label\">"+categoryChild.name+"</span></a></li>";
         }
-        categoryHtml+="  </ul> </div>\n";
+        categoryHtml+=" </ul> " +
+            "         </div>\n" +
+            "        </li>";
     }
-    categoryHtml+="</li>\n";
+
     return categoryHtml;
 }

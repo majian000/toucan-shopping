@@ -156,7 +156,7 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
                     resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
-                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexReleasePage()+"/"+ ShopUtils.encShopId(shopId)+"/"+shopId);
+                    resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexReleasePage()+"/"+shopId);
 
                     //同步更新预览页
                     sellerDesignerPageVO.setType(1);
