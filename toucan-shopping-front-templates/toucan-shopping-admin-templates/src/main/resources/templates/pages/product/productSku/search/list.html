@@ -184,13 +184,19 @@
                     {field: 'categoryId', width: 150, title: '分类ID'},
                     {field: 'categoryIds', width: 150, title: '分类路径',
                         templet: function (row) {
-                            return JSON.stringify(row.categoryIds);
+                            if(row.categoryIds!=null) {
+                                return JSON.stringify(row.categoryIds);
+                            }
+                            return "";
                         }},
                     {field: 'shopId', width: 150, title: '店铺ID'},
                     {field: 'shopCategoryId', width: 150, title: '店铺分类ID'},
                     {field: 'shopCategoryIds', width: 150, title: '店铺分类路径',
                         templet: function (row) {
-                            return JSON.stringify(row.shopCategoryIds);
+                            if(row.shopCategoryIds!=null) {
+                                return JSON.stringify(row.shopCategoryIds);
+                            }
+                            return "";
                         }},
                     {field: 'attributes', width: 150, title: '属性列表',
                         templet: function (row) {
