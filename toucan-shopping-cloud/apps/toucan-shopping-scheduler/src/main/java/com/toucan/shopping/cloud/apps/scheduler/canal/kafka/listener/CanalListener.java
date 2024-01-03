@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -16,6 +17,7 @@ import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -46,6 +48,10 @@ public class CanalListener {
 
     @Autowired
     private FeignAttributeKeyValueService feignAttributeKeyValueService;
+
+    @Autowired
+    private FeignShopCategoryService feignShopCategoryService;
+
 
     @Autowired
     private Toucan toucan;
@@ -190,6 +196,8 @@ public class CanalListener {
                                         productSearchResultVO.setCategoryName(productSearchResultVOResult.getCategoryName());
                                     }
 
+                                    this.setShopCategoryIdPath(productSearchResultVO);
+
                                     if (CollectionUtils.isEmpty(productSearchResultVOS)) {
                                         productSearchService.save(productSearchResultVO);
                                     } else {
@@ -215,4 +223,30 @@ public class CanalListener {
             logger.error(e.getMessage(),e);
         }
     }
+
+
+    /**
+     * 设置店铺分类ID路径
+     * @param productSearchResultVO
+     * @throws Exception
+     */
+    private void setShopCategoryIdPath(ProductSearchResultVO productSearchResultVO) throws Exception{
+        ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
+        queryShopCateogry.setId(productSearchResultVO.getShopCategoryId());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopCateogry);
+        ResultObjectVO resultShopCategoryObjectVO = feignShopCategoryService.findIdPathById(requestJsonVO);
+        if (resultShopCategoryObjectVO.isSuccess() && resultShopCategoryObjectVO.getData() != null) {
+            ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
+            List<String> shopCategoryIdPath = new LinkedList<>();
+            if (CollectionUtils.isNotEmpty(shopCategoryVO.getIdPath())) {
+                for (Long shopCategoryId : shopCategoryVO.getIdPath()) {
+                    shopCategoryIdPath.add(String.valueOf(shopCategoryId));
+                }
+                productSearchResultVO.setShopCategoryIds(shopCategoryIdPath);
+            }
+        }
+    }
+
+
+
 }

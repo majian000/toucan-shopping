@@ -42,6 +42,8 @@ public class ProductSearchResultVO {
 
     private List<String> categoryIds; //分类ID路径列表
 
+    private List<String> shopCategoryIds; //店铺分类ID路径列表
+
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //分类ID

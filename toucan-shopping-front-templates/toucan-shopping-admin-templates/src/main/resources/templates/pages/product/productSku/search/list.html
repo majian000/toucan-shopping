@@ -182,8 +182,16 @@
                     {field: 'brandId', width: 150, title: '品牌ID'},
                     {field: 'categoryName', width: 150, title: '分类名称'},
                     {field: 'categoryId', width: 150, title: '分类ID'},
+                    {field: 'categoryIds', width: 150, title: '分类路径',
+                        templet: function (row) {
+                            return JSON.stringify(row.categoryIds);
+                        }},
                     {field: 'shopId', width: 150, title: '店铺ID'},
                     {field: 'shopCategoryId', width: 150, title: '店铺分类ID'},
+                    {field: 'shopCategoryIds', width: 150, title: '店铺分类路径',
+                        templet: function (row) {
+                            return JSON.stringify(row.shopCategoryIds);
+                        }},
                     {field: 'attributes', width: 150, title: '属性列表',
                         templet: function (row) {
                             return JSON.stringify(row.attributes);

@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -13,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +32,8 @@ public class SearchUtils {
     public static FeignBrandService feignBrandService;
 
     public static FeignAttributeKeyValueService feignAttributeKeyValueService;
+
+    public static FeignShopCategoryService feignShopCategoryService;
 
     /**
      * 刷新到搜索
@@ -148,6 +152,8 @@ public class SearchUtils {
                 productSearchResultVO.setCategoryName(categoryVO.getName());
             }
 
+            setShopCategoryIdPath(productSearchResultVO);
+
             if (CollectionUtils.isEmpty(productSearchResultVOS)) {
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO);
                 feignProductSearchService.save(requestJsonVO);
@@ -162,5 +168,30 @@ public class SearchUtils {
             feignProductSearchService.removeById(requestJsonVO);
         }
 
+    }
+
+
+
+
+    /**
+     * 设置店铺分类ID路径
+     * @param productSearchResultVO
+     * @throws Exception
+     */
+    private static void setShopCategoryIdPath(ProductSearchResultVO productSearchResultVO) throws Exception{
+        ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
+        queryShopCateogry.setId(productSearchResultVO.getShopCategoryId());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopCateogry);
+        ResultObjectVO resultShopCategoryObjectVO = feignShopCategoryService.findIdPathById(requestJsonVO);
+        if (resultShopCategoryObjectVO.isSuccess() && resultShopCategoryObjectVO.getData() != null) {
+            ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
+            List<String> shopCategoryIdPath = new LinkedList<>();
+            if (CollectionUtils.isNotEmpty(shopCategoryVO.getIdPath())) {
+                for (Long shopCategoryId : shopCategoryVO.getIdPath()) {
+                    shopCategoryIdPath.add(String.valueOf(shopCategoryId));
+                }
+                productSearchResultVO.setShopCategoryIds(shopCategoryIdPath);
+            }
+        }
     }
 }
