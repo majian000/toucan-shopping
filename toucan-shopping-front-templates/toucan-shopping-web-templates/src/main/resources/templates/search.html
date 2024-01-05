@@ -13,7 +13,9 @@
         <input type="hidden" id="pe" class="psfh psfi" value="${pe!''}" />
         <input type="hidden" id="pst" class="psfh psfi" value="${pst!''}" />
         <input type="hidden" id="pdst" class="psfh psfi" value="${pdst!''}" />
+        <input type="hidden" id="sid" class="psfh psfi" value="${sid!''}" />
         <input type="button" value="搜索" class="s_btn" />
+        <input type="button" value="搜本店" class="ss_btn" />
     </form>
     <span class="fl ">
         <a  class="q_labels">手机</a>
@@ -24,6 +26,6 @@
         <a  class="q_labels">连衣裙</a>
     </span>
 </div>
-
+<input type="hidden" id="curspid" value="${curspid!''}"/>
 
 <script type="text/javascript" src="${basePath}/static/shopping/web/js/search/product/search.js"></script>

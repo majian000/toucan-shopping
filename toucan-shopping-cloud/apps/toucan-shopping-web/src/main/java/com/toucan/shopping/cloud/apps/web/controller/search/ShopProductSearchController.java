@@ -189,6 +189,9 @@ public class ShopProductSearchController {
             //价格区间
             httpServletRequest.setAttribute("ps",productSearchVO.getPs());
             httpServletRequest.setAttribute("pe",productSearchVO.getPe());
+            //店铺ID
+            httpServletRequest.setAttribute("curspid",productSearchVO.getSid());
+            httpServletRequest.setAttribute("sid",productSearchVO.getSid());
 
             //默认排序
             httpServletRequest.setAttribute("stt","default");
@@ -328,31 +331,36 @@ public class ShopProductSearchController {
                 }
             }
 
-            if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
-                SellerShop entity = new SellerShop();
-                entity.setId(Long.parseLong(productSearchVO.getSid()));
-                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
-                resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<SellerShopVO> sellerShops = resultObjectVO.formatDataList(SellerShopVO.class);
-                    if(CollectionUtils.isNotEmpty(sellerShops))
-                    {
-                        SellerShopVO sellerShopVO = sellerShops.get(0);
-                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
-                        {
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+sellerShopVO.getLogo());
-                        }
-                        httpServletRequest.setAttribute("shop",sellerShopVO);
-                    }
-                }
-            }
+            this.setShopInfo(productSearchVO,httpServletRequest);
 
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);
         }
-        return "shop/shop_product_list";
+        return "search/shop_product_list";
+    }
+
+    private void setShopInfo(ProductSearchVO productSearchVO,HttpServletRequest httpServletRequest) throws Exception{
+
+        if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
+            SellerShop entity = new SellerShop();
+            entity.setId(Long.parseLong(productSearchVO.getSid()));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
+            ResultObjectVO resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<SellerShopVO> sellerShops = resultObjectVO.formatDataList(SellerShopVO.class);
+                if(CollectionUtils.isNotEmpty(sellerShops))
+                {
+                    SellerShopVO sellerShopVO = sellerShops.get(0);
+                    if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
+                    {
+                        sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+sellerShopVO.getLogo());
+                    }
+                    httpServletRequest.setAttribute("shop",sellerShopVO);
+                }
+            }
+        }
     }
 
     /**

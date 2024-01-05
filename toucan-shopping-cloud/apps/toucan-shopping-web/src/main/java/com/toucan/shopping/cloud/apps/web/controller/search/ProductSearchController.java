@@ -178,6 +178,9 @@ public class ProductSearchController {
             //价格区间
             httpServletRequest.setAttribute("ps",productSearchVO.getPs());
             httpServletRequest.setAttribute("pe",productSearchVO.getPe());
+            //店铺ID
+            httpServletRequest.setAttribute("curspid",productSearchVO.getSid());
+            httpServletRequest.setAttribute("sid",productSearchVO.getSid());
 
             //默认排序
             httpServletRequest.setAttribute("stt","default");

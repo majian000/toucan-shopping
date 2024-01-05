@@ -173,7 +173,7 @@ table.c_tab tr th{
 	height:55px; overflow:hidden; float:left; display:inline; margin-top:40px;
 }
 .search{
-	width:520px; height:65px; overflow:hidden; float:left; display:inline; margin-left:134px; margin-top:50px;
+	width:600px; height:65px; overflow:hidden; float:left; display:inline; margin-left:5%; margin-top:50px;
 }
 .page_title{
 	height:65px; overflow:hidden; float:left; display:inline; margin-left:40px; margin-top:40px;font-size:25px;
@@ -185,7 +185,10 @@ table.c_tab tr th{
 	cursor:pointer;
 }
 .s_btn{
-	width:90px; height:40px; line-height:40px\9; background-color:#ff4e00; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; float:left; border:0; cursor:pointer;
+	width:80px; height:40px; line-height:40px\9; background-color:#ff4e00; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; float:left; border:0; cursor:pointer;
+}
+.ss_btn{
+	width:80px; height:40px; line-height:40px\9; background-color: #ff2b00; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; float:left; border:0; cursor:pointer;display:none;
 }
 .search a{
 	margin-right:12px; display:inline-block;
