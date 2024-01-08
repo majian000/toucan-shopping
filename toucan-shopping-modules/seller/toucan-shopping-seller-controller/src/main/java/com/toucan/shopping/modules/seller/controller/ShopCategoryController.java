@@ -1957,6 +1957,54 @@ public class ShopCategoryController {
     }
 
 
+
+    /**
+     * 根据店铺ID查询所有分类
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/shopId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryListByShopId(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+        try {
+            ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
+
+            if(queryShopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:{}",JSONObject.toJSONString(queryShopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            List<ShopCategory> shopCategorys = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
+            List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
+            for(ShopCategory shopCategory:shopCategorys)
+            {
+                ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+                BeanUtils.copyProperties(shopCategoryVO,shopCategory);
+
+                shopCategoryVOS.add(shopCategoryVO);
+
+            }
+            resultObjectVO.setData(shopCategoryVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
     /**
      * 查询树表格
      * @param requestJsonVO

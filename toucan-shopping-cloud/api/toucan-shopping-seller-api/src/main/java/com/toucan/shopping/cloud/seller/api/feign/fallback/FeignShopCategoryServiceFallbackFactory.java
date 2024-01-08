@@ -443,6 +443,21 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
                 resultObjectVO.setMsg("查询店铺分类失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryListByShopId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("查询店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.queryListByShopId失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询店铺分类失败");
+                return resultObjectVO;
+            }
         };
     }
 }

@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -12,12 +13,14 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +60,9 @@ public class ShopProductSearchController {
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
+
+    @Autowired
+    private FeignShopCategoryService feignShopCategoryService;
 
     private String doSearch(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest)
     {
@@ -253,46 +259,28 @@ public class ShopProductSearchController {
             httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
 
             //查询搜索属性列表
-            if(CollectionUtils.isNotEmpty(productResult)) {
-                AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
-                if(StringUtils.isNotEmpty(productSearchVO.getCid()))
-                {
-                    attributeKeyVO.setCategoryId(Long.parseLong(productSearchVO.getCid()));
-                }else {
-                    if(CollectionUtils.isNotEmpty(productResult)) {
-                        attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
-                    }
-                }
-                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
-                resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
+            if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
+                ShopCategoryVO queryShopCategory=new ShopCategoryVO();
+                queryShopCategory.setShopId(Long.parseLong(productSearchVO.getSid()));
+                resultObjectVO = feignShopCategoryService.queryListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategory));
                 if(resultObjectVO.isSuccess())
                 {
-                    List<AttributeKeyVO> attributes= resultObjectVO .formatDataList(AttributeKeyVO.class);
-                    if(CollectionUtils.isEmpty(productSearchVO.getSearchAttributes()))
+                    List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
+                    List<AttributeKeyVO> attributes = new LinkedList<>();
+                    AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
+                    attributeKeyVO.setAttributeName("商品分类");
+                    attributeKeyVO.setValues(new LinkedList<>());
+                    if(CollectionUtils.isNotEmpty(shopCategoryVOS))
                     {
-                        httpServletRequest.setAttribute("searchAttributes",attributes);
-                    }else {
-                        List<AttributeKeyVO> releaseAttributes = new LinkedList<>();
-                        boolean isSelectAttribute=false;
-                        if (CollectionUtils.isNotEmpty(attributes)) {
-                            for (AttributeKeyVO akv : attributes) {
-                                isSelectAttribute=false;
-                                for(ProductSearchAttributeVO selectSearchAttribute:productSearchVO.getSearchAttributes())
-                                {
-                                    if(selectSearchAttribute.getNameId().equals(akv.getId()))
-                                    {
-                                        isSelectAttribute=true;
-                                        break;
-                                    }
-                                }
-                                if(!isSelectAttribute)
-                                {
-                                    releaseAttributes.add(akv);
-                                }
-                            }
+                        for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
+                        {
+                            AttributeValueVO attributeValueVO = new AttributeValueVO();
+                            attributeValueVO.setAttributeValue(shopCategoryVO.getName());
+                            attributeKeyVO.getValues().add(attributeValueVO);
                         }
-                        httpServletRequest.setAttribute("searchAttributes",releaseAttributes);
                     }
+                    attributes.add(attributeKeyVO);
+                    httpServletRequest.setAttribute("searchAttributes",attributes);
                 }
             }
 

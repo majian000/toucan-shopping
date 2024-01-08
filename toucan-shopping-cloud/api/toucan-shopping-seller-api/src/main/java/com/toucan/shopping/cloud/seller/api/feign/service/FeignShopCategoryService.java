@@ -244,5 +244,15 @@ public interface FeignShopCategoryService {
      */
     @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 根据店铺ID查询所有分类
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/shopId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryListByShopId(@RequestBody RequestJsonVO requestJsonVO);
     
 }
