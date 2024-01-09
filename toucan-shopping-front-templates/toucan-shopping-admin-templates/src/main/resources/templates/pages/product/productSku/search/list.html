@@ -200,12 +200,26 @@
                         }},
                     {field: 'attributes', width: 150, title: '属性列表',
                         templet: function (row) {
-                            return JSON.stringify(row.attributes);
+                            if(row.attributes!=null) {
+                                return JSON.stringify(row.attributes);
+                            }
+                            return "";
                         }},
                     {field: 'searchAttributes', width: 300, title: '搜索属性',
                         templet: function (row) {
-                            return JSON.stringify(row.searchAttributes);
+                            if(row.searchAttributes!=null) {
+                                return JSON.stringify(row.searchAttributes);
+                            }
+                            return "";
                         }},
+                    {field: 'searchShopAttributes', width: 300, title: '搜索店铺属性',
+                        templet: function (row) {
+                            if(row.searchShopAttributes!=null) {
+                                return JSON.stringify(row.searchShopAttributes);
+                            }
+                            return "";
+                        }},
+
                     {field: 'attributeValueGroup', width: 300, title: '属性值'},
                     {field: 'createDate', width: 240, title: '创建时间'},
                     {field: 'updateDate', width: 240, title: '修改时间'},

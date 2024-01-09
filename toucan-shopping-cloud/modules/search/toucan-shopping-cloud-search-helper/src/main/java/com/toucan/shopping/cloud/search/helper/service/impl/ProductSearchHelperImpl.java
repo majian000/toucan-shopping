@@ -11,11 +11,13 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.constant.ShopAttributeConstant;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchAttributeVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -79,7 +82,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
             this.setSearchAttribute(productSearchResultVO,productSkuVO);
 
             //设置店铺搜索属性列表
-
+            this.setSearchShopAttributeList(productSearchResultVO,productSkuVO);
 
 
             ProductSearchResultVO productSearchResultVOResult = null;
@@ -207,6 +210,38 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
                 }
             }
         }
+    }
+
+    /**
+     * 设置店铺搜索属性
+     */
+    private void setSearchShopAttributeList(ProductSearchResultVO productSearchResultVO, ProductSkuVO productSkuVO) throws InvocationTargetException, IllegalAccessException, NoSuchAlgorithmException {
+        productSearchResultVO.setSearchShopAttributes(new LinkedList<>());
+        //将搜索属性赋值到店铺搜索属性
+        if(CollectionUtils.isNotEmpty(productSearchResultVO.getSearchAttributes())) {
+            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchResultVO.getSearchAttributes()) {
+                ProductSearchAttributeVO productSearchShopAttributeVO = new ProductSearchAttributeVO();
+                BeanUtils.copyProperties(productSearchShopAttributeVO,productSearchAttributeVO);
+                productSearchResultVO.getSearchShopAttributes().add(productSearchShopAttributeVO);
+            }
+        }
+        ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+        shopCategoryVO.setId(productSkuVO.getShopCategoryId());
+        ResultObjectVO resultObjectVO = feignShopCategoryService.queryById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO));
+        if(resultObjectVO.isSuccess())
+        {
+            List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
+            if(CollectionUtils.isNotEmpty(shopCategoryVOS)) {
+                shopCategoryVO = shopCategoryVOS.get(0);
+                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
+                productSearchAttributeVO.setNameId(ShopAttributeConstant.SHOP_CATEGORY_ATTRIBUTE_KEY_ID);
+                productSearchAttributeVO.setName("商品分类");
+                productSearchAttributeVO.setValueId(shopCategoryVO.getId());
+                productSearchAttributeVO.setValue(shopCategoryVO.getNamePath());
+                productSearchResultVO.getSearchShopAttributes().add(productSearchAttributeVO);
+            }
+        }
+
     }
 
     /**

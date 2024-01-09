@@ -85,9 +85,28 @@
 
                         <div class="layui-form-item" >
 
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >分类ID</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.categoryId}"  class="layui-input">
+                                </div>
+                            </div>
+
                             <div class="layui-inline" style="width:40%">
 
-                                <label class="layui-form-label " >分类名称</label>
+                                <label class="layui-form-label " >分类路径</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.categoryIds}"  class="layui-input">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item" >
+
+                            <div class="layui-inline" style="width:40%">
+
+                                <label class="layui-form-label " >分类名称路径</label>
                                 <div class="layui-input-block">
                                     <input type="text"  th:value="${model.categoryPath}"  class="layui-input">
                                 </div>
@@ -154,6 +173,14 @@
 
 
                         <div class="layui-form-item" >
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >店铺分类路径</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.shopCategoryIds}"  class="layui-input">
+                                </div>
+                            </div>
+
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >属性值</label>
                                 <div class="layui-input-block">
@@ -162,6 +189,33 @@
                             </div>
                         </div>
 
+
+                        <div class="layui-form-item" >
+
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >搜索店铺属性</label>
+                                <div class="layui-input-block">
+                                    <table class="layui-table">
+                                        <thead>
+                                        <tr>
+                                            <th lay-data="width:100}">属性名ID</th>
+                                            <th lay-data="width:100}">属性名</th>
+                                            <th lay-data="minWidth: 100}">属性值ID</th>
+                                            <th lay-data="minWidth: 100}">属性值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="attribute : ${model.searchShopAttributes}">
+                                            <td th:text="${attribute.nameId}"></td>
+                                            <td th:text="${attribute.name}"></td>
+                                            <td th:text="${attribute.valueId}"></td>
+                                            <td th:text="${attribute.value}"></td>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         <div class="layui-form-item" >
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >属性列表</label>

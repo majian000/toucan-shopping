@@ -1547,14 +1547,14 @@ public class ShopCategoryController {
             //查询是否存在该数据
             ShopCategoryVO query=new ShopCategoryVO();
             query.setId(entity.getId());
-            List<ShopCategory> ShopCategorys = shopCategoryService.queryList(query);
-            if(CollectionUtils.isEmpty(ShopCategorys))
+            List<ShopCategory> shopCategories = shopCategoryService.queryList(query);
+            if(CollectionUtils.isEmpty(shopCategories))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("对象不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(ShopCategorys);
+            resultObjectVO.setData(shopCategories);
 
         }catch(Exception e)
         {
