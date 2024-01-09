@@ -215,6 +215,42 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+
+                    //搜索店铺属性
+                    builder.startObject("searchShopAttributes");
+                    {
+                        builder.field("type", "nested");
+
+                        builder.startObject("properties");
+                        {
+                            builder.startObject("nameId");
+                            {
+                                builder.field("type", "long");
+                            }
+                            builder.endObject();
+
+                            builder.startObject("name");
+                            {
+                                builder.field("type", "keyword");
+                            }
+                            builder.endObject();
+
+                            builder.startObject("valueId");
+                            {
+                                builder.field("type", "long");
+                            }
+                            builder.endObject();
+
+                            builder.startObject("value");
+                            {
+                                builder.field("type", "keyword");
+                            }
+                            builder.endObject();
+                        }
+                        builder.endObject();
+                    }
+                    builder.endObject();
+
                     //品牌ID
                     builder.startObject("brandId");
                     {

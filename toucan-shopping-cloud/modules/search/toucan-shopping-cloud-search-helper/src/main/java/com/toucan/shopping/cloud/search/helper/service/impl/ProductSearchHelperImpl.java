@@ -225,23 +225,24 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
                 productSearchResultVO.getSearchShopAttributes().add(productSearchShopAttributeVO);
             }
         }
-        ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
-        shopCategoryVO.setId(productSkuVO.getShopCategoryId());
-        ResultObjectVO resultObjectVO = feignShopCategoryService.queryById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO));
-        if(resultObjectVO.isSuccess())
-        {
-            List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
-            if(CollectionUtils.isNotEmpty(shopCategoryVOS)) {
-                shopCategoryVO = shopCategoryVOS.get(0);
-                ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
-                productSearchAttributeVO.setNameId(ShopAttributeConstant.SHOP_CATEGORY_ATTRIBUTE_KEY_ID);
-                productSearchAttributeVO.setName("商品分类");
-                productSearchAttributeVO.setValueId(shopCategoryVO.getId());
-                productSearchAttributeVO.setValue(shopCategoryVO.getNamePath());
-                productSearchResultVO.getSearchShopAttributes().add(productSearchAttributeVO);
+
+        if(productSkuVO.getShopCategoryId()!=null) {
+            ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+            shopCategoryVO.setId(productSkuVO.getShopCategoryId());
+            ResultObjectVO resultObjectVO = feignShopCategoryService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopCategoryVO));
+            if (resultObjectVO.isSuccess()) {
+                List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
+                if (CollectionUtils.isNotEmpty(shopCategoryVOS)) {
+                    shopCategoryVO = shopCategoryVOS.get(0);
+                    ProductSearchAttributeVO productSearchAttributeVO = new ProductSearchAttributeVO();
+                    productSearchAttributeVO.setNameId(ShopAttributeConstant.SHOP_CATEGORY_ATTRIBUTE_KEY_ID);
+                    productSearchAttributeVO.setName("商品分类");
+                    productSearchAttributeVO.setValueId(shopCategoryVO.getId());
+                    productSearchAttributeVO.setValue(shopCategoryVO.getNamePath());
+                    productSearchResultVO.getSearchShopAttributes().add(productSearchAttributeVO);
+                }
             }
         }
-
     }
 
     /**
