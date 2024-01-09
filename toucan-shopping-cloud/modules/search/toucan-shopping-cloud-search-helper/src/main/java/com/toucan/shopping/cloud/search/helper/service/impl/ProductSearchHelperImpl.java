@@ -238,7 +238,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
                     productSearchAttributeVO.setNameId(ShopAttributeConstant.SHOP_CATEGORY_ATTRIBUTE_KEY_ID);
                     productSearchAttributeVO.setName("商品分类");
                     productSearchAttributeVO.setValueId(shopCategoryVO.getId());
-                    productSearchAttributeVO.setValue(shopCategoryVO.getNamePath());
+                    productSearchAttributeVO.setValue(shopCategoryVO.getName());
                     productSearchResultVO.getSearchShopAttributes().add(productSearchAttributeVO);
                 }
             }
