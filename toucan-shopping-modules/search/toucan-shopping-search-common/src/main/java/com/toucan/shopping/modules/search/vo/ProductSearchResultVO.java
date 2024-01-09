@@ -73,5 +73,7 @@ public class ProductSearchResultVO {
 
     private List<ProductSearchAttributeVO> searchAttributes; //搜索属性键值对
 
+    private List<ProductSearchAttributeVO> searchShopAttributes; //店铺内搜索属性键值对
+
 
 }

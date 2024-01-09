@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
+import com.toucan.shopping.cloud.search.helper.service.ProductSearchHelper;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -41,16 +42,15 @@ public class AfterStartConfig {
     @Autowired
     private FeignShopCategoryService feignShopCategoryService;
 
+    @Autowired
+    private ProductSearchHelper productSearchHelper;
+
 
     @PostConstruct
     public void initAppCode()
     {
         SearchUtils.toucan=toucan;
-        SearchUtils.feignProductSearchService=feignProductSearchService;
-        SearchUtils.feignCategoryService=feignCategoryService;
-        SearchUtils.feignBrandService=feignBrandService;
-        SearchUtils.feignAttributeKeyValueService = feignAttributeKeyValueService;
-        SearchUtils.feignShopCategoryService=feignShopCategoryService;
+        SearchUtils.productSearchHelper=productSearchHelper;
     }
 
 }

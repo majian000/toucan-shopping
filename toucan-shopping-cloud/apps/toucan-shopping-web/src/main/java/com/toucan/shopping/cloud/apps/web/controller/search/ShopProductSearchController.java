@@ -268,6 +268,7 @@ public class ShopProductSearchController {
                     List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
                     List<AttributeKeyVO> attributes = new LinkedList<>();
                     AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
+                    attributeKeyVO.setId(-1L);
                     attributeKeyVO.setAttributeName("商品分类");
                     attributeKeyVO.setValues(new LinkedList<>());
                     if(CollectionUtils.isNotEmpty(shopCategoryVOS))

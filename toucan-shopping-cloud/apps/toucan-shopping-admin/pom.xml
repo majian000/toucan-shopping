@@ -248,6 +248,11 @@
             <artifactId>toucan-shopping-search-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.modules.search</groupId>
+            <artifactId>toucan-shopping-cloud-search-helper</artifactId>
+        </dependency>
+
     </dependencies>
 
 
