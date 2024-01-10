@@ -20,6 +20,7 @@ import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -154,8 +155,19 @@ public class ShopPageController extends BaseController {
     public String queryProductListByShopCategoryId(HttpServletRequest request, @RequestParam String sid, @RequestParam String scid)
     {
         try {
-
-            this.setShopAttribute(request, sid);
+            if(StringUtils.isNotEmpty(sid)) {
+                this.setShopAttribute(request, sid);
+                ShopCategoryVO queryShopCategoryVO=new ShopCategoryVO();
+                queryShopCategoryVO.setShopId(Long.parseLong(sid));
+                ResultObjectVO resultObjectVO = feignShopCategoryService.queryTree(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO));
+                if(resultObjectVO.isSuccess())
+                {
+                    List<ShopCategoryVO> rootShopCategoryTree = resultObjectVO.formatDataList(ShopCategoryVO.class);
+                    if(CollectionUtils.isNotEmpty(rootShopCategoryTree)) {
+                        request.setAttribute("shopCategorys",rootShopCategoryTree.get(0).getChildren());
+                    }
+                }
+            }
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);

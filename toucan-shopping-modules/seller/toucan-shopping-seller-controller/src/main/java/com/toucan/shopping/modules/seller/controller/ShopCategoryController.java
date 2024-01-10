@@ -1705,7 +1705,7 @@ public class ShopCategoryController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            ShopCategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
+            ShopCategoryVO query = requestJsonVO.formatEntity(ShopCategoryVO.class);
 
             List<ShopCategory> ShopCategoryList = shopCategoryService.queryList(query);
             if(!CollectionUtils.isEmpty(ShopCategoryList))

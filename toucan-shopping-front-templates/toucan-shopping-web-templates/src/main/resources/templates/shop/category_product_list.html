@@ -55,47 +55,19 @@
 
     <div class="content2 mar_20">
         <div class="l_history">
-            <div class="his_t">
-                <span class="fl">浏览历史</span>
-                <span class="fr"><a href="#">清空</a></span>
+            <div class="cate_nav">
+
+                <#if shopCategorys??>
+                    <#list shopCategorys as category>
+                        <dl>
+                            <dt><a href="#">${category.name!}</a></dt>
+                            <#list category.children as cc>
+                                <dd><a href="#">${cc.name!}</a></dd>
+                            </#list>
+                        </dl>
+                    </#list>
+                </#if>
             </div>
-            <ul>
-                <li>
-                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_1.jpg" width="185" height="162" /></a></div>
-                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
-                    <div class="price">
-                        <font>￥<span>368.00</span></font> &nbsp; 18R
-                    </div>
-                </li>
-                <li>
-                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_2.jpg" width="185" height="162" /></a></div>
-                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
-                    <div class="price">
-                        <font>￥<span>768.00</span></font> &nbsp; 18R
-                    </div>
-                </li>
-                <li>
-                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_3.jpg" width="185" height="162" /></a></div>
-                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
-                    <div class="price">
-                        <font>￥<span>680.00</span></font> &nbsp; 18R
-                    </div>
-                </li>
-                <li>
-                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_4.jpg" width="185" height="162" /></a></div>
-                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
-                    <div class="price">
-                        <font>￥<span>368.00</span></font> &nbsp; 18R
-                    </div>
-                </li>
-                <li>
-                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_5.jpg" width="185" height="162" /></a></div>
-                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
-                    <div class="price">
-                        <font>￥<span>368.00</span></font> &nbsp; 18R
-                    </div>
-                </li>
-            </ul>
         </div>
         <div class="l_list2">
             <div class="list_t">
