@@ -55,4 +55,6 @@ public class ProductSearchVO extends SearchVO{
 
     private List<ProductSearchAttributeVO> searchAttributes; //属性集合
 
+    private List<ProductSearchAttributeVO> searchShopAttributes; //店铺搜索属性集合
+
 }

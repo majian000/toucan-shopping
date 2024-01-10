@@ -152,7 +152,7 @@ public class ShopProductSearchController {
             //选择的查询属性
             if(StringUtils.isNotEmpty(productSearchVO.getAb())&&StringUtils.isNotEmpty(productSearchVO.getAbids()))
             {
-                productSearchVO.setSearchAttributes(new LinkedList<>());
+                productSearchVO.setSearchShopAttributes(new LinkedList<>());
                 String[] abArray = productSearchVO.getAb().split(",");
                 String[] abidsArray = productSearchVO.getAbids().split(",");
                 if(abArray!=null&&abidsArray!=null&&abidsArray.length==abidsArray.length)
@@ -163,7 +163,7 @@ public class ShopProductSearchController {
                         productSearchAttributeVO.setName(akv[0]);
                         productSearchAttributeVO.setValue(akv[1]);
                         productSearchAttributeVO.setNameId(Long.parseLong(abidsArray[i]));
-                        productSearchVO.getSearchAttributes().add(productSearchAttributeVO);
+                        productSearchVO.getSearchShopAttributes().add(productSearchAttributeVO);
                     }
                 }
             }
@@ -186,8 +186,8 @@ public class ShopProductSearchController {
             httpServletRequest.setAttribute("abids",productSearchVO.getAbids());
             //属性集合字符串
             httpServletRequest.setAttribute("ab",productSearchVO.getAb());
-            //属性集合
-            httpServletRequest.setAttribute("selectSearchAttributes",productSearchVO.getSearchAttributes());
+            //已选搜素属性集合
+            httpServletRequest.setAttribute("selectSearchShopAttributes",productSearchVO.getSearchShopAttributes());
             //品牌ID
             httpServletRequest.setAttribute("bid",productSearchVO.getBid());
             //品牌名称
@@ -259,29 +259,46 @@ public class ShopProductSearchController {
             httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
 
             //查询搜索属性列表
-            if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
-                ShopCategoryVO queryShopCategory=new ShopCategoryVO();
-                queryShopCategory.setShopId(Long.parseLong(productSearchVO.getSid()));
-                resultObjectVO = feignShopCategoryService.queryListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategory));
+            if(CollectionUtils.isNotEmpty(productResult)) {
+                AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
+                if(StringUtils.isNotEmpty(productSearchVO.getCid()))
+                {
+                    attributeKeyVO.setCategoryId(Long.parseLong(productSearchVO.getCid()));
+                }else {
+                    if(CollectionUtils.isNotEmpty(productResult)) {
+                        attributeKeyVO.setCategoryId(productResult.get(0).getCategoryId());
+                    }
+                }
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
+                resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
-                    List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
-                    List<AttributeKeyVO> attributes = new LinkedList<>();
-                    AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
-                    attributeKeyVO.setId(-1L);
-                    attributeKeyVO.setAttributeName("商品分类");
-                    attributeKeyVO.setValues(new LinkedList<>());
-                    if(CollectionUtils.isNotEmpty(shopCategoryVOS))
+                    List<AttributeKeyVO> attributes= resultObjectVO .formatDataList(AttributeKeyVO.class);
+                    if(CollectionUtils.isEmpty(productSearchVO.getSearchAttributes()))
                     {
-                        for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
-                        {
-                            AttributeValueVO attributeValueVO = new AttributeValueVO();
-                            attributeValueVO.setAttributeValue(shopCategoryVO.getName());
-                            attributeKeyVO.getValues().add(attributeValueVO);
+                        httpServletRequest.setAttribute("searchShopAttributes",attributes);
+                    }else {
+                        List<AttributeKeyVO> releaseAttributes = new LinkedList<>();
+                        boolean isSelectAttribute=false;
+                        if (CollectionUtils.isNotEmpty(attributes)) {
+                            for (AttributeKeyVO akv : attributes) {
+                                isSelectAttribute=false;
+                                for(ProductSearchAttributeVO selectSearchAttribute:productSearchVO.getSearchAttributes())
+                                {
+                                    if(selectSearchAttribute.getNameId().equals(akv.getId()))
+                                    {
+                                        isSelectAttribute=true;
+                                        break;
+                                    }
+                                }
+                                if(!isSelectAttribute)
+                                {
+                                    releaseAttributes.add(akv);
+                                }
+                            }
                         }
+                        httpServletRequest.setAttribute("searchShopAttributes",releaseAttributes);
                     }
-                    attributes.add(attributeKeyVO);
-                    httpServletRequest.setAttribute("searchAttributes",attributes);
                 }
             }
 

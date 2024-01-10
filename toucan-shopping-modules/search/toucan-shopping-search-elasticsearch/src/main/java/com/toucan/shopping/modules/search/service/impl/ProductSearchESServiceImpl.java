@@ -362,7 +362,19 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                 boolQuery.filter(nestedQuery);
             }
             boolQueryBuilder.must(boolQuery);
-
+        }
+        //店铺属性查询
+        if(CollectionUtils.isNotEmpty(productSearchVO.getSearchShopAttributes()))
+        {
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getSearchShopAttributes()) {
+                BoolQueryBuilder attributeQuery = QueryBuilders.boolQuery();
+                attributeQuery.must(QueryBuilders.termQuery("searchShopAttributes.name", productSearchAttributeVO.getName()));
+                attributeQuery.must(QueryBuilders.termQuery("searchShopAttributes.value", productSearchAttributeVO.getValue()));
+                NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("searchShopAttributes", attributeQuery, ScoreMode.None);
+                boolQuery.filter(nestedQuery);
+            }
+            boolQueryBuilder.must(boolQuery);
         }
 
         if(productSearchVO.getPsd() != null||productSearchVO.getPed() != null) {

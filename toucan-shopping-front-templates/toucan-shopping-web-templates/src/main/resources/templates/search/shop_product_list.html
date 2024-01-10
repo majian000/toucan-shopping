@@ -59,8 +59,8 @@
                 </a>
             </#list>
         </#if>
-        <#if selectSearchAttributes??>
-            <#list selectSearchAttributes as ssa>
+        <#if selectSearchShopAttributes??>
+            <#list selectSearchShopAttributes as ssa>
                 <a class="spab-item">
                     <b>${ssa.name}:</b>
                     <em>${ssa.value}</em>
@@ -85,8 +85,8 @@
                 </tr>
             </#if>
 
-            <#if searchAttributes??>
-                <#list searchAttributes as attributeKey>
+            <#if searchShopAttributes??>
+                <#list searchShopAttributes as attributeKey>
                 <tr valign="top" class="atis_${attributeKey.id?c}">
                     <td style="width:8%">&nbsp; ${attributeKey.attributeName!''}：</td>
                     <td class="td_a">
