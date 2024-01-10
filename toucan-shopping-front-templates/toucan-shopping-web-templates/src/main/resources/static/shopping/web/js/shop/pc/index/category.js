@@ -37,7 +37,7 @@ function getCategoryHtml(category,shopId){
     {
         href=category.href;
     }else{
-        href="/api/shop/product/g/search?scid="+category.id+"&sid="+shopId;
+        href="/page/shop/category/product/list?scid="+category.id+"&sid="+shopId;
     }
     var categoryHtml="";
     if(category.children==null||category.children.length<=0)
@@ -55,7 +55,7 @@ function getCategoryHtml(category,shopId){
             {
                 href=categoryChild.href;
             }else{
-                href="/api/shop/product/g/search?scid="+categoryChild.id+"&sid="+shopId;
+                href="/page/shop/category/product/list?scid="+categoryChild.id+"&sid="+shopId;
             }
             categoryHtml+="<li><a href=\""+href+"\" class=\"menu-subbutton\"><span class=\"menu-label\">"+categoryChild.name+"</span></a></li>";
         }

@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <#include "/common_js.html"/>
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_list.css">
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/css/MagicZoom.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
+    <script type="text/javascript" src="${basePath}/static/js/num.js">
+        var jq = jQuery.noConflict();
+    </script>
+    <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/common-product.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation_wide.html">
+
+<#include "/shop/shop_top.html"/>
+
+
+<!------------main---------------->
+<div class="i_bg">
+
+    <input type="hidden" id="pageTotal" value="${pageTotal!'1'}"/>
+    <input type="hidden" id="page" value="${page!'1'}"/>
+    <input type="hidden" id="total" value="${total!'0'}"/>
+
+    <div class="content2 mar_20">
+        <div class="l_history">
+            <div class="his_t">
+                <span class="fl">浏览历史</span>
+                <span class="fr"><a href="#">清空</a></span>
+            </div>
+            <ul>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_1.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_2.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_3.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>680.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_4.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="${basePath}/static/images/his_5.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="l_list2">
+            <div class="list_t">
+            	<span class="fl list_or">
+                    <#if stt?? && stt == "default">
+                	    <a  class="now fla pfla" attr-type="defult">默认</a>
+                    <#else>
+                	    <a  class=" fla pfla" attr-type="defult">默认</a>
+                    </#if>
+                    <#if stt?? && stt == "price">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="price"  >价格</span>
+                            <span class="i_up pfla"  attr-type="priceAsc"  >价格从低到高显示</span>
+                            <span class="i_down pfla" attr-type="priceDesc"  >价格从高到低显示</span>
+                        </a>
+                    </#if>
+                    <#if stt?? && stt == "newest">
+                        <a  class=" now fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                        <#else>
+                        <a  class="  fla">
+                            <span class="fl pfla" attr-type="newest"  >新品</span>
+                            <span class="i_up pfla"  attr-type="newestAsc"  >最近发布</span>
+                            <span class="i_down pfla" attr-type="newestDesc"  >最早发布</span>
+                        </a>
+                    </#if>
+                    <div class="search-price">
+                        <div class="search-price-set">
+                            <div class="fl">
+                                <input type="text" id="psi" class="input-txt"  value="${ps!''}"  placeholder="¥"  />
+                            </div>
+                            <em>-</em>
+                            <div class="fl">
+                                <input type="text" id="pei" class="input-txt"   value="${pe!''}"  placeholder="¥" />
+                            </div>
+                        </div>
+                        <div class="search-price-edit">
+                            <a  class="item1 spclear">清空</a>
+                            <a  class="item2 spbtn" >确定</a>
+                        </div>
+                    </div>
+                </span>
+                <span class="fr plcount">共发现${total!'0'}件</span>
+            </div>
+            <div class="list_c">
+
+                <ul class="cate_list">
+                    <#if productResult??>
+                        <#list productResult as product >
+                            <li>
+                                <div class="img"><a href="${basePath}/page/product/detail/${product.skuId?c}"  target="_blank"><img src="${product.httpProductPreviewPath}" width="210" height="185" /></a></div>
+                                <div class="price2">
+                                    <font>￥<span>${product.price?c}</span></font>
+                                </div>
+                                <div class="name"><a href="${basePath}/page/product/detail/${product.skuId?c}" title="${product.name}"  target="_blank">${product.name}</a></div>
+                                <div class="carbg">
+                                    <a class="ss_disabled cp_${product.skuId?c} cplist" attr-v="${product.skuId?c}" attr-t="1" >收藏</a>
+                                    <a  class="j_car p_l_ac" attr-pid="${product.id?c}">加入购物车</a>
+                                </div>
+                            </li>
+                        </#list>
+                    </#if>
+
+                </ul>
+
+
+                <div class="pagination" id="pagination">
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<#include "/common_user_car.html"/>
+
+<#include "/footer.html"/>
+
+</body>
+
+<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/search/product/shop_product_list.js"></script>
+
+
+</html>

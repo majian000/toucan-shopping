@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -14,6 +16,7 @@ import com.toucan.shopping.modules.designer.seller.model.container.ShopPageConta
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
+import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -55,6 +58,8 @@ public class ShopPageController extends BaseController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignShopCategoryService feignShopCategoryService;
 
     @Autowired
     private IPageParser pageParser;
@@ -141,4 +146,20 @@ public class ShopPageController extends BaseController {
         return "shop/index";
     }
 
+
+
+
+
+    @RequestMapping("/category/product/list")
+    public String queryProductListByShopCategoryId(HttpServletRequest request, @RequestParam String sid, @RequestParam String scid)
+    {
+        try {
+
+            this.setShopAttribute(request, sid);
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+        return "shop/category_product_list";
+    }
 }
