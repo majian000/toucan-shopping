@@ -36,6 +36,8 @@ public class ProductSearchResultVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId; //店铺ID
 
     private String categoryName; //分类名称
