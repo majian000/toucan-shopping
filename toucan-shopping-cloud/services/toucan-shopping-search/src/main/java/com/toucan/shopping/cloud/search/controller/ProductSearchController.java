@@ -157,5 +157,29 @@ public class ProductSearchController {
 
 
 
+    /**
+     * 清空
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/clear",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO clear(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        Long skuId = requestJsonVO.formatEntity(Long.class);
+        try {
+            List<Long> deleteFaildList = new ArrayList<>();
+            productSearchService.deleteIndex();
+            productSearchService.createIndex();
+            resultObjectVO.setData(deleteFaildList);
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage());
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
 
 }

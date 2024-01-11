@@ -328,6 +328,27 @@ public class ProductSkuSearchController extends UIController {
 
 
 
+    /**
+     * 清空搜索
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/clear",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO clear(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO = feignProductSearchService.clear(RequestJsonVOGenerator.generator(toucan.getAppCode(),null));
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 }
 

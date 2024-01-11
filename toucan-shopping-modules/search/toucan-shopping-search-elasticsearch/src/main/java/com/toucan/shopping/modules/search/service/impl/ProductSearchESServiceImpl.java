@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.client.core.CountRequest;
@@ -253,6 +254,20 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
 
                     //品牌ID
                     builder.startObject("brandId");
+                    {
+                        builder.field("type", "long");
+                    }
+                    builder.endObject();
+
+                    //店铺ID
+                    builder.startObject("shopId");
+                    {
+                        builder.field("type", "long");
+                    }
+                    builder.endObject();
+
+                    //店铺分类ID
+                    builder.startObject("shopCategoryId");
                     {
                         builder.field("type", "long");
                     }
@@ -553,4 +568,13 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         }
         return false;
     }
+
+
+    @Override
+    public void deleteIndex() throws Exception {
+        DeleteIndexRequest request = new DeleteIndexRequest(ProductIndex.PRODUCT_SKU_INDEX);
+        restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
+    }
+
+
 }

@@ -60,4 +60,11 @@ public interface FeignProductSearchService {
     ResultObjectVO removeById(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 清空
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/clear",produces = "application/json;charset=UTF-8")
+    ResultObjectVO clear(@RequestBody RequestJsonVO requestJsonVO);
 }

@@ -343,12 +343,37 @@
                 {
                     reqData.push({skuId:data[i].id});
                 }
-                layer.confirm('确定从搜索中删除?(注:不会影响商品,可再次进行同步搜索)', function (index) {
+                layer.confirm('确定从搜索中删除?(不会影响商品,可再次进行同步搜索)', function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/productSku/search/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:JSON.stringify(reqData),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('productSkuTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'clearToolbar') {  // 清空操作
+                layer.confirm('确定要清空所有商品?(不会影响商品,可再次进行同步搜索)', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/productSku/search/clear",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:null,
                         success:function(data){
                             layer.msg(data.msg);
 

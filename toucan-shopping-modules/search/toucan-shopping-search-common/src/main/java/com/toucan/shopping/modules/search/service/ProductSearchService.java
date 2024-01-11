@@ -48,6 +48,13 @@ public interface ProductSearchService {
     boolean removeById(Long id,List<Long> deleteFaildIdList) throws Exception;
 
     /**
+     * 删除索引
+     * @return
+     * @throws Exception
+     */
+    void deleteIndex() throws Exception;
+
+    /**
      * 是否存在索引
      * @return
      */
