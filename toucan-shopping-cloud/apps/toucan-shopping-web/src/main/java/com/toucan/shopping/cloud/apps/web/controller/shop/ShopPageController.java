@@ -186,6 +186,13 @@ public class ShopPageController extends BaseController {
                     pageInfo = resultObjectVO.formatData(PageInfo.class);
                     List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
                     if (CollectionUtils.isNotEmpty(productResult)) {
+
+                        for(ProductSearchResultVO productSearchResultVO:productResult)
+                        {
+                            productSearchResultVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+productSearchResultVO.getProductPreviewPath());
+                        }
+
+
                         request.setAttribute("productResult",productResult);
                         request.setAttribute("page",pageInfo.getPage());
                         request.setAttribute("total",pageInfo.getTotal());
