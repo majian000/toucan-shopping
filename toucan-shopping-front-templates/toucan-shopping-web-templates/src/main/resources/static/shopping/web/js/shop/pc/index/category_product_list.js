@@ -12,7 +12,7 @@ $(function(){
 
     bindRemoveBrandEvent();
 
-    bindAttributeEvent();
+    bindShopCategoryEvent();
 
     bindCollectProductEvent();
 
@@ -72,45 +72,10 @@ function drawPageJumpBtns()
 
 
 
-function bindAttributeEvent(){
+function bindShopCategoryEvent(){
 
-    $(".qb_labels").bind("click", function () {
-        doSearchByProductList(this,1);
-    });
-
-    //品牌名称条件查询
-    $(".abb_labels").bind("click", function () {
-        var attrId = $(this).attr("attr-id");
-        var attrName = $(this).attr("attr-name");
-        var ebids=$("#ebids").val();
-        //将这个品牌条件从排除的品牌ID列表中移除
-        if(ebids!=null&&ebids!="")
-        {
-            var ebidsArray = ebids.split(",");
-            var releaseArray =new Array();
-            for(var i=0;i<ebidsArray.length;i++)
-            {
-                if(ebidsArray[i]!=attrId)
-                {
-                    releaseArray.push(ebidsArray[i]);
-                }
-            }
-            if(releaseArray.length>0) {
-                $("#ebids").val(releaseArray.join(","));
-            }else{
-                $("#ebids").val("");
-            }
-        }
-        $("#bid").val(attrId);
-        $("#bn").val(attrName);
-        $("#qbs").val("f");
-        doSearch();
-    });
-
-    $(".pfla").bind("click", function () {
+    $(".sci").bind("click", function () {
         var attrType=$(this).attr("attr-type");
-
-
 
         //默认排序
         if(attrType=="defult")
@@ -174,54 +139,6 @@ function bindAttributeEvent(){
         doSearch();
     });
 
-
-    $(".bcb").bind("click", function () {
-        $("#bid").val("");
-        $("#bn").val("");
-        doSearch();
-    });
-
-    //属性条件查询
-    $(".rpab").bind("click", function () {
-        var attrKV=$(this).attr("attr-kv");
-        var attrKeyId=$(this).attr("attr-key-id");
-        var ab = $("#ab").val();
-        var abids = $("#abids").val();
-        if(ab!=null&&ab!="")
-        {
-            var abArray = ab.split(",");
-            var releaseAbArray =new Array();
-            for(var i=0;i<abArray.length;i++)
-            {
-                if(abArray[i]!=attrKV)
-                {
-                    releaseAbArray.push(abArray[i]);
-                }
-            }
-            if(releaseAbArray.length>0) {
-                $("#ab").val(releaseAbArray.join(","));
-            }else{
-                $("#ab").val("");
-            }
-        }
-
-        if(abids!=null&&abids!="") {
-            var abidsArray = abids.split(",");
-            var releaseAbidsArray = new Array();
-            for (var i = 0; i < abidsArray.length; i++) {
-                if (abidsArray[i] != attrKeyId) {
-                    releaseAbidsArray.push(abidsArray[i]);
-                }
-            }
-            if(releaseAbidsArray.length>0) {
-                $("#abids").val(releaseAbidsArray.join(","));
-            }else{
-                $("#abids").val("");
-            }
-        }
-
-        doSearchByProductList(null,0);
-    });
 
 }
 

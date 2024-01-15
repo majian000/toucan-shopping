@@ -2,12 +2,14 @@ package com.toucan.shopping.cloud.apps.web.controller.shop;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -15,6 +17,8 @@ import com.toucan.shopping.modules.designer.core.parser.IPageParser;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
 import com.toucan.shopping.modules.designer.seller.view.ShopIndexPageView;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
+import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
 import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
@@ -64,6 +68,9 @@ public class ShopPageController extends BaseController {
 
     @Autowired
     private IPageParser pageParser;
+
+    @Autowired
+    private FeignProductSearchService feignProductSearchService;
 
     private void setShopAttribute(HttpServletRequest request, String shopId) throws Exception{
         SellerShopVO querySellerShopVO = new SellerShopVO();
@@ -167,6 +174,26 @@ public class ShopPageController extends BaseController {
                         request.setAttribute("shopCategorys",rootShopCategoryTree.get(0).getChildren());
                     }
                 }
+                ProductSearchVO productSearchVO = new ProductSearchVO();
+                productSearchVO.setSize(20);
+                productSearchVO.setPage(1);
+                productSearchVO.setSid(sid);
+                productSearchVO.setScid(scid);
+                PageInfo pageInfo = null;
+
+                resultObjectVO = feignProductSearchService.search(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchVO));
+                if(resultObjectVO.isSuccess()) {
+                    pageInfo = resultObjectVO.formatData(PageInfo.class);
+                    List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
+                    if (CollectionUtils.isNotEmpty(productResult)) {
+                        request.setAttribute("productResult",productResult);
+                        request.setAttribute("page",pageInfo.getPage());
+                        request.setAttribute("total",pageInfo.getTotal());
+                        request.setAttribute("pageTotal",pageInfo.getPageTotal());
+                    }
+                }
+                request.setAttribute("sid",sid);;
+                request.setAttribute("scid",scid);;
             }
         }catch(Exception e)
         {
