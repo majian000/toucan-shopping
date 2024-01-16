@@ -5,6 +5,7 @@ var productSkuBasePath="/page/product/detail/";
 var orderPayPath="/page/user/buyCar/pay/";
 var orderDetailPath="/page/order/detail";
 var searchGetPath="/api/product/g/search";
+var shopCategoryProductListPath="/page/shop/category/product/list";
 var shopSearchGetPath="/api/shop/product/g/search";
 
 /**

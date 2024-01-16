@@ -158,6 +158,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
                     }
                     builder.endObject();
 
+                    //店铺分类ID数组
+                    builder.startObject("shopCategoryIds");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.endObject();
+
+
                     //属性数组
                     builder.startObject("attributes");
                     {
@@ -320,7 +328,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         }
         //店铺分类查询
         if(StringUtils.isNotEmpty(productSearchVO.getScid())) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("shopCategoryId",productSearchVO.getScid()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("shopCategoryIds",productSearchVO.getScid()));
         }
         //店铺查询
         if(StringUtils.isNotEmpty(productSearchVO.getSid())) {

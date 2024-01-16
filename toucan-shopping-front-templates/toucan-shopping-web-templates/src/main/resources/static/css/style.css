@@ -1265,17 +1265,18 @@ ul.cate li{
 .cate_nav dl dt{
 	height:22px; height:22px; overflow:hidden; color:#3e3e3e; font-size:14px; clear:both; margin-left:12px;
 }
-.cate_nav dl dt a{
+.sci_default{
 	color:#3e3e3e;
 }
 .cate_nav dl dt a:hover{
 	color:#ff4e00;
 }
+.cate_nav_active{
+	color:#ff4e00;
+	font-family:"宋体";
+}
 .cate_nav dl dd{
 	height:20px; height:20px; overflow:hidden; color:#888888; font-family:"宋体"; float:left; display:inline; margin-left:12px;
-}
-.cate_nav dl dd a{
-	color:#3e3e3e;
 }
 .cate_nav dl dd a:hover{
 	color:#ff4e00;

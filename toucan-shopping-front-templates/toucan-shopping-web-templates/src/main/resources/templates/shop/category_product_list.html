@@ -49,6 +49,7 @@
 <!------------main---------------->
 <div class="i_bg">
 
+    <input type="hidden" id="scid" value="${scid!''}" />
     <input type="hidden" id="pageTotal" value="${pageTotal!'1'}"/>
     <input type="hidden" id="page" value="${page!'1'}"/>
     <input type="hidden" id="total" value="${total!'0'}"/>
@@ -60,9 +61,9 @@
                 <#if shopCategorys??>
                     <#list shopCategorys as category>
                         <dl>
-                            <dt><a class="sci" attr-id="${category.id!}">${category.name!}</a></dt>
+                            <dt><a class="sci sci_default" attr-id="${category.id?c}">${category.name!}</a></dt>
                             <#list category.children as cc>
-                                <dd><a class="sci" attr-id="${cc.id!}">${cc.name!}</a></dd>
+                                <dd><a class="sci sci_default" attr-id="${cc.id?c}">${cc.name!}</a></dd>
                             </#list>
                         </dl>
                     </#list>

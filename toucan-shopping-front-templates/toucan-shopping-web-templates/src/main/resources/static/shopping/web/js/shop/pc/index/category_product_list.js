@@ -10,8 +10,6 @@ $(function(){
 
     bindAddBuyCar();
 
-    bindRemoveBrandEvent();
-
     bindShopCategoryEvent();
 
     bindCollectProductEvent();
@@ -35,10 +33,37 @@ function loadPageBefore()
     $(".spbtn").bind("click", function () {
         $("#ps").val($("#psi").val());
         $("#pe").val($("#pei").val());
-        doSearch();
+        queryShopCategoryProductList(null);
     });
+    var scis = $(".sci");
+    if(scis!=null&&scis.length>0)
+    {
+        var scid = $("#scid").val();
+        for(var i=0;i<scis.length;i++)
+        {
+            var scisObj = $(scis[i]);
+            if(scisObj.attr("attr-id")==scid)
+            {
+                scisObj.removeClass("sci_default");
+                scisObj.addClass("cate_nav_active");
+            }
+        }
+    }
+}
 
 
+
+function queryShopCategoryProductList(extParams)
+{
+    var sid = $("#sid").val();
+    var scid = $("#scid").val();
+    var params = "?sid="+sid+"&scid="+scid;
+    if(extParams!=null&&extParams!="")
+    {
+        params+=extParams;
+    }
+
+    window.location.href=shopCategoryProductListPath+params;
 }
 
 
@@ -62,7 +87,7 @@ function drawPageJumpBtns()
         isShowTotalCount:false, //是否显示总页数
         callback: function (pageNum) {
             if (g_um_cpage != pageNum) {
-                doSearch("&page="+pageNum);
+                queryShopCategoryProductList("&page="+pageNum);
             }
         }
     });
@@ -75,8 +100,12 @@ function drawPageJumpBtns()
 function bindShopCategoryEvent(){
 
     $(".sci").bind("click", function () {
-        var attrType=$(this).attr("attr-type");
+        $("#scid").val($(this).attr("attr-id"));
+        queryShopCategoryProductList(null);
+    });
 
+    $(".pfla").bind("click", function () {
+        var attrType=$(this).attr("attr-type");
         //默认排序
         if(attrType=="defult")
         {
@@ -136,43 +165,10 @@ function bindShopCategoryEvent(){
             $("#pdst").val("desc");
         }
 
-        doSearch();
+        queryShopCategoryProductList(null);
     });
 
 
-}
-
-
-/**
- * 查询商品列表
- * @param eventSrcObj
- * @param type 1:属性查询 0:默认查询
- */
-function doSearchByProductList(eventSrcObj,type)
-{
-    var params="";
-    var ab = $("#ab").val();
-    var abids = $("#abids").val();
-    if(type==1)
-    {
-        var attrKV = $(eventSrcObj).attr("attr-kv");
-        if(ab==null||ab=="")
-        {
-            ab=attrKV;
-        }else{
-            ab+=","+attrKV;
-        }
-        $("#ab").val(ab);
-
-        if(abids==null||abids=="")
-        {
-            abids=$(eventSrcObj).attr("attr-key-id");
-        }else{
-            abids+=","+$(eventSrcObj).attr("attr-key-id");
-        }
-        $("#abids").val(abids);
-    }
-    doSearch(params);
 }
 
 function bindAddBuyCar(){
@@ -221,32 +217,6 @@ function bindAddBuyCar(){
     });
 }
 
-
-/**
- * 移除品牌条件
- */
-function bindRemoveBrandEvent()
-{
-    $(".bcb").bind("click", function () {
-        var bid = $(this).attr("attr-bid");
-        var ebids = $("#ebids").val();
-        var ebidArray = new Array();
-        if(ebids!=null&&ebids!='')
-        {
-            ebidArray.push(ebids.split(","));
-        }
-        ebidArray.push(bid);
-        $("#ebids").val(ebidArray.join(","));
-        $("#qbs").val("f");
-
-        doSearch();
-    });
-
-    $(".qball").bind("click", function () {
-        $("#qbs").val("f");
-        doSearch();
-    });
-}
 
 function bindCollectProductEvent(){
     var ssdArray = $(".cplist");
