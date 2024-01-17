@@ -1,17 +1,19 @@
 package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.apps.seller.web.app.CloudSellerWebApplication;
+import com.toucan.shopping.cloud.apps.admin.app.CloudAdminApplication;
+import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.vo.*;
-import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.product.vo.PublishProductApproveVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveSkuVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,13 +23,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = CloudSellerWebApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = CloudAdminApplication.class)
 public class ShopProductApproveTest {
 
     @Autowired
@@ -36,12 +37,15 @@ public class ShopProductApproveTest {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
+
 
     /**
      * 批量插入店铺商品
      */
     @Test
-    public void batchInsertShopProductApprove() throws NoSuchAlgorithmException {
+    public void batchInsertShopProductApprove() throws Exception {
         Random rand = new Random();
         double randomNum = 1000.0 + rand.nextDouble() * 1000.0;
 
@@ -57,11 +61,11 @@ public class ShopProductApproveTest {
             ResultObjectVO resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
         }
 
-//        this.batchApproveList();
+        this.batchApproveListAndSyncSearch();
 
     }
 
-    public void batchApproveList() throws NoSuchAlgorithmException {
+    public void batchApproveListAndSyncSearch() throws Exception {
         PublishProductApproveVO queryPublishProductApprove=new PublishProductApproveVO();
         queryPublishProductApprove.setShopId(983769356921995303L);
         ResultObjectVO resultObjectVO = feignShopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
@@ -77,6 +81,25 @@ public class ShopProductApproveTest {
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), passVo);
                 resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
 
+
+                if(resultObjectVO.getData()!=null) {
+                    ShopProductApproveVO resultShopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                    //同步搜索
+                    ProductSkuVO queryProductSkuVO = new ProductSkuVO();
+                    if(resultShopProductApproveVO.getShopProductId()!=null) {
+                        queryProductSkuVO.setShopProductId(resultShopProductApproveVO.getShopProductId());
+                        RequestJsonVO querySkuRequestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
+                        ResultObjectVO querySkuResultObjectVO = feignProductSkuService.queryListByShopProductIdList(querySkuRequestJsonVO);
+                        if (querySkuResultObjectVO.isSuccess()) {
+                            List<ProductSkuVO> productSkuVOS = querySkuResultObjectVO.formatDataList(ProductSkuVO.class);
+                            if (CollectionUtils.isNotEmpty(productSkuVOS)) {
+                                for (ProductSkuVO productSkuVO : productSkuVOS) {
+                                    SearchUtils.flushToSearch(productSkuVO);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
