@@ -63,7 +63,7 @@ public class SkylarkRedisLockManagerThread extends Thread {
                         //如果这个锁已经很久没释放,将强制释放这个锁
                         if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= SkylarkRedisLockManagerThread.lockTimeOutMillisecond)
                         {
-                            logger.info("删除超时锁 "+lockKey+ "创建时间"+lockCreateTime);
+                            logger.info("删除超时锁 {} 创建时间 {}",lockKey,lockCreateTime);
                             if(((SkylarkRedisLockImpl)redisLock).getThreadHashMap().get(lockKey)!=null)
                             {
                                 ((SkylarkRedisLockImpl)redisLock).getThreadHashMap().get(lockKey).setLoop(false);
