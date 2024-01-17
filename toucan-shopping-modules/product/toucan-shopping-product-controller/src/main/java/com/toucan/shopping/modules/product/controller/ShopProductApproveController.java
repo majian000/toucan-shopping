@@ -619,6 +619,45 @@ public class ShopProductApproveController {
 
 
     /**
+     * 根据店铺ID查询所有审核中
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/approve/list/shopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryApproveListByShopId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductApproveVO query = requestJsonVO.formatEntity(ShopProductApproveVO.class);
+            if(query.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            query.setApproveStatus(ProductConstant.PROCESSING.shortValue());
+            resultObjectVO.setData(shopProductApproveService.queryList(query));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询列表
      * @param requestJsonVO
      * @return
