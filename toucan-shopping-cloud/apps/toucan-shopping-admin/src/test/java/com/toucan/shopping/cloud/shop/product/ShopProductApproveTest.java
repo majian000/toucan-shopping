@@ -65,7 +65,32 @@ public class ShopProductApproveTest {
         }
 
 //        this.batchApproveListAndSyncSearch();
+        batchApproveList();
+    }
 
+
+
+    public void batchApproveList() throws Exception {
+        PublishProductApproveVO queryPublishProductApprove=new PublishProductApproveVO();
+        queryPublishProductApprove.setShopId(983769356921995303L);
+        ResultObjectVO resultObjectVO = feignShopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
+        if(resultObjectVO.isSuccess())
+        {
+            int i=1;
+            List<ShopProductApproveVO> shopProductApproves = resultObjectVO.formatDataList(ShopProductApproveVO.class);
+            for(ShopProductApproveVO shopProductApproveVO:shopProductApproves)
+            {
+                ShopProductApproveVO passVo = new ShopProductApproveVO();
+                passVo.setId(shopProductApproveVO.getId());
+                passVo.setProductId(1152261441160478746L);
+                passVo.setProductUuid("4e5b511f3b5943d3a628e78a0d88755f");
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), passVo);
+                resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
+
+                log.info("同步商品 {} ",i);
+                i++;
+            }
+        }
     }
 
     public void batchApproveListAndSyncSearch() throws Exception {
