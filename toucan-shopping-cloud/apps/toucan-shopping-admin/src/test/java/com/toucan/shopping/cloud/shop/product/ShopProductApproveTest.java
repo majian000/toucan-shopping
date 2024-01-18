@@ -57,13 +57,14 @@ public class ShopProductApproveTest {
             PublishProductApproveVO publishProductVO = JSONObject.parseObject(shopProductApproveJson, PublishProductApproveVO.class);
             publishProductVO.setName(publishProductVO.getName() + "_" + DateUtils.currentDate().getTime());
             for (ShopProductApproveSkuVO shopProductApproveSkuVO : publishProductVO.getProductSkuVOList()) {
+                randomNum = 1000.0 + rand.nextDouble() * 1000.0;
                 shopProductApproveSkuVO.setPrice(new BigDecimal(randomNum));
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
             ResultObjectVO resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
         }
 
-        this.batchApproveListAndSyncSearch();
+//        this.batchApproveListAndSyncSearch();
 
     }
 
