@@ -13,8 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexResponse;
@@ -30,6 +34,8 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -452,14 +458,19 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         sourceBuilder.size(productSearchVO.getSize());
         request.source(sourceBuilder);
 
-        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-        SearchHits searchHits = response.getHits();
-        SearchHit[] searchHitsHits = searchHits.getHits();
-        for (SearchHit searchHit : searchHitsHits) {
-            String sourceString = searchHit.getSourceAsString();
-            if (StringUtils.isNotEmpty(sourceString)) {
-                queryResult.add(JSONObject.parseObject(sourceString,ProductSearchResultVO.class));
+        try {
+            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            SearchHits searchHits = response.getHits();
+            SearchHit[] searchHitsHits = searchHits.getHits();
+            for (SearchHit searchHit : searchHitsHits) {
+                String sourceString = searchHit.getSourceAsString();
+                if (StringUtils.isNotEmpty(sourceString)) {
+                    queryResult.add(JSONObject.parseObject(sourceString, ProductSearchResultVO.class));
+                }
             }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
         }
 
 
@@ -467,13 +478,14 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         pageInfo.setList(queryResult);
         pageInfo.setPage(productSearchVO.getPage());
         pageInfo.setSize(productSearchVO.getSize());
-        pageInfo.setTotal(queryCount(sourceBuilder).longValue());
+//        pageInfo.setTotal(queryCountBySearchBuilder(sourceBuilder).longValue());
+        pageInfo.setTotal(queryMaxResultWindowCount());
         pageInfo.setPageTotal(pageInfo.getTotal()%pageInfo.getSize()==0?(pageInfo.getTotal()/pageInfo.getSize()):((pageInfo.getTotal()/pageInfo.getSize())+1));
         return pageInfo;
     }
 
 
-    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+    public Long queryCountBySearchBuilder(SearchSourceBuilder searchSourceBuilder)  throws Exception {
         CountRequest countRequest=new CountRequest(ProductIndex.PRODUCT_SKU_INDEX);
         countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
@@ -527,6 +539,31 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     }
 
     @Override
+    public void setMaxResultWindow(Long maxCount) throws IOException {
+        Settings settings = Settings.builder().put("index.max_result_window", maxCount).build();
+        UpdateSettingsRequest request = new UpdateSettingsRequest(ProductIndex.PRODUCT_SKU_INDEX);
+        request.settings(settings);
+        AcknowledgedResponse acknowledgedResponse = restHighLevelClient.indices().putSettings(request, RequestOptions.DEFAULT);
+    }
+
+    @Override
+    public Long queryMaxResultWindowCount() throws IOException {
+        GetSettingsRequest request = new GetSettingsRequest();
+        request.indices(ProductIndex.PRODUCT_SKU_INDEX);
+        GetSettingsResponse getSettingsResponse = restHighLevelClient.indices().getSettings(request, RequestOptions.DEFAULT);
+        Settings settings = getSettingsResponse.getIndexToSettings().get("product_sku_index");
+        if(settings!=null)
+        {
+            String indexMaxResultWindow = settings.get("index.max_result_window");
+            if(indexMaxResultWindow!=null)
+            {
+                return Long.parseLong(indexMaxResultWindow);
+            }
+        }
+        return ProductIndex.MAX_RESULT_WINDOW;
+    }
+
+    @Override
     public void save(ProductSearchResultVO productSearchResultVO) throws IOException {
         productSearchResultVO.setCreateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
         IndexRequest request = new IndexRequest(ProductIndex.PRODUCT_SKU_INDEX).id(String.valueOf(productSearchResultVO.getSkuId())).source(JSONObject.toJSONString(productSearchResultVO), XContentType.JSON);
@@ -550,7 +587,7 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("skuId", id));
-        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
+        searchSourceBuilder.size(queryCountBySearchBuilder(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);

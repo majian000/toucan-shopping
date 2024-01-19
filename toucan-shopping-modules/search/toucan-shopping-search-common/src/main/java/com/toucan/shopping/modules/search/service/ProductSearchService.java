@@ -70,4 +70,16 @@ public interface ProductSearchService {
     List<ProductSearchResultVO> queryBySkuId(Long id) throws Exception;
 
 
+    /**
+     * 设置窗口最大返回数
+     * @param maxCount
+     */
+    void setMaxResultWindow(Long maxCount) throws IOException;
+
+    /**
+     * 查询窗口最大返回数
+     * @return
+     */
+    Long queryMaxResultWindowCount() throws IOException;
+
 }

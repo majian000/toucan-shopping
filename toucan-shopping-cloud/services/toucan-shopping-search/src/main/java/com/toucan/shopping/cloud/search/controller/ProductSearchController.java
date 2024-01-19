@@ -51,7 +51,7 @@ public class ProductSearchController {
             resultObjectVO.setData(productSearchService.search(productSearch));
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
@@ -75,7 +75,7 @@ public class ProductSearchController {
             productSearchService.save(productSearchResultVO);
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
@@ -100,7 +100,7 @@ public class ProductSearchController {
             resultObjectVO.setData(productSearchService.queryBySkuId(skuId));
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
@@ -125,7 +125,7 @@ public class ProductSearchController {
             productSearchService.update(productSearchResultVO);
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
@@ -149,7 +149,7 @@ public class ProductSearchController {
             resultObjectVO.setData(deleteFaildList);
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
@@ -175,7 +175,7 @@ public class ProductSearchController {
             resultObjectVO.setData(deleteFaildList);
         }catch(Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
