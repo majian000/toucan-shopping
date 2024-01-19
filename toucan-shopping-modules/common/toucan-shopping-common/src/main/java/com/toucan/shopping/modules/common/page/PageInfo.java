@@ -20,6 +20,11 @@ public class PageInfo<E> {
     private Long total = 0L;
 
     /**
+     * 最大数量(ES中的maxResultWindow)
+     */
+    private Long maxTotal = 0L;
+
+    /**
      * 页总数
      */
     private Long pageTotal = 0L;

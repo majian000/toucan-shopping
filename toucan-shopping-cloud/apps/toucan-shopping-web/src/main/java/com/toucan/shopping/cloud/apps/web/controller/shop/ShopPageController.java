@@ -199,6 +199,7 @@ public class ShopPageController extends BaseController {
                         request.setAttribute("pageTotal",pageInfo.getPageTotal());
                     }
                 }
+                request.setAttribute("curspid",sid);;
                 request.setAttribute("sid",sid);;
                 request.setAttribute("scid",scid);;
             }

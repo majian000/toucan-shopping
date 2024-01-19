@@ -112,7 +112,12 @@ public class ProductSkuSearchController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);
-                tableVO.setCount(pageInfo.getTotal());
+                if(pageInfo.getTotal().longValue()>pageInfo.getMaxTotal().longValue())
+                {
+                    tableVO.setCount(pageInfo.getMaxTotal());
+                }else {
+                    tableVO.setCount(pageInfo.getTotal());
+                }
                 List<ProductSearchResultVO> list = pageInfo.formatDataList(ProductSearchResultVO.class);
                 if(CollectionUtils.isNotEmpty(list))
                 {
