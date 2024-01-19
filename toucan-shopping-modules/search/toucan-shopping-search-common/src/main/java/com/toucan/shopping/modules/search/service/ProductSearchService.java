@@ -25,6 +25,14 @@ public interface ProductSearchService {
      */
     PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception;
 
+    /**
+     * 查询搜索商品数量
+     * @param productSearchVO
+     * @return
+     * @throws Exception
+     */
+    Long queryCount(ProductSearchVO productSearchVO) throws Exception;
+
 
     /**
      * 保存商品到搜索中间件
@@ -74,7 +82,7 @@ public interface ProductSearchService {
      * 设置窗口最大返回数
      * @param maxCount
      */
-    void setMaxResultWindow(Long maxCount) throws IOException;
+    void setMaxResultWindow(Long maxCount);
 
     /**
      * 查询窗口最大返回数

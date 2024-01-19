@@ -321,6 +321,44 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
 
         //名称查询
+        SearchSourceBuilder sourceBuilder =  initSourceBuilder(productSearchVO);
+        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
+        sourceBuilder.size(productSearchVO.getSize());
+        request.source(sourceBuilder);
+
+        try {
+            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            SearchHits searchHits = response.getHits();
+            SearchHit[] searchHitsHits = searchHits.getHits();
+            for (SearchHit searchHit : searchHitsHits) {
+                String sourceString = searchHit.getSourceAsString();
+                if (StringUtils.isNotEmpty(sourceString)) {
+                    queryResult.add(JSONObject.parseObject(sourceString, ProductSearchResultVO.class));
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+
+
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setList(queryResult);
+        pageInfo.setPage(productSearchVO.getPage());
+        pageInfo.setSize(productSearchVO.getSize());
+//        pageInfo.setTotal(queryCountBySearchBuilder(sourceBuilder).longValue());
+        pageInfo.setTotal(queryMaxResultWindowCount());
+        pageInfo.setPageTotal(pageInfo.getTotal()%pageInfo.getSize()==0?(pageInfo.getTotal()/pageInfo.getSize()):((pageInfo.getTotal()/pageInfo.getSize())+1));
+        return pageInfo;
+    }
+
+    /**
+     * 构造查询条件
+     * @param productSearchVO
+     * @return
+     */
+    private SearchSourceBuilder initSourceBuilder(ProductSearchVO productSearchVO){
+        //名称查询
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
@@ -454,34 +492,12 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
         }
 
         sourceBuilder.query(boolQueryBuilder);
-        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
-        sourceBuilder.size(productSearchVO.getSize());
-        request.source(sourceBuilder);
+        return sourceBuilder;
+    }
 
-        try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            SearchHits searchHits = response.getHits();
-            SearchHit[] searchHitsHits = searchHits.getHits();
-            for (SearchHit searchHit : searchHitsHits) {
-                String sourceString = searchHit.getSourceAsString();
-                if (StringUtils.isNotEmpty(sourceString)) {
-                    queryResult.add(JSONObject.parseObject(sourceString, ProductSearchResultVO.class));
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-        }
-
-
-        PageInfo pageInfo = new PageInfo();
-        pageInfo.setList(queryResult);
-        pageInfo.setPage(productSearchVO.getPage());
-        pageInfo.setSize(productSearchVO.getSize());
-//        pageInfo.setTotal(queryCountBySearchBuilder(sourceBuilder).longValue());
-        pageInfo.setTotal(queryMaxResultWindowCount());
-        pageInfo.setPageTotal(pageInfo.getTotal()%pageInfo.getSize()==0?(pageInfo.getTotal()/pageInfo.getSize()):((pageInfo.getTotal()/pageInfo.getSize())+1));
-        return pageInfo;
+    @Override
+    public Long queryCount(ProductSearchVO productSearchVO) throws Exception {
+        return queryCountBySearchBuilder(initSourceBuilder(productSearchVO)).longValue();
     }
 
 
@@ -539,11 +555,16 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     }
 
     @Override
-    public void setMaxResultWindow(Long maxCount) throws IOException {
-        Settings settings = Settings.builder().put("index.max_result_window", maxCount).build();
-        UpdateSettingsRequest request = new UpdateSettingsRequest(ProductIndex.PRODUCT_SKU_INDEX);
-        request.settings(settings);
-        AcknowledgedResponse acknowledgedResponse = restHighLevelClient.indices().putSettings(request, RequestOptions.DEFAULT);
+    public void setMaxResultWindow(Long maxCount) {
+        try {
+            Settings settings = Settings.builder().put("index.max_result_window", maxCount).build();
+            UpdateSettingsRequest request = new UpdateSettingsRequest(ProductIndex.PRODUCT_SKU_INDEX);
+            request.settings(settings);
+            AcknowledgedResponse acknowledgedResponse = restHighLevelClient.indices().putSettings(request, RequestOptions.DEFAULT);
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
     }
 
     @Override

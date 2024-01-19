@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.scheduler.app.config;
 
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class AfterStartConfig {
         if(!productSearchService.existsIndex())
         {
             productSearchService.createIndex();
+            productSearchService.setMaxResultWindow(ProductIndex.MAX_RESULT_WINDOW);
         }
 
     }

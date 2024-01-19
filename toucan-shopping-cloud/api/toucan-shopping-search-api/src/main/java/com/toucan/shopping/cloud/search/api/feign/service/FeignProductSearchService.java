@@ -67,4 +67,14 @@ public interface FeignProductSearchService {
      */
     @RequestMapping(value="/clear",produces = "application/json;charset=UTF-8")
     ResultObjectVO clear(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 搜索商品数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/count",produces = "application/json;charset=UTF-8")
+    ResultObjectVO count(@RequestBody RequestJsonVO requestJsonVO);
+
 }

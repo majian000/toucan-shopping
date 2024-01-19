@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
 import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
@@ -58,6 +59,26 @@ public class ProductSearchController {
     }
 
 
+    /**
+     * 搜索商品数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/count",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO count(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
+        try {
+            resultObjectVO.setData(productSearchService.queryCount(productSearch));
+        }catch(Exception e)
+        {
+            logger.error(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
 
 
     /**
@@ -172,6 +193,7 @@ public class ProductSearchController {
             List<Long> deleteFaildList = new ArrayList<>();
             productSearchService.deleteIndex();
             productSearchService.createIndex();
+            productSearchService.setMaxResultWindow(ProductIndex.MAX_RESULT_WINDOW);
             resultObjectVO.setData(deleteFaildList);
         }catch(Exception e)
         {
