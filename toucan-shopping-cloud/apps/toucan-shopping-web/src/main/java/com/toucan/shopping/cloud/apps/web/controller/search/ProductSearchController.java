@@ -239,7 +239,14 @@ public class ProductSearchController {
             httpServletRequest.setAttribute("productResult",productResult);
             httpServletRequest.setAttribute("page",pageInfo.getPage());
             httpServletRequest.setAttribute("total",pageInfo.getTotal());
-            httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
+            //如果超过最大返回数,按照最大返回数回显页数
+            if(pageInfo.getTotal().longValue()>pageInfo.getMaxTotal().longValue()) {
+                httpServletRequest.setAttribute("maxTotal", pageInfo.getMaxTotal());
+                httpServletRequest.setAttribute("pageTotal",pageInfo.getMaxTotal()%pageInfo.getSize()==0?(pageInfo.getMaxTotal()/pageInfo.getSize()):((pageInfo.getMaxTotal()/pageInfo.getSize())+1));
+            }else{
+                httpServletRequest.setAttribute("maxTotal", pageInfo.getTotal());
+                httpServletRequest.setAttribute("pageTotal",pageInfo.getPageTotal());
+            }
 
             //查询搜索属性列表
             if(CollectionUtils.isNotEmpty(productResult)) {

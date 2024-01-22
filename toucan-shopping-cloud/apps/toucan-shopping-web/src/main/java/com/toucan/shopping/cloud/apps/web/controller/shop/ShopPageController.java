@@ -196,7 +196,14 @@ public class ShopPageController extends BaseController {
                         request.setAttribute("productResult",productResult);
                         request.setAttribute("page",pageInfo.getPage());
                         request.setAttribute("total",pageInfo.getTotal());
-                        request.setAttribute("pageTotal",pageInfo.getPageTotal());
+                        //如果超过最大返回数,按照最大返回数回显页数
+                        if(pageInfo.getTotal().longValue()>pageInfo.getMaxTotal().longValue()) {
+                            request.setAttribute("maxTotal", pageInfo.getMaxTotal());
+                            request.setAttribute("pageTotal",pageInfo.getMaxTotal()%pageInfo.getSize()==0?(pageInfo.getMaxTotal()/pageInfo.getSize()):((pageInfo.getMaxTotal()/pageInfo.getSize())+1));
+                        }else{
+                            request.setAttribute("maxTotal", pageInfo.getTotal());
+                            request.setAttribute("pageTotal",pageInfo.getPageTotal());
+                        }
                     }
                 }
                 request.setAttribute("curspid",sid);;

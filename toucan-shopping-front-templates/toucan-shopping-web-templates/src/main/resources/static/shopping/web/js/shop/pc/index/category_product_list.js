@@ -71,7 +71,9 @@ function drawPageJumpBtns()
 {
     var cpage = parseInt($("#page").val());
     var totalPage = parseInt($("#pageTotal").val());
-    var total = parseInt($("#pageTotal").val());
+    var total = parseInt($("#total").val());
+    var maxTotal = parseInt($("#maxTotal").val());
+
 
     g_um_cpage = cpage;
 
@@ -82,7 +84,7 @@ function drawPageJumpBtns()
         maxPage: 7, //最大页码数,支持奇数，左右对称
         startPage: 1,    //默认第一页
         currentPage: cpage,          //当前页码
-        totalItemCount: total,    //项目总数,大于0，显示页码总数
+        totalItemCount: maxTotal,    //项目总数,大于0，显示页码总数
         totalPageCount: totalPage,        //总页数
         isShowTotalCount:false, //是否显示总页数
         callback: function (pageNum) {
