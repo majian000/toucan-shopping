@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Random;
 
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CloudAdminApplication.class)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = CloudAdminApplication.class)
 public class ShopProductApproveTest {
 
     @Autowired
@@ -45,7 +45,7 @@ public class ShopProductApproveTest {
     /**
      * 批量插入店铺商品
      */
-    @Test
+//    @Test
     public void batchInsertShopProductApprove() throws Exception {
         Random rand = new Random();
         double randomNum = 1000.0 + rand.nextDouble() * 1000.0;

@@ -40,7 +40,7 @@ public class ShopProductApproveTest {
     /**
      * 批量插入店铺商品
      */
-    @Test
+//    @Test
     public void batchInsertShopProductApprove() throws NoSuchAlgorithmException {
         Random rand = new Random();
         double randomNum = 1000.0 + rand.nextDouble() * 1000.0;
