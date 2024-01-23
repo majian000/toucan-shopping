@@ -23,7 +23,14 @@ public class FeignUserStatisticServiceFallbackFactory implements FallbackFactory
     public FeignUserStatisticService create(Throwable throwable) {
         logger.error(throwable.getMessage(),throwable);
         return new FeignUserStatisticService(){
-
+            @Override
+            public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                logger.warn("调用FeignUserStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear失败");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }

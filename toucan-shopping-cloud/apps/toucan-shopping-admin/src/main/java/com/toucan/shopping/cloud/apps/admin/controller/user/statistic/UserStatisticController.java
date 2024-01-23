@@ -63,7 +63,8 @@ public class UserStatisticController extends UIController {
     private FeignUserStatisticService feignUserStatisticService;
 
     /**
-     * 总数/今日新增/本月新增/本年新增
+     * 查询统计数据
+     * 总数 今日新增 本月新增 本年新增
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
@@ -74,10 +75,11 @@ public class UserStatisticController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
+            resultObjectVO = feignUserStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

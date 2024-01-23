@@ -19,5 +19,13 @@ public interface FeignUserStatisticService {
 
 
 
+    /**
+     * 查询统计数据
+     * 总数 今日新增 本月新增 本年新增
+     * @return
+     */
+    @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
+    ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
+
 
 }

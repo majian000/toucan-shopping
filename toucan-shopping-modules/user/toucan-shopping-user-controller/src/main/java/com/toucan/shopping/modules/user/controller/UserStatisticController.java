@@ -54,7 +54,25 @@ public class UserStatisticController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private UserStatisticService userStatisticService;
 
+
+    @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO.setData(userStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear());
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

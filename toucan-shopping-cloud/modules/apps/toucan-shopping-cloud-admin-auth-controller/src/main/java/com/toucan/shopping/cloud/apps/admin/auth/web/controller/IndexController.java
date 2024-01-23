@@ -131,16 +131,18 @@ public class IndexController {
                 if(!CollectionUtils.isEmpty(functions))
                 {
                     List<String> welcomeComponent = new ArrayList<String>();
+                    StringBuilder welcomeComponentHtml = new StringBuilder();
 
                     for(Function buttonFunction:functions)
                     {
                         if(buttonFunction.getType().shortValue()==5)
                         {
                             welcomeComponent.add(buttonFunction.getFunctionText());
+                            welcomeComponentHtml.append(buttonFunction.getFunctionText());
                         }
                     }
 
-                    request.setAttribute("welcomeComponent",welcomeComponent);
+                    request.setAttribute("welcomeComponentHtml",welcomeComponentHtml);
                 }
             }
         }catch(Exception e)

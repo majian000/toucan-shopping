@@ -40,23 +40,6 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
 
-        <div class="layui-col-md3">
-            <div class="col-xs-6 col-md-3">
-                <div class="panel layui-bg-cyan">
-                    <div class="panel-body">
-                        <div class="panel-title">
-                            <span class="label pull-right layui-bg-blue">实时</span>
-                            <h5>用户统计</h5>
-                        </div>
-                        <div class="panel-content">
-                            <h1 class="no-margins">1234</h1>
-                            <div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>
-                            <small>当前分类总记录数</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="layui-col-md3">
             <div class="col-xs-6 col-md-3">
@@ -127,10 +110,9 @@
                 </div>
             </div>
         </div>
-        <div class="layui-row layui-col-space15">
-            <div style="margin-left:10px"  th:each="component : ${welcomeComponent}" th:utext="${component}" >
 
-            </div>
+        <div style="width:100%;" th:utext="${welcomeComponentHtml}" >
+
         </div>
     </div>
 
@@ -171,10 +153,6 @@
                 content:html,
                 success: function (layero) {
                     var btn = layero.find('.layui-layer-btn');
-                    btn.find('.layui-layer-btn0').attr({
-                        href: 'https://gitee.com/zhongshaofa/layuimini',
-                        target: '_blank'
-                    });
                 }
             });
         });
@@ -268,8 +246,35 @@
         }
 
 
+        /**
+         *  用户统计
+         */
+        var userStatisticPanelObj = $(".userStatisticPanel");
+        if(userStatisticPanelObj!=null&&userStatisticPanelObj.html()!=null&&userStatisticPanelObj.html()!="") {
+            $.ajax({
+                url: "[[@{/userStatistic/queryTotalAndTodayAndCurrentMonthAndCurrentYear}]]",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify({}),
+                success: function (data) {
+                    if(data.code==0)
+                    {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+
+                    $(".userStatisticPanelTotal").html(data.data.total);
+                    $(".userStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
+                },
+                complete: function () {
+                }
+            });
+        }
 
 
+        /**
+         *  操作统计
+         */
         function drawOperateCharts(optionRecords) {
             operateChartLoadding = layer.load();
             $.ajax({
