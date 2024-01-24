@@ -7,4 +7,30 @@
         select count(*) from t_product_sku t where t.delete_status=0
     </select>
 
+
+    <select id="queryTodayTotal" resultType="java.lang.Long">
+        select count(*) from t_product_sku t where t.delete_status=0
+         <![CDATA[
+             AND t.create_date>=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 00:00:00')
+             AND t.create_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
+         ]]>
+    </select>
+
+    <select id="queryCurMonthTotal" resultType="java.lang.Long">
+        select count(*) from t_product_sku t where t.delete_status=0
+         <![CDATA[
+             AND t.create_date>=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m'),'-01 00:00:00')
+             AND t.create_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
+         ]]>
+    </select>
+
+    <select id="queryCurYearTotal" resultType="java.lang.Long">
+        select count(*) from t_product_sku t where t.delete_status=0
+         <![CDATA[
+             AND t.create_date>=CONCAT(DATE_FORMAT(SYSDATE(), '%Y'),'-01-01 00:00:00')
+             AND t.create_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
+         ]]>
+    </select>
+
+
 </mapper>

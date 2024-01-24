@@ -15,4 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignProductSkuStatisticService {
 
 
+
+
+    @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
+    ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
+
 }

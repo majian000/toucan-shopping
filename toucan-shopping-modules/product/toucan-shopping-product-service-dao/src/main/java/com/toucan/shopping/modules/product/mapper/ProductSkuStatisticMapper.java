@@ -18,6 +18,29 @@ import java.util.List;
 public interface ProductSkuStatisticMapper {
 
 
+    /**
+     * 查询总数量
+     * @return
+     */
     Long queryTotal();
+
+    /**
+     * 查询今日数量
+     * @return
+     */
+    Long queryTodayTotal();
+
+
+    /**
+     * 查询本月数量
+     * @return
+     */
+    Long queryCurMonthTotal();
+
+    /**
+     * 查询本年数量
+     * @return
+     */
+    Long queryCurYearTotal();
 
 }

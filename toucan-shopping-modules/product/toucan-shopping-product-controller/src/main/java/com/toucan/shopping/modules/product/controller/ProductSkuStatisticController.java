@@ -42,4 +42,22 @@ public class ProductSkuStatisticController {
 
 
 
+    @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO.setData(productSkuStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear());
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
 }

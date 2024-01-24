@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.product.mapper.ProductSkuStatisticMapper;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
 import com.toucan.shopping.modules.product.service.ProductSkuStatisticService;
+import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,13 @@ public class ProductSkuStatisticServiceImpl implements ProductSkuStatisticServic
     private ProductSkuStatisticMapper productSkuStatisticMapper;
 
 
-
-
+    @Override
+    public ProductSkuStatisticVO queryTotalAndTodayAndCurrentMonthAndCurrentYear() {
+        ProductSkuStatisticVO productSkuStatisticVO=new ProductSkuStatisticVO();
+        productSkuStatisticVO.setTotal(productSkuStatisticMapper.queryTotal()); //总数
+        productSkuStatisticVO.setTodayCount(productSkuStatisticMapper.queryTodayTotal()); //今日新增
+        productSkuStatisticVO.setCurMonthCount(productSkuStatisticMapper.queryCurMonthTotal()); //本月新增
+        productSkuStatisticVO.setCurYearCount(productSkuStatisticMapper.queryCurYearTotal()); //本年新增
+        return productSkuStatisticVO;
+    }
 }

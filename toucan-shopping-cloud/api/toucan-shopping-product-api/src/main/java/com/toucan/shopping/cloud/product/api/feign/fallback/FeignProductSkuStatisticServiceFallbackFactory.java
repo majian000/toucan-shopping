@@ -26,6 +26,14 @@ public class FeignProductSkuStatisticServiceFallbackFactory implements FallbackF
         logger.warn(throwable.getMessage(),throwable);
         return new FeignProductSkuStatisticService(){
 
+            @Override
+            public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                logger.warn("调用FeignProductSkuStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear失败");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }
