@@ -4,6 +4,8 @@
 layui.define(['layer','echarts'],function (exports) {
     var obj = {
         draw:function() {
+            var $ = layui.jquery;
+            var layer = layui.layer;
             var userStatisticPanelObj = $(".userStatisticPanel");
             if(userStatisticPanelObj!=null&&userStatisticPanelObj.html()!=null&&userStatisticPanelObj.html()!="") {
                 $.ajax({
