@@ -27,5 +27,8 @@ layui.config({
     echartsTheme: 'echarts/echartsTheme', // echarts图表主题扩展
     wangEditor: 'wangEditor/wangEditor', // wangEditor富文本扩展
     layarea: 'layarea/layarea', //  省市县区三级联动下拉选择器
+    onlineAdminChart: 'toucan-module/onlineAdminChart', //管理员在线统计报表
+    adminOperateChart: 'toucan-module/adminOperateChart', //管理员操作统计报表
+    userRegistStatistic: 'toucan-module/userRegistStatistic' //用户注册统计
     // echarts: 'echarts-5/echarts', //echarts5
 });

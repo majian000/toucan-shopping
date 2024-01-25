@@ -37,6 +37,9 @@
     </style>
 </head>
 <body>
+
+<span th:replace="common_page::common"></span>
+
 <div class="layuimini-container">
     <div class="layuimini-main">
 
@@ -120,13 +123,13 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/lay-config.js?v=2.0.0}" charset="utf-8"></script>
 <script>
-    layui.use(['layer', 'miniTab','echarts'], function () {
+    layui.use(['layer', 'miniTab','echarts','onlineAdminChart','adminOperateChart','userRegistStatistic'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
-            miniTab = layui.miniTab,
-            echarts = layui.echarts;
-        var onlineUserChartLoadding;
-        var operateChartLoadding;
+            miniTab = layui.miniTab;
+        var onlineAdminChart=layui.onlineAdminChart;
+        var adminOperateChart = layui.adminOperateChart;
+        var userRegistStatistic = layui.userRegistStatistic;
 
         miniTab.listen();
 
@@ -157,210 +160,16 @@
             });
         });
 
-
-        function drawOnlineUserCharts(optionRecords) {
-            onlineUserChartLoadding = layer.load();
-            $.ajax({
-                url: "[[@{/online/user/chart/queryAppLoginUserCountList}]]",
-                contentType: "application/json; charset=utf-8",
-                type: 'POST',
-                data: JSON.stringify({}),
-                success: function (data) {
-                    layer.close(onlineUserChartLoadding);
-                    if (data.code == 0) {
-                        layer.msg(data.msg);
-                        return false;
-                    }
-                    optionRecords.xAxis.data = [];
-                    optionRecords.series[0].data = [];
-                    if (data.data != null && data.data.length > 0) {
-                        for (var i = 0; i < data.data.length; i++) {
-                            var obj = data.data[i];
-                            optionRecords.xAxis.data.push(obj.appName);
-                            optionRecords.series[0].data.push(obj.loginCount);
-                        }
-                    }
-                    echartsRecords.clear();
-                    echartsRecords.setOption(optionRecords);
-                },
-                complete: function () {
-                    layer.close(onlineUserChartLoadding);
-                }
-            });
-        }
-
-        var echartsRecords = null;
-        var onlineUserChartsObj = $("#online-user-charts-dev");
-        if(onlineUserChartsObj!=null&&onlineUserChartsObj.html()!=null&&onlineUserChartsObj.html()!="") {
-            /**
-             * 报表功能
-             */
-            echartsRecords = echarts.init(document.getElementById('online-user-charts'));
-            var optionRecords = {
-                xAxis: {
-                    type: 'category',
-                    data: []
-                },
-                yAxis: {
-                    type: 'value',
-                    minInterval: 1 //只显示整数
-                },
-                series: [
-                    {
-                        type: 'bar',
-                        data: [],
-                        showBackground: true,
-                        backgroundStyle: {
-                            color: 'rgba(111, 162, 135, 0.2)'
-                        },
-                        itemStyle: {
-                            normal: {
-                                //这里是颜色
-                                color: function(params) {
-                                    //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-                                    var colorList = ['#00A3E0','#FFA100', '#ffc0cb', '#CCCCCC', '#BBFFAA','#749f83', '#ca8622'];
-                                    return colorList[params.dataIndex]
-                                }
-                            }
-                        }
-                    }
-                ],
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross',
-                        label: {
-                            backgroundColor: '#6a7985'
-                        }
-                    }
-                }
-            };
-
-            $("#refershOnlineUserCharts").bind("click", function () {
-
-                drawOnlineUserCharts(optionRecords);
-            });
-
-
-            drawOnlineUserCharts(optionRecords);
-        }
-
-
-        /**
-         *  用户统计
-         */
-        var userStatisticPanelObj = $(".userStatisticPanel");
-        if(userStatisticPanelObj!=null&&userStatisticPanelObj.html()!=null&&userStatisticPanelObj.html()!="") {
-            $.ajax({
-                url: "[[@{/userStatistic/queryTotalAndTodayAndCurrentMonthAndCurrentYear}]]",
-                contentType: "application/json; charset=utf-8",
-                type: 'POST',
-                data: JSON.stringify({}),
-                success: function (data) {
-                    if(data.code==0)
-                    {
-                        layer.msg(data.msg);
-                        return false;
-                    }
-
-                    $(".userStatisticPanelTotal").html(data.data.total);
-                    $(".userStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
-                },
-                complete: function () {
-                }
-            });
-        }
-
-
-        /**
-         *  操作统计
-         */
-        function drawOperateCharts(optionRecords) {
-            operateChartLoadding = layer.load();
-            $.ajax({
-                url: "[[@{/operate/log/chart/queryOperateChart}]]",
-                contentType: "application/json; charset=utf-8",
-                type: 'POST',
-                data: JSON.stringify({}),
-                success: function (data) {
-                    layer.close(operateChartLoadding);
-                    if (data.code == 0) {
-                        layer.msg(data.msg);
-                        return false;
-                    }
-                    optionRecords.legend.data=data.data.appNames;
-                    optionRecords.xAxis.data = data.data.categorys;
-                    optionRecords.series = [];
-                    if (data.data != null && data.data.datas!=null && data.data.datas.length > 0) {
-                        for (var i = 0; i < data.data.datas.length; i++) {
-                            var obj = data.data.datas[i];
-                            obj.name=obj.appName;
-                            obj.type = "line";
-                            obj.data = obj.values;
-                            optionRecords.series.push(obj);
-                        }
-                    }
-                    operateEchartsRecords.clear();
-                    operateEchartsRecords.setOption(optionRecords);
-                },
-                complete: function () {
-                    layer.close(operateChartLoadding);
-                }
-            });
-        }
-        var operateEchartsRecords = null;
-        var operateChartsObj = $("#operate-charts-dev");
-        if(operateChartsObj!=null&&operateChartsObj.html()!=null&&operateChartsObj.html()!="") {
-            /**
-             * 操作报表功能
-             */
-            operateEchartsRecords = echarts.init(document.getElementById('operate-charts'), 'walden');
-            var operateOptionRecords = {
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data:[]
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {}
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: []
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-
-                ]
-            };
-
-
-            drawOperateCharts(operateOptionRecords);
-        }
-
-
+        onlineAdminChart.draw();
+        adminOperateChart.draw();
+        userRegistStatistic.draw();
 
         // echarts 窗口缩放自适应
         window.onresize = function(){
-            if(echartsRecords!=null) {
-                echartsRecords.resize();
-            }
 
-            if(operateEchartsRecords!=null){
-                operateEchartsRecords.resize();
-            }
+            onlineAdminChart.resize();
+            adminOperateChart.resize();
+
         }
 
     });
