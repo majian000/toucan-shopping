@@ -20,8 +20,8 @@ layui.define(['layer','echarts'],function (exports) {
                             return false;
                         }
 
-                        $(".userStatisticPanelTotal").html(data.data.total);
-                        $(".userStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
+                        $(".productSkuStatisticPanelTotal").html(data.data.total);
+                        $(".productSkuStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
                     },
                     complete: function () {
                     }

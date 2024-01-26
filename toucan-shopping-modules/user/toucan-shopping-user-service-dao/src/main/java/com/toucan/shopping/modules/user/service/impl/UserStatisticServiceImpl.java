@@ -31,4 +31,24 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         userStatisticVO.setCurYearCount(userStatisticMapper.queryCurYearTotal()); //本年新增
         return userStatisticVO;
     }
+
+    @Override
+    public Long queryTotal() {
+        return userStatisticMapper.queryTotal();
+    }
+
+    @Override
+    public Long queryTodayTotal() {
+        return userStatisticMapper.queryTodayTotal();
+    }
+
+    @Override
+    public Long queryCurMonthTotal() {
+        return userStatisticMapper.queryCurMonthTotal();
+    }
+
+    @Override
+    public Long queryCurYearTotal() {
+        return userStatisticMapper.queryCurYearTotal();
+    }
 }
