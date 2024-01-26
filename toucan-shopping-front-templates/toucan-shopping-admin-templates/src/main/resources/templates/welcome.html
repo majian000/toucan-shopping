@@ -123,13 +123,14 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/lay-config.js?v=2.0.0}" charset="utf-8"></script>
 <script>
-    layui.use(['layer', 'miniTab','echarts','onlineAdminChart','adminOperateChart','userRegistStatistic'], function () {
+    layui.use(['layer', 'miniTab','echarts','onlineAdminChart','adminOperateChart','userRegistStatistic','productSkuStatistic'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
             miniTab = layui.miniTab;
         var onlineAdminChart=layui.onlineAdminChart;
         var adminOperateChart = layui.adminOperateChart;
         var userRegistStatistic = layui.userRegistStatistic;
+        var productSkuStatistic = layui.productSkuStatistic;
 
         miniTab.listen();
 
@@ -163,6 +164,7 @@
         onlineAdminChart.draw();
         adminOperateChart.draw();
         userRegistStatistic.draw();
+        productSkuStatistic.draw();
 
         // echarts 窗口缩放自适应
         window.onresize = function(){
