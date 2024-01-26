@@ -36,4 +36,9 @@ public class ProductSkuStatisticServiceImpl implements ProductSkuStatisticServic
         productSkuStatisticVO.setCurYearCount(productSkuStatisticMapper.queryCurYearTotal()); //本年新增
         return productSkuStatisticVO;
     }
+
+    @Override
+    public List<ProductSkuStatisticVO> queryCategoryStatistic(ProductSkuStatisticVO query) {
+        return productSkuStatisticMapper.queryCategoryStatistic(query);
+    }
 }

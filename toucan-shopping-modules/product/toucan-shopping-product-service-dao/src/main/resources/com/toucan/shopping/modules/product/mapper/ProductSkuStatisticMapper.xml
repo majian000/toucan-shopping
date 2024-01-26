@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.product.mapper.ProductSkuStatisticMapper">
 
+    <resultMap id="productSkuStatisticVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO" >
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="total" jdbcType="BIGINT" property="total" />
+        <result column="todayCount" jdbcType="BIGINT" property="todayCount" />
+        <result column="curMonthCount" jdbcType="BIGINT" property="curMonthCount" />
+        <result column="curYearCount" jdbcType="BIGINT" property="curYearCount" />
+
+    </resultMap>
 
     <select id="queryTotal" resultType="java.lang.Long">
         select count(*) from t_product_sku t where t.delete_status=0
@@ -32,5 +40,24 @@
          ]]>
     </select>
 
+
+
+    <select id="queryCategoryStatistic" resultMap="productSkuStatisticVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO">
+        select t.category_id,count(t.id) as total from t_product_sku t where t.delete_status=0
+
+        <if test="startDate!=null">
+            <![CDATA[ AND t.create_date>=#{startDate} ]]>
+        </if>
+
+        <if test="endDate!=null">
+            <![CDATA[  AND t.create_date<=#{endDate}  ]]>
+        </if>
+
+        <if test="categoryId!=null">
+            <![CDATA[  AND t.category_id<=#{categoryId}  ]]>
+        </if>
+          group by t.category_id
+
+    </select>
 
 </mapper>

@@ -60,4 +60,22 @@ public class ProductSkuStatisticController {
 
 
 
+    @RequestMapping(value = "/queryCategoryStatistic",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryCategoryStatistic(RequestJsonVO requestVo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            ProductSkuStatisticVO query = new ProductSkuStatisticVO();
+            resultObjectVO.setData(productSkuStatisticService.queryCategoryStatistic(query));
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 }

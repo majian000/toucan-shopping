@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -42,5 +43,12 @@ public interface ProductSkuStatisticMapper {
      * @return
      */
     Long queryCurYearTotal();
+
+    /**
+     * 查询分类统计
+     * @param query
+     * @return
+     */
+    List<ProductSkuStatisticVO> queryCategoryStatistic(ProductSkuStatisticVO query);
 
 }
