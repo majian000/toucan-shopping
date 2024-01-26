@@ -101,7 +101,7 @@ public class ProductSkuStatisticController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSkuStatisticVO> productSkuStatusVOList = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
-                List<CategoryProductSkuStatisticVO> categoryProductSkuStatisticVOS = new LinkedList();
+                List<CategoryProductSkuStatisticVO> categoryProductSkuStatistics = new LinkedList();
                 requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
                 resultObjectVO = feignCategoryService.queryAllList(requestVo);
                 if(resultObjectVO.isSuccess())
@@ -109,9 +109,25 @@ public class ProductSkuStatisticController extends UIController {
                     List<CategoryVO> categorys = resultObjectVO.formatDataList(CategoryVO.class);
                     if(CollectionUtils.isNotEmpty(categorys))
                     {
-
+                        boolean productSkuStatisticIsEmpty=CollectionUtils.isEmpty(productSkuStatusVOList);
+                        for(CategoryVO categoryVO:categorys)
+                        {
+                            CategoryProductSkuStatisticVO categoryProductSkuStatisticVO = new CategoryProductSkuStatisticVO();
+                            categoryProductSkuStatisticVO.setCategoryId(categoryVO.getId());
+                            categoryProductSkuStatisticVO.setParentCategoryId(categoryVO.getParentId());
+                            categoryProductSkuStatisticVO.setCategoryName(categoryVO.getName());
+                            if(!productSkuStatisticIsEmpty) {
+                                for (ProductSkuStatisticVO productSkuStatisticVO : productSkuStatusVOList) {
+                                    if(categoryProductSkuStatisticVO.getCategoryId().longValue()==productSkuStatisticVO.getCategoryId().longValue())
+                                    {
+                                        categoryProductSkuStatisticVO.setCount(productSkuStatisticVO.getTotal());
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+                resultObjectVO.setData(categoryProductSkuStatistics);
             }
         }catch(Exception e)
         {

@@ -44,6 +44,9 @@ public class ProductSkuStatisticVO {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endDate; //结束日期
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long count; //数量
 
 
 }

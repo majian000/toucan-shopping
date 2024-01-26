@@ -18,12 +18,16 @@ public class CategoryProductSkuStatisticVO {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long total; //总数
+    private Long count; //总数
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //分类ID
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long parentCategoryId; //上级分类ID
 
     private String categoryName; //分类名称
 

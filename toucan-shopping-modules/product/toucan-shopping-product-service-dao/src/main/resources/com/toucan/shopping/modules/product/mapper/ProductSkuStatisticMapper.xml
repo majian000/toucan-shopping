@@ -8,6 +8,7 @@
         <result column="todayCount" jdbcType="BIGINT" property="todayCount" />
         <result column="curMonthCount" jdbcType="BIGINT" property="curMonthCount" />
         <result column="curYearCount" jdbcType="BIGINT" property="curYearCount" />
+        <result column="count" jdbcType="BIGINT" property="count" />
 
     </resultMap>
 
