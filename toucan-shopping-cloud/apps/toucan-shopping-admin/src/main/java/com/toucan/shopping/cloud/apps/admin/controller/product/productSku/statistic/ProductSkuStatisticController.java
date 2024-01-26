@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSku.stati
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -51,6 +52,9 @@ public class ProductSkuStatisticController extends UIController {
     @Autowired
     private FeignProductSkuStatisticService feignProductSkuStatisticService;
 
+    @Autowired
+    private FeignCategoryService feignCategoryService;
+
     /**
      * 查询统计数据
      * 总数 今日新增 本月新增 本年新增
@@ -93,7 +97,7 @@ public class ProductSkuStatisticController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSkuStatisticVO> productSkuStatusVOList = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
-
+//                feignCategoryService.
             }
         }catch(Exception e)
         {
