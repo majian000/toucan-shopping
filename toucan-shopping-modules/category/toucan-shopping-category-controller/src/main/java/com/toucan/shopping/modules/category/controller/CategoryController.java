@@ -1389,6 +1389,36 @@ public class CategoryController {
 
 
 
+    /**
+     * 查询全部
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/all/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        try {
+            CategoryVO query = new CategoryVO();
+            resultObjectVO.setData(categoryService.queryList(query));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
 
 
 }

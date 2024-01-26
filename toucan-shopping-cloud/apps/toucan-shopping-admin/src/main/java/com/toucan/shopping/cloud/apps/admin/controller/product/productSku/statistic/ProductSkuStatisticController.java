@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.vo.CategoryProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -97,7 +99,10 @@ public class ProductSkuStatisticController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSkuStatisticVO> productSkuStatusVOList = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
-//                feignCategoryService.
+                List<CategoryProductSkuStatisticVO> categoryProductSkuStatisticVOS = new LinkedList();
+                requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
+                resultObjectVO = feignCategoryService.queryAllList(requestVo);
+
             }
         }catch(Exception e)
         {

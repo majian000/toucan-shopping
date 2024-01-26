@@ -213,4 +213,14 @@ public interface FeignCategoryService {
     @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询全部
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/all/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO);
+
 }
