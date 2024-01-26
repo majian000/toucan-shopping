@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -15,6 +16,7 @@ import com.toucan.shopping.modules.product.vo.CategoryProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +104,14 @@ public class ProductSkuStatisticController extends UIController {
                 List<CategoryProductSkuStatisticVO> categoryProductSkuStatisticVOS = new LinkedList();
                 requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
                 resultObjectVO = feignCategoryService.queryAllList(requestVo);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<CategoryVO> categorys = resultObjectVO.formatDataList(CategoryVO.class);
+                    if(CollectionUtils.isNotEmpty(categorys))
+                    {
 
+                    }
+                }
             }
         }catch(Exception e)
         {
