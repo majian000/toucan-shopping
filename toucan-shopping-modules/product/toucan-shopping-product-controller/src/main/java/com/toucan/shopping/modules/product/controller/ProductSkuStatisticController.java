@@ -44,7 +44,7 @@ public class ProductSkuStatisticController {
 
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo)
+    public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(@RequestBody RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -59,10 +59,14 @@ public class ProductSkuStatisticController {
     }
 
 
-
-    @RequestMapping(value = "/queryCategoryStatistic",method = RequestMethod.POST)
+    /**
+     * 分类商品统计
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/queryCategoryProductStatistic",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryStatistic(RequestJsonVO requestVo)
+    public ResultObjectVO queryCategoryProductStatistic(@RequestBody RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

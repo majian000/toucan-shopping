@@ -15,9 +15,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignProductSkuStatisticService {
 
 
-
-
+    /**
+     * 查询统计数据
+     * 总数 今日新增 本月新增 本年新增
+     * @param requestVo
+     * @return
+     */
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
+
+
+
+    /**
+     * 分类商品统计
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/queryCategoryProductStatistic",method = RequestMethod.POST)
+    ResultObjectVO queryCategoryProductStatistic(@RequestBody RequestJsonVO requestVo);
 
 }

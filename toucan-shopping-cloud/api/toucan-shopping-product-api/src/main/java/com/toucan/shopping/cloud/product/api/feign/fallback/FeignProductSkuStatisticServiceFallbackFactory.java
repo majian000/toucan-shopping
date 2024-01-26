@@ -34,6 +34,15 @@ public class FeignProductSkuStatisticServiceFallbackFactory implements FallbackF
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryCategoryProductStatistic(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                logger.warn("调用FeignProductSkuStatisticService.queryCategoryProductStatistic失败");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }
