@@ -19,8 +19,13 @@ public class OrderStatisticController {
     private OrderStatisticService orderStatisticService;
 
 
-
-
+    /**
+     * 总数
+     * 今日完成 / 本月完成 / 本年完成 / 完成数
+     * 今日取消 / 本月取消 / 本年取消 / 取消数
+     * @param requestVo
+     * @return
+     */
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(@RequestBody RequestJsonVO requestVo)

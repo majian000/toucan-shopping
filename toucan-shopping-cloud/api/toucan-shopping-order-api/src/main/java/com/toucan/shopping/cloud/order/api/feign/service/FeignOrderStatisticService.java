@@ -14,7 +14,9 @@ public interface FeignOrderStatisticService {
 
     /**
      * 查询统计数据
-     * 总数 今日新增 本月新增 本年新增
+     * 总数
+     * 今日完成 / 本月完成 / 本年完成 / 完成数
+     * 今日取消 / 本月取消 / 本年取消 / 取消数
      * @param requestVo
      * @return
      */
