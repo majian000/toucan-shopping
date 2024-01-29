@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -136,6 +137,21 @@ public class ProductSkuStatisticController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * SKU统计列表
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
+    public String listPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/productSkuStatistic/listPage",feignFunctionService);
+        return "pages/product/productSku/statistic/statistic_list.html";
     }
 
 }
