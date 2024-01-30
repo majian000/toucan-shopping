@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.controller.product.productSku.statistic;
+package com.toucan.shopping.cloud.apps.admin.controller.product.statistic.productSku;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
@@ -93,77 +93,7 @@ public class ProductSkuStatisticController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/queryCategoryProductStatistic",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryProductStatistic(@RequestBody ProductSkuStatisticVO query)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestVo);
-            if(resultObjectVO.isSuccess())
-            {
-                List<ProductSkuStatisticVO> productSkuStatusVOList = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
-                List<CategoryProductSkuStatisticVO> categoryProductSkuStatistics = new LinkedList();
-                requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
-                resultObjectVO = feignCategoryService.queryAllList(requestVo);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<CategoryVO> categorys = resultObjectVO.formatDataList(CategoryVO.class);
-                    if(CollectionUtils.isNotEmpty(categorys))
-                    {
-                        boolean productSkuStatisticIsEmpty=CollectionUtils.isEmpty(productSkuStatusVOList);
-                        for(CategoryVO categoryVO:categorys)
-                        {
-                            CategoryProductSkuStatisticVO categoryProductSkuStatisticVO = new CategoryProductSkuStatisticVO();
-                            categoryProductSkuStatisticVO.setCategoryId(categoryVO.getId());
-                            categoryProductSkuStatisticVO.setParentCategoryId(categoryVO.getParentId());
-                            categoryProductSkuStatisticVO.setCategoryName(categoryVO.getName());
-                            if(!productSkuStatisticIsEmpty) {
-                                for (ProductSkuStatisticVO productSkuStatisticVO : productSkuStatusVOList) {
-                                    if(categoryProductSkuStatisticVO.getCategoryId().longValue()==productSkuStatisticVO.getCategoryId().longValue())
-                                    {
-                                        categoryProductSkuStatisticVO.setCount(productSkuStatisticVO.getTotal());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                resultObjectVO.setData(categoryProductSkuStatistics);
-            }
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-    /**
-     * SKU统计列表
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSkuStatistic/listPage",feignFunctionService);
-        return "pages/product/productSku/statistic/statistic_list.html";
-    }
-
-
-    /**
-     * 查询列表
-     * @param productSkuStatisticVO
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO list(HttpServletRequest request, ProductSkuStatisticVO productSkuStatisticVO)
+    public ResultObjectVO queryCategoryProductStatistic(@RequestBody ProductSkuStatisticVO productSkuStatisticVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -199,6 +129,23 @@ public class ProductSkuStatisticController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 分类SKU统计列表
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/categoryStatisticPage",method = RequestMethod.GET)
+    public String listPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/productSkuStatistic/categoryStatisticPage",feignFunctionService);
+        return "pages/product/statistic/productSku/category_statistic.html";
+    }
+
+
 
 
 
