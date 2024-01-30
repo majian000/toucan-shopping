@@ -49,6 +49,16 @@ public class ProductSkuStatisticVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long count; //数量
 
+    private String categoryName; //分类名称
+
     private List<Long> categoryIdList; //分类ID结合
 
+    /**
+     * 上架状态 -1全部 0未上架 1已上架
+     */
+    private Integer status;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long shopId; //店铺ID
 }

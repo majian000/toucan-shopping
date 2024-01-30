@@ -44,7 +44,7 @@
 
 
     <select id="queryCategoryStatistic" resultMap="productSkuStatisticVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO">
-        select t.category_id,count(t.id) as total from t_product_sku t where t.delete_status=0
+        select t.category_id,count(t.id) as count from t_product_sku t where t.delete_status=0
 
         <if test="startDate!=null">
             <![CDATA[ AND t.create_date>=#{startDate} ]]>
@@ -54,9 +54,18 @@
             <![CDATA[  AND t.create_date<=#{endDate}  ]]>
         </if>
 
-        <if test="categoryId!=null">
+        <if test="categoryId!=null and categoryId!=-1">
             <![CDATA[  AND t.category_id<=#{categoryId}  ]]>
         </if>
+
+        <if test="status!=null and status!=-1">
+            <![CDATA[  AND t.status<=#{status}  ]]>
+        </if>
+
+        <if test="shopId!=null">
+            <![CDATA[  AND t.shop_id<=#{shopId}  ]]>
+        </if>
+
 
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in

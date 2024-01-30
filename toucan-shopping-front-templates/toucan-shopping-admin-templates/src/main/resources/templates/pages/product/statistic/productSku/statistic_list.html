@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+        .ztree *{
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
+    </style>
+
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layui-layout">
+    <div class="layui-side ">
+
+        <div class="layuimini-container" style="height:90%">
+            <div class="layuimini-main">
+                <div class="layui-card">
+                    <div class="layui-card-header">分类树</div>
+                    <div class="layui-card-body" >
+                        <ul id="categoryTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-body">
+
+        <div class="layuimini-container">
+            <div class="layuimini-main">
+
+                <fieldset class="table-search-fieldset">
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" id="statisticSearchForm" action="">
+                            <input type="hidden" id="categoryId" name="categoryId">
+                            <div class="layui-form-item">
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">上架状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="status"  name="status" lay-search="">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="0" >未上架</option>
+                                            <option value="1" >已上架</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <div id="category-product-charts" style="width: 100%;min-height:500px"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+<script>
+
+    layui.config({
+        base: basePath //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: '/lib/layui_ext/dtree/dtree', //定义该组件模块名
+        echarts: '/js/lay-module/echarts-5/echarts' // echarts图表扩展
+    }).use(['form', 'table','tree','dtree','jquery','echarts'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+        // var table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var loaddingTree;
+        var dtree = layui.dtree;
+        var echarts = layui.echarts;
+        var productCategoryChartLoadding;
+
+
+
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#statisticSearchForm").serializeJson();
+            return formParam;
+        }
+
+
+        var echartsRecords = null;
+        /**
+         * 报表功能
+         */
+        echartsRecords = echarts.init(document.getElementById('category-product-charts'));
+        var optionRecords = {
+            xAxis: {
+                type: 'category',
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [],
+                    type: 'bar'
+                }
+            ],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            dataZoom: {
+                show: true,
+                realtime: true,
+                type:'slider',
+                height: 20
+            }
+        };
+
+
+        function drawProductSkuStatisticChart(optionRecords) {
+            productCategoryChartLoadding = layer.load();
+            $.ajax({
+                url: "[[@{/productSkuStatistic/queryProductSkuStatistic}]]",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify(getFormParam()),
+                success: function (data) {
+                    layer.close(productCategoryChartLoadding);
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    optionRecords.xAxis.data = [];
+                    optionRecords.series[0].data = [];
+                    if (data.data != null && data.data.length > 0) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var obj = data.data[i];
+                            optionRecords.xAxis.data.push(obj.categoryName);
+                            optionRecords.series[0].data.push(obj.count==null?0:obj.count);
+                        }
+                    }
+                    echartsRecords.clear();
+                    echartsRecords.setOption(optionRecords);
+                },
+                complete: function () {
+                    layer.close(productCategoryChartLoadding);
+                }
+            });
+        }
+
+
+
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var categoryId = $("#categoryId").val();
+            if(categoryId==null||categoryId==""||categoryId=="-1")
+            {
+                layer.msg("请选择左侧的商品分类");
+                return false;
+            }
+            //执行搜索重载
+            drawProductSkuStatisticChart(optionRecords);
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#statisticSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: categoryTreeClick
+            }
+        };
+
+        function categoryTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+            $("#categoryId").val(treeNode.id);
+            $("#queryButton").click();
+        }
+
+        initCategoryTree();
+
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
+        //初始化树
+        function initCategoryTree(){
+
+            loaddingTree = layer.load();
+            $.ajax({
+                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                type:"POST",
+                dataType: "json",
+                success: function(data){
+                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingTree);
+                }
+            });
+        }
+
+    });
+</script>
+
+
+</body>
+</html>

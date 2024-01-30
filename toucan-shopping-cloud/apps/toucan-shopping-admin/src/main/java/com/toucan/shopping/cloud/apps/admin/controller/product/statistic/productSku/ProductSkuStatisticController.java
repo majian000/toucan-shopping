@@ -91,13 +91,15 @@ public class ProductSkuStatisticController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/queryCategoryProductStatistic",method = RequestMethod.POST)
+    @RequestMapping(value = "/queryProductSkuStatistic",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryProductStatistic(@RequestBody ProductSkuStatisticVO productSkuStatisticVO)
+    public ResultObjectVO queryProductSkuStatistic(@RequestBody ProductSkuStatisticVO productSkuStatisticVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = null;
+            List<CategoryVO> categorys = null;
+            List<ProductSkuStatisticVO> productCategoryStatistics = new LinkedList<>();
             if(productSkuStatisticVO.getCategoryId()!=null&&productSkuStatisticVO.getCategoryId().longValue()!=-1) {
                 //查询分类以及子分类
                 CategoryVO categoryVO = new CategoryVO();
@@ -106,10 +108,10 @@ public class ProductSkuStatisticController extends UIController {
                 resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
-                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
-                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                        categorys = resultObjectVO.formatDataList(CategoryVO.class);
+                        if (CollectionUtils.isNotEmpty(categorys)) {
                             List<Long> categoryIdList = new LinkedList<>();
-                            for (CategoryVO cv : categoryVOS) {
+                            for (CategoryVO cv : categorys) {
                                 categoryIdList.add(cv.getId());
                             }
                             categoryIdList.add(productSkuStatisticVO.getCategoryId());
@@ -118,9 +120,32 @@ public class ProductSkuStatisticController extends UIController {
                         }
                     }
                 }
+
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
+                resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<ProductSkuStatisticVO> productSkuStatistics = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
+                    if(CollectionUtils.isNotEmpty(productSkuStatistics))
+                    {
+                        for(CategoryVO cv:categorys)
+                        {
+                            ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
+                            productCategoryStatistic.setCategoryName(cv.getName());
+                            productCategoryStatistic.setCount(0L);
+                            for(ProductSkuStatisticVO pss:productSkuStatistics)
+                            {
+                                if(cv.getId().equals(pss.getCategoryId())) {
+                                    productCategoryStatistic.setCount(pss.getCount());
+                                    break;
+                                }
+                            }
+                            productCategoryStatistics.add(productCategoryStatistic);
+                        }
+                    }
+                }
             }
-            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
-            resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
+            resultObjectVO.setData(productCategoryStatistics);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请稍后重试");
@@ -142,7 +167,7 @@ public class ProductSkuStatisticController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/productSkuStatistic/categoryStatisticPage",feignFunctionService);
-        return "pages/product/statistic/productSku/category_statistic.html";
+        return "pages/product/statistic/productSku/statistic_list.html";
     }
 
 
