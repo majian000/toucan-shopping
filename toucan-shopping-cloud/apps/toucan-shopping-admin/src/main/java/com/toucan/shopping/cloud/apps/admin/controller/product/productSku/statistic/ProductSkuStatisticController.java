@@ -154,5 +154,53 @@ public class ProductSkuStatisticController extends UIController {
         return "pages/product/productSku/statistic/statistic_list.html";
     }
 
+
+    /**
+     * 查询列表
+     * @param productSkuStatisticVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO list(HttpServletRequest request, ProductSkuStatisticVO productSkuStatisticVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = null;
+            if(productSkuStatisticVO.getCategoryId()!=null&&productSkuStatisticVO.getCategoryId().longValue()!=-1) {
+                //查询分类以及子分类
+                CategoryVO categoryVO = new CategoryVO();
+                categoryVO.setId(productSkuStatisticVO.getCategoryId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    if (resultObjectVO.getData() != null) {
+                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                            List<Long> categoryIdList = new LinkedList<>();
+                            for (CategoryVO cv : categoryVOS) {
+                                categoryIdList.add(cv.getId());
+                            }
+                            categoryIdList.add(productSkuStatisticVO.getCategoryId());
+                            productSkuStatisticVO.setCategoryIdList(categoryIdList);
+                            productSkuStatisticVO.setCategoryId(null);
+                        }
+                    }
+                }
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
+            resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
 }
 

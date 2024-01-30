@@ -57,7 +57,15 @@
         <if test="categoryId!=null">
             <![CDATA[  AND t.category_id<=#{categoryId}  ]]>
         </if>
-          group by t.category_id
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        group by t.category_id
 
     </select>
 

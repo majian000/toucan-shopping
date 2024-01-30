@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 商品SKU统计
@@ -48,5 +49,6 @@ public class ProductSkuStatisticVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long count; //数量
 
+    private List<Long> categoryIdList; //分类ID结合
 
 }
