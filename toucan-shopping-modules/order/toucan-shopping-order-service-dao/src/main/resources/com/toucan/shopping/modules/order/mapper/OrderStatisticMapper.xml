@@ -3,15 +3,15 @@
 <mapper namespace="com.toucan.shopping.modules.order.mapper.OrderStatisticMapper">
 
     <resultMap id="orderStatisticMap" type="com.toucan.shopping.modules.order.vo.OrderStatisticVO" >
-        <result column="total" jdbcType="BIGINT" property="total" />
-        <result column="todayFinishCount" jdbcType="BIGINT" property="todayFinishCount" />
-        <result column="curMonthFinishCount" jdbcType="BIGINT" property="curMonthFinishCount" />
-        <result column="curYearFinishCount" jdbcType="BIGINT" property="curYearFinishCount" />
-        <result column="finishCount" jdbcType="BIGINT" property="finishCount" />
-        <result column="cancelCount" jdbcType="BIGINT" property="cancelCount" />
+        <result column="totalMoney" jdbcType="DECIMAL" property="totalMoney" />
+        <result column="todayMoney" jdbcType="DECIMAL" property="todayMoney" />
+        <result column="curMonthMoney" jdbcType="DECIMAL" property="curMonthMoney" />
+        <result column="curYearMoney" jdbcType="DECIMAL" property="curYearMoney" />
     </resultMap>
 
-
+    <select id="queryTotalMoney" resultType="java.math.BigDecimal">
+        select sum()
+    </select>
 
 
 </mapper>
