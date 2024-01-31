@@ -10,7 +10,7 @@
     </resultMap>
 
     <select id="queryTotalMoney" resultType="java.math.BigDecimal">
-        select sum(order_amount) from t_order t where and t.delete_status=0 and t.trade_status=3
+        select sum(t.order_amount) from t_order t where  t.delete_status=0 and t.trade_status=3
     </select>
 
 
