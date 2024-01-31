@@ -30,6 +30,7 @@ layui.config({
     onlineAdminChart: 'toucan-module/onlineAdminChart', //管理员在线统计报表
     adminOperateChart: 'toucan-module/adminOperateChart', //管理员操作统计报表
     userRegistStatistic: 'toucan-module/userRegistStatistic', //用户注册统计
-    productSkuStatistic: 'toucan-module/productSkuStatistic' //商品SKU注册统计
+    productSkuStatistic: 'toucan-module/productSkuStatistic', //商品SKU统计
+    orderStatistic: 'toucan-module/orderStatistic' //订单统计
     // echarts: 'echarts-5/echarts', //echarts5
 });

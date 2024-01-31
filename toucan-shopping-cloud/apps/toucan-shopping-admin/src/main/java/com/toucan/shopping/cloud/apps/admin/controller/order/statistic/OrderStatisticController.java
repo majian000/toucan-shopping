@@ -59,10 +59,7 @@ public class OrderStatisticController extends UIController {
     private FeignCategoryService feignCategoryService;
 
     /**
-     * 查询统计数据
-     * 总数
-     * 今日完成 / 本月完成 / 本年完成 / 完成数
-     * 今日取消 / 本月取消 / 本年取消 / 取消数 
+     * 总金额
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)

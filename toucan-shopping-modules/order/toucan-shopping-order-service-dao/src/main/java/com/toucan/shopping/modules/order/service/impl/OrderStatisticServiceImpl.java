@@ -20,6 +20,7 @@ public class OrderStatisticServiceImpl implements OrderStatisticService {
     @Override
     public OrderStatisticVO queryTotalAndTodayAndCurrentMonthAndCurrentYear() {
         OrderStatisticVO orderStatisticVO=new OrderStatisticVO();
+        orderStatisticVO.setTotalMoney(orderStatisticMapper.queryTotalMoney());
         return orderStatisticVO;
     }
 
