@@ -20,7 +20,7 @@ layui.define(['layer','echarts'],function (exports) {
                             return false;
                         }
 
-                        $(".orderStatisticPanelTotal").html(data.data.total);
+                        $(".orderStatisticPanelTotal").html(data.data.totalMoney);
                         // $(".orderStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
                     },
                     complete: function () {
