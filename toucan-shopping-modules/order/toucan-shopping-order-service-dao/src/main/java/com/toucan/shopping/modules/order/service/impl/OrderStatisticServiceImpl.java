@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -22,13 +23,33 @@ public class OrderStatisticServiceImpl implements OrderStatisticService {
     @Override
     public OrderStatisticVO queryTotalAndTodayAndCurrentMonthAndCurrentYear() {
         OrderStatisticVO orderStatisticVO=new OrderStatisticVO();
-        orderStatisticVO.setTotalMoney(orderStatisticMapper.queryTotalMoney());
-        Date currentDate = new Date();
-        String currentDateStr = DateUtils.FORMATTER_DD.get().format(currentDate);
-        String currentMonthStr = DateUtils.FORMATTER_MON.get().format(currentDate);
-        orderStatisticVO.setTodayMoney(orderStatisticMapper.queryTodayMoney(currentDateStr));
-        orderStatisticVO.setCurMonthMoney(orderStatisticMapper.queryCurMonthMoney(currentMonthStr,currentDateStr));
-        orderStatisticVO.setCurYearMoney(orderStatisticMapper.queryCurYearMoney());
+        BigDecimal totalMoney = orderStatisticMapper.queryTotalMoney();
+        if(totalMoney!=null) {
+            orderStatisticVO.setTotalMoney(totalMoney);
+        }else{
+            orderStatisticVO.setTotalMoney(new BigDecimal(0));
+        }
+
+        BigDecimal todayMoney = orderStatisticMapper.queryTodayMoney();
+        if(todayMoney!=null) {
+            orderStatisticVO.setTodayMoney(todayMoney);
+        }else{
+            orderStatisticVO.setTodayMoney(new BigDecimal(0));
+        }
+
+        BigDecimal curMonthMoney = orderStatisticMapper.queryCurMonthMoney();
+        if(curMonthMoney!=null) {
+            orderStatisticVO.setCurMonthMoney(curMonthMoney);
+        }else{
+            orderStatisticVO.setCurMonthMoney(new BigDecimal(0));
+        }
+
+        BigDecimal curYearMoney = orderStatisticMapper.queryCurYearMoney();
+        if(curYearMoney!=null) {
+            orderStatisticVO.setCurYearMoney(curYearMoney);
+        }else{
+            orderStatisticVO.setCurYearMoney(new BigDecimal(0));
+        }
         return orderStatisticVO;
     }
 

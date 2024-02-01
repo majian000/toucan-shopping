@@ -25,14 +25,14 @@ public interface OrderStatisticMapper {
      * 查询今日金额
      * @return
      */
-    BigDecimal queryTodayMoney(String currentDate);
+    BigDecimal queryTodayMoney();
 
 
     /**
      * 查询当月金额
      * @return
      */
-    BigDecimal queryCurMonthMoney(String currentMonth,String currentDate);
+    BigDecimal queryCurMonthMoney();
 
 
     /**

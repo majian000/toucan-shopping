@@ -15,17 +15,17 @@
 
     <select id="queryTodayMoney" resultType="java.math.BigDecimal">
         select sum(t.order_amount) from t_order t where  t.delete_status=0 and t.trade_status=3
-        <![CDATA[
-             AND t.create_date>=CONCAT(#{currentDate},' 00:00:00')
-             AND t.create_date<=CONCAT(#{currentDate},' 23:59:59')
+       <![CDATA[
+             AND t.create_date>=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 00:00:00')
+             AND t.create_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
          ]]>
     </select>
 
     <select id="queryCurMonthMoney" resultType="java.math.BigDecimal">
         select sum(t.order_amount) from t_order t where  t.delete_status=0 and t.trade_status=3
-         <![CDATA[
-             AND t.create_date>=CONCAT(#{currentMonth},'-01 00:00:00')
-             AND t.create_date<=CONCAT(#{currentDate},' 23:59:59')
+          <![CDATA[
+             AND t.create_date>=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m'),'-01 00:00:00')
+             AND t.create_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
          ]]>
     </select>
 
