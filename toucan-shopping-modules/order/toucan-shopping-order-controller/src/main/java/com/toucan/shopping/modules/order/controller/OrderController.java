@@ -73,7 +73,7 @@ public class OrderController {
     @ResponseBody
     public ResultObjectVO testSharding(@RequestBody RequestJsonVO requestJsonVO) throws Exception{
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        for(int i=2021;i<=2023;i++) {
+        for(int i=2022;i<=2023;i++) {
             for(int j=1;j<=12;j++) {
                 String dateString=i+"-"+j+"-01 00:01:00";
                 if(j<10)
@@ -83,6 +83,7 @@ public class OrderController {
                 Order order = new Order();
                 order.setId(idGenerator.id());
                 order.setCreateDate(DateUtils.parse(dateString,DateUtils.FORMATTER_SS.get()));
+                order.setShardingDate(order.getCreateDate());
                 order.setOrderNo(orderNoService.generateOrderNo());
                 order.setUserId("-1");
                 order.setOrderAmount(new BigDecimal(0.0D));
