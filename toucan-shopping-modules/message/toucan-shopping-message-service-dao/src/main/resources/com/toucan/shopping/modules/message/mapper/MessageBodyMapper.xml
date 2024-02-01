@@ -11,6 +11,7 @@
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 
@@ -55,8 +56,8 @@
     </sql>
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageBody" >
-        insert into t_message_body(id,title,content,content_type,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
-        values(#{id},#{title},#{content},#{contentType},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+        insert into t_message_body(id,title,content,content_type,message_type_code,message_type_name,message_type_app_code,create_date,delete_status,sharding_date)
+        values(#{id},#{title},#{content},#{contentType},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus},#{shardingDate})
     </insert>
 
 

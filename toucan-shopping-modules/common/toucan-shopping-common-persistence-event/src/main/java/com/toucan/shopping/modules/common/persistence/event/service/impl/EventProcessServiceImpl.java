@@ -29,6 +29,7 @@ public class EventProcessServiceImpl implements EventProcessService {
     @Transactional
     @Override
     public int insert(EventProcess transactionMessage) {
+        transactionMessage.setShardingDate(transactionMessage.getCreateDate());
         return eventProcessMapper.insert(transactionMessage);
     }
 

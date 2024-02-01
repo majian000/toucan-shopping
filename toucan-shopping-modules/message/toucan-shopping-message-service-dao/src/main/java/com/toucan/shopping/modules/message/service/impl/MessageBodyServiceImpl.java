@@ -29,6 +29,7 @@ public class MessageBodyServiceImpl implements MessageBodyService {
 
     @Override
     public int save(MessageBody entity) {
+        entity.setShardingDate(entity.getCreateDate());
         return messageBodyMapper.insert(entity);
     }
 

@@ -29,11 +29,16 @@ public class MessageUserServiceImpl implements MessageUserService {
 
     @Override
     public int save(MessageUser entity) {
+        entity.setShardingDate(entity.getCreateDate());
         return messageUserMapper.insert(entity);
     }
 
     @Override
     public int saves(List<MessageUserVO> entitys) {
+        for(MessageUserVO messageUserVO:entitys)
+        {
+            messageUserVO.setShardingDate(messageUserVO.getCreateDate());
+        }
         return messageUserMapper.inserts(entitys);
     }
 

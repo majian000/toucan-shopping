@@ -12,6 +12,7 @@
         <result property="type" jdbcType="VARCHAR" column="type" />
         <result property="remark" jdbcType="VARCHAR" column="remark" />
         <result property="createDate" jdbcType="TIMESTAMP" column="create_date" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
     </resultMap>
 
     <select id="queryList" resultMap="eventMessageProcessMap" parameterType="com.toucan.shopping.modules.common.persistence.event.entity.EventProcess">
@@ -70,8 +71,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.common.persistence.event.entity.EventProcess"  keyProperty="id" >
-        insert into t_event_process(id,business_id,status,payload,transaction_id,table_name,remark,type,create_date)
-         values(#{id},#{businessId},#{status},#{payload},#{transactionId},#{tableName},#{remark},#{type},#{createDate})
+        insert into t_event_process(id,business_id,status,payload,transaction_id,table_name,remark,type,create_date,sharding_date)
+         values(#{id},#{businessId},#{status},#{payload},#{transactionId},#{tableName},#{remark},#{type},#{createDate},#{shardingDate})
 
     </insert>
 

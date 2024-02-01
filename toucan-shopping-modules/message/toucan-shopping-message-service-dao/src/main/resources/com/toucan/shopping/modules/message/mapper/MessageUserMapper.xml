@@ -12,6 +12,7 @@
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 
@@ -59,16 +60,17 @@
     
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageUser" >
-        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
-        values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status,sharding_date)
+        values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus},#{shardingDate})
     </insert>
 
 
     <insert id="inserts"  useGeneratedKeys="false" keyProperty="id" >
-        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status,sharding_date)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.messageBodyId},#{entity.userMainId},#{entity.sendDate},#{entity.status},#{entity.messageTypeCode},#{entity.messageTypeName},#{entity.messageTypeAppCode},#{entity.createDate},#{entity.deleteStatus})
+            (#{entity.id},#{entity.messageBodyId},#{entity.userMainId},#{entity.sendDate},#{entity.status},#{entity.messageTypeCode},
+            #{entity.messageTypeName},#{entity.messageTypeAppCode},#{entity.createDate},#{entity.deleteStatus},#{entity.shardingDate})
         </foreach>
 
     </insert>

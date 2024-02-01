@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.common.persistence.event.entity;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -20,5 +21,7 @@ public class EventProcess {
     private String tableName; //业务表名
     private String remark; //备注
     private Date createDate; //创建时间
+    private Date shardingDate; //分片日期
+
 
 }
