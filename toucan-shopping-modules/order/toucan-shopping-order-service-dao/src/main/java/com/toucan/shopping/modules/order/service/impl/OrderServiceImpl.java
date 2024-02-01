@@ -102,6 +102,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int saveByVos(List<OrderVO> orders) {
+        if(!CollectionUtils.isEmpty(orders))
+        {
+            for(OrderVO orderVO:orders){
+                orderVO.setShardingDate(orderVO.getCreateDate());
+            }
+        }
         return orderMapper.insertByVoList(orders);
     }
 

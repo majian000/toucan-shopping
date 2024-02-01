@@ -20,4 +20,24 @@ public interface OrderStatisticMapper {
      */
     BigDecimal queryTotalMoney();
 
+
+    /**
+     * 查询今日金额
+     * @return
+     */
+    BigDecimal queryTodayMoney(String currentDate);
+
+
+    /**
+     * 查询当月金额
+     * @return
+     */
+    BigDecimal queryCurMonthMoney(String currentMonth,String currentDate);
+
+
+    /**
+     * 查询本年金额
+     * @return
+     */
+    BigDecimal queryCurYearMoney();
 }

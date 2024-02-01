@@ -21,6 +21,7 @@
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
 
     </resultMap>
 
@@ -33,8 +34,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress" >
-        insert into t_order_consignee_address(id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
-        values(#{id},#{userMainId},#{orderId},#{orderNo},#{mainOrderNo},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode})
+        insert into t_order_consignee_address(id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code,sharding_date)
+        values(#{id},#{userMainId},#{orderId},#{orderNo},#{mainOrderNo},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode},#{shardingDate})
     </insert>
 
 
@@ -50,11 +51,11 @@
 
     <insert id="inserts" parameterType="com.toucan.shopping.modules.order.entity.OrderConsigneeAddress"  >
         insert into t_order_consignee_address
-        (id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code)
+        (id,user_main_id,order_id,order_no,main_order_no,name,address,phone,province_code,city_code,area_code,create_date,delete_status,province_name,city_name,area_name,app_code,sharding_date)
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.userMainId},#{entity.orderId},#{entity.orderNo},#{entity.mainOrderNo},#{entity.name},#{entity.address},#{entity.phone},#{entity.provinceCode},#{entity.cityCode},
-            #{entity.areaCode},#{entity.createDate},#{entity.deleteStatus},#{entity.provinceName},#{entity.cityName},#{entity.areaName},#{entity.appCode})
+            #{entity.areaCode},#{entity.createDate},#{entity.deleteStatus},#{entity.provinceName},#{entity.cityName},#{entity.areaName},#{entity.appCode},#{entity.shardingDate})
         </foreach>
 
     </insert>

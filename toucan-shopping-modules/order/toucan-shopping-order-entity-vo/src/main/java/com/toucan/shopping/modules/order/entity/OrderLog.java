@@ -28,6 +28,10 @@ public class OrderLog {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date shardingDate; //分片日期
+
     private String dataBody; //数据主体
 
     private String remark; //日志备注

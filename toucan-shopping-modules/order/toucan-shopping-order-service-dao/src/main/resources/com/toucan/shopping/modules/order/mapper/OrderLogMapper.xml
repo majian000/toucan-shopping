@@ -11,6 +11,7 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
     </resultMap>
 
 
@@ -22,8 +23,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderLog" >
-        insert into t_order_log(id,order_no,operate_user_id,data_body,remark,create_date,app_code,delete_status)
-        values(#{id},#{orderNo},#{operateUserId},#{dataBody},#{remark},#{createDate},#{appCode},0)
+        insert into t_order_log(id,order_no,operate_user_id,data_body,remark,create_date,app_code,delete_status,sharding_date)
+        values(#{id},#{orderNo},#{operateUserId},#{dataBody},#{remark},#{createDate},#{appCode},0,#{shardingDate})
     </insert>
 
 

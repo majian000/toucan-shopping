@@ -26,6 +26,7 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="freight_template_id" jdbcType="BIGINT" property="freightTemplateId" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
 
     </resultMap>
 
@@ -47,11 +48,11 @@
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_item(id,user_id,order_no,order_id,sku_id,product_sku_name,product_sku_json,product_preview_path,delivery_status,seller_status,buyer_status,
         product_num,product_price,product_rough_weight,order_item_amount,delivery_receive_time,delivery_finish_time,
-        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id)
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id,sharding_date)
 
          values(#{id},#{userId},#{orderNo},#{orderId},#{skuId},#{productSkuName},#{productSkuJson},#{productPreviewPath},#{deliveryStatus},#{sellerStatus},#{buyerStatus},
          #{productNum},#{productPrice},#{productRoughWeight},#{orderItemAmount},#{deliveryReceiveTime},#{deliveryFinishTime},
-         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{deleteStatus},#{freightTemplateId})
+         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{deleteStatus},#{freightTemplateId},#{shardingDate})
 
     </insert>
 
@@ -63,12 +64,12 @@
     <insert id="insertByVoList" parameterType="com.toucan.shopping.modules.order.vo.OrderItemVO"  >
         insert into t_order_item(id,user_id,order_no,order_id,sku_id,product_sku_name,product_sku_json,product_preview_path,delivery_status,seller_status,buyer_status,
         product_num,product_price,product_rough_weight,order_item_amount,delivery_receive_time,delivery_finish_time,
-        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id)
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,delete_status,freight_template_id,sharding_date)
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.userId},#{entity.orderNo},#{entity.orderId},#{entity.skuId},#{entity.productSkuName},#{entity.productSkuJson},#{entity.productPreviewPath},#{entity.deliveryStatus},#{entity.sellerStatus},#{entity.buyerStatus},
             #{entity.productNum},#{entity.productPrice},#{entity.productRoughWeight},#{entity.orderItemAmount},#{entity.deliveryReceiveTime},#{entity.deliveryFinishTime},
-            #{entity.sellerFinishTime},#{entity.buyerFinishTime},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus},#{entity.freightTemplateId})
+            #{entity.sellerFinishTime},#{entity.buyerFinishTime},#{entity.remark},#{entity.createDate},#{entity.appCode},#{entity.deleteStatus},#{entity.freightTemplateId},#{entity.shardingDate})
         </foreach>
 
     </insert>

@@ -25,6 +25,7 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
     </resultMap>
 
     <resultMap id="orderVOMap" type="com.toucan.shopping.modules.order.vo.MainOrderVO" extends="orderMap">
@@ -68,10 +69,10 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.MainOrder"  >
         insert into t_main_order(id,order_no,user_id,order_amount,pay_amount,payment_deadline_time,total_amount,freight_amount,red_package_amount,coupon_amount,
-        pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status)
+        pay_status,trade_status,pay_type,pay_method,outer_trade_no,pay_date,remark,create_date,app_code,delete_status,sharding_date)
 
          values(#{id},#{orderNo},#{userId},#{orderAmount},#{payAmount},#{paymentDeadlineTime},#{totalAmount},#{freightAmount},#{redPackageAmount},#{couponAmount},#{payStatus},
-         #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus})
+         #{tradeStatus},#{payType},#{payMethod},#{outerTradeNo},#{payDate},#{remark},#{createDate},#{appCode},#{deleteStatus},#{shardingDate})
 
     </insert>
 

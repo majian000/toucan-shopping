@@ -14,10 +14,7 @@ import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
-import com.toucan.shopping.modules.order.vo.CreateOrderVO;
-import com.toucan.shopping.modules.order.vo.MainOrderVO;
-import com.toucan.shopping.modules.order.vo.OrderConsigneeAddressVO;
-import com.toucan.shopping.modules.order.vo.OrderVO;
+import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -61,6 +58,7 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public int save(MainOrder mainOrder) {
+        mainOrder.setShardingDate(mainOrder.getCreateDate());
         return mainOrderMapper.insert(mainOrder);
     }
 
@@ -68,11 +66,20 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public int createOrder(CreateOrderVO createOrderVO) throws Exception {
         MainOrderVO mainOrderVO = createOrderVO.getMainOrder();
+        mainOrderVO.setShardingDate(mainOrderVO.getCreateDate());
         //保存主订单
         int ret = mainOrderMapper.insert(mainOrderVO);
         if(ret<=0)
         {
             throw new IllegalArgumentException("保存主订单失败");
+        }
+
+        //设置分片列
+        if(!CollectionUtils.isEmpty(mainOrderVO.getOrders()))
+        {
+            for(OrderVO orderVO:mainOrderVO.getOrders()){
+                orderVO.setShardingDate(orderVO.getCreateDate());
+            }
         }
         //保存子订单
         ret = orderMapper.insertByVoList(mainOrderVO.getOrders());
@@ -92,6 +99,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             orderConsigneeAddress.setDeleteStatus((short)0);
             orderConsigneeAddress.setCreateDate(orderVO.getCreateDate());
             orderConsigneeAddress.setAppCode(orderVO.getAppCode());
+            orderConsigneeAddress.setShardingDate(orderConsigneeAddress.getCreateDate());
             orderConsigneeAddresss.add(orderConsigneeAddress);
         }
         ret = orderConsigneeAddressMapper.inserts(orderConsigneeAddresss);
@@ -102,6 +110,10 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         for(OrderVO orderVO:mainOrderVO.getOrders())
         {
+            for(OrderItemVO orderItemVO:orderVO.getOrderItems())
+            {
+                orderItemVO.setShardingDate(orderItemVO.getCreateDate());
+            }
             ret = orderItemMapper.insertByVoList(orderVO.getOrderItems());
             if(ret!=orderVO.getOrderItems().size())
             {

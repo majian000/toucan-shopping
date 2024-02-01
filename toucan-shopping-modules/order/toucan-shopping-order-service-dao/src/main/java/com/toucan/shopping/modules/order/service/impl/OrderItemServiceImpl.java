@@ -48,6 +48,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
     @Override
     public int create(OrderItem orderItem) {
+        orderItem.setShardingDate(orderItem.getCreateDate());
         return orderItemMapper.insert(orderItem);
     }
 

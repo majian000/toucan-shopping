@@ -50,6 +50,7 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.setAppCode(appCode);
         orderLog.setId(idGenerator.id());
         orderLog.setCreateDate(new Date());
+        orderLog.setShardingDate(orderLog.getCreateDate());
         orderLog.setOrderNo(orderNo);
         orderLog.setRemark("修改订单信息");
         orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();

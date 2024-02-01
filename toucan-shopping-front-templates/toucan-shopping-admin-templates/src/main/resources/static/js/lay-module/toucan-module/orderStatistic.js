@@ -21,7 +21,7 @@ layui.define(['layer','echarts'],function (exports) {
                         }
 
                         $(".orderStatisticPanelTotal").html(data.data.totalMoney);
-                        // $(".orderStatisticPanelOther").html("<small>今日新增:</small>"+data.data.todayCount+"<small>,本月新增:</small>"+data.data.curMonthCount+"<small>,本年新增:</small>"+data.data.curYearCount);
+                        $(".orderStatisticPanelOther").html("<small>今日金额:</small>"+data.data.todayMoney+"<small>,本月金额:</small>"+data.data.curMonthMoney+"<small>,本年金额:</small>"+data.data.curYearMoney);
                     },
                     complete: function () {
                     }

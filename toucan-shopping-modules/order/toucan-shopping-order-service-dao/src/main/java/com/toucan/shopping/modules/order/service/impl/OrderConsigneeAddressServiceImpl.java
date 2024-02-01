@@ -31,6 +31,7 @@ public class OrderConsigneeAddressServiceImpl implements OrderConsigneeAddressSe
 
     @Override
     public int save(OrderConsigneeAddress entity) {
+        entity.setShardingDate(entity.getCreateDate());
         return orderConsigneeAddressMapper.insert(entity);
     }
 
