@@ -157,6 +157,11 @@
             <artifactId>toucan-shopping-cloud-search-helper</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-user-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -28,4 +28,14 @@ public interface FeignUserStatisticService {
     ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
 
 
+
+
+    /**
+     * 刷新用户总数
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/refershTotal",method = RequestMethod.POST)
+    ResultObjectVO refershTotal(RequestJsonVO requestVo);
+
 }

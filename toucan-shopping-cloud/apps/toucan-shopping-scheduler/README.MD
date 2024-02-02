@@ -6,23 +6,18 @@
    
 
 #### 依赖服务
-    1.toucan-shopping-config-server
-    
+    1.toucan-shopping-config-server    
         配置中心
         
-    2.nacos-server-2.0.4
-        
+    2.nacos-server-2.0.4        
         服务注册中心
         
-    3.toucan-shopping-web
-    
+    3.toucan-shopping-web    
         商城前端接口
         
-    4.toucan-shopping-product
-        
+    4.toucan-shopping-product        
         商品服务
         
-    5.toucan-shopping-order
-        
+    5.toucan-shopping-order        
         订单服务
 

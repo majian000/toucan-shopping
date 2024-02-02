@@ -93,4 +93,28 @@ public class UserStatisticController {
     }
 
 
+    /**
+     * 刷新用户总数
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/refershTotal",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO refershTotal(RequestJsonVO requestVo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Object userTotalObj = toucanStringRedisService.get(UserStatisticKey.getUserTotalKey());
+            if(userTotalObj==null||"0".equals(String.valueOf(userTotalObj)))
+            {
+                toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticService.queryTodayTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 }
