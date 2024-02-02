@@ -229,7 +229,11 @@
                     {field: 'categoryName', title: '分类', width: 120},
                     {field: 'count', title: '商品数量', minWidth: 150, sort: true}
                      ]
-                ]
+                ],
+                initSort:{
+                    field:'count',
+                    type:'desc'
+                }
                 ,data: rows
                 ,even: true
             });
