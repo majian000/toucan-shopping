@@ -83,6 +83,7 @@
 
                 <div id="category-product-charts" style="width: 100%;min-height:500px"></div>
 
+                <table class="layui-hide" id="pcsTable"></table>
 
             </div>
         </div>
@@ -105,7 +106,7 @@
     }).use(['form', 'table','tree','dtree','jquery','echarts'], function () {
         var $ = layui.jquery,
             form = layui.form;
-        // var table = layui.table;
+        var table = layui.table;
         var index;
         var tree = layui.tree;
         var loadding;
@@ -203,6 +204,7 @@
                     }
                     echartsRecords.clear();
                     echartsRecords.setOption(optionRecords);
+                    drawProductSkuCategoryStatisTable(data);
                 },
                 complete: function () {
                     layer.close(productCategoryChartLoadding);
@@ -211,6 +213,27 @@
         }
 
 
+        function drawProductSkuCategoryStatisTable(data){
+            var rows = new Array();
+            if (data.data != null && data.data.length > 0) {
+                for (var i = 0; i < data.data.length; i++) {
+                    var obj = data.data[i];
+                    rows.push({id:i+1,categoryName:obj.categoryName,count:obj.count});
+                }
+            }
+            table.render({
+                elem: '#pcsTable'
+                ,cols: [
+                    [
+                    {field: 'id', title: '序号', width: 80},
+                    {field: 'categoryName', title: '分类', width: 120},
+                    {field: 'count', title: '商品数量', minWidth: 150, sort: true}
+                     ]
+                ]
+                ,data: rows
+                ,even: true
+            });
+        }
 
 
         // 监听搜索操作
