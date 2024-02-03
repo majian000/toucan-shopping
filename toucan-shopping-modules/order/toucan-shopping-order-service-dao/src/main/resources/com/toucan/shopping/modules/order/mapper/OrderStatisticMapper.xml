@@ -54,9 +54,9 @@
 
 
     <select id="queryHotSellListPage" resultMap="orderHotSellVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select t.sku_id,sum(t.order_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order t
+        select t.sku_id,sum(t.order_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order_item t
         <where>
-            1=1 t.delete_status=0 and t.trade_status=3
+            1=1 and t.delete_status=0 and t.trade_status=3
             <include refid="queryHotSellListPageWhere" />
         </where>
         group by t.sku_id
@@ -66,7 +66,7 @@
 
 
     <select id="queryHotSellListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select count(*) from t_order t
+        select count(*) from t_order_item t
         <where>
             1=1 and t.delete_status=0 and t.trade_status=3
             <include refid="queryHotSellListPageWhere" />

@@ -210,7 +210,7 @@ public class ProductSkuStatisticController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             //先查询热卖的订单类型
             ResultObjectVO resultObjectVO = feignOrderStatisticService.queryHotSellListPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
