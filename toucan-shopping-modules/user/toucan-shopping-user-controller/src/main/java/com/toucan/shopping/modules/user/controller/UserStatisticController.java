@@ -76,7 +76,7 @@ public class UserStatisticController {
             {
                 userStatisticVO.setTotal(Long.parseLong(String.valueOf(userTotalObj))); //总数
             }else{
-                userStatisticVO.setTotal(userStatisticService.queryTodayTotal());
+                userStatisticVO.setTotal(userStatisticService.queryTotal());
                 toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticVO.getTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
             }
             userStatisticVO.setTodayCount(userStatisticService.queryTodayTotal()); //今日新增
@@ -104,11 +104,7 @@ public class UserStatisticController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            Object userTotalObj = toucanStringRedisService.get(UserStatisticKey.getUserTotalKey());
-            if(userTotalObj==null||"0".equals(String.valueOf(userTotalObj)))
-            {
-                toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticService.queryTodayTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
-            }
+            toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticService.queryTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
