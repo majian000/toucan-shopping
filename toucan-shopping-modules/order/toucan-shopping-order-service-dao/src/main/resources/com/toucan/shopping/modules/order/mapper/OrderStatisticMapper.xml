@@ -9,6 +9,19 @@
         <result column="curYearMoney" jdbcType="DECIMAL" property="curYearMoney" />
     </resultMap>
 
+
+    <resultMap id="orderHotSellVOMap" type="com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO">
+        <result column="skuId" jdbcType="BIGINT" property="skuId" />
+        <result column="sellCount" jdbcType="BIGINT" property="sellCount" />
+        <result column="sellTotal" jdbcType="DECIMAL" property="sellTotal" />
+    </resultMap>
+
+
+    <sql id="queryHotSellListPageWhere">
+
+
+    </sql>
+
     <select id="queryTotalMoney" resultType="java.math.BigDecimal">
         select sum(t.order_amount) from t_order t where  t.delete_status=0 and t.trade_status=3
     </select>
@@ -36,5 +49,30 @@
              AND t.pay_date<=CONCAT(DATE_FORMAT(SYSDATE(), '%Y-%m-%d'),' 23:59:59')
          ]]>
     </select>
+
+
+
+
+    <select id="queryHotSellListPage" resultMap="orderHotSellVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
+        select t.sku_id,sum(t.order_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order t
+        <where>
+            1=1 t.delete_status=0 and t.trade_status=3
+            <include refid="queryHotSellListPageWhere" />
+        </where>
+        group by t.sku_id
+        order by sellTotal desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryHotSellListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
+        select count(*) from t_order t
+        <where>
+            1=1 and t.delete_status=0 and t.trade_status=3
+            <include refid="queryHotSellListPageWhere" />
+        </where>
+
+    </select>
+
 
 </mapper>

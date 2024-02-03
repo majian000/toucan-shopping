@@ -21,5 +21,13 @@ public interface FeignOrderStatisticService {
     ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
 
 
+    /**
+     * 查询热销列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/hot/sell/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryHotSellListPage(@RequestBody RequestJsonVO requestJsonVO);
+
 
 }

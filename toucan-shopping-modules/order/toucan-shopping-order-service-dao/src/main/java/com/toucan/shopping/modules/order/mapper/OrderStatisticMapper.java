@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.mapper;
 
-import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
+import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigDecimal;
@@ -40,4 +41,20 @@ public interface OrderStatisticMapper {
      * @return
      */
     BigDecimal queryCurYearMoney();
+
+
+    /**
+     * 查询热销列表页
+     * @param pageInfo
+     * @return
+     */
+    List<OrderHotSellStatisticVO> queryHotSellListPage(OrderHotSellPageInfo pageInfo);
+
+    /**
+     * 返回热销列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryHotSellListPageCount(OrderHotSellPageInfo pageInfo);
+
 }

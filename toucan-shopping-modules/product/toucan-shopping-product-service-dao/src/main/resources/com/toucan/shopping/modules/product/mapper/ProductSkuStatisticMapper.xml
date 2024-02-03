@@ -9,8 +9,10 @@
         <result column="curMonthCount" jdbcType="BIGINT" property="curMonthCount" />
         <result column="curYearCount" jdbcType="BIGINT" property="curYearCount" />
         <result column="count" jdbcType="BIGINT" property="count" />
-
     </resultMap>
+
+
+
 
     <select id="queryTotal" resultType="java.lang.Long">
         select count(*) from t_product_sku t where t.delete_status=0
@@ -63,9 +65,12 @@
         </if>
 
         <if test="shopId!=null">
-            <![CDATA[  AND t.shop_id<=#{shopId}  ]]>
+             AND t.shop_id=#{shopId}
         </if>
 
+        <if test="productSkuId!=null">
+            AND t.id=#{productSkuId}
+        </if>
 
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in
@@ -77,5 +82,7 @@
         group by t.category_id
 
     </select>
+
+
 
 </mapper>

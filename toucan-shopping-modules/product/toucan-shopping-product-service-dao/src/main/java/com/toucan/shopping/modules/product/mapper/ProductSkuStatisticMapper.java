@@ -1,7 +1,5 @@
 package com.toucan.shopping.modules.product.mapper;
 
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
@@ -50,5 +48,7 @@ public interface ProductSkuStatisticMapper {
      * @return
      */
     List<ProductSkuStatisticVO> queryCategoryStatistic(ProductSkuStatisticVO query);
+
+
 
 }

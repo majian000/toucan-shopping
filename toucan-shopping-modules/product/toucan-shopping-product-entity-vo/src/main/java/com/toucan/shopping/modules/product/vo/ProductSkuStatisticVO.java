@@ -51,6 +51,9 @@ public class ProductSkuStatisticVO {
 
     private String categoryName; //分类名称
 
+    /**
+     * 查询条件
+     */
     private List<Long> categoryIdList; //分类ID结合
 
     /**
@@ -61,4 +64,10 @@ public class ProductSkuStatisticVO {
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId; //店铺ID
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long productSkuId; //SKU ID
+
+
 }

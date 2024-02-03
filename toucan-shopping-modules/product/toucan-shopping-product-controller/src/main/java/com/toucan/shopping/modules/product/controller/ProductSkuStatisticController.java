@@ -8,13 +8,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.entity.Brand;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.entity.ShopProductDescription;
-import com.toucan.shopping.modules.product.entity.ShopProductImg;
-import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
-import com.toucan.shopping.modules.product.redis.ShopProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -80,6 +73,8 @@ public class ProductSkuStatisticController {
         }
         return resultObjectVO;
     }
+
+
 
 
 }

@@ -31,6 +31,15 @@ public class FeignOrderStatisticServiceFallbackFactory implements FallbackFactor
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO queryHotSellListPage(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                logger.warn("调用FeignOrderStatisticService.queryHotSellListPage失败");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
         };
     }
 }

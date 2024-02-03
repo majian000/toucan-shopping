@@ -1,10 +1,12 @@
 package com.toucan.shopping.modules.order.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.mapper.OrderStatisticMapper;
+import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
 import com.toucan.shopping.modules.order.service.OrderStatisticService;
+import com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO;
 import com.toucan.shopping.modules.order.vo.OrderStatisticVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +53,17 @@ public class OrderStatisticServiceImpl implements OrderStatisticService {
             orderStatisticVO.setCurYearMoney(new BigDecimal(0));
         }
         return orderStatisticVO;
+    }
+
+
+
+    @Override
+    public PageInfo<OrderHotSellStatisticVO> queryHotSellListPage(OrderHotSellPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<OrderHotSellStatisticVO> pageInfo = new PageInfo();
+        pageInfo.setList(orderStatisticMapper.queryHotSellListPage(queryPageInfo));
+        pageInfo.setTotal(orderStatisticMapper.queryHotSellListPageCount(queryPageInfo));
+        return pageInfo;
     }
 
 }

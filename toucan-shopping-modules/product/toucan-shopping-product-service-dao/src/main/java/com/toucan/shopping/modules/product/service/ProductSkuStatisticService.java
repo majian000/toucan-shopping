@@ -24,4 +24,6 @@ public interface ProductSkuStatisticService {
      */
     List<ProductSkuStatisticVO> queryCategoryStatistic(ProductSkuStatisticVO query);
 
+
+
 }

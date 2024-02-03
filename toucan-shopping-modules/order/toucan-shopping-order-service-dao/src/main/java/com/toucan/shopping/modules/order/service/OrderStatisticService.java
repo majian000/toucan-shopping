@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.order.service;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO;
 import com.toucan.shopping.modules.order.vo.OrderStatisticVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 
 import java.util.List;
 
@@ -18,5 +20,12 @@ public interface OrderStatisticService {
      */
     OrderStatisticVO queryTotalAndTodayAndCurrentMonthAndCurrentYear();
 
+
+    /**
+     * 查询热销列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<OrderHotSellStatisticVO> queryHotSellListPage(OrderHotSellPageInfo queryPageInfo);
 
 }

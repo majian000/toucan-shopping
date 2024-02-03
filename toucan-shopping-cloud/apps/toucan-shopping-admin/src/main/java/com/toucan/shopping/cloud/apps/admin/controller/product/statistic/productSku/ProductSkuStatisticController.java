@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.statistic.produc
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderStatisticService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -12,6 +13,8 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
 import com.toucan.shopping.modules.product.vo.CategoryProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
@@ -59,6 +62,9 @@ public class ProductSkuStatisticController extends UIController {
 
     @Autowired
     private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignOrderStatisticService feignOrderStatisticService;
 
     /**
      * 查询统计数据
@@ -173,6 +179,55 @@ public class ProductSkuStatisticController extends UIController {
 
 
 
+    /**
+     * 热卖统计
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/hotSellStatisticPage",method = RequestMethod.GET)
+    public String hotSellStatisticPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/productSkuStatistic/hotSellStatisticPage",feignFunctionService);
+        return "pages/product/statistic/productSku/hot_sell_statistic_list.html";
+    }
 
+
+
+
+    /**
+     * 商品热卖列表
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/queryHotSellListPage",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO queryHotSellListPage(HttpServletRequest request, OrderHotSellPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            //先查询热卖的订单类型
+            ResultObjectVO resultObjectVO = feignOrderStatisticService.queryHotSellListPage(requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    pageInfo = resultObjectVO.formatData(OrderHotSellPageInfo.class);
+                    tableVO.setCount(pageInfo.getTotal());
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData(pageInfo.getList());
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 }
 
