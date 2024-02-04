@@ -5,6 +5,7 @@
     <resultMap id="orderLogMap" type="com.toucan.shopping.modules.order.entity.OrderLog" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="batch_id" jdbcType="VARCHAR" property="batchId" />
         <result column="operate_user_id" jdbcType="VARCHAR" property="operateUserId" />
         <result column="data_body" jdbcType="VARCHAR" property="dataBody" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -23,8 +24,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderLog" >
-        insert into t_order_log(id,order_no,operate_user_id,data_body,remark,create_date,app_code,delete_status,sharding_date)
-        values(#{id},#{orderNo},#{operateUserId},#{dataBody},#{remark},#{createDate},#{appCode},0,#{shardingDate})
+        insert into t_order_log(id,order_no,batch_id,operate_user_id,data_body,remark,create_date,app_code,delete_status,sharding_date)
+        values(#{id},#{orderNo},#{batchId},#{operateUserId},#{dataBody},#{remark},#{createDate},#{appCode},0,#{shardingDate})
     </insert>
 
 

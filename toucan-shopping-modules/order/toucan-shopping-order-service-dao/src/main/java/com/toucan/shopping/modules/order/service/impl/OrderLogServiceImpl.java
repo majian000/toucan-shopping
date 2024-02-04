@@ -43,16 +43,17 @@ public class OrderLogServiceImpl implements OrderLogService {
     }
 
     @Override
-    public int save(String operateUserId, String appCode, String orderNo, String remark, Object oldObj, Object updateObj, Integer logType) {
+    public int save(String batchId,String operateUserId, String appCode, String orderNo, String remark, Object oldObj, Object updateObj, Integer logType) {
 
         OrderLog orderLog = new OrderLog();
+        orderLog.setBatchId(batchId);
         orderLog.setOperateUserId(operateUserId);
         orderLog.setAppCode(appCode);
         orderLog.setId(idGenerator.id());
         orderLog.setCreateDate(new Date());
         orderLog.setShardingDate(orderLog.getCreateDate());
         orderLog.setOrderNo(orderNo);
-        orderLog.setRemark("修改订单信息");
+        orderLog.setRemark(remark);
         orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();
         return this.save(orderLog);
     }
