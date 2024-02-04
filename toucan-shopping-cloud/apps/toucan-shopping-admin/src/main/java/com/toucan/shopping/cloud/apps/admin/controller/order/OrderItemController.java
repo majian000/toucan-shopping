@@ -101,7 +101,51 @@ public class OrderItemController extends UIController {
         return tableVO;
     }
 
+    /**
+     * 查询列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/all/list/{docNo}",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO queryListAllByDocNo(HttpServletRequest request, OrderItemPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            if(pageInfo==null)
+            {
+                pageInfo = new OrderItemPageInfo();
+            }
 
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
+            ResultObjectVO resultObjectVO = feignOrderItemService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
+                    List<OrderItemVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderItemVO.class);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        for(OrderItemVO orderItemVO:list)
+                        {
+                            if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath()))
+                            {
+                                orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                            }
+                        }
+                    }
+                    tableVO.setData((List)list);
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 
 }
 
