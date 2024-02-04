@@ -460,7 +460,11 @@
                     return false;
                 }else if (obj.event == 'update') {
                     openUpdateDialog(data.id);
+                }else if (obj.event == 'modifyOrderItems') {
+                    openModifyOrderItemsDialog(data.id);
                 }
+
+
             });
         }
 
@@ -500,6 +504,33 @@
             });
             return false;
 
+        }
+
+
+        function openModifyOrderItemsDialog(docNo,id)
+        {
+            var index = layer.open({
+                title:  "订单号:"+docNo+"——订单项列表",
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                    var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
+                    setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    layer.close(index);
+                },
+                area: ['80%', '80%'],
+                content: '[[@{/}]]order/orderItemListPage/'+docNo,
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
         }
         initOrderTable("tab_index_0_");
 

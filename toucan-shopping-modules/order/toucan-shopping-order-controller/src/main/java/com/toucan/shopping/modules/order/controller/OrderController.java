@@ -236,7 +236,7 @@ public class OrderController {
 
                 orderVO.getOrderConsigneeAddress().setOrderNo(oldOrder.getOrderNo());
                 orderLogService.save(logBatchId,orderVO.getOperateUserId(),requestJsonVO.getAppCode(),oldOrder.getOrderNo(),
-                        "修改收货人信息",orderConsigneeAddressService.queryOneByOrderNo(orderVO.getOrderNo()),
+                        "修改收货人信息",orderConsigneeAddressService.queryOneByOrderNo(oldOrder.getOrderNo()),
                         orderVO.getOrderConsigneeAddress(),OrderConstant.ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS);
 
                 orderConsigneeAddressService.updateByOrderNo(orderVO.getOrderConsigneeAddress());
@@ -277,9 +277,9 @@ public class OrderController {
     }
 
 
-        /**
-         * 完成订单
-         */
+    /**
+     * 完成订单
+     */
     @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO){

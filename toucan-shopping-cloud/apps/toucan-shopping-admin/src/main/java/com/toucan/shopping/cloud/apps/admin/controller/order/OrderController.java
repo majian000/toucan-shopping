@@ -307,5 +307,20 @@ public class OrderController extends UIController {
         request.setAttribute("orderNo",orderNo);
         return "pages/order/cancel.html";
     }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/orderItemListPage/{docNo}",method = RequestMethod.GET)
+    public String spuListPage(HttpServletRequest request,@PathVariable String docNo)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/order/orderItemListPage",feignFunctionService);
+
+        request.setAttribute("docNo",docNo);
+        return "pages/order/modify_order_item_list.html";
+    }
+
+
 }
 

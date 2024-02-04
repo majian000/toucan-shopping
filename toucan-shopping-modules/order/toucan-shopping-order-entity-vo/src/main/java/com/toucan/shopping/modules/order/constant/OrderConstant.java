@@ -24,8 +24,11 @@ public class OrderConstant {
      */
     public static final int TRADE_STATUS_CALCEL=2; //已取消
 
-    public static final int ORDER_LOG_TYPE_ORDER=1; //修改订单主表类型
 
+    /**
+     * 订单日志类型
+     */
+    public static final int ORDER_LOG_TYPE_ORDER=1; //修改订单主表类型
     public static final int ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS=1; //修改订单收货人类型
 
 
