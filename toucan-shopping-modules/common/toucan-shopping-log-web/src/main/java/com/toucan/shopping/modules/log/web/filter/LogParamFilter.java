@@ -167,7 +167,7 @@ public class LogParamFilter extends OncePerRequestFilter {
                                 logParam = new LogParam();
                             }
                             LogParamResponse logParamResponse = new LogParamResponse();
-                            String contentType = request.getContentType();
+                            String contentType = response.getContentType();
                             logParamResponse.setUri(uri);
                             logParamResponse.setContentType(contentType);
                             if (StringUtils.isNotEmpty(contentType)) {

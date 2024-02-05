@@ -44,9 +44,9 @@ public class LogParamHelper {
         if(response!=null)
         {
             logBuilder.append("-------------response------------\n");
-            logBuilder.append("uri:"+ request.getUri()+"\n");
-            logBuilder.append("contentType:"+ request.getContentType()+"\n");
-            logBuilder.append("body:"+request.getBody()+"\n");
+            logBuilder.append("uri:"+ response.getUri()+"\n");
+            logBuilder.append("contentType:"+ response.getContentType()+"\n");
+            logBuilder.append("body:"+response.getBody()+"\n");
         }
         logBuilder.append("\n=======================================\n");
         logger.info(logBuilder.toString());
