@@ -27,4 +27,5 @@ public class Response {
      * 忽略URL
      */
     private List<String> ignoreUrls;
+
 }

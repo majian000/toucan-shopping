@@ -30,17 +30,16 @@ public class LogParamHelper {
             logBuilder.append("ip:"+request.getIp()+"\n");
             logBuilder.append("method:"+ request.getMethod()+"\n");
             logBuilder.append("contentType:"+ request.getContentType()+"\n");
-            logBuilder.append("---------header---------\n");
             if(CollectionUtils.isNotEmpty(request.getHeaders()))
             {
+                logBuilder.append("---------header---------\n");
                 for(LogParamHeader header:request.getHeaders())
                 {
                     logBuilder.append(header.getName()+":"+header.getValue()+"\n");
                 }
+                logBuilder.append("-----------------------\n");
             }
-            logBuilder.append("-----------------------\n");
             logBuilder.append("body:"+request.getBody()+"\n");
-            logBuilder.append("--------------------------------\n");
         }
         if(response!=null)
         {
@@ -48,7 +47,6 @@ public class LogParamHelper {
             logBuilder.append("uri:"+ request.getUri()+"\n");
             logBuilder.append("contentType:"+ request.getContentType()+"\n");
             logBuilder.append("body:"+request.getBody()+"\n");
-            logBuilder.append("--------------------------------\n");
         }
         logBuilder.append("\n=======================================\n");
         logger.info(logBuilder.toString());

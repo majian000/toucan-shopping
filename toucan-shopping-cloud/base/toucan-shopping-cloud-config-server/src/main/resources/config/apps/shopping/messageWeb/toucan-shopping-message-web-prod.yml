@@ -119,13 +119,21 @@ toucan:
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
   modules:
     log: #日志模块
-      request:
-        enabled: true
-        content-type-list[0]: application/x-www-form-urlencoded
-        content-type-list[1]: application/json
-      response:
-        enabled: true
-        content-type-list[0]: application/json
+      param:
+        #只配置请求即可,忽略以上请求日志
+        ignore-url-patterns[0]: .*\.js
+        ignore-url-patterns[1]: .*\.css
+        ignore-url-patterns[2]: .*\.jpg
+        ignore-url-patterns[3]: .*\.png
+        ignore-url-patterns[4]: .*\.gif
+        ignore-url-patterns[5]: .*\.json
+        request:
+          enabled: true
+          content-type-list[0]: application/x-www-form-urlencoded
+          content-type-list[1]: application/json
+        response:
+          enabled: true
+          content-type-list[0]: application/json
       email:
         enabled: false
         title: ——商城PC端——异常邮件

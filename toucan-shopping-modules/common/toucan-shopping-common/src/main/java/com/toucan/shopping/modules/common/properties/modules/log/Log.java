@@ -13,15 +13,9 @@ public class Log {
      */
     private Email email;
 
-
     /**
-     * 请求配置
+     * 参数
      */
-    private Request request;
-
-    /**
-     * 响应配置
-     */
-    private Response response;
+    private Param param;
 
 }
