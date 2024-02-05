@@ -21,35 +21,36 @@ public class LogParamHelper {
 
     public void execute(LogParam logParam){
         StringBuilder logBuilder = new StringBuilder();
-        logBuilder.append("log param=================");
+        logBuilder.append("\n=================log param=================\n");
         LogParamRequest request = logParam.getRequest();
         LogParamResponse response = logParam.getResponse();
         if(request!=null) {
-            logBuilder.append("-------------request------------");
-            logBuilder.append("uri:"+ request.getUri());
-            logBuilder.append("ip:"+request.getIp());
-            logBuilder.append("method:"+ request.getMethod());
-            logBuilder.append("contentType:"+ request.getContentType());
-            logBuilder.append("---------header---------");
+            logBuilder.append("-------------request------------\n");
+            logBuilder.append("uri:"+ request.getUri()+"\n");
+            logBuilder.append("ip:"+request.getIp()+"\n");
+            logBuilder.append("method:"+ request.getMethod()+"\n");
+            logBuilder.append("contentType:"+ request.getContentType()+"\n");
+            logBuilder.append("---------header---------\n");
             if(CollectionUtils.isNotEmpty(request.getHeaders()))
             {
                 for(LogParamHeader header:request.getHeaders())
                 {
-                    logBuilder.append(header.getName()+":"+header.getValue());
+                    logBuilder.append(header.getName()+":"+header.getValue()+"\n");
                 }
             }
-            logBuilder.append("-----------------------");
-            logBuilder.append("body:"+request.getBody());
-            logBuilder.append("--------------------------------");
+            logBuilder.append("-----------------------\n");
+            logBuilder.append("body:"+request.getBody()+"\n");
+            logBuilder.append("--------------------------------\n");
         }
         if(response!=null)
         {
-            logBuilder.append("-------------response------------");
-            logBuilder.append("uri:"+ request.getUri());
-            logBuilder.append("contentType:"+ request.getContentType());
-            logBuilder.append("body:"+request.getBody());
-            logBuilder.append("--------------------------------");
+            logBuilder.append("-------------response------------\n");
+            logBuilder.append("uri:"+ request.getUri()+"\n");
+            logBuilder.append("contentType:"+ request.getContentType()+"\n");
+            logBuilder.append("body:"+request.getBody()+"\n");
+            logBuilder.append("--------------------------------\n");
         }
+        logBuilder.append("\n=======================================\n");
         logger.info(logBuilder.toString());
     }
 
