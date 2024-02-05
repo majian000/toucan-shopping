@@ -49,7 +49,7 @@ public class LogParamFilterConfig {
         if(toucanModules!=null&&toucanModules.getLog()!=null) {
             Log toucanLog = toucanModules.getLog();
             Param toucanParam = toucanLog.getParam();
-            if(toucanParam!=null)
+            if(toucanParam!=null&&CollectionUtils.isNotEmpty(toucanParam.getIgnoreUrlPatterns()))
             {
                 for(String ingoreUrlPattern:toucanParam.getIgnoreUrlPatterns()) {
                     Pattern pattern = Pattern.compile(ingoreUrlPattern, Pattern.CASE_INSENSITIVE);
