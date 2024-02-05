@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.log.web.config;
 
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.log.queue.LogParamQueue;
 import com.toucan.shopping.modules.log.web.filter.LogParamFilter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,8 @@ public class LogParamFilterConfig {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private LogParamQueue logParamQueue;
 
     /**
      * 注册替换request对象过滤器
@@ -77,6 +80,7 @@ public class LogParamFilterConfig {
     public Filter LogParamFilter() {
         LogParamFilter logParamFilter = new LogParamFilter();
         logParamFilter.setToucan(toucan);
+        logParamFilter.setLogParamQueue(logParamQueue);
         return logParamFilter;
     }
 

@@ -3,6 +3,11 @@ package com.toucan.shopping.modules.log.web.filter;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.properties.modules.log.Request;
 import com.toucan.shopping.modules.common.properties.modules.log.Response;
+import com.toucan.shopping.modules.log.queue.LogParamQueue;
+import com.toucan.shopping.modules.log.vo.LogParam;
+import com.toucan.shopping.modules.log.vo.LogParamHeader;
+import com.toucan.shopping.modules.log.vo.LogParamRequest;
+import com.toucan.shopping.modules.log.vo.LogParamResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +34,9 @@ public class LogParamFilter extends OncePerRequestFilter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private Toucan toucan;
+
+    private LogParamQueue logParamQueue;
 
     public Toucan getToucan() {
         return toucan;
@@ -37,6 +44,14 @@ public class LogParamFilter extends OncePerRequestFilter {
 
     public void setToucan(Toucan toucan) {
         this.toucan = toucan;
+    }
+
+    public LogParamQueue getLogParamQueue() {
+        return logParamQueue;
+    }
+
+    public void setLogParamQueue(LogParamQueue logParamQueue) {
+        this.logParamQueue = logParamQueue;
     }
 
     @Override
@@ -53,6 +68,7 @@ public class LogParamFilter extends OncePerRequestFilter {
             if(toucan.getModules()!=null
                     &&toucan.getModules().getLog()!=null) {
                 Request requestConfig = toucan.getModules().getLog().getRequest();
+                LogParam logParam = null; //参数日志
                 if(requestConfig!=null&&requestConfig.isEnabled())
                 {
                     boolean isIgnore=false;
@@ -66,15 +82,30 @@ public class LogParamFilter extends OncePerRequestFilter {
                         }
                     }
 
+
                     if(!isIgnore) {
+                        logParam = new LogParam();
                         String contentType = request.getContentType();
                         List<String> contentTypeList = requestConfig.getContentTypeList();
                         if (CollectionUtils.isNotEmpty(contentTypeList)) {
+                            LogParamRequest logParamRequest = new LogParamRequest();
+                            logParamRequest.setUri(uri);
+                            logParamRequest.setIp(request.getRemoteAddr());
+                            logParamRequest.setMethod(request.getMethod());
+                            logParamRequest.setContentType(contentType);
+                            logParamRequest.setHeaders(new LinkedList<>());
+                            while(request.getHeaderNames().hasMoreElements()){
+//                                LogParamHeader logParamHeader = new LogParamHeader();
+//                                String headerName = request.getHeaderNames().nextElement();
+//                                logParamHeader.setName(headerName);
+//                                logParamHeader.setValue(request.getHeader(headerName));
+//                                logParamRequest.getHeaders().add(logParamHeader);
+                            }
                             if (StringUtils.isNotEmpty(contentType)) {
                                 for (String ct : contentTypeList) {
                                     if (contentType.indexOf(ct.toLowerCase()) != -1) {
                                         byte[] requestBody = req.getContentAsByteArray();
-                                        logger.info("request uri:{} requestIp:{} method:{} body:{}", uri, request.getRemoteAddr(), request.getMethod(), new String(requestBody, StandardCharsets.UTF_8));
+                                        logParamRequest.setBody(new String(requestBody, StandardCharsets.UTF_8));
                                     }
                                 }
                             } else {
@@ -93,10 +124,12 @@ public class LogParamFilter extends OncePerRequestFilter {
                                             }
                                             builder.append(" ");
                                         }
-                                        logger.info("request uri:{} requestIp:{} method:{} body:{}", uri, request.getRemoteAddr(), request.getMethod(), builder.toString());
+                                        logParamRequest.setBody(builder.toString());
                                     }
                                 }
                             }
+
+                            logParam.setRequest(logParamRequest);
                         }
                     }
                 }
@@ -115,18 +148,25 @@ public class LogParamFilter extends OncePerRequestFilter {
                         }
                     }
                     if(!isIgnore) {
+                        if(logParam==null) {
+                            logParam = new LogParam();
+                        }
+                        LogParamResponse logParamResponse = new LogParamResponse();
                         String contentType = request.getContentType();
+                        logParamResponse.setUri(uri);
+                        logParamResponse.setContentType(contentType);
                         if (StringUtils.isNotEmpty(contentType)) {
                             List<String> contentTypeList = responseConfig.getContentTypeList();
                             if (CollectionUtils.isNotEmpty(contentTypeList)) {
                                 for (String ct : contentTypeList) {
                                     if (contentType.indexOf(ct.toLowerCase()) != -1) {
                                         byte[] responseBody = resp.getContentAsByteArray();
-                                        logger.info("response uri:{} requestIp:{} body:{}", uri, request.getRemoteAddr(), new String(responseBody, StandardCharsets.UTF_8));
+                                        logParamResponse.setBody(new String(responseBody, StandardCharsets.UTF_8));
                                     }
                                 }
                             }
                         }
+                        logParam.setResponse(logParamResponse);
                     }
                 }
 
