@@ -74,11 +74,11 @@ toucan:
     log: #日志模块
       param:
         request:
-          enabled: true
+          enabled: false
           content-type-list[0]: application/x-www-form-urlencoded
           content-type-list[1]: application/json
         response:
-          enabled: true
+          enabled: false
           content-type-list[0]: application/json
       email:
         enabled: false
