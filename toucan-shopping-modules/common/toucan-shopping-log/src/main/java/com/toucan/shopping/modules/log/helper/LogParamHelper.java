@@ -49,8 +49,8 @@ public class LogParamHelper {
             logBuilder.append("contentType:"+ request.getContentType());
             logBuilder.append("body:"+request.getBody());
             logBuilder.append("--------------------------------");
-
         }
+        logger.info(logBuilder.toString());
     }
 
 

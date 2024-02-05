@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,9 +95,10 @@ public class LogParamFilter extends OncePerRequestFilter {
                             logParamRequest.setMethod(request.getMethod());
                             logParamRequest.setContentType(contentType);
                             logParamRequest.setHeaders(new LinkedList<>());
-                            while(request.getHeaderNames().hasMoreElements()){
+                            Enumeration<String> headerNames = request.getHeaderNames();
+                            while(headerNames.hasMoreElements()){
+                                String headerName = headerNames.nextElement();
 //                                LogParamHeader logParamHeader = new LogParamHeader();
-//                                String headerName = request.getHeaderNames().nextElement();
 //                                logParamHeader.setName(headerName);
 //                                logParamHeader.setValue(request.getHeader(headerName));
 //                                logParamRequest.getHeaders().add(logParamHeader);
@@ -168,6 +170,11 @@ public class LogParamFilter extends OncePerRequestFilter {
                         }
                         logParam.setResponse(logParamResponse);
                     }
+                }
+
+
+                if(logParam!=null) {
+                    logParamQueue.push(logParam);
                 }
 
             }
