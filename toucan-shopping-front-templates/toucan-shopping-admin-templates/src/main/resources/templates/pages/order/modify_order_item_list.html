@@ -35,6 +35,9 @@
 
         <table class="layui-hide" id="orderItemTable" lay-filter="orderItemTableFilter"></table>
 
+        <div class="layui-form-item" style="text-align:center;margin-top: 20px;" >
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="orderUpdateBtn">确认保存</button>
+        </div>
     </div>
 </div>
 
@@ -84,6 +87,31 @@
         };
 
 
+
+        //监听提交
+        form.on('submit(orderUpdateBtn)', function (data) {
+            loadding = layer.load();
+
+            $.ajax({
+                url:"[[@{/order/orderItem/update}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(null),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
+            });
+            return false;
+        });
+
         table.render({
             elem: '#orderItemTable',
             url: "[[@{/}]]/order/orderItem/all/list/"+$("#orderId").val(),
@@ -100,8 +128,65 @@
             },
             cols: [
                 [
-                    {field: 'id',  title: '商品ID', width: 150},
-                    {field: 'updateDate', width: 150, title: '修改时间'}
+                    {field: 'skuId',  title: '商品SKUID', width: 180},
+                    {field: 'productSkuName',  title: '商品名称', width: 320},
+                    {field: 'httpProductPreviewPath', width: 150, title: '商品预览',
+                        templet: function (row) {
+                            if(row.httpProductPreviewPath!=null) {
+                                return "<a href='" + row.httpProductPreviewPath + "' target='_blank'><img src='" + row.httpProductPreviewPath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'deliveryStatus',  title: '配送状态', width: 100,
+                        templet: function (row) {
+                            if(row.deliveryStatus==0) {
+                                return "未收货";
+                            }
+                            if(row.deliveryStatus==1) {
+                                return "送货中";
+                            }
+                            if(row.deliveryStatus==2) {
+                                return "已收货";
+                            }
+                            return row.deliveryStatus;
+                        }},
+                    {field: 'sellerStatus',  title: '卖家备货状态', width: 150,
+                        templet: function (row) {
+                            if(row.sellerStatus==0) {
+                                return "备货中";
+                            }
+                            if(row.sellerStatus==1) {
+                                return "备货完成";
+                            }
+                            if(row.sellerStatus==2) {
+                                return "缺货";
+                            }
+                            return row.sellerStatus;
+                        }},
+                    {field: 'buyerStatus',  title: '买家状态', width: 100,
+                        templet: function (row) {
+                            if(row.buyerStatus==0) {
+                                return "待收货";
+                            }
+                            if(row.buyerStatus==1) {
+                                return "已收货";
+                            }
+                            if(row.buyerStatus==2) {
+                                return "换货";
+                            }
+                            if(row.buyerStatus==3) {
+                                return "退货";
+                            }
+                            return row.buyerStatus;
+                        }},
+                    {field: 'productPrice',  title: '商品单价', width: 120},
+                    {field: 'productNum',  title: '购买数量', width: 120},
+                    {field: 'orderItemAmount',  title: '总金额', width: 120},
+                    {field: 'deliveryReceiveTime',  title: '收货时间', width: 120},
+                    {field: 'deliveryFinishTime',  title: '配送完成时间', width: 120},
+                    {field: 'sellerFinishTime',  title: '卖家完成时间', width: 120},
+                    {field: 'buyerFinishTime',  title: '买家完成时间', width: 120},
+                    {field: 'freightTemplateId',  title: '运费模板ID', width: 120}
                 ]
             ],
             page: false,

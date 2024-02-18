@@ -450,6 +450,11 @@
                 contentType: "application/json; charset=utf-8",
                 type:'GET',
                 success:function(data){
+                    if(data.code==0)
+                    {
+                        layer.msg(data.msg);
+                        layer.close(loadding);
+                    }
                     var optionHtml="";
                     provinceCache.splice(0,provinceCache.length);
                     for(var i=0;i<data.data.length;i++) {
@@ -532,6 +537,11 @@
                     contentType: "application/json; charset=utf-8",
                     type: 'GET',
                     success: function (data) {
+                        if(data.code==0)
+                        {
+                            layer.msg(data.msg);
+                            layer.close(loadding);
+                        }
                         var optionHtml = "";
                         var isDefaultSelect = false;
                         cityCache.splice(0, provinceCache.length);
@@ -577,6 +587,11 @@
                 contentType: "application/json; charset=utf-8",
                 type:'GET',
                 success:function(data){
+                    if(data.code==0)
+                    {
+                        layer.msg(data.msg);
+                        layer.close(loadding);
+                    }
                     var optionHtml="";
                     var isDefaultSelect=false;
                     for(var i=0;i<data.data.length;i++) {

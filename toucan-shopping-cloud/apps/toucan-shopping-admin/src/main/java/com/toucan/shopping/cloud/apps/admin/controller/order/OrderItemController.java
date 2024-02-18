@@ -112,16 +112,26 @@ public class OrderItemController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
-            OrderItemVO orderItemVO = new OrderItemVO();
-            orderItemVO.setOrderId(orderId);
+            OrderItemVO queryOrderItemVO = new OrderItemVO();
+            queryOrderItemVO.setOrderId(orderId);
 
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderItemVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryOrderItemVO);
             ResultObjectVO resultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     List<OrderItemVO> list = resultObjectVO.formatDataList(OrderItemVO.class);
-                    tableVO.setCount(Long.parseLong(String.valueOf(list.size())));
-                    tableVO.setData(list);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        tableVO.setCount(Long.parseLong(String.valueOf(list.size())));
+                        tableVO.setData(list);
+                        for(OrderItemVO orderItemVO:list)
+                        {
+                            if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath()))
+                            {
+                                orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                            }
+                        }
+                    }
                 }
             }
         }catch(Exception e)
