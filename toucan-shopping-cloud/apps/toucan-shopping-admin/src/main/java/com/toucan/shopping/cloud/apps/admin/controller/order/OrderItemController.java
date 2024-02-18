@@ -106,14 +106,14 @@ public class OrderItemController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/all/list/{orderId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/all/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO queryListAllByDocNo(HttpServletRequest request,@PathVariable Long orderId)
+    public TableVO queryListAllByOrderId(HttpServletRequest request,OrderItemPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
             OrderItemVO queryOrderItemVO = new OrderItemVO();
-            queryOrderItemVO.setOrderId(orderId);
+            queryOrderItemVO.setOrderId(pageInfo.getOrderId());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryOrderItemVO);
             ResultObjectVO resultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);

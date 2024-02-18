@@ -36,7 +36,7 @@
         <table class="layui-hide" id="orderItemTable" lay-filter="orderItemTableFilter"></table>
 
         <div class="layui-form-item" style="text-align:center;margin-top: 20px;" >
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="orderUpdateBtn">确认保存</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="orderUpdateBtn">确认修改</button>
         </div>
     </div>
 </div>
@@ -124,9 +124,9 @@
 
         table.render({
             elem: '#orderItemTable',
-            url: "[[@{/}]]/order/orderItem/all/list/"+$("#orderId").val(),
+            url: "[[@{/}]]order/orderItem/all/list",
             method:'POST',
-            where:{},
+            where:{"orderId":$("#orderId").val()},
             defaultToolbar: ['filter',  {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
