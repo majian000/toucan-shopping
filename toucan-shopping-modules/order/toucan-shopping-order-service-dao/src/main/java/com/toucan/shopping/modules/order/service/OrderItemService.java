@@ -19,6 +19,8 @@ public interface OrderItemService {
 
     List<OrderItemVO> findByOrderNo(String orderNo);
 
+    List<OrderItemVO> findByOrderId(Long orderId);
+
     List<OrderItemVO> findByOrderNos(List<String> orderNos);
 
 

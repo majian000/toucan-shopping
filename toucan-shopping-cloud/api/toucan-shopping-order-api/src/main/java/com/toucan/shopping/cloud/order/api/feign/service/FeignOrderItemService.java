@@ -19,4 +19,9 @@ public interface FeignOrderItemService {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    @RequestMapping(value="/queryAllListByOrderId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryAllListByOrderId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

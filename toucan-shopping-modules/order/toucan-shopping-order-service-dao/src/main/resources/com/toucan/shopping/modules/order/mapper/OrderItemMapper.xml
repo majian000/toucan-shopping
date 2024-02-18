@@ -85,6 +85,9 @@
         select * from t_order_item where order_no=#{orderNo}  and delete_status=0
     </select>
 
+    <select id="findByOrderId" parameterType="java.lang.Long" resultMap="orderItemVOMap">
+        select * from t_order_item where order_id=#{orderId}  and delete_status=0
+    </select>
 
     <select id="findByOrderNos" resultMap="orderItemVOMap">
         select * from t_order_item t where

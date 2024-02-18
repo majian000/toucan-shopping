@@ -39,6 +39,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    public List<OrderItemVO> findByOrderId(Long orderId) {
+        return orderItemMapper.findByOrderId(orderId);
+    }
+
+    @Override
     public List<OrderItemVO> findByOrderNos(List<String> orderNos) {
         if(CollectionUtils.isEmpty(orderNos))
         {

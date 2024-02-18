@@ -31,7 +31,7 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
 
-        <input type="hidden" id="docNo" name="docNo" th:value="${docNo}">
+        <input type="hidden" id="orderId" name="orderId" th:value="${orderId}">
 
         <table class="layui-hide" id="orderItemTable" lay-filter="orderItemTableFilter"></table>
 
@@ -86,7 +86,7 @@
 
         table.render({
             elem: '#orderItemTable',
-            url: "[[@{/}]]/order/orderItem/all/list/"+$("#docNo").val(),
+            url: "[[@{/}]]/order/orderItem/all/list/"+$("#orderId").val(),
             method:'POST',
             where:{},
             defaultToolbar: ['filter',  {

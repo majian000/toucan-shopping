@@ -22,6 +22,8 @@ public interface OrderItemMapper {
 
     List<OrderItemVO> findByOrderNo(String orderNo);
 
+    List<OrderItemVO> findByOrderId(Long orderId);
+
     List<OrderItemVO> findByOrderNos(List<String> orderNos);
 
 

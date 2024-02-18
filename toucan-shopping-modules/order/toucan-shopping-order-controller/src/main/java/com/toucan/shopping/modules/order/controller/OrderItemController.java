@@ -68,6 +68,28 @@ public class OrderItemController {
 
 
 
+    /**
+     * 查询列表页
+     */
+    @RequestMapping(value="/queryAllListByOrderId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryAllListByOrderId(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+            try {
+                OrderItemVO orderItemVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), OrderItemVO.class);
+                resultObjectVO.setData( orderItemService.findByOrderId(orderItemVO.getOrderId()));
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
 
 
 }

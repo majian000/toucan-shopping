@@ -103,39 +103,25 @@ public class OrderItemController extends UIController {
 
     /**
      * 查询列表
-     * @param pageInfo
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/all/list/{docNo}",method = RequestMethod.POST)
+    @RequestMapping(value = "/all/list/{orderId}",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO queryListAllByDocNo(HttpServletRequest request, OrderItemPageInfo pageInfo)
+    public TableVO queryListAllByDocNo(HttpServletRequest request,@PathVariable Long orderId)
     {
         TableVO tableVO = new TableVO();
         try {
-            if(pageInfo==null)
-            {
-                pageInfo = new OrderItemPageInfo();
-            }
+            OrderItemVO orderItemVO = new OrderItemVO();
+            orderItemVO.setOrderId(orderId);
 
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            ResultObjectVO resultObjectVO = feignOrderItemService.queryListPage(requestJsonVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderItemVO);
+            ResultObjectVO resultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    List<OrderItemVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderItemVO.class);
-                    if(CollectionUtils.isNotEmpty(list))
-                    {
-                        for(OrderItemVO orderItemVO:list)
-                        {
-                            if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath()))
-                            {
-                                orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
-                            }
-                        }
-                    }
-                    tableVO.setData((List)list);
+                    List<OrderItemVO> list = resultObjectVO.formatDataList(OrderItemVO.class);
+                    tableVO.setCount(Long.parseLong(String.valueOf(list.size())));
+                    tableVO.setData(list);
                 }
             }
         }catch(Exception e)
