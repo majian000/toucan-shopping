@@ -20,6 +20,8 @@
         .ztree *{
             font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
         }
+
+        .layui-table-cell { overflow: visible !important; }
     </style>
 
 </head>
@@ -40,6 +42,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
@@ -86,6 +94,32 @@
             return serializeObj;
         };
 
+        //配送状态
+        form.on('select(deliveryStatus)', function (data) {
+            var elem = $(data.elem);
+            var trElem = elem.parents('tr');
+            var tableData = table.cache['orderItemTable'];
+            // 更新到表格的缓存数据中，才能在获得选中行等等其他的方法中得到更新之后的值
+            tableData[trElem.data('index')][elem.attr('name')] = data.value;
+        });
+
+        //卖家备货状态
+        form.on('select(sellerStatus)', function (data) {
+            var elem = $(data.elem);
+            var trElem = elem.parents('tr');
+            var tableData = table.cache['orderItemTable'];
+            // 更新到表格的缓存数据中，才能在获得选中行等等其他的方法中得到更新之后的值
+            tableData[trElem.data('index')][elem.attr('name')] = data.value;
+        });
+
+        //买家状态
+        form.on('select(buyerStatus)', function (data) {
+            var elem = $(data.elem);
+            var trElem = elem.parents('tr');
+            var tableData = table.cache['orderItemTable'];
+            // 更新到表格的缓存数据中，才能在获得选中行等等其他的方法中得到更新之后的值
+            tableData[trElem.data('index')][elem.attr('name')] = data.value;
+        });
 
 
         //监听提交
@@ -134,7 +168,7 @@
             }],
             done:function(res, curr, count)
             {
-                console.log(res);
+                // console.log(res);
             },
             cols: [
                 [
@@ -147,48 +181,31 @@
                             }
                             return "";
                         }},
-                    {field: 'deliveryStatus',  title: '配送状态', width: 100,
-                        templet: function (row) {
-                            if(row.deliveryStatus==0) {
-                                return "未收货";
-                            }
-                            if(row.deliveryStatus==1) {
-                                return "送货中";
-                            }
-                            if(row.deliveryStatus==2) {
-                                return "已收货";
-                            }
-                            return row.deliveryStatus;
-                        }},
-                    {field: 'sellerStatus',  title: '卖家备货状态', width: 150,
-                        templet: function (row) {
-                            if(row.sellerStatus==0) {
-                                return "备货中";
-                            }
-                            if(row.sellerStatus==1) {
-                                return "备货完成";
-                            }
-                            if(row.sellerStatus==2) {
-                                return "缺货";
-                            }
-                            return row.sellerStatus;
-                        }},
-                    {field: 'buyerStatus',  title: '买家状态', width: 100,
-                        templet: function (row) {
-                            if(row.buyerStatus==0) {
-                                return "待收货";
-                            }
-                            if(row.buyerStatus==1) {
-                                return "已收货";
-                            }
-                            if(row.buyerStatus==2) {
-                                return "换货";
-                            }
-                            if(row.buyerStatus==3) {
-                                return "退货";
-                            }
-                            return row.buyerStatus;
-                        }},
+                    {field: 'deliveryStatus',  title: '配送状态', width: 150,templet:function (row) {
+                        var selectHtml="  <select id=\"deliveryStatus\" name='deliveryStatus' lay-filter=\"deliveryStatus\">\n" +
+                            "        <option value=\"0\" "+(row.deliveryStatus==0?'selected':'')+">未收货</option>\n" +
+                            "        <option value=\"1\" " +(row.deliveryStatus==1?'selected':'')+">送货中</option>\n" +
+                            "        <option value=\"2\" "+(row.deliveryStatus==2?'selected':'')+">已收货</option>\n" +
+                            "    </select>";
+                        return selectHtml;
+                    }},
+                    {field: 'sellerStatus',  title: '卖家备货状态', width: 150,templet:function (row) {
+                            var selectHtml="  <select id=\"sellerStatus\" name='sellerStatus' lay-filter=\"sellerStatus\">\n" +
+                                "        <option value=\"0\" "+(row.sellerStatus==0?'selected':'')+">备货中</option>\n" +
+                                "        <option value=\"1\" "+(row.sellerStatus==1?'selected':'')+">备货完成</option>\n" +
+                                "        <option value=\"2\" "+(row.sellerStatus==2?'selected':'')+">缺货</option>\n" +
+                                "    </select>";
+                            return selectHtml;
+                    }},
+                    {field: 'buyerStatus',  title: '买家状态', width: 150,templet: function (row) {
+                            var selectHtml=" <select id=\"buyerStatus\" name='buyerStatus' lay-filter=\"buyerStatus\">\n" +
+                                "        <option value=\"0\" "+(row.buyerStatus==0?'selected':'')+">待收货</option>\n" +
+                                "        <option value=\"1\" "+(row.buyerStatus==1?'selected':'')+">已收货</option>\n" +
+                                "        <option value=\"2\" "+(row.buyerStatus==2?'selected':'')+">换货</option>\n" +
+                                "        <option value=\"3\" "+(row.buyerStatus==3?'selected':'')+">退货</option>\n" +
+                                "    </select>";
+                            return selectHtml;
+                    }},
                     {field: 'productPrice',  title: '商品单价', width: 120},
                     {field: 'productNum',  title: '购买数量', width: 120},
                     {field: 'orderItemAmount',  title: '总金额', width: 120},
@@ -196,7 +213,7 @@
                     {field: 'deliveryFinishTime',  title: '配送完成时间', width: 120},
                     {field: 'sellerFinishTime',  title: '卖家完成时间', width: 120},
                     {field: 'buyerFinishTime',  title: '买家完成时间', width: 120},
-                    {field: 'freightTemplateId',  title: '运费模板ID', width: 120}
+                    {field: 'freightTemplateId',  title: '运费模板ID', width: 180}
                 ]
             ],
             page: false,
