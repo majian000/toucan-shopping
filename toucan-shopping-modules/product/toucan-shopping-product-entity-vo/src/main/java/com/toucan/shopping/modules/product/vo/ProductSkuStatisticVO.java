@@ -54,7 +54,7 @@ public class ProductSkuStatisticVO {
     /**
      * 查询条件
      */
-    private List<Long> categoryIdList; //分类ID结合
+    private List<Long> categoryIdList; //分类ID集合
 
     /**
      * 上架状态 -1全部 0未上架 1已上架

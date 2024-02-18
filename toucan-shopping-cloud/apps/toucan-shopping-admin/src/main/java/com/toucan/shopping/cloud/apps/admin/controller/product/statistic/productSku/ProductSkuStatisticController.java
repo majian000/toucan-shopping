@@ -127,6 +127,19 @@ public class ProductSkuStatisticController extends UIController {
                     }
                 }
 
+                //查询出所有下一级节点
+                for(CategoryVO cv:categorys)
+                {
+                    if(cv.getParentId().longValue()==productSkuStatisticVO.getCategoryId().longValue()) {
+                        ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
+                        productCategoryStatistic.setCategoryName(cv.getName());
+                        productCategoryStatistic.setCategoryId(cv.getId());
+                        productCategoryStatistic.setCount(0L);
+                        productCategoryStatistics.add(productCategoryStatistic);
+                    }
+                }
+
+
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
                 resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
                 if(resultObjectVO.isSuccess())
@@ -146,7 +159,7 @@ public class ProductSkuStatisticController extends UIController {
                                     break;
                                 }
                             }
-                            productCategoryStatistics.add(productCategoryStatistic);
+//                            productCategoryStatistics.add(productCategoryStatistic);
                         }
                     }
                 }
@@ -159,6 +172,14 @@ public class ProductSkuStatisticController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+    /**
+     * 合并商品分类统计
+     * @param releaseProductCategoryStatistics
+     */
+    private void mergeProductCategoryStatistics(List<ProductSkuStatisticVO> releaseProductCategoryStatistics,List<ProductSkuStatisticVO> productSkuStatistics){
+
     }
 
 
