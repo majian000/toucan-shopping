@@ -57,6 +57,13 @@
     </insert>
 
 
+    <update id="updatesFromOrderList" parameterType="com.toucan.shopping.modules.order.vo.OrderItemVO">
+        update t_order_item set delivery_receive_time=#{deliveryReceiveTime} , delivery_finish_time=#{deliveryFinishTime},
+          seller_finish_time=#{sellerFinishTime},buyer_finish_time=#{buyerFinishTime},
+          delivery_status=#{deliveryStatus},seller_status=#{sellerStatus},buyer_status=#{buyerStatus}
+
+         where id=#{id} and delete_status=#{deleteStatus}
+    </update>
 
 
 
@@ -99,6 +106,9 @@
     </select>
 
 
+    <select id="findById" resultMap="orderItemVOMap" parameterType="java.lang.Long">
+        select t.* from t_order_item t where t.delete_status = 0 and t.id=#{id}
+    </select>
 
 
     <select id="queryListPage" resultMap="orderItemVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderItemPageInfo">

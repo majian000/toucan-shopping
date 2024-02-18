@@ -51,6 +51,12 @@ public class OrderItemServiceImpl implements OrderItemService {
         }
         return orderItemMapper.findByOrderNos(orderNos);
     }
+
+    @Override
+    public int updatesFromOrderList(OrderItemVO orderItemVO) {
+        return orderItemMapper.updatesFromOrderList(orderItemVO);
+    }
+
     @Override
     public int create(OrderItem orderItem) {
         orderItem.setShardingDate(orderItem.getCreateDate());
@@ -69,5 +75,10 @@ public class OrderItemServiceImpl implements OrderItemService {
         pageResult.setLimit(pageInfo.getLimit());
         pageResult.setPage(pageInfo.getPage());
         return pageResult;
+    }
+
+    @Override
+    public OrderItemVO findById(Long id) {
+        return orderItemMapper.findById(id);
     }
 }

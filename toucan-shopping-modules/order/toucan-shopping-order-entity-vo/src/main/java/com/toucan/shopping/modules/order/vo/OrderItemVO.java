@@ -20,5 +20,6 @@ public class OrderItemVO extends OrderItem {
 
     private String httpProductPreviewPath; //商品主图HTTP路径
 
+    String operateUserId; //操作用户
 
 }

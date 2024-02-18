@@ -26,9 +26,13 @@ public interface OrderItemMapper {
 
     List<OrderItemVO> findByOrderNos(List<String> orderNos);
 
+    int updatesFromOrderList(OrderItemVO orderItemVO);
+
 
     List<OrderItemVO> queryListPage(OrderItemPageInfo pageInfo);
 
     Long queryListPageCount(OrderItemPageInfo pageInfo);
+
+    OrderItemVO findById(Long id);
 
 }

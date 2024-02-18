@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -25,10 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -142,6 +140,31 @@ public class OrderItemController extends UIController {
         }
         return tableVO;
     }
+
+
+    /**
+     * 修改
+     * @param itemVOS
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/updatesFromOrderList",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO updatesFromOrderList(HttpServletRequest request, @RequestBody List<OrderItemVO> itemVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, itemVOS);
+            resultObjectVO = feignOrderItemService.updatesFromOrderList(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("修改失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 }
 

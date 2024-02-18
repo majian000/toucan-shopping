@@ -66,7 +66,7 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree','jquery'], function () {
+    }).use(['form', 'table','tree','dtree','jquery','laydate'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -75,6 +75,7 @@
         var loadding;
         var loaddingTree;
         var dtree = layui.dtree;
+        var laydate = layui.laydate;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -125,12 +126,20 @@
         //监听提交
         form.on('submit(orderUpdateBtn)', function (data) {
             loadding = layer.load();
-
+            var tableData = table.cache['orderItemTable'];
+            for(var i=0;i<tableData.length;i++)
+            {
+                var row = tableData[i];
+                row.deliveryReceiveTime = $("#deliveryReceiveTime_"+row.id).val();
+                row.deliveryFinishTime = $("#deliveryFinishTime_"+row.id).val();
+                row.sellerFinishTime = $("#sellerFinishTime_"+row.id).val();
+                row.buyerFinishTime = $("#buyerFinishTime_"+row.id).val();
+            }
             $.ajax({
-                url:"[[@{/order/orderItem/update}]]",
+                url:"[[@{/order/orderItem/updatesFromOrderList}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:JSON.stringify(null),
+                data:JSON.stringify(tableData),
                 success:function(data){
                     if(data.code<=0) {
                         layer.msg(data.msg);
@@ -168,6 +177,26 @@
             }],
             done:function(res, curr, count)
             {
+                var data = res.data;
+                for(var i=0;i<data.length;i++)
+                {
+                    laydate.render({
+                        elem: "#deliveryReceiveTime_"+data[i].id //指定元素
+                        ,type: 'datetime'
+                    });
+                    laydate.render({
+                        elem: "#deliveryFinishTime_"+data[i].id //指定元素
+                        ,type: 'datetime'
+                    });
+                    laydate.render({
+                        elem: "#sellerFinishTime_"+data[i].id //指定元素
+                        ,type: 'datetime'
+                    });
+                    laydate.render({
+                        elem: "#buyerFinishTime_"+data[i].id //指定元素
+                        ,type: 'datetime'
+                    });
+                }
                 // console.log(res);
             },
             cols: [
@@ -209,10 +238,22 @@
                     {field: 'productPrice',  title: '商品单价', width: 120},
                     {field: 'productNum',  title: '购买数量', width: 120},
                     {field: 'orderItemAmount',  title: '总金额', width: 120},
-                    {field: 'deliveryReceiveTime',  title: '收货时间', width: 120},
-                    {field: 'deliveryFinishTime',  title: '配送完成时间', width: 120},
-                    {field: 'sellerFinishTime',  title: '卖家完成时间', width: 120},
-                    {field: 'buyerFinishTime',  title: '买家完成时间', width: 120},
+                    {field: 'deliveryReceiveTime',  title: '收货时间', width: 200,templet: function (row) {
+                            var selectHtml="<input type=\"text\" id=\"deliveryReceiveTime_"+row.id+"\" value=\""+(row.deliveryReceiveTime!=null?row.deliveryReceiveTime:'')+"\"  class=\"layui-input\">";
+                            return selectHtml;
+                    }},
+                    {field: 'deliveryFinishTime',  title: '配送完成时间', width: 200,templet: function (row) {
+                            var selectHtml="<input type=\"text\" id=\"deliveryFinishTime_"+row.id+"\"  value=\""+(row.deliveryFinishTime!=null?row.deliveryFinishTime:'')+"\" class=\"layui-input\">";
+                            return selectHtml;
+                        }},
+                    {field: 'sellerFinishTime',  title: '卖家完成时间', width: 200,templet: function (row) {
+                            var selectHtml="<input type=\"text\" id=\"sellerFinishTime_"+row.id+"\"  value=\""+(row.sellerFinishTime!=null?row.sellerFinishTime:'')+"\" class=\"layui-input\">";
+                            return selectHtml;
+                        }},
+                    {field: 'buyerFinishTime',  title: '买家完成时间', width: 200,templet: function (row) {
+                            var selectHtml="<input type=\"text\" id=\"buyerFinishTime_"+row.id+"\"  value=\""+(row.buyerFinishTime!=null?row.buyerFinishTime:'')+"\" class=\"layui-input\">";
+                            return selectHtml;
+                        }},
                     {field: 'freightTemplateId',  title: '运费模板ID', width: 180}
                 ]
             ],

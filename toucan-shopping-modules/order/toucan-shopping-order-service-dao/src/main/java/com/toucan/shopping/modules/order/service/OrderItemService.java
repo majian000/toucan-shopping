@@ -23,6 +23,7 @@ public interface OrderItemService {
 
     List<OrderItemVO> findByOrderNos(List<String> orderNos);
 
+    int updatesFromOrderList(OrderItemVO orderItemVO);
 
     /**
      * 查询订单列表页
@@ -30,5 +31,7 @@ public interface OrderItemService {
      * @return
      */
     PageInfo<OrderItemVO> queryOrderListPage(OrderItemPageInfo pageInfo);
+
+    OrderItemVO findById(Long id);
 
 }
