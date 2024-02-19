@@ -128,7 +128,15 @@ public class ProductSkuStatisticController extends UIController {
                     }
                 }
 
-
+                //查询当前分类
+                CategoryVO queryCategoryVO = new CategoryVO();
+                queryCategoryVO.setId(categoryId);
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+                resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    categorys.add(resultObjectVO.formatData(CategoryVO.class));
+                }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
                 resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
@@ -147,6 +155,29 @@ public class ProductSkuStatisticController extends UIController {
                             }
                         }
                     }
+
+                    //查询出当前节点
+                    for(CategoryVO cv:categorys)
+                    {
+                        //查询出所有下一级节点
+                        if(cv.getId().longValue()==categoryId.longValue()) {
+                            ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
+                            productCategoryStatistic.setCategoryName(cv.getName());
+                            productCategoryStatistic.setCategoryId(cv.getId());
+                            productCategoryStatistic.setCount(0L);
+                            for(ProductSkuStatisticVO pssvo:productSkuStatistics)
+                            {
+                                if(productCategoryStatistic.getCategoryId().longValue()==pssvo.getCategoryId().longValue())
+                                {
+                                    productCategoryStatistic.setCount(pssvo.getCount());
+                                    break;
+                                }
+                            }
+                            productCategoryStatistics.add(productCategoryStatistic);
+                            addProductCategoryStatistisCount(productSkuStatistics,productCategoryStatistic,productCategoryStatistic.getCategoryId());
+                        }
+                    }
+
                     //查询出所有下一级节点
                     for(CategoryVO cv:categorys)
                     {
@@ -155,6 +186,14 @@ public class ProductSkuStatisticController extends UIController {
                             productCategoryStatistic.setCategoryName(cv.getName());
                             productCategoryStatistic.setCategoryId(cv.getId());
                             productCategoryStatistic.setCount(0L);
+                            for(ProductSkuStatisticVO pssvo:productSkuStatistics)
+                            {
+                                if(productCategoryStatistic.getCategoryId().longValue()==pssvo.getCategoryId().longValue())
+                                {
+                                    productCategoryStatistic.setCount(pssvo.getCount());
+                                    break;
+                                }
+                            }
                             productCategoryStatistics.add(productCategoryStatistic);
                             addProductCategoryStatistisCount(productSkuStatistics,productCategoryStatistic,productCategoryStatistic.getCategoryId());
                         }
