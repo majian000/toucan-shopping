@@ -11,7 +11,7 @@
 
 
     <resultMap id="orderHotSellVOMap" type="com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO">
-        <result column="skuId" jdbcType="BIGINT" property="skuId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
         <result column="sellCount" jdbcType="BIGINT" property="sellCount" />
         <result column="sellTotal" jdbcType="DECIMAL" property="sellTotal" />
     </resultMap>
@@ -54,7 +54,7 @@
 
 
     <select id="queryHotSellListPage" resultMap="orderHotSellVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select t.sku_id,sum(t.order_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order_item t
+        select t.sku_id,sum(t.order_item_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order_item t
         <where>
             1=1 and t.delete_status=0 and t.buyer_status=1
             <include refid="queryHotSellListPageWhere" />
@@ -66,11 +66,12 @@
 
 
     <select id="queryHotSellListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select count(*) from t_order_item t
+        select count(*)  from t_order_item t
         <where>
             1=1 and t.delete_status=0 and t.buyer_status=1
             <include refid="queryHotSellListPageWhere" />
         </where>
+        group by t.sku_id
 
     </select>
 

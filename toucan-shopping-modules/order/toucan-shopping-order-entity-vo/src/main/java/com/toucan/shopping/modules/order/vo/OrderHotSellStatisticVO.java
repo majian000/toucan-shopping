@@ -23,15 +23,25 @@ public class OrderHotSellStatisticVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long skuId; //主键
 
+    private String productName; //商品名称
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long shopId; //店铺ID
+
 
     /**
      * 销售数量
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long sellCount;
 
     /**
      * 销售总金额
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private BigDecimal sellTotal;
 
 

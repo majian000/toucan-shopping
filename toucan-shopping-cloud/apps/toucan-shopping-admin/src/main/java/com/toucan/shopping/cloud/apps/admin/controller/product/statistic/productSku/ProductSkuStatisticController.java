@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderStatisticService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -15,10 +16,14 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO;
+import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.vo.CategoryProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +70,9 @@ public class ProductSkuStatisticController extends UIController {
 
     @Autowired
     private FeignOrderStatisticService feignOrderStatisticService;
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
     /**
      * 查询统计数据
@@ -285,6 +293,31 @@ public class ProductSkuStatisticController extends UIController {
                     pageInfo = resultObjectVO.formatData(OrderHotSellPageInfo.class);
                     tableVO.setCount(pageInfo.getTotal());
                     if(tableVO.getCount()>0) {
+                        List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
+                        for (OrderHotSellStatisticVO orderHotSellStatisticVO : pageInfo.getList()) {
+                            ProductSkuVO productSkuVO = new ProductSkuVO();
+                            productSkuVO.setId(orderHotSellStatisticVO.getSkuId());
+                            productSkus.add(productSkuVO);
+                        }
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
+                        ResultObjectVO productResultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                        if(productResultObjectVO.isSuccess()) {
+                            List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
+
+                            for (OrderHotSellStatisticVO orderHotSellStatisticVO : pageInfo.getList()) {
+                                for(ProductSku productSku:productSkuList)
+                                {
+                                    if(orderHotSellStatisticVO.getSkuId()!=null
+                                            &&orderHotSellStatisticVO.getSkuId().longValue()==productSku.getId().longValue())
+                                    {
+                                        orderHotSellStatisticVO.setProductName(productSku.getName());
+                                        orderHotSellStatisticVO.setShopId(productSku.getShopId());
+                                    }
+                                }
+                            }
+
+                        }
+
                         tableVO.setData(pageInfo.getList());
                     }
                 }
