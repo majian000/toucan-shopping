@@ -106,6 +106,7 @@ public class ProductSkuStatisticController extends UIController {
             RequestJsonVO requestJsonVO = null;
             List<CategoryVO> categorys = null;
             List<ProductSkuStatisticVO> productCategoryStatistics = new LinkedList<>();
+            Long categoryId = productSkuStatisticVO.getCategoryId();
             if(productSkuStatisticVO.getCategoryId()!=null&&productSkuStatisticVO.getCategoryId().longValue()!=-1) {
                 //查询分类以及子分类
                 CategoryVO categoryVO = new CategoryVO();
@@ -127,17 +128,6 @@ public class ProductSkuStatisticController extends UIController {
                     }
                 }
 
-                //查询出所有下一级节点
-                for(CategoryVO cv:categorys)
-                {
-                    if(cv.getParentId().longValue()==productSkuStatisticVO.getCategoryId().longValue()) {
-                        ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
-                        productCategoryStatistic.setCategoryName(cv.getName());
-                        productCategoryStatistic.setCategoryId(cv.getId());
-                        productCategoryStatistic.setCount(0L);
-                        productCategoryStatistics.add(productCategoryStatistic);
-                    }
-                }
 
 
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
@@ -145,21 +135,28 @@ public class ProductSkuStatisticController extends UIController {
                 if(resultObjectVO.isSuccess())
                 {
                     List<ProductSkuStatisticVO> productSkuStatistics = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
-                    if(CollectionUtils.isNotEmpty(productSkuStatistics))
+
+                    if(CollectionUtils.isNotEmpty(productSkuStatistics)&&CollectionUtils.isNotEmpty(categorys))
                     {
-                        for(CategoryVO cv:categorys)
-                        {
-                            ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
-                            productCategoryStatistic.setCategoryName(cv.getName());
-                            productCategoryStatistic.setCount(0L);
-                            for(ProductSkuStatisticVO pss:productSkuStatistics)
-                            {
-                                if(cv.getId().equals(pss.getCategoryId())) {
-                                    productCategoryStatistic.setCount(pss.getCount());
+                        for (ProductSkuStatisticVO psv : productSkuStatistics) {
+                            for(CategoryVO cv:categorys) {
+                                if (psv.getCategoryId().longValue() == cv.getId().longValue()) {
+                                    psv.setParentCategoryId(cv.getParentId());
                                     break;
                                 }
                             }
-//                            productCategoryStatistics.add(productCategoryStatistic);
+                        }
+                    }
+                    //查询出所有下一级节点
+                    for(CategoryVO cv:categorys)
+                    {
+                        if(cv.getParentId().longValue()==categoryId.longValue()) {
+                            ProductSkuStatisticVO productCategoryStatistic = new ProductSkuStatisticVO();
+                            productCategoryStatistic.setCategoryName(cv.getName());
+                            productCategoryStatistic.setCategoryId(cv.getId());
+                            productCategoryStatistic.setCount(0L);
+                            productCategoryStatistics.add(productCategoryStatistic);
+                            addProductCategoryStatistisCount(productSkuStatistics,productCategoryStatistic,productCategoryStatistic.getCategoryId());
                         }
                     }
                 }
@@ -176,10 +173,21 @@ public class ProductSkuStatisticController extends UIController {
 
     /**
      * 合并商品分类统计
-     * @param releaseProductCategoryStatistics
+     * @param allProductCategoryStatistics
+     * @param productCategoryStatistic
+     * @param parentCategoryId
      */
-    private void mergeProductCategoryStatistics(List<ProductSkuStatisticVO> releaseProductCategoryStatistics,List<ProductSkuStatisticVO> productSkuStatistics){
-
+    private void addProductCategoryStatistisCount(List<ProductSkuStatisticVO> allProductCategoryStatistics,ProductSkuStatisticVO productCategoryStatistic,Long parentCategoryId){
+        if(CollectionUtils.isNotEmpty(allProductCategoryStatistics))
+        {
+            for(ProductSkuStatisticVO psv:allProductCategoryStatistics)
+            {
+                if(psv.getParentCategoryId().longValue()==parentCategoryId.longValue()) {
+                    productCategoryStatistic.setCount(productCategoryStatistic.getCount().longValue()+psv.getCount().longValue());
+                    this.addProductCategoryStatistisCount(allProductCategoryStatistics,productCategoryStatistic,psv.getCategoryId());
+                }
+            }
+        }
     }
 
 

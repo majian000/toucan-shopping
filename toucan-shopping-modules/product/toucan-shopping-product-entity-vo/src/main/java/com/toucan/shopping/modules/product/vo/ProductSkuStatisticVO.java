@@ -37,6 +37,10 @@ public class ProductSkuStatisticVO {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //分类ID
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long parentCategoryId; //父级分类ID
+
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startDate; //开始日期

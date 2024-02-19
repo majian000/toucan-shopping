@@ -63,7 +63,7 @@ public class ProductSkuStatisticController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            ProductSkuStatisticVO query = new ProductSkuStatisticVO();
+            ProductSkuStatisticVO query = requestVo.formatEntity(ProductSkuStatisticVO.class);
             resultObjectVO.setData(productSkuStatisticService.queryCategoryStatistic(query));
         }catch(Exception e)
         {
