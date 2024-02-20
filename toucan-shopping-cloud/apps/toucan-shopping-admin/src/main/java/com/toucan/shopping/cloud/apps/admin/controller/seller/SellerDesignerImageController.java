@@ -105,10 +105,10 @@ public class SellerDesignerImageController extends UIController {
                     }
 
                     for (SellerDesignerImageVO sellerDesignerImageVO : shopBannerPageInfo.getList()) {
-                        if(!sellerDesignerImageVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
+                        if(sellerDesignerImageVO.getCreaterId()!=null&&!sellerDesignerImageVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
                             sellerDesignerImageVO.setCreaterName("掌柜ID:"+sellerDesignerImageVO.getCreaterId());
                         }
-                        if(!sellerDesignerImageVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
+                        if(sellerDesignerImageVO.getUpdaterId()!=null&&!sellerDesignerImageVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
                             sellerDesignerImageVO.setUpdaterName("掌柜ID:"+sellerDesignerImageVO.getUpdaterId());
                         }
                     }
