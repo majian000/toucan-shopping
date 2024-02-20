@@ -114,6 +114,7 @@ public class ProductSkuStatisticController extends UIController {
             RequestJsonVO requestJsonVO = null;
             List<CategoryVO> categorys = null;
             List<ProductSkuStatisticVO> productCategoryStatistics = new LinkedList<>();
+            List<Long> categoryIdList = new LinkedList<>();
             Long categoryId = productSkuStatisticVO.getCategoryId();
             if(productSkuStatisticVO.getCategoryId()!=null&&productSkuStatisticVO.getCategoryId().longValue()!=-1) {
                 //查询分类以及子分类
@@ -125,16 +126,15 @@ public class ProductSkuStatisticController extends UIController {
                     if (resultObjectVO.getData() != null) {
                         categorys = resultObjectVO.formatDataList(CategoryVO.class);
                         if (CollectionUtils.isNotEmpty(categorys)) {
-                            List<Long> categoryIdList = new LinkedList<>();
                             for (CategoryVO cv : categorys) {
                                 categoryIdList.add(cv.getId());
                             }
-                            categoryIdList.add(productSkuStatisticVO.getCategoryId());
-                            productSkuStatisticVO.setCategoryIdList(categoryIdList);
-                            productSkuStatisticVO.setCategoryId(null);
                         }
                     }
                 }
+                categoryIdList.add(productSkuStatisticVO.getCategoryId());
+                productSkuStatisticVO.setCategoryIdList(categoryIdList);
+                productSkuStatisticVO.setCategoryId(null);
 
                 //查询当前分类
                 CategoryVO queryCategoryVO = new CategoryVO();
