@@ -28,13 +28,13 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">下单时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="startCreateDate" name="startCreateDate" class="layui-input"  readonly >
+                                <input type="text" id="startPayDate" name="startPayDate" class="layui-input"  readonly >
                             </div>
                         </div>
                         至&nbsp;&nbsp;
                         <div class="layui-inline">
                             <div class="layui-input-inline">
-                                <input type="text" id="endCreateDate" name="endCreateDate" class="layui-input"  readonly >
+                                <input type="text" id="endPayDate" name="endPayDate" class="layui-input"  readonly >
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -92,13 +92,13 @@
 
         //初始化时间控件
         laydate.render({
-            elem: '#startCreateDate' //指定元素
+            elem: '#startPayDate' //指定元素
             ,type: 'datetime'
         });
 
         //初始化时间控件
         laydate.render({
-            elem: '#endCreateDate' //指定元素
+            elem: '#endPayDate' //指定元素
             ,type: 'datetime'
         });
 

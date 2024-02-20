@@ -1,6 +1,8 @@
 package com.toucan.shopping.cloud.apps.admin.controller.product.statistic.productSku;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品SKU统计
@@ -290,11 +293,13 @@ public class ProductSkuStatisticController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    pageInfo = resultObjectVO.formatData(OrderHotSellPageInfo.class);
-                    tableVO.setCount(pageInfo.getTotal());
+
+                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
+                    List<OrderHotSellStatisticVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderHotSellStatisticVO.class);
                     if(tableVO.getCount()>0) {
                         List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
-                        for (OrderHotSellStatisticVO orderHotSellStatisticVO : pageInfo.getList()) {
+                        for (OrderHotSellStatisticVO orderHotSellStatisticVO : list) {
                             ProductSkuVO productSkuVO = new ProductSkuVO();
                             productSkuVO.setId(orderHotSellStatisticVO.getSkuId());
                             productSkus.add(productSkuVO);
@@ -304,7 +309,7 @@ public class ProductSkuStatisticController extends UIController {
                         if(productResultObjectVO.isSuccess()) {
                             List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
 
-                            for (OrderHotSellStatisticVO orderHotSellStatisticVO : pageInfo.getList()) {
+                            for (OrderHotSellStatisticVO orderHotSellStatisticVO : list) {
                                 for(ProductSku productSku:productSkuList)
                                 {
                                     if(orderHotSellStatisticVO.getSkuId()!=null
@@ -317,8 +322,7 @@ public class ProductSkuStatisticController extends UIController {
                             }
 
                         }
-
-                        tableVO.setData(pageInfo.getList());
+                        tableVO.setData(list);
                     }
                 }
             }

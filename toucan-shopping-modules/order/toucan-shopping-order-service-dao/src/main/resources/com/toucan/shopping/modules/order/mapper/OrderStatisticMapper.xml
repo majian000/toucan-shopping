@@ -19,6 +19,21 @@
 
     <sql id="queryHotSellListPageWhere">
 
+        and t.order_id in (
+          select t.id from t_order t where t.delete_status=0 and t.trade_status=3
+        )
+
+        <if test="startPayDate!=null">
+            <![CDATA[
+                and t.pay_date>= #{startPayDate}
+            ]]>
+        </if>
+
+        <if test="endPayDate!=null">
+            <![CDATA[
+                and t.pay_date<= #{endPayDate}
+            ]]>
+        </if>
 
     </sql>
 
@@ -54,9 +69,10 @@
 
 
     <select id="queryHotSellListPage" resultMap="orderHotSellVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select t.sku_id,sum(t.order_item_amount) as sellTotal,count(t.sku_id) as sellCount  from t_order_item t
+        select t.sku_id,sum(t.order_item_amount) as sellTotal,count(t.sku_id) as sellCount
+         from t_order_item t
         <where>
-            1=1 and t.delete_status=0 and t.buyer_status=1
+            1=1 and t.delete_status=0
             <include refid="queryHotSellListPageWhere" />
         </where>
         group by t.sku_id
@@ -66,12 +82,12 @@
 
 
     <select id="queryHotSellListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderHotSellPageInfo">
-        select count(*)  from t_order_item t
+
+        select COUNT(DISTINCT t.sku_id) from t_order_item t
         <where>
-            1=1 and t.delete_status=0 and t.buyer_status=1
+            1=1 and t.delete_status=0
             <include refid="queryHotSellListPageWhere" />
         </where>
-        group by t.sku_id
 
     </select>
 
