@@ -163,8 +163,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_dict_category(id,name,code,dict_category_sort,remark,create_admin_id,create_date,delete_status)
-        values(#{id},#{name},#{code},#{dictCategorySort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
+        insert into t_sa_dict_category(name,code,dict_category_sort,remark,enable_status,create_admin_id,create_date,delete_status)
+        values(#{name},#{code},#{dictCategorySort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
