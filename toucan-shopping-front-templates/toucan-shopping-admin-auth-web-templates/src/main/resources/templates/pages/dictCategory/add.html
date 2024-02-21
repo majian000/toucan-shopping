@@ -18,22 +18,17 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">账号</label>
+        <label class="layui-form-label required">名称</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" maxlength="20" lay-reqtext="账号不能为空" placeholder="请输入账号" value="" class="layui-input">
-            <tip>填写账号。</tip>
+            <input type="text" name="name" lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
+            <tip>填写名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">密码</label>
+        <label class="layui-form-label required">编码</label>
         <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required" maxlength="25" placeholder="请输入密码" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">确认密码</label>
-        <div class="layui-input-block">
-            <input type="password" name="password2" lay-verify="required" maxlength="25" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <input type="text" name="code" lay-verify="required" maxlength="100" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+            <tip>填写编码。</tip>
         </div>
     </div>
     <div class="layui-form-item">
@@ -50,7 +45,7 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">账号状态</label>
+        <label class="layui-form-label">启用状态</label>
         <div class="layui-input-block">
             <input type="radio" name="enableStatus" value="1" title="启用" checked="">
             <input type="radio" name="enableStatus" value="0" title="禁用">
@@ -72,18 +67,13 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            if(data.field.password!=data.field.password2)
-            {
-                layer.msg("密码与确认密码不一致");
-                return false;
-            }
             var appCodes = [];
             $('input[name=appCodes]:checked').each(function() {
                 appCodes.push($(this).val());
             });
             data.field.appCodes=appCodes;
             $.ajax({
-                url:"[[@{/admin/save}]]",
+                url:"[[@{/dictCategory/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

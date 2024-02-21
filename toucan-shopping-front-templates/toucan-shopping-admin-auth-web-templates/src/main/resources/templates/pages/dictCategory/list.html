@@ -25,19 +25,19 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">账号ID</label>
+                            <label class="layui-form-label">名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="adminId" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">账号</label>
+                            <label class="layui-form-label">编码</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="code" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">账号状态</label>
+                            <label class="layui-form-label">启用状态</label>
                             <div class="layui-input-inline">
                                 <select id="enableStatus" name="enableStatus"  lay-search="">
                                     <option value="-1">全部</option>
@@ -71,9 +71,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="adminTable" lay-filter="adminTableFilter"></table>
+        <table class="layui-hide" id="dictCategoryTable" lay-filter="dictCategoryTableFilter"></table>
 
-        <script type="text/html" id="adminTableBar">
+        <script type="text/html" id="dictCategoryTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -122,8 +122,8 @@
         }
 
         table.render({
-            elem: '#adminTable',
-            url: "[[@{/}]]admin/list",
+            elem: '#dictCategoryTable',
+            url: "[[@{/}]]dictCategory/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -139,10 +139,11 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'username',  title: '账号'},
-                    {field: 'adminId',  title: '账号ID'},
+                    {field: 'name',  title: '名称'},
+                    {field: 'code',  title: '编码'},
+                    {field: 'dictCategorySort',  title: '排序'},
                     {field: 'appNames', title: '关联应用'},
-                    {field: 'enableStatus', title: '账号状态',
+                    {field: 'enableStatus', title: '启用状态',
                         templet: function (row) {
                             if(row.enableStatus == "1"){
                                 return "启用"
@@ -151,7 +152,7 @@
                         }},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'createAdminId',  title: '创建人ID'},
-                    {title: '操作', minWidth: 360, toolbar: '#adminTableBar', align: "center"}
+                    {title: '操作', minWidth: 360, toolbar: '#dictCategoryTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -163,7 +164,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('adminTable', {
+            table.reload('dictCategoryTable', {
                 page: {
                     curr: 1
                 }
@@ -184,7 +185,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(adminTableFilter)', function (obj) {
+        table.on('toolbar(dictCategoryTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加账号',
@@ -193,13 +194,13 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/admin/addPage}]]",
+                    content: "[[@{/dictCategory/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('adminTable')
+                var checkStatus = table.checkStatus('dictCategoryTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -208,7 +209,7 @@
                 }
                 layer.confirm('确定删除账号?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]admin/delete/ids",
+                        url:"[[@{/}]]dictCategory/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -216,7 +217,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('dictCategoryTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -307,22 +308,22 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(adminTableFilter)', function (obj) {
+        table.on('checkbox(dictCategoryTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(adminTableFilter)', function (obj) {
+        table.on('tool(dictCategoryTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑字典分类',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]admin/editPage/'+data.id
+                    content: '[[@{/}]]dictCategory/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -331,14 +332,14 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该账号?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]admin/delete/"+data.id,
+                        url:"[[@{/}]]dictCategory/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('dictCategoryTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -370,10 +371,10 @@
                     success:function(layero){
                         loadding = layer.load();
                         $.ajax({
-                            url:"[[@{/}]]role/query/admin/role/tree",
+                            url:"[[@{/}]]role/query/dictCategory/role/tree",
                             contentType: "application/json; charset=utf-8",
                             type:'POST',
-                            data:JSON.stringify({adminId:data.adminId}),
+                            data:JSON.stringify({dictCategoryId:data.dictCategoryId}),
                             success:function(data){
                                 if(data.code==1)
                                 {
@@ -422,10 +423,10 @@
                         }
 
                         $.ajax({
-                            url: "[[@{/}]]admin/connect/roles",
+                            url: "[[@{/}]]dictCategory/connect/roles",
                             contentType: "application/json; charset=utf-8",
                             type: 'POST',
-                            data: JSON.stringify({roles:rolesArray,adminId:data.adminId}),
+                            data: JSON.stringify({roles:rolesArray,dictCategoryId:data.dictCategoryId}),
                             success: function (data) {
                                 if (data.code == 0) {
                                     layer.msg(data.msg);
@@ -449,7 +450,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]admin/selectOrgnazitionPage/'+data.adminId
+                    content: '[[@{/}]]dictCategory/selectOrgnazitionPage/'+data.dictCategoryId
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -464,7 +465,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]admin/passwordPage/'+data.id
+                    content: '[[@{/}]]dictCategory/passwordPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

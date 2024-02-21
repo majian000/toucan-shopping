@@ -30,4 +30,12 @@ public class DictCategoryVO extends DictCategory {
      * 分类应用关联
      */
     private List<DictCategoryApp> dictCategoryApps;
+
+
+    /**
+     * 关联应用名称
+     */
+    private String appNames;
+
+
 }
