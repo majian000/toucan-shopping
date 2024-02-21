@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 账号组织机构 增删改查
@@ -73,13 +74,14 @@ public class AdminOrgnazitionController {
                 throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
             }
 
-            //拿到当前这个账户的操作人可管理的所有应用
-            String[] appCodes = new String[adminApps.size()];
-            for(int i=0;i<adminApps.size();i++)
+            List<String> connectAppCodes = entity.getAdminOrgnazitions().stream().map(AdminOrgnazition::getAppCode).collect(Collectors.toList()).stream().distinct().collect(Collectors.toList());
+
+            String[] appCodes = new String[connectAppCodes.size()];
+            for(int i=0;i<connectAppCodes.size();i++)
             {
-                appCodes[i] = adminApps.get(i).getAppCode();
+                appCodes[i] = connectAppCodes.get(i);
             }
-            //创建账户组织机构的前提是这个账户和操作这个账户的操作人属于同一个应用,这个操作人也只能操作他俩所属同一应用下面的所有组织机构
+            //清空该应用下旧的关联
             adminOrgnazitionService.deleteByAdminIdAndAppCodes(entity.getAdminId(),appCodes);
 
             int length=0;
