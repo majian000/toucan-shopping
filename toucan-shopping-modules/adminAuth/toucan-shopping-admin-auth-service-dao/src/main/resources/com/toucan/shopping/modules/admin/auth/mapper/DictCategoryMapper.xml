@@ -44,8 +44,17 @@
     <sql id="queryListPageWhere">
 
         <if test="name!=null and name!=''">
-            and t.name like concat('%',#{name},'%')
+            and t.name like concat(#{name},'%')
         </if>
+
+        <if test="code!=null and code!=''">
+            and t.code like concat(#{code},'%')
+        </if>
+
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+
     </sql>
 
     <select id="findListByEntity" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
