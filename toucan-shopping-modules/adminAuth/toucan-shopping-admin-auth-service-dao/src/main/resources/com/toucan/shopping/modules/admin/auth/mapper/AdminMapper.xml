@@ -38,7 +38,7 @@
     <sql id="queryListPageWhere">
 
         <if test="username!=null and username!='' ">
-            and tu.username  like concat('%',#{username},'%')
+            and tu.username  like concat(#{username},'%')
         </if>
 
         <if test="adminId!=null and adminId!=''">
