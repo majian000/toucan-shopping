@@ -38,7 +38,7 @@ public interface DictCategoryMapper {
      * @param pageInfo
      * @return
      */
-    List<DictCategory> queryListPage(DictCategoryPageInfo pageInfo);
+    List<DictCategoryVO> queryListPage(DictCategoryPageInfo pageInfo);
 
     /**
      * 查询列表页数量

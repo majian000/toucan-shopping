@@ -64,7 +64,7 @@ public class DictCategoryServiceImpl implements DictCategoryService {
     }
 
     @Override
-    public PageInfo<DictCategory> queryListPage(DictCategoryPageInfo queryPageInfo) {
+    public PageInfo<DictCategoryVO> queryListPage(DictCategoryPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         DictCategoryPageInfo pageInfo = new DictCategoryPageInfo();
         pageInfo.setList(dictCategoryMapper.queryListPage(queryPageInfo));

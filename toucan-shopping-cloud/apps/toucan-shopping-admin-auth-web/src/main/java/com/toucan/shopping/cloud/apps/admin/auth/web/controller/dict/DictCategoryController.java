@@ -132,17 +132,6 @@ public class DictCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
-            {
-                entity.setDictCategoryApps(new ArrayList<DictCategoryApp>());
-                for(String appCode:entity.getAppCodes()){
-                    DictCategoryApp dictCategoryApp = new DictCategoryApp();
-                    dictCategoryApp.setAppCode(appCode);
-                    dictCategoryApp.setCreateAdminId(entity.getCreateAdminId());
-                    dictCategoryApp.setCreateDate(new Date());
-                    entity.getDictCategoryApps().add(dictCategoryApp);
-                }
-            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignDictCategoryService.save(requestJsonVO);
         }catch(Exception e)

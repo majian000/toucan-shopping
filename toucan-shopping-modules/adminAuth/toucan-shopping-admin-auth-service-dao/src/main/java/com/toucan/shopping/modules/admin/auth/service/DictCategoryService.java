@@ -50,7 +50,7 @@ public interface DictCategoryService {
      * @param pageInfo
      * @return
      */
-    PageInfo<DictCategory> queryListPage(DictCategoryPageInfo pageInfo);
+    PageInfo<DictCategoryVO> queryListPage(DictCategoryPageInfo pageInfo);
 
     /**
      *  根据ID删除

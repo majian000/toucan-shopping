@@ -20,6 +20,7 @@
     <resultMap id="dictCategoryVOMap" type="com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO" extends="dictCategoryMap">
         <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
         <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
+        <result column="appNames" jdbcType="VARCHAR" property="appNames" />
     </resultMap>
 
 
@@ -65,11 +66,23 @@
 
 
 
-    <select id="queryListPage" resultMap="dictCategoryMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
-        select t.* from t_sa_dict_category t
+    <select id="queryListPage" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
+        select t.* from (
+            SELECT t.*,ds2.appNames FROM t_sa_dict_category t LEFT JOIN (
+                SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
+                    SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
+                    LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
+                    LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
+                    WHERE t.delete_status = 0
+                    <if test="appCode!=null and appCode!='' ">
+                        and ta.code = #{appCode}
+                    </if>
+                )ds
+                GROUP BY ds.id
+            )ds2 ON t.id = ds2.id
+        )t
         <where>
             1=1
-
             <include refid="queryListPageWhere" />
 
             and t.delete_status = 0
@@ -79,14 +92,28 @@
     </select>
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
-        select count(*) from t_sa_dict_category t
-        <where>
-            1=1
+        select count(*) from (
+            select t.* from (
+                SELECT t.*,ds2.appNames FROM t_sa_dict_category t LEFT JOIN (
+                    SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
+                        SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
+                        LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
+                        LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
+                        WHERE t.delete_status = 0
+                            <if test="appCode!=null and appCode!='' ">
+                                and ta.code = #{appCode}
+                            </if>
+                    )ds
+                    GROUP BY ds.id
+                )ds2 ON t.id = ds2.id
+            )t
+            <where>
+                1=1
+                <include refid="queryListPageWhere" />
 
-            <include refid="queryListPageWhere" />
-
-            and t.delete_status = 0
-        </where>
+                and t.delete_status = 0
+            </where>
+        )ds
     </select>
 
 

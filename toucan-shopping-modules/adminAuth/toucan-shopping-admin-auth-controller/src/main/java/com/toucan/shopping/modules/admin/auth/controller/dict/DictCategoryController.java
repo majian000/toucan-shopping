@@ -89,14 +89,14 @@ public class DictCategoryController {
             {
                 for(String appCode:dictCategoryVO.getAppCodes())
                 {
-                    DictCategoryApp orgnazitionApp = new DictCategoryApp();
-                    orgnazitionApp.setDictCategoryId(dictCategoryVO.getId());
-                    orgnazitionApp.setAppCode(appCode);
-                    orgnazitionApp.setCreateDate(new Date());
-                    orgnazitionApp.setDeleteStatus((short)0);
-                    orgnazitionApp.setCreateAdminId(dictCategoryVO.getCreateAdminId());
+                    DictCategoryApp dictCategoryApp = new DictCategoryApp();
+                    dictCategoryApp.setDictCategoryId(dictCategoryVO.getId());
+                    dictCategoryApp.setAppCode(appCode);
+                    dictCategoryApp.setCreateDate(new Date());
+                    dictCategoryApp.setDeleteStatus((short)0);
+                    dictCategoryApp.setCreateAdminId(dictCategoryVO.getCreateAdminId());
 
-                    dictCategoryAppService.save(orgnazitionApp);
+                    dictCategoryAppService.save(dictCategoryApp);
                 }
             }
 

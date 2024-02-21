@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.page;
 
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
+import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class DictCategoryPageInfo extends PageInfo<DictCategory> {
+public class DictCategoryPageInfo extends PageInfo<DictCategoryVO> {
 
 
 
