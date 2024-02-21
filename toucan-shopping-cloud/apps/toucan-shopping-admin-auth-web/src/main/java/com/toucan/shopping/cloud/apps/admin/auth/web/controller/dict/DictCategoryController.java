@@ -114,7 +114,7 @@ public class DictCategoryController extends UIController {
     {
         super.initSelectApp(request,toucan,feignAppService);
 
-        return "pages/dictCategory/admin/add.html";
+        return "pages/dictCategory/add.html";
     }
 
 

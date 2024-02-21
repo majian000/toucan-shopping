@@ -136,12 +136,12 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_dict_category(id,pid,name,dict_category_id,dictCategory_sort,remark,create_admin_id,create_date,delete_status)
-        values(#{id},#{pid},#{name},#{dictCategoryId},#{dictCategorySort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
+        insert into t_sa_dict_category(id,name,code,dict_category_sort,remark,create_admin_id,create_date,delete_status)
+        values(#{id},#{name},#{code},#{dictCategorySort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
-        update t_sa_dict_category set  name=#{name},pid=#{pid},dictCategory_sort=#{dictCategorySort},
+        update t_sa_dict_category set  name=#{name},code=#{code},dict_category_sort=#{dictCategorySort},
         update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
           where id = #{id}
     </update>
@@ -151,5 +151,8 @@
     </update>
 
 
+    <select id="queryMaxSort" resultType="java.lang.Integer" >
+        select max(t.dict_category_sort) from t_sa_dict_category t where  1=1 and t.delete_status = 0
+    </select>
 
 </mapper>

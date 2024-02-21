@@ -188,7 +188,7 @@
         table.on('toolbar(dictCategoryTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加账号',
+                    title: '添加字典分类',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -207,7 +207,7 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除账号?', function (index) {
+                layer.confirm('确定删除字典分类?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]dictCategory/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -330,7 +330,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该账号?', function (index) {
+                layer.confirm('确定删除该字典分类?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]dictCategory/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",

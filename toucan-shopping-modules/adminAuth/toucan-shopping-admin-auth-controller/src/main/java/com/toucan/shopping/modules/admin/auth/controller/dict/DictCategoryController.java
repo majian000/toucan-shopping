@@ -69,9 +69,15 @@ public class DictCategoryController {
                 resultObjectVO.setMsg("添加失败,请输入字典分类名称");
                 return resultObjectVO;
             }
-
+            if(StringUtils.isEmpty(dictCategoryVO.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,请输入字典分类编码");
+                return resultObjectVO;
+            }
             dictCategoryVO.setCreateDate(new Date());
             dictCategoryVO.setDeleteStatus((short)0);
+            dictCategoryVO.setDictCategorySort(dictCategoryService.queryMaxSort()+1);
             int row = dictCategoryService.save(dictCategoryVO);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);

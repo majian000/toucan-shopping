@@ -64,7 +64,7 @@
             layer = layui.layer,
             $ = layui.$;
 
-
+        var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             var appCodes = [];
@@ -72,6 +72,9 @@
                 appCodes.push($(this).val());
             });
             data.field.appCodes=appCodes;
+
+            loadding = layer.load();
+
             $.ajax({
                 url:"[[@{/dictCategory/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -92,6 +95,9 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function(){
+                    layer.close(loadding);
                 }
             });
             return false;

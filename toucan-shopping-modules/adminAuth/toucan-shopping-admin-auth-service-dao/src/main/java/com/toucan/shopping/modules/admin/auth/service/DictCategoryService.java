@@ -31,6 +31,11 @@ public interface DictCategoryService {
      */
     int update(DictCategory entity);
 
+    /**
+     * 查询最大排序
+     * @return
+     */
+    Integer queryMaxSort();
 
 
     /**

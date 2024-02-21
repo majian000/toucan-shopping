@@ -69,6 +69,11 @@ public interface DictCategoryMapper {
      */
     List<DictCategoryVO> queryListByAppCodeArray(String[] appCodes);
 
+    /**
+     * 查询最大排序
+     * @return
+     */
+    Integer queryMaxSort();
 
     /**
      * 根据上级节点ID查询

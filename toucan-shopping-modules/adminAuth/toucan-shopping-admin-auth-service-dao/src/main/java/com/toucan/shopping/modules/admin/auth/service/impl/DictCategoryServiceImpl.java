@@ -35,10 +35,18 @@ public class DictCategoryServiceImpl implements DictCategoryService {
         return dictCategoryMapper.insert(entity);
     }
 
-    @Transactional
     @Override
     public int update(DictCategory entity) {
         return dictCategoryMapper.update(entity);
+    }
+
+    @Override
+    public Integer queryMaxSort() {
+        Integer maxSort = dictCategoryMapper.queryMaxSort();
+        if(maxSort==null){
+            maxSort=0;
+        }
+        return maxSort;
     }
 
 
