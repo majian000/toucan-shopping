@@ -234,22 +234,19 @@
         form.on('submit(formStep2)', function (data) {
 
             var selectNodes = orgnazitionTree.getCheckbarNodesParam("orgTree");
-            if(selectNodes==null||selectNodes.length<=0)
-            {
-                layer.msg("请选择组织机构");
-                return false;
-            }
             var orgArray =  new Array();
-            for (var i = 0; i < selectNodes.length; i++) {
-                var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                orgArray.push({orgnazitionId:selectNodeObject.orgnazitionId,appCode:g_appCode});
-                getParentNode(orgArray,selectNodeObject.pid);
+            if(selectNodes!=null) {
+                for (var i = 0; i < selectNodes.length; i++) {
+                    var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
+                    orgArray.push({orgnazitionId: selectNodeObject.orgnazitionId, appCode: g_appCode});
+                    getParentNode(orgArray, selectNodeObject.pid);
+                }
             }
             $.ajax({
                 url: "[[@{/}]]admin/connect/orgnazitions",
                 contentType: "application/json; charset=utf-8",
                 type: 'POST',
-                data: JSON.stringify({adminOrgnazitions:orgArray,adminId:$("#adminId").val()}),
+                data: JSON.stringify({adminOrgnazitions:orgArray,adminId:$("#adminId").val(),selectAppCode:g_appCode}),
                 success: function (data) {
                     if (data.code == 0) {
                         layer.msg(data.msg);

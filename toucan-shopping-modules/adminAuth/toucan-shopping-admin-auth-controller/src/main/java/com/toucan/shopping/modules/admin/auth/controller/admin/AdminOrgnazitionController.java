@@ -61,45 +61,40 @@ public class AdminOrgnazitionController {
             }
             if(CollectionUtils.isEmpty(entity.getAdminOrgnazitions()))
             {
-                throw new IllegalArgumentException("adminOrgnazitions为空");
+                String[] appCodes = {entity.getSelectAppCode()};
+                //清空该应用下旧的关联
+                adminOrgnazitionService.deleteByAdminIdAndAppCodes(entity.getAdminId(), appCodes);
+            }else {
+
+                AdminApp queryAdminApp = new AdminApp();
+                queryAdminApp.setAdminId(entity.getCreateAdminId());
+
+                List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
+
+                if (CollectionUtils.isEmpty(adminApps)) {
+                    throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
+                }
+
+                String[] appCodes = {entity.getSelectAppCode()};
+                //清空该应用下旧的关联
+                adminOrgnazitionService.deleteByAdminIdAndAppCodes(entity.getAdminId(), appCodes);
+
+                int length = 0;
+                for (AdminOrgnazition adminOrgnazition : entity.getAdminOrgnazitions()) {
+                    adminOrgnazition.setAdminId(entity.getAdminId());
+                    adminOrgnazition.setCreateAdminId(entity.getCreateAdminId());
+                    adminOrgnazition.setCreateDate(new Date());
+                    adminOrgnazition.setDeleteStatus((short) 0);
+                    length++;
+                }
+                AdminOrgnazition[] adminOrgnazitions = new AdminOrgnazition[length];
+                int pos = 0;
+                for (AdminOrgnazition adminOrgnazition : entity.getAdminOrgnazitions()) {
+                    adminOrgnazitions[pos] = adminOrgnazition;
+                    pos++;
+                }
+                adminOrgnazitionService.saves(adminOrgnazitions);
             }
-
-            AdminApp queryAdminApp = new AdminApp();
-            queryAdminApp.setAdminId(entity.getCreateAdminId());
-
-            List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
-
-            if(CollectionUtils.isEmpty(adminApps))
-            {
-                throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
-            }
-
-            List<String> connectAppCodes = entity.getAdminOrgnazitions().stream().map(AdminOrgnazition::getAppCode).collect(Collectors.toList()).stream().distinct().collect(Collectors.toList());
-
-            String[] appCodes = new String[connectAppCodes.size()];
-            for(int i=0;i<connectAppCodes.size();i++)
-            {
-                appCodes[i] = connectAppCodes.get(i);
-            }
-            //清空该应用下旧的关联
-            adminOrgnazitionService.deleteByAdminIdAndAppCodes(entity.getAdminId(),appCodes);
-
-            int length=0;
-            for(AdminOrgnazition adminOrgnazition:entity.getAdminOrgnazitions())
-            {
-                adminOrgnazition.setAdminId(entity.getAdminId());
-                adminOrgnazition.setCreateAdminId(entity.getCreateAdminId());
-                adminOrgnazition.setCreateDate(new Date());
-                adminOrgnazition.setDeleteStatus((short) 0);
-                length++;
-            }
-            AdminOrgnazition[] adminOrgnazitions = new AdminOrgnazition[length];
-            int pos = 0;
-            for(AdminOrgnazition adminOrgnazition:entity.getAdminOrgnazitions()) {
-                adminOrgnazitions[pos] = adminOrgnazition;
-                pos++;
-            }
-            adminOrgnazitionService.saves(adminOrgnazitions);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

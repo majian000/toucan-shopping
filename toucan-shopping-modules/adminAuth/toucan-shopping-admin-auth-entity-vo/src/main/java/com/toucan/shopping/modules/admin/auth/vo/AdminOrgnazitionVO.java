@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class AdminOrgnazitionVO extends AdminOrgnazition {
 
+    private String selectAppCode; //选择操作的应用
 
     /**
      * 机构列表
