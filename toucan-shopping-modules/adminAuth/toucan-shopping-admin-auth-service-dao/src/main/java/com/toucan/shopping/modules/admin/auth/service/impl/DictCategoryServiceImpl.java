@@ -1,0 +1,82 @@
+package com.toucan.shopping.modules.admin.auth.service.impl;
+
+import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
+import com.toucan.shopping.modules.admin.auth.mapper.DictCategoryMapper;
+import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
+import com.toucan.shopping.modules.admin.auth.service.DictCategoryService;
+import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+@Service
+public class DictCategoryServiceImpl implements DictCategoryService {
+
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private DictCategoryMapper dictCategoryMapper;
+
+    @Override
+    public List<DictCategoryVO> findListByEntity(DictCategory entity) {
+        return dictCategoryMapper.findListByEntity(entity);
+    }
+
+
+    @Override
+    public int save(DictCategory entity) {
+        return dictCategoryMapper.insert(entity);
+    }
+
+    @Transactional
+    @Override
+    public int update(DictCategory entity) {
+        return dictCategoryMapper.update(entity);
+    }
+
+
+    @Override
+    public boolean exists(String name) {
+        DictCategory entity = new DictCategory();
+        entity.setName(name);
+        entity.setDeleteStatus((short)0);
+        List<DictCategoryVO> list = dictCategoryMapper.findListByEntity(entity);
+        if(!CollectionUtils.isEmpty(list))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public PageInfo<DictCategory> queryListPage(DictCategoryPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        DictCategoryPageInfo pageInfo = new DictCategoryPageInfo();
+        pageInfo.setList(dictCategoryMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(dictCategoryMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
+        return pageInfo;
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return dictCategoryMapper.deleteById(id);
+    }
+
+    @Override
+    public List<DictCategoryVO> queryListByAppCode(String appCode) {
+        return dictCategoryMapper.queryListByAppCode(appCode);
+    }
+
+
+
+}

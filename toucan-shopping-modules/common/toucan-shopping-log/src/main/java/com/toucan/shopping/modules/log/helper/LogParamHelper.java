@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.log.vo.LogParamHeader;
 import com.toucan.shopping.modules.log.vo.LogParamRequest;
 import com.toucan.shopping.modules.log.vo.LogParamResponse;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,16 +38,21 @@ public class LogParamHelper {
                 {
                     logBuilder.append(header.getName()+":"+header.getValue()+"\n");
                 }
-                logBuilder.append("-----------------------\n");
+                logBuilder.append("\n");
             }
-            logBuilder.append("body:"+request.getBody()+"\n");
+            if(StringUtils.isNotEmpty(request.getBody())) {
+                logBuilder.append(request.getBody() + "\n");
+            }
         }
         if(response!=null)
         {
             logBuilder.append("-------------response------------\n");
             logBuilder.append("uri:"+ response.getUri()+"\n");
             logBuilder.append("contentType:"+ response.getContentType()+"\n");
-            logBuilder.append("body:"+response.getBody()+"\n");
+            logBuilder.append("\n");
+            if(StringUtils.isNotEmpty(response.getBody())) {
+                logBuilder.append(response.getBody() + "\n");
+            }
         }
         logBuilder.append("\n=======================================\n");
         logger.info(logBuilder.toString());

@@ -340,7 +340,7 @@ public class OrgnazitionController {
 
 
     /**
-     * 删除指定组织机构
+     * 删除指定组织机构(仅限中台使用)
      * @param requestVo
      * @return
      */
@@ -405,7 +405,7 @@ public class OrgnazitionController {
 
 
     /**
-     * 批量删除组织机构
+     * 批量删除组织机构(仅限中台使用)
      * @param requestVo
      * @return
      */

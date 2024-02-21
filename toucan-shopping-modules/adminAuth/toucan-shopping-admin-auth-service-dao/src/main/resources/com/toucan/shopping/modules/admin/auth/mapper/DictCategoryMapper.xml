@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.admin.auth.mapper.DictCategoryMapper">
+
+    <resultMap id="dictCategoryMap" type="com.toucan.shopping.modules.admin.auth.entity.DictCategory" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="dict_category_sort" jdbcType="BIGINT" property="dictCategorySort" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        
+    </resultMap>
+
+    <resultMap id="dictCategoryVOMap" type="com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO" extends="dictCategoryMap">
+        <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
+        <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
+    </resultMap>
+
+
+    <sql id="queryColumns">
+        t.id,
+        t.name,
+        t.code,
+        t.pid,
+        t.enable_status,
+        t.dict_category_sort,
+        t.create_date,
+        t.update_date,
+        t.delete_status,
+        t.remark,
+        t.create_admin_id,
+        t.update_admin_id
+    </sql>
+
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+    </sql>
+
+    <select id="findListByEntity" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
+        select * from t_sa_dict_category t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="name!=null and name!=''">
+                and t.name = #{name}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+
+
+    <select id="queryListPage" resultMap="dictCategoryMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
+        select t.* from t_sa_dict_category t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
+        select count(*) from t_sa_dict_category t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+    </select>
+
+
+
+
+    <select id="findById" resultMap="dictCategoryVOMap" parameterType="java.lang.Long">
+        select * from t_sa_dict_category t where  1=1 and t.id = #{id} and t.delete_status = 0
+    </select>
+
+
+
+    <select id="findByIdAndAppCode" resultMap="dictCategoryVOMap" >
+         select t.*,tsoa.app_code from t_sa_dict_category t
+            left join t_sa_dict_category_app tsoa on t.dict_category_id = tsoa.dict_category_id
+            where  1=1 and t.id = #{id} and t.delete_status = 0 and tsoa.app_code=#{appCode}
+
+    </select>
+
+    <select id="queryListByAppCode" resultMap="dictCategoryVOMap" parameterType="java.lang.String">
+        select * from t_sa_dict_category t
+          left join t_sa_dict_category_app tso on t.dict_category_id = tso.dict_category_id
+          and tso.app_code = #{appCode}
+          and tso.delete_status = 0
+         where  1=1  and t.delete_status = 0 and tso.app_code is not null
+    </select>
+
+    <select id="queryAll" resultMap="dictCategoryVOMap" parameterType="java.lang.String">
+        select * from t_sa_dict_category t where  1=1  and t.delete_status = 0
+    </select>
+
+    <select id="queryListByAppCodeArray" resultMap="dictCategoryVOMap" >
+        select * from t_sa_dict_category t
+          left join t_sa_dict_category_app tso on t.dict_category_id = tso.dict_category_id
+            and tso.app_code in
+            <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+           and tso.delete_status = 0
+         where  1=1  and t.delete_status = 0 and tso.app_code is not null
+    </select>
+
+
+
+    <select id="findListByPid" resultMap="dictCategoryVOMap" parameterType="java.lang.Long">
+        select * from t_sa_dict_category t where  1=1 and t.pid = #{pid} and t.delete_status = 0
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_sa_dict_category(id,pid,name,dict_category_id,dictCategory_sort,remark,create_admin_id,create_date,delete_status)
+        values(#{id},#{pid},#{name},#{dictCategoryId},#{dictCategorySort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
+    </insert>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
+        update t_sa_dict_category set  name=#{name},pid=#{pid},dictCategory_sort=#{dictCategorySort},
+        update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
+          where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_sa_dict_category set delete_status=1 where id = #{id}
+    </update>
+
+
+
+</mapper>
