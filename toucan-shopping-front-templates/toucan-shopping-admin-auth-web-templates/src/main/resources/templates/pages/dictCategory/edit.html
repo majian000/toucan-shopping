@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>权限管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <input type="hidden" name="id" th:value="${model.id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入名称" th:value="${model.name}" class="layui-input">
+            <tip>填写名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">编码</label>
+        <div class="layui-input-block">
+            <input type="text" name="code" lay-verify="required" maxlength="100" lay-reqtext="编码不能为空" placeholder="请输入编码" th:value="${model.code}" class="layui-input">
+            <tip>填写编码。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="dictCategorySort" lay-verify="required" maxlength="100" lay-reqtext="排序不能为空" placeholder="请输入排序" th:value="${model.dictCategorySort}" class="layui-input">
+            <tip>填写排序。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联应用</label>
+        <div class="layui-input-block">
+            <input th:each="aa:${apps}" name="appCodes" id="appCodes" th:attr="checked=${aa.checked?true:false}"  type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" checked>
+            <input type="radio" name="enableStatus" value="0" title="禁用">
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" >
+            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息" th:text="${model.remark}"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var appCodes = [];
+            $('input[name=appCodes]:checked').each(function() {
+                appCodes.push($(this).val());
+            });
+            data.field.appCodes=appCodes;
+            $.ajax({
+                url:"[[@{/dictCategory/update}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

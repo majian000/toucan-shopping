@@ -3,8 +3,10 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -134,6 +136,94 @@ public class DictCategoryController extends UIController {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignDictCategoryService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Integer id)
+    {
+        try {
+            super.initSelectApp(request,toucan,feignAppService);
+
+            DictCategoryVO dictCategory = new DictCategoryVO();
+            dictCategory.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
+            ResultObjectVO resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+
+                    List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
+                    if(!CollectionUtils.isEmpty(dictCategoryVOS))
+                    {
+                        dictCategory = dictCategoryVOS.get(0);
+                        //设置复选框选中状态
+                        Object appsObject = request.getAttribute("apps");
+                        if(appsObject!=null) {
+                            List<AppVO> appVos = (List<AppVO>) appsObject;
+                            if(!CollectionUtils.isEmpty(dictCategory.getDictCategoryApps()))
+                            {
+                                for(DictCategoryApp dictCategoryApp:dictCategory.getDictCategoryApps())
+                                {
+                                    for(AppVO aa:appVos)
+                                    {
+                                        if(dictCategoryApp.getAppCode().equals(aa.getCode()))
+                                        {
+                                            aa.setChecked(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        request.setAttribute("model",dictCategory);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/dictCategory/edit.html";
+    }
+
+
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody DictCategoryVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateDate(new Date());
+            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
+            {
+                entity.setDictCategoryApps(new ArrayList<DictCategoryApp>());
+                for(String appCode:entity.getAppCodes()){
+                    DictCategoryApp dictCategoryApp = new DictCategoryApp();
+                    dictCategoryApp.setAppCode(appCode);
+                    entity.getDictCategoryApps().add(dictCategoryApp);
+                }
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignDictCategoryService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
