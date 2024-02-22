@@ -85,6 +85,11 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public int deleteById(Long id, String adminId) {
+        return appMapper.deleteByIdAndUpdateAdminId(id,adminId);
+    }
+
+    @Override
     public AppVO findByCodeIngoreDelete(String code) {
         return appMapper.findByCodeIngoreDelete(code);
     }

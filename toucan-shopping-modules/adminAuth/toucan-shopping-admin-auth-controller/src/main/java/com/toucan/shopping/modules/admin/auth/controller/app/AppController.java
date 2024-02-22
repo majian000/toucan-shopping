@@ -95,7 +95,7 @@ public class AppController {
             if(appService.existsByCode(app.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该应用编码!");
+                resultObjectVO.setMsg("该应用编码已被使用了!");
                 return resultObjectVO;
             }
             app.setCreateDate(new Date());
@@ -472,7 +472,7 @@ public class AppController {
             }
 
 
-            int row = appService.deleteById(app.getId());
+            int row = appService.deleteById(app.getId(),app.getUpdateAdminId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");

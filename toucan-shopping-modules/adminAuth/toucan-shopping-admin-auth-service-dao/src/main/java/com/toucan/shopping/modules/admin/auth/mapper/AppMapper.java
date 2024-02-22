@@ -23,6 +23,8 @@ public interface AppMapper {
 
     int deleteById(Long id);
 
+    int deleteByIdAndUpdateAdminId(Long id,String adminId);
+
     App findByAppCode(String appCode);
 
     List<App> findByAppCodes(List<String> appCodes);

@@ -28,5 +28,7 @@ public interface AppService {
 
     int deleteById(Long id);
 
+    int deleteById(Long id,String adminId);
+
     AppVO findByCodeIngoreDelete(String code);
 }

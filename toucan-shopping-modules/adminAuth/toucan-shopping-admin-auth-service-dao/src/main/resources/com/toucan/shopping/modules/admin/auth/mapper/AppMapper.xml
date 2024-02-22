@@ -146,6 +146,12 @@
         update t_app set delete_status=1 where id = #{id}
     </update>
 
+
+    <update id="deleteByIdAndUpdateAdminId" >
+        update t_app set delete_status=1 , update_admin_id=#{adminId} , update_date=sysdate() where id = #{id}
+    </update>
+
+
     <select id="findByCodeIngoreDelete" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
         select * from t_app t where t.code = #{code} limit 0,1
     </select>
