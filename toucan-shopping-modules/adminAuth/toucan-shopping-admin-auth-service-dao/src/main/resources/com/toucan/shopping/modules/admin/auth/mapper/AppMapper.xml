@@ -85,6 +85,20 @@
 
     </select>
 
+    <select id="findByAppCodes" resultMap="appMap" parameterType="java.util.List">
+        select * from t_app t
+        <where>
+            1=1
+            <if test="appCodes!=null and appCodes.size>0">
+                t.code in
+                <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
 
     <select id="queryListPage" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
         select <include refid="queryColumns" />,tsa.username as create_admin_username,tsau.username as update_admin_username from t_app t
@@ -131,5 +145,9 @@
     <update id="deleteById" parameterType="java.lang.Long">
         update t_app set delete_status=1 where id = #{id}
     </update>
+
+    <select id="findByCodeIngoreDelete" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
+        select * from t_app t where t.code = #{code} limit 0,1
+    </select>
 
 </mapper>

@@ -34,6 +34,13 @@ public interface DictCategoryMapper {
     List<DictCategoryVO> findListByEntity(DictCategory entity);
 
     /**
+     * 查询列表
+     * @param entity
+     * @return
+     */
+    List<DictCategoryVO> findListByVO(DictCategoryVO entity);
+
+    /**
      * 查询列表页
      * @param pageInfo
      * @return

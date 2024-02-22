@@ -51,16 +51,12 @@ public class DictCategoryServiceImpl implements DictCategoryService {
 
 
     @Override
-    public boolean exists(String name) {
-        DictCategory entity = new DictCategory();
-        entity.setName(name);
-        entity.setDeleteStatus((short)0);
-        List<DictCategoryVO> list = dictCategoryMapper.findListByEntity(entity);
-        if(!CollectionUtils.isEmpty(list))
-        {
-            return true;
-        }
-        return false;
+    public List<DictCategoryVO> queryListByCodeAndAppCodes(String code,List<String> appCodes) {
+        DictCategoryVO query = new DictCategoryVO();
+        query.setCode(code);
+        query.setEnableStatus((short)1);
+        query.setAppCodes(appCodes);
+        return dictCategoryMapper.findListByVO(query);
     }
 
     @Override

@@ -39,11 +39,11 @@ public interface DictCategoryService {
 
 
     /**
-     * 判断是否存在
-     * @param name
+     * 根据编码和应用编码查询集合
+     * @param code
      * @return
      */
-    boolean exists(String name);
+    List<DictCategoryVO> queryListByCodeAndAppCodes(String code,List<String> appCodes);
 
     /**
      * 查询列表页
@@ -66,11 +66,6 @@ public interface DictCategoryService {
      * @return
      */
     List<DictCategoryVO> queryListByAppCode(String appCode);
-
-
-
-
-
 
 
 

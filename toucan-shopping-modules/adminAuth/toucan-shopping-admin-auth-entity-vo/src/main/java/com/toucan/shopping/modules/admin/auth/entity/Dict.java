@@ -9,18 +9,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 字典分类
+ * 字典
  * 说明
- *      字典分类名称、编码允许重复,支持应用创建只属自己的分类名称和编码(应用内编码唯一)
+ *      字典名称、编码允许重复,支持应用创建只属自己的字典名称和编码
  * 注意
- *      比如字典分类{name:性别,code:sex}可以关联A应用和B应用
- *      A应用修改成了{name:性别,code:xingbie},B应用也会同步更新成最新的{name:性别,code:xingbie}
- *      如果A应用想{name:性别,code:xingbie}的这次修改只影响自己,可以由A应用创建一个新的字典分类{name:性别,code:xingbie}
- *      然后在中台中把{name:性别,code:sex}这个关联只保留B应用即可
- *      应用端的删除操作,只做关联删除,当该字典分类没有关联任何应用的时候才做逻辑删除
+ *      修改字典编码以及名称会生成历史快照，然后创建一个新的字典来设置为活动字典(用于回显历史数据)
+ *      启用、禁用、删除、修改应用关联，不会生成快照
  */
 @Data
-public class DictCategory {
+public class Dict {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
@@ -31,12 +28,27 @@ public class DictCategory {
 
     private String code; //编码
 
-    private Integer dictCategorySort; //排序
+    private Integer pid; //父级ID
+
+    private Integer categoryId; //字典分类ID
+
+    private Integer dictSort; //排序
+
+    private String dictVersion; //版本号
+
+    private String batchId; //批次ID
+
+    private String extendProperty; //扩展属性
 
     /**
      * 启用状态 0:禁用 1启用
      */
     private Short enableStatus;
+
+    /**
+     * 是否活动版本(0否 1是)
+     */
+    private Short isActive;
 
     /**
      * 删除状态 0未删除 1已删除

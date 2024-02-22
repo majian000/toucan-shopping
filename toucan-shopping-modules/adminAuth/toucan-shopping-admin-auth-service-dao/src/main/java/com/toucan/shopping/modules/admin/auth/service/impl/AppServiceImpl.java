@@ -25,8 +25,23 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public boolean existsByCode(String code) {
+        AppVO appVO = appMapper.findByCodeIngoreDelete(code);
+        if(appVO!=null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public App findByAppCode(String appCode) {
         return appMapper.findByAppCode(appCode);
+    }
+
+    @Override
+    public List<App> queryByCodes(List<String> codes) {
+        return null;
     }
 
     @Override
@@ -67,6 +82,11 @@ public class AppServiceImpl implements AppService {
     @Override
     public int deleteById(Long id) {
         return appMapper.deleteById(id);
+    }
+
+    @Override
+    public AppVO findByCodeIngoreDelete(String code) {
+        return appMapper.findByCodeIngoreDelete(code);
     }
 
 }

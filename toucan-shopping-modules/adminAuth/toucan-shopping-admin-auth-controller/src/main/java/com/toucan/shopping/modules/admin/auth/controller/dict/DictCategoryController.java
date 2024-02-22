@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -57,7 +58,7 @@ public class DictCategoryController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -66,22 +67,46 @@ public class DictCategoryController {
             if(StringUtils.isEmpty(dictCategoryVO.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入字典分类名称");
+                resultObjectVO.setMsg("请输入字典分类名称");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(dictCategoryVO.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入字典分类编码");
+                resultObjectVO.setMsg("请输入字典分类编码");
                 return resultObjectVO;
             }
+
+            List<DictCategoryVO> dictCategorys = dictCategoryService.queryListByCodeAndAppCodes(dictCategoryVO.getCode(),dictCategoryVO.getAppCodes());
+            if(!CollectionUtils.isEmpty(dictCategorys))
+            {
+                DictCategoryVO dcv = dictCategorys.get(0);
+                DictCategoryApp dictCategoryApp = new DictCategoryApp();
+                dictCategoryApp.setDictCategoryId(dcv.getId());
+                List<DictCategoryApp> dictCategoryApps = dictCategoryAppService.findListByEntity(dictCategoryApp);
+                if(!CollectionUtils.isEmpty(dictCategoryApps))
+                {
+                    for(DictCategoryApp dca:dictCategoryApps)
+                    {
+                        AppVO appVO = appService.findByCodeIngoreDelete(dca.getAppCode());
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中该编码已存在");
+                        return resultObjectVO;
+                    }
+                }else{
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("编码已存在");
+                    return resultObjectVO;
+                }
+            }
+
             dictCategoryVO.setCreateDate(new Date());
             dictCategoryVO.setDeleteStatus((short)0);
             dictCategoryVO.setDictCategorySort(dictCategoryService.queryMaxSort()+1);
             int row = dictCategoryService.save(dictCategoryVO);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -107,7 +132,7 @@ public class DictCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

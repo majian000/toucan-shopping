@@ -24,4 +24,8 @@ public interface AppMapper {
     int deleteById(Long id);
 
     App findByAppCode(String appCode);
+
+    List<App> findByAppCodes(List<String> appCodes);
+
+    AppVO findByCodeIngoreDelete(String code);
 }

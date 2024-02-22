@@ -90,10 +90,9 @@ public class AppController {
                 return resultObjectVO;
             }
 
-            App query=new App();
-            query.setCode(app.getCode());
-            query.setDeleteStatus((short)0);
-            if(!CollectionUtils.isEmpty(appService.findListByEntity(query)))
+            //应用编码全局唯一,删除的数据也会被校验
+            //删除应用的话并没有级联删除所有业务数据,如果编码重复,进行编码查询的话会将旧应用的数据也查询出来
+            if(appService.existsByCode(app.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("已存在该应用编码!");

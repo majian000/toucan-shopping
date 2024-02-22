@@ -67,11 +67,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
                 return resultObjectVO;
             }
 
-
-            App query=new App();
-            query.setCode(app.getCode());
-            query.setDeleteStatus((short)0);
-            if(!CollectionUtils.isEmpty(appService.findListByEntity(query)))
+            if(appService.existsByCode(app.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("已存在该应用编码!");

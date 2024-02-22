@@ -12,7 +12,11 @@ public interface AppService {
 
     List<App> findListByEntity(App app);
 
+    boolean existsByCode(String code);
+
     App findByAppCode(String appCode);
+
+    List<App> queryByCodes(List<String> codes);
 
     int save(App app);
 
@@ -23,4 +27,6 @@ public interface AppService {
     PageInfo<AppVO> queryListPage(AppPageInfo appPageInfo);
 
     int deleteById(Long id);
+
+    AppVO findByCodeIngoreDelete(String code);
 }

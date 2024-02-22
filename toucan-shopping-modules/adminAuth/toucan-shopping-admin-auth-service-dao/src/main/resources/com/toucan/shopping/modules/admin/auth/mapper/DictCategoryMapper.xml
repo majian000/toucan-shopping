@@ -24,23 +24,6 @@
     </resultMap>
 
 
-    <sql id="queryColumns">
-        t.id,
-        t.name,
-        t.code,
-        t.pid,
-        t.enable_status,
-        t.dict_category_sort,
-        t.create_date,
-        t.update_date,
-        t.delete_status,
-        t.remark,
-        t.create_admin_id,
-        t.update_admin_id
-    </sql>
-
-
-
     <sql id="queryListPageWhere">
 
         <if test="name!=null and name!=''">
@@ -53,6 +36,30 @@
 
         <if test="enableStatus!=null">
             and t.enable_status = #{enableStatus}
+        </if>
+
+    </sql>
+
+
+
+    <sql id="findListByVO">
+
+        <if test="code!=null and code!=''">
+            and t.code =#{code}
+        </if>
+
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+
+        <if test="appCodes!=null and appCodes.size>0">
+            and t.id in (
+                select dict_category_id from t_sa_dict_category_app
+                where delete_status=0 and app_code in
+                <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            )
         </if>
 
     </sql>
@@ -74,6 +81,16 @@
 
 
 
+    <select id="findListByVO" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO">
+        select * from t_sa_dict_category t
+        <where>
+            1=1
+            <include refid="findListByVO" />
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
 
     <select id="queryListPage" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
         select t.* from (
@@ -82,7 +99,7 @@
                     SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
                     LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
                     LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
-                    WHERE t.delete_status = 0
+                    WHERE t.delete_status = 0  AND tsdca.delete_status=0  AND ta.delete_status = 0
                     <if test="appCode!=null and appCode!='' ">
                         and ta.code = #{appCode}
                     </if>
@@ -108,7 +125,7 @@
                         SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
                         LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
                         LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
-                        WHERE t.delete_status = 0
+                        WHERE t.delete_status = 0  AND tsdca.delete_status=0 AND ta.delete_status = 0
                             <if test="appCode!=null and appCode!='' ">
                                 and ta.code = #{appCode}
                             </if>
