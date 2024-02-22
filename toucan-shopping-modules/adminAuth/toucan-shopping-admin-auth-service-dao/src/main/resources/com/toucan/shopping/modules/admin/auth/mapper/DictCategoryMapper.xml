@@ -34,7 +34,7 @@
             and t.code like concat(#{code},'%')
         </if>
 
-        <if test="enableStatus!=null">
+        <if test="enableStatus!=null and enableStatus!=-1">
             and t.enable_status = #{enableStatus}
         </if>
 
@@ -48,7 +48,7 @@
             and t.code =#{code}
         </if>
 
-        <if test="enableStatus!=null">
+        <if test="enableStatus!=null and enableStatus!=-1">
             and t.enable_status = #{enableStatus}
         </if>
 
