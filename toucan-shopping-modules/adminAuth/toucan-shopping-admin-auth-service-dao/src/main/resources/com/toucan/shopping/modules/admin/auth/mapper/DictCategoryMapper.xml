@@ -199,7 +199,7 @@
           where id = #{id}
     </update>
 
-    <update id="deleteById" parameterType="java.lang.Long">
+    <update id="deleteById" parameterType="java.lang.Integer">
         update t_sa_dict_category set delete_status=1 where id = #{id}
     </update>
 

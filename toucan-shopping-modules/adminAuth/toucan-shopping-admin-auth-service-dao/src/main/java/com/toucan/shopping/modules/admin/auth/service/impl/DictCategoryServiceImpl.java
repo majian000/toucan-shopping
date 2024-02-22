@@ -72,7 +72,7 @@ public class DictCategoryServiceImpl implements DictCategoryService {
     }
 
     @Override
-    public int deleteById(Long id) {
+    public int deleteById(Integer id) {
         return dictCategoryMapper.deleteById(id);
     }
 

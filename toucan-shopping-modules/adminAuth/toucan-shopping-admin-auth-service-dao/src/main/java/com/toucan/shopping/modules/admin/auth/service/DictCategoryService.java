@@ -57,7 +57,7 @@ public interface DictCategoryService {
      * @param id
      * @return
      */
-    int deleteById(Long id);
+    int deleteById(Integer id);
 
 
     /**

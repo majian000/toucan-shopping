@@ -341,6 +341,7 @@ public class DictCategoryController {
                 return resultObjectVO;
             }
 
+            dictCategoryService.deleteById(entity.getId());
             dictCategoryAppService.deleteByDictCategoryId(entity.getId());
             resultObjectVO.setData(entity);
 
@@ -384,7 +385,7 @@ public class DictCategoryController {
                 if(dictCategory.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(dictCategory);
-
+                    dictCategoryService.deleteById(dictCategory.getId());
                     dictCategoryAppService.deleteByDictCategoryId(dictCategory.getId());
                 }
             }

@@ -59,7 +59,7 @@ public interface DictCategoryMapper {
      * @param id
      * @return
      */
-    int deleteById(Long id);
+    int deleteById(Integer id);
 
     /**
      * 根据应用查询列表
