@@ -52,4 +52,9 @@
     </update>
 
 
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update t_sa_dict_category_app set delete_status=1 where id = #{id} and delete_status=0
+    </update>
+
+
 </mapper>

@@ -35,4 +35,8 @@ public class DictCategoryAppServiceImpl implements DictCategoryAppService {
     }
 
 
+    @Override
+    public int deleteById(Integer id) {
+        return dictCategoryAppMapper.deleteById(id);
+    }
 }

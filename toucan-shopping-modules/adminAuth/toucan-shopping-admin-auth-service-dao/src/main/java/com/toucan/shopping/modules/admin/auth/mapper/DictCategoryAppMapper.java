@@ -39,6 +39,11 @@ public interface DictCategoryAppMapper {
      */
     int deleteByDictCategoryId(Integer dictCategoryId);
 
-
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Integer id);
 
 }

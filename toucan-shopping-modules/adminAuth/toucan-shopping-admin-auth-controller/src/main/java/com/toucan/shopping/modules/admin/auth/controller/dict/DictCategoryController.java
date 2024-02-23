@@ -295,14 +295,13 @@ public class DictCategoryController {
                             }
                         }
                         if(isRemove){
+                            dictCategoryAppService.deleteById(categoryApp.getId());
                             dictAppService.deleteByCategoryId(categoryApp.getDictCategoryId(),categoryApp.getAppCode());
                         }
                     }
                 }
             }
 
-            //删除字典分类应用关联
-            dictCategoryAppService.deleteByDictCategoryId(entity.getId());
 
 
             resultObjectVO.setData(entity);
