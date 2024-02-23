@@ -22,7 +22,7 @@ public class Dict {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Integer id;
+    private Long id;
 
     private String name; //名称
 

@@ -16,13 +16,13 @@ public class DictApp {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Integer id;
+    private Long id;
 
 
     /**
      * 字典分类ID
      */
-    private Integer dictCategoryId;
+    private Long dictId;
 
 
     /**

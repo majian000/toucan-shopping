@@ -28,28 +28,192 @@
     </resultMap>
 
 
-    <sql id="queryColumns">
-        t.id,
-        t.name,
-        t.code,
-        t.pid,
-        t.category_id,
-        t.extend_property,
-        t.dict_version,
-        t.batch_id,
-        t.is_active,
-        t.dict_sort,
-        t.enable_status,
-        t.create_date,
-        t.update_date,
-        t.delete_status,
-        t.remark,
-        t.create_admin_id,
-        t.update_admin_id
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name like concat(#{name},'%')
+        </if>
+
+        <if test="code!=null and code!=''">
+            and t.code like concat(#{code},'%')
+        </if>
+
+        <if test="enableStatus!=null and enableStatus!=-1">
+            and t.enable_status = #{enableStatus}
+        </if>
+
     </sql>
 
 
 
+    <sql id="findListByVO">
+
+        <if test="code!=null and code!=''">
+            and t.code =#{code}
+        </if>
+
+        <if test="enableStatus!=null and enableStatus!=-1">
+            and t.enable_status = #{enableStatus}
+        </if>
+
+        <if test="appCodes!=null and appCodes.size>0">
+            and t.id in (
+            select dict_category_id from t_sa_dict_app
+            where delete_status=0 and app_code in
+            <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+
+    </sql>
+
+    <select id="findListByEntity" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
+        select * from t_sa_dict t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="name!=null and name!=''">
+                and t.name = #{name}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+
+    <select id="findListByVO" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
+        select * from t_sa_dict t
+        <where>
+            1=1
+            <include refid="findListByVO" />
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <select id="queryListPage" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictPageInfo">
+        select t.* from (
+        SELECT t.*,ds2.appNames FROM t_sa_dict t LEFT JOIN (
+        SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
+        SELECT t.*,ta.name AS appName FROM t_sa_dict t
+        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_category_id AND tsada.delete_status=0
+        LEFT JOIN t_app ta ON tsada.app_code = ta.code AND ta.delete_status = 0
+        WHERE t.delete_status = 0  AND tsada.delete_status=0  AND ta.delete_status = 0
+        <if test="appCode!=null and appCode!='' ">
+            and ta.code = #{appCode}
+        </if>
+        )ds
+        GROUP BY ds.id
+        )ds2 ON t.id = ds2.id
+        )t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.DictPageInfo">
+        select count(*) from (
+        select t.* from (
+        SELECT t.*,ds2.appNames FROM t_sa_dict t LEFT JOIN (
+        SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
+        SELECT t.*,ta.name AS appName FROM t_sa_dict t
+        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_category_id AND tsada.delete_status=0
+        LEFT JOIN t_app ta ON tsada.app_code = ta.code AND ta.delete_status = 0
+        WHERE t.delete_status = 0  AND tsada.delete_status=0 AND ta.delete_status = 0
+        <if test="appCode!=null and appCode!='' ">
+            and ta.code = #{appCode}
+        </if>
+        )ds
+        GROUP BY ds.id
+        )ds2 ON t.id = ds2.id
+        )t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+        )ds
+    </select>
+
+
+
+
+    <select id="findById" resultMap="dictVOMap" parameterType="java.lang.Long">
+        select * from t_sa_dict t where  1=1 and t.id = #{id} and t.delete_status = 0
+    </select>
+
+
+
+    <select id="findByIdAndAppCode" resultMap="dictVOMap" >
+         select t.*,tsoa.app_code from t_sa_dict t
+            left join t_sa_dict_app tsoa on t.dict_category_id = tsoa.dict_category_id
+            where  1=1 and t.id = #{id} and t.delete_status = 0 and tsoa.app_code=#{appCode}
+
+    </select>
+
+    <select id="queryListByAppCode" resultMap="dictVOMap" parameterType="java.lang.String">
+        select * from t_sa_dict t
+          left join t_sa_dict_app tso on t.dict_category_id = tso.dict_category_id
+          and tso.app_code = #{appCode}
+          and tso.delete_status = 0
+         where  1=1  and t.delete_status = 0 and tso.app_code is not null
+    </select>
+
+    <select id="queryAll" resultMap="dictVOMap" parameterType="java.lang.String">
+        select * from t_sa_dict t where  1=1  and t.delete_status = 0
+    </select>
+
+    <select id="queryListByAppCodeArray" resultMap="dictVOMap" >
+        select * from t_sa_dict t
+        left join t_sa_dict_app tso on t.dict_category_id = tso.dict_category_id
+        and tso.app_code in
+        <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        and tso.delete_status = 0
+        where  1=1  and t.delete_status = 0 and tso.app_code is not null
+    </select>
+
+
+
+    <select id="findListByPid" resultMap="dictVOMap" parameterType="java.lang.Long">
+        select * from t_sa_dict t where  1=1 and t.pid = #{pid} and t.delete_status = 0
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict"  keyProperty="id" >
+        insert into t_sa_dict(id,name,code,pid,category_id,extend_property,dict_version,batch_id,
+        is_active,dict_sort,remark,enable_status,create_admin_id,create_date,delete_status)
+        values(#{id},#{name},#{code},#{pid},#{categoryId},#{extendProperty},#{dictVersion},#{batchId},
+        #{isActive},#{dictSort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
+    </insert>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
+        update t_sa_dict set  name=#{name},code=#{code},dict_sort=#{dictSort},enable_status=#{enableStatus}
+        update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
+          where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_sa_dict set delete_status=1 where id = #{id}
+    </update>
+
+
+    <select id="queryMaxSort" resultType="java.lang.Integer" >
+        select max(t.dict_category_sort) from t_sa_dict t where  1=1 and t.delete_status = 0
+    </select>
 
 
 

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.vo;
 
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
+import com.toucan.shopping.modules.admin.auth.entity.DictApp;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import lombok.Data;
@@ -28,9 +29,9 @@ public class DictVO extends Dict {
 
 
     /**
-     * 分类应用关联
+     * 字典应用关联
      */
-    private List<DictCategoryApp> dictCategoryApps;
+    private List<DictApp> dictApps;
 
 
     /**
