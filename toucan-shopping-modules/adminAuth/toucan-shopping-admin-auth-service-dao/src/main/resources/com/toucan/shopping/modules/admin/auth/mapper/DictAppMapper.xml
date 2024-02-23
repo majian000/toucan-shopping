@@ -41,6 +41,14 @@
         values(#{id},#{dictId},#{appCode},#{createDate},#{deleteStatus},#{createAdminId})
     </insert>
 
+    <insert id="inserts"  keyProperty="id" >
+        insert into t_sa_dict_app(id,dict_id,app_code,create_date,delete_status,create_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.dictId},#{entity.appCode},#{entity.createDate},#{entity.deleteStatus},#{entity.createAdminId})
+        </foreach>
+
+    </insert>
 
     <update id="deleteByAppCode" parameterType="java.lang.String">
         update t_sa_dict_app set delete_status=1 where app_code = #{appCode} and delete_status=0
@@ -57,4 +65,9 @@
         )
     </update>
 
+    <update id="deleteByCategoryIdAndAppCode" parameterType="java.lang.Integer">
+        update t_sa_dict_app set delete_status=1 where delete_status=0 and dict_id in (
+          select dict_id from t_sa_dict where category_id = #{categoryId} and delete_status=0
+        ) and app_code=#{appCode}
+    </update>
 </mapper>

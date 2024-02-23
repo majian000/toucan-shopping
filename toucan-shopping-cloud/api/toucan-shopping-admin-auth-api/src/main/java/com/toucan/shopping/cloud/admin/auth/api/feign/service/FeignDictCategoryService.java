@@ -83,4 +83,14 @@ public interface FeignDictCategoryService {
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/dict/category/app/list/by/id",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryCategoryAppListByCategoryId(@RequestBody RequestJsonVO requestVo);
+
 }

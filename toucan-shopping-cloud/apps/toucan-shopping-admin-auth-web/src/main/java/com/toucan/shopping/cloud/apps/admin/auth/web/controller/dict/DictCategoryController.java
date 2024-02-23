@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dictCategory")
@@ -301,5 +302,50 @@ public class DictCategoryController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/queryAppListByCategoryId",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppListByCategoryId(@RequestBody DictCategoryVO query)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(query.getId()==null){
+                resultObjectVO.setMsg("字典分类ID不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            resultObjectVO = feignDictCategoryService.queryCategoryAppListByCategoryId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<DictCategoryApp> dictCategoryApps = resultObjectVO.formatDataList(DictCategoryApp.class);
+                resultObjectVO.setData(null);
+                if(CollectionUtils.isNotEmpty(dictCategoryApps))
+                {
+                    List<String> appCodes = dictCategoryApps.stream().map(DictCategoryApp::getAppCode).collect(Collectors.toList());
+                    if(CollectionUtils.isNotEmpty(appCodes)){
+                        AppVO appVO=new AppVO();
+                        appVO.setCodes(appCodes);
+                        requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
+                        resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
+                    }
+                }
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
 }
 

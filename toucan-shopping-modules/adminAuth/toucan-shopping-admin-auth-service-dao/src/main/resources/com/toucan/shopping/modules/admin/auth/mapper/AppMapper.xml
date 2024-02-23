@@ -85,12 +85,12 @@
 
     </select>
 
-    <select id="findByAppCodes" resultMap="appMap" parameterType="java.util.List">
+    <select id="findListByAppCodes" resultMap="appMap" parameterType="java.util.List">
         select * from t_app t
         <where>
             1=1
             <if test="appCodes!=null and appCodes.size>0">
-                t.code in
+                and t.code in
                 <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
                     #{item}
                 </foreach>

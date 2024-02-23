@@ -157,6 +157,21 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryListByCodes(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAppService.queryListByCodes faild  params {}", JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

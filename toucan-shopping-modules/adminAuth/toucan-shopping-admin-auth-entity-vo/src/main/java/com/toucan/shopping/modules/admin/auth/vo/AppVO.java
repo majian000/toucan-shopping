@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.admin.auth.entity.App;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 应用
@@ -33,5 +34,10 @@ public class AppVO extends App {
      * checkbox是否选中
      */
     private boolean checked;
+
+    /**
+     * 编码集合
+     */
+    private List<String> codes;
 
 }

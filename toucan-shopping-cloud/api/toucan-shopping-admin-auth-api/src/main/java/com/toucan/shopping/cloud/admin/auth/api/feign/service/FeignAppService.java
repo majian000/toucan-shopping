@@ -97,4 +97,14 @@ public interface FeignAppService {
     @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryListByCodes",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByCodes(@RequestBody RequestJsonVO requestVo);
+
 }

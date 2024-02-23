@@ -17,6 +17,14 @@ public interface DictAppMapper {
      */
     int insert(DictApp entity);
 
+
+    /**
+     * 批量保存
+     * @param entitys
+     * @return
+     */
+    int inserts(List<DictApp> entitys);
+
     /**
      * 根据实体查询列表
      * @param entity
@@ -46,5 +54,13 @@ public interface DictAppMapper {
      * @return
      */
     int deleteByCategoryId(Integer categoryId);
+
+    /**
+     * 根据分类ID和应用编码删除
+     * @param categoryId
+     * @param appCode
+     * @return
+     */
+    int deleteByCategoryIdAndAppCode(Integer categoryId, String appCode);
 
 }

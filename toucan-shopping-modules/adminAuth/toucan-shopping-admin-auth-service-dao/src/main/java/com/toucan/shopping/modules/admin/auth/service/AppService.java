@@ -16,7 +16,7 @@ public interface AppService {
 
     App findByAppCode(String appCode);
 
-    List<App> queryByCodes(List<String> codes);
+    List<App> queryListByCodes(List<String> codes);
 
     int save(App app);
 

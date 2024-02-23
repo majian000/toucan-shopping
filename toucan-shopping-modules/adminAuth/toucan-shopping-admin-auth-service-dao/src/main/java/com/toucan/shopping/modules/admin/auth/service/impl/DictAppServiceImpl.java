@@ -39,4 +39,14 @@ public class DictAppServiceImpl implements DictAppService {
         return dictAppMapper.deleteByCategoryId(categoryId);
     }
 
+
+    @Override
+    public int saves(List<DictApp> entitys) {
+        return dictAppMapper.inserts(entitys);
+    }
+    @Override
+    public int deleteByCategoryId(Integer categoryId, String appCode) {
+        return dictAppMapper.deleteByCategoryIdAndAppCode(categoryId,appCode);
+    }
+
 }

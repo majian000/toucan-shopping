@@ -27,7 +27,7 @@ public interface AppMapper {
 
     App findByAppCode(String appCode);
 
-    List<App> findByAppCodes(List<String> appCodes);
+    List<App> findListByAppCodes(List<String> appCodes);
 
     AppVO findByCodeIngoreDelete(String code);
 }

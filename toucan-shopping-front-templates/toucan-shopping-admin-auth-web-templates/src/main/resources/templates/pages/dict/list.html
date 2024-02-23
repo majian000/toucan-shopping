@@ -80,7 +80,6 @@
                                     <div class="layui-input-inline">
                                         <select id="selectApp" name="appCode"  lay-search="">
                                             <option value="">请选择</option>
-                                            <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
                                         </select>
                                     </div>
                                 </div>
@@ -244,9 +243,41 @@
         };
 
         function categoryTreeClick(event, treeId, treeNode) {
-            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+            loadListPageApps(treeNode.id);
             $("#categoryId").val(treeNode.id);
             $("#queryButton").click();
+        }
+
+        function loadListPageApps(categoryId){
+            $("#selectApp").empty();
+            var queryParam = {};
+            queryParam.id = categoryId;
+            $.ajax({
+                url:"[[@{/}]]dictCategory/queryAppListByCategoryId",
+                type:"POST",
+                contentType: "application/json; charset=utf-8",
+                data:JSON.stringify(queryParam),
+                dataType: "json",
+                success: function(data){
+                    if(data.data!=null)
+                    {
+                        $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
+                        for(var i=0;i<data.data.length;i++)
+                        {
+                            var app = data.data[i];
+                            $("#selectApp").append("<option value='" + app.code + "' >" + app.name + "</option>");
+                        }
+                        form.render();
+                    }
+
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                }
+            });
         }
 
         initCategoryTree();

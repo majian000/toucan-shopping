@@ -19,6 +19,7 @@ public interface DictMapper {
      */
     int insert(Dict entity);
 
+
     /**
      * 更新
      * @param entity

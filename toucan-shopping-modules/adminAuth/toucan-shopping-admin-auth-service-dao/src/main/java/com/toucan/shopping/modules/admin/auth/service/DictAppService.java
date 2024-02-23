@@ -24,6 +24,12 @@ public interface DictAppService {
     int save(DictApp entity);
 
     /**
+     * 批量保存
+     * @param entitys
+     * @return
+     */
+    int saves(List<DictApp> entitys);
+    /**
      * 删除指定应用编码下所有关联
      * @param appCode
      * @return
@@ -45,5 +51,13 @@ public interface DictAppService {
      * @return
      */
     int deleteByCategoryId(Integer categoryId);
+
+    /**
+     * 根据分类ID删除和应用编码删除
+     * @param categoryId
+     * @param appCode
+     * @return
+     */
+    int deleteByCategoryId(Integer categoryId,String appCode);
 
 }

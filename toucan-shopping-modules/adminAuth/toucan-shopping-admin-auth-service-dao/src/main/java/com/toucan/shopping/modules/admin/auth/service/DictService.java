@@ -24,6 +24,7 @@ public interface DictService {
      */
     int save(Dict entity);
 
+
     /**
      * 更新
      * @param entity

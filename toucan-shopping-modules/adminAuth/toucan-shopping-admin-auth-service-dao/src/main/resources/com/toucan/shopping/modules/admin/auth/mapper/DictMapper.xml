@@ -269,6 +269,8 @@
         #{isActive},#{dictSort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
+
+
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
         update t_sa_dict set  name=#{name},code=#{code},dict_sort=#{dictSort},enable_status=#{enableStatus}
         update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
