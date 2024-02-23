@@ -35,9 +35,26 @@ public class DictVO extends Dict {
 
 
     /**
+     * 是否有子节点
+     */
+    private Boolean haveChild = false;
+
+    /**
+     * 路径
+     */
+    private String path;
+
+    /**
      * 关联应用名称
      */
     private String appNames;
 
+    private Long[] idArray; //主键列表
+
+    private List<Long> idList; //主键集合
+
+    private String parentName; //上级节点名称
+
+    private List<Long> categoryIdList; //分类ID列表
 
 }

@@ -28,7 +28,7 @@ public class Dict {
 
     private String code; //编码
 
-    private Integer pid; //父级ID
+    private Long pid; //父级ID
 
     private Integer categoryId; //字典分类ID
 

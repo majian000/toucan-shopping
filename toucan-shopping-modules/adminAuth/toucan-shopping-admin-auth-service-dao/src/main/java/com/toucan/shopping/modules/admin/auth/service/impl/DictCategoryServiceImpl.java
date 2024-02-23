@@ -72,6 +72,11 @@ public class DictCategoryServiceImpl implements DictCategoryService {
     }
 
     @Override
+    public List<DictCategoryVO> queryList(DictCategoryVO query) {
+        return dictCategoryMapper.findListByVO(query);
+    }
+
+    @Override
     public int deleteById(Integer id) {
         return dictCategoryMapper.deleteById(id);
     }

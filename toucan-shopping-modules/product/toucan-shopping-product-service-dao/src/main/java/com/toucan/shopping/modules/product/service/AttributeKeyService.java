@@ -104,9 +104,9 @@ public interface AttributeKeyService {
 
 
     /**
-     * 设置分类名称路径
-     * @param categoryTreeVO
+     * 设置名称路径
+     * @param attributeKeyVO
      */
-    void setPath(AttributeKeyVO categoryTreeVO);
+    void setPath(AttributeKeyVO attributeKeyVO);
 
 }

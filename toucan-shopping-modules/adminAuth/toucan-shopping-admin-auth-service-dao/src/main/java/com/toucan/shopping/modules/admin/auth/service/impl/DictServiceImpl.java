@@ -75,10 +75,24 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int deleteByCategoryId(Integer categoryId) {
+        return dictMapper.deleteByCategoryId(categoryId);
+    }
+
+    @Override
     public List<DictVO> queryListByAppCode(String appCode) {
         return dictMapper.queryListByAppCode(appCode);
     }
 
+    @Override
+    public List<DictVO> queryList(DictVO query) {
+        return dictMapper.queryList(query);
+    }
+
+    @Override
+    public Long queryListCount(DictVO query) {
+        return dictMapper.queryListCount(query);
+    }
 
 
 }

@@ -1,23 +1,21 @@
 package com.toucan.shopping.modules.admin.auth.page;
 
-import com.toucan.shopping.modules.admin.auth.vo.DictVO;
+import com.toucan.shopping.modules.admin.auth.entity.Dict;
+import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
-
 /**
- * 字典分类
+ * 字典列表分页查询
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class DictPageInfo extends PageInfo<DictVO> {
+public class DictTreeInfo extends PageInfo<Dict> {
 
 
 
@@ -25,14 +23,9 @@ public class DictPageInfo extends PageInfo<DictVO> {
     // ===============查询条件===================
 
     /**
-     * 名称
+     * 机构名称
      */
     private String name;
-
-    /**
-     * 编码
-     */
-    private String code;
 
     /**
      * 启用状态 0:禁用 1启用
@@ -48,15 +41,6 @@ public class DictPageInfo extends PageInfo<DictVO> {
      * 管理员ID
      */
     private String adminId;
-
-    /**
-     * 分类ID
-     */
-    private Long categoryId;
-
-    private Long pid; //上级节点
-
-    private List<Long> categoryIdList; //分类ID列表
 
     //==============================================
 

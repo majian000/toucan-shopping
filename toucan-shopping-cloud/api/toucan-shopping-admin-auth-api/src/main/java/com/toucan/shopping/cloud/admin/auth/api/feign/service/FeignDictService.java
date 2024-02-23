@@ -73,4 +73,14 @@ public interface FeignDictService {
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
+
 }

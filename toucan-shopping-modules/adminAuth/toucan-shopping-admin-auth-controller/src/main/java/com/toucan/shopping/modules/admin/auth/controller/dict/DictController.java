@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -392,6 +394,158 @@ public class DictController {
                 }
             }
             resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            DictPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), DictPageInfo.class);
+
+            List<DictVO> dictVoList = new ArrayList<DictVO>();
+            boolean queryCriteria=false;
+            //按指定条件查询
+            if(StringUtils.isNotEmpty(queryPageInfo.getName())
+                    ||StringUtils.isNotEmpty(queryPageInfo.getCode()))
+            {
+                queryCriteria = true;
+                DictVO queryDictVO = new DictVO();
+                BeanUtils.copyProperties(queryDictVO,queryPageInfo);
+                queryDictVO.setPid(null);
+                List<DictVO> dictVOS = dictService.queryList(queryDictVO);
+                for (int i = 0; i < dictVOS.size(); i++) {
+                    dictVoList.add(dictVOS.get(i));
+                }
+            }else {
+                //查询当前节点下的所有子节点
+                DictVO queryDict = new DictVO();
+                if(queryPageInfo.getPid()!=null) {
+                    queryDict.setPid(queryPageInfo.getPid());
+                }else{
+                    queryDict.setPid(-1L);
+                }
+                List<Long> categoryIdList = new LinkedList<>();
+                if(!CollectionUtils.isEmpty(queryPageInfo.getCategoryIdList()))
+                {
+                    for(Long categoryId:queryPageInfo.getCategoryIdList())
+                    {
+                        if(categoryId!=null&&categoryId.longValue()!=-1) {
+                            categoryIdList.add(categoryId);
+                        }
+                    }
+                }
+                if(queryPageInfo.getCategoryId()!=null)
+                {
+                    categoryIdList.add(queryPageInfo.getCategoryId());
+                }
+                //设置分类
+                queryDict.setCategoryIdList(categoryIdList);
+                List<DictVO> dictVOS = dictService.queryList(queryDict);
+                for (int i = 0; i < dictVOS.size(); i++) {
+                    DictVO dictVO = dictVOS.get(i);
+
+                    queryDict = new DictVO();
+                    queryDict.setPid(dictVO.getId());
+                    Long childCount = dictService.queryListCount(queryDict);
+                    if (childCount > 0) {
+                        dictVO.setHaveChild(true);
+                    }
+                    dictVoList.add(dictVO);
+                }
+            }
+
+
+            //先查询出属性路径相关
+            if(!CollectionUtils.isEmpty(dictVoList))
+            {
+                List<Long> parentIdList =new LinkedList<>();
+                boolean parentIdExists=false;
+
+                for(DictVO dictVO:dictVoList)
+                {
+                    //设置上级节点ID
+                    parentIdExists=false;
+                    for(Long parentId:parentIdList)
+                    {
+                        if(dictVO.getPid()!=null&&parentId!=null
+                                &&parentId.longValue()==dictVO.getPid().longValue())
+                        {
+                            parentIdExists=true;
+                            break;
+                        }
+                    }
+                    if(!parentIdExists&&dictVO.getPid()!=null&&dictVO.getPid().longValue()!=-1)
+                    {
+                        parentIdList.add(dictVO.getPid());
+                    }
+                }
+                for(DictVO dictVO:dictVoList)
+                {
+                    if(dictVO.getPid()!=null&&dictVO.getPid().longValue()==-1)
+                    {
+                        dictVO.setParentName("根节点");
+                    }
+                }
+                if(!CollectionUtils.isEmpty(parentIdList)) {
+                    DictVO queryParentDictVO = new DictVO();
+                    queryParentDictVO.setIdList(parentIdList);
+                    List<DictVO> parentList = dictService.queryList(queryParentDictVO);
+                    if(!CollectionUtils.isEmpty(parentList))
+                    {
+                        for(DictVO dictVO:dictVoList) {
+                            if(dictVO.getPid()!=null
+                                    &&dictVO.getPid().longValue()!=-1) {
+                                for (DictVO parent : parentList) {
+                                    if (dictVO.getPid() != null
+                                            && dictVO.getPid().longValue() == parent.getId().longValue()) {
+                                        dictVO.setParentName(parent.getName());
+                                        break;
+                                    }
+                                }
+                            }else{
+                                dictVO.setParentName("根节点");
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //如果做了条件查询 就将查询的这些节点设置为顶级节点
+            if(queryCriteria) {
+                if(!org.apache.commons.collections.CollectionUtils.isEmpty(dictVoList)) {
+                    for (DictVO dictVO : dictVoList) {
+                        dictVO.setPid(-1L);
+                    }
+                }
+            }
+
+            resultObjectVO.setData(dictVoList);
 
         }catch(Exception e)
         {

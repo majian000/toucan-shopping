@@ -12,27 +12,31 @@ import java.util.List;
 public class DictAppServiceImpl implements DictAppService {
 
     @Autowired
-    private DictAppMapper dictCategoryAppMapper;
+    private DictAppMapper dictAppMapper;
 
     @Override
     public List<DictApp> findListByEntity(DictApp entity) {
-        return dictCategoryAppMapper.findListByEntity(entity);
+        return dictAppMapper.findListByEntity(entity);
     }
 
     @Override
     public int save(DictApp entity) {
-        return dictCategoryAppMapper.insert(entity);
+        return dictAppMapper.insert(entity);
     }
 
     @Override
     public int deleteByAppCode(String appCode) {
-        return dictCategoryAppMapper.deleteByAppCode(appCode);
+        return dictAppMapper.deleteByAppCode(appCode);
     }
 
     @Override
     public int deleteByDictId(Long dictId) {
-        return dictCategoryAppMapper.deleteByDictId(dictId);
+        return dictAppMapper.deleteByDictId(dictId);
     }
 
+    @Override
+    public int deleteByCategoryId(Integer categoryId) {
+        return dictAppMapper.deleteByCategoryId(categoryId);
+    }
 
 }

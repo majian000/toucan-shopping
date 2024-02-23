@@ -39,4 +39,11 @@ public interface DictAppService {
     int deleteByDictId(Long dictId);
 
 
+    /**
+     * 根据分类ID删除
+     * @param categoryId
+     * @return
+     */
+    int deleteByCategoryId(Integer categoryId);
+
 }

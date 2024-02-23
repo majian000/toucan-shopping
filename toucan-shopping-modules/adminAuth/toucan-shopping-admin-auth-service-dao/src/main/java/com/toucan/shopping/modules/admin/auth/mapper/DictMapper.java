@@ -111,4 +111,18 @@ public interface DictMapper {
      * @return
      */
     List<DictVO> queryAll();
+
+    /**
+     * 根据分类ID删除
+     * @param categoryId
+     * @return
+     */
+    int deleteByCategoryId(Integer categoryId);
+
+
+    List<DictVO> queryList(DictVO entity);
+
+    Long queryListCount(DictVO entity);
+
+
 }

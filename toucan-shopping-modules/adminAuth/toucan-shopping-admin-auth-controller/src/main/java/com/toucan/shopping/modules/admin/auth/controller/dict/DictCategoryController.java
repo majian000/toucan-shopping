@@ -37,6 +37,12 @@ public class DictCategoryController {
     private DictCategoryService dictCategoryService;
 
     @Autowired
+    private DictService dictService;
+
+    @Autowired
+    private DictAppService dictAppService;
+
+    @Autowired
     private AppService appService;
 
     @Autowired
@@ -201,14 +207,14 @@ public class DictCategoryController {
             {
                 for(String appCode:entity.getAppCodes())
                 {
-                    DictCategoryApp orgnazitionApp = new DictCategoryApp();
-                    orgnazitionApp.setDictCategoryId(dictCategoryList.get(0).getId());
-                    orgnazitionApp.setAppCode(appCode);
-                    orgnazitionApp.setCreateDate(new Date());
-                    orgnazitionApp.setDeleteStatus((short)0);
-                    orgnazitionApp.setCreateAdminId(entity.getUpdateAdminId());
+                    DictCategoryApp dictCategoryApp = new DictCategoryApp();
+                    dictCategoryApp.setDictCategoryId(dictCategoryList.get(0).getId());
+                    dictCategoryApp.setAppCode(appCode);
+                    dictCategoryApp.setCreateDate(new Date());
+                    dictCategoryApp.setDeleteStatus((short)0);
+                    dictCategoryApp.setCreateAdminId(entity.getUpdateAdminId());
 
-                    dictCategoryAppService.save(orgnazitionApp);
+                    dictCategoryAppService.save(dictCategoryApp);
                 }
             }
 
@@ -246,6 +252,36 @@ public class DictCategoryController {
         try {
             DictCategoryPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), DictCategoryPageInfo.class);
             resultObjectVO.setData(dictCategoryService.queryListPage(pageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            DictCategoryVO dictCategoryVO = requestVo.formatEntity(DictCategoryVO.class);
+            resultObjectVO.setData(dictCategoryService.queryList(dictCategoryVO));
 
         }catch(Exception e)
         {
@@ -343,6 +379,9 @@ public class DictCategoryController {
 
             dictCategoryService.deleteById(entity.getId());
             dictCategoryAppService.deleteByDictCategoryId(entity.getId());
+            dictAppService.deleteByCategoryId(entity.getId());
+            dictService.deleteByCategoryId(entity.getId());
+
             resultObjectVO.setData(entity);
 
         }catch(Exception e)
@@ -387,6 +426,8 @@ public class DictCategoryController {
                     appResultObjectVO.setData(dictCategory);
                     dictCategoryService.deleteById(dictCategory.getId());
                     dictCategoryAppService.deleteByDictCategoryId(dictCategory.getId());
+                    dictAppService.deleteByCategoryId(dictCategory.getId());
+                    dictService.deleteByCategoryId(dictCategory.getId());
                 }
             }
             resultObjectVO.setData(resultObjectVOList);

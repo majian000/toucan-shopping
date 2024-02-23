@@ -51,5 +51,10 @@
         update t_sa_dict_app set delete_status=1 where dict_id = #{dictId} and delete_status=0
     </update>
 
+    <update id="deleteByCategoryId" parameterType="java.lang.Integer">
+        update t_sa_dict_app set delete_status=1 where delete_status=0 and dict_id in (
+          select dict_id from t_sa_dict where category_id = #{categoryId} and delete_status=0
+        )
+    </update>
 
 </mapper>

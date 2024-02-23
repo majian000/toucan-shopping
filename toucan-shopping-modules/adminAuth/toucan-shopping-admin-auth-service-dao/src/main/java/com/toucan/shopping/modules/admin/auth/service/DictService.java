@@ -59,6 +59,13 @@ public interface DictService {
      */
     int deleteById(Long id);
 
+    /**
+     * 根据分类ID删除
+     * @param categoryId
+     * @return
+     */
+    int deleteByCategoryId(Integer categoryId);
+
 
     /**
      * 根据应用编码查询列表
@@ -66,6 +73,21 @@ public interface DictService {
      * @return
      */
     List<DictVO> queryListByAppCode(String appCode);
+
+
+    /**
+     * 根据查询对象查询列表
+     * @param query
+     * @return
+     */
+    List<DictVO> queryList(DictVO query);
+
+    /**
+     * 根据查询对象查询列表数量
+     * @param entity
+     * @return
+     */
+    Long queryListCount(DictVO entity);
 
 
 

@@ -53,6 +53,13 @@ public interface DictCategoryService {
     PageInfo<DictCategoryVO> queryListPage(DictCategoryPageInfo pageInfo);
 
     /**
+     * 查询列表
+     * @param query
+     * @return
+     */
+    List<DictCategoryVO> queryList(DictCategoryVO query);
+
+    /**
      *  根据ID删除
      * @param id
      * @return

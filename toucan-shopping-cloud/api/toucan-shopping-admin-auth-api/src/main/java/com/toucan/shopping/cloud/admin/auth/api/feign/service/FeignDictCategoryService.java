@@ -74,4 +74,13 @@ public interface FeignDictCategoryService {
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryList(@RequestBody RequestJsonVO requestVo);
+
 }

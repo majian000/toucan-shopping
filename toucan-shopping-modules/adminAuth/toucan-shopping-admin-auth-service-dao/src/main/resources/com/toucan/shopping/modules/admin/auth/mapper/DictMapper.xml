@@ -69,6 +69,75 @@
 
     </sql>
 
+
+
+    <sql id="queryListWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name  like concat('%',#{name},'%')
+        </if>
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="pid!=null">
+            and t.pid = #{pid}
+        </if>
+
+        <if test="categoryId!=null">
+            and t.category_id = #{categoryId}
+        </if>
+
+
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="idArray!=null and idArray.length>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="idList!=null and idList.size>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
+
+    <select id="queryList" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
+        select t.* from t_sa_dict t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+        </where>
+    </select>
+
+    <select id="queryListCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
+        select count(*) from t_sa_dict t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+
+        </where>
+    </select>
+
+
+
     <select id="findListByEntity" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
         select * from t_sa_dict t
         <where>
@@ -210,6 +279,9 @@
         update t_sa_dict set delete_status=1 where id = #{id}
     </update>
 
+    <update id="deleteByCategoryId" parameterType="java.lang.Integer">
+        update t_sa_dict set delete_status=1 where category_id = #{categoryId}
+    </update>
 
     <select id="queryMaxSort" resultType="java.lang.Integer" >
         select max(t.dict_category_sort) from t_sa_dict t where  1=1 and t.delete_status = 0
