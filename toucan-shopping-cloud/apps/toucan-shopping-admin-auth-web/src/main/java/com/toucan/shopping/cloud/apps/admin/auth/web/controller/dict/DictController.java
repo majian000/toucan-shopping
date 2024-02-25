@@ -72,10 +72,65 @@ public class DictController extends UIController {
 
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/dict/listPage",feignFunctionService);
-        return "pages/dict/list.html";
+        return "pages/dict/dict/list.html";
     }
 
 
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@RequestParam Integer dictCategoryId) throws Exception
+    {
+        this.setDictCategoryApps(request,dictCategoryId);
+        return "pages/dict/dict/add.html";
+    }
+
+
+    /**
+     * 设置分类字典的应用
+     * @param request
+     * @param id
+     * @throws Exception
+     */
+    private void setDictCategoryApps(HttpServletRequest request,Integer id) throws Exception {
+        DictCategoryVO dictCategory = new DictCategoryVO();
+        dictCategory.setId(id);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
+        ResultObjectVO resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+        if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+        {
+            if(resultObjectVO.getData()!=null) {
+
+                List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
+                if(!CollectionUtils.isEmpty(dictCategoryVOS))
+                {
+                    dictCategory = dictCategoryVOS.get(0);
+                    //设置复选框选中状态
+                    Object appsObject = request.getAttribute("apps");
+                    if(appsObject!=null) {
+                        List<AppVO> appVos = (List<AppVO>) appsObject;
+                        if(!CollectionUtils.isEmpty(dictCategory.getDictCategoryApps()))
+                        {
+                            for(DictCategoryApp dictCategoryApp:dictCategory.getDictCategoryApps())
+                            {
+                                for(AppVO aa:appVos)
+                                {
+                                    if(dictCategoryApp.getAppCode().equals(aa.getCode()))
+                                    {
+                                        aa.setChecked(true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    request.setAttribute("model",dictCategory);
+                }
+            }
+
+        }
+    }
 
 
     /**
@@ -115,8 +170,7 @@ public class DictController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(id==null)
-            {
+            if(id==null){
                 id=-1L;
             }
             DictCategoryVO query = new DictCategoryVO();

@@ -68,7 +68,7 @@ public class DictCategoryController extends UIController {
 
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/dictCategory/listPage",feignFunctionService);
-        return "pages/dictCategory/list.html";
+        return "pages/dict/dictCategory/list.html";
     }
 
 
@@ -118,7 +118,7 @@ public class DictCategoryController extends UIController {
     {
         super.initSelectApp(request,toucan,feignAppService);
 
-        return "pages/dictCategory/add.html";
+        return "pages/dict/dictCategory/add.html";
     }
 
 
@@ -195,7 +195,7 @@ public class DictCategoryController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/dictCategory/edit.html";
+        return "pages/dict/dictCategory/edit.html";
     }
 
 
