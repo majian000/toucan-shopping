@@ -119,7 +119,26 @@
 
 
     <select id="queryList" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select t.*,group_concat(ta.name) as appNames from t_sa_dict t
+        select
+        t.id,
+        t.name,
+        t.code,
+        t.pid,
+        t.category_id,
+        t.extend_property,
+        t.dict_version,
+        t.batch_id,
+        t.is_active,
+        t.dict_sort,
+        t.enable_status,
+        t.delete_status,
+        t.remark,
+        t.create_date,
+        t.create_admin_id,
+        t.update_date,
+        t.update_admin_id,
+        group_concat(ta.name) as appNames
+        from t_sa_dict t
           left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
           left join t_app ta on ta.code = tsda.app_code and ta.delete_status=0
         <where>
@@ -127,15 +146,40 @@
             and t.delete_status=0 and tsda.delete_status=0  and ta.delete_status=0
             <include refid="queryListWhere" />
         </where>
+        group by t.id
     </select>
 
     <select id="queryListCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select count(*) from t_sa_dict t
-        <where>
-            1=1
-            <include refid="queryListWhere" />
-
-        </where>
+        select count(*) from (
+            select
+            t.id,
+            t.name,
+            t.code,
+            t.pid,
+            t.category_id,
+            t.extend_property,
+            t.dict_version,
+            t.batch_id,
+            t.is_active,
+            t.dict_sort,
+            t.enable_status,
+            t.delete_status,
+            t.remark,
+            t.create_date,
+            t.create_admin_id,
+            t.update_date,
+            t.update_admin_id,
+            group_concat(ta.name) as appNames
+            from t_sa_dict t
+            left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
+            left join t_app ta on ta.code = tsda.app_code and ta.delete_status=0
+            <where>
+                1=1
+                and t.delete_status=0 and tsda.delete_status=0  and ta.delete_status=0
+                <include refid="queryListWhere" />
+            </where>
+            group by t.id
+        )ds
     </select>
 
 

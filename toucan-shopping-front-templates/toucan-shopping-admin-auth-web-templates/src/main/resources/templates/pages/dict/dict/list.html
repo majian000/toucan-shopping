@@ -50,7 +50,7 @@
 
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
-                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                        <form class="layui-form layui-form-pane" id="dictSearchForm" action="">
                             <div class="layui-form-item">
                                 <input type="hidden" name="categoryId" id="categoryId" value="-1">
                                 <div class="layui-inline">
@@ -154,11 +154,11 @@
 
         function getFormParam(row)
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#dictSearchForm").serializeJson();
             if(row!=null) {
-                formParam.parentId = row.id;
+                formParam.pid = row.id;
             }else{
-                formParam.parentId=-1;
+                formParam.pid=-1;
             }
             return formParam;
         }
@@ -326,7 +326,7 @@
 
         $("#data-reset-btn").click(function(){
             $("#categoryId").val("");
-            $("#userSearchForm")[0].reset();
+            $("#dictSearchForm")[0].reset();
             layui.form.render();
         });
 
