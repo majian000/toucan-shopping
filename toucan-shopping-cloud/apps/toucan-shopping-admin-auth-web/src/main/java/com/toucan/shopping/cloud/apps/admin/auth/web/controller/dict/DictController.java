@@ -147,7 +147,7 @@ public class DictController extends UIController {
 
                     Set<String> adminIdList = new HashSet<String>();
                     Set<String> appCodes = new HashSet<>();
-                    List<DictTreeVO> dictTreeVOS = (List<DictTreeVO>)resultObjectVO.getData();
+                    List<DictTreeVO> dictTreeVOS = resultObjectVO.formatDataList(DictTreeVO.class);
                     if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
                         for (DictTreeVO dictTreeVO : dictTreeVOS) {
                             if (dictTreeVO.getCreateAdminId() != null) {
