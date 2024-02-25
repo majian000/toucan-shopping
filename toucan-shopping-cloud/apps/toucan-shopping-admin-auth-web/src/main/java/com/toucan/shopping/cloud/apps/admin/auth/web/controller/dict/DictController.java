@@ -145,7 +145,8 @@ public class DictController extends UIController {
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
 
-                    List<String> adminIdList = new ArrayList<String>();
+                    Set<String> adminIdList = new HashSet<String>();
+                    Set<String> appCodes = new HashSet<>();
                     List<DictTreeVO> dictTreeVOS = (List<DictTreeVO>)resultObjectVO.getData();
                     if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
                         for (DictTreeVO dictTreeVO : dictTreeVOS) {
@@ -155,9 +156,19 @@ public class DictController extends UIController {
                             if (dictTreeVO.getUpdateAdminId() != null) {
                                 adminIdList.add(dictTreeVO.getUpdateAdminId());
                             }
+                            if(StringUtils.isNotEmpty(dictTreeVO.getAppCodesStr())) {
+                                if(dictTreeVO.getAppCodesStr().indexOf(",")!=-1)
+                                {
+                                    String[] appCodeArray = dictTreeVO.getAppCodesStr().split(",");
+                                    for(String ac:appCodeArray) {
+                                        appCodes.add(ac);
+                                    }
+                                }else {
+                                    appCodes.add(dictTreeVO.getAppCodesStr());
+                                }
+                            }
                         }
-                        adminIdList = adminIdList.stream().distinct().collect(Collectors.toList());
-                        this.setAdminName(adminIdList, dictTreeVOS);
+                        this.setAdminNames(adminIdList, dictTreeVOS);
 
                         resultObjectVO.setData(dictTreeVOS);
                     }
@@ -173,12 +184,22 @@ public class DictController extends UIController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 设置关联应用
+     * @param appCodes
+     * @throws Exception
+     */
+    private void setAppNames(List<String> appCodes,List<DictTreeVO> list) throws Exception{
+
+    }
+
     /**
      * 设置管理员名称
      * @param adminIdList
      * @throws Exception
      */
-    private void setAdminName(List<String> adminIdList,List<DictTreeVO> list) throws Exception{
+    private void setAdminNames(Set<String> adminIdList,List<DictTreeVO> list) throws Exception{
 
         //查询创建人和修改人
         String[] createOrUpdateAdminIds = new String[adminIdList.size()];

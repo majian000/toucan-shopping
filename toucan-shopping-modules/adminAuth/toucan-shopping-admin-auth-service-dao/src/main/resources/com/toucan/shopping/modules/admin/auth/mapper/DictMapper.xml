@@ -25,6 +25,7 @@
 
     <resultMap id="dictVOMap" type="com.toucan.shopping.modules.admin.auth.vo.DictVO" extends="dictMap">
         <result column="appNames" jdbcType="VARCHAR" property="appNames" />
+        <result column="appCodesStr" jdbcType="VARCHAR" property="appCodesStr" />
     </resultMap>
 
 
@@ -137,13 +138,12 @@
         t.create_admin_id,
         t.update_date,
         t.update_admin_id,
-        group_concat(ta.name) as appNames
+        group_concat(tsda.app_code) as appCodesStr
         from t_sa_dict t
-          left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
-          left join t_app ta on ta.code = tsda.app_code and ta.delete_status=0
+        left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
         <where>
             1=1
-            and t.delete_status=0 and tsda.delete_status=0  and ta.delete_status=0
+            and t.delete_status=0 and tsda.delete_status=0
             <include refid="queryListWhere" />
         </where>
         group by t.id
@@ -169,13 +169,12 @@
             t.create_admin_id,
             t.update_date,
             t.update_admin_id,
-            group_concat(ta.name) as appNames
+            group_concat(tsda.app_code) as appCodesStr
             from t_sa_dict t
             left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
-            left join t_app ta on ta.code = tsda.app_code and ta.delete_status=0
             <where>
                 1=1
-                and t.delete_status=0 and tsda.delete_status=0  and ta.delete_status=0
+                and t.delete_status=0 and tsda.delete_status=0
                 <include refid="queryListWhere" />
             </where>
             group by t.id

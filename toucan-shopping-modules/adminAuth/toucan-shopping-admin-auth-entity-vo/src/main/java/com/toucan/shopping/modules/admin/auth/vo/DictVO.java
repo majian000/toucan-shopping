@@ -57,4 +57,6 @@ public class DictVO extends Dict {
 
     private List<Long> categoryIdList; //分类ID列表
 
+    private String appCodesStr;
+
 }
