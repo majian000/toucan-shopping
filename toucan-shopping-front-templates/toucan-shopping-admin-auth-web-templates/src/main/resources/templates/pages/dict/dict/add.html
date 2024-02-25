@@ -115,39 +115,6 @@
             return false;
         });
 
-        loadListPageApps($("#").val());
-
-        function loadListPageApps(categoryId){
-            $("#selectApp").empty();
-            var queryParam = {};
-            queryParam.id = categoryId;
-            $.ajax({
-                url:"[[@{/}]]dictCategory/queryAppListByCategoryId",
-                type:"POST",
-                contentType: "application/json; charset=utf-8",
-                data:JSON.stringify(queryParam),
-                dataType: "json",
-                success: function(data){
-                    if(data.data!=null)
-                    {
-                        $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
-                        for(var i=0;i<data.data.length;i++)
-                        {
-                            var app = data.data[i];
-                            $("#selectApp").append("<option value='" + app.code + "' >" + app.name + "</option>");
-                        }
-                        form.render();
-                    }
-
-                },
-                error: function(){
-
-                },
-                complete:function()
-                {
-                }
-            });
-        }
         function filter(treeId, parentNode, data) {
             return data.data;
         }
