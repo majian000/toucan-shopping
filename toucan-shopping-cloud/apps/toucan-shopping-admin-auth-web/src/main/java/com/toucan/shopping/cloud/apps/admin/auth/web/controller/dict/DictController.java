@@ -147,19 +147,20 @@ public class DictController extends UIController {
 
                     List<String> adminIdList = new ArrayList<String>();
                     List<DictTreeVO> dictTreeVOS = (List<DictTreeVO>)resultObjectVO.getData();
-                    for(DictTreeVO dictTreeVO:dictTreeVOS)
-                    {
-                        if(dictTreeVO.getCreateAdminId()!=null) {
-                            adminIdList.add(dictTreeVO.getCreateAdminId());
+                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
+                        for (DictTreeVO dictTreeVO : dictTreeVOS) {
+                            if (dictTreeVO.getCreateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getCreateAdminId());
+                            }
+                            if (dictTreeVO.getUpdateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getUpdateAdminId());
+                            }
                         }
-                        if(dictTreeVO.getUpdateAdminId()!=null) {
-                            adminIdList.add(dictTreeVO.getUpdateAdminId());
-                        }
-                    }
-                    adminIdList = adminIdList.stream().distinct().collect(Collectors.toList());
-                    this.setAdminName(adminIdList,dictTreeVOS);
+                        adminIdList = adminIdList.stream().distinct().collect(Collectors.toList());
+                        this.setAdminName(adminIdList, dictTreeVOS);
 
-                    resultObjectVO.setData(dictTreeVOS);
+                        resultObjectVO.setData(dictTreeVOS);
+                    }
                 }
             }
             return resultObjectVO;
