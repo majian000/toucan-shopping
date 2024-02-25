@@ -119,12 +119,12 @@
 
 
     <select id="queryList" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select t.*,group_concat(t.name) as appNames from t_sa_dict t
+        select t.*,group_concat(ta.name) as appNames from t_sa_dict t
           left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
-          left join t_app ta on t.app_code = tsda.app_code and t.delete_status=0
+          left join t_app ta on ta.code = tsda.app_code and ta.delete_status=0
         <where>
             1=1
-            and t.delete_status=0 and tsda.delete_status=0  and t.delete_status=0
+            and t.delete_status=0 and tsda.delete_status=0  and ta.delete_status=0
             <include refid="queryListWhere" />
         </where>
     </select>
