@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.admin.auth.page.DictTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictTreeVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -31,10 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dict")
@@ -83,54 +82,46 @@ public class DictController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request,@RequestParam Integer dictCategoryId) throws Exception
     {
-        this.setDictCategoryApps(request,dictCategoryId);
+        DictCategoryVO dictCategoryVO = new DictCategoryVO();
+        dictCategoryVO.setId(dictCategoryId);;
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,dictCategoryVO);
+        ResultObjectVO resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
+            if(CollectionUtils.isNotEmpty(dictCategoryVOS)) {
+                DictCategoryVO dictCategoryModel = dictCategoryVOS.get(0);
+
+                request.setAttribute("dictCategoryModel", dictCategoryModel);
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,dictCategoryModel);
+                resultObjectVO = feignDictCategoryService.queryCategoryAppListByCategoryId(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<DictCategoryApp> dictCategoryApps = resultObjectVO.formatDataList(DictCategoryApp.class);
+                    resultObjectVO.setData(null);
+                    if(CollectionUtils.isNotEmpty(dictCategoryApps))
+                    {
+                        List<String> appCodes = dictCategoryApps.stream().map(DictCategoryApp::getAppCode).collect(Collectors.toList());
+                        if(CollectionUtils.isNotEmpty(appCodes)){
+                            AppVO appVO=new AppVO();
+                            appVO.setCodes(appCodes);
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
+                            resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
+                            request.setAttribute("apps",resultObjectVO.formatDataList(AppVO.class));
+                        }
+                    }else{
+                        request.setAttribute("apps",new LinkedList<>());
+                    }
+                }
+            }else {
+                request.setAttribute("dictCategoryModel", new DictCategoryVO());
+            }
+        }
+
         return "pages/dict/dict/add.html";
     }
 
 
-    /**
-     * 设置分类字典的应用
-     * @param request
-     * @param id
-     * @throws Exception
-     */
-    private void setDictCategoryApps(HttpServletRequest request,Integer id) throws Exception {
-        DictCategoryVO dictCategory = new DictCategoryVO();
-        dictCategory.setId(id);
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
-        ResultObjectVO resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
-        if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-        {
-            if(resultObjectVO.getData()!=null) {
-
-                List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
-                if(!CollectionUtils.isEmpty(dictCategoryVOS))
-                {
-                    dictCategory = dictCategoryVOS.get(0);
-                    //设置复选框选中状态
-                    Object appsObject = request.getAttribute("apps");
-                    if(appsObject!=null) {
-                        List<AppVO> appVos = (List<AppVO>) appsObject;
-                        if(!CollectionUtils.isEmpty(dictCategory.getDictCategoryApps()))
-                        {
-                            for(DictCategoryApp dictCategoryApp:dictCategory.getDictCategoryApps())
-                            {
-                                for(AppVO aa:appVos)
-                                {
-                                    if(dictCategoryApp.getAppCode().equals(aa.getCode()))
-                                    {
-                                        aa.setChecked(true);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    request.setAttribute("model",dictCategory);
-                }
-            }
-
-        }
-    }
 
 
     /**
@@ -199,6 +190,33 @@ public class DictController extends UIController {
     }
 
 
+
+    /**
+     * 查询树的子节点列表
+     * @param areaTreeVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO areaTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            DictTreeVO dictTreeVO = new DictTreeVO();
+//            dictTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());  //应用端调用需要传编码
+            dictTreeVO.setPid(areaTreeVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),dictTreeVO);
+            resultObjectVO = feignDictService.queryTreeChildByPid(requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

@@ -125,5 +125,6 @@ public interface DictMapper {
 
     Long queryListCount(DictVO entity);
 
+    Long queryOneChildCountByPid(Long pid,String appCode);
 
 }

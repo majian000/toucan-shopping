@@ -18,10 +18,11 @@
 </head>
 <body>
 <div class="layui-form layuimini-form">
+    <input type="hidden" id="categoryId" name="categoryId" th:value="${dictCategoryModel.id}"/>
     <div class="layui-form-item">
         <label class="layui-form-label required">字典分类</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="100"  readonly th:value="${categoryName}" class="layui-input">
+            <input type="text" name="name" lay-verify="required" maxlength="100"  readonly th:value="${dictCategoryModel.name}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -114,8 +115,39 @@
             return false;
         });
 
+        loadListPageApps($("#").val());
 
+        function loadListPageApps(categoryId){
+            $("#selectApp").empty();
+            var queryParam = {};
+            queryParam.id = categoryId;
+            $.ajax({
+                url:"[[@{/}]]dictCategory/queryAppListByCategoryId",
+                type:"POST",
+                contentType: "application/json; charset=utf-8",
+                data:JSON.stringify(queryParam),
+                dataType: "json",
+                success: function(data){
+                    if(data.data!=null)
+                    {
+                        $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
+                        for(var i=0;i<data.data.length;i++)
+                        {
+                            var app = data.data[i];
+                            $("#selectApp").append("<option value='" + app.code + "' >" + app.name + "</option>");
+                        }
+                        form.render();
+                    }
 
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                }
+            });
+        }
         function filter(treeId, parentNode, data) {
             return data.data;
         }

@@ -396,6 +396,11 @@
 
             if (obj.event === 'add') {  // 监听添加操作
                 var selectCategoryId = $("#categoryId").val();
+                if(selectCategoryId==null||selectCategoryId==""||selectCategoryId=="-1")
+                {
+                    layer.msg("请选择字典分类");
+                    return ;
+                }
                 var index = layer.open({
                     title: '添加字典',
                     type: 2,
@@ -403,7 +408,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/dict/addPage/}]]"+selectCategoryId
+                    content: "[[@{/dict/addPage?dictCategoryId=}]]"+selectCategoryId
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

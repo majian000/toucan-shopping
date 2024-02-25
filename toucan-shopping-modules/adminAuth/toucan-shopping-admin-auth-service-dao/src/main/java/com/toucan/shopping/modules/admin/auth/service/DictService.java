@@ -91,5 +91,6 @@ public interface DictService {
     Long queryListCount(DictVO entity);
 
 
+    Long queryOneChildCountByPid(Long pid,String appCode);
 
 }

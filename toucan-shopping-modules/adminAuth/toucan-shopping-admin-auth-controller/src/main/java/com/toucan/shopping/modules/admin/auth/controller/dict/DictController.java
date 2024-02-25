@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.service.DictAppService;
 import com.toucan.shopping.modules.admin.auth.service.DictService;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -546,6 +547,72 @@ public class DictController {
             }
 
             resultObjectVO.setData(dictVoList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            DictVO dict = requestJsonVO.formatEntity(DictVO.class);
+            List<DictTreeVO> areaVOS = new ArrayList<DictTreeVO>();
+            if(dict.getPid()==null)
+            {
+                DictTreeVO areaVO = new DictTreeVO();
+                areaVO.setId(-1L);
+                areaVO.setName("根节点");
+                areaVO.setParentId(-1L);
+                Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode());
+                if(childCount>0){
+                    areaVO.setIsParent(true);
+                }
+                areaVOS.add(areaVO);
+            }else {
+                List<DictVO> dictVOS = dictService.queryList(dict);
+                for (int i = 0; i < dictVOS.size(); i++) {
+                    Dict area = dictVOS.get(i);
+                    DictTreeVO areaTreeVO = new DictTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    Long childCount = 0L;
+                    if(StringUtils.isNotEmpty(dict.getAppCode())) {
+                        childCount = dictService.queryOneChildCountByPid(areaTreeVO.getId(), areaTreeVO.getAppCode());
+                    }else{
+                        childCount = dictService.queryOneChildCountByPid(areaTreeVO.getId(), null);
+                    }
+                    if(childCount>0)
+                    {
+                        areaTreeVO.setIsParent(true);
+                    }else{
+                        areaTreeVO.setIsParent(false);
+                    }
+                    areaVOS.add(areaTreeVO);
+                }
+            }
+
+            resultObjectVO.setData(areaVOS);
 
         }catch(Exception e)
         {

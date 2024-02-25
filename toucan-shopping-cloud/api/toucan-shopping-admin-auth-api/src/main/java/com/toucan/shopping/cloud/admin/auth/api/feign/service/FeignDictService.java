@@ -83,4 +83,15 @@ public interface FeignDictService {
     @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
+
 }
