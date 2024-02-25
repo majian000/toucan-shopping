@@ -14,13 +14,13 @@ public class DictVO extends Dict {
     /**
      * 创建人
      */
-    private String createAdminUsername;
+    private String createAdminName;
 
 
     /**
      * 修改人
      */
-    private String updateAdminUsername;
+    private String updateAdminName;
 
     /**
      * 应用编码

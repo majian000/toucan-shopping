@@ -55,6 +55,12 @@
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">扩展属性</label>
+        <div class="layui-input-block">
+            <textarea name="extendProperty" class="layui-textarea" maxlength="255" placeholder="请输入扩展属性"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
             <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
@@ -90,6 +96,14 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
+            var appCodes = [];
+            $('input[name=appCodes]:checked').each(function() {
+                appCodes.push($(this).val());
+            });
+            data.field.appCodes=appCodes;
+
+            loadding = layer.load();
             $.ajax({
                 url:"[[@{/dict/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -110,6 +124,9 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function(){
+                    layer.close(loadding);
                 }
             });
             return false;

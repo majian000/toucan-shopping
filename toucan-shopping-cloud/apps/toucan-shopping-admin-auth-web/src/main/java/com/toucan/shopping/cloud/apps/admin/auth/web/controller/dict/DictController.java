@@ -1,20 +1,14 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictCategoryService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.DictTreeInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AppVO;
-import com.toucan.shopping.modules.admin.auth.vo.DictCategoryTreeVO;
-import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
-import com.toucan.shopping.modules.admin.auth.vo.DictTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -58,6 +52,9 @@ public class DictController extends UIController {
 
     @Autowired
     private FeignDictCategoryService feignDictCategoryService;
+
+    @Autowired
+    private FeignAdminService feignAdminService;
 
 
 
@@ -144,6 +141,27 @@ public class DictController extends UIController {
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             resultObjectVO = feignDictService.queryTreeTableByPid(requestJsonVO);
+
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+
+                    List<String> adminIdList = new ArrayList<String>();
+                    List<DictTreeVO> dictTreeVOS = (List<DictTreeVO>)resultObjectVO.getData();
+                    for(DictTreeVO dictTreeVO:dictTreeVOS)
+                    {
+                        if(dictTreeVO.getCreateAdminId()!=null) {
+                            adminIdList.add(dictTreeVO.getCreateAdminId());
+                        }
+                        if(dictTreeVO.getUpdateAdminId()!=null) {
+                            adminIdList.add(dictTreeVO.getUpdateAdminId());
+                        }
+                    }
+                    adminIdList = adminIdList.stream().distinct().collect(Collectors.toList());
+                    this.setAdminName(adminIdList,dictTreeVOS);
+
+                    resultObjectVO.setData(dictTreeVOS);
+                }
+            }
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -152,6 +170,43 @@ public class DictController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+    /**
+     * 设置管理员名称
+     * @param adminIdList
+     * @throws Exception
+     */
+    private void setAdminName(List<String> adminIdList,List<DictTreeVO> list) throws Exception{
+
+        //查询创建人和修改人
+        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+        adminIdList.toArray(createOrUpdateAdminIds);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+        ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+            if(CollectionUtils.isNotEmpty(adminVOS))
+            {
+                for(DictVO dictVO:list)
+                {
+                    for(AdminVO adminVO:adminVOS)
+                    {
+                        if(dictVO.getCreateAdminId()!=null&&dictVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictVO.setCreateAdminName(adminVO.getUsername());
+                        }
+                        if(dictVO.getUpdateAdminId()!=null&&dictVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictVO.setUpdateAdminName(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
@@ -213,6 +268,33 @@ public class DictController extends UIController {
         {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody DictVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignDictService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

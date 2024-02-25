@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.service.DictService;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -50,9 +51,12 @@ public class DictController {
     @Autowired
     private AdminAppService adminAppService;
 
+    @Autowired
+    private IdGenerator idGenerator;
+
 
     /**
-     * 添加字典分类
+     * 添加字典
      * @param requestVo
      * @return
      */
@@ -72,13 +76,19 @@ public class DictController {
             if(StringUtils.isEmpty(dictVO.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请输入字典分类名称");
+                resultObjectVO.setMsg("请输入字典名称");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(dictVO.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请输入字典分类编码");
+                resultObjectVO.setMsg("请输入字典编码");
+                return resultObjectVO;
+            }
+            if(dictVO.getCategoryId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请选择字典分类");
                 return resultObjectVO;
             }
 
@@ -105,6 +115,7 @@ public class DictController {
                 }
             }
 
+            dictVO.setId(idGenerator.id());
             dictVO.setCreateDate(new Date());
             dictVO.setDeleteStatus((short)0);
             dictVO.setDictSort(dictService.queryMaxSort()+1);
@@ -115,6 +126,8 @@ public class DictController {
                 return resultObjectVO;
             }
 
+
+            dictAppService.deleteByDictId(dictVO.getId());
             if(!CollectionUtils.isEmpty(dictVO.getAppCodes()))
             {
                 for(String appCode:dictVO.getAppCodes())
@@ -146,7 +159,7 @@ public class DictController {
 
 
     /**
-     * 編輯字典分类
+     * 編輯字典
      * @param requestVo
      * @return
      */
@@ -167,13 +180,13 @@ public class DictController {
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入字典分类名称");
+                resultObjectVO.setMsg("请传入字典名称");
                 return resultObjectVO;
             }
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入字典分类ID");
+                resultObjectVO.setMsg("请传入字典ID");
                 return resultObjectVO;
             }
 
@@ -185,7 +198,7 @@ public class DictController {
             if(CollectionUtils.isEmpty(dictList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该字典分类不存在!");
+                resultObjectVO.setMsg("该字典不存在!");
                 return resultObjectVO;
             }
 
@@ -197,7 +210,7 @@ public class DictController {
                 return resultObjectVO;
             }
 
-            //删除字典分类应用关联
+            //删除字典应用关联
             dictAppService.deleteByDictId(dictList.get(0).getId());
 
 
@@ -284,18 +297,18 @@ public class DictController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
+                resultObjectVO.setMsg("没有找到字典ID");
                 return resultObjectVO;
             }
 
-            //查询是否存在该字典分类
+            //查询是否存在该字典
             Dict query=new Dict();
             query.setId(entity.getId());
             List<DictVO> orgnazitionVOS = dictService.findListByEntity(query);
             if(CollectionUtils.isEmpty(orgnazitionVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("字典分类不存在!");
+                resultObjectVO.setMsg("字典不存在!");
                 return resultObjectVO;
             }
             for(DictVO dictVO:orgnazitionVOS) {
@@ -322,7 +335,7 @@ public class DictController {
 
 
     /**
-     * 删除指定字典分类(仅限中台使用)
+     * 删除指定字典(仅限中台使用)
      * @param requestVo
      * @return
      */
@@ -342,7 +355,7 @@ public class DictController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
+                resultObjectVO.setMsg("没有找到字典ID");
                 return resultObjectVO;
             }
 
@@ -362,7 +375,7 @@ public class DictController {
 
 
     /**
-     * 批量删除字典分类(仅限中台使用)
+     * 批量删除字典(仅限中台使用)
      * @param requestVo
      * @return
      */
@@ -382,7 +395,7 @@ public class DictController {
             if(CollectionUtils.isEmpty(dictList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
+                resultObjectVO.setMsg("没有找到字典ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();

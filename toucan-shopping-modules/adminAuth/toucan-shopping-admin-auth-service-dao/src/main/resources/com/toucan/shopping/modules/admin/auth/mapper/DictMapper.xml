@@ -59,7 +59,7 @@
 
         <if test="appCodes!=null and appCodes.size>0">
             and t.id in (
-            select dict_category_id from t_sa_dict_app
+            select dict_id from t_sa_dict_app
             where delete_status=0 and app_code in
             <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
                 #{item}
@@ -119,10 +119,12 @@
 
 
     <select id="queryList" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select t.* from t_sa_dict t
+        select t.*,group_concat(t.name) as appNames from t_sa_dict t
+          left join t_sa_dict_app tsda on t.id = tsda.dict_id and tsda.delete_status=0
+          left join t_app ta on t.app_code = tsda.app_code and t.delete_status=0
         <where>
             1=1
-
+            and t.delete_status=0 and tsda.delete_status=0  and t.delete_status=0
             <include refid="queryListWhere" />
         </where>
     </select>
@@ -171,7 +173,7 @@
         SELECT t.*,ds2.appNames FROM t_sa_dict t LEFT JOIN (
         SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
         SELECT t.*,ta.name AS appName FROM t_sa_dict t
-        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_category_id AND tsada.delete_status=0
+        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_id AND tsada.delete_status=0
         LEFT JOIN t_app ta ON tsada.app_code = ta.code AND ta.delete_status = 0
         WHERE t.delete_status = 0  AND tsada.delete_status=0  AND ta.delete_status = 0
         <if test="appCode!=null and appCode!='' ">
@@ -197,7 +199,7 @@
         SELECT t.*,ds2.appNames FROM t_sa_dict t LEFT JOIN (
         SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
         SELECT t.*,ta.name AS appName FROM t_sa_dict t
-        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_category_id AND tsada.delete_status=0
+        LEFT JOIN t_sa_dict_app tsada ON t.id = tsada.dict_id AND tsada.delete_status=0
         LEFT JOIN t_app ta ON tsada.app_code = ta.code AND ta.delete_status = 0
         WHERE t.delete_status = 0  AND tsada.delete_status=0 AND ta.delete_status = 0
         <if test="appCode!=null and appCode!='' ">
@@ -227,14 +229,14 @@
 
     <select id="findByIdAndAppCode" resultMap="dictVOMap" >
          select t.*,tsoa.app_code from t_sa_dict t
-            left join t_sa_dict_app tsoa on t.dict_category_id = tsoa.dict_category_id
+            left join t_sa_dict_app tsoa on t.id = tsoa.dict_id
             where  1=1 and t.id = #{id} and t.delete_status = 0 and tsoa.app_code=#{appCode}
 
     </select>
 
     <select id="queryListByAppCode" resultMap="dictVOMap" parameterType="java.lang.String">
         select * from t_sa_dict t
-          left join t_sa_dict_app tso on t.dict_category_id = tso.dict_category_id
+          left join t_sa_dict_app tso on t.id = tso.dict_id
           and tso.app_code = #{appCode}
           and tso.delete_status = 0
          where  1=1  and t.delete_status = 0 and tso.app_code is not null
@@ -246,7 +248,7 @@
 
     <select id="queryListByAppCodeArray" resultMap="dictVOMap" >
         select * from t_sa_dict t
-        left join t_sa_dict_app tso on t.dict_category_id = tso.dict_category_id
+        left join t_sa_dict_app tso on t.id = tso.dict_id
         and tso.app_code in
         <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
             #{item}
@@ -286,7 +288,7 @@
     </update>
 
     <select id="queryMaxSort" resultType="java.lang.Integer" >
-        select max(t.dict_category_sort) from t_sa_dict t where  1=1 and t.delete_status = 0
+        select max(t.dict_sort) from t_sa_dict t where  1=1 and t.category_id = #{categoryId} and t.delete_status = 0
     </select>
 
 

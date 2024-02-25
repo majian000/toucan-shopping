@@ -178,7 +178,19 @@
                     [
                         {type: "checkbox", width: 50},
                         {field: 'id', width: 200, title: '主键'},
-                        {field: 'attributeName',width: 350,  title: '字典'},
+                        {field: 'name',width: 200,  title: '名称'},
+                        {field: 'code',width: 200,  title: '编码'},
+                        {field: 'parentName',width: 200,  title: '上级节点'},
+                        {field: 'pid',width: 200,  title: '上级节点ID'},
+                        {field: 'dictSort',width: 200,  title: '排序'},
+                        {field: 'appNames', title: '关联应用'},
+                        {field: 'enableStatus', title: '启用状态',
+                            templet: function (row) {
+                                if(row.enableStatus == "1"){
+                                    return "启用"
+                                }
+                                return "禁用"
+                            }},
                         {field: 'categoryName',width: 150,  title: '所属分类'},
                         {field: 'createAdminName',width: 150,  title: '创建人'},
                         {field: 'createDate',width: 200,  title: '创建时间'},
@@ -193,6 +205,9 @@
                         type:'POST',
                         data:getFormParam(selectRow),
                         success:function(res){
+                            if(res.data==null||res.data.length<=0) {
+                                res.data = new Array();
+                            }
                             callback(res.data);
                         },
                         complete:function(data)
