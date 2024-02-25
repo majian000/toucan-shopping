@@ -606,22 +606,22 @@ public class DictController {
             }else {
                 List<DictVO> dictVOS = dictService.queryList(dict);
                 for (int i = 0; i < dictVOS.size(); i++) {
-                    Dict area = dictVOS.get(i);
-                    DictTreeVO areaTreeVO = new DictTreeVO();
-                    BeanUtils.copyProperties(areaTreeVO, area);
+                    DictVO dvo = dictVOS.get(i);
+                    DictTreeVO dictTreeVO = new DictTreeVO();
+                    BeanUtils.copyProperties(dictTreeVO, dvo);
                     Long childCount = 0L;
                     if(StringUtils.isNotEmpty(dict.getAppCode())) {
-                        childCount = dictService.queryOneChildCountByPid(areaTreeVO.getId(), areaTreeVO.getAppCode());
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), dictTreeVO.getAppCode());
                     }else{
-                        childCount = dictService.queryOneChildCountByPid(areaTreeVO.getId(), null);
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), null);
                     }
                     if(childCount>0)
                     {
-                        areaTreeVO.setIsParent(true);
+                        dictTreeVO.setIsParent(true);
                     }else{
-                        areaTreeVO.setIsParent(false);
+                        dictTreeVO.setIsParent(false);
                     }
-                    areaVOS.add(areaTreeVO);
+                    areaVOS.add(dictTreeVO);
                 }
             }
 
