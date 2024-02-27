@@ -149,6 +149,13 @@
 
                     loadding = layer.load();
 
+                    var appCodeArray = new Array();
+                    $('input[name=appCodes]').each(function() {
+                        appCodeArray.push($(this).val());
+                    });
+                    var queryParam = {};
+                    queryParam.appCodesStr = appCodeArray.join(",");
+
                     var setting = {
                         async: {
                             enable: true,
@@ -173,7 +180,7 @@
                         url:"[[@{/}]]dict/query/tree/child",
                         type:"POST",
                         dataType: "json",
-                        data: {"id": null},
+                        data: queryParam,
                         success: function(data){
                             zTreeObj = $.fn.zTree.init($("#dictTree"),setting, data.data);
                         },

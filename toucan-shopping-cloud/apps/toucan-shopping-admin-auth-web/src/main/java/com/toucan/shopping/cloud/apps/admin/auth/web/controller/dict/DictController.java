@@ -281,7 +281,11 @@ public class DictController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             DictTreeVO dictTreeVO = new DictTreeVO();
-//            dictTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());  //应用端调用需要传编码
+            if(StringUtils.isNotEmpty(areaTreeVO.getAppCodesStr()))
+            {
+                dictTreeVO.setAppCodes(Arrays.asList(areaTreeVO.getAppCodesStr().split(",")));
+            }
+
             dictTreeVO.setPid(areaTreeVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),dictTreeVO);
             resultObjectVO = feignDictService.queryTreeChildByPid(requestJsonVO);

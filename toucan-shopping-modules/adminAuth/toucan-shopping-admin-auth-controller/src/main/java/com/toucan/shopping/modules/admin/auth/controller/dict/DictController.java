@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.controller.dict;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.entity.DictApp;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
@@ -115,6 +116,9 @@ public class DictController {
                 }
             }
 
+            if(dictVO.getPid()<=0){
+                dictVO.setPid(-1L);
+            }
             dictVO.setId(idGenerator.id());
             dictVO.setCreateDate(new Date());
             dictVO.setDeleteStatus((short)0);
@@ -591,18 +595,30 @@ public class DictController {
 
         try {
             DictVO dict = requestJsonVO.formatEntity(DictVO.class);
-            List<DictTreeVO> areaVOS = new ArrayList<DictTreeVO>();
-            if(dict.getPid()==null)
+            if(CollectionUtils.isEmpty(dict.getAppCodes())&&dict.getPid()==null)
             {
-                DictTreeVO areaVO = new DictTreeVO();
-                areaVO.setId(-1L);
-                areaVO.setName("根节点");
-                areaVO.setParentId(-1L);
-                Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode());
-                if(childCount>0){
-                    areaVO.setIsParent(true);
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码或父级节点ID");
+                return resultObjectVO;
+            }
+            List<DictTreeVO> areaVOS = new ArrayList<DictTreeVO>();
+            if(!CollectionUtils.isEmpty(dict.getAppCodes()))
+            {
+                for(int i=0;i<dict.getAppCodes().size();i++)
+                {
+                    String appCode = dict.getAppCodes().get(i);
+                    App app = appService.findByAppCode(appCode);
+
+                    DictTreeVO areaVO = new DictTreeVO();
+                    areaVO.setId((long)0-(i+1));
+                    areaVO.setName(app.getName());
+                    areaVO.setParentId(-1L);
+                    Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode());
+                    if(childCount>0){
+                        areaVO.setIsParent(true);
+                    }
+                    areaVOS.add(areaVO);
                 }
-                areaVOS.add(areaVO);
             }else {
                 List<DictVO> dictVOS = dictService.queryList(dict);
                 for (int i = 0; i < dictVOS.size(); i++) {
