@@ -101,6 +101,13 @@
             $('input[name=appCodes]:checked').each(function() {
                 appCodes.push($(this).val());
             });
+
+            if(appCodes==null||appCodes.length<=0)
+            {
+                layer.msg("请选择关联的应用");
+                return false;
+            }
+
             data.field.appCodes=appCodes;
 
             loadding = layer.load();
@@ -149,13 +156,6 @@
 
                     loadding = layer.load();
 
-                    var appCodeArray = new Array();
-                    $('input[name=appCodes]').each(function() {
-                        appCodeArray.push($(this).val());
-                    });
-                    var queryParam = {};
-                    queryParam.appCodesStr = appCodeArray.join(",");
-
                     var setting = {
                         async: {
                             enable: true,
@@ -180,7 +180,7 @@
                         url:"[[@{/}]]dict/query/tree/child",
                         type:"POST",
                         dataType: "json",
-                        data: queryParam,
+                        data: {"id": null},
                         success: function(data){
                             zTreeObj = $.fn.zTree.init($("#dictTree"),setting, data.data);
                         },
