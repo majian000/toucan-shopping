@@ -56,6 +56,13 @@ public interface DictAppMapper {
     int deleteByCategoryId(Integer categoryId);
 
     /**
+     * 根据ID集合删除
+     * @param ids
+     * @return
+     */
+    int deleteByDictIdList(List<Long> ids);
+
+    /**
      * 根据分类ID和应用编码删除
      * @param categoryId
      * @param appCode

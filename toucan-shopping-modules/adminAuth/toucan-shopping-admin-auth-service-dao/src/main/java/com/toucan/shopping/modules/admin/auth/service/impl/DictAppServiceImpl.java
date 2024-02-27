@@ -41,6 +41,11 @@ public class DictAppServiceImpl implements DictAppService {
 
 
     @Override
+    public int deleteByDictIdList(List<Long> ids) {
+        return dictAppMapper.deleteByDictIdList(ids);
+    }
+
+    @Override
     public int saves(List<DictApp> entitys) {
         return dictAppMapper.inserts(entitys);
     }

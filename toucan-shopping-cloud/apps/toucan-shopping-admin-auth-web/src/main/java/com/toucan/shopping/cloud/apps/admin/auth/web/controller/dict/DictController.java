@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
@@ -347,6 +348,42 @@ public class DictController extends UIController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Dict entity =new Dict();
+            entity.setId(Long.parseLong(id));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,entity);
+            resultObjectVO = feignDictService.deleteById(requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
 

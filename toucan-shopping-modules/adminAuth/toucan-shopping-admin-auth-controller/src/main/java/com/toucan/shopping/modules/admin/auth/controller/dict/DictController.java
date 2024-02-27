@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 字典
@@ -351,17 +352,26 @@ public class DictController {
         }
 
         try {
-            Dict entity = JSONObject.parseObject(requestVo.getEntityJson(),Dict.class);
-            if(entity.getId()==null)
+            DictVO dictVO = JSONObject.parseObject(requestVo.getEntityJson(),DictVO.class);
+            if(dictVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到字典ID");
                 return resultObjectVO;
             }
 
-            dictService.deleteById(entity.getId());
-            dictAppService.deleteByDictId(entity.getId());
-            resultObjectVO.setData(entity);
+
+            List<DictVO> chidlren = new ArrayList<DictVO>();
+            dictService.queryChildren(chidlren,dictVO);
+            //把当前的添加进去
+            chidlren.add(dictVO);
+
+            List<Long> dictIdList = chidlren.stream().map(DictVO::getId).collect(Collectors.toList());
+            dictService.deleteByIdList(dictIdList);
+            dictAppService.deleteByDictIdList(dictIdList);
+
+
+            resultObjectVO.setData(dictVO);
 
         }catch(Exception e)
         {

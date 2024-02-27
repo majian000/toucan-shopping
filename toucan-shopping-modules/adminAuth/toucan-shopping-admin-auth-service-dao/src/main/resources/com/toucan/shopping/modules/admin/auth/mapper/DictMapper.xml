@@ -326,6 +326,15 @@
         update t_sa_dict set delete_status=1 where id = #{id}
     </update>
 
+
+    <update id="deleteByIdList" parameterType="java.util.List">
+        update t_sa_dict set delete_status=1 where delete_status=0
+         and id in
+        <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
     <update id="deleteByCategoryId" parameterType="java.lang.Integer">
         update t_sa_dict set delete_status=1 where category_id = #{categoryId}
     </update>

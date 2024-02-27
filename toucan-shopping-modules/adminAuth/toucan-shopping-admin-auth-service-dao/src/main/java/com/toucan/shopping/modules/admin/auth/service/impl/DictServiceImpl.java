@@ -75,6 +75,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int deleteByIdList(List<Long> ids) {
+        return dictMapper.deleteByIdList(ids);
+    }
+
+    @Override
     public int deleteByCategoryId(Integer categoryId) {
         return dictMapper.deleteByCategoryId(categoryId);
     }
@@ -99,4 +104,16 @@ public class DictServiceImpl implements DictService {
     public Long queryOneChildCountByPid(Long pid,String appCode) {
         return dictMapper.queryOneChildCountByPid(pid,appCode);
     }
+
+
+    @Override
+    public void queryChildren(List children, Dict query) {
+        List<DictVO> dictVOS = dictMapper.findListByPid(query.getId());
+        children.addAll(dictVOS);
+        for(DictVO dictVO:dictVOS)
+        {
+            queryChildren(children,dictVO);
+        }
+    }
+
 }

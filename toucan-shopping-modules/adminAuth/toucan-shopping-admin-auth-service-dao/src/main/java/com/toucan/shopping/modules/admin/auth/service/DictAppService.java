@@ -46,6 +46,13 @@ public interface DictAppService {
 
 
     /**
+     * 删除指定应用编码下所有关联
+     * @param dictIdList
+     * @return
+     */
+    int deleteByDictIdList(List<Long> dictIdList);
+
+    /**
      * 根据分类ID删除
      * @param categoryId
      * @return

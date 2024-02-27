@@ -61,6 +61,12 @@ public interface DictService {
     int deleteById(Long id);
 
     /**
+     *  根据ID删除
+     * @param ids
+     * @return
+     */
+    int deleteByIdList(List<Long> ids);
+    /**
      * 根据分类ID删除
      * @param categoryId
      * @return
@@ -75,6 +81,12 @@ public interface DictService {
      */
     List<DictVO> queryListByAppCode(String appCode);
 
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
+    void queryChildren(List children,Dict query);
 
     /**
      * 根据查询对象查询列表

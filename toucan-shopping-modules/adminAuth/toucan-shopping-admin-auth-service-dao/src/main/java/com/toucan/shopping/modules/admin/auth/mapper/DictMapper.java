@@ -63,6 +63,13 @@ public interface DictMapper {
     int deleteById(Long id);
 
     /**
+     * 根据ID集合删除
+     * @param ids
+     * @return
+     */
+    int deleteByIdList(List<Long> ids);
+
+    /**
      * 根据应用查询列表
      * @param appCode
      * @return
