@@ -105,4 +105,6 @@ public interface DictService {
 
     Long queryOneChildCountByPid(Long pid,String appCode);
 
+    Long queryOneChildCountByPid(Long pid,String appCode,Integer categoryId);
+
 }

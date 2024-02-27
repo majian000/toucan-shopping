@@ -608,7 +608,7 @@ public class DictController {
                 areaVO.setId(-1L);
                 areaVO.setName("根节点");
                 areaVO.setParentId(-1L);
-                Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode());
+                Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode(),dict.getCategoryId());
                 if(childCount>0){
                     areaVO.setIsParent(true);
                 }
@@ -621,9 +621,9 @@ public class DictController {
                     BeanUtils.copyProperties(dictTreeVO, dvo);
                     Long childCount = 0L;
                     if(StringUtils.isNotEmpty(dict.getAppCode())) {
-                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), dictTreeVO.getAppCode());
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), dictTreeVO.getAppCode(),dict.getCategoryId());
                     }else{
-                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), null);
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), null,dict.getCategoryId());
                     }
                     if(childCount>0)
                     {

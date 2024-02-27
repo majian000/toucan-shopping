@@ -154,6 +154,7 @@
                 content: "<ul id=\"dictTree\" style='height:90%' class=\"ztree\"></ul>",
                 success:function(layero){
 
+                    var categoryId=$("#categoryId").val();
                     loadding = layer.load();
 
                     var setting = {
@@ -180,7 +181,7 @@
                         url:"[[@{/}]]dict/query/tree/child",
                         type:"POST",
                         dataType: "json",
-                        data: {"id": null},
+                        data: {"id": null,"categoryId":categoryId},
                         success: function(data){
                             zTreeObj = $.fn.zTree.init($("#dictTree"),setting, data.data);
                         },

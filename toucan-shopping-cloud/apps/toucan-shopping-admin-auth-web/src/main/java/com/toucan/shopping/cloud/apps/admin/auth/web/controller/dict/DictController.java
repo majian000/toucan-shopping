@@ -296,19 +296,20 @@ public class DictController extends UIController {
 
     /**
      * 查询树的子节点列表
-     * @param areaTreeVO
+     * @param queryParam
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO areaTreeVO)
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO queryParam)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             DictTreeVO dictTreeVO = new DictTreeVO();
 //            dictTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());  //应用端调用需要传编码
-            dictTreeVO.setPid(areaTreeVO.getId());
+            dictTreeVO.setPid(queryParam.getId());
+            dictTreeVO.setCategoryId(queryParam.getCategoryId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),dictTreeVO);
             resultObjectVO = feignDictService.queryTreeChildByPid(requestJsonVO);
             return resultObjectVO;

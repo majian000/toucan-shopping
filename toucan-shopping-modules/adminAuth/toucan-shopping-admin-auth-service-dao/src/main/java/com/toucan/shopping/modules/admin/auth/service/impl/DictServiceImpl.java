@@ -105,6 +105,10 @@ public class DictServiceImpl implements DictService {
         return dictMapper.queryOneChildCountByPid(pid,appCode);
     }
 
+    @Override
+    public Long queryOneChildCountByPid(Long pid,String appCode,Integer categoryId) {
+        return dictMapper.queryOneChildCountByPidAndCategoryId(pid,appCode,categoryId);
+    }
 
     @Override
     public void queryChildren(List children, Dict query) {

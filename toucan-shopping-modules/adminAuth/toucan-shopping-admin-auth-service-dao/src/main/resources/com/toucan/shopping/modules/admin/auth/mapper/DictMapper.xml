@@ -359,5 +359,19 @@
         </where>
     </select>
 
+    <select id="queryOneChildCountByPidAndCategoryId" resultType="java.lang.Long" >
+        select count(*) from t_sa_dict t
+        <where>
+            1=1 and t.pid = #{pid}
+            and t.category_id=#{categoryId}
+            <if test="appCode!=null and appCode!=''">
+                and t.id in
+                (
+                select dict_id from t_sa_dict_app where app_code=#{appCode} and delete_status = 0
+                )
+            </if>
+            and t.delete_status = 0
+        </where>
+    </select>
 
 </mapper>
