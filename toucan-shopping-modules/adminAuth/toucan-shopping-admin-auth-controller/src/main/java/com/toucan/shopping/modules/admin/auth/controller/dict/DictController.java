@@ -608,6 +608,7 @@ public class DictController {
                 areaVO.setId(-1L);
                 areaVO.setName("根节点");
                 areaVO.setParentId(-1L);
+                areaVO.setCategoryId(dict.getCategoryId());
                 Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode(),dict.getCategoryId());
                 if(childCount>0){
                     areaVO.setIsParent(true);
