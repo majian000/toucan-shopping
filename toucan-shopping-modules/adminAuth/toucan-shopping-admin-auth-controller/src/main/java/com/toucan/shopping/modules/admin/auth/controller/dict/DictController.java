@@ -286,7 +286,11 @@ public class DictController {
             }
             DictVO dictVO = list.get(0);
             DictVO parentDictVO = dictService.findById(dictVO.getPid());
-            dictVO.setParentName(parentDictVO.getName());
+            if(parentDictVO!=null) {
+                dictVO.setParentName(parentDictVO.getName());
+            }else{
+                dictVO.setParentName("根节点");
+            }
             resultObjectVO.setData(list);
 
         }catch(Exception e)

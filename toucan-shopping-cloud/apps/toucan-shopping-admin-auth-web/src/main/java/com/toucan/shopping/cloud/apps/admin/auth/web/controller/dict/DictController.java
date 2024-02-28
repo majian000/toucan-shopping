@@ -108,29 +108,26 @@ public class DictController extends UIController {
             dictVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictVO);
             ResultObjectVO resultObjectVO = feignDictService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            if(resultObjectVO.isSuccess())
             {
-                if(resultObjectVO.getData()!=null) {
-
-                    List<DictVO> dictVOS = resultObjectVO.formatDataList(DictVO.class);
-                    if(!CollectionUtils.isEmpty(dictVOS))
+                List<DictVO> dictVOS = resultObjectVO.formatDataList(DictVO.class);
+                if(!CollectionUtils.isEmpty(dictVOS))
+                {
+                    dictVO = dictVOS.get(0);
+                    DictCategoryVO dictCategory = new DictCategoryVO();
+                    dictCategory.setId(dictVO.getCategoryId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
+                    resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
                     {
-                        dictVO = dictVOS.get(0);
-                        DictCategoryVO dictCategory = new DictCategoryVO();
-                        dictCategory.setId(dictVO.getCategoryId());
-                        requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
-                        resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
-                        if(resultObjectVO.isSuccess())
+                        List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
+                        if(!CollectionUtils.isEmpty(dictCategoryVOS))
                         {
-                            List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
-                            if(!CollectionUtils.isEmpty(dictCategoryVOS))
-                            {
-                                dictCategory = dictCategoryVOS.get(0);
-                                dictVO.setCategoryName(dictCategory.getName());
-                            }
+                            dictCategory = dictCategoryVOS.get(0);
+                            dictVO.setCategoryName(dictCategory.getName());
                         }
-                        request.setAttribute("model",dictVO);
                     }
+                    request.setAttribute("model",dictVO);
                 }
 
             }
