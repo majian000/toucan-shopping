@@ -106,7 +106,7 @@
         form.on('submit(saveBtn)', function (data) {
 
             $.ajax({
-                url:"[[@{/dictCategory/update}]]",
+                url:"[[@{/dict/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
