@@ -32,7 +32,7 @@ public class Dict {
 
     private Integer dictSort; //排序
 
-    private String dictVersion; //版本号
+    private Integer dictVersion; //版本号
 
     private String batchId; //批次ID
 

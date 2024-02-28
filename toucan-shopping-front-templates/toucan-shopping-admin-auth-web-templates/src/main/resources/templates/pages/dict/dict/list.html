@@ -257,41 +257,16 @@
         };
 
         function categoryTreeClick(event, treeId, treeNode) {
-            loadListPageApps(treeNode.id);
+            loadListPageApps(treeNode);
             $("#categoryId").val(treeNode.id);
             $("#queryButton").click();
         }
 
-        function loadListPageApps(categoryId){
+        function loadListPageApps(treeNode){
             $("#selectApp").empty();
-            var queryParam = {};
-            queryParam.id = categoryId;
-            $.ajax({
-                url:"[[@{/}]]dictCategory/queryAppListByCategoryId",
-                type:"POST",
-                contentType: "application/json; charset=utf-8",
-                data:JSON.stringify(queryParam),
-                dataType: "json",
-                success: function(data){
-                    if(data.data!=null)
-                    {
-                        $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
-                        for(var i=0;i<data.data.length;i++)
-                        {
-                            var app = data.data[i];
-                            $("#selectApp").append("<option value='" + app.code + "' >" + app.name + "</option>");
-                        }
-                        form.render();
-                    }
-
-                },
-                error: function(){
-
-                },
-                complete:function()
-                {
-                }
-            });
+            $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
+            $("#selectApp").append("<option value='" + treeNode.appCode + "' >" + treeNode.appName + "</option>");
+            form.render();
         }
 
         initCategoryTree();

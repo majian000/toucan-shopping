@@ -318,7 +318,6 @@ public class DictCategoryController extends UIController {
                 resultObjectVO.setCode(TableVO.FAILD);
                 return resultObjectVO;
             }
-
             return resultObjectVO;
         }catch(Exception e)
         {

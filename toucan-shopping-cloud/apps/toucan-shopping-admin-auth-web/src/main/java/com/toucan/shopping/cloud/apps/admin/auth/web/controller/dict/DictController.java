@@ -88,28 +88,7 @@ public class DictController extends UIController {
             List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
             if(CollectionUtils.isNotEmpty(dictCategoryVOS)) {
                 DictCategoryVO dictCategoryModel = dictCategoryVOS.get(0);
-
                 request.setAttribute("dictCategoryModel", dictCategoryModel);
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,dictCategoryModel);
-//                resultObjectVO = feignDictCategoryService.queryCategoryAppListByCategoryId(requestJsonVO);
-//                if(resultObjectVO.isSuccess())
-//                {
-//                    List<DictCategoryApp> dictCategoryApps = resultObjectVO.formatDataList(DictCategoryApp.class);
-//                    resultObjectVO.setData(null);
-//                    if(CollectionUtils.isNotEmpty(dictCategoryApps))
-//                    {
-//                        List<String> appCodes = dictCategoryApps.stream().map(DictCategoryApp::getAppCode).collect(Collectors.toList());
-//                        if(CollectionUtils.isNotEmpty(appCodes)){
-//                            AppVO appVO=new AppVO();
-//                            appVO.setCodes(appCodes);
-//                            requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
-//                            resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
-//                            request.setAttribute("apps",resultObjectVO.formatDataList(AppVO.class));
-//                        }
-//                    }else{
-//                        request.setAttribute("apps",new LinkedList<>());
-//                    }
-//                }
             }else {
                 request.setAttribute("dictCategoryModel", new DictCategoryVO());
             }
@@ -118,6 +97,49 @@ public class DictController extends UIController {
         return "pages/dict/dict/add.html";
     }
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            super.initSelectApp(request,toucan,feignAppService);
+
+            DictVO dictVO = new DictVO();
+            dictVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictVO);
+            ResultObjectVO resultObjectVO = feignDictService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+
+                    List<DictVO> dictVOS = resultObjectVO.formatDataList(DictVO.class);
+                    if(!CollectionUtils.isEmpty(dictVOS))
+                    {
+                        dictVO = dictVOS.get(0);
+                        DictCategoryVO dictCategory = new DictCategoryVO();
+                        dictCategory.setId(dictVO.getCategoryId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
+                        resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
+                            if(!CollectionUtils.isEmpty(dictCategoryVOS))
+                            {
+                                dictCategory = dictCategoryVOS.get(0);
+                                dictVO.setCategoryName(dictCategory.getName());
+                            }
+                        }
+                        request.setAttribute("model",dictVO);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/dict/dict/edit.html";
+    }
 
 
 
@@ -273,11 +295,34 @@ public class DictController extends UIController {
             {
                 if(resultObjectVO.getData()!=null) {
                     List<DictCategoryTreeVO> dictCategoryTreeVOS = resultObjectVO.formatDataList(DictCategoryTreeVO.class);
+                    Set<String> appCodes = new HashSet<>();
                     for(DictCategoryTreeVO dictCategoryTreeVO:dictCategoryTreeVOS)
                     {
                         dictCategoryTreeVO.setOpen(false);
                         dictCategoryTreeVO.setIcon(null);
+                        appCodes.add(dictCategoryTreeVO.getAppCode());
                     }
+
+                    if(CollectionUtils.isNotEmpty(appCodes)){
+                        AppVO appVO=new AppVO();
+                        appVO.setCodes(new ArrayList(appCodes));
+                        requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
+                        resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
+                            if(CollectionUtils.isNotEmpty(apps)) {
+                                for (DictCategoryVO dictCategoryVO : dictCategoryTreeVOS) {
+                                    for(AppVO apv:apps){
+                                        if(dictCategoryVO.getAppCode().equals(apv.getCode())){
+                                            dictCategoryVO.setAppName(apv.getName());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     resultObjectVO.setData(dictCategoryTreeVOS);
                 }
             }

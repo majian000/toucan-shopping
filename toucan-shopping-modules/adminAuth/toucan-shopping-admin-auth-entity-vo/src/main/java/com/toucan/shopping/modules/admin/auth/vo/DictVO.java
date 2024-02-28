@@ -52,4 +52,6 @@ public class DictVO extends Dict {
 
     private String appCodesStr;
 
+    private String categoryName; //分类名称
+
 }

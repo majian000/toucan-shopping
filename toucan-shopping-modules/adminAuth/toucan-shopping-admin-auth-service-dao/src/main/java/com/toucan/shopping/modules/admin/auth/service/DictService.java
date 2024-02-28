@@ -18,6 +18,13 @@ public interface DictService {
     List<DictVO> findListByEntity(Dict entity);
 
     /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    DictVO findById(Long id);
+
+    /**
      * 保存
      * @param entity
      * @return
@@ -38,6 +45,20 @@ public interface DictService {
      */
     Integer queryMaxSort();
 
+    /**
+     * 根据批次ID更新是否活动
+     * @param isActive
+     * @param batchId
+     * @return
+     */
+    int updateIsActiveByBatchId(short isActive,String batchId);
+
+    /**
+     * 查询最大版本号
+     * @param batchId
+     * @return
+     */
+    int queryMaxVersion(String batchId);
 
     /**
      * 根据编码和应用编码查询集合

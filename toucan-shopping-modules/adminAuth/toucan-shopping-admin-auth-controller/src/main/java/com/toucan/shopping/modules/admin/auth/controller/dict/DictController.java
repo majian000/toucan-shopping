@@ -84,7 +84,8 @@ public class DictController {
                 resultObjectVO.setMsg("请选择字典分类");
                 return resultObjectVO;
             }
-
+            dictVO.setAppCodes(new LinkedList<>());
+            dictVO.getAppCodes().add(dictVO.getAppCode());
             List<DictVO> dicts = dictService.queryListByCodeAndAppCodes(dictVO.getCode(),dictVO.getAppCodes());
             if(!CollectionUtils.isEmpty(dicts))
             {
@@ -99,7 +100,7 @@ public class DictController {
             dictVO.setCreateDate(new Date());
             dictVO.setDeleteStatus((short)0);
             dictVO.setDictSort(dictService.queryMaxSort()+1);
-            dictVO.setDictVersion("1");
+            dictVO.setDictVersion(1);
             dictVO.setIsActive((short)1);
             dictVO.setBatchId(UUID.randomUUID().toString().replaceAll("-",""));
             int row = dictService.save(dictVO);
@@ -160,20 +161,46 @@ public class DictController {
             Dict query=new Dict();
             query.setId(entity.getId());
             query.setDeleteStatus((short)0);
+            query.setCode(entity.getCode());
+            query.setAppCode(entity.getAppCode());
             List<DictVO> dictList = dictService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(dictList))
+            if(!CollectionUtils.isEmpty(dictList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该字典不存在!");
-                return resultObjectVO;
+                if(!dictList.get(0).getId().equals(entity.getId())) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("该字典编码已经存在!");
+                    return resultObjectVO;
+                }
             }
 
-            entity.setUpdateDate(new Date());
-            int row = dictService.update(entity);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+            boolean isSnapshot=false; //是否快照字典
+            DictVO dict = dictService.findById(entity.getId());
+            //下面的数据变更,就将字典进行快照
+            if(!dict.getCode().equals(entity.getCode())
+               ||!dict.getName().equals(entity.getName())
+               ||!dict.getExtendProperty().equals(entity.getExtendProperty())
+               ||!dict.getPid().equals(entity.getPid())){
+
+                isSnapshot=true;
+            }
+
+            if(isSnapshot)
+            {
+                dictService.updateIsActiveByBatchId((short)0,dict.getBatchId());
+                entity.setDictVersion(dictService.queryMaxVersion(dict.getBatchId())+1);
+                entity.setId(idGenerator.id());
+                entity.setIsActive((short)1);
+                entity.setBatchId(dict.getBatchId());
+                entity.setCreateDate(new Date());
+                dictService.save(entity);
+            }else {
+                entity.setUpdateDate(new Date());
+                int row = dictService.update(entity);
+                if (row < 1) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请重试!");
+                    return resultObjectVO;
+                }
             }
 
 
@@ -257,6 +284,9 @@ public class DictController {
                 resultObjectVO.setMsg("字典不存在!");
                 return resultObjectVO;
             }
+            DictVO dictVO = list.get(0);
+            DictVO parentDictVO = dictService.findById(dictVO.getPid());
+            dictVO.setParentName(parentDictVO.getName());
             resultObjectVO.setData(list);
 
         }catch(Exception e)

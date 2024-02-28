@@ -283,14 +283,14 @@ public class DictCategoryController {
             //查询是否存在该字典分类
             DictCategory query=new DictCategory();
             query.setId(entity.getId());
-            List<DictCategoryVO> orgnazitionVOS = dictCategoryService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(orgnazitionVOS))
+            List<DictCategoryVO> list = dictCategoryService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(list))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("字典分类不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(orgnazitionVOS);
+            resultObjectVO.setData(list);
 
         }catch(Exception e)
         {

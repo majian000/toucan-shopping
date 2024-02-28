@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">关联应用</label>
+        <label class="layui-form-label required">关联应用</label>
         <div class="layui-input-block">
             <select id="selectApp" name="appCode" lay-verify="required"  lay-search="">
                 <option value="">请选择</option>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">账号状态</label>
+        <label class="layui-form-label">启用状态</label>
         <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
             <input type="radio" name="enableStatus" value="1" title="启用" checked>
             <input type="radio" name="enableStatus" value="0" title="禁用">

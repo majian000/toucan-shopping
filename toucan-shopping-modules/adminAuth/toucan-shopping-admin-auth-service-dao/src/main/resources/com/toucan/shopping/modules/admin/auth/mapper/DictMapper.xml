@@ -119,63 +119,21 @@
 
 
     <select id="queryList" resultMap="dictVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select
-        t.id,
-        t.name,
-        t.code,
-        t.pid,
-        t.category_id,
-        t.extend_property,
-        t.dict_version,
-        t.batch_id,
-        t.is_active,
-        t.dict_sort,
-        t.enable_status,
-        t.delete_status,
-        t.remark,
-        t.create_date,
-        t.create_admin_id,
-        t.update_date,
-        t.update_admin_id,
-        group_concat(tsda.app_code) as appCodesStr
-        from t_sa_dict t
+        select t.* from t_sa_dict t
         <where>
             1=1
             and t.delete_status=0
             <include refid="queryListWhere" />
         </where>
-        group by t.id
     </select>
 
     <select id="queryListCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.vo.DictVO">
-        select count(*) from (
-            select
-            t.id,
-            t.name,
-            t.code,
-            t.pid,
-            t.category_id,
-            t.extend_property,
-            t.dict_version,
-            t.batch_id,
-            t.is_active,
-            t.dict_sort,
-            t.enable_status,
-            t.delete_status,
-            t.remark,
-            t.create_date,
-            t.create_admin_id,
-            t.update_date,
-            t.update_admin_id,
-            group_concat(tsda.app_code) as appCodesStr
-            from t_sa_dict t
-            <where>
-                1=1
-                and t.delete_status=0
-                <include refid="queryListWhere" />
-            </where>
-            group by t.id
-        )ds
+        select count(*) from t_sa_dict t
+        <where>
+            1=1
+            and t.delete_status=0
+            <include refid="queryListWhere" />
+        </where>
     </select>
 
 
@@ -189,6 +147,9 @@
             </if>
             <if test="name!=null and name!=''">
                 and t.name = #{name}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
             </if>
             and t.delete_status = 0
         </where>
@@ -221,7 +182,7 @@
     </select>
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.DictPageInfo">
-        select count(t.*) FROM t_sa_dict t
+        select count(*) FROM t_sa_dict t
         <where>
             1=1
             <include refid="queryListPageWhere" />
@@ -234,7 +195,7 @@
 
 
     <select id="findById" resultMap="dictVOMap" parameterType="java.lang.Long">
-        select * from t_sa_dict t where  1=1 and t.id = #{id} and t.delete_status = 0
+        select * from t_sa_dict t where  1=1 and t.id = #{id} and t.delete_status = 0 limit 0,1
     </select>
 
 
@@ -242,8 +203,9 @@
     <select id="findByIdAndAppCode" resultMap="dictVOMap" >
          select t.*,tsoa.app_code from t_sa_dict t
             where  1=1 and t.id = #{id} and t.delete_status = 0 and t.app_code=#{appCode}
-
     </select>
+
+
 
     <select id="queryListByAppCode" resultMap="dictVOMap" parameterType="java.lang.String">
         select * from t_sa_dict t
@@ -336,5 +298,15 @@
     <update id="updateAppCodeByCategoryId">
         update t_sa_dict set app_code=#{appCode} where category_id = #{categoryId} and delete_status=0
     </update>
+
+
+    <update id="updateIsActiveByBatchId" >
+        update t_sa_dict set is_active=#{isActive} where batch_id = #{batchId} and delete_status=0
+    </update>
+
+    <select id="queryMaxVersion" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select max(t.dict_version) from t_sa_dict t where  1=1 and t.batch_id=#{batchId} and t.delete_status = 0
+    </select>
+
 
 </mapper>

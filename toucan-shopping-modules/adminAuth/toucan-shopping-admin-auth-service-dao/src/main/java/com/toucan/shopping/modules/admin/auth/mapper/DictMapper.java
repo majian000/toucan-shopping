@@ -102,7 +102,7 @@ public interface DictMapper {
      * @param id
      * @return
      */
-    List<DictVO> findById(Long id);
+    DictVO findById(Long id);
 
 
     /**
@@ -112,7 +112,21 @@ public interface DictMapper {
      */
     List<DictVO> findByIdAndAppCode(Long id,String appCode);
 
+    /**
+     * 根据批次ID更新活动状态
+     * @param isActive
+     * @param batchId
+     * @return
+     */
+    int updateIsActiveByBatchId(short isActive, String batchId);
 
+
+    /**
+     * 查询最大版本号
+     * @param batchId
+     * @return
+     */
+    int queryMaxVersion(String batchId);
 
     /**
      * 查询全部

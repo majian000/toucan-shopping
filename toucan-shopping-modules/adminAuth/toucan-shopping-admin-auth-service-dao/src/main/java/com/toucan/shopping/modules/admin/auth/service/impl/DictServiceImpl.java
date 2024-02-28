@@ -27,6 +27,11 @@ public class DictServiceImpl implements DictService {
         return dictMapper.findListByEntity(entity);
     }
 
+    @Override
+    public DictVO findById(Long id) {
+        return dictMapper.findById(id);
+    }
+
 
     @Override
     public int save(Dict entity) {
@@ -45,6 +50,16 @@ public class DictServiceImpl implements DictService {
             maxSort=0;
         }
         return maxSort;
+    }
+
+    @Override
+    public int updateIsActiveByBatchId(short isActive, String batchId) {
+        return dictMapper.updateIsActiveByBatchId(isActive,batchId);
+    }
+
+    @Override
+    public int queryMaxVersion(String batchId) {
+        return dictMapper.queryMaxVersion(batchId);
     }
 
 
