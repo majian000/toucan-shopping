@@ -54,6 +54,13 @@ public interface DictService {
     int updateIsActiveByBatchId(short isActive,String batchId);
 
     /**
+     * 根据批次ID逻辑删除
+     * @param batchId
+     * @return
+     */
+    int deleteByBatchId(String batchId);
+
+    /**
      * 查询最大版本号
      * @param batchId
      * @return

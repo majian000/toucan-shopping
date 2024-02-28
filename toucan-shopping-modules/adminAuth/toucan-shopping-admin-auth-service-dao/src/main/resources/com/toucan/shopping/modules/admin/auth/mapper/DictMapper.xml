@@ -304,6 +304,12 @@
         update t_sa_dict set is_active=#{isActive} where batch_id = #{batchId} and delete_status=0
     </update>
 
+
+
+    <update id="deleteByBatchId" >
+        update t_sa_dict set delete_status=1 where batch_id = #{batchId} and delete_status=0
+    </update>
+
     <select id="queryMaxVersion" resultType="java.lang.Integer" parameterType="java.lang.String">
         select max(t.dict_version) from t_sa_dict t where  1=1 and t.batch_id=#{batchId} and t.delete_status = 0
     </select>

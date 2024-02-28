@@ -58,6 +58,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int deleteByBatchId(String batchId) {
+        return dictMapper.deleteByBatchId(batchId);
+    }
+
+    @Override
     public int queryMaxVersion(String batchId) {
         return dictMapper.queryMaxVersion(batchId);
     }

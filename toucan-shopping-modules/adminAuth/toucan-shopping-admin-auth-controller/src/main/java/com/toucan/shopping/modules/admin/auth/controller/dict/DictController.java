@@ -187,6 +187,7 @@ public class DictController {
             if(isSnapshot)
             {
                 dictService.updateIsActiveByBatchId((short)0,dict.getBatchId());
+                dictService.deleteByBatchId(dict.getBatchId());
                 entity.setDictVersion(dictService.queryMaxVersion(dict.getBatchId())+1);
                 entity.setId(idGenerator.id());
                 entity.setIsActive((short)1);
