@@ -470,6 +470,9 @@ public class DictController {
                     categoryIdList.add(queryPageInfo.getCategoryId());
                 }
                 //设置分类
+                queryDict.setName(queryPageInfo.getName());
+                queryDict.setCode(queryPageInfo.getCode());
+                queryDict.setEnableStatus(queryPageInfo.getEnableStatus());
                 queryDict.setCategoryIdList(categoryIdList);
                 List<DictVO> dictVOS = dictService.queryList(queryDict);
                 for (int i = 0; i < dictVOS.size(); i++) {
