@@ -54,4 +54,6 @@ public class DictVO extends Dict {
 
     private String categoryName; //分类名称
 
+    private String appName; //应用名称
+
 }

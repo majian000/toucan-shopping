@@ -245,18 +245,11 @@ public class DictController extends UIController {
                 List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
                 if(CollectionUtils.isNotEmpty(apps)) {
                     for (DictTreeVO dictTreeVO : list) {
-                        if (StringUtils.isNotEmpty(dictTreeVO.getAppCodesStr())) {
-                            String[] appCodeArray = dictTreeVO.getAppCodesStr().split(",");
-                            List<String> appNames = new LinkedList<>();
-                            for(String appCode:appCodeArray){
-                               for(AppVO apv:apps){
-                                   if(appCode.equals(apv.getCode())){
-                                       appNames.add(apv.getName());
-                                       break;
-                                   }
-                               }
+                        for(AppVO apv:apps){
+                            if(dictTreeVO.getAppCode().equals(apv.getCode())){
+                                dictTreeVO.setAppName(apv.getName());
+                                break;
                             }
-                            dictTreeVO.setAppNames(String.join(",", appNames));
                         }
                     }
                 }
