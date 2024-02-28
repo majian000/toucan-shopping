@@ -192,6 +192,8 @@ public class DictController {
                 entity.setIsActive((short)1);
                 entity.setBatchId(dict.getBatchId());
                 entity.setCreateDate(new Date());
+                entity.setCreateAdminId(entity.getUpdateAdminId());
+                entity.setDeleteStatus((short)0);
                 dictService.save(entity);
             }else {
                 entity.setUpdateDate(new Date());

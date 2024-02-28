@@ -212,7 +212,7 @@ public class DictController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody DictCategoryVO entity)
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody DictVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
