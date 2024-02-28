@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.vo;
 
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
-import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import lombok.Data;
 
 import java.util.List;
@@ -26,16 +25,11 @@ public class DictCategoryVO extends DictCategory {
     private List<String> appCodes;
 
 
-    /**
-     * 分类应用关联
-     */
-    private List<DictCategoryApp> dictCategoryApps;
-
 
     /**
      * 关联应用名称
      */
-    private String appNames;
+    private String appName;
 
 
 }

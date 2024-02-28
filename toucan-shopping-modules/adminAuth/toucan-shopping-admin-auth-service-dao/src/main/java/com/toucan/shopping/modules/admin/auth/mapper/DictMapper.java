@@ -136,4 +136,6 @@ public interface DictMapper {
 
     Long queryOneChildCountByPidAndCategoryId(Long pid,String appCode,Integer categoryId);
 
+    int updateAppCodeByCategoryId(Integer categoryId, String appCode);
+
 }

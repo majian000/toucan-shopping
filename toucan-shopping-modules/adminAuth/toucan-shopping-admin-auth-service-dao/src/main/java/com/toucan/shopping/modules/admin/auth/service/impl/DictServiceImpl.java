@@ -111,6 +111,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int updateAppCodeByCategoryId(Integer categoryId, String appCode) {
+        return dictMapper.updateAppCodeByCategoryId(categoryId,appCode);
+    }
+
+    @Override
     public void queryChildren(List children, Dict query) {
         List<DictVO> dictVOS = dictMapper.findListByPid(query.getId());
         children.addAll(dictVOS);

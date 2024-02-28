@@ -52,11 +52,16 @@ public class DictPageInfo extends PageInfo<DictVO> {
     /**
      * 分类ID
      */
-    private Long categoryId;
+    private Integer categoryId;
 
     private Long pid; //上级节点
 
-    private List<Long> categoryIdList; //分类ID列表
+    private List<Integer> categoryIdList; //分类ID列表
+
+    /**
+     * 是否活动版本(0否 1是)
+     */
+    private Short isActive;
 
     //==============================================
 

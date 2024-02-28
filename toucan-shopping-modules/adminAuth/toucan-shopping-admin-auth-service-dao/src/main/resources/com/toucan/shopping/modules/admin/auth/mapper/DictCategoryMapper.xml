@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="code" jdbcType="VARCHAR" property="code" />
         <result column="dict_category_sort" jdbcType="BIGINT" property="dictCategorySort" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -38,6 +39,9 @@
             and t.enable_status = #{enableStatus}
         </if>
 
+        <if test="appCode!=null and appCode!='' ">
+            and t.app_code = #{appCode}
+        </if>
     </sql>
 
 
@@ -53,13 +57,10 @@
         </if>
 
         <if test="appCodes!=null and appCodes.size>0">
-            and t.id in (
-                select dict_category_id from t_sa_dict_category_app
-                where delete_status=0 and app_code in
+            and t.app_code in
                 <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
-            )
         </if>
 
     </sql>
@@ -73,6 +74,12 @@
             </if>
             <if test="name!=null and name!=''">
                 and t.name = #{name}
+            </if>
+            <if test="code!=null and code!=''">
+                and t.code = #{code}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
             </if>
             and t.delete_status = 0
         </where>
@@ -93,20 +100,7 @@
 
 
     <select id="queryListPage" resultMap="dictCategoryVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
-        select t.* from (
-            SELECT t.*,ds2.appNames FROM t_sa_dict_category t LEFT JOIN (
-                SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
-                    SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
-                    LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
-                    LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
-                    WHERE t.delete_status = 0  AND tsdca.delete_status=0  AND ta.delete_status = 0
-                    <if test="appCode!=null and appCode!='' ">
-                        and ta.code = #{appCode}
-                    </if>
-                )ds
-                GROUP BY ds.id
-            )ds2 ON t.id = ds2.id
-        )t
+        SELECT t.* FROM t_sa_dict_category t
         <where>
             1=1
             <include refid="queryListPageWhere" />
@@ -118,28 +112,13 @@
     </select>
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo">
-        select count(*) from (
-            select t.* from (
-                SELECT t.*,ds2.appNames FROM t_sa_dict_category t LEFT JOIN (
-                    SELECT ds.id,GROUP_CONCAT(ds.appName) AS appNames FROM (
-                        SELECT t.*,ta.name AS appName FROM t_sa_dict_category t
-                        LEFT JOIN t_sa_dict_category_app tsdca ON t.id = tsdca.dict_category_id AND tsdca.delete_status=0
-                        LEFT JOIN t_app ta ON tsdca.app_code = ta.code AND ta.delete_status = 0
-                        WHERE t.delete_status = 0  AND tsdca.delete_status=0 AND ta.delete_status = 0
-                            <if test="appCode!=null and appCode!='' ">
-                                and ta.code = #{appCode}
-                            </if>
-                    )ds
-                    GROUP BY ds.id
-                )ds2 ON t.id = ds2.id
-            )t
-            <where>
-                1=1
-                <include refid="queryListPageWhere" />
+        SELECT count(*) FROM t_sa_dict_category t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
 
-                and t.delete_status = 0
-            </where>
-        )ds
+            and t.delete_status = 0
+        </where>
     </select>
 
 
@@ -152,18 +131,14 @@
 
 
     <select id="findByIdAndAppCode" resultMap="dictCategoryVOMap" >
-         select t.*,tsoa.app_code from t_sa_dict_category t
-            left join t_sa_dict_category_app tsoa on t.dict_category_id = tsoa.dict_category_id
-            where  1=1 and t.id = #{id} and t.delete_status = 0 and tsoa.app_code=#{appCode}
+         select t.* from t_sa_dict_category t
+            where  1=1 and t.id = #{id} and t.delete_status = 0 and t.app_code=#{appCode}
 
     </select>
 
     <select id="queryListByAppCode" resultMap="dictCategoryVOMap" parameterType="java.lang.String">
         select * from t_sa_dict_category t
-          left join t_sa_dict_category_app tso on t.dict_category_id = tso.dict_category_id
-          and tso.app_code = #{appCode}
-          and tso.delete_status = 0
-         where  1=1  and t.delete_status = 0 and tso.app_code is not null
+         where  1=1  and t.app_code = #{appCode} and  t.delete_status = 0
     </select>
 
     <select id="queryAll" resultMap="dictCategoryVOMap" parameterType="java.lang.String">
@@ -172,13 +147,11 @@
 
     <select id="queryListByAppCodeArray" resultMap="dictCategoryVOMap" >
         select * from t_sa_dict_category t
-          left join t_sa_dict_category_app tso on t.dict_category_id = tso.dict_category_id
-            and tso.app_code in
+         where  1=1  and t.delete_status = 0
+          and t.app_code in
             <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
                 #{item}
             </foreach>
-           and tso.delete_status = 0
-         where  1=1  and t.delete_status = 0 and tso.app_code is not null
     </select>
 
 
@@ -189,12 +162,12 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_dict_category(name,code,dict_category_sort,remark,enable_status,create_admin_id,create_date,delete_status)
-        values(#{name},#{code},#{dictCategorySort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
+        insert into t_sa_dict_category(name,code,app_code,dict_category_sort,remark,enable_status,create_admin_id,create_date,delete_status)
+        values(#{name},#{code},#{appCode},#{dictCategorySort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.DictCategory">
-        update t_sa_dict_category set  name=#{name},code=#{code},dict_category_sort=#{dictCategorySort},enable_status=#{enableStatus},
+        update t_sa_dict_category set  name=#{name},code=#{code},app_code=#{appCode},dict_category_sort=#{dictCategorySort},enable_status=#{enableStatus},
         update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
           where id = #{id}
     </update>

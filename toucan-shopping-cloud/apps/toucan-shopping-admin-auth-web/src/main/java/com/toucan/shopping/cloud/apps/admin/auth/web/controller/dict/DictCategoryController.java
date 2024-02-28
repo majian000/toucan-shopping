@@ -4,7 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
-import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
@@ -26,10 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -94,10 +90,15 @@ public class DictCategoryController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    DictCategoryPageInfo dictCategoryPageInfo = resultObjectVO.formatData(DictCategoryPageInfo.class);
+                    tableVO.setCount(dictCategoryPageInfo.getTotal());
                     if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                        Set<String> appCodes = new HashSet<>();
+                        for (DictCategoryVO dictCategoryVO : dictCategoryPageInfo.getList()) {
+                            appCodes.add(dictCategoryVO.getAppCode());
+                        }
+                        this.setAppNames(appCodes,dictCategoryPageInfo.getList());
+                        tableVO.setData(dictCategoryPageInfo.getList());
                     }
                 }
             }
@@ -111,6 +112,33 @@ public class DictCategoryController extends UIController {
     }
 
 
+
+    /**
+     * 设置关联应用
+     * @param appCodes
+     * @throws Exception
+     */
+    private void setAppNames(Set<String> appCodes,List<DictCategoryVO> list) throws Exception{
+        if(CollectionUtils.isNotEmpty(appCodes)){
+            AppVO appVO=new AppVO();
+            appVO.setCodes(new ArrayList(appCodes));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
+            ResultObjectVO resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
+                if(CollectionUtils.isNotEmpty(apps)) {
+                    for (DictCategoryVO dictCategoryVO : list) {
+                        for(AppVO apv:apps){
+                            if(dictCategoryVO.getAppCode().equals(apv.getCode())){
+                                dictCategoryVO.setAppName(apv.getName());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
@@ -168,24 +196,6 @@ public class DictCategoryController extends UIController {
                     if(!CollectionUtils.isEmpty(dictCategoryVOS))
                     {
                         dictCategory = dictCategoryVOS.get(0);
-                        //设置复选框选中状态
-                        Object appsObject = request.getAttribute("apps");
-                        if(appsObject!=null) {
-                            List<AppVO> appVos = (List<AppVO>) appsObject;
-                            if(!CollectionUtils.isEmpty(dictCategory.getDictCategoryApps()))
-                            {
-                                for(DictCategoryApp dictCategoryApp:dictCategory.getDictCategoryApps())
-                                {
-                                    for(AppVO aa:appVos)
-                                    {
-                                        if(dictCategoryApp.getAppCode().equals(aa.getCode()))
-                                        {
-                                            aa.setChecked(true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         request.setAttribute("model",dictCategory);
                     }
                 }
@@ -215,15 +225,6 @@ public class DictCategoryController extends UIController {
         try {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
-            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
-            {
-                entity.setDictCategoryApps(new ArrayList<DictCategoryApp>());
-                for(String appCode:entity.getAppCodes()){
-                    DictCategoryApp dictCategoryApp = new DictCategoryApp();
-                    dictCategoryApp.setAppCode(appCode);
-                    entity.getDictCategoryApps().add(dictCategoryApp);
-                }
-            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignDictCategoryService.update(requestJsonVO);
         }catch(Exception e)
@@ -318,23 +319,6 @@ public class DictCategoryController extends UIController {
                 return resultObjectVO;
             }
 
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignDictCategoryService.queryCategoryAppListByCategoryId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<DictCategoryApp> dictCategoryApps = resultObjectVO.formatDataList(DictCategoryApp.class);
-                resultObjectVO.setData(null);
-                if(CollectionUtils.isNotEmpty(dictCategoryApps))
-                {
-                    List<String> appCodes = dictCategoryApps.stream().map(DictCategoryApp::getAppCode).collect(Collectors.toList());
-                    if(CollectionUtils.isNotEmpty(appCodes)){
-                        AppVO appVO=new AppVO();
-                        appVO.setCodes(appCodes);
-                        requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
-                        resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
-                    }
-                }
-            }
             return resultObjectVO;
         }catch(Exception e)
         {

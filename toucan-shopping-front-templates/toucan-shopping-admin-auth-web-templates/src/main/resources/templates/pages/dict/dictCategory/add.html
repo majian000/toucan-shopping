@@ -31,10 +31,14 @@
             <tip>填写编码。</tip>
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">关联应用</label>
         <div class="layui-input-block">
-            <input th:each="aa:${apps}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
+            <select id="selectApp" name="appCode" lay-verify="required"  lay-search="">
+                <option value="">请选择</option>
+                <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
+            </select>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -67,11 +71,6 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var appCodes = [];
-            $('input[name=appCodes]:checked').each(function() {
-                appCodes.push($(this).val());
-            });
-            data.field.appCodes=appCodes;
 
             loadding = layer.load();
 

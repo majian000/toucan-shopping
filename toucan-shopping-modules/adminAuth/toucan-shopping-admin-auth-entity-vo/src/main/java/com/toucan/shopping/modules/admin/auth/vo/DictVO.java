@@ -1,9 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.vo;
 
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
-import com.toucan.shopping.modules.admin.auth.entity.DictApp;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
-import com.toucan.shopping.modules.admin.auth.entity.DictCategoryApp;
 import lombok.Data;
 
 import java.util.List;
@@ -28,11 +26,6 @@ public class DictVO extends Dict {
     private List<String> appCodes;
 
 
-    /**
-     * 字典应用关联
-     */
-    private List<DictApp> dictApps;
-
 
     /**
      * 是否有子节点
@@ -55,7 +48,7 @@ public class DictVO extends Dict {
 
     private String parentName; //上级节点名称
 
-    private List<Long> categoryIdList; //分类ID列表
+    private List<Integer> categoryIdList; //分类ID列表
 
     private String appCodesStr;
 

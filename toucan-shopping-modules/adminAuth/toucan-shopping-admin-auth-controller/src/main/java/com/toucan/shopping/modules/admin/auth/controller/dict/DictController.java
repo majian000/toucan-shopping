@@ -3,11 +3,9 @@ package com.toucan.shopping.modules.admin.auth.controller.dict;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
-import com.toucan.shopping.modules.admin.auth.entity.DictApp;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AppService;
-import com.toucan.shopping.modules.admin.auth.service.DictAppService;
 import com.toucan.shopping.modules.admin.auth.service.DictService;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictTreeVO;
@@ -24,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +40,6 @@ public class DictController {
 
     @Autowired
     private AppService appService;
-
-    @Autowired
-    private DictAppService dictAppService;
 
     @Autowired
     private AdminAppService adminAppService;
@@ -97,51 +89,24 @@ public class DictController {
             if(!CollectionUtils.isEmpty(dicts))
             {
                 DictVO dcv = dicts.get(0);
-                DictApp dictApp = new DictApp();
-                dictApp.setDictId(dcv.getId());
-                List<DictApp> dictApps = dictAppService.findListByEntity(dictApp);
-                if(!CollectionUtils.isEmpty(dictApps))
-                {
-                    for(DictApp dca:dictApps)
-                    {
-                        AppVO appVO = appService.findByCodeIngoreDelete(dca.getAppCode());
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中该编码已存在");
-                        return resultObjectVO;
-                    }
-                }else{
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("编码已存在");
-                    return resultObjectVO;
-                }
+                AppVO appVO = appService.findByCodeIngoreDelete(dcv.getAppCode());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中该编码已存在");
+                return resultObjectVO;
             }
 
             dictVO.setId(idGenerator.id());
             dictVO.setCreateDate(new Date());
             dictVO.setDeleteStatus((short)0);
             dictVO.setDictSort(dictService.queryMaxSort()+1);
+            dictVO.setDictVersion("1");
+            dictVO.setIsActive((short)1);
+            dictVO.setBatchId(UUID.randomUUID().toString().replaceAll("-",""));
             int row = dictService.save(dictVO);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
-            }
-
-
-            dictAppService.deleteByDictId(dictVO.getId());
-            if(!CollectionUtils.isEmpty(dictVO.getAppCodes()))
-            {
-                for(String appCode:dictVO.getAppCodes())
-                {
-                    DictApp dictApp = new DictApp();
-                    dictApp.setDictId(dictVO.getId());
-                    dictApp.setAppCode(appCode);
-                    dictApp.setCreateDate(new Date());
-                    dictApp.setDeleteStatus((short)0);
-                    dictApp.setCreateAdminId(dictVO.getCreateAdminId());
-
-                    dictAppService.save(dictApp);
-                }
             }
 
             resultObjectVO.setData(dictVO);
@@ -209,26 +174,6 @@ public class DictController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
-            }
-
-            //删除字典应用关联
-            dictAppService.deleteByDictId(dictList.get(0).getId());
-
-
-            //重新生成关联
-            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
-            {
-                for(String appCode:entity.getAppCodes())
-                {
-                    DictApp orgnazitionApp = new DictApp();
-                    orgnazitionApp.setDictId(dictList.get(0).getId());
-                    orgnazitionApp.setAppCode(appCode);
-                    orgnazitionApp.setCreateDate(new Date());
-                    orgnazitionApp.setDeleteStatus((short)0);
-                    orgnazitionApp.setCreateAdminId(entity.getUpdateAdminId());
-
-                    dictAppService.save(orgnazitionApp);
-                }
             }
 
 
@@ -305,20 +250,14 @@ public class DictController {
             //查询是否存在该字典
             Dict query=new Dict();
             query.setId(entity.getId());
-            List<DictVO> orgnazitionVOS = dictService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(orgnazitionVOS))
+            List<DictVO> list = dictService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(list))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("字典不存在!");
                 return resultObjectVO;
             }
-            for(DictVO dictVO:orgnazitionVOS) {
-                DictApp queryDictApp = new DictApp();
-                queryDictApp.setDictId(dictVO.getId());
-                List<DictApp> orgnazitionApps = dictAppService.findListByEntity(queryDictApp);
-                dictVO.setDictApps(orgnazitionApps);
-            }
-            resultObjectVO.setData(orgnazitionVOS);
+            resultObjectVO.setData(list);
 
         }catch(Exception e)
         {
@@ -368,7 +307,6 @@ public class DictController {
 
             List<Long> dictIdList = chidlren.stream().map(DictVO::getId).collect(Collectors.toList());
             dictService.deleteByIdList(dictIdList);
-            dictAppService.deleteByDictIdList(dictIdList);
 
 
             resultObjectVO.setData(dictVO);
@@ -401,20 +339,27 @@ public class DictController {
         }
 
         try {
-            List<Dict> dictList = JSONObject.parseArray(requestVo.getEntityJson(),Dict.class);
-            if(CollectionUtils.isEmpty(dictList))
+            List<DictVO> dictVOS = JSONObject.parseArray(requestVo.getEntityJson(),DictVO.class);
+            if(CollectionUtils.isEmpty(dictVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到字典ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Dict dict:dictList) {
-                if(dict.getId()!=null) {
+            for(DictVO dictVO:dictVOS) {
+                if(dictVO.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(dict);
-                    dictService.deleteById(dict.getId());
-                    dictAppService.deleteByDictId(dict.getId());
+                    appResultObjectVO.setData(dictVO);
+
+
+                    List<DictVO> chidlren = new ArrayList<DictVO>();
+                    dictService.queryChildren(chidlren,dictVO);
+                    //把当前的添加进去
+                    chidlren.add(dictVO);
+
+                    List<Long> dictIdList = chidlren.stream().map(DictVO::getId).collect(Collectors.toList());
+                    dictService.deleteByIdList(dictIdList);
                 }
             }
             resultObjectVO.setData(resultObjectVOList);
@@ -473,10 +418,10 @@ public class DictController {
                 }else{
                     queryDict.setPid(-1L);
                 }
-                List<Long> categoryIdList = new LinkedList<>();
+                List<Integer> categoryIdList = new LinkedList<>();
                 if(!CollectionUtils.isEmpty(queryPageInfo.getCategoryIdList()))
                 {
-                    for(Long categoryId:queryPageInfo.getCategoryIdList())
+                    for(Integer categoryId:queryPageInfo.getCategoryIdList())
                     {
                         if(categoryId!=null&&categoryId.longValue()!=-1) {
                             categoryIdList.add(categoryId);
