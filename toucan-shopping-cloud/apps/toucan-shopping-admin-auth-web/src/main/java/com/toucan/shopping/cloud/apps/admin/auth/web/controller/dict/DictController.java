@@ -175,17 +175,7 @@ public class DictController extends UIController {
                             if (dictTreeVO.getUpdateAdminId() != null) {
                                 adminIdList.add(dictTreeVO.getUpdateAdminId());
                             }
-                            if(StringUtils.isNotEmpty(dictTreeVO.getAppCodesStr())) {
-                                if(dictTreeVO.getAppCodesStr().indexOf(",")!=-1)
-                                {
-                                    String[] appCodeArray = dictTreeVO.getAppCodesStr().split(",");
-                                    for(String ac:appCodeArray) {
-                                        appCodes.add(ac);
-                                    }
-                                }else {
-                                    appCodes.add(dictTreeVO.getAppCodesStr());
-                                }
-                            }
+                            appCodes.add(dictTreeVO.getAppCode());
                         }
                         this.setAdminNames(adminIdList, dictTreeVOS);
                         this.setAppNames(appCodes,dictTreeVOS);
