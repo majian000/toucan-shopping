@@ -437,7 +437,9 @@ public class DictController {
             boolean queryCriteria=false;
             //按指定条件查询
             if(StringUtils.isNotEmpty(queryPageInfo.getName())
-                    ||StringUtils.isNotEmpty(queryPageInfo.getCode()))
+                    ||StringUtils.isNotEmpty(queryPageInfo.getCode())
+                    ||(queryPageInfo.getEnableStatus()!=null&&queryPageInfo.getEnableStatus().intValue()!=-1)
+                    ||StringUtils.isNotEmpty(queryPageInfo.getAppCode()))
             {
                 queryCriteria = true;
                 DictVO queryDictVO = new DictVO();

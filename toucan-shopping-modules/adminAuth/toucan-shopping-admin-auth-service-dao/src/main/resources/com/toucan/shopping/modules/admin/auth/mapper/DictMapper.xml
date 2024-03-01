@@ -322,7 +322,7 @@
     </update>
 
     <select id="queryMaxVersion" resultType="java.lang.Integer" parameterType="java.lang.String">
-        select max(t.dict_version) from t_sa_dict t where  1=1 and t.batch_id=#{batchId} and t.delete_status = 0
+        select max(t.dict_version) from t_sa_dict t where  1=1 and t.batch_id=#{batchId}
     </select>
 
 
