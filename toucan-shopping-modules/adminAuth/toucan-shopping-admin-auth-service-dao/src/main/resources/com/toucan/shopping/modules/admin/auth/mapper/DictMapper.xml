@@ -326,4 +326,9 @@
     </select>
 
 
+    <update id="updateParentId" parameterType="java.lang.Long">
+        update t_sa_dict set pid=#{newParentId} where pid = #{oldParentId} and delete_status=0
+    </update>
+
+
 </mapper>

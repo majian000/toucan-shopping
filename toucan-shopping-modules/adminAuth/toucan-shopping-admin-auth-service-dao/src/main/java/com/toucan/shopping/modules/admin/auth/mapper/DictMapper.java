@@ -48,6 +48,15 @@ public interface DictMapper {
      */
     List<DictVO> queryListPage(DictPageInfo pageInfo);
 
+
+    /**
+     * 更新父节点ID
+     * @param oldParentId
+     * @param newParentId
+     * @return
+     */
+    int updateParentId(Long oldParentId,Long newParentId);
+
     /**
      * 查询列表页数量
      * @param pageInfo
@@ -134,6 +143,8 @@ public interface DictMapper {
      * @return
      */
     int queryMaxVersion(String batchId);
+
+
 
     /**
      * 查询全部

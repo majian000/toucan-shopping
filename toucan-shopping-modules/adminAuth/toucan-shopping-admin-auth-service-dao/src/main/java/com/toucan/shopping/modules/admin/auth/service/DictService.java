@@ -61,6 +61,14 @@ public interface DictService {
     int deleteByBatchId(String batchId);
 
     /**
+     * 更新父节点ID
+     * @param oldParentId
+     * @param newParentId
+     * @return
+     */
+    int updateParentId(Long oldParentId,Long newParentId);
+
+    /**
      * 查询最大版本号
      * @param batchId
      * @return

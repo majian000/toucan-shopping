@@ -186,7 +186,9 @@ public class DictController {
 
             if(isSnapshot)
             {
+                //将所有这个批次的字典活动状态为非活动
                 dictService.updateIsActiveByBatchId((short)0,dict.getBatchId());
+                //逻辑删除这个批次的字典,让上一条数据形成快照
                 dictService.deleteByBatchId(dict.getBatchId());
                 entity.setDictVersion(dictService.queryMaxVersion(dict.getBatchId())+1);
                 entity.setId(idGenerator.id());
@@ -196,6 +198,9 @@ public class DictController {
                 entity.setCreateAdminId(entity.getUpdateAdminId());
                 entity.setDeleteStatus((short)0);
                 dictService.save(entity);
+                //更新子节点的父节点ID为新的ID
+                dictService.updateParentId(dict.getId(),entity.getId());
+
             }else {
                 entity.setUpdateDate(new Date());
                 int row = dictService.update(entity);

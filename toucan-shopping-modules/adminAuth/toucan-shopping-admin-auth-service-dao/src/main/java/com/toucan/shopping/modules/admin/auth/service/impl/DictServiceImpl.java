@@ -63,6 +63,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int updateParentId(Long oldParentId, Long newParentId) {
+        return dictMapper.updateParentId(oldParentId,newParentId);
+    }
+
+    @Override
     public int queryMaxVersion(String batchId) {
         return dictMapper.queryMaxVersion(batchId);
     }
