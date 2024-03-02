@@ -159,7 +159,6 @@ public class DictController {
 
 
             Dict query=new Dict();
-            query.setId(entity.getId());
             query.setDeleteStatus((short)0);
             query.setCode(entity.getCode());
             query.setAppCode(entity.getAppCode());
