@@ -31,7 +31,7 @@
 
 
 <div class="layuimini-container">
-    <div class="layuimini-main">
+    <div class="layuimini-main" style="min-height: 800px;">
 
         <input type="hidden" id="orderId" name="orderId" th:value="${orderId}">
 
@@ -54,12 +54,6 @@
 <script>
 
     var selectSpu={spuName:"",spuId:-1,spuUuid:""};
-
-
-    function getSelectSpu()
-    {
-        return selectSpu;
-    }
 
 
     layui.config({
@@ -258,7 +252,8 @@
                 ]
             ],
             page: false,
-            skin: 'line'
+            skin: 'line',
+            height:'full-95'
         });
 
 
