@@ -291,6 +291,7 @@ public class DictController extends UIController {
                 id=-1L;
             }
             DictCategoryVO query = new DictCategoryVO();
+            query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = feignDictCategoryService.queryList(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -353,7 +354,7 @@ public class DictController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             DictPageInfo dictTreeVO = new DictPageInfo();
-//            dictTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());  //应用端调用需要传编码
+            dictTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());  //应用端调用需要传编码
             dictTreeVO.setPid(queryParam.getId());
             dictTreeVO.setCategoryId(queryParam.getCategoryId());
             dictTreeVO.setIsActive((short)1); //查询活动的版本
