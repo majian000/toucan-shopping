@@ -87,7 +87,7 @@ public class DictCategoryController extends UIController {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignDictCategoryService.listPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
