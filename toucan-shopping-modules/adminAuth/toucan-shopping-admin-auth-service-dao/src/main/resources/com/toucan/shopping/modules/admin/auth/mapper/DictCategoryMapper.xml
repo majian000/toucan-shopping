@@ -56,6 +56,10 @@
             and t.enable_status = #{enableStatus}
         </if>
 
+        <if test="appCode!=null and appCode!='' ">
+            and t.app_code = #{appCode}
+        </if>
+
         <if test="appCodes!=null and appCodes.size>0">
             and t.app_code in
                 <foreach item="item" index="index" collection="appCodes" open="(" close=")" separator=",">

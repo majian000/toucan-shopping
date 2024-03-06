@@ -76,14 +76,6 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">所属应用</label>
-                                    <div class="layui-input-inline">
-                                        <select id="selectApp" name="appCode"  lay-search="">
-                                            <option value="">请选择</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
                                     <button type="submit" class="layui-btn layui-btn-primary"  id="queryButton" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
@@ -183,7 +175,6 @@
                         {field: 'parentName',width: 200,  title: '上级节点'},
                         {field: 'pid',width: 200,  title: '上级节点ID'},
                         {field: 'dictSort',width: 200,  title: '排序'},
-                        {field: 'appName', title: '关联应用'},
                         {field: 'enableStatus', title: '启用状态',
                             templet: function (row) {
                                 if(row.enableStatus == "1"){
