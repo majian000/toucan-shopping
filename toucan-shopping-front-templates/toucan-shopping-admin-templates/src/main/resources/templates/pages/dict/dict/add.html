@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <input type="hidden" id="categoryId" name="categoryId" th:value="${dictCategoryModel.id}"/>
+    <input type="hidden" id="appCode" name="appCode" th:value="${dictCategoryModel.appCode}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">字典分类</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" maxlength="100"  readonly th:value="${dictCategoryModel.name}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
+            <tip>填写名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">编码</label>
+        <div class="layui-input-block">
+            <input type="text" name="code" lay-verify="required" maxlength="100" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+            <tip>填写编码。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">上级节点</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="pid" id="pid">
+            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" value="" class="layui-input" >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">扩展属性</label>
+        <div class="layui-input-block">
+            <textarea name="extendProperty" class="layui-textarea" maxlength="255" placeholder="请输入扩展属性"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">启用状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="enableStatus" value="1" title="启用" checked="">
+            <input type="radio" name="enableStatus" value="0" title="禁用">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+<script>
+    layui.use(['form','layer','tree'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        var index;
+        var zTreeObj;
+        var tree = layui.tree;
+        var loadding;
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/dict/save}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                },
+                complete:function(){
+                    layer.close(loadding);
+                }
+            });
+            return false;
+        });
+
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
+
+        $("#selectPid").click(function(){
+            index = layer.open({
+                title: '选择上级节点',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                area: ['20%', '60%'],
+                btn: ['确定'],
+                content: "<ul id=\"dictTree\" style='height:90%' class=\"ztree\"></ul>",
+                success:function(layero){
+
+                    var categoryId=$("#categoryId").val();
+                    loadding = layer.load();
+
+                    var setting = {
+                        async: {
+                            enable: true,
+                            url:"[[@{/}]]dict/query/tree/child",
+                            autoParam:["id", "pid", "name","categoryId"],
+                            dataFilter: filter
+                        },
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                idKey:'id',
+                                pIdKey:'pid',
+                                rootPId: -1
+                            }
+                        },
+                        view:{
+                            showIcon: true
+                        }
+                    };
+
+                    $.ajax({
+                        url:"[[@{/}]]dict/query/tree/child",
+                        type:"POST",
+                        dataType: "json",
+                        data: {"id": null,"categoryId":categoryId},
+                        success: function(data){
+                            zTreeObj = $.fn.zTree.init($("#dictTree"),setting, data.data);
+                        },
+                        error: function(){
+
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+
+
+                },
+                yes: function(index, layero){
+                    var checkedNodes = zTreeObj.getSelectedNodes();
+                    if(checkedNodes==null||checkedNodes.length<=0)
+                    {
+                        layer.msg("请选择节点");
+                        return false;
+                    }
+                    var selectNode = checkedNodes[0];
+                    $("#selectPid").val(selectNode.name);
+                    $("#pid").val(selectNode.id);
+                    layer.close(index);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+    });
+</script>
+
+
+
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+
+</body>
+</html>

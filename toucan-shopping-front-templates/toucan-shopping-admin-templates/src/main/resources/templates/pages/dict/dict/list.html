@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+
+
+
+    <style>
+        .ztree *{
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+
+<div class="layui-layout">
+    <div class="layui-side ">
+
+        <div class="layuimini-container" style="height:90%">
+            <div class="layuimini-main">
+                <div class="layui-card">
+                    <div class="layui-card-header">字典分类</div>
+                    <div class="layui-card-body" >
+                        <ul id="categoryTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-body">
+        <div class="layuimini-container">
+            <div class="layuimini-main">
+
+                <fieldset class="table-search-fieldset">
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" id="dictSearchForm" action="">
+                            <div class="layui-form-item">
+                                <input type="hidden" name="categoryId" id="categoryId" value="-1">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">编码</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="code" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">启用状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="enableStatus" name="enableStatus"  lay-search="">
+                                            <option value="-1">全部</option>
+                                            <option value="1">启用</option>
+                                            <option value="0">禁用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">所属应用</label>
+                                    <div class="layui-input-inline">
+                                        <select id="selectApp" name="appCode"  lay-search="">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" class="layui-btn layui-btn-primary"  id="queryButton" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <script type="text/html" id="toolbarDemo">
+                    <div class="layui-btn-container">
+                        <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                    </div>
+                </script>
+
+                <table class="layui-hide" id="dictTable" lay-filter="dictTableFilter"></table>
+
+                <script type="text/html" id="dictTableBar">
+                    <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree/dtree',
+        treeTable: 'treeTable/treeTable'
+    }).use(['form', 'table','tree','treeTable','dtree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var dtree = layui.dtree;
+        var treetable = layui.treeTable;
+        var treetableHandler;
+        var roleTree;
+        var roleTreeDataArray = new Array();
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam(row)
+        {
+            var formParam = $("#dictSearchForm").serializeJson();
+            if(row!=null) {
+                formParam.pid = row.id;
+            }else{
+                formParam.pid=-1;
+            }
+            return formParam;
+        }
+
+
+        function loadTreeTable()
+        {
+            loadding = layer.load();
+            treetableHandler = treetable.render({
+                elem: '#dictTable',
+                tree: {
+                    iconIndex: 2
+                },
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'id', width: 200, title: '主键'},
+                        {field: 'name',width: 200,  title: '名称'},
+                        {field: 'code',width: 200,  title: '编码'},
+                        {field: 'parentName',width: 200,  title: '上级节点'},
+                        {field: 'pid',width: 200,  title: '上级节点ID'},
+                        {field: 'dictSort',width: 200,  title: '排序'},
+                        {field: 'appName', title: '关联应用'},
+                        {field: 'enableStatus', title: '启用状态',
+                            templet: function (row) {
+                                if(row.enableStatus == "1"){
+                                    return "启用"
+                                }
+                                return "禁用"
+                            }},
+                        {field: 'createAdminName',width: 150,  title: '创建人'},
+                        {field: 'createDate',width: 200,  title: '创建时间'},
+                        {field: 'updateAdminName', width: 150,  title: '修改人'},
+                        {field: 'updateDate', width: 200, title: '修改时间'},
+                        {templet: '#dictTableBar', width: 350, align: 'center', title: '操作'}
+                    ]
+                ],
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]dict/tree/table/by/pid",
+                        type:'POST',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            if(res.data==null||res.data.length<=0) {
+                                res.data = new Array();
+                            }
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
+                }
+            });
+
+        }
+
+
+        loadTreeTable();
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            loadTreeTable();
+
+            return false;
+        });
+
+
+
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]dict/query/category/list",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: categoryTreeClick
+            }
+        };
+
+        function categoryTreeClick(event, treeId, treeNode) {
+            loadListPageApps(treeNode);
+            $("#categoryId").val(treeNode.id);
+            $("#queryButton").click();
+        }
+
+        function loadListPageApps(treeNode){
+            $("#selectApp").empty();
+            $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
+            $("#selectApp").append("<option value='" + treeNode.appCode + "' >" + treeNode.appName + "</option>");
+            form.render();
+        }
+
+        initCategoryTree();
+
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
+        //初始化树
+        function initCategoryTree(){
+
+            loaddingTree = layer.load();
+            $.ajax({
+                url:"[[@{/}]]dict/query/category/list",
+                type:"POST",
+                dataType: "json",
+                success: function(data){
+                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                    layer.close(loaddingTree);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingTree);
+                }
+            });
+        }
+
+
+
+        $("#data-reset-btn").click(function(){
+            $("#categoryId").val("");
+            $("#dictSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+
+
+
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                roleTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
+                }
+                if(data[i].children!=null&&data[i].children.length>0)
+                {
+                    getCheckdNodeId(data[i].children,idArray);
+                }
+            }
+        }
+
+
+        /**
+         * 拿到指定节点对象
+         */
+        function getNodeObject(nodeId)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+                if(roleTreeDataArray[i].id==nodeId)
+                {
+                    return roleTreeDataArray[i];
+                }
+            }
+            return null;
+        }
+
+
+        /**
+         * 拿到上级节点信息
+         */
+        function getParentNode(rolesArray,pid)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+
+                if(roleTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<rolesArray.length;j++)
+                    {
+                        if(rolesArray[j].id==pid) {
+                            exists = true;
+                        }
+                    }
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
+                    }
+                    if(roleTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * toolbar监听事件
+         */
+        treetable.on('toolbar(dictTable)', function (obj) {
+
+            if (obj.event === 'add') {  // 监听添加操作
+                var selectCategoryId = $("#categoryId").val();
+                if(selectCategoryId==null||selectCategoryId==""||selectCategoryId=="-1")
+                {
+                    layer.msg("请选择字典分类");
+                    return ;
+                }
+                var index = layer.open({
+                    title: '添加字典',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/dict/addPage?dictCategoryId=}]]"+selectCategoryId
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var data = treetableHandler.checkStatus();
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除字典?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]dict/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        treetable.on('checkbox(dictTable)', function (obj) {
+            console.log(obj)
+        });
+
+        treetable.on('tool(dictTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'edit') {
+
+                var index = layer.open({
+                    title: '编辑字典',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]dict/editPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event == 'delete') {
+                layer.confirm('确定删除该字典?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]dict/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event == 'valueList') { //属性值管理
+                var index = layer.open({
+                    title: '属性值管理',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    btn: ["关闭" ],
+                    area: ['80%', '80%'],
+                    content: "[[@{/attributeValue/listPage/}]]"+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
