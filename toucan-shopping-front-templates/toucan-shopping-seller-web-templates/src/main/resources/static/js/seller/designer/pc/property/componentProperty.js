@@ -38,6 +38,7 @@ function componentClickCallback(clickObj){
                 $(propertyPanel[i]).hide();
             }else{
                 if(componentInstance!=null) {
+                    $(propertyPanel[i]).attr("component-instance-ref",componentInstanceId);
                     if(compoentType=="image")
                     {
                         //清空属性面板
@@ -45,7 +46,6 @@ function componentClickCallback(clickObj){
                         //加载属性面板
                         loadImageProperty(componentInstance);
                     }
-                    $(propertyPanel[i]).attr("component-instance-ref",componentInstanceId);
                     $(propertyPanel[i]).show();
                 }
             }

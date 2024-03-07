@@ -13,6 +13,11 @@ function loadImageProperty(componentInstance){
                 $("#image_clickPath").val(element.value);
             }else if(element.name=="httpImgPath"){
                 $("#image_selectBackgroundImagePreview").attr("src",element.value);
+                $("#image_httpImgPath").val(element.value);
+            }else if(element.name=="imgPath"){
+                $("#image_imgPath").val(element.value);
+            }else if(element.name=="imgRefId"){
+                $("#image_imgRefId").val(element.value);
             }
         });
     }
@@ -36,7 +41,6 @@ function selectImageCallback(row){
 function saveImageProperty(){
 
     var componentInstanceId = $("#image_propertyPanel").attr("component-instance-ref");
-    console.log(componentInstanceId);
     var componentInstance = getComponentInstanceByInstanceId(componentInstanceId);
     var clickPathVal = $("#image_clickPath").val();
     var imgPathVal = $("#image_imgPath").val();
