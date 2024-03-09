@@ -74,11 +74,11 @@ public class DictServiceImpl implements DictService {
 
 
     @Override
-    public List<DictVO> queryListByCodeAndAppCodes(String code,List<String> appCodes) {
+    public List<DictVO> queryListByCodeAndAppCodes(String code,List<String> appCodes,Long pid) {
         DictVO query = new DictVO();
         query.setCode(code);
-        query.setEnableStatus((short)1);
         query.setAppCodes(appCodes);
+        query.setPid(pid);
         return dictMapper.findListByVO(query);
     }
 

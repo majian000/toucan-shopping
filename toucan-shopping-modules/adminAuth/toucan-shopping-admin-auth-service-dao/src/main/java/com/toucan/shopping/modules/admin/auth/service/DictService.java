@@ -80,7 +80,7 @@ public interface DictService {
      * @param code
      * @return
      */
-    List<DictVO> queryListByCodeAndAppCodes(String code, List<String> appCodes);
+    List<DictVO> queryListByCodeAndAppCodes(String code, List<String> appCodes,Long pid);
 
     /**
      * 查询列表页

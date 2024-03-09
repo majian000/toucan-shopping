@@ -40,6 +40,10 @@
             and t.code like concat(#{code},'%')
         </if>
 
+        <if test="pid!=null ">
+            and t.pid = #{pid}
+        </if>
+
         <if test="enableStatus!=null and enableStatus!=-1">
             and t.enable_status = #{enableStatus}
         </if>
@@ -56,6 +60,10 @@
 
         <if test="enableStatus!=null and enableStatus!=-1">
             and t.enable_status = #{enableStatus}
+        </if>
+
+        <if test="pid!=null ">
+            and t.pid = #{pid}
         </if>
 
         <if test="appCodes!=null and appCodes.size>0">

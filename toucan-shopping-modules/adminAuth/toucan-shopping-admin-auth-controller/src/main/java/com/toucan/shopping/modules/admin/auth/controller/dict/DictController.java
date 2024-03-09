@@ -86,13 +86,18 @@ public class DictController {
             }
             dictVO.setAppCodes(new LinkedList<>());
             dictVO.getAppCodes().add(dictVO.getAppCode());
-            List<DictVO> dicts = dictService.queryListByCodeAndAppCodes(dictVO.getCode(),dictVO.getAppCodes());
+            List<DictVO> dicts = dictService.queryListByCodeAndAppCodes(dictVO.getCode(),dictVO.getAppCodes(),dictVO.getPid());
             if(!CollectionUtils.isEmpty(dicts))
             {
                 DictVO dcv = dicts.get(0);
                 AppVO appVO = appService.findByCodeIngoreDelete(dcv.getAppCode());
+                String nodeName="根节点";;
+                if(dictVO.getPid().longValue()!=-1) {
+                    DictVO parentNode = dictService.findById(dictVO.getPid());
+                    nodeName =  parentNode.getName();
+                }
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中该编码已存在");
+                resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中的"+nodeName+"下该编码已存在");
                 return resultObjectVO;
             }
 
@@ -160,14 +165,22 @@ public class DictController {
 
             Dict query=new Dict();
             query.setDeleteStatus((short)0);
+            query.setPid(entity.getPid());
             query.setCode(entity.getCode());
             query.setAppCode(entity.getAppCode());
             List<DictVO> dictList = dictService.findListByEntity(query);
             if(!CollectionUtils.isEmpty(dictList))
             {
                 if(!dictList.get(0).getId().equals(entity.getId())) {
+                    DictVO dcv = dictList.get(0);
+                    AppVO appVO = appService.findByCodeIngoreDelete(dcv.getAppCode());
+                    String nodeName="根节点";;
+                    if(entity.getPid().longValue()!=-1) {
+                        DictVO parentNode = dictService.findById(entity.getPid());
+                        nodeName =  parentNode.getName();
+                    }
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该字典编码已经存在!");
+                    resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中的"+nodeName+"下该编码已存在");
                     return resultObjectVO;
                 }
             }
