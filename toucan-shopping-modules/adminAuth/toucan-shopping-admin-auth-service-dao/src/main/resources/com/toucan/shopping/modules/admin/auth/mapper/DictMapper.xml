@@ -164,6 +164,14 @@
             <if test="name!=null and name!=''">
                 and t.name = #{name}
             </if>
+            <if test="pid!=null">
+                and t.pid = #{pid}
+            </if>
+
+            <if test="code!=null and code!=''">
+                and t.code = #{code}
+            </if>
+
             <if test="appCode!=null and appCode!=''">
                 and t.app_code = #{appCode}
             </if>
