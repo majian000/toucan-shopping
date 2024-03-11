@@ -25,7 +25,11 @@ public interface OrgnazitionService {
      */
     List<OrgnazitionTreeVO> queryTreeByAppCode(String appCode);
 
-
+    /**
+     * 查询最大编码值
+     * @return
+     */
+    Integer queryMaxCode();
 
     /**
      * 查询全部树结构

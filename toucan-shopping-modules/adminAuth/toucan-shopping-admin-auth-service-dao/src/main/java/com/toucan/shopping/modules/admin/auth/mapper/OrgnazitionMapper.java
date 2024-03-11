@@ -61,6 +61,11 @@ public interface OrgnazitionMapper {
      */
     List<OrgnazitionVO> queryListByAppCode(String appCode);
 
+    /**
+     * 查询最大编码值
+     * @return
+     */
+    Integer queryMaxCode();
 
     /**
      * 根据应用编码数组查询列表

@@ -25,6 +25,11 @@ public class Orgnazition {
      */
     private String name;
 
+    /**
+     * 机构编码
+     */
+    private String code;
+
 
     /**
      * 上级菜单 -1表示当前是顶级

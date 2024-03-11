@@ -80,6 +80,11 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
     }
 
     @Override
+    public Integer queryMaxCode() {
+        return orgnazitionMapper.queryMaxCode();
+    }
+
+    @Override
     public List<OrgnazitionTreeVO> queryTree() {
         List<OrgnazitionTreeVO> orgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
         try {

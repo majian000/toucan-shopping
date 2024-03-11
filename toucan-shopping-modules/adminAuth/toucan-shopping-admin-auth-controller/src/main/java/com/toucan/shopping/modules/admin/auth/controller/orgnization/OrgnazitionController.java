@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.CodeUtils;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -83,6 +84,11 @@ public class OrgnazitionController {
             entity.setOrgnazitionId(GlobalUUID.uuid());
             entity.setCreateDate(new Date());
             entity.setDeleteStatus((short)0);
+            Integer maxCodeVal = orgnazitionService.queryMaxCode();
+            if(maxCodeVal==null){
+                maxCodeVal=0;
+            }
+            entity.setCode("ORG"+CodeUtils.genMinCode(maxCodeVal+1,3));
             int row = orgnazitionService.save(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);

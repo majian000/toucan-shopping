@@ -28,6 +28,11 @@ public class OrgnazitionTreeInfo extends PageInfo<Orgnazition> {
     private String name;
 
     /**
+     * 编码
+     */
+    private String code;
+
+    /**
      * 启用状态 0:禁用 1启用
      */
     private Short enableStatus;

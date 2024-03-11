@@ -5,6 +5,7 @@
     <resultMap id="orgnazitionMap" type="com.toucan.shopping.modules.admin.auth.entity.Orgnazition" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
         <result column="orgnazition_id" jdbcType="VARCHAR" property="orgnazitionId" />
         <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="orgnazition_sort" jdbcType="BIGINT" property="orgnazitionSort" />
@@ -26,6 +27,7 @@
     <sql id="queryColumns">
         t.id,
         t.name,
+        t.code,
         t.orgnazition_id,
         t.pid,
         t.orgnazition_sort,
@@ -43,6 +45,9 @@
 
         <if test="name!=null and name!=''">
             and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="code!=null and code!=''">
+            and t.code like concat('%',#{code},'%')
         </if>
     </sql>
 
@@ -169,8 +174,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_orgnazition(id,pid,name,orgnazition_id,orgnazition_sort,remark,create_admin_id,create_date,delete_status)
-        values(#{id},#{pid},#{name},#{orgnazitionId},#{orgnazitionSort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
+        insert into t_sa_orgnazition(id,pid,name,code,orgnazition_id,orgnazition_sort,remark,create_admin_id,create_date,delete_status)
+        values(#{id},#{pid},#{name},#{code},#{orgnazitionId},#{orgnazitionSort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition">
@@ -183,6 +188,10 @@
         update t_sa_orgnazition set delete_status=1 where id = #{id}
     </update>
 
-
+    <select id="queryMaxCode" resultType="java.lang.Integer">
+         SELECT CODE FROM (
+            SELECT REPLACE(t.code,'ORG','') AS CODE FROM t_sa_orgnazition t
+         )ds ORDER BY ds.code DESC LIMIT 0,1
+    </select>
 
 </mapper>
