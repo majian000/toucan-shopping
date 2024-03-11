@@ -189,9 +189,9 @@
     </update>
 
     <select id="queryMaxCode" resultType="java.lang.Integer">
-         SELECT CODE FROM (
-            SELECT REPLACE(t.code,'ORG','') AS CODE FROM t_sa_orgnazition t
-         )ds ORDER BY ds.code DESC LIMIT 0,1
+         SELECT ds.code FROM (
+            SELECT REPLACE(t.code,'ORG','') AS code FROM t_sa_orgnazition t
+         )ds ORDER BY code DESC LIMIT 0,1
     </select>
 
 </mapper>
