@@ -145,7 +145,6 @@
                                             <select name="payStatus"  lay-search="">
                                                 <option value="0" selected>未支付</option>
                                                 <option value="1" >已支付</option>
-                                                <option value="3" >线下支付已到账</option>
                                                 <option value="4" >取消支付</option>
                                             </select>
                                         </div>
@@ -153,7 +152,6 @@
                                             <select name="payStatus"  lay-search="">
                                                 <option value="0" selected>未支付</option>
                                                 <option value="1" >已支付</option>
-                                                <option value="3" >线下支付已到账</option>
                                                 <option value="4" >取消支付</option>
                                             </select>
                                         </div>
@@ -161,15 +159,6 @@
                                             <select name="payStatus"  lay-search="">
                                                 <option value="0" >未支付</option>
                                                 <option value="1" selected>已支付</option>
-                                                <option value="3" >线下支付已到账</option>
-                                                <option value="4" >取消支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payStatus eq 3}" >
-                                            <select name="payStatus"  lay-search="">
-                                                <option value="0" >未支付</option>
-                                                <option value="1" >已支付</option>
-                                                <option value="3" selected>线下支付已到账</option>
                                                 <option value="4" >取消支付</option>
                                             </select>
                                         </div>
@@ -177,7 +166,6 @@
                                             <select name="payStatus"  lay-search="">
                                                 <option value="0" >未支付</option>
                                                 <option value="1" >已支付</option>
-                                                <option value="3" >线下支付已到账</option>
                                                 <option value="4" selected>取消支付</option>
                                             </select>
                                         </div>
@@ -191,6 +179,7 @@
                                         <div class="layui-input-block" th:if="${model.tradeStatus eq null}" >
                                             <select name="tradeStatus"  lay-search="">
                                                 <option value="0" selected >待付款</option>
+                                                <option value="4" >待发货</option>
                                                 <option value="1" >待收货</option>
                                                 <option value="2" >已取消</option>
                                                 <option value="3" >已完成</option>
@@ -199,6 +188,7 @@
                                         <div class="layui-input-block" th:if="${model.tradeStatus eq 0}" >
                                             <select name="tradeStatus"  lay-search="">
                                                 <option value="0" selected>待付款</option>
+                                                <option value="4" >待发货</option>
                                                 <option value="1" >待收货</option>
                                                 <option value="2" >已取消</option>
                                                 <option value="3" >已完成</option>
@@ -207,6 +197,7 @@
                                         <div class="layui-input-block" th:if="${model.tradeStatus eq 1}" >
                                             <select name="tradeStatus"  lay-search="">
                                                 <option value="0" >待付款</option>
+                                                <option value="4" >待发货</option>
                                                 <option value="1" selected>待收货</option>
                                                 <option value="2" >已取消</option>
                                                 <option value="3" >已完成</option>
@@ -215,6 +206,7 @@
                                         <div class="layui-input-block" th:if="${model.tradeStatus eq 2}" >
                                             <select name="tradeStatus"  lay-search="">
                                                 <option value="0" >待付款</option>
+                                                <option value="4" >待发货</option>
                                                 <option value="1" >待收货</option>
                                                 <option value="2" selected>已取消</option>
                                                 <option value="3" >已完成</option>
@@ -223,9 +215,19 @@
                                         <div class="layui-input-block" th:if="${model.tradeStatus eq 3}" >
                                             <select name="tradeStatus"  lay-search="">
                                                 <option value="0" >待付款</option>
+                                                <option value="4" >待发货</option>
                                                 <option value="1" >待收货</option>
                                                 <option value="2" >已取消</option>
                                                 <option value="3" selected>已完成</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 4}" >
+                                            <select name="tradeStatus"  lay-search="">
+                                                <option value="0" >待付款</option>
+                                                <option value="4" selected>待发货</option>
+                                                <option value="1" >待收货</option>
+                                                <option value="2" >已取消</option>
+                                                <option value="3" >已完成</option>
                                             </select>
                                         </div>
                                     </div>

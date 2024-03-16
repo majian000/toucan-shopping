@@ -59,6 +59,18 @@
             and t.valuation_method = #{valuationMethod}
         </if>
 
+        <if test="startCreateDate!=null">
+            <![CDATA[
+                and t.create_date>= #{startCreateDate}
+            ]]>
+        </if>
+
+        <if test="endCreateDate!=null">
+            <![CDATA[
+                and t.create_date<= #{endCreateDate}
+            ]]>
+        </if>
+
     </sql>
 
     <sql id="queryWhere">

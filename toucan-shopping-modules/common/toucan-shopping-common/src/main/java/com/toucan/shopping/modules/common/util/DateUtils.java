@@ -41,6 +41,12 @@ public final class DateUtils {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     };
+    public static final ThreadLocal<DateFormat> FORMATTER_MM = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        }
+    };
 
     public static final ThreadLocal<DateFormat> FORMATTER_TSS = new ThreadLocal<DateFormat>(){
         @Override

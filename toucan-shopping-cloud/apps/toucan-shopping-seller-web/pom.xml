@@ -144,6 +144,16 @@
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-order-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.order</groupId>
+            <artifactId>toucan-shopping-order-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-common-data-api</artifactId>
         </dependency>
 

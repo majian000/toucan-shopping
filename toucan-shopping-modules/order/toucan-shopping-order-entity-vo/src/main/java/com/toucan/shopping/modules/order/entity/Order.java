@@ -29,8 +29,8 @@ public class Order {
     private BigDecimal redPackageAmount = new BigDecimal(0); //红包金额
     private BigDecimal couponAmount = new BigDecimal(0); //优惠券金额
     private BigDecimal totalAmount; //订单金额(不算折扣)
-    private Integer payStatus; //支付状态 0未支付 1已支付 3线下支付已到账 4取消支付
-    private Integer tradeStatus; //交易状态 0:待付款 1:待收货 2:已取消 3:已完成
+    private Integer payStatus; //支付状态 0未支付 1已支付  4取消支付
+    private Integer tradeStatus; //交易状态 0:待付款 4:待发货 1:待收货 2:已取消 3:已完成
     private Integer payMethod;  //支付方式 1线上支付 2线下支付
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
     private String outerTradeNo; //交易订单号(微信支付宝交易流水号)

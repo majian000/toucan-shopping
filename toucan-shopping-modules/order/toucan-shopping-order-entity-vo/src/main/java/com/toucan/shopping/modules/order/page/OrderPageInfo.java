@@ -40,8 +40,8 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
     private String orderNo; //订单编号
     private String mainOrderNo; //主订单编号
 
-    private Integer payStatus; //支付状态 -1全部 0未支付 1已支付 3线下支付已到账 4取消支付
-    private Integer tradeStatus; //交易状态 0:待付款 1:待收货 2:已取消 3:已完成
+    private Integer payStatus; //支付状态 -1全部 0未支付 1已支付 4取消支付
+    private Integer tradeStatus; //交易状态 0:待付款 4:待发货 1:待收货 2:已取消 3:已完成
 
 
 
@@ -52,6 +52,9 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endCreateDate; //结束下单时间
+
+    private String startCreateDateYMDHS; //开始下单时间 (年-月-日 时:分)
+    private String endCreateDateYMDHS; //结束下单时间 (年-月-日 时:分)
 
     private String keyword; //查询关键字
 

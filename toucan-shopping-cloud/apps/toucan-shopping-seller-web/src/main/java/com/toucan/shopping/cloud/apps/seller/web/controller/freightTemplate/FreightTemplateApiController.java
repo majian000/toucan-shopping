@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -85,11 +86,18 @@ public class FreightTemplateApiController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(userMainId))
             {
-                logger.warn("查询商品审核 没有找到用户ID {} ",userMainId);
+                logger.warn("查询运费模板 没有找到用户ID {} ",userMainId);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询失败,用户ID不能为空");
                 return resultObjectVO;
             }
+            if(StringUtils.isNotEmpty(pageInfo.getStartDateYMDHS())){
+                pageInfo.setStartCreateDate(DateUtils.FORMATTER_SS.get().parse(pageInfo.getStartDateYMDHS()+":00"));
+            }
+            if(StringUtils.isNotEmpty(pageInfo.getEndDateYMDHS())){
+                pageInfo.setEndCreateDate(DateUtils.FORMATTER_SS.get().parse(pageInfo.getEndDateYMDHS()+":59"));
+            }
+
             pageInfo.setUserMainId(Long.parseLong(userMainId));
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));

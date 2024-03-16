@@ -45,7 +45,7 @@
             <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="javascript:;">运费模板</a>
+            <a href="javascript:;">订单列表</a>
         </li>
     </ol>
 
@@ -56,20 +56,42 @@
 
     <div class="right_content" >
         <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
-            <div class="title" style="border-bottom: 1px solid#9a9999;"><span>运费模板</span></div>
+            <div class="title" style="border-bottom: 1px solid#9a9999;"><span>订单列表</span></div>
             <div class="right_panel">
 
                 <div class="bootstrap-frm" style="width:100%;max-width:100%;"  >
-                    <form id="freightTemplateForm">
+                    <form id="orderForm">
                         <label style="width:40%;float: left;">
-                            <span>模板名称 :</span>
-                            <input type="text" id="name" maxlength="25"  name="name"   tabindex="1"  style="width:50%" />
+                            <span>订单编号 :</span>
+                            <input type="text" id="orderNo" maxlength="32"  name="orderNo"   tabindex="1"  style="width:50%" />
                         </label>
                         <label style="width:40%;float: left;">
-                            <span>创建时间 :</span>
+                            <span>支付流水号 :</span>
+                            <input type="text" id="outerTradeNo" maxlength="48"  name="outerTradeNo"   tabindex="1"  style="width:50%" />
+                        </label>
+                        <label style="width:40%;float: left;">
+                            <span>下单时间 :</span>
                             <input type="text" id="startDate"  style="width:30%" />
                             至
                             <input type="text" id="endDate"   style="width:30%" />
+                        </label>
+                        <label style="width:40%;float: left;">
+                            <span>交易状态 :</span>
+                            <select id="tradeStatus" style="width:100px;">
+                                <option value="-1">全部</option>
+                                <option value="0">待付款</option>
+                                <option value="4">待发货</option>
+                                <option value="1">待收货</option>
+                                <option value="2">已取消</option>
+                                <option value="3">已完成</option>
+                            </select>
+                            <span>支付状态 :</span>
+                            <select id="payStatus" style="width:100px;">
+                                <option value="-1">全部</option>
+                                <option value="0">未支付</option>
+                                <option value="1">已支付</option>
+                                <option value="4">取消支付</option>
+                            </select>
                         </label>
                         <div style="width:80%;text-align: center;">
                             <input type="button" id="queryBtn" class="button" style="width:100px;" value="查询"  />
@@ -80,11 +102,10 @@
                 </div>
 
                 <div style="width:100%;padding-left: 25px;">
-                <input type="button" style="width:100px;height:30px;" id="addFreightTemplate" value="添加模板"/> <br> <br>
                 </div>
                 <div class="pageToolbar">
-                    <table id="freightTemplateTable" class="freezeTable" border="1" width="900">
-                        <tbody id="freightTemplateTableBody">
+                    <table id="orderTable" class="freezeTable" border="1" width="900">
+                        <tbody id="orderTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -97,7 +118,7 @@
 <script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/freightTemplate/index.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/order/index.js"></script>
 
 
 

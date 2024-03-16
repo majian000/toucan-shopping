@@ -46,6 +46,10 @@
             and t.id = #{id}
         </if>
 
+        <if test="shopId!=null  ">
+            and t.shop_id = #{shopId}
+        </if>
+
         <if test="orderNo!=null and orderNo!='' ">
             and t.order_no = #{orderNo}
         </if>

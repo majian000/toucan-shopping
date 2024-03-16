@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * 列表查询页
@@ -53,6 +56,16 @@ public class FreightTemplatePageInfo extends PageInfo<FreightTemplate> {
 
     private Short valuationMethod; //计价方式 1:按件数 2:按重量 3:按体积
 
+    private String startDateYMDHS;
+    private String endDateYMDHS;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date startCreateDate; //开始创建时间
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date endCreateDate; //结束创建
     //==============================================
 
 
