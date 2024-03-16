@@ -76,22 +76,26 @@
                             <input type="text" id="endDate"   style="width:30%" />
                         </label>
                         <label style="width:40%;float: left;">
-                            <span>交易状态 :</span>
-                            <select id="tradeStatus" style="width:100px;">
-                                <option value="-1">全部</option>
-                                <option value="0">待付款</option>
-                                <option value="4">待发货</option>
-                                <option value="1">待收货</option>
-                                <option value="2">已取消</option>
-                                <option value="3">已完成</option>
-                            </select>
-                            <span>支付状态 :</span>
-                            <select id="payStatus" style="width:100px;">
-                                <option value="-1">全部</option>
-                                <option value="0">未支付</option>
-                                <option value="1">已支付</option>
-                                <option value="4">取消支付</option>
-                            </select>
+                            <div style="width:45%;float:left;">
+                                <span>交易状态 :</span>
+                                <select id="tradeStatus" style="width:100px;">
+                                    <option value="-1">全部</option>
+                                    <option value="0">待付款</option>
+                                    <option value="4">待发货</option>
+                                    <option value="1">待收货</option>
+                                    <option value="2">已取消</option>
+                                    <option value="3">已完成</option>
+                                </select>
+                            </div>
+                            <div style="width:45%;float:left;">
+                                <span>支付状态 :</span>
+                                <select id="payStatus" style="width:100px;">
+                                    <option value="-1">全部</option>
+                                    <option value="0">未支付</option>
+                                    <option value="1">已支付</option>
+                                    <option value="4">取消支付</option>
+                                </select>
+                            </div>
                         </label>
                         <div style="width:80%;text-align: center;">
                             <input type="button" id="queryBtn" class="button" style="width:100px;" value="查询"  />
