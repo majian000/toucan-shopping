@@ -97,8 +97,8 @@ toucan:
   machine-id: 2202 #机器编码
   app-code: 10001004 #自定义应用编码
   #雪花算法ID相关
-  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
-  datacenterId: 0 #数据中心ID (0~31)
+  # workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  # datacenterId: 0 #数据中心ID (0~31)
   seller:
     shop-logo-max-size: 5120 #头像最大长度5MB(单位KB)
     default-shop-logo: group1/M00/00/01/rB5PVWEniGuAEJw5AAA1H6b9sow877.png

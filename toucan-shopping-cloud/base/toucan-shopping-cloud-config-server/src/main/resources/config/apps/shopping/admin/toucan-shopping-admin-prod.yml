@@ -91,8 +91,8 @@ toucan:
   app-name: 犀鸟商城
   app-code: 10001002 #自定义应用编码
   #雪花算法ID相关
-  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
-  datacenterId: 0 #数据中心ID (0~31)
+  # workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  # datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #商城PC端
     app-code: 10001001
     base-path: http://8.140.187.184:8083

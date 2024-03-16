@@ -42,8 +42,8 @@ spring:
 toucan:
   machine-id: 2202 #机器编码
   #雪花算法ID相关
-  workerId: 1 #工作ID 0~31, 每个服务实例都有一个工作ID
-  datacenterId: 0 #数据中心ID (0~31)
+  # workerId: 1 #工作ID 0~31, 每个服务实例都有一个工作ID
+  # datacenterId: 0 #数据中心ID (0~31)
   modules:
     skylarkLock: #云雀分布式锁
       type: redis #中间件类型

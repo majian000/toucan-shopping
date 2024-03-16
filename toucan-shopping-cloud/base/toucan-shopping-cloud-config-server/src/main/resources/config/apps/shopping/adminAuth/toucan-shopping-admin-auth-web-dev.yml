@@ -74,8 +74,8 @@ ribbon:
 toucan:
   app-code: 10001003 #自定义应用编码
   #雪花算法ID相关
-  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
-  datacenterId: 0 #数据中心ID (0~31)
+  # workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  # datacenterId: 0 #数据中心ID (0~31)
   admin-auth:
     enabled: true
     operate-log: #操作日志

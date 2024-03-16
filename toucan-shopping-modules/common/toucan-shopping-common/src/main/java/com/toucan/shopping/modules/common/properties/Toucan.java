@@ -40,10 +40,10 @@ public class Toucan {
     private String machineId;
 
     //工作ID 0~31
-    private Integer workerId;
+    private Integer workerId = 0;
 
     //数据中心ID (0~31)
-    private Integer datacenterId;
+    private Integer datacenterId = 0;
 
     /**
      * 权限中台
