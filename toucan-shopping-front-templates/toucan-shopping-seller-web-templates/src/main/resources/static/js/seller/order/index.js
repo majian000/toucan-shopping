@@ -53,13 +53,14 @@ function drawTable(pageResult)
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
-        "                            <td style=\"width:100px;\" >订单编号</td>\n" +
+        "                            <td style=\"width:150px;\" >订单编号</td>\n" +
+        "                            <td style=\"width:150px;\" >支付流水号</td>\n" +
         "                            <td style=\"width:100px;\" >订单金额</td>\n" +
         "                            <td style=\"width:100px;\" >付款金额</td>\n" +
         "                            <td style=\"width:100px;\" >交易状态</td>\n" +
         "                            <td style=\"width:100px;\" >支付状态</td>\n" +
         "                            <td style=\"width:100px;\" >下单时间</td>\n" +
-        "                            <td style=\"width:200px;\">操作</td>\n" +
+        "                            <td style=\"width:100px;\">操作</td>\n" +
         "                        </tr>";
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
     {
@@ -92,6 +93,7 @@ function drawTable(pageResult)
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.orderNo+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.outerTradeNo!=null?row.outerTradeNo:"")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.orderAmount+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.payAmount+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+tradeStatusName+"</div></td>\n" ;
