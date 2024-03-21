@@ -79,6 +79,30 @@ $(function () {
                     $("#tradeStatus").html(tradeStatusName);
 
 
+
+                    var payStatusName="";
+                    if(retObj.payStatus==0){
+                        payStatusName="未支付";
+                    }else if(retObj.payStatus==1){
+                        payStatusName="已支付";
+                    }else if(retObj.payStatus==4){
+                        payStatusName="取消支付";
+                    }
+                    $("#payStatus").html(payStatusName);
+
+
+                    var payMethodName="";
+                    if(retObj.payMethod==1){
+                        payMethodName="线上支付";
+                    }else if(retObj.payMethod==2){
+                        payMethodName="线下支付";
+                    }
+                    $("#payMethod").html(payMethodName);
+
+
+
+
+
                 }
             }
         },

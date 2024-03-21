@@ -28,7 +28,7 @@
 
 <#include "/top.html"/>
 
-<#assign leftName = "freightTemplateList">
+<#assign leftName = "orderList">
 <#assign menuType = "deliveryMenu">
 
 <div class="body_box">
@@ -59,7 +59,6 @@
                 <div class="title" style="border-bottom: 1px solid#9a9999;"><span>查看订单</span></div>
                 <div class="right_panel" style="min-height: 900px;">
                         <div class="tabs-basic" >
-
                             <ul>
                                 <li>
                                     <a data-index="0" href="#" class="tab-active" >订单信息</a>
@@ -95,6 +94,17 @@
                                                 <div id="tradeStatus" style="display: inline-block;padding:0;" ></div>
                                             </div>
                                         </div>
+
+                                        <div class="frm-div-row" style="width:90%;margin-top:2%;">
+                                            <div class="frm-div-row" style="width:40%;display: inline-block;text-align: left;">
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >支付状态 :</label>
+                                                <div id="payStatus" style="display: inline-block;padding:0;" ></div>
+                                            </div>
+                                            <div class="frm-div-row" style="width:40%;display: inline-block;text-align: left;" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >支付方式 :</label>
+                                                <div id="payMethod" style="display: inline-block;padding:0;" ></div>
+                                            </div>
+                                        </div>
                                     </form>
 
 
@@ -109,13 +119,10 @@
                         </div>
 
 
-                    <!--<div style="width:100%;text-align:center;margin-top: 5%;">-->
-                        <!--<input type="button" id="backBtn" class="button" value="返回"  />-->
-                    <!--</div>-->
-                    <!--<label>-->
-                        <!--<span> </span>-->
-                        <!--<a id="scaf_msg" ></a>-->
-                    <!--</label>-->
+                        <div class="bootstrap-frm" style="width:100%;max-width:100%;text-align: center;"  >
+                            <input type="button" id="backBtn"  class="button" value="返回"  />
+                        </div>
+
 
                 </div>
             </div>
