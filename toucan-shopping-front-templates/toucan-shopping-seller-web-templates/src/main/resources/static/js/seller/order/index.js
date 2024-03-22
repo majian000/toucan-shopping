@@ -51,11 +51,11 @@ function doPage()
 function drawTable(pageResult)
 {
     var tableHtml="";
-    tableHtml+=" <tr class=\"tabTh\">\n" +
+    tableHtml+=" <tr class=\"tabTh\" style=\"height:50px;\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:150px;\" >订单编号</td>\n" +
         "                            <td style=\"width:150px;\" >支付流水号</td>\n" +
-        "                            <td style=\"width:100px;\" >订单金额</td>\n" +
+        "                            <td style=\"width:100px;\"  >订单金额<div class=\"columnSort\"><div class=\"columnSortIcon\"><a><i class=\"sortUp\"></i><a><i class=\"sortDown\"></i></div></div></td>\n" +
         "                            <td style=\"width:100px;\" >付款金额</td>\n" +
         "                            <td style=\"width:100px;\" >交易状态</td>\n" +
         "                            <td style=\"width:100px;\" >支付状态</td>\n" +

@@ -14,3 +14,45 @@
     padding-left: 1%;
     padding-right: 1%;
 }
+
+.tabTh .columnSort{
+    display: inline-block;
+}
+
+.tabTh .columnSort .columnSortIcon{
+    display: grid;
+    align-items: center;
+    width: 25px;
+    height: 50%;
+}
+
+.tabTh .columnSort a{
+    cursor: pointer;
+}
+
+.tabTh .columnSort i{
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.tabTh .columnSort .sortRight {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.tabTh .columnSort .sortLeft {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.tabTh .columnSort .sortUp {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.tabTh .columnSort .sortDown {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}

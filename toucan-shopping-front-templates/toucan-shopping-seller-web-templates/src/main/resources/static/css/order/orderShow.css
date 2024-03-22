@@ -7,3 +7,19 @@
     font-weight: bold;
     margin-top: 1%;
 }
+
+.frm-div-row-group{
+    width:90%;margin-top:2%;
+}
+
+
+.frm-div-row-item{
+    width:40%;
+    display: inline-block;
+    text-align: left;
+}
+
+.frm-div-row-item-v-text{
+    display: inline-block;
+    padding:0;
+}

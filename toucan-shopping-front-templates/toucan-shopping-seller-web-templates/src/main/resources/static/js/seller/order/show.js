@@ -100,8 +100,17 @@ $(function () {
                     $("#payMethod").html(payMethodName);
 
 
+                    var payTypeName="";
+                    if(retObj.payType==0){
+                        payTypeName="微信";
+                    }else if(retObj.payType==1){
+                        payTypeName="支付宝";
+                    }
+                    $("#payType").html(payTypeName);
 
 
+                    $("#outerTradeNo").val(retObj.outerTradeNo);
+                    $("#remark").val(retObj.remark);
 
                 }
             }
