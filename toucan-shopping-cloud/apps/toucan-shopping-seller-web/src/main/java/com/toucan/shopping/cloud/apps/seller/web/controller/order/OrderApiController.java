@@ -88,7 +88,22 @@ public class OrderApiController extends BaseController {
                 resultObjectVO.setMsg("查询失败,用户ID不能为空");
                 return resultObjectVO;
             }
-
+            if(StringUtils.isNotEmpty(pageInfo.getSortBy()))
+            {
+                String sortBy = pageInfo.getSortBy().toLowerCase();
+                if(!"asc".equals(sortBy)&&!"desc".equals(sortBy)){
+                    pageInfo.setSortBy(null);
+                }
+            }
+            if(StringUtils.isNotEmpty(pageInfo.getSortColumn()))
+            {
+                if("orderAmount".equals(pageInfo.getSortColumn())){
+                    pageInfo.setSortColumn("order_amount");
+                }
+                if("payAmount".equals(pageInfo.getSortColumn())){
+                    pageInfo.setSortColumn("pay_amount");
+                }
+            }
             if(StringUtils.isNotEmpty(pageInfo.getStartCreateDateYMDHS())){
                 pageInfo.setStartCreateDate(DateUtils.FORMATTER_SS.get().parse(pageInfo.getStartCreateDateYMDHS()+":00"));
             }

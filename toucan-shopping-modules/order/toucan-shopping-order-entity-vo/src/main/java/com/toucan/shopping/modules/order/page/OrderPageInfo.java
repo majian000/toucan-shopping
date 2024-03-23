@@ -58,6 +58,10 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
 
     private String keyword; //查询关键字
 
+    private String sortColumn; //排序列
+
+    private String sortBy; //升降序 ASC、DESC
+
     //==============================================
 
 

@@ -226,7 +226,24 @@
             <include refid="queryListPageWhere" />
 
         </where>
-        order by t.id desc
+
+        <choose>
+            <when test="sortColumn!=null and sortColumn!=''">
+                order by ${sortColumn}
+                <choose>
+                    <when test="sortBy!=null and sortBy!=''">
+                         ${sortBy}
+                    </when>
+                    <otherwise>
+                        asc
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by t.id desc
+            </otherwise>
+        </choose>
+
         limit #{start},#{limit}
     </select>
 

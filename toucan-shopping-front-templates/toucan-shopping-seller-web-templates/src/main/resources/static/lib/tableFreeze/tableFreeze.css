@@ -15,44 +15,46 @@
     padding-right: 1%;
 }
 
-.tabTh .columnSort{
+.tabTh .tcc{
     display: inline-block;
+    float: right;
+    margin-right: 5px;
 }
 
-.tabTh .columnSort .columnSortIcon{
+.tabTh .tcc .csi{
     display: grid;
     align-items: center;
     width: 25px;
     height: 50%;
 }
 
-.tabTh .columnSort a{
+.tabTh .tcc a{
     cursor: pointer;
 }
 
-.tabTh .columnSort i{
+.tabTh .tcc i{
     border: solid black;
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
 }
 
-.tabTh .columnSort .sortRight {
+.tabTh .tcc .sortRight {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
 }
 
-.tabTh .columnSort .sortLeft {
+.tabTh .tcc .sortLeft {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
 }
 
-.tabTh .columnSort .sortUp {
+.tabTh .tcc .su {
     transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
 }
 
-.tabTh .columnSort .sortDown {
+.tabTh .tcc .sd {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }

@@ -55,13 +55,15 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:150px;\" >订单编号</td>\n" +
         "                            <td style=\"width:150px;\" >支付流水号</td>\n" +
-        "                            <td style=\"width:100px;\"  >订单金额<div class=\"columnSort\"><div class=\"columnSortIcon\"><a><i class=\"sortUp\"></i><a><i class=\"sortDown\"></i></div></div></td>\n" +
-        "                            <td style=\"width:100px;\" >付款金额</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  class=\"sortColumns\" sortColumn=\"orderAmount\" >订单金额</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  class=\"sortColumns\" sortColumn=\"payAmount\" >付款金额</td>\n" +
         "                            <td style=\"width:100px;\" >交易状态</td>\n" +
         "                            <td style=\"width:100px;\" >支付状态</td>\n" +
         "                            <td style=\"width:100px;\" >下单时间</td>\n" +
         "                            <td style=\"width:100px;\">操作</td>\n" +
         "                        </tr>";
+
+
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
     {
         for(var i=0;i<pageResult.list.length;i++)
@@ -107,11 +109,34 @@ function drawTable(pageResult)
 
     }
     $("#orderTableBody").html(tableHtml);
+    drawSortColumn();
     $("#orderTable").FrozenTable(2,0,0);
 
     bindRowEvent();
 }
 
+function drawSortColumn(){
+    //追加排序列
+    var sortColumns = $(".sortColumns");
+    if(sortColumns!=null&&sortColumns.length>0)
+    {
+        for(var i=0;i<sortColumns.length;i++){
+            $(sortColumns[i]).append("<div class=\"tcc\"><div class=\"csi\"><a><i class=\"su\"></i><a style=\" margin-top: 5px;\"><i class=\"sd\"></i></div></div>");
+        }
+        //升序
+        $(".csi .su").bind("click", function () {
+            $("#sortColumn").val($(this).parents(".sortColumns").attr("sortColumn"));
+            $("#sortBy").val("asc");
+            doQuery();
+        });
+        //降序
+        $(".csi .sd").bind("click", function () {
+            $("#sortColumn").val($(this).parents(".sortColumns").attr("sortColumn"));
+            $("#sortBy").val("desc");
+            doQuery();
+        });
+    }
+}
 
 function bindRowEvent()
 {
@@ -176,20 +201,28 @@ function initPagination()
     });
 }
 
+
+function doQuery(){
+    pagegizationConfigObject.current_page = 1;
+    g_order_query_obj.page = 1;
+    g_order_query_obj.orderNo=$("#orderNo").val();
+    g_order_query_obj.outerTradeNo=$("#outerTradeNo").val();
+    g_order_query_obj.tradeStatus=$("#tradeStatus option:selected").val();
+    g_order_query_obj.payStatus=$("#payStatus option:selected").val();
+    g_order_query_obj.startCreateDateYMDHS=$("#startDate").val();
+    g_order_query_obj.endCreateDateYMDHS=$("#endDate").val();
+    g_order_query_obj.sortColumn = $("#sortColumn").val();
+    g_order_query_obj.sortBy = $("#sortBy").val();
+    initPagination();
+}
+
 $(function () {
 
 
     $("#queryBtn").bind( 'click' ,function(){
-        pagegizationConfigObject.current_page = 1;
-        g_order_query_obj.page = 1;
-        g_order_query_obj.orderNo=$("#orderNo").val();
-        g_order_query_obj.outerTradeNo=$("#outerTradeNo").val();
-        g_order_query_obj.tradeStatus=$("#tradeStatus option:selected").val();
-        g_order_query_obj.payStatus=$("#payStatus option:selected").val();
-        g_order_query_obj.startCreateDateYMDHS=$("#startDate").val();
-        g_order_query_obj.endCreateDateYMDHS=$("#endDate").val();
-
-        initPagination();
+        $("#sortColumn").val("");
+        $("#sortBy").val("");
+        doQuery();
     });
 
 
