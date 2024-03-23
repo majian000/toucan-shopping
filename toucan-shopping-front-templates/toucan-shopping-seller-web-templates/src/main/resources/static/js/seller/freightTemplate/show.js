@@ -433,6 +433,10 @@ $(function () {
                         }
                     }
                 }
+
+                $('#transportModel_express').off("click");
+                $('#transportModel_ems').off("click");
+                $('#transportModel_ordinaryMail').off("click");
             }
         },
         error: function (result) {
