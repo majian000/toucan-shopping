@@ -297,7 +297,7 @@ public class AppController {
         }
         try {
             AppVO appVO = JSONObject.parseObject(requestVo.getEntityJson(), AppVO.class);
-            resultObjectVO.setData(appService.queryListByCodes(appVO.getCodes()));
+            resultObjectVO.setData(appService.queryListByCodesIngoreDelete(appVO.getCodes()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

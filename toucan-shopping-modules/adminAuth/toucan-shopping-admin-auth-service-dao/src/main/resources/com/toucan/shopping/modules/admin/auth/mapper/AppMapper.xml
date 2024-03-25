@@ -85,7 +85,7 @@
 
     </select>
 
-    <select id="findListByAppCodes" resultMap="appMap" parameterType="java.util.List">
+    <select id="queryListByCodesIngoreDelete" resultMap="appMap" parameterType="java.util.List">
         select * from t_app t
         <where>
             1=1
@@ -95,7 +95,6 @@
                     #{item}
                 </foreach>
             </if>
-            and t.delete_status = 0
         </where>
 
     </select>

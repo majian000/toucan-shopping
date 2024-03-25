@@ -40,8 +40,8 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public List<App> queryListByCodes(List<String> codes) {
-        return appMapper.findListByAppCodes(codes);
+    public List<App> queryListByCodesIngoreDelete(List<String> codes) {
+        return appMapper.queryListByCodesIngoreDelete(codes);
     }
 
     @Override
