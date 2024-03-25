@@ -187,13 +187,16 @@ public class DictController {
 
             boolean isSnapshot=false; //是否快照字典
             DictVO dict = dictService.findById(entity.getId());
-            //下面的数据变更,就将字典进行快照
-            if(!dict.getCode().equals(entity.getCode())
-               ||!dict.getName().equals(entity.getName())
-               ||!dict.getExtendProperty().equals(entity.getExtendProperty())
-               ||!dict.getPid().equals(entity.getPid())){
+            //快照该字典
+            if(entity.getIsSnapshot().intValue()==1) {
+                //下面的数据变更,就将字典进行快照
+                if (!dict.getCode().equals(entity.getCode())
+                        || !dict.getName().equals(entity.getName())
+                        || !dict.getExtendProperty().equals(entity.getExtendProperty())
+                        || !dict.getPid().equals(entity.getPid())) {
 
-                isSnapshot=true;
+                    isSnapshot = true;
+                }
             }
 
             if(isSnapshot)

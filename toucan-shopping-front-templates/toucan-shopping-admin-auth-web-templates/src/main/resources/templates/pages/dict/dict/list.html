@@ -184,6 +184,13 @@
                         {field: 'pid',width: 200,  title: '上级节点ID'},
                         {field: 'dictSort',width: 200,  title: '排序'},
                         {field: 'appName', title: '关联应用'},
+                        {field: 'isSnapshot', title: '是否快照',
+                            templet: function (row) {
+                                if(row.isSnapshot == "1"){
+                                    return "是"
+                                }
+                                return "否"
+                            }},
                         {field: 'enableStatus', title: '启用状态',
                             templet: function (row) {
                                 if(row.enableStatus == "1"){

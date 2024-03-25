@@ -49,6 +49,10 @@ public class Dict {
     private Short isActive;
 
     /**
+     * 是否快照(0否 1是)
+     */
+    private Short isSnapshot;
+    /**
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;

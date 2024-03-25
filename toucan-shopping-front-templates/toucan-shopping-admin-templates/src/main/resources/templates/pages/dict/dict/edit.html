@@ -71,6 +71,17 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">是否快照</label>
+        <div class="layui-input-block" th:if="${model.isSnapshot eq 0}" >
+            <input type="radio" name="isSnapshot" value="0" title="否"  checked="">
+            <input type="radio" name="isSnapshot" value="1" title="是">
+        </div>
+        <div class="layui-input-block" th:if="${model.isSnapshot eq 1}" >
+            <input type="radio" name="isSnapshot" value="0" title="否" >
+            <input type="radio" name="isSnapshot" value="1" title="是"  checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">启用状态</label>
         <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
             <input type="radio" name="enableStatus" value="1" title="启用" checked>

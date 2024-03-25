@@ -12,6 +12,7 @@
         <result column="extend_property" jdbcType="VARCHAR" property="extendProperty" />
         <result column="dict_version" jdbcType="BIGINT" property="dictVersion" />
         <result column="is_active" jdbcType="INTEGER" property="isActive" />
+        <result column="is_snapshot" jdbcType="INTEGER" property="isSnapshot" />
         <result column="dict_sort" jdbcType="BIGINT" property="dictSort" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -259,16 +260,16 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict"  keyProperty="id" >
-        insert into t_sa_dict(id,name,code,pid,category_id,app_code,extend_property,dict_version,batch_id,
+        insert into t_sa_dict(id,name,code,pid,category_id,app_code,extend_property,dict_version,is_snapshot,batch_id,
         is_active,dict_sort,remark,enable_status,create_admin_id,create_date,delete_status)
-        values(#{id},#{name},#{code},#{pid},#{categoryId},#{appCode},#{extendProperty},#{dictVersion},#{batchId},
+        values(#{id},#{name},#{code},#{pid},#{categoryId},#{appCode},#{extendProperty},#{dictVersion},#{isSnapshot},#{batchId},
         #{isActive},#{dictSort},#{remark},#{enableStatus},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
-        update t_sa_dict set  name=#{name},code=#{code},app_code=#{appCode},dict_sort=#{dictSort},enable_status=#{enableStatus},
+        update t_sa_dict set  name=#{name},code=#{code},app_code=#{appCode},is_snapshot=#{isSnapshot},dict_sort=#{dictSort},enable_status=#{enableStatus},
         update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
           where id = #{id}
     </update>
