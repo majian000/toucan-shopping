@@ -58,12 +58,12 @@ $(function () {
             if(result.data!=null) {
                 var retObj = result.data;
                 if(retObj!=null) {
-                    $("#orderNo").val(retObj.orderNo);
-                    $("#orderAmount").val(retObj.orderAmount);
-                    $("#payAmount").val(retObj.payAmount);
-                    $("#freightAmount").val(retObj.freightAmount);
-                    $("#redPackageAmount").val(retObj.redPackageAmount);
-                    $("#couponAmount").val(retObj.couponAmount);
+                    $("#orderNo").html(retObj.orderNo);
+                    $("#orderAmount").html(retObj.orderAmount);
+                    $("#payAmount").html(retObj.payAmount);
+                    $("#freightAmount").html(retObj.freightAmount);
+                    $("#redPackageAmount").html(retObj.redPackageAmount);
+                    $("#couponAmount").html(retObj.couponAmount);
 
 
                     var tradeStatusName="";
