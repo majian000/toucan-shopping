@@ -23,6 +23,14 @@
     <link rel="stylesheet" href="${basePath}/static/css/order/orderShow.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/tabs/tabs-basic.css" />
     <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+    <style>
+        .pay-success-group{
+            display:none;
+        }
+        .pay-cancel-group{
+            display:none;
+        }
+    </style>
 </head>
 <body>
 
@@ -80,29 +88,66 @@
                                         <div class="frm-div-row-group" style="margin-top:0;">
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="orderNo" >订单编号 :</label>
-                                                <input type="text" id="orderNo"  tabindex="1"  style="margin:0" />
+                                                <input type="text" id="orderNo"   style="margin:0" />
                                             </div>
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="orderAmount" >订单金额 :</label>
-                                                <input type="text" id="orderAmount"  tabindex="2"  style="margin:0"  />
+                                                <input type="text" id="orderAmount"  style="margin:0"  />
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="freightAmount" >运费金额 :</label>
+                                                <input type="text" id="freightAmount"   style="margin:0" />
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="redPackageAmount" >红包金额 :</label>
+                                                <input type="text" id="redPackageAmount"   style="margin:0" />
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="freightAmount" >优惠券金额 :</label>
+                                                <input type="text" id="couponAmount"   style="margin:0" />
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="payAmount" >付款金额 :</label>
+                                                <input type="text" id="payAmount"   style="margin:0" />
                                             </div>
                                         </div>
 
                                         <div class="frm-div-row-group" >
-                                            <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text" for="payAmount" >付款金额 :</label>
-                                                <input type="text" id="payAmount"  tabindex="1"  style="margin:0" />
-                                            </div>
                                             <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >订单状态 :</label>
                                                 <div id="tradeStatus" class="frm-div-row-item-v-text" ></div>
                                             </div>
-                                        </div>
-
-                                        <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >支付状态 :</label>
                                                 <div id="payStatus" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="frm-div-row-group pay-cancel-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >取消订单时间 :</label>
+                                                <div id="cancelDate" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group pay-cancel-group" >
+                                            <div class="frm-div-row-item" style="width:80%" >
+                                                <label class="order-detail-item-text" for="remark" >取消订单备注 :</label>
+                                                <textarea id="cancelRemark" ></textarea>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="frm-div-row-group pay-success-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >支付时间 :</label>
+                                                <div id="payDate" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >支付方式 :</label>
@@ -110,32 +155,30 @@
                                             </div>
                                         </div>
 
-                                        <div class="frm-div-row-group" >
+                                        <div class="frm-div-row-group pay-success-group" >
                                             <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >支付类型 :</label>
                                                 <div id="payType" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="outerTradeNo" >支付流水号 :</label>
-                                                <input type="text" id="outerTradeNo"  tabindex="3"  style="margin:0" />
+                                                <input type="text" id="outerTradeNo"   style="margin:0" />
                                             </div>
                                         </div>
 
                                         <div class="frm-div-row-group" >
-                                            <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text"  style="display: inline-block;" >支付时间 :</label>
-                                                <div id="payDate" class="frm-div-row-item-v-text" ></div>
-                                            </div>
                                             <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >期望送货时间 :</label>
                                                 <div id="bestDate" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
                                             </div>
                                         </div>
 
 
                                         <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" style="width:80%" >
-                                                <label class="order-detail-item-text" for="remark" >卖家备注 :</label>
+                                                <label class="order-detail-item-text" for="remark" >买家备注 :</label>
                                                 <textarea id="remark" ></textarea>
                                             </div>
                                         </div>

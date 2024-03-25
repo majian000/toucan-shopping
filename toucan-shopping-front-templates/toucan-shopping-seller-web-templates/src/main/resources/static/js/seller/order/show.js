@@ -61,6 +61,10 @@ $(function () {
                     $("#orderNo").val(retObj.orderNo);
                     $("#orderAmount").val(retObj.orderAmount);
                     $("#payAmount").val(retObj.payAmount);
+                    $("#freightAmount").val(retObj.freightAmount);
+                    $("#redPackageAmount").val(retObj.redPackageAmount);
+                    $("#couponAmount").val(retObj.couponAmount);
+
 
                     var tradeStatusName="";
                     if(retObj.tradeStatus==0){
@@ -85,32 +89,47 @@ $(function () {
                         payStatusName="未支付";
                     }else if(retObj.payStatus==1){
                         payStatusName="已支付";
+
+                        var payMethodName="";
+                        if(retObj.payMethod==1){
+                            payMethodName="线上支付";
+                        }else if(retObj.payMethod==2){
+                            payMethodName="线下支付";
+                        }
+                        $("#payMethod").html(payMethodName);
+
+
+                        var payTypeName="";
+                        if(retObj.payType==0){
+                            payTypeName="微信";
+                        }else if(retObj.payType==1){
+                            payTypeName="支付宝";
+                        }
+                        $("#payType").html(payTypeName);
+
+                        $("#outerTradeNo").val(retObj.outerTradeNo);
+
+                        $(".pay-success-group").show();
+
+                        $("#payStatus").css("color","green")
+
                     }else if(retObj.payStatus==4){
                         payStatusName="取消支付";
+                        $("#cancelDate").val(retObj.cancelDate);
+                        $("#cancelRemark").val(retObj.cancelRemark);
+
+                        $(".pay-cancel-group").show();
+
+                        $("#payStatus").css("color","red")
                     }
+
                     $("#payStatus").html(payStatusName);
 
 
-                    var payMethodName="";
-                    if(retObj.payMethod==1){
-                        payMethodName="线上支付";
-                    }else if(retObj.payMethod==2){
-                        payMethodName="线下支付";
-                    }
-                    $("#payMethod").html(payMethodName);
 
-
-                    var payTypeName="";
-                    if(retObj.payType==0){
-                        payTypeName="微信";
-                    }else if(retObj.payType==1){
-                        payTypeName="支付宝";
-                    }
-                    $("#payType").html(payTypeName);
-
-
-                    $("#outerTradeNo").val(retObj.outerTradeNo);
                     $("#remark").val(retObj.remark);
+                    $("#bestDate").val(retObj.bestDate);
+
 
                 }
             }
