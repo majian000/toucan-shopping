@@ -107,7 +107,7 @@ $(function () {
                         }
                         $("#payType").html(payTypeName);
 
-                        $("#outerTradeNo").val(retObj.outerTradeNo);
+                        $("#outerTradeNo").html(retObj.outerTradeNo);
 
                         $(".pay-success-group").show();
 
