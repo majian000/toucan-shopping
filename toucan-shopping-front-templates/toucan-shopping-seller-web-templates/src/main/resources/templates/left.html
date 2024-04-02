@@ -15,7 +15,11 @@
             <#else>
                  <li><a href="${basePath}/page/order/index"><span class="menu-item-cls">订单列表</span></a></li>
             </#if>
-            <li><a href="to_order.html"><span class="menu-item-cls">待发货订单</span></a></li>
+            <#if leftName??&&leftName=="waitDeliveryOrder">
+                <li class="active"><a href="${basePath}/page/order/index"><span class="menu-item-cls">待发货订单</span></a></li>
+            <#else>
+                <li><a href="${basePath}/page/order/index"><span class="menu-item-cls">待发货订单</span></a></li>
+            </#if>
 
             <#if leftName??&&leftName=="freightTemplateList">
                 <li class="active"><a href="${basePath}/page/freightTemplate/index"><span class="menu-item-cls">运费模板</span></a></li>
