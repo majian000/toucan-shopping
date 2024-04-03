@@ -35,8 +35,8 @@
 
 <#include "/top.html"/>
 
-<#assign leftName = "orderList">
-<#assign menuType = "waitDeliveryOrder">
+<#assign leftName = "waitDeliveryOrder">
+<#assign menuType = "deliveryMenu">
 
 <div class="body_box">
 
@@ -63,6 +63,7 @@
                     <form id="orderForm">
                         <input type="hidden" id="sortColumn" />
                         <input type="hidden" id="sortBy" />
+                        <input type="hidden" id="tradeStatus" name="tradeStatus" value="4"/>
 
                         <label style="width:40%;float: left;">
                             <span>订单编号 :</span>
@@ -77,19 +78,6 @@
                             <input type="text" id="startDate"  style="width:30%" />
                             至
                             <input type="text" id="endDate"   style="width:30%" />
-                        </label>
-                        <label style="width:40%;float: left;">
-                            <div style="width:45%;float:left;">
-                                <span>订单状态 :</span>
-                                <select id="tradeStatus" style="width:150px;">
-                                    <option value="-1">全部</option>
-                                    <option value="0">待付款</option>
-                                    <option value="4">待发货</option>
-                                    <option value="1">待收货</option>
-                                    <option value="3">已完成</option>
-                                    <option value="2">已取消</option>
-                                </select>
-                            </div>
                         </label>
                         <div style="width:80%;text-align: center;">
                             <input type="button" id="queryBtn" class="button" style="width:100px;" value="查询"  />
@@ -116,7 +104,7 @@
 <script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/order/index.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/waitDeliveryOrder/index.js"></script>
 
 
 

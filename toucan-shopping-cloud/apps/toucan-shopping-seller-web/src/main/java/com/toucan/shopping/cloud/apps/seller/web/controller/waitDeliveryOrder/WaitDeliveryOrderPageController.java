@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * 待收货订单
+ * 待发货订单
  */
 @Controller("waitDeliveryOrderPageController")
 @RequestMapping("/page/waitDeliveryOrder")
