@@ -76,7 +76,10 @@
                                     <a data-index="0" href="#" class="tab-active" >订单信息</a>
                                 </li>
                                 <li>
-                                    <a data-index="1" href="#" class="">物流信息</a>
+                                    <a data-index="1" href="#" class="">商品信息</a>
+                                </li>
+                                <li>
+                                    <a data-index="2" href="#" class="">物流信息</a>
                                 </li>
                             </ul>
 
@@ -91,14 +94,14 @@
                                                 <div id="orderNo" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text" for="orderAmount" >订单金额 :</label>
-                                                <div id="orderAmount" class="frm-div-row-item-v-text" ></div>
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单创建时间 :</label>
+                                                <div id="createDate" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                         </div>
                                         <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text" for="freightAmount" >运费金额 :</label>
-                                                <div id="freightAmount" class="frm-div-row-item-v-text" ></div>
+                                                <label class="order-detail-item-text" for="orderAmount" >订单总金额 :</label>
+                                                <div id="orderAmount" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="redPackageAmount" >红包金额 :</label>
@@ -107,23 +110,33 @@
                                         </div>
                                         <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text" for="freightAmount" >优惠券金额 :</label>
+                                                <label class="order-detail-item-text" for="couponAmount" >优惠券金额 :</label>
                                                 <div id="couponAmount" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="freightAmount" >运费金额 :</label>
+                                                <div id="freightAmount" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="payAmount" >付款金额 :</label>
                                                 <div id="payAmount" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单状态 :</label>
+                                                <div id="tradeStatus" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                         </div>
 
                                         <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item"  >
-                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单状态 :</label>
-                                                <div id="tradeStatus" class="frm-div-row-item-v-text" ></div>
-                                            </div>
-                                            <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >支付状态 :</label>
                                                 <div id="payStatus" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
                                             </div>
                                         </div>
 
@@ -190,6 +203,9 @@
                                     111111
                                 </div>
 
+                                <div class="tabs-content-placeholder-div">
+                                    22222
+                                </div>
                             </div>
 
                         </div>

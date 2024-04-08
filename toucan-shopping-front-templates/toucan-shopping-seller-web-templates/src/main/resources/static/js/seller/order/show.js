@@ -59,6 +59,7 @@ $(function () {
                 var retObj = result.data;
                 if(retObj!=null) {
                     $("#orderNo").html(retObj.orderNo);
+                    $("#createDate").html(retObj.createDate);
                     $("#orderAmount").html(retObj.orderAmount);
                     $("#payAmount").html(retObj.payAmount);
                     $("#freightAmount").html(retObj.freightAmount);
@@ -115,7 +116,7 @@ $(function () {
 
                     }else if(retObj.payStatus==4){
                         payStatusName="取消支付";
-                        $("#cancelDate").val(retObj.cancelDate);
+                        $("#cancelDate").html(retObj.cancelDate);
                         $("#cancelRemark").val(retObj.cancelRemark);
 
                         $(".pay-cancel-group").show();
