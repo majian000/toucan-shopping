@@ -76,10 +76,13 @@
                                     <a data-index="0" href="#" class="tab-active" >订单信息</a>
                                 </li>
                                 <li>
-                                    <a data-index="1" href="#" class="">商品快照</a>
+                                    <a data-index="1" href="#" class="">收货人信息</a>
                                 </li>
                                 <li>
-                                    <a data-index="2" href="#" class="">物流信息</a>
+                                    <a data-index="2" href="#" class="">商品快照</a>
+                                </li>
+                                <li>
+                                    <a data-index="3" href="#" class="">物流信息</a>
                                 </li>
                             </ul>
 
@@ -88,19 +91,27 @@
                                 <div class="tab-content-active tabs-content-placeholder-div">
                                     <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 100%;"  >
 
-                                        <div class="frm-div-row-group" style="margin-top:0;">
+                                        <div class="frm-div-row-group" style="margin-top:0;" >
+                                            <div class="frm-div-row-item"  >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单状态 :</label>
+                                                <div id="tradeStatus" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" >
                                                 <label class="order-detail-item-text" for="orderNo" >订单编号 :</label>
                                                 <div id="orderNo" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单创建时间 :</label>
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >下单时间 :</label>
                                                 <div id="createDate" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                         </div>
                                         <div class="frm-div-row-group" >
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text" for="orderAmount" >订单总金额 :</label>
+                                                <label class="order-detail-item-text" for="orderAmount" >总金额 :</label>
                                                 <div id="orderAmount" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
@@ -126,24 +137,16 @@
                                                 <div id="payAmount" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单状态 :</label>
-                                                <div id="tradeStatus" class="frm-div-row-item-v-text" ></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="frm-div-row-group" >
-                                            <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >支付状态 :</label>
                                                 <div id="payStatus" class="frm-div-row-item-v-text" ></div>
                                             </div>
-                                            <div class="frm-div-row-item" >
-                                            </div>
                                         </div>
+
 
 
                                         <div class="frm-div-row-group pay-cancel-group" >
                                             <div class="frm-div-row-item" >
-                                                <label class="order-detail-item-text"  style="display: inline-block;" >取消订单时间 :</label>
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >取消时间 :</label>
                                                 <div id="cancelDate" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
@@ -151,8 +154,8 @@
                                         </div>
                                         <div class="frm-div-row-group pay-cancel-group" >
                                             <div class="frm-div-row-item" style="width:80%" >
-                                                <label class="order-detail-item-text" for="remark" >取消订单备注 :</label>
-                                                <textarea id="cancelRemark" ></textarea>
+                                                <label class="order-detail-item-text" for="remark" >取消备注 :</label>
+                                                <div id="cancelRemark"  class="frm-div-row-item-v-text" style="width: 70%;" ></div>
                                             </div>
                                         </div>
 
@@ -190,7 +193,7 @@
                                         <div class="frm-div-row-group " >
                                             <div class="frm-div-row-item" style="width:80%" >
                                                 <label class="order-detail-item-text" for="remark" >买家备注 :</label>
-                                                <textarea id="remark" ></textarea>
+                                                <div id="remark"  class="frm-div-row-item-v-text" style="width: 70%;"></div>
                                             </div>
                                         </div>
 
@@ -200,11 +203,46 @@
                                 </div>
 
                                 <div class="tabs-content-placeholder-div">
-                                    111111
+                                    <form id="scaf2" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 100%;"  >
+
+                                        <div class="frm-div-row-group" style="margin-top:0;" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="payAmount" >收货人 :</label>
+                                                <div id="oca_name" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >联系电话 :</label>
+                                                <div id="oca_phone" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="frm-div-row-group"  >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="payAmount" >所属城市 :</label>
+                                                <div id="oca_provinceCityAreaName" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+
+                                        <div class="frm-div-row-group"  >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="payAmount" >收货地址 :</label>
+                                                <div id="oca_address" class="frm-div-row-item-v-text" style="width: 70%;" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                    </form>
+
+
                                 </div>
 
                                 <div class="tabs-content-placeholder-div">
                                     22222
+                                </div>
+                                <div class="tabs-content-placeholder-div">
+                                    33333
                                 </div>
                             </div>
 

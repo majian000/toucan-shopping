@@ -117,7 +117,7 @@ $(function () {
                     }else if(retObj.payStatus==4){
                         payStatusName="取消支付";
                         $("#cancelDate").html(retObj.cancelDate);
-                        $("#cancelRemark").val(retObj.cancelRemark);
+                        $("#cancelRemark").html(retObj.cancelRemark);
 
                         $(".pay-cancel-group").show();
 
@@ -128,9 +128,16 @@ $(function () {
 
 
 
-                    $("#remark").val(retObj.remark);
-                    $("#bestDate").val(retObj.bestDate);
+                    $("#remark").html(retObj.remark);
+                    $("#bestDate").html(retObj.bestDate);
 
+                    if(retObj.orderConsigneeAddress!=null){
+                        var orderConsigneeAddress = retObj.orderConsigneeAddress;
+                        $("#oca_name").html(orderConsigneeAddress.name);
+                        $("#oca_phone").html(orderConsigneeAddress.phone);
+                        $("#oca_provinceCityAreaName").html(orderConsigneeAddress.provinceName+" "+orderConsigneeAddress.cityName+" "+orderConsigneeAddress.areaName);
+                        $("#oca_address").html(orderConsigneeAddress.address);
+                    }
 
                 }
             }
