@@ -139,6 +139,10 @@ $(function () {
                         $("#oca_address").html(orderConsigneeAddress.address);
                     }
 
+                    if(retObj.orderItems!=null&&retObj.orderItems.length>0){
+                        drawOrderItemTable(retObj);
+                    }
+
                 }
             }
         },
@@ -157,3 +161,35 @@ $(function () {
 
 
 });
+
+
+function drawOrderItemTable(orderVO){
+    var orderItems = orderVO.orderItems;
+
+    var tableHtml="";
+    tableHtml+=" <tr class=\"tabTh\" style=\"height:50px;\">\n" +
+        "                            <td style=\"width:50px;\" >序号</td>\n" +
+        "                            <td style=\"width:150px;\" >商品名称</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >购买数量</td>\n" +
+        "                        </tr>";
+
+
+    for(var i=0;i<orderItems.length;i++)
+    {
+        var row = orderItems[i];
+
+
+        tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
+        tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productSkuName+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productPrice+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productNum+"</div></td>\n" ;
+        tableHtml+=    "                        </tr>";
+    }
+
+    $("#orderItemTableBody").html(tableHtml);
+    $("#orderItemList").FrozenTable(2,0,0);
+
+
+}

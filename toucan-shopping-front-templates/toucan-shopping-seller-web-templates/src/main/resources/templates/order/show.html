@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="${basePath}/static/css/order/orderShow.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/tabs/tabs-basic.css" />
     <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+    <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
     <style>
         .pay-success-group{
             display:none;
@@ -197,6 +198,27 @@
                                             </div>
                                         </div>
 
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item"  >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >订单项列表 </label>
+                                                <div  class="frm-div-row-item-v-text" style="width: 70%;">
+                                                </div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+
+                                        <div class="frm-div-row-group" style="margin-top:1%">
+                                            <div class="frm-div-row-item"  >
+                                                <table id="orderItemList" class="freezeTable" border="1" width="800" >
+                                                    <tbody id="orderItemTableBody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+
                                     </form>
 
 
@@ -262,6 +284,7 @@
 </div>
 
 
+<script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <link rel="stylesheet" href="${basePath}/static/lib/areaPlugin/RegionalChoice.css">
 <script src="${basePath}/static/lib/areaPlugin/RegionalChoice.js"></script>
 
