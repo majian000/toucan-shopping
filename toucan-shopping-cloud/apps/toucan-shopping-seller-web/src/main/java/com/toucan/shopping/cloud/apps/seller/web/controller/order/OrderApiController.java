@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
@@ -14,7 +15,9 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
@@ -62,6 +65,12 @@ public class OrderApiController extends BaseController {
 
     @Autowired
     private FeignAreaService feignAreaService;
+
+    @Autowired
+    private FeignOrderItemService feignOrderItemService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     /**
@@ -160,6 +169,32 @@ public class OrderApiController extends BaseController {
             queryVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
             resultObjectVO = feignOrderService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                orderVO = resultObjectVO.formatData(OrderVO.class);
+
+                OrderItemVO queryOrderItemVO = new OrderItemVO();
+                queryOrderItemVO.setOrderId(orderVO.getId());
+
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryOrderItemVO);
+                ResultObjectVO orderItemResultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);
+                if(orderItemResultObjectVO.isSuccess()) {
+                    if (orderItemResultObjectVO.getData() != null) {
+                        List<OrderItemVO> orderItemVOList = orderItemResultObjectVO.formatDataList(OrderItemVO.class);
+                        if(CollectionUtils.isNotEmpty(orderItemVOList)){
+                            for(OrderItemVO orderItemVO:orderItemVOList){
+                                if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())){
+                                    orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                                }
+                            }
+                        }
+                        orderVO.setOrderItems(orderItemVOList);
+                    }
+                }
+
+                resultObjectVO.setData(orderVO);
+
+            }
 
         }catch(Exception e)
         {
