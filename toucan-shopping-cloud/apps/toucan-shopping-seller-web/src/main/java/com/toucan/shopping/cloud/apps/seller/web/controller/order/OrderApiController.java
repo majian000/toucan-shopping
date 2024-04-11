@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
@@ -10,6 +11,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductServi
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -74,6 +76,8 @@ public class OrderApiController extends BaseController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignCategoryService feignCategoryService;
 
     /**
      * 查询列表
@@ -184,6 +188,7 @@ public class OrderApiController extends BaseController {
                     if (orderItemResultObjectVO.getData() != null) {
                         List<OrderItemVO> orderItemVOList = orderItemResultObjectVO.formatDataList(OrderItemVO.class);
                         if(CollectionUtils.isNotEmpty(orderItemVOList)){
+                            List<ProductSkuVO> orderItemProductSkuList = new LinkedList<>();
                             for(OrderItemVO orderItemVO:orderItemVOList){
                                 if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())){
                                     orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
@@ -191,10 +196,27 @@ public class OrderApiController extends BaseController {
                                 String productSkuJson = orderItemVO.getProductSkuJson();
                                 if(StringUtils.isNotEmpty(productSkuJson)) {
                                     ProductSkuVO productSkuVO = JSONObject.parseObject(productSkuJson, ProductSkuVO.class);
-                                    productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
-                                    orderItemVO.setProductSkuJson(JSONObject.toJSONString(productSkuVO));
+                                    orderItemProductSkuList.add(productSkuVO);
                                 }
                             }
+                            Set<Long> categoryIdSet = new HashSet();
+                            for(int i = 0; i < orderItemProductSkuList.size(); i++) {
+                                ProductSkuVO productSkuVO = orderItemProductSkuList.get(i);
+
+                                if(StringUtils.isNotEmpty(productSkuVO.getMainPhotoFilePath()))
+                                {
+                                    productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
+                                }
+
+                                //设置店铺分类ID
+                                if (productSkuVO.getCategoryId() != null) {
+                                    categoryIdSet.add(productSkuVO.getCategoryId());
+                                }
+                            }
+
+                            this.queryCategory(orderItemProductSkuList,categoryIdSet.stream().toArray(Long[]::new));
+
+                            orderVO.setOrderItemProductSkus(orderItemProductSkuList);
                         }
                         orderVO.setOrderItems(orderItemVOList);
                     }
@@ -213,6 +235,39 @@ public class OrderApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 查询类别信息
+     *
+     * @param list
+     * @param categoryIds
+     */
+    void queryCategory(List<ProductSkuVO> list, Long[] categoryIds) {
+        try {
+            //查询类别名称
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setIdArray(categoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                    for (ProductSkuVO productSkuVO : list) {
+                        for (CategoryVO categoryVO : categoryVOS) {
+                            if (productSkuVO.getCategoryId() != null && productSkuVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                productSkuVO.setCategoryName(categoryVO.getName());
+                                productSkuVO.setCategoryPath(categoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+    }
 
     private SellerShopVO queryByShop(String userMainId) throws Exception
     {

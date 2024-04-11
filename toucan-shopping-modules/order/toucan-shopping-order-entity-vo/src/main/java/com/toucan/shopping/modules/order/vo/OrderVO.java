@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.vo;
 
 import com.toucan.shopping.modules.order.entity.Order;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
 import jdk.nashorn.internal.objects.annotations.Constructor;
@@ -24,6 +25,8 @@ public class OrderVO extends Order {
     OrderFreightVO orderFreight; //订单运费规则
 
     List<OrderItemVO> orderItems; //订单项
+
+    List<ProductSkuVO> orderItemProductSkus; //订单项商品快照
 
     OrderConsigneeAddressVO orderConsigneeAddress; //收货人
 

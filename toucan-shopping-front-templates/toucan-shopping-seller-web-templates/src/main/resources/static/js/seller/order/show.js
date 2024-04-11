@@ -213,7 +213,7 @@ function drawOrderItemTable(orderVO){
 
 
 function drawOrderItemProductTable(orderVO){
-    var orderItems = orderVO.orderItems;
+    var orderItemProductSkus = orderVO.orderItemProductSkus;
 
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\" style=\"height:50px;\">\n" +
@@ -222,27 +222,26 @@ function drawOrderItemProductTable(orderVO){
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:150px;\" >商品名称</td>\n" +
         "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >分类</td>\n" +
         "                            <td style=\"width:100px;padding-left: 2%;\"  >毛重</td>\n" +
         "                            <td style=\"width:100px;padding-left: 2%;\"  >净重</td>\n" +
         "                        </tr>";
 
 
-    for(var i=0;i<orderItems.length;i++)
+    for(var i=0;i<orderItemProductSkus.length;i++)
     {
-        var row = orderItems[i];
-        var productSku = JSON.parse(row.productSkuJson);
+        var row = orderItemProductSkus[i];
 
-        if(productSku!=null) {
-            tableHtml += " <tr align=\"center\" class=\"tabTd\">\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + (i + 1) + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.productNo + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\"><a href=\"javascript:window.open('" + productSku.httpProductPreviewPath + "')\"><img width=\"100\" height=\"100\" src=\"" + productSku.httpProductPreviewPath + "\"></a>" + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.name + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.price + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.roughWeight + "</div></td>\n";
-            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.suttle + "</div></td>\n";
-            tableHtml += "                        </tr>";
-        }
+        tableHtml += " <tr align=\"center\" class=\"tabTd\">\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + (i + 1) + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.productNo + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\"><a href=\"javascript:window.open('" + row.httpProductPreviewPath + "')\"><img width=\"100\" height=\"100\" src=\"" + row.httpProductPreviewPath + "\"></a>" + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.name + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.price + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.categoryName + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.roughWeight + "</div></td>\n";
+        tableHtml += "                            <td><div class=\"tabTdWrap\">" + row.suttle + "</div></td>\n";
+        tableHtml += "                        </tr>";
     }
 
     $("#orderItemProductTableBody").html(tableHtml);
