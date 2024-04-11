@@ -172,10 +172,10 @@ function drawOrderItemTable(orderVO){
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:150px;\" >商品名称</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >总金额</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >购买数量</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >配送状态</td>\n" +
+        "                            <td style=\"width:100px;\"  >总金额</td>\n" +
+        "                            <td style=\"width:100px;\"  >商品单价</td>\n" +
+        "                            <td style=\"width:100px;\"  >购买数量</td>\n" +
+        "                            <td style=\"width:100px;\"  >配送状态</td>\n" +
         "                        </tr>";
 
 
@@ -221,10 +221,10 @@ function drawOrderItemProductTable(orderVO){
         "                            <td style=\"width:100px;\" >商品编号</td>\n" +
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:150px;\" >商品名称</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >分类</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >毛重</td>\n" +
-        "                            <td style=\"width:100px;padding-left: 2%;\"  >净重</td>\n" +
+        "                            <td style=\"width:100px;\"  >商品单价</td>\n" +
+        "                            <td style=\"width:100px;\"  >分类</td>\n" +
+        "                            <td style=\"width:100px;\"  >毛重</td>\n" +
+        "                            <td style=\"width:100px;\"  >净重</td>\n" +
         "                        </tr>";
 
 
