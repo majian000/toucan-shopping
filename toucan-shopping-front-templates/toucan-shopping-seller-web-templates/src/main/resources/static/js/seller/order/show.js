@@ -141,6 +141,7 @@ $(function () {
 
                     if(retObj.orderItems!=null&&retObj.orderItems.length>0){
                         drawOrderItemTable(retObj);
+                        drawOrderItemProductTable(retObj);
                     }
 
                 }
@@ -204,6 +205,48 @@ function drawOrderItemTable(orderVO){
 
     $("#orderItemTableBody").html(tableHtml);
     $("#orderItemList").FrozenTable(2,0,0);
+
+
+}
+
+
+
+
+function drawOrderItemProductTable(orderVO){
+    var orderItems = orderVO.orderItems;
+
+    var tableHtml="";
+    tableHtml+=" <tr class=\"tabTh\" style=\"height:50px;\">\n" +
+        "                            <td style=\"width:50px;\" >序号</td>\n" +
+        "                            <td style=\"width:100px;\" >商品编号</td>\n" +
+        "                            <td style=\"width:100px;\" >商品预览</td>\n" +
+        "                            <td style=\"width:150px;\" >商品名称</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >毛重</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >净重</td>\n" +
+        "                        </tr>";
+
+
+    for(var i=0;i<orderItems.length;i++)
+    {
+        var row = orderItems[i];
+        var productSku = JSON.parse(row.productSkuJson);
+
+        if(productSku!=null) {
+            tableHtml += " <tr align=\"center\" class=\"tabTd\">\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + (i + 1) + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.productNo + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\"><a href=\"javascript:window.open('" + productSku.httpProductPreviewPath + "')\"><img width=\"100\" height=\"100\" src=\"" + productSku.httpProductPreviewPath + "\"></a>" + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.name + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.price + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.roughWeight + "</div></td>\n";
+            tableHtml += "                            <td><div class=\"tabTdWrap\">" + productSku.suttle + "</div></td>\n";
+            tableHtml += "                        </tr>";
+        }
+    }
+
+    $("#orderItemProductTableBody").html(tableHtml);
+    $("#orderItemProductList").FrozenTable(2,0,0);
 
 
 }

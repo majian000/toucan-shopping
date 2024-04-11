@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
@@ -20,6 +21,7 @@ import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
@@ -185,6 +187,12 @@ public class OrderApiController extends BaseController {
                             for(OrderItemVO orderItemVO:orderItemVOList){
                                 if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())){
                                     orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                                }
+                                String productSkuJson = orderItemVO.getProductSkuJson();
+                                if(StringUtils.isNotEmpty(productSkuJson)) {
+                                    ProductSkuVO productSkuVO = JSONObject.parseObject(productSkuJson, ProductSkuVO.class);
+                                    productSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
+                                    orderItemVO.setProductSkuJson(JSONObject.toJSONString(productSkuVO));
                                 }
                             }
                         }
