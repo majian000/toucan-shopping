@@ -169,22 +169,36 @@ function drawOrderItemTable(orderVO){
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\" style=\"height:50px;\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
+        "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:150px;\" >商品名称</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >总金额</td>\n" +
         "                            <td style=\"width:100px;padding-left: 2%;\"  >商品单价</td>\n" +
         "                            <td style=\"width:100px;padding-left: 2%;\"  >购买数量</td>\n" +
+        "                            <td style=\"width:100px;padding-left: 2%;\"  >配送状态</td>\n" +
         "                        </tr>";
 
 
     for(var i=0;i<orderItems.length;i++)
     {
         var row = orderItems[i];
+        var deliveryStatusName="";
+        if(row.deliveryStatus==0){
+            deliveryStatusName="未收货";
+        }else if(row.deliveryStatus==1){
+            deliveryStatusName="送货中";
+        }else if(row.deliveryStatus==2){
+            deliveryStatusName="已收货";
+        }
 
 
         tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
         tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a href=\"javascript:window.open('"+row.httpProductPreviewPath+"')\"><img width=\"100\" height=\"100\" src=\""+row.httpProductPreviewPath+"\"></a>"+"</div></td>\n" ;
         tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productSkuName+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.orderItemAmount+"</div></td>\n" ;
         tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productPrice+"</div></td>\n" ;
         tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.productNum+"</div></td>\n" ;
+        tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+deliveryStatusName+"</div></td>\n" ;
         tableHtml+=    "                        </tr>";
     }
 
