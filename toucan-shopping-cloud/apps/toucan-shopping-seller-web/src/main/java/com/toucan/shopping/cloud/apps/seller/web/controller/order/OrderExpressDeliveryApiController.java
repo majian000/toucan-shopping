@@ -136,6 +136,7 @@ public class OrderExpressDeliveryApiController extends BaseController {
                 expressCompanyVO.setName(expressCompanyEnum.getName());
                 expressCompanyVOS.add(expressCompanyVO);
             }
+            resultObjectVO.setData(expressCompanyVOS);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

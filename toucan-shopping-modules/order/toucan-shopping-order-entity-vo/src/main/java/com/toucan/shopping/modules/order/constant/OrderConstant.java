@@ -24,6 +24,11 @@ public class OrderConstant {
      */
     public static final int TRADE_STATUS_CALCEL=2; //已取消
 
+    /**
+     * 交易状态
+     */
+    public static final int WAIT_DELIVERY=4; //待发货
+
 
     /**
      * 订单日志类型

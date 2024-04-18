@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
@@ -106,6 +107,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
             }
             SellerShopVO  sellerShopVO = this.queryByShop(userMainId);
             pageInfo.setShopId(String.valueOf(sellerShopVO.getId()));
+            pageInfo.setTradeStatus(OrderConstant.WAIT_DELIVERY);
             if(pageInfo.getShopId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);

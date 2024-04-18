@@ -51,5 +51,11 @@ public class OrderPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/deliverGoods/{orderId}")
+    public String deliverGoods(HttpServletRequest request, @PathVariable String orderId){
+        request.setAttribute("orderId",orderId);
+        return "order/deliver_goods";
+    }
 
 }
