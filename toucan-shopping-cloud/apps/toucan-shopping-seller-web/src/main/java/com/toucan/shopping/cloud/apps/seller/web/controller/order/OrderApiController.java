@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.seller.web.service.ShopService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
@@ -58,8 +59,6 @@ public class OrderApiController extends BaseController {
     @Autowired
     private FeignOrderService feignOrderService;
 
-    @Autowired
-    private FeignSellerShopService feignSellerShopService;
 
     @Autowired
     private FeignShopProductApproveService feignShopProductApproveService;
@@ -78,6 +77,9 @@ public class OrderApiController extends BaseController {
 
     @Autowired
     private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private ShopService shopService;
 
     /**
      * 查询列表
@@ -125,7 +127,7 @@ public class OrderApiController extends BaseController {
             if(StringUtils.isNotEmpty(pageInfo.getEndCreateDateYMDHS())){
                 pageInfo.setEndCreateDate(DateUtils.FORMATTER_SS.get().parse(pageInfo.getEndCreateDateYMDHS()+":59"));
             }
-            SellerShopVO  sellerShopVO = this.queryByShop(userMainId);
+            SellerShopVO  sellerShopVO = shopService.queryByShop(userMainId);
             pageInfo.setShopId(String.valueOf(sellerShopVO.getId()));
             if(pageInfo.getShopId()==null)
             {
@@ -169,7 +171,7 @@ public class OrderApiController extends BaseController {
             }
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
 
-            SellerShopVO  sellerShopVO = this.queryByShop(userMainId);
+            SellerShopVO  sellerShopVO = shopService.queryByShop(userMainId);
             OrderVO queryVO = new OrderVO();
             queryVO.setId(orderVO.getId());
             queryVO.setShopId(sellerShopVO.getId());
@@ -267,19 +269,6 @@ public class OrderApiController extends BaseController {
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
-    }
-
-    private SellerShopVO queryByShop(String userMainId) throws Exception
-    {
-        SellerShop querySellerShop = new SellerShop();
-        querySellerShop.setUserMainId(Long.parseLong(userMainId));
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
-        if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
-            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-            return sellerShopVO;
-        }
-        return null;
     }
 
 

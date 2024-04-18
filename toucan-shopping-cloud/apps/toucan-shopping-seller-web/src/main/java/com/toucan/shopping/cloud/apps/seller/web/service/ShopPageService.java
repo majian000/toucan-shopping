@@ -13,4 +13,5 @@ public interface ShopPageService {
 
     String shopInfo(HttpServletRequest httpServletRequest);
 
+
 }
