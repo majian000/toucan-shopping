@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.order.service.impl;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.mapper.OrderExpressDeliveryMapper;
 import com.toucan.shopping.modules.order.mapper.OrderItemMapper;
@@ -26,4 +27,18 @@ public class OrderExpressDeliveryServiceImpl implements OrderExpressDeliveryServ
     private OrderExpressDeliveryMapper orderExpressDeliveryMapper;
 
 
+    @Override
+    public int save(OrderExpressDelivery entity) {
+        return orderExpressDeliveryMapper.insert(entity);
+    }
+
+    @Override
+    public int update(OrderExpressDelivery entity) {
+        return orderExpressDeliveryMapper.update(entity);
+    }
+
+    @Override
+    public OrderExpressDelivery queryByOrderId(Long orderId) {
+        return orderExpressDeliveryMapper.queryByOrderId(orderId);
+    }
 }
