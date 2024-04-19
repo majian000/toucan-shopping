@@ -94,6 +94,7 @@ public class OrderExpressDeliveryApiController extends BaseController {
             }
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             SellerShopVO sellerShopVO = shopService.queryByShop(userMainId);
+            orderExpressDeliveryVO.setOperateUserId(userMainId);
             orderExpressDeliveryVO.setSellerUserMainId(sellerShopVO.getUserMainId());
             orderExpressDeliveryVO.setAppCode(toucan.getAppCode());
             orderExpressDeliveryVO.setShopId(sellerShopVO.getId());

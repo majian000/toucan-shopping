@@ -41,4 +41,9 @@ public class OrderExpressDeliveryServiceImpl implements OrderExpressDeliveryServ
     public OrderExpressDelivery queryByOrderId(Long orderId) {
         return orderExpressDeliveryMapper.queryByOrderId(orderId);
     }
+
+    @Override
+    public int removeByOrderId(Long orderId) {
+        return orderExpressDeliveryMapper.removeByOrderId(orderId);
+    }
 }

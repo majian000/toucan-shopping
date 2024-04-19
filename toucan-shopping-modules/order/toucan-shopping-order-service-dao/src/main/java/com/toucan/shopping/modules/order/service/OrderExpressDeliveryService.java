@@ -20,4 +20,6 @@ public interface OrderExpressDeliveryService {
 
     OrderExpressDelivery queryByOrderId(Long orderId);
 
+    int removeByOrderId(Long orderId);
+
 }

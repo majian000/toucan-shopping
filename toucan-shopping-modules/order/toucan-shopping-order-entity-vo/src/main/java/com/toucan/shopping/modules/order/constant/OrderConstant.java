@@ -17,16 +17,20 @@ public class OrderConstant {
     //====================交易状态=========================
     public static final int TRADE_STATUS_NON_PAYMENT=0; // 未付款
     public static final int TRADE_STATUS_CALCEL=2; //已取消
-    public static final int WAIT_DELIVERY=4; //待发货
-    public static final int WAIT_RECEIVER=1; //待收货
+    public static final int TRADE_STATUS_FINISH=3; //已完成
+    public static final int TRADE_STATUS_WAIT_DELIVERY=4; //待发货
+    public static final int TRADE_STATUS_WAIT_RECEIVER=1; //待收货
     //=============================================
 
     /**
      * 订单日志类型
      */
     public static final int ORDER_LOG_TYPE_ORDER=1; //修改订单主表类型
-    public static final int ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS=1; //修改订单收货人类型
+    public static final int ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS=2; //修改订单收货人类型
     public static final int ORDER_LOG_TYPE_ORDER_ITEMS=2; //修改订单项类型
+    public static final int ORDER_LOG_TYPE_EXPRESS_DELIVERY=4; //修改订单快递信息
+    public static final int ORDER_LOG_TYPE_UPDATE_ORDER_TRADE_STATUS=5; //修改订单交易状态
+    public static final int ORDER_LOG_TYPE_DELETE_EXPRESS_DELIVERY=6; //删除订单快递信息
 
 
 }

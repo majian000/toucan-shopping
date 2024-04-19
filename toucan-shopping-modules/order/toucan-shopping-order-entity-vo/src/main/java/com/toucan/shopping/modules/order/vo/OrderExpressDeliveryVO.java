@@ -16,5 +16,9 @@ public class OrderExpressDeliveryVO extends OrderExpressDelivery {
      */
     private Long shopId;
 
+    /**
+     * 操作人
+     */
+    private String operateUserId;
 
 }

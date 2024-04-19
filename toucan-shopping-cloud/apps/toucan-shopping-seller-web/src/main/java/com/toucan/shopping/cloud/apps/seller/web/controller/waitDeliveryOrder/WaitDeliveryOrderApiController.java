@@ -107,7 +107,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
             }
             SellerShopVO  sellerShopVO = this.queryByShop(userMainId);
             pageInfo.setShopId(String.valueOf(sellerShopVO.getId()));
-            pageInfo.setTradeStatus(OrderConstant.WAIT_DELIVERY);
+            pageInfo.setTradeStatus(OrderConstant.TRADE_STATUS_WAIT_DELIVERY);
             if(pageInfo.getShopId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);

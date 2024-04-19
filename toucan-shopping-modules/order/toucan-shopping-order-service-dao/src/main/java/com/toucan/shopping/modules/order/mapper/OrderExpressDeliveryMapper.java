@@ -19,4 +19,6 @@ public interface OrderExpressDeliveryMapper {
 
     OrderExpressDelivery queryByOrderId(Long orderId);
 
+    int removeByOrderId(Long orderId);
+
 }

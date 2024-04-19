@@ -21,4 +21,11 @@ public interface FeignOrderExpressDeliveryService {
 
 
 
+    /**
+     * 根据订单ID删除
+     */
+    @RequestMapping(value="/removeByOrderId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO removeByOrderId(@RequestBody RequestJsonVO requestJsonVO);
+
+
 }

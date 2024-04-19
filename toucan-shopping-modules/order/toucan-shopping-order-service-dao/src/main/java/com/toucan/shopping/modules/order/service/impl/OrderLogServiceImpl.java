@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.order.service.impl;
 
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderLog;
@@ -57,4 +58,21 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();
         return this.save(orderLog);
     }
+
+    @Override
+    public int save(String operateUserId, String appCode, String orderNo, String remark, Object oldObj, Object updateObj, Integer logType) {
+
+        OrderLog orderLog = new OrderLog();
+        orderLog.setBatchId(GlobalUUID.uuid());
+        orderLog.setOperateUserId(operateUserId);
+        orderLog.setAppCode(appCode);
+        orderLog.setId(idGenerator.id());
+        orderLog.setCreateDate(new Date());
+        orderLog.setShardingDate(orderLog.getCreateDate());
+        orderLog.setOrderNo(orderNo);
+        orderLog.setRemark(remark);
+        orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();
+        return this.save(orderLog);
+    }
+
 }
