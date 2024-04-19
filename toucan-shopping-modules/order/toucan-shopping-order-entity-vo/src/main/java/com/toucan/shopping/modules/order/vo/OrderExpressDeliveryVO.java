@@ -11,6 +11,10 @@ import java.math.BigDecimal;
 @Data
 public class OrderExpressDeliveryVO extends OrderExpressDelivery {
 
+    /**
+     * 店铺ID
+     */
+    private Long shopId;
 
 
 }

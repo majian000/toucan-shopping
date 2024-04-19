@@ -94,18 +94,10 @@ public class OrderExpressDeliveryApiController extends BaseController {
             }
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             SellerShopVO sellerShopVO = shopService.queryByShop(userMainId);
-            OrderVO queryVO = new OrderVO();
-            queryVO.setId(orderExpressDeliveryVO.getOrderId());
-            queryVO.setShopId(sellerShopVO.getId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
-            resultObjectVO = feignOrderService.findById(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
-                orderExpressDeliveryVO.setBuyerUserMainId(Long.parseLong(orderVO.getUserId()));
-                orderExpressDeliveryVO.setSellerUserMainId(sellerShopVO.getUserMainId());
-                orderExpressDeliveryVO.setAppCode(toucan.getAppCode());
-                resultObjectVO = feignOrderExpressDeliveryService.saveOrUpdate(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
-            }
+            orderExpressDeliveryVO.setSellerUserMainId(sellerShopVO.getUserMainId());
+            orderExpressDeliveryVO.setAppCode(toucan.getAppCode());
+            orderExpressDeliveryVO.setShopId(sellerShopVO.getId());
+            resultObjectVO = feignOrderExpressDeliveryService.saveOrUpdate(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

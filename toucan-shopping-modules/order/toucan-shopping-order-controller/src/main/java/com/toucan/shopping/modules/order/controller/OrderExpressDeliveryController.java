@@ -38,6 +38,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 订单快递信息表
+ * @author majian
+ */
 @RestController
 @RequestMapping("/orderExpressDelivery")
 public class OrderExpressDeliveryController {
@@ -54,7 +58,7 @@ public class OrderExpressDeliveryController {
 
 
     /**
-     * 保存或修改订单快递信息
+     * 保存或修改
      */
     @RequestMapping(value="/saveOrUpdate",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -72,6 +76,16 @@ public class OrderExpressDeliveryController {
             }
 
             try {
+                OrderVO queryOrderVO = new OrderVO();
+                queryOrderVO.setShopId(orderExpressDeliveryVO.getShopId());
+                queryOrderVO.setId(orderExpressDeliveryVO.getOrderId());
+                OrderVO orderVO = orderService.queryOneVOByVO(queryOrderVO);
+                if(orderVO==null){
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("没有找到订单");
+                    return resultObjectVO;
+                }
+                orderExpressDeliveryVO.setBuyerUserMainId(Long.parseLong(orderVO.getUserId()));
                 OrderExpressDelivery orderExpressDelivery = orderExpressDeliveryService.queryByOrderId(orderExpressDeliveryVO.getOrderId());
                 if(orderExpressDelivery==null){
                     orderExpressDeliveryVO.setCreateDate(new Date());
