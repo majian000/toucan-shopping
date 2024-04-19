@@ -25,7 +25,7 @@ function drawDeliverCompanyList(){
                 if(datas!=null&&datas.length>0) {
                     for(var i=0;i<datas.length;i++) {
                         var company = datas[i];
-                        $("#companyTypeCode").append("<option value='"+company.code+"'>"+company.name+"</option>");
+                        $("#companyType").append("<option value='"+company.code+"'>"+company.name+"</option>");
                     }
                 }
             }
@@ -53,16 +53,24 @@ function saveDeliverGoods(){
         type:6,
         tip:"保存中..."
     });
-    $('#deliverGoodsForm').ajaxSubmit({
-        url: basePath+'/api/shop/banner/save',
-        dataType:"json",
-        contentType:"application/json;charset=utf-8",
+    var fromData={
+        orderId:$("#orderId").val(),
+        companyTypeCode:$("#companyType").find("option:selected").val(),
+        companyTypeName:$("#companyType").find("option:selected").text(),
+        courierNumber:$("#courierNumber").val()
+    };
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/orderExpressDelivery/saveOrUpdate',
+        contentType: "application/json;charset=utf-8",
+        data:  JSON.stringify(fromData),
+        dataType: "json",
         success: function (data) {
             loading.hideLoading();
             if(data.code==401)
             {
                 window.location.href=basePath+data.data;
-            }else  if(data.code<=0)
+            }else if(data.code<=0)
             {
                 $.message({
                     time:'4000',

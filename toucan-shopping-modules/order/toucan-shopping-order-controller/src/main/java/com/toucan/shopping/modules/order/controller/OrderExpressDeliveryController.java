@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +48,8 @@ public class OrderExpressDeliveryController {
     @Autowired
     private OrderExpressDeliveryService orderExpressDeliveryService;
 
+    @Autowired
+    private OrderService orderService;
 
 
 
@@ -71,11 +74,17 @@ public class OrderExpressDeliveryController {
             try {
                 OrderExpressDelivery orderExpressDelivery = orderExpressDeliveryService.queryByOrderId(orderExpressDeliveryVO.getOrderId());
                 if(orderExpressDelivery==null){
-                    orderExpressDeliveryService.save(orderExpressDeliveryVO);
+                    orderExpressDeliveryVO.setCreateDate(new Date());
+                    orderExpressDeliveryVO.setShardingDate(orderExpressDeliveryVO.getCreateDate());
+                    int ret = orderExpressDeliveryService.save(orderExpressDeliveryVO);
+                    if(ret>0){
+                        orderService.updateTradeStatus(orderExpressDeliveryVO.getOrderId(),OrderConstant.WAIT_RECEIVER);
+                    }
                 }else{
                     orderExpressDelivery.setCourierNumber(orderExpressDeliveryVO.getCourierNumber());
                     orderExpressDelivery.setCompanyTypeCode(orderExpressDeliveryVO.getCompanyTypeCode());
                     orderExpressDelivery.setCompanyTypeName(orderExpressDeliveryVO.getCompanyTypeName());
+                    orderExpressDelivery.setUpdateDate(new Date());
                     orderExpressDeliveryService.update(orderExpressDelivery);
                 }
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);

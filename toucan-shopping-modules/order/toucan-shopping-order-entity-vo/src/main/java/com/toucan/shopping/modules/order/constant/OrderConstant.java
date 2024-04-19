@@ -14,21 +14,12 @@ public class OrderConstant {
     public static final int PAY_STATUS_NON_PAYMENT=0; // 未支付
 
 
-    /**
-     * 交易状态
-     */
+    //====================交易状态=========================
     public static final int TRADE_STATUS_NON_PAYMENT=0; // 未付款
-
-    /**
-     * 交易状态
-     */
     public static final int TRADE_STATUS_CALCEL=2; //已取消
-
-    /**
-     * 交易状态
-     */
     public static final int WAIT_DELIVERY=4; //待发货
-
+    public static final int WAIT_RECEIVER=1; //待收货
+    //=============================================
 
     /**
      * 订单日志类型

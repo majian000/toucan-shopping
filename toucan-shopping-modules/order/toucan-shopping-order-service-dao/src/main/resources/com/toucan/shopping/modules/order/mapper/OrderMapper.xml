@@ -314,4 +314,8 @@
          where id=#{id} and delete_status=0
     </update>
 
+    <update id="updateTradeStatus">
+        update t_order set trade_status=#{tradeStatus} where id =#{id} and delete_status=0
+    </update>
+
 </mapper>

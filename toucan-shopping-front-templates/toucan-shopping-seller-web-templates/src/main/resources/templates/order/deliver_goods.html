@@ -51,10 +51,11 @@
                 <div class="title" style="border-bottom: 1px solid#9a9999;"><span>订单发货</span></div>
                 <div class="right_panel">
 
-                    <form action="" id="deliverGoodsForm" method="post" class="bootstrap-frm"  >
+                    <form  id="deliverGoodsForm" method="post" class="bootstrap-frm"  >
+                        <input type="hidden" id="orderId" value="${orderId!''}" />
                         <label>
                             <span><font color="#ff4e00">*</font>快递公司 :</span>
-                            <select id="companyTypeCode" style="width:150px"></select>
+                            <select id="companyType" style="width:150px"></select>
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>快递单号 :</span>

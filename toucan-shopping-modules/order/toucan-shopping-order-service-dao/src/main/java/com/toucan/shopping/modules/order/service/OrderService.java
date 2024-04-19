@@ -103,4 +103,14 @@ public interface OrderService {
      * @throws Exception
      */
     int updateById(OrderVO orderVO) throws Exception;
+
+    /**
+     * 设置交易状态
+     * @param id
+     * @param tradeStatus
+     * @return
+     */
+    int updateTradeStatus(Long id,int tradeStatus);
+
+
 }

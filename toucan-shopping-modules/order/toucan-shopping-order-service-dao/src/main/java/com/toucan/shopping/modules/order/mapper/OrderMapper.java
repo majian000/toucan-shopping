@@ -61,4 +61,6 @@ public interface OrderMapper {
 
     int updateById(OrderVO orderVO);
 
+    int updateTradeStatus(Long id, int tradeStatus);
+
 }

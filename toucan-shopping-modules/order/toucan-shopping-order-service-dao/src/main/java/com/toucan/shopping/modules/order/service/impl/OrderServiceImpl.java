@@ -152,4 +152,9 @@ public class OrderServiceImpl implements OrderService {
     public int updateById(OrderVO orderVO){
         return orderMapper.updateById(orderVO);
     }
+
+    @Override
+    public int updateTradeStatus(Long id, int tradeStatus) {
+        return orderMapper.updateTradeStatus(id,tradeStatus);
+    }
 }
