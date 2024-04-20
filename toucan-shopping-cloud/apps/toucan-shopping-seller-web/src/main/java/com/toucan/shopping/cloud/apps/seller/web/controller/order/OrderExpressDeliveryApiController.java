@@ -79,9 +79,9 @@ public class OrderExpressDeliveryApiController extends BaseController {
      * @return
      */
     @UserAuth
-    @RequestMapping(value="/saveOrUpdate",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delivery",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO saveOrUpdate(HttpServletRequest request,@RequestBody OrderExpressDeliveryVO orderExpressDeliveryVO)
+    public ResultObjectVO delivery(HttpServletRequest request,@RequestBody OrderExpressDeliveryVO orderExpressDeliveryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -99,6 +99,40 @@ public class OrderExpressDeliveryApiController extends BaseController {
             orderExpressDeliveryVO.setAppCode(toucan.getAppCode());
             orderExpressDeliveryVO.setShopId(sellerShopVO.getId());
             resultObjectVO = feignOrderExpressDeliveryService.saveOrUpdate(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 取消发货
+     * @param request
+     * @param orderExpressDeliveryVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/cancelDelivery",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO cancelDelivery(HttpServletRequest request,@RequestBody OrderExpressDeliveryVO orderExpressDeliveryVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            if(orderExpressDeliveryVO.getOrderId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("订单ID不能为空");
+                return resultObjectVO;
+            }
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            orderExpressDeliveryVO.setOperateUserId(userMainId);
+            resultObjectVO = feignOrderExpressDeliveryService.removeByOrderId(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

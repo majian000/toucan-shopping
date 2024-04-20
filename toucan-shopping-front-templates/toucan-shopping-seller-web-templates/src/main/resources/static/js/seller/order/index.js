@@ -106,7 +106,7 @@ function drawTable(pageResult)
             if(row.tradeStatus==4){
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"deliverGoods\" style=\"color:blue;cursor: pointer;\">去发货</a>\n" ;
             }else if(row.tradeStatus==1){
-                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"cancelDeliverGoods\" style=\"color:blue;cursor: pointer;\">取消发货</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-no=\""+row.orderNo+"\" class=\"cancelDeliverGoods\" style=\"color:blue;cursor: pointer;\">取消发货</a>\n" ;
             }
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
@@ -161,30 +161,39 @@ function bindRowEvent()
     $(".cancelDeliverGoods").unbind("click");
     $(".cancelDeliverGoods").bind("click", function () {
         var attrId = $(this).attr("attr-id");
-        loading.showLoading({
-            type:6,
-            tip:"操作中..."
-        });
-        $.ajax({
-            type: "POST",
-            url: basePath+"/api/order/list",
-            contentType: "application/json;charset=utf-8",
-            data:  JSON.stringify(g_order_query_obj),
-            dataType: "json",
-            success: function (result) {
+        var orderNo = $(this).attr("attr-no");
+        layer.confirm("确定取消发货"+orderNo+"?", {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            loading.showLoading({
+                type:6,
+                tip:"取消中..."
+            });
+            var requestParam={
+                orderId:attrId
+            };
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/orderExpressDelivery/cancelDelivery",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify(requestParam),
+                dataType: "json",
+                success: function (result) {
 
-            },
-            error: function (result) {
-                $.message({
-                    message: "操作失败,请稍后重试",
-                    type: 'error'
-                });
-            },
-            complete:function()
-            {
-                loading.hideLoading();
-            }
+                },
+                error: function (result) {
+                    $.message({
+                        message: "取消失败,请稍后重试",
+                        type: 'error'
+                    });
+                },
+                complete:function()
+                {
+                    loading.hideLoading();
+                }
 
+            });
         });
     });
 

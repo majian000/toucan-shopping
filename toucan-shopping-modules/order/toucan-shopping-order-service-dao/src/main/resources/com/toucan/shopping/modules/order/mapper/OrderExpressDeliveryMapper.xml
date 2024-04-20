@@ -26,9 +26,9 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderExpressDelivery" useGeneratedKeys="true" keyProperty="id">
          insert into t_order_express_delivery(id,company_type_code,company_type_name,courier_number,order_id,
-         buyer_user_main_id,seller_user_main_id,remark,create_date,app_code,delete_status,sharding_date)
+         buyer_user_main_id,seller_user_main_id,create_date,app_code,delete_status,sharding_date)
          values(#{id},#{companyTypeCode},#{companyTypeName},#{courierNumber},#{orderId},
-         #{buyerUserMainId},#{sellerUserMainId},#{remark},#{createDate},#{appCode},#{deleteStatus},#{shardingDate})
+         #{buyerUserMainId},#{sellerUserMainId},#{createDate},#{appCode},#{deleteStatus},#{shardingDate})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.order.entity.OrderExpressDelivery">

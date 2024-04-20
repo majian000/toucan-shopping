@@ -61,7 +61,7 @@ function saveDeliverGoods(){
     };
     $.ajax({
         type: "POST",
-        url: basePath+'/api/orderExpressDelivery/saveOrUpdate',
+        url: basePath+'/api/orderExpressDelivery/delivery',
         contentType: "application/json;charset=utf-8",
         data:  JSON.stringify(fromData),
         dataType: "json",

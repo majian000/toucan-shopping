@@ -66,7 +66,7 @@ public class OrderExpressDeliveryController {
     @ResponseBody
     public ResultObjectVO saveOrUpdate(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
             OrderExpressDeliveryVO orderExpressDeliveryVO =requestJsonVO.formatEntity(OrderExpressDeliveryVO.class);
@@ -99,13 +99,14 @@ public class OrderExpressDeliveryController {
                 if(orderExpressDelivery==null){
                     orderExpressDeliveryVO.setCreateDate(new Date());
                     orderExpressDeliveryVO.setShardingDate(orderExpressDeliveryVO.getCreateDate());
+                    orderExpressDeliveryVO.setDeleteStatus((short)0);
                     ret = orderExpressDeliveryService.save(orderExpressDeliveryVO);
                     if(ret>0){
-                        orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
+                        orderLogService.save(orderExpressDeliveryVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
                                 "订单关联快递信息",null,orderExpressDeliveryVO,OrderConstant.ORDER_LOG_TYPE_EXPRESS_DELIVERY);
                         ret = orderService.updateTradeStatus(orderExpressDeliveryVO.getOrderId(),OrderConstant.TRADE_STATUS_WAIT_RECEIVER);
                         if(ret>0){
-                            orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
+                            orderLogService.save(orderExpressDeliveryVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
                                     "修改订单交易状态",orderVO.getTradeStatus(),OrderConstant.TRADE_STATUS_WAIT_RECEIVER,OrderConstant.ORDER_LOG_TYPE_UPDATE_ORDER_TRADE_STATUS);
                         }
                     }
@@ -168,14 +169,14 @@ public class OrderExpressDeliveryController {
                 }
 
                 OrderExpressDelivery oldOrderExpressDelivery = orderExpressDeliveryService.queryByOrderId(orderExpressDeliveryVO.getOrderId());
-                orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
+                orderLogService.save(orderExpressDeliveryVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
                         "删除订单快递信息",null,oldOrderExpressDelivery,OrderConstant.ORDER_LOG_TYPE_DELETE_EXPRESS_DELIVERY);
                 int ret = orderExpressDeliveryService.removeByOrderId(orderExpressDeliveryVO.getOrderId());
                 if(ret>0) {
                     //改为待发货
                     ret = orderService.updateTradeStatus(orderExpressDeliveryVO.getOrderId(),OrderConstant.TRADE_STATUS_WAIT_DELIVERY);
                     if(ret>0) {
-                        orderLogService.save(orderVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
+                        orderLogService.save(orderExpressDeliveryVO.getOperateUserId(),requestJsonVO.getAppCode(),orderVO.getOrderNo(),
                                 "修改订单交易状态",orderVO.getTradeStatus(),OrderConstant.TRADE_STATUS_WAIT_DELIVERY,OrderConstant.ORDER_LOG_TYPE_UPDATE_ORDER_TRADE_STATUS);
                         resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                         resultObjectVO.setMsg("请求成功");
