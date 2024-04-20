@@ -79,7 +79,7 @@ function saveDeliverGoods(){
                 });
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/banner/list";
+                window.location.href=basePath+"/page/order/index";
             }
         }
     });

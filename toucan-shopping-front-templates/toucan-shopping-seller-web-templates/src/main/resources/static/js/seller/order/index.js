@@ -166,10 +166,6 @@ function bindRowEvent()
             btn: ['确定','关闭'], //按钮
             title:'提示信息'
         }, function(index) {
-            loading.showLoading({
-                type:6,
-                tip:"取消中..."
-            });
             var requestParam={
                 orderId:attrId
             };
@@ -180,7 +176,19 @@ function bindRowEvent()
                 data:  JSON.stringify(requestParam),
                 dataType: "json",
                 success: function (result) {
+                    if(result.code<=0)
+                    {
+                        $.message({
+                            message: "取消失败,请稍后重试",
+                            type: 'error'
+                        });
+                        return ;
+                    }
 
+                    $.message({
+                        message: "取消成功",
+                        type: 'success'
+                    });
                 },
                 error: function (result) {
                     $.message({
@@ -190,7 +198,8 @@ function bindRowEvent()
                 },
                 complete:function()
                 {
-                    loading.hideLoading();
+                    layer.close(index);
+                    $("#queryBtn").click();
                 }
 
             });
