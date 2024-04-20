@@ -31,5 +31,14 @@
 
 
 
+    <insert id="inserts" parameterType="com.toucan.shopping.modules.order.entity.OrderLog"  >
+        insert into t_order_log(id,order_no,batch_id,operate_user_id,data_body,remark,create_date,app_code,delete_status,sharding_date)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.orderNo},#{entity.batchId},#{entity.operateUserId},#{entity.dataBody},#{entity.remark},#{entity.createDate},#{entity.appCode},0,#{entity.shardingDate})
+        </foreach>
+
+    </insert>
+
 
 </mapper>

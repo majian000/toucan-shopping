@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.order.service.OrderLogService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -73,6 +75,29 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.setRemark(remark);
         orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();
         return this.save(orderLog);
+    }
+
+    @Override
+    public int saves(String operateUserId,List<OrderVO> orderVOS,String appCode,String remark,Integer logType) {
+        List<OrderLog> orderLogs = new LinkedList<>();
+        if(CollectionUtils.isNotEmpty(orderVOS)){
+            String batchId = GlobalUUID.uuid();
+            Date createDate = new Date();
+            for(OrderVO orderVO:orderVOS) {
+                OrderLog orderLog = new OrderLog();
+                orderLog.setBatchId(batchId);
+                orderLog.setOperateUserId(operateUserId);
+                orderLog.setAppCode(appCode);
+                orderLog.setId(idGenerator.id());
+                orderLog.setCreateDate(createDate);
+                orderLog.setShardingDate(orderLog.getCreateDate());
+                orderLog.setOrderNo(orderVO.getOrderNo());
+                orderLog.setRemark(remark);
+                orderLog.loadOldData(null).loadUpdateData(null).setDataBodyType(logType).loadDataBody();
+                orderLogs.add(orderLog);
+            }
+        }
+        return orderLogMapper.inserts(orderLogs);
     }
 
 }

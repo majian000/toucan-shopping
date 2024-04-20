@@ -17,5 +17,7 @@ public interface OrderLogMapper {
 
     int insert(OrderLog entity);
 
+    int inserts(List<OrderLog> entitys);
+
 
 }

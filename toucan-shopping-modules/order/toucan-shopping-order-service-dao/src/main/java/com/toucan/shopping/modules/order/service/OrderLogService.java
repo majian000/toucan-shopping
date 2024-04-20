@@ -16,4 +16,5 @@ public interface OrderLogService {
 
     int save(String operateUserId,String appCode,String orderNo,String remark,Object oldObj,Object updateObj,Integer logType);
 
+    int saves(String operateUserId,List<OrderVO> orderVOS,String appCode,String remark,Integer logType);
 }

@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.order.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderConsigneeAddress;
@@ -13,6 +14,7 @@ import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
+import com.toucan.shopping.modules.order.service.OrderLogService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.order.vo.*;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -56,6 +58,9 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private OrderConsigneeAddressMapper orderConsigneeAddressMapper;
 
+    @Autowired
+    private OrderLogService orderLogService;
+
     @Override
     public int save(MainOrder mainOrder) {
         mainOrder.setShardingDate(mainOrder.getCreateDate());
@@ -87,6 +92,8 @@ public class MainOrderServiceImpl implements MainOrderService {
         {
             throw new IllegalArgumentException("保存子订单失败");
         }
+        orderLogService.saves(mainOrderVO.getUserId(),mainOrderVO.getOrders(),mainOrderVO.getAppCode(),"创建订单", OrderConstant.ORDER_LOG_TYPE_CREATE_ORDER);
+
         List<OrderConsigneeAddress> orderConsigneeAddresss = new LinkedList<>();
         for(OrderVO orderVO:mainOrderVO.getOrders())
         {
