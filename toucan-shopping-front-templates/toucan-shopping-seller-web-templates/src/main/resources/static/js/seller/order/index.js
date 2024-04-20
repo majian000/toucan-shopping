@@ -162,7 +162,7 @@ function bindRowEvent()
     $(".cancelDeliverGoods").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         var orderNo = $(this).attr("attr-no");
-        layer.confirm("确定取消发货"+orderNo+"?", {
+        layer.confirm("订单【"+orderNo+"】取消发货?", {
             btn: ['确定','关闭'], //按钮
             title:'提示信息'
         }, function(index) {
