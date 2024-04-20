@@ -55,6 +55,7 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.setId(idGenerator.id());
         orderLog.setCreateDate(new Date());
         orderLog.setShardingDate(orderLog.getCreateDate());
+        orderLog.setType(logType);
         orderLog.setOrderNo(orderNo);
         orderLog.setRemark(remark);
         orderLog.loadOldData(oldObj).loadUpdateData(updateObj).setDataBodyType(logType).loadDataBody();
@@ -70,6 +71,7 @@ public class OrderLogServiceImpl implements OrderLogService {
         orderLog.setAppCode(appCode);
         orderLog.setId(idGenerator.id());
         orderLog.setCreateDate(new Date());
+        orderLog.setType(logType);
         orderLog.setShardingDate(orderLog.getCreateDate());
         orderLog.setOrderNo(orderNo);
         orderLog.setRemark(remark);
@@ -87,6 +89,7 @@ public class OrderLogServiceImpl implements OrderLogService {
                 OrderLog orderLog = new OrderLog();
                 orderLog.setBatchId(batchId);
                 orderLog.setOperateUserId(operateUserId);
+                orderLog.setType(logType);
                 orderLog.setAppCode(appCode);
                 orderLog.setId(idGenerator.id());
                 orderLog.setCreateDate(createDate);

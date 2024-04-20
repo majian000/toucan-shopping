@@ -36,6 +36,8 @@ public class OrderLog {
 
     private String remark; //日志备注
 
+    private Integer type; //日志类型
+
     private String batchId; //操作批次ID
 
     private String appCode; //所属应用
