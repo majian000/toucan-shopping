@@ -25,6 +25,28 @@ public interface DictService {
     DictVO findById(Long id);
 
     /**
+     * 根据编码和分类编码查询
+     * @param code
+     * @param categoryCode
+     * @return
+     */
+    DictVO findByCodeAndCategoryCode(String code,String categoryCode);
+
+
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
+    void queryChildrenByVO(List<DictVO> children,DictVO query);
+
+    /**
+     * 设置子节点
+     * @param dictVO
+     */
+    void setChildrenByVO(DictVO dictVO);
+
+    /**
      * 保存
      * @param entity
      * @return

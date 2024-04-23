@@ -25,7 +25,7 @@ public class OrderLogPageInfo extends PageInfo<OrderLogVO> {
      */
     private Long id;
     private String appCode; //所属应用
-    private Long orderNo; //订单编号
+    private String orderNo; //订单编号
     //==============================================
 
 

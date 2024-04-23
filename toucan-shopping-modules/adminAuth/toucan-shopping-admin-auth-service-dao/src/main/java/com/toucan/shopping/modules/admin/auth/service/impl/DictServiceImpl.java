@@ -6,11 +6,13 @@ import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.DictService;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -32,6 +34,32 @@ public class DictServiceImpl implements DictService {
         return dictMapper.findById(id);
     }
 
+    @Override
+    public DictVO findByCodeAndCategoryCode(String code, String categoryCode) {
+        return dictMapper.findByCodeAndCategoryCode(code,categoryCode);
+    }
+
+    @Override
+    public void queryChildrenByVO(List<DictVO> children,DictVO query) {
+        List<DictVO> dictList = dictMapper.queryByParentId(query.getId());
+        children.addAll(dictList);
+        for(DictVO dictVO:dictList)
+        {
+            queryChildrenByVO(children,dictVO);
+        }
+    }
+
+    @Override
+    public void setChildrenByVO(DictVO dictVO) {
+        List<DictVO> dictList = dictMapper.queryByParentId(dictVO.getId());
+        if(CollectionUtils.isNotEmpty(dictList)) {
+            dictVO.getChildren().addAll(dictList);
+            for (DictVO child : dictList) {
+                child.setChildren(new LinkedList<>());
+                setChildrenByVO(child);
+            }
+        }
+    }
 
     @Override
     public int save(Dict entity) {

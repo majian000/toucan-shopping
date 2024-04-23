@@ -28,7 +28,7 @@ public class OrderConstant {
     public static final int ORDER_LOG_TYPE_CREATE_ORDER=0; //创建订单
     public static final int ORDER_LOG_TYPE_ORDER=1; //修改订单主表类型
     public static final int ORDER_LOG_TYPE_ORDER_CONSIGNEE_ADDRESS=2; //修改订单收货人类型
-    public static final int ORDER_LOG_TYPE_ORDER_ITEMS=2; //修改订单项类型
+    public static final int ORDER_LOG_TYPE_ORDER_ITEMS=3; //修改订单项类型
     public static final int ORDER_LOG_TYPE_EXPRESS_DELIVERY=4; //修改订单快递信息
     public static final int ORDER_LOG_TYPE_UPDATE_ORDER_TRADE_STATUS=5; //修改订单交易状态
     public static final int ORDER_LOG_TYPE_DELETE_EXPRESS_DELIVERY=6; //删除订单快递信息

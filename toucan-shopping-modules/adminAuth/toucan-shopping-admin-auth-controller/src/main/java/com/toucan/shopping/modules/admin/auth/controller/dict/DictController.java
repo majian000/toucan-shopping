@@ -656,4 +656,41 @@ public class DictController {
     }
 
 
+    /**
+     * 查询分类下的字典
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="query/dict/by/code/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDictByCodeAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            DictVO query = requestJsonVO.formatEntity(DictVO.class);
+            DictVO dictVO = dictService.findByCodeAndCategoryCode(query.getCode(),query.getCategoryCode());
+            if(dictVO!=null){
+                dictVO.setChildren(new LinkedList<>());
+                dictService.setChildrenByVO(dictVO);
+            }
+            resultObjectVO.setData(dictVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
 }

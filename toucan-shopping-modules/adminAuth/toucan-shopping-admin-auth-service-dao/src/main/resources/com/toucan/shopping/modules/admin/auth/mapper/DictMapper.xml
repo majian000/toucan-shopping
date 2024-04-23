@@ -348,4 +348,16 @@
     </update>
 
 
+    <select id="findByCodeAndCategoryCode" resultMap="dictVOMap" >
+        select * from t_sa_dict where delete_status=0 and code=#{code} and category_id = (
+          select id from t_sa_dict_category where code=#{categoryCode} and delete_status=0 limit 0,1
+        )
+    </select>
+
+    <select id="queryByParentId" resultMap="dictVOMap" >
+        select t.* from t_sa_dict t
+         where 1=1 and t.parent_id=#{parentId}   and t.delete_status=0 order by t.dict_sort desc
+
+    </select>
+
 </mapper>

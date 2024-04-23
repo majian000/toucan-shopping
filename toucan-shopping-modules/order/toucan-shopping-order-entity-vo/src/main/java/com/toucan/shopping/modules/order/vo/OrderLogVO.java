@@ -17,4 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderLogVO extends OrderLog {
 
+    /**
+     * 操作类型名称
+     */
+    private String typeName;
+
+
+
 }

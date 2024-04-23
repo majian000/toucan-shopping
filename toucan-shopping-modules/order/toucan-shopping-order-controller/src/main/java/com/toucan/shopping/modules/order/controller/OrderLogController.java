@@ -53,7 +53,7 @@ public class OrderLogController {
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
             try {
                 OrderLogPageInfo orderLogPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), OrderLogPageInfo.class);
-                if(orderLogPageInfo.getOrderNo()==null){
+                if(StringUtils.isEmpty(orderLogPageInfo.getOrderNo())){
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("订单编号不能为空");
                     return resultObjectVO;

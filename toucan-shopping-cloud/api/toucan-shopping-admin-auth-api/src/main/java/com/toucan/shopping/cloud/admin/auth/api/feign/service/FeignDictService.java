@@ -94,4 +94,14 @@ public interface FeignDictService {
     @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询分类下的字典
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="query/dict/by/code/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryDictByCodeAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
+
 }

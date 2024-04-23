@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -51,6 +52,9 @@ public class OrderLogController extends UIController {
     @Autowired
     private FeignOrderLogService feignOrderLogService;
 
+    @Autowired
+    private FeignDictService feignDictService;
+
     /**
      * 查询列表
      * @param pageInfo
@@ -67,7 +71,11 @@ public class OrderLogController extends UIController {
             {
                 pageInfo = new OrderLogPageInfo();
             }
-
+            if(StringUtils.isEmpty(pageInfo.getOrderNo())){
+                tableVO.setCode(ResultObjectVO.FAILD);
+                tableVO.setMsg("订单编号不能为空");
+                return tableVO;
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             ResultObjectVO resultObjectVO = feignOrderLogService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
@@ -77,6 +85,7 @@ public class OrderLogController extends UIController {
                     tableVO.setData(JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderLogVO.class));
                 }
             }
+
         }catch(Exception e)
         {
             tableVO.setMsg("请重试");
