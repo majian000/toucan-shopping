@@ -461,7 +461,11 @@
                     openUpdateDialog(data.id);
                 }else if (obj.event == 'modifyOrderItems') {
                     openModifyOrderItemsDialog(data.orderNo,data.id);
+                }else if (obj.event == 'orderLogs') {
+                    openOrderLogDialog(data.orderNo,data.id);
                 }
+
+
 
 
             });
@@ -524,6 +528,28 @@
             });
             return false;
         }
+
+
+
+        function openOrderLogDialog(orderNo,orderId)
+        {
+            var index = layer.open({
+                title:  "订单号:"+orderNo+"——日志列表",
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                area: ['100%', '100%'],
+                content: '[[@{/}]]order/orderLogListPage/'+orderNo,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+        }
+
         initOrderTable("tab_index_0_");
 
 

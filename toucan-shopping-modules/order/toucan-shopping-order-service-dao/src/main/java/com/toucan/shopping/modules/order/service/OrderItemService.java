@@ -26,7 +26,7 @@ public interface OrderItemService {
     int updatesFromOrderList(OrderItemVO orderItemVO);
 
     /**
-     * 查询订单列表页
+     * 查询列表页
      * @param pageInfo
      * @return
      */

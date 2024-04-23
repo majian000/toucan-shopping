@@ -21,6 +21,15 @@
 
     </resultMap>
 
+    <sql id="queryListPageWhere">
+
+        <if test="orderNo!=null and orderNo!=-1 ">
+            and t.order_no = #{orderNo}
+        </if>
+
+        and delete_status = 0
+
+    </sql>
 
 
 
@@ -40,6 +49,33 @@
         </foreach>
 
     </insert>
+
+
+
+    <select id="queryListPage" resultMap="orderLogMap" parameterType="com.toucan.shopping.modules.order.page.OrderLogPageInfo">
+        select t.* from t_order_log t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderLogPageInfo">
+        select count(*) from t_order_log t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
 
 
 </mapper>

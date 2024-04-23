@@ -8,10 +8,12 @@ import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderLog;
 import com.toucan.shopping.modules.order.mapper.OrderLogMapper;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
+import com.toucan.shopping.modules.order.page.OrderLogPageInfo;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderLogService;
 import com.toucan.shopping.modules.order.service.OrderService;
+import com.toucan.shopping.modules.order.vo.OrderLogVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.collections.CollectionUtils;
@@ -101,6 +103,19 @@ public class OrderLogServiceImpl implements OrderLogService {
             }
         }
         return orderLogMapper.inserts(orderLogs);
+    }
+
+    @Override
+    public PageInfo<OrderLogVO> queryOrderListPage(OrderLogPageInfo pageInfo) {
+        PageInfo<OrderLogVO> pageResult = new PageInfo();
+        pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
+        pageResult.setList(orderLogMapper.queryListPage(pageInfo));
+        pageResult.setTotal(orderLogMapper.queryListPageCount(pageInfo));
+
+        pageResult.setSize(pageInfo.getSize());
+        pageResult.setLimit(pageInfo.getLimit());
+        pageResult.setPage(pageInfo.getPage());
+        return pageResult;
     }
 
 }

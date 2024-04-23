@@ -322,5 +322,16 @@ public class OrderController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/orderLogListPage/{orderNo}",method = RequestMethod.GET)
+    public String orderLogListPage(HttpServletRequest request,@PathVariable String orderNo)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/order/orderLogListPage",feignFunctionService);
+
+        request.setAttribute("orderNo",orderNo);
+        return "pages/order/order_log_list.html";
+    }
+
 }
 

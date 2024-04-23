@@ -32,7 +32,7 @@ public class FeignOrderItemServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrderItemServiceFallbackFactory queryListPage  params{}:",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignOrderItemService queryListPage  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询订单项失败");
                 return resultObjectVO;
@@ -47,7 +47,7 @@ public class FeignOrderItemServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrderItemServiceFallbackFactory queryAllListByOrderId  params{}:",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignOrderItemService queryAllListByOrderId  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询订单项失败");
                 return resultObjectVO;
@@ -62,7 +62,7 @@ public class FeignOrderItemServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrderItemServiceFallbackFactory updatesFromOrderList  params{}:",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignOrderItemService updatesFromOrderList  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询订单项失败");
                 return resultObjectVO;
