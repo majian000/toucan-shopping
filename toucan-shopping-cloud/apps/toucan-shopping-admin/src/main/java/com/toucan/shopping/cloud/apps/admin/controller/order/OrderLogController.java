@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -13,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.order.constant.OrderDictConstant;
 import com.toucan.shopping.modules.order.page.OrderLogPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderLogVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -82,7 +84,27 @@ public class OrderLogController extends UIController {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    tableVO.setData(JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderLogVO.class));
+                    List<OrderLogVO> orderLogs = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderLogVO.class);
+                    DictVO query=new DictVO();
+                    query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
+                    query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+                    resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
+                    if(resultObjectVO.isSuccess()) {
+                        DictVO dictVO = resultObjectVO.formatData(DictVO.class);
+                        if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
+                            for (OrderLogVO orderLogVO : orderLogs) {
+                                for(DictVO child:dictVO.getChildren()){
+                                    if(child.getCode().equals(String.valueOf(orderLogVO.getType()))){
+                                        orderLogVO.setTypeName(child.getName());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    tableVO.setData(orderLogs);
                 }
             }
 
