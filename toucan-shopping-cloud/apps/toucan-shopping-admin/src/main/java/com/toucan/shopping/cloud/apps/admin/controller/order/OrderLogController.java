@@ -83,32 +83,29 @@ public class OrderLogController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             ResultPageInfoVO<OrderLogVO> resultPageInfoVO = feignOrderLogService.queryListPage(requestJsonVO);
             if(resultPageInfoVO.isSuccess()) {
-                if (resultPageInfoVO.getData() != null) {
-                    PageInfo orderLogPageInfo = resultPageInfoVO.getData();
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultPageInfoVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    List<OrderLogVO> orderLogs = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderLogVO.class);
-                    DictVO query=new DictVO();
-                    query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
-                    query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
-                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-                    ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
-                    if(resultObjectVO.isSuccess()) {
-                        DictVO dictVO = resultObjectVO.formatData(DictVO.class);
-                        if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
-                            for (OrderLogVO orderLogVO : orderLogs) {
-                                for(DictVO child:dictVO.getChildren()){
-                                    if(child.getCode().equals(String.valueOf(orderLogVO.getType()))){
-                                        orderLogVO.setTypeName(child.getName());
-                                        break;
-                                    }
+                PageInfo orderLogPageInfo = resultPageInfoVO.getData();
+                tableVO.setCount(orderLogPageInfo.getTotal()!=null?orderLogPageInfo.getTotal():0);
+                List<OrderLogVO> orderLogs = orderLogPageInfo.getList();
+                DictVO query=new DictVO();
+                query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
+                query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+                ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
+                if(resultObjectVO.isSuccess()) {
+                    DictVO dictVO = resultObjectVO.formatData(DictVO.class);
+                    if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
+                        for (OrderLogVO orderLogVO : orderLogs) {
+                            for(DictVO child:dictVO.getChildren()){
+                                if(child.getCode().equals(String.valueOf(orderLogVO.getType()))){
+                                    orderLogVO.setTypeName(child.getName());
+                                    break;
                                 }
                             }
                         }
                     }
-
-                    tableVO.setData(orderLogs);
                 }
+
+                tableVO.setData(orderLogs);
             }
 
         }catch(Exception e)

@@ -48,7 +48,7 @@ public class OrderLogController {
      */
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultPageInfoVO queryListPage(@RequestBody RequestJsonVO requestJsonVO){
+    public ResultPageInfoVO<OrderLogVO> queryListPage(@RequestBody RequestJsonVO requestJsonVO){
 
         ResultPageInfoVO resultPageInfoVO = new ResultPageInfoVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {

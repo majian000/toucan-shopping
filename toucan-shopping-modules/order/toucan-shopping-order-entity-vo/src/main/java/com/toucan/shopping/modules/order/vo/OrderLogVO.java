@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderLogVO extends OrderLog {
 
     /**

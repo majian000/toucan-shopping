@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.toucan.shopping.modules.order.vo.OrderLogDataBodyVO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -16,6 +19,8 @@ import java.util.Date;
  * @author majian
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderLog {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
@@ -47,6 +52,7 @@ public class OrderLog {
      */
     private Short deleteStatus;
 
+    @JsonIgnore
     private OrderLogDataBodyVO orderLogDataBody = new OrderLogDataBodyVO();
 
     public OrderLog loadOldData(Object oldData){
