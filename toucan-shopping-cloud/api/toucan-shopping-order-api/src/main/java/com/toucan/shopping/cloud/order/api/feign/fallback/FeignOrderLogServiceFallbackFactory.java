@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultPageInfoVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,8 @@ public class FeignOrderLogServiceFallbackFactory implements FallbackFactory<Feig
         return new FeignOrderLogService(){
 
             @Override
-            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
+            public ResultPageInfoVO queryListPage(RequestJsonVO requestJsonVO) {
+                ResultPageInfoVO resultObjectVO = new ResultPageInfoVO();
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);

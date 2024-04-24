@@ -9,9 +9,11 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultPageInfoVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.constant.OrderDictConstant;
@@ -79,17 +81,18 @@ public class OrderLogController extends UIController {
                 return tableVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            ResultObjectVO resultObjectVO = feignOrderLogService.queryListPage(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                if (resultObjectVO.getData() != null) {
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+            ResultPageInfoVO<OrderLogVO> resultPageInfoVO = feignOrderLogService.queryListPage(requestJsonVO);
+            if(resultPageInfoVO.isSuccess()) {
+                if (resultPageInfoVO.getData() != null) {
+                    PageInfo orderLogPageInfo = resultPageInfoVO.getData();
+                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultPageInfoVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
                     List<OrderLogVO> orderLogs = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderLogVO.class);
                     DictVO query=new DictVO();
                     query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
                     query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-                    resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
+                    ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
                     if(resultObjectVO.isSuccess()) {
                         DictVO dictVO = resultObjectVO.formatData(DictVO.class);
                         if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
