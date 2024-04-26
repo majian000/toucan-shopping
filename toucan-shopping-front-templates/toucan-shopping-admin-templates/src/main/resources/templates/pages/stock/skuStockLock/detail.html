@@ -110,15 +110,15 @@
 
     <div class="layui-form-item" >
         <div class="layui-inline" style="width:40%">
-            <label class="layui-form-label required">删除状态</label>
-            <div class="layui-input-block" th:if="${model.deleteStatus eq 0}" >
+            <label class="layui-form-label required">还原状态</label>
+            <div class="layui-input-block" th:if="${model.restoreStatus eq 0}" >
                 <select   lay-search="">
-                    <option value="0" selected>未删除</option>
+                    <option value="0" selected>未还原</option>
                 </select>
             </div>
-            <div class="layui-input-block" th:if="${model.deleteStatus eq 1}" >
+            <div class="layui-input-block" th:if="${model.restoreStatus eq 1}" >
                 <select   lay-search="">
-                    <option value="1" selected>已删除</option>
+                    <option value="1" selected>已还原</option>
                 </select>
             </div>
         </div>
