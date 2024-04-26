@@ -318,7 +318,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("主订单编号不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)1);
+            productSkuStockLockVO.setRestoreStatus((short)0);
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -411,7 +411,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("订单编号不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)1);
+            productSkuStockLockVO.setRestoreStatus((short)0);
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
