@@ -267,13 +267,15 @@ public class OrderController extends UIController {
                             if (!CollectionUtils.isEmpty(productSkuStockLocks)) {
                                 List<InventoryReductionVO> inventoryReductions = new LinkedList<>();
                                 for (ProductSkuStockLockVO pssl : productSkuStockLocks) {
-                                    InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
-                                    inventoryReductionVO.setProductSkuId(pssl.getProductSkuId());
-                                    inventoryReductionVO.setStockNum(pssl.getStockNum());
-                                    inventoryReductions.add(inventoryReductionVO);
+                                    //如果当前库存锁定是未还原状态
+                                    if(pssl.getRestoreStatus().intValue()==0) {
+                                        InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
+                                        inventoryReductionVO.setProductSkuId(pssl.getProductSkuId());
+                                        inventoryReductionVO.setStockNum(pssl.getStockNum());
+                                        inventoryReductions.add(inventoryReductionVO);
+                                    }
                                 }
                                 if (!CollectionUtils.isEmpty(inventoryReductions)) {
-                                    //保存还原锁定库存事件
                                     resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                                 }
                             }
