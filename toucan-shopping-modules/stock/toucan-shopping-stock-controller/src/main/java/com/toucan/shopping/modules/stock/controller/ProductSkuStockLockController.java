@@ -270,7 +270,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("SKU ID不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)0);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -318,7 +318,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("主订单编号不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)0);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -365,7 +365,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("主订单编号不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)0);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             resultObjectVO.setData(productSkuStockLockService.queryListByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -412,7 +412,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("订单编号不能为空");
                 return resultObjectVO;
             }
-            productSkuStockLockVO.setRestoreStatus((short)0);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -461,6 +461,7 @@ public class ProductSkuStockLockController {
                 return resultObjectVO;
             }
             productSkuStockLockVO.setType(null);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
             if(!CollectionUtils.isEmpty(skuStockLockVO)) {
                 int ret = productSkuStockLockService.restores(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
@@ -516,6 +517,7 @@ public class ProductSkuStockLockController {
                 return resultObjectVO;
             }
             productSkuStockLockVO.setType(null);
+            productSkuStockLockVO.setRestoreStatus((short)0); //未还原
             List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
             if(!CollectionUtils.isEmpty(skuStockLockVO)) {
                 int ret = productSkuStockLockService.restores(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
