@@ -220,7 +220,7 @@ public class ProductSkuStockLockController {
         }
 
         try {
-            int ret = productSkuStockLockService.deletes(productSkuStockLocks.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
+            int ret = productSkuStockLockService.restores(productSkuStockLocks.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
             if(ret<=0||ret!=productSkuStockLocks.size())
             {
                 throw new IllegalArgumentException("删除锁定库存出现异常");
@@ -270,6 +270,7 @@ public class ProductSkuStockLockController {
                 resultObjectVO.setMsg("SKU ID不能为空");
                 return resultObjectVO;
             }
+            productSkuStockLockVO.setRestoreStatus((short)0);
             resultObjectVO.setData(productSkuStockLockService.queryStockNumByVO(productSkuStockLockVO));
         }catch(Exception e)
         {
@@ -459,7 +460,7 @@ public class ProductSkuStockLockController {
             productSkuStockLockVO.setType(null);
             List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
             if(!CollectionUtils.isEmpty(skuStockLockVO)) {
-                int ret = productSkuStockLockService.deletes(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
+                int ret = productSkuStockLockService.restores(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
                 if (ret <= 0 || ret != skuStockLockVO.size()) {
                     throw new IllegalArgumentException("删除锁定库存出现异常");
                 }
@@ -514,7 +515,7 @@ public class ProductSkuStockLockController {
             productSkuStockLockVO.setType(null);
             List<ProductSkuStockLockVO> skuStockLockVO = productSkuStockLockService.queryListByVO(productSkuStockLockVO);
             if(!CollectionUtils.isEmpty(skuStockLockVO)) {
-                int ret = productSkuStockLockService.deletes(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
+                int ret = productSkuStockLockService.restores(skuStockLockVO.stream().map(ProductSkuStockLockVO::getId).collect(Collectors.toList()));
                 if (ret <= 0 || ret != skuStockLockVO.size()) {
                     throw new IllegalArgumentException("删除锁定库存出现异常");
                 }

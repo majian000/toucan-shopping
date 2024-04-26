@@ -366,6 +366,11 @@ public class OrderApiController {
                         productSkuStockLockVO.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
                         productSkuStockLockVO.setRemark(productSku.getName()+" 锁库存数量:"+userBuyCarItemVO.getBuyCount());
                         productSkuStockLockVO.setCreateDate(new Date());
+                        if(productSku.getBuckleInventoryMethod().intValue()==1) {
+                            productSkuStockLockVO.setRestoreStatus((short) 0); //库存未还原
+                        }else{
+                            productSkuStockLockVO.setRestoreStatus((short) 1); //库存已还原
+                        }
 
                         if(productSku.getBuckleInventoryMethod().intValue()==1) { //拍下减库存
                             productSkuStockLockVO.setType((short)1); //实扣库存

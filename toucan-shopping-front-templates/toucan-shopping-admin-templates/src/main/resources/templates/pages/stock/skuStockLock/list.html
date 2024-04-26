@@ -50,12 +50,12 @@
                         </div>
 
                         <div class="layui-inline">
-                            <label class="layui-form-label">删除状态</label>
+                            <label class="layui-form-label">还原状态</label>
                             <div class="layui-input-inline">
-                                <select id="deleteStatus" name="deleteStatus"  lay-search="">
+                                <select id="restoreStatus" name="restoreStatus"  lay-search="">
                                     <option value="-1">全部</option>
-                                    <option value="0">未删除</option>
-                                    <option value="1">已删除</option>
+                                    <option value="0">未还原</option>
+                                    <option value="1">已还原</option>
                                 </select>
                             </div>
                         </div>
@@ -163,15 +163,15 @@
                     {field: 'orderCreateDate',  width: 200, title: '订单创建时间'},
                     {field: 'orderNo',  width: 200, title: '子订单编号'},
                     {field: 'remark',   width: 300,title: '备注'},
-                    {field: 'deleteStatus', width: 100,title: '删除状态',templet: function (row) {
-                            if(row.deleteStatus==0)
+                    {field: 'restoreStatus', width: 100,title: '还原状态',templet: function (row) {
+                            if(row.restoreStatus==0)
                             {
-                                return "未删除";
-                            }else if(row.deleteStatus==1)
+                                return "未还原";
+                            }else if(row.restoreStatus==1)
                             {
-                                return "已删除";
+                                return "已还原";
                             }
-                            return row.deleteStatus;
+                            return row.restoreStatus;
                         }},
                     {title: '操作', minWidth: 300, toolbar: '#skuStockLockTableBar', align: "center"}
                 ]

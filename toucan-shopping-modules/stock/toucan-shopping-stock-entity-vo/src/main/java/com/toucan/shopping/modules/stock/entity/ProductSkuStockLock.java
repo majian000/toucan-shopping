@@ -36,6 +36,8 @@ public class ProductSkuStockLock {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderCreateDate; //订单创建时间
 
+    private Short restoreStatus; //库存还原状态 0:未还原 1:已还原
+
     /**
      * 删除状态 0未删除 1已删除
      */

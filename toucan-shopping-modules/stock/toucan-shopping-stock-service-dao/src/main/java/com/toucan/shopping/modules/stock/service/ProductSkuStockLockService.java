@@ -20,6 +20,7 @@ public interface ProductSkuStockLockService {
 
     int deletes(List<Long> idList);
 
+    int restores(List<Long> idList);
     /**
      * 查询商品锁定库存
      * @param productSkuStockLockVO
