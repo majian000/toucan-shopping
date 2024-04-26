@@ -30,6 +30,8 @@ public class ProductSkuStockLockPageInfo extends PageInfo<ProductSkuStockLockVO>
 
     private Integer deleteStatus; //删除状态 -1:全部 0:未删除 1:已删除
 
+    private Integer restoreStatus; //库存还原状态 0:未还原 1:已还原
+
     //==============================================
 
 
