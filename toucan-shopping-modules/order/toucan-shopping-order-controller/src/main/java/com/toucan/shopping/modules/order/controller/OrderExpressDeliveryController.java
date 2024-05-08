@@ -142,7 +142,7 @@ public class OrderExpressDeliveryController {
     @ResponseBody
     public ResultObjectVO removeByOrderId(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
             OrderExpressDeliveryVO orderExpressDeliveryVO =requestJsonVO.formatEntity(OrderExpressDeliveryVO.class);
@@ -207,7 +207,7 @@ public class OrderExpressDeliveryController {
     @ResponseBody
     public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(@RequestBody RequestJsonVO requestJsonVO){
 
-        ResultTypeObjectVO<OrderExpressDeliveryVO> resultObjectVO = new ResultTypeObjectVO(ResultVO.FAILD,"请重试");
+        ResultTypeObjectVO<OrderExpressDeliveryVO> resultObjectVO = new ResultTypeObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
             OrderExpressDeliveryVO orderExpressDeliveryVO =requestJsonVO.formatEntity(OrderExpressDeliveryVO.class);
@@ -234,7 +234,9 @@ public class OrderExpressDeliveryController {
                     return resultObjectVO;
                 }
                 orderExpressDeliveryVO = orderExpressDeliveryService.queryVOByOrderId(queryOrderVO.getId());
-                orderExpressDeliveryVO.setCompanyTypeName(ExpressCompanyEnum.getByCode(orderExpressDeliveryVO.getCompanyTypeCode()).getName());
+                if(orderExpressDeliveryVO!=null) {
+                    orderExpressDeliveryVO.setCompanyTypeName(ExpressCompanyEnum.getByCode(orderExpressDeliveryVO.getCompanyTypeCode()).getName());
+                }
                 resultObjectVO.setData(orderExpressDeliveryVO);
             }catch(Exception e)
             {

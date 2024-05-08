@@ -33,7 +33,6 @@ public class LogParamHelper {
             logBuilder.append("contentType:"+ request.getContentType()+"\n");
             if(CollectionUtils.isNotEmpty(request.getHeaders()))
             {
-                logBuilder.append("---------header---------\n");
                 for(LogParamHeader header:request.getHeaders())
                 {
                     logBuilder.append(header.getName()+":"+header.getValue()+"\n");

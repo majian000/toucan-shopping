@@ -255,6 +255,9 @@ function drawOrderItemProductTable(orderVO){
 
 function drawOrderExpressDeliver(orderVO){
 
-
+    if(orderVO.orderExpressDelivery!=null) {
+        $("#ed_companyTypeName").html(orderVO.orderExpressDelivery.companyTypeName);
+        $("#ed_courierNumber").html(orderVO.orderExpressDelivery.courierNumber);
+    }
 
 }
