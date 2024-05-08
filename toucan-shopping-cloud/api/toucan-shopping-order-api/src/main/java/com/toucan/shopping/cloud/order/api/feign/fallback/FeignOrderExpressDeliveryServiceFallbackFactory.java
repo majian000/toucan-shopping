@@ -5,6 +5,9 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderExpressDelive
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
+import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,21 @@ public class FeignOrderExpressDeliveryServiceFallbackFactory implements Fallback
                 logger.warn("FeignOrderItemServiceFallbackFactory removeByOrderId  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("删除订单快递信息失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(RequestJsonVO requestJsonVO) {
+                ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignOrderItemServiceFallbackFactory findOneByOrderIdAndShopId  params{}:",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询订单快递信息失败");
                 return resultObjectVO;
             }
         };

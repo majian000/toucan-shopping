@@ -40,6 +40,11 @@
         select * from t_order_express_delivery where order_id=#{orderId} and delete_status=0
     </select>
 
+
+    <select id="queryVOByOrderId" parameterType="java.lang.Long" resultMap="entityVOMap">
+        select * from t_order_express_delivery where order_id=#{orderId} and delete_status=0
+    </select>
+
     <update id="removeByOrderId">
         update t_order_express_delivery set delete_status=1 where order_id=#{orderId}
     </update>

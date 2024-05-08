@@ -19,7 +19,7 @@ public enum ExpressCompanyEnum {
         this.name = name;
     }
 
-    public static ExpressCompanyEnum getKey(String code){
+    public static ExpressCompanyEnum getByCode(String code){
         for (ExpressCompanyEnum changeActivityEnumType : ExpressCompanyEnum.values()) {
             if (changeActivityEnumType.getCode().equals(code)){
                 return  changeActivityEnumType;

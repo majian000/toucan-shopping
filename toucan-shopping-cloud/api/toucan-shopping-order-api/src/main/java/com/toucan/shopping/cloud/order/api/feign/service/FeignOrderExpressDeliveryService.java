@@ -4,6 +4,9 @@ import com.toucan.shopping.cloud.order.api.feign.fallback.FeignOrderExpressDeliv
 import com.toucan.shopping.cloud.order.api.feign.fallback.FeignOrderServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
+import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -27,5 +30,14 @@ public interface FeignOrderExpressDeliveryService {
     @RequestMapping(value="/removeByOrderId",produces = "application/json;charset=UTF-8")
     ResultObjectVO removeByOrderId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据订单ID和店铺ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/findOneByOrderIdAndShopId",produces = "application/json;charset=UTF-8")
+    ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

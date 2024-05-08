@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderExpressDeliveryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
@@ -19,8 +20,11 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
@@ -77,6 +81,9 @@ public class OrderApiController extends BaseController {
 
     @Autowired
     private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
 
     @Autowired
     private ShopService shopService;
@@ -222,6 +229,16 @@ public class OrderApiController extends BaseController {
                         }
                         orderVO.setOrderItems(orderItemVOList);
                     }
+                }
+
+
+                OrderExpressDeliveryVO orderExpressDeliveryVO=new OrderExpressDeliveryVO();
+                orderExpressDeliveryVO.setOrderId(orderVO.getId());
+                orderExpressDeliveryVO.setShopId(sellerShopVO.getId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                if(orderExpressDeliveryResultObjectVO.isSuccess()){
+                    orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
                 }
 
                 resultObjectVO.setData(orderVO);

@@ -144,6 +144,8 @@ $(function () {
                         drawOrderItemProductTable(retObj);
                     }
 
+                    drawOrderExpressDeliver(retObj);
+
                 }
             }
         },
@@ -246,6 +248,13 @@ function drawOrderItemProductTable(orderVO){
 
     $("#orderItemProductTableBody").html(tableHtml);
     $("#orderItemProductList").FrozenTable(2,0,0);
+
+
+}
+
+
+function drawOrderExpressDeliver(orderVO){
+
 
 
 }

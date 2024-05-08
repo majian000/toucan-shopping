@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.order.mapper.OrderItemMapper;
 import com.toucan.shopping.modules.order.page.OrderItemPageInfo;
 import com.toucan.shopping.modules.order.service.OrderExpressDeliveryService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
+import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,10 @@ public class OrderExpressDeliveryServiceImpl implements OrderExpressDeliveryServ
         return orderExpressDeliveryMapper.queryByOrderId(orderId);
     }
 
+    @Override
+    public OrderExpressDeliveryVO queryVOByOrderId(Long orderId) {
+        return orderExpressDeliveryMapper.queryVOByOrderId(orderId);
+    }
     @Override
     public int removeByOrderId(Long orderId) {
         return orderExpressDeliveryMapper.removeByOrderId(orderId);

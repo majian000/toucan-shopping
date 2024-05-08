@@ -30,6 +30,8 @@ public class OrderVO extends Order {
 
     OrderConsigneeAddressVO orderConsigneeAddress; //收货人
 
+    OrderExpressDeliveryVO orderExpressDelivery; //快递信息
+
     Long createDateLong; //订单创建时间
 
     Long systemDateLong; //系统时间

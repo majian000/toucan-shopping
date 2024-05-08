@@ -9,11 +9,13 @@ import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
 import com.toucan.shopping.modules.order.entity.OrderItem;
+import com.toucan.shopping.modules.order.enums.ExpressCompanyEnum;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.service.*;
@@ -185,6 +187,55 @@ public class OrderExpressDeliveryController {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("请求失败");
                 }
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据订单ID和店铺ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/findOneByOrderIdAndShopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultTypeObjectVO<OrderExpressDeliveryVO> resultObjectVO = new ResultTypeObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            OrderExpressDeliveryVO orderExpressDeliveryVO =requestJsonVO.formatEntity(OrderExpressDeliveryVO.class);
+            if(orderExpressDeliveryVO.getOrderId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到订单ID");
+                return resultObjectVO;
+            }
+            if(orderExpressDeliveryVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到店铺ID");
+                return resultObjectVO;
+            }
+            try {
+                OrderVO queryOrderVO = new OrderVO();
+                queryOrderVO.setShopId(orderExpressDeliveryVO.getShopId());
+                queryOrderVO.setId(orderExpressDeliveryVO.getOrderId());
+                OrderVO orderVO = orderService.queryOneVOByVO(queryOrderVO);
+                if(orderVO==null){
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("没有找到订单");
+                    return resultObjectVO;
+                }
+                orderExpressDeliveryVO = orderExpressDeliveryService.queryVOByOrderId(queryOrderVO.getId());
+                orderExpressDeliveryVO.setCompanyTypeName(ExpressCompanyEnum.getByCode(orderExpressDeliveryVO.getCompanyTypeCode()).getName());
+                resultObjectVO.setData(orderExpressDeliveryVO);
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
