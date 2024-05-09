@@ -151,6 +151,15 @@ public class OrderController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+
+                OrderExpressDeliveryVO orderExpressDeliveryVO=new OrderExpressDeliveryVO();
+                orderExpressDeliveryVO.setOrderId(orderVO.getId());
+                orderExpressDeliveryVO.setShopId(orderVO.getShopId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                if(orderExpressDeliveryResultObjectVO.isSuccess()){
+                    orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
+                }
                 request.setAttribute("model",orderVO);
             }
         }catch(Exception e)
