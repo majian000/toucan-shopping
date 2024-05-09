@@ -103,6 +103,11 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">查看</a>\n" ;
+            if(row.tradeStatus==4){
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"deliverGoods\" style=\"color:blue;cursor: pointer;\">去发货</a>\n" ;
+            }else if(row.tradeStatus==1){
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-no=\""+row.orderNo+"\" class=\"cancelDeliverGoods\" style=\"color:blue;cursor: pointer;\">取消发货</a>\n" ;
+            }
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -145,6 +150,62 @@ function bindRowEvent()
     $(".previewRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
         window.location.href = basePath+"/page/waitDeliveryOrder/show/"+attrId;
+    });
+
+
+
+    $(".deliverGoods").unbind("click");
+    $(".deliverGoods").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        window.location.href = basePath+"/page/order/deliverGoods/"+attrId;
+    });
+
+    $(".cancelDeliverGoods").unbind("click");
+    $(".cancelDeliverGoods").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var orderNo = $(this).attr("attr-no");
+        layer.confirm("订单【"+orderNo+"】取消发货?", {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            var requestParam={
+                orderId:attrId
+            };
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/orderExpressDelivery/cancelDelivery",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify(requestParam),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code<=0)
+                    {
+                        $.message({
+                            message: "取消失败,请稍后重试",
+                            type: 'error'
+                        });
+                        return ;
+                    }
+
+                    $.message({
+                        message: "取消成功",
+                        type: 'success'
+                    });
+                },
+                error: function (result) {
+                    $.message({
+                        message: "取消失败,请稍后重试",
+                        type: 'error'
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(index);
+                    $("#queryBtn").click();
+                }
+
+            });
+        });
     });
 
 }

@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderExpressDeliveryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
@@ -23,6 +24,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
@@ -32,6 +34,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
@@ -76,6 +79,8 @@ public class OrderController extends UIController {
     @Autowired
     private FeignProductSkuStockLockService feignProductSkuStockLockService;
 
+    @Autowired
+    private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -175,6 +180,16 @@ public class OrderController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+
+                OrderExpressDeliveryVO orderExpressDeliveryVO=new OrderExpressDeliveryVO();
+                orderExpressDeliveryVO.setOrderId(orderVO.getId());
+                orderExpressDeliveryVO.setShopId(orderVO.getShopId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                if(orderExpressDeliveryResultObjectVO.isSuccess()){
+                    orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
+                }
+
                 request.setAttribute("model",orderVO);
             }
         }catch(Exception e)

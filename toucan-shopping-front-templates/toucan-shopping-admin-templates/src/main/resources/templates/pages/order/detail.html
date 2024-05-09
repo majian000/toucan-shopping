@@ -397,6 +397,30 @@
                     </div>
 
                     <div class="layui-tab-item">
+                        <div class="layui-inline" style="width:80%">
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>快递详情</legend>
+                            </fieldset>
+                            <div class="layui-form layuimini-form">
+                                <div class="layui-form-item" >
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >快递公司</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.orderExpressDelivery!=null?model.orderExpressDelivery.companyTypeName:''}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" style="width:40%">
+                                        <label class="layui-form-label " >快递单号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text"  th:value="${model.courierNumber!=null?model.orderExpressDelivery.courierNumber:''}"  class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
 
 
                     </div>
