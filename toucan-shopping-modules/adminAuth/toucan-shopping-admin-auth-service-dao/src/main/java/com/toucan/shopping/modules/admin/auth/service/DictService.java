@@ -30,8 +30,15 @@ public interface DictService {
      * @param categoryCode
      * @return
      */
-    DictVO findByCodeAndCategoryCode(String code,String categoryCode);
+    DictVO findByCodeAndCategoryCode(String code,String categoryCode,String appCode);
 
+    /**
+     * 根据编码和分类编码查询
+     * @param codes
+     * @param categoryCode
+     * @return
+     */
+    List<DictVO> findByCodesAndCategoryCode(List<String> codes,String categoryCode,String appCode);
 
     /**
      * 查询所有子节点

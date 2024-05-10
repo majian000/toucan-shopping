@@ -2,12 +2,16 @@ package com.toucan.shopping.cloud.admin.auth.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -153,6 +157,21 @@ public class FeignDictServiceFallbackFactory implements FallbackFactory<FeignDic
                     return resultObjectVO;
                 }
                 logger.warn("FeignDictService.queryDictByCodeAndCategoryCode faild params:"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO) {
+                ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignDictService.queryDictByCodesAndCategoryCode faild params:"+ JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;

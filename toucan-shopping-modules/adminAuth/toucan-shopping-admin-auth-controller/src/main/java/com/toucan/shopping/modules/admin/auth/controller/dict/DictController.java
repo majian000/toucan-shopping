@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -674,7 +675,12 @@ public class DictController {
 
         try {
             DictVO query = requestJsonVO.formatEntity(DictVO.class);
-            DictVO dictVO = dictService.findByCodeAndCategoryCode(query.getCode(),query.getCategoryCode());
+            if(StringUtils.isEmpty(query.getAppCode())){
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            DictVO dictVO = dictService.findByCodeAndCategoryCode(query.getCode(),query.getCategoryCode(),query.getAppCode());
             if(dictVO!=null){
                 dictVO.setChildren(new LinkedList<>());
                 dictService.setChildrenByVO(dictVO);
@@ -692,5 +698,45 @@ public class DictController {
 
 
 
+    /**
+     * 查询分类下的字典
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="query/dict/by/codes/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO){
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            DictVO query = requestJsonVO.formatEntity(DictVO.class);
+            if(StringUtils.isEmpty(query.getAppCode())){
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            List<DictVO> dictList = dictService.findByCodesAndCategoryCode(query.getCodes(),query.getCategoryCode(),query.getAppCode());
+            if(!CollectionUtils.isEmpty(dictList)){
+                for(DictVO dictVO:dictList){
+                    dictVO.setChildren(new LinkedList<>());
+                    dictService.setChildrenByVO(dictVO);
+                }
+            }
+            resultObjectVO.setData(dictList);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 }

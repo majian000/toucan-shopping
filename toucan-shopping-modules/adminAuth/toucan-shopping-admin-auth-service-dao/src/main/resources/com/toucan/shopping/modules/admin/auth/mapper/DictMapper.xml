@@ -350,7 +350,18 @@
 
     <select id="findByCodeAndCategoryCode" resultMap="dictVOMap" >
         select * from t_sa_dict where delete_status=0 and code=#{code} and category_id = (
-          select id from t_sa_dict_category where code=#{categoryCode} and delete_status=0 limit 0,1
+          select id from t_sa_dict_category where code=#{categoryCode} and app_code=#{appCode} and delete_status=0 limit 0,1
+        ) limit 0,1
+    </select>
+
+
+    <select id="findByCodesAndCategoryCode" resultMap="dictVOMap" >
+        select * from t_sa_dict where delete_status=0 and code in
+        <foreach item="item" index="index" collection="codes" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        and category_id = (
+            select id from t_sa_dict_category where code=#{categoryCode} and app_code=#{appCode} and delete_status=0 limit 0,1
         )
     </select>
 

@@ -170,7 +170,9 @@ public interface DictMapper {
 
     int updateAppCodeByCategoryId(Integer categoryId, String appCode);
 
-    DictVO findByCodeAndCategoryCode(String code,String categoryCode);
+    DictVO findByCodeAndCategoryCode(String code,String categoryCode,String appCode);
+
+    List<DictVO> findByCodesAndCategoryCode(List<String> code,String categoryCode,String appCode);
 
 
     List<DictVO> queryByParentId(Long parentId);

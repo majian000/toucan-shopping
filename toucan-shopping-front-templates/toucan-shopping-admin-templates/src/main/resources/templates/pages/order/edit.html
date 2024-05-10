@@ -141,32 +141,10 @@
                                     </div>
                                     <div class="layui-inline" style="width:40%">
                                         <label class="layui-form-label "  >支付状态</label>
-                                        <div class="layui-input-block" th:if="${model.payStatus eq null}" >
-                                            <select name="payStatus"  lay-search="">
-                                                <option value="0" selected>未支付</option>
-                                                <option value="1" >已支付</option>
-                                                <option value="4" >取消支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payStatus eq 0}" >
-                                            <select name="payStatus"  lay-search="">
-                                                <option value="0" selected>未支付</option>
-                                                <option value="1" >已支付</option>
-                                                <option value="4" >取消支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payStatus eq 1}" >
-                                            <select name="payStatus"  lay-search="">
-                                                <option value="0" >未支付</option>
-                                                <option value="1" selected>已支付</option>
-                                                <option value="4" >取消支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payStatus eq 4}" >
-                                            <select name="payStatus"  lay-search="">
-                                                <option value="0" >未支付</option>
-                                                <option value="1" >已支付</option>
-                                                <option value="4" selected>取消支付</option>
+                                        <div class="layui-input-block"  >
+                                            <select name="payStatus"  lay-search="" >
+                                                <option th:each="c:${payStatusList}" th:value="${c.code}" th:text="${c.name}" th:selected="${model.payStatus} eq ${c.code} ">
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -176,80 +154,20 @@
 
                                     <div class="layui-inline" style="width:40%">
                                         <label class="layui-form-label "  >交易状态</label>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq null}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" selected >待付款</option>
-                                                <option value="4" >待发货</option>
-                                                <option value="1" >待收货</option>
-                                                <option value="2" >已取消</option>
-                                                <option value="3" >已完成</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 0}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" selected>待付款</option>
-                                                <option value="4" >待发货</option>
-                                                <option value="1" >待收货</option>
-                                                <option value="2" >已取消</option>
-                                                <option value="3" >已完成</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 1}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" >待付款</option>
-                                                <option value="4" >待发货</option>
-                                                <option value="1" selected>待收货</option>
-                                                <option value="2" >已取消</option>
-                                                <option value="3" >已完成</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 2}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" >待付款</option>
-                                                <option value="4" >待发货</option>
-                                                <option value="1" >待收货</option>
-                                                <option value="2" selected>已取消</option>
-                                                <option value="3" >已完成</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 3}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" >待付款</option>
-                                                <option value="4" >待发货</option>
-                                                <option value="1" >待收货</option>
-                                                <option value="2" >已取消</option>
-                                                <option value="3" selected>已完成</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.tradeStatus eq 4}" >
-                                            <select name="tradeStatus"  lay-search="">
-                                                <option value="0" >待付款</option>
-                                                <option value="4" selected>待发货</option>
-                                                <option value="1" >待收货</option>
-                                                <option value="2" >已取消</option>
-                                                <option value="3" >已完成</option>
+                                        <div class="layui-input-block" >
+                                            <select name="tradeStatus"  lay-search="" >
+                                                <option th:each="c:${tradeStatusList}" th:value="${c.code}" th:text="${c.name}" th:selected="${model.tradeStatus} eq ${c.code} ">
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="layui-inline" style="width:40%">
                                         <label class="layui-form-label "  >支付方式</label>
-                                        <div class="layui-input-block" th:if="${model.payMethod eq null}" >
-                                            <select name="payMethod"  lay-search="">
-                                                <option value="1" selected>线上支付</option>
-                                                <option value="2" >线下支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payMethod eq 1}" >
-                                            <select name="payMethod"  lay-search="">
-                                                <option value="1" selected>线上支付</option>
-                                                <option value="2" >线下支付</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payMethod eq 2}" >
-                                            <select name="payMethod"  lay-search="">
-                                                <option value="1" >线上支付</option>
-                                                <option value="2" selected>线下支付</option>
+                                        <div class="layui-input-block" >
+                                            <select name="payMethod"  lay-search="" >
+                                                <option th:each="c:${payMethodList}" th:value="${c.code}" th:text="${c.name}" th:selected="${model.payMethod} eq ${c.code} ">
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -260,32 +178,10 @@
                                     <div class="layui-inline" style="width:40%">
 
                                         <label class="layui-form-label "  >支付渠道</label>
-                                        <div class="layui-input-block" th:if="${model.payType eq null}" >
-                                            <select name="payType"  lay-search="">
-                                                <option value="-1" >未确定</option>
-                                                <option value="0" >微信</option>
-                                                <option value="1" >支付宝</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payType eq -1}" >
-                                            <select name="payType"  lay-search="">
-                                                <option value="-1" selected>未确定</option>
-                                                <option value="0" >微信</option>
-                                                <option value="1" >支付宝</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payType eq 0}" >
-                                            <select name="payType"  lay-search="">
-                                                <option value="-1">未确定</option>
-                                                <option value="0" selected>微信</option>
-                                                <option value="1" >支付宝</option>
-                                            </select>
-                                        </div>
-                                        <div class="layui-input-block" th:if="${model.payType eq 1}" >
-                                            <select name="payType"  lay-search="">
-                                                <option value="-1">未确定</option>
-                                                <option value="0" >微信</option>
-                                                <option value="1" selected>支付宝</option>
+                                        <div class="layui-input-block"  >
+                                            <select name="payType"  lay-search="" >
+                                                <option th:each="c:${payTypeList}" th:value="${c.code}" th:text="${c.name}" th:selected="${model.payType} eq ${c.code} ">
+                                                </option>
                                             </select>
                                         </div>
                                     </div>

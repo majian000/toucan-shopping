@@ -2,12 +2,16 @@ package com.toucan.shopping.cloud.admin.auth.api.feign.service;
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignDictCategoryServiceFallbackFactory;
 import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignDictServiceFallbackFactory;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/dict",fallbackFactory = FeignDictServiceFallbackFactory.class)
 public interface FeignDictService {
@@ -103,5 +107,15 @@ public interface FeignDictService {
      */
     @RequestMapping(value="query/dict/by/code/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryDictByCodeAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 查询分类下的字典
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="query/dict/by/codes/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
 
 }

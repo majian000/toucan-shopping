@@ -89,6 +89,7 @@ public class OrderLogController extends UIController {
                 DictVO query=new DictVO();
                 query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
                 query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
+                query.setAppCode(toucan.getAppCode());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
                 ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
                 if(resultObjectVO.isSuccess()) {

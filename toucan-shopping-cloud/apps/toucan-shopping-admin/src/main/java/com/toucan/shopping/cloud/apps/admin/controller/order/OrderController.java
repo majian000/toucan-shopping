@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
@@ -14,6 +15,7 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -33,8 +35,10 @@ import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
+import com.toucan.shopping.modules.order.constant.OrderDictConstant;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
+import com.toucan.shopping.modules.order.vo.OrderLogVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
@@ -49,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -81,6 +86,9 @@ public class OrderController extends UIController {
 
     @Autowired
     private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
+
+    @Autowired
+    private FeignDictService feignDictService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -161,6 +169,8 @@ public class OrderController extends UIController {
                     orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
                 }
                 request.setAttribute("model",orderVO);
+
+                setOrderDictList(request);
             }
         }catch(Exception e)
         {
@@ -200,6 +210,9 @@ public class OrderController extends UIController {
                 }
 
                 request.setAttribute("model",orderVO);
+
+                setOrderDictList(request);
+
             }
         }catch(Exception e)
         {
@@ -208,6 +221,40 @@ public class OrderController extends UIController {
         return "pages/order/edit.html";
     }
 
+    private void setOrderDictList(HttpServletRequest request) throws NoSuchAlgorithmException {
+        //交易状态
+        DictVO queryDict=new DictVO();
+        queryDict.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
+        queryDict.setCodes(new LinkedList<>());
+        queryDict.getCodes().add(OrderDictConstant.ORDER_TRADE_STATUS_CODE);
+        queryDict.getCodes().add(OrderDictConstant.ORDER_PAY_STATUS_CODE);
+        queryDict.getCodes().add(OrderDictConstant.ORDER_PAY_METHOD_CODE);
+        queryDict.getCodes().add(OrderDictConstant.ORDER_PAY_TYPE_CODE);
+        queryDict.setAppCode(toucan.getAppCode());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
+        if(resultObjectVO.isSuccess()) {
+            if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
+                for(DictVO dictVO:resultObjectVO.getData()){
+                    switch (dictVO.getCode()){
+                        case OrderDictConstant.ORDER_TRADE_STATUS_CODE:
+                            request.setAttribute("tradeStatusList",dictVO.getChildren());
+                            break;
+                        case OrderDictConstant.ORDER_PAY_STATUS_CODE:
+                            request.setAttribute("payStatusList",dictVO.getChildren());
+                            break;
+                        case OrderDictConstant.ORDER_PAY_METHOD_CODE:
+                            request.setAttribute("payMethodList",dictVO.getChildren());
+                            break;
+                        case OrderDictConstant.ORDER_PAY_TYPE_CODE:
+                            request.setAttribute("payTypeList",dictVO.getChildren());
+                            break;
+                    }
+                }
+            }
+        }
+
+    }
 
     /**
      * 取消

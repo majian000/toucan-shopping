@@ -60,4 +60,6 @@ public class DictVO extends Dict {
 
     private List<DictVO> children; //子节点
 
+    private List<String> codes; //编码集合
+
 }

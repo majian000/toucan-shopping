@@ -35,10 +35,14 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public DictVO findByCodeAndCategoryCode(String code, String categoryCode) {
-        return dictMapper.findByCodeAndCategoryCode(code,categoryCode);
+    public DictVO findByCodeAndCategoryCode(String code, String categoryCode,String appCode) {
+        return dictMapper.findByCodeAndCategoryCode(code,categoryCode,appCode);
     }
 
+    @Override
+    public List<DictVO> findByCodesAndCategoryCode(List<String> codes,String categoryCode,String appCode) {
+        return dictMapper.findByCodesAndCategoryCode(codes,categoryCode,appCode);
+    }
     @Override
     public void queryChildrenByVO(List<DictVO> children,DictVO query) {
         List<DictVO> dictList = dictMapper.queryByParentId(query.getId());
