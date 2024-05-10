@@ -172,7 +172,7 @@ public interface DictMapper {
 
     DictVO findByCodeAndCategoryCode(String code,String categoryCode,String appCode);
 
-    List<DictVO> findByCodesAndCategoryCode(List<String> code,String categoryCode,String appCode);
+    List<DictVO> findByCodesAndCategoryCode(List<String> codes,String categoryCode,String appCode);
 
 
     List<DictVO> queryByParentId(Long parentId);
