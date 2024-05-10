@@ -164,6 +164,7 @@
         }
 
 
+
         table.render({
             elem: '#productSkuTable',
             url: "[[@{/}]]product/productSku/search/list",
@@ -177,6 +178,9 @@
             }],
             done:function(res, curr, count)
             {
+                if(count>=10000) {
+                    $("div[lay-id=\"productSkuTable\"]").find('.layui-laypage-count').html("共 " + count+"+ 条");
+                }
             },
             cols: [
                 [
