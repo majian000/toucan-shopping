@@ -3,9 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -32,8 +35,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 订单日志
@@ -58,6 +63,10 @@ public class OrderLogController extends UIController {
 
     @Autowired
     private FeignDictService feignDictService;
+
+    @Autowired
+    private FeignUserService feignUserService;
+
 
     /**
      * 查询列表
@@ -86,19 +95,39 @@ public class OrderLogController extends UIController {
                 PageInfo orderLogPageInfo = resultPageInfoVO.getData();
                 tableVO.setCount(orderLogPageInfo.getTotal()!=null?orderLogPageInfo.getTotal():0);
                 List<OrderLogVO> orderLogs = orderLogPageInfo.getList();
-                DictVO query=new DictVO();
-                query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
-                query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
-                query.setAppCode(toucan.getAppCode());
-                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-                ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
-                if(resultObjectVO.isSuccess()) {
-                    DictVO dictVO = resultObjectVO.formatData(DictVO.class);
-                    if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
+                List<String> operateUserIdList = null;
+                if(CollectionUtils.isNotEmpty(orderLogs)) {
+                    operateUserIdList = orderLogs.stream().map(OrderLogVO::getOperateUserId).collect(Collectors.toList());
+
+                    DictVO query=new DictVO();
+                    query.setCategoryCode(OrderDictConstant.ORDER_LOG_DICT_CATEGORY_CODE);
+                    query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
+                    query.setAppCode(toucan.getAppCode());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+                    ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
+                    if(resultObjectVO.isSuccess()) {
+                        DictVO dictVO = resultObjectVO.formatData(DictVO.class);
+                        if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {
+                            for (OrderLogVO orderLogVO : orderLogs) {
+                                for(DictVO child:dictVO.getChildren()){
+                                    if(child.getCode().equals(String.valueOf(orderLogVO.getType()))){
+                                        orderLogVO.setTypeName(child.getName());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    List<AdminVO> admins = this.queryAdminListByAdminId(operateUserIdList);
+                    if(CollectionUtils.isNotEmpty(admins)){
                         for (OrderLogVO orderLogVO : orderLogs) {
-                            for(DictVO child:dictVO.getChildren()){
-                                if(child.getCode().equals(String.valueOf(orderLogVO.getType()))){
-                                    orderLogVO.setTypeName(child.getName());
+                            orderLogVO.setOperateUserType(2); //先默认为普通用户操作
+                            for(AdminVO adminVO:admins){
+                                if(orderLogVO.getOperateUserId().equals(adminVO.getAdminId())){
+                                    orderLogVO.setOperateUserName(adminVO.getUsername());
+                                    orderLogVO.setOperateUserType(1); //如果匹配到管理员ID 在设置为管理员操作
                                     break;
                                 }
                             }

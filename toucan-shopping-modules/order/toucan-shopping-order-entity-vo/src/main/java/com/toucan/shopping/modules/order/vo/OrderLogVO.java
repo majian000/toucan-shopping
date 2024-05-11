@@ -23,6 +23,9 @@ public class OrderLogVO extends OrderLog {
      */
     private String typeName;
 
+    private Integer operateUserType; //1:管理员 2:商城用户
+
+    private String operateUserName; //操作用户名称
 
 
 }

@@ -91,6 +91,16 @@
                     {field: 'orderNo',  title: '订单编号', width: 260},
                     {field: 'batchId',  title: '操作批次ID', width: 200},
                     {field: 'operateUserId',  title: '操作人ID', width: 200},
+                    {field: 'operateUserName',  title: '操作人', width: 100},
+                    {field: 'operateUserType', width: 100, title: '操作人类型',
+                        templet: function (row) {
+                            if(row.operateUserType == "1"){
+                                return "管理员"
+                            }else if(row.operateUserType == "2"){
+                                return "普通用户"
+                            }
+                            return row.operateUserType;
+                        }},
                     {field: 'createDate',  title: '创建时间', width: 200},
                     {field: 'dataBody',  title: '变更数据', width: 200},
                     {field: 'remark',  title: '操作备注', width: 200},
