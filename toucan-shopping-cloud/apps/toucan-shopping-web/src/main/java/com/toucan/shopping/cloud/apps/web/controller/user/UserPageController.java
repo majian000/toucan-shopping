@@ -181,7 +181,7 @@ public class UserPageController extends BaseController {
     {
         loginUserService.setAttributeUser(httpServletRequest);
         UserVO userVO = (UserVO)httpServletRequest.getAttribute("userVO");
-        //如果是修改手机号的话,需要先进行实名认证
+        //如果是绑定手机号的话,需要先进行实名认证
         if(StringUtils.isNotEmpty(userVO.getMobilePhone())) {
             if (userVO.getTrueNameStatus().intValue() == 0) {
                 httpServletRequest.setAttribute("msg", "请您先进行实名");
@@ -189,6 +189,22 @@ public class UserPageController extends BaseController {
             }
         }
         return "user/bindMobilePhone/bind_mobile_phone";
+    }
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/modifyMobilePhone")
+    public String modifyMobilePhone(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        UserVO userVO = (UserVO)httpServletRequest.getAttribute("userVO");
+        //如果是修改手机号的话,需要先进行实名认证
+        if(StringUtils.isNotEmpty(userVO.getMobilePhone())) {
+            if (userVO.getTrueNameStatus().intValue() == 0) {
+                httpServletRequest.setAttribute("msg", "请您先进行实名");
+                return "user/modifyMobilePhone/modify_mobile_phone_msg";
+            }
+        }
+        return "user/modifyMobilePhone/modify_mobile_phone";
     }
 
 

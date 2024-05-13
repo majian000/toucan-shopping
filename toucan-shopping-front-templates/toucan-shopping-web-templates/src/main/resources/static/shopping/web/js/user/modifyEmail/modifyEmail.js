@@ -83,6 +83,7 @@ $(function () {
                 }else{
                     $("#modify_email_msg").css("color","green");
                     $("#modify_email_msg").text("修改成功");
+                    window.location.href="/page/user/info";
                 }
             },
             error: function (result) {

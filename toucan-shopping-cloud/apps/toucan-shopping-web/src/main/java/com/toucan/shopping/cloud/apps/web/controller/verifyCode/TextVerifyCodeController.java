@@ -2,10 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.verifyCode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
-import com.toucan.shopping.cloud.apps.web.redis.UserBindEmailRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.UserBindMobilePhoneRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.UserModifyPwdRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
+import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.BindEmailUtil;
 import com.toucan.shopping.cloud.apps.web.util.EmailModifyPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
@@ -24,6 +21,7 @@ import com.toucan.shopping.modules.email.message.EmailMessage;
 import com.toucan.shopping.modules.email.queue.EmailQueue;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.user.constant.UserBindEmailConstant;
+import com.toucan.shopping.modules.user.constant.UserModifyMobilePhoneConstant;
 import com.toucan.shopping.modules.user.constant.UserModifyPwdConstant;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -340,4 +338,97 @@ public class TextVerifyCodeController extends BaseController {
         }
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 修改手机号 验证码(手机)
+     * @param request
+     */
+    @UserAuth
+    @RequestMapping(value="/mobile/user/modifyMobilePhone", method = RequestMethod.POST)
+    public ResultObjectVO mobileModifyMobilePhoneVerifyCode(HttpServletRequest request, @RequestBody UserVO userVoParam) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId ="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
+            String vcode = MobilePhoneVCodeUtil.genCode(6);
+            Map<String,String> codeInfo= new HashMap<>();
+            codeInfo.put("code",vcode);
+            codeInfo.put("mobilePhone",userVoParam.getMobilePhone());
+            toucanStringRedisService.set(UserModifyMobilePhoneRedisKey.getMobileVerifyCodeKey(userMainId),JSONObject.toJSONString(codeInfo),UserModifyPwdConstant.MAX_MODIFY_PWD_VCODE_MAX_AGE, TimeUnit.SECONDS);
+            //TODO:接入短信网关后删除
+            resultObjectVO.setData(vcode);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改手机号 验证码(邮箱)
+     * @param request
+     */
+    @UserAuth
+    @RequestMapping(value="/email/user/modifyMobilePhone", method = RequestMethod.POST)
+    public ResultObjectVO emailModifyMobilePhoneVerifyCode(HttpServletRequest request,@RequestBody UserVO userVoParam) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId ="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
+            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            if(resultObectVO.isSuccess()) {
+                userVO = resultObectVO.formatData(UserVO.class);
+                String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+                Map<String,String> codeInfo= new HashMap<>();
+                codeInfo.put("code",vcode);
+                codeInfo.put("email",userVoParam.getEmail());
+                toucanStringRedisService.set(UserModifyMobilePhoneRedisKey.getEmailVerifyCodeKey(userMainId), JSONObject.toJSONString(codeInfo), UserModifyMobilePhoneConstant.MAX_MODIFY_MP_VCODE_MAX_AGE, TimeUnit.SECONDS);
+                Email email = new Email();
+                EmailConfig emailConfig=EmailConfigHelper.getEmailConfig("犀鸟商城——修改手机号");
+                if(emailConfig!=null) {
+                    email.setEmailConfig(emailConfig);
+                    email.setSubject("犀鸟商城——修改手机号");
+                    email.setContent(EmailModifyPwdUtil.getEmailContent(vcode, userVO.getNickName(), (UserModifyMobilePhoneConstant.MAX_MODIFY_MP_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
+
+                    Receiver receiver = new Receiver();
+                    receiver.setEmail(userVO.getEmail());
+                    receiver.setName(userVO.getNickName());
+                    List<Receiver> receiverList = new LinkedList<>();
+                    receiverList.add(receiver);
+                    emailConfig.setReceivers(receiverList);
+                    EmailMessage EmailMessage = new EmailMessage();
+                    EmailMessage.setEmail(email);
+                    emailQueue.push(EmailMessage);
+                }else{
+                    logger.warn("修改手机号发送邮件功能已被禁用...");
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 }

@@ -79,6 +79,7 @@ $(function () {
                 }else{
                     $("#bind_email_msg").css("color","green");
                     $("#bind_email_msg").text("绑定成功");
+                    window.location.href="/page/user/info";
                 }
             },
             error: function (result) {

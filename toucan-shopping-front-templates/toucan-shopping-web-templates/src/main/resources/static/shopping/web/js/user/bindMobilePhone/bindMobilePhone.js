@@ -8,11 +8,11 @@ $(function () {
         var mobilePhoneSendVcBtnObj=$(this);
         if(mobilePhone==null||mobilePhone=="")
         {
-            $("#bind_mobilePhone_msg").text("请输入邮箱地址");
+            $("#bind_mobilePhone_msg").text("请输入手机号");
             return;
         }
 
-        if(!checkInput.mobilePhone[0].test(mobilePhone))
+        if(!checkInput.phone[0].test(mobilePhone))
         {
             $("#bind_mobilePhone_msg").text(checkInput.mobilePhone[1]);
             return;
@@ -35,7 +35,7 @@ $(function () {
                     return;
                 }
                 //TODO:接入短信网关后这里注释掉
-                $("#bind_mobilePhone_msg").text(result.data);
+                $("#bind_mobilePhone_msg").text("验证码:"+result.data);
                 mobilePhoneSendVcBtnObj.text("已发送");
                 mobilePhoneSendVcBtnObj.css("color", "grey");
                 mobilePhoneSendVcBtnObj.unbind("click");
@@ -59,7 +59,7 @@ $(function () {
             return false;
         }
 
-        var fields = $('#bindEmailForm').serializeArray();
+        var fields = $('#bindMobilePhoneForm').serializeArray();
         var params = {}; //声明一个对象
         $.each(fields, function(index, field) {
             params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
@@ -82,6 +82,7 @@ $(function () {
                 }else{
                     $("#bind_mobilePhone_msg").css("color","green");
                     $("#bind_mobilePhone_msg").text("绑定成功");
+                    window.location.href="/page/user/info";
                 }
             },
             error: function (result) {
@@ -95,3 +96,4 @@ $(function () {
 
 
 });
+
