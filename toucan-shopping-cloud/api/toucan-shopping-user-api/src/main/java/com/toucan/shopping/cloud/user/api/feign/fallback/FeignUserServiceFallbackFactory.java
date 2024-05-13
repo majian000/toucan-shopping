@@ -421,6 +421,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
+            public ResultObjectVO updateConnectMobilePhone(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.error("调用FeignUserService.updateConnectMobilePhone  params {}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO disabledEnabledEmail(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

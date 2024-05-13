@@ -2,19 +2,23 @@
 $(function () {
 
     $("#emailSendVcBtn").click(function(){
-        $("#bind_email_msg").text("");
-        $("#bind_email_msg").css("color","#ff4e00;");
+        $("#modify_email_msg").text("");
+        $("#modify_email_msg").css("color","#ff4e00;");
         var email = $("#email").val();
+        var oldEmail = $("#old_email").val();
         var emailSendVcBtnObj=$(this);
         if(email==null||email=="")
         {
-            $("#bind_email_msg").text("请输入邮箱地址");
+            $("#modify_email_msg").text("请输入邮箱地址");
             return;
         }
-
+        if(oldEmail==email){
+            $("#modify_email_msg").text("新邮箱地址不能与旧邮箱地址一致");
+            return;
+        }
         if(!checkInput.email[0].test(email))
         {
-            $("#bind_email_msg").text(checkInput.email[1]);
+            $("#modify_email_msg").text(checkInput.email[1]);
             return;
         }
         loading.showLoading({
@@ -25,13 +29,13 @@ $(function () {
         params.email = email;
         $.ajax({
             type: "POST",
-            url: basePath + "/api/vcode/text/email/user/bindEmail",
+            url: basePath + "/api/vcode/text/email/user/modifyEmail",
             contentType: "application/json;charset=utf-8",
             data:  JSON.stringify(params),
             dataType: "json",
             success: function (result) {
                 if (result.code <= 0) {
-                    $("#bind_email_msg").text(result.msg);
+                    $("#modify_email_msg").text(result.msg);
                     return;
                 }
                 emailSendVcBtnObj.text("已发送");
@@ -40,7 +44,7 @@ $(function () {
                 g_isSendVC=1;
             },
             error: function (result) {
-                $("#bind_email_msg").text("发送失败,请稍后重试");
+                $("#modify_email_msg").text("发送失败,请稍后重试");
             },
             complete: function (data, status) {
                 loading.hideLoading();
@@ -50,13 +54,13 @@ $(function () {
     });
     
     $("#ueibtn").click(function() {
-        $("#bind_email_msg").css("color","#ff4e00;");
+        $("#modify_email_msg").css("color","#ff4e00;");
     
         if(!checkInputFunction($('#ueibtn'),2)){
             return false;
         }
     
-        var fields = $('#bindEmailForm').serializeArray();
+        var fields = $('#modifyEmailForm').serializeArray();
         var params = {}; //声明一个对象
         $.each(fields, function(index, field) {
             params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
@@ -68,21 +72,21 @@ $(function () {
         });
         $.ajax({
             type: "POST",
-            url: basePath+"/api/user/bind/email/bind",
+            url: basePath+"/api/user/modify/email/modify",
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify(params),
             dataType: "json",
             success: function (result) {
                 if(result.code<=0)
                 {
-                    $("#bind_email_msg").text(result.msg);
+                    $("#modify_email_msg").text(result.msg);
                 }else{
-                    $("#bind_email_msg").css("color","green");
-                    $("#bind_email_msg").text("绑定成功");
+                    $("#modify_email_msg").css("color","green");
+                    $("#modify_email_msg").text("修改成功");
                 }
             },
             error: function (result) {
-                $("#bind_email_msg").text("修改失败,请稍后重试");
+                $("#modify_email_msg").text("修改失败,请稍后重试");
             },
             complete:function(data,status){
                 loading.hideLoading();

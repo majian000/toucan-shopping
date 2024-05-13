@@ -57,12 +57,25 @@
         </#if>
         <#if leftMenuName??&&leftMenuName=="bindEmail">
                 <dd class="active"><a href="${basePath}/page/user/bindEmail">绑定邮箱</a></dd>
+        <#elseif leftMenuName??&&leftMenuName=="modifyEmail">
+                <dd class="active"><a href="${basePath}/page/user/modifyEmail">修改邮箱</a></dd>
         <#else>
-                <dd><a href="${basePath}/page/user/bindEmail">绑定邮箱</a></dd>
+                <#if userVO.email?? && userVO.email!='' >
+                        <dd><a href="${basePath}/page/user/modifyEmail">修改邮箱</a></dd>
+                <#else>
+                        <dd><a href="${basePath}/page/user/bindEmail">绑定邮箱</a></dd>
+                </#if>
         </#if>
         <#if leftMenuName??&&leftMenuName=="bindMobilePhone">
                 <dd class="active"><a href="${basePath}/page/user/bindMobilePhone">绑定手机号</a></dd>
+        <#elseif leftMenuName??&&leftMenuName=="modifyMobilePhone">
+                <dd class="active"><a href="${basePath}/page/user/modifyMobilePhone">修改手机号</a></dd>
         <#else>
-                <dd><a href="${basePath}/page/user/bindMobilePhone">绑定手机号</a></dd>
+                <#if userVO.mobilePhone?? && userVO.mobilePhone!='' >
+                        <dd><a href="${basePath}/page/user/modifyMobilePhone">修改手机号</a></dd>
+                <#else>
+                        <dd><a href="${basePath}/page/user/bindMobilePhone">绑定手机号</a></dd>
+                </#if>
+
         </#if>
 </dl>

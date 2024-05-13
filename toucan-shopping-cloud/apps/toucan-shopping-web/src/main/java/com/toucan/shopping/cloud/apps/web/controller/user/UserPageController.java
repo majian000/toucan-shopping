@@ -167,6 +167,13 @@ public class UserPageController extends BaseController {
         return "user/bindEmail/bind_email";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/modifyEmail")
+    public String modifyEmail(HttpServletRequest httpServletRequest)
+    {
+        loginUserService.setAttributeUser(httpServletRequest);
+        return "user/modifyEmail/modify_email";
+    }
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/bindMobilePhone")

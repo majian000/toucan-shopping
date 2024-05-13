@@ -265,6 +265,15 @@ public interface FeignUserService {
     @RequestMapping(value="/update/connect/email",produces = "application/json;charset=UTF-8")
     ResultObjectVO updateConnectEmail(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 更新关联手机号
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/connect/mobilePhone",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateConnectMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据用户ID和邮箱 禁用邮箱关联
      * @param signHeader

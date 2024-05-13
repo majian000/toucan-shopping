@@ -839,6 +839,122 @@ public class UserController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 更新关联手机号
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/connect/mobilePhone",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateConnectMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到参数");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserBindMobilePhoneVO userBindMobilePhoneVO =requestJsonVO.formatEntity(UserBindMobilePhoneVO.class);
+        if(userBindMobilePhoneVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到参数");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userBindMobilePhoneVO.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("关联失败,请输入手机号");
+            return resultObjectVO;
+        }
+
+        if(!PhoneUtils.isChinaPhoneLegal(userBindMobilePhoneVO.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("关联失败,手机号格式错误");
+            return resultObjectVO;
+        }
+
+        if(userBindMobilePhoneVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
+
+        try {
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindMobilePhoneLock(String.valueOf(userBindMobilePhoneVO.getUserMainId())), String.valueOf(userBindMobilePhoneVO.getUserMainId()));
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            List<UserMobilePhone> userMobilePhoneList = userMobilePhoneService.findListByMobilePhone(userBindMobilePhoneVO.getMobilePhone());
+            if (!CollectionUtils.isEmpty(userMobilePhoneList)) {
+                for(UserMobilePhone userMobilePhone:userMobilePhoneList)
+                {
+                    if(userMobilePhone.getUserMainId().longValue()==userBindMobilePhoneVO.getUserMainId().longValue())
+                    {
+                        resultObjectVO.setCode(UserResultVO.FAILD);
+                        resultObjectVO.setMsg("绑定失败，手机号已经绑定到该用户了!");
+                        return resultObjectVO;
+                    }
+                }
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败，手机号已被绑定!");
+                return resultObjectVO;
+            }
+
+            //清空当前绑定的邮箱
+            userMobilePhoneService.deleteByUserMainId(userBindMobilePhoneVO.getUserMainId());
+
+            //保存用户邮箱绑定
+            UserMobilePhone userMobilePhone = new UserMobilePhone();
+            userMobilePhone.setId(idGenerator.id());
+            //设置邮箱
+            userMobilePhone.setMobilePhone(userBindMobilePhoneVO.getMobilePhone());
+            //设置用户主表ID
+            userMobilePhone.setUserMainId(userBindMobilePhoneVO.getUserMainId());
+            userMobilePhone.setCreateDate(new Date());
+            userMobilePhone.setDeleteStatus((short) 0);
+
+            int row = userMobilePhoneService.save(userMobilePhone);
+            if (row < 1) {
+                logger.warn("绑定手机号失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("绑定失败,请稍后重试!");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userBindMobilePhoneVO.getUserMainId()), userBindMobilePhoneVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("绑定失败,请稍后重试");
+        }finally{
+            skylarkLock.unLock(UserCenterRegistRedisKey.getBindMobilePhoneLock(String.valueOf(userBindMobilePhoneVO.getUserMainId())), String.valueOf(userBindMobilePhoneVO.getUserMainId()));
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 查询邮箱列表
      * @param requestJsonVO

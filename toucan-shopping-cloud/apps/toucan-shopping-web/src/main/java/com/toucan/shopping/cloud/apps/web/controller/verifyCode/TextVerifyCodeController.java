@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.web.controller.verifyCode;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserBindEmailRedisKey;
+import com.toucan.shopping.cloud.apps.web.redis.UserBindMobilePhoneRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserModifyPwdRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.BindEmailUtil;
@@ -209,8 +210,129 @@ public class TextVerifyCodeController extends BaseController {
                     emailQueue.push(EmailMessage);
                 }else{
                     logger.warn("绑定邮箱发送邮件功能已被禁用...");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("验证码生成失败,请稍后重试");
                 }
             }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    /**
+     * 修改邮箱 验证码(邮箱)
+     * @param request
+     * @param response
+     */
+    @UserAuth
+    @RequestMapping(value="/email/user/modifyEmail", method = RequestMethod.POST)
+    public ResultObjectVO modifyEmailVerifyCode(HttpServletRequest request, HttpServletResponse response, @RequestBody UserVO userVoParam) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId ="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userVoParam.getEmail()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("邮箱不能为空");
+                return resultObjectVO;
+            }
+            if(!EmailUtils.isEmail(userVoParam.getEmail()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("邮箱格式有误,请重新输入");
+                return resultObjectVO;
+            }
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
+            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            if(resultObectVO.isSuccess()) {
+                userVO = resultObectVO.formatData(UserVO.class);
+                if(userVoParam.getEmail().equals(userVO.getEmail()))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("邮箱已经被绑定了");
+                    return resultObjectVO;
+                }
+                String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+                Map<String,String> codeInfo= new HashMap<>();
+                codeInfo.put("code",vcode);
+                codeInfo.put("email",userVoParam.getEmail());
+                toucanStringRedisService.set(UserBindEmailRedisKey.getEmailVerifyCodeKey(userMainId), JSONObject.toJSONString(codeInfo), UserBindEmailConstant.MAX_BIND_EMAIL_VCODE_MAX_AGE, TimeUnit.SECONDS);
+                Email email = new Email();
+                EmailConfig emailConfig=EmailConfigHelper.getEmailConfig("犀鸟商城——修改邮箱");
+                if(emailConfig!=null) {
+                    email.setEmailConfig(emailConfig);
+                    email.setSubject("犀鸟商城——修改邮箱");
+                    email.setContent(BindEmailUtil.getModifyEmailContent(vcode, userVO.getNickName(), (UserBindEmailConstant.MAX_BIND_EMAIL_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
+
+                    Receiver receiver = new Receiver();
+                    receiver.setEmail(userVoParam.getEmail());
+                    receiver.setName(userVO.getNickName());
+                    List<Receiver> receiverList = new LinkedList<>();
+                    receiverList.add(receiver);
+                    emailConfig.setReceivers(receiverList);
+                    EmailMessage EmailMessage = new EmailMessage();
+                    EmailMessage.setEmail(email);
+                    emailQueue.push(EmailMessage);
+                }else{
+                    logger.warn("修改邮箱发送邮件功能已被禁用...");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("验证码生成失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 绑定手机号 验证码(手机)
+     * @param request
+     */
+    @UserAuth
+    @RequestMapping(value="/mobile/user/bindMobilePhone", method = RequestMethod.POST)
+    public ResultObjectVO bindMobilePhoneVerifyCode(HttpServletRequest request,@RequestBody UserVO userVoParam) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId ="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            if("-1".equals(userMainId))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("登录超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            if(!PhoneUtils.isChinaPhoneLegal(userVoParam.getMobilePhone()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("手机号格式有误,请重新输入");
+                return resultObjectVO;
+            }
+            String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+            Map<String,String> codeInfo= new HashMap<>();
+            codeInfo.put("code",vcode);
+            codeInfo.put("mobilePhone",userVoParam.getMobilePhone());
+            toucanStringRedisService.set(UserBindMobilePhoneRedisKey.getMobilePhoneVerifyCodeKey(userMainId), JSONObject.toJSONString(codeInfo), UserBindEmailConstant.MAX_BIND_EMAIL_VCODE_MAX_AGE, TimeUnit.SECONDS);
+            //TODO:接入短信网关后这里注释掉
+            resultObjectVO.setData(vcode);
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
