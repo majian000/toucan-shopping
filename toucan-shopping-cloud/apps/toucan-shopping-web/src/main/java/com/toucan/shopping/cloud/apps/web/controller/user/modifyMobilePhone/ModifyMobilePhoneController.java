@@ -165,14 +165,14 @@ public class ModifyMobilePhoneController extends BaseController {
 
         if(StringUtils.isEmpty(userModifyMobilePhoneVO.getVcode()))
         {
-            resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请输入验证码");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(userModifyMobilePhoneVO.getMobilePhone()))
         {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请输入手机号");
             return resultObjectVO;
         }
@@ -205,7 +205,7 @@ public class ModifyMobilePhoneController extends BaseController {
 
             if(!userModifyMobilePhoneVO.getMobilePhone().equals(codeInfo.get("mobilePhone")))
             {
-                resultObjectVO.setMsg("手机号输入有误,请输入接收验证码的手机号");
+                resultObjectVO.setMsg("验证码已过期,请重新发送");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }

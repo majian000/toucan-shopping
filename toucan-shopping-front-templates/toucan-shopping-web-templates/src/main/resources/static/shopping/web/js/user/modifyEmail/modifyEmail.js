@@ -1,4 +1,6 @@
 
+var g_goUserCenterSecond=5;
+
 $(function () {
 
     $("#emailSendVcBtn").click(function(){
@@ -82,8 +84,7 @@ $(function () {
                     $("#modify_email_msg").text(result.msg);
                 }else{
                     $("#modify_email_msg").css("color","green");
-                    $("#modify_email_msg").text("修改成功");
-                    window.location.href="/page/user/info";
+                    goUserCenterPage();
                 }
             },
             error: function (result) {
@@ -97,3 +98,20 @@ $(function () {
 
 
 });
+
+
+function goUserCenterPage()
+{
+    if(g_goUserCenterSecond<=0)
+    {
+        window.location.href=basePath+"/page/user/info";
+    }else
+    {
+        $("#modify_email_msg").text("修改成功,"+g_goUserCenterSecond + '秒后跳转到个人中心');
+    }
+    g_goUserCenterSecond--;
+    setTimeout(function () {
+        goUserCenterPage();
+    }, 1000);
+
+}

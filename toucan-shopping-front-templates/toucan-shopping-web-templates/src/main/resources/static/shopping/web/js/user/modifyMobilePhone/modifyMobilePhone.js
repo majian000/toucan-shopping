@@ -14,7 +14,7 @@ $(function () {
         }else{
             var s1VerifyCode=$("#s1VerifyCode").val();
             if(s1VerifyCode==null||s1VerifyCode==""){
-                $("#modify_mobile_phone_msg").text("请先发送验证码");
+                $("#modify_mobile_phone_msg").text("请输入验证码");
                 return ;
             }
 
@@ -76,9 +76,9 @@ $(function () {
         });
         $.ajax({
             type: "POST",
-            url: basePath + "/api/user/modify/password",
+            url: basePath + "/api/user/modify/mobilePhone/modify",
             contentType: "application/json;charset=utf-8",
-            data: JSON.stringify({mobile:newMobile,vcode:verifyCode,securityCode:securityCode}),
+            data: JSON.stringify({mobilePhone:newMobile,vcode:verifyCode,securityCode:securityCode}),
             dataType: "json",
             success: function (result) {
                 if (result.code <= 0) {

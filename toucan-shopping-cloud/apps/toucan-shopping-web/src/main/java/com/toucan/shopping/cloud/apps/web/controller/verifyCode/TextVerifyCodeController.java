@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.BindEmailUtil;
+import com.toucan.shopping.cloud.apps.web.util.EmailModifyMobilePhoneUtil;
 import com.toucan.shopping.cloud.apps.web.util.EmailModifyPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -408,7 +409,7 @@ public class TextVerifyCodeController extends BaseController {
                 if(emailConfig!=null) {
                     email.setEmailConfig(emailConfig);
                     email.setSubject("犀鸟商城——修改手机号");
-                    email.setContent(EmailModifyPwdUtil.getEmailContent(vcode, userVO.getNickName(), (UserModifyMobilePhoneConstant.MAX_MODIFY_MP_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
+                    email.setContent(EmailModifyMobilePhoneUtil.getEmailContent(vcode, userVO.getNickName(), (UserModifyMobilePhoneConstant.MAX_MODIFY_MP_VCODE_MAX_AGE/60), DateUtils.format(new Date(), DateUtils.FORMATTER_DD.get())));
 
                     Receiver receiver = new Receiver();
                     receiver.setEmail(userVO.getEmail());
