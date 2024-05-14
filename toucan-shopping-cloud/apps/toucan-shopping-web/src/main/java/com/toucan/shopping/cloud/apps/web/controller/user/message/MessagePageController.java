@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user.message;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -24,11 +25,14 @@ public class MessagePageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
+    @Autowired
+    private LoginUserService loginUserService;
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/")
     public String page(HttpServletRequest request)
     {
+        loginUserService.setAttributeUser(request);
         return "user/message/message_list";
     }
 
