@@ -4,9 +4,11 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.mapper.ArticleMapper;
 import com.toucan.shopping.modules.content.mapper.BannerMapper;
+import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.content.service.ArticleService;
 import com.toucan.shopping.modules.content.service.BannerService;
+import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
 
+
+    @Override
+    public PageInfo<ArticleVO> queryListPage(ArticlePageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<ArticleVO> pageInfo = new PageInfo();
+        pageInfo.setList(articleMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(articleMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
+    }
 
 
 }

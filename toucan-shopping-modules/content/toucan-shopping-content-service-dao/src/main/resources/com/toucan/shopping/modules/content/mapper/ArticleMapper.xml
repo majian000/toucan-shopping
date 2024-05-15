@@ -15,6 +15,8 @@
         <result column="seo_description" jdbcType="VARCHAR" property="seoDescription" />
         <result column="article_sort" jdbcType="BIGINT" property="articleSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="start_show_date" jdbcType="TIMESTAMP" property="startShowDate" />
+        <result column="end_show_date" jdbcType="TIMESTAMP" property="endShowDate" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
@@ -26,6 +28,45 @@
 
     <resultMap id="articleVOMap" type="com.toucan.shopping.modules.content.vo.ArticleVO" extends="articleMap" >
     </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="title!=null and title!='' ">
+            and t.title  like concat('%',#{title},'%')
+        </if>
+
+
+        <if test="startShowDate!=null">
+            <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+        </if>
+        <if test="endShowDate!=null">
+            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+        </if>
+    </sql>
+
+
+    <select id="queryListPage" resultMap="articleVOMap" parameterType="com.toucan.shopping.modules.content.page.ArticlePageInfo">
+        select t.* from t_article t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.content.page.ArticlePageInfo">
+        select count(*) from t_article t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
 
 
 </mapper>
