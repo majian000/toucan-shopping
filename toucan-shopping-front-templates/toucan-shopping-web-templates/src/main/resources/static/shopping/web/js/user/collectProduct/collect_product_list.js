@@ -24,7 +24,7 @@ function drawCollectProductList(cpage,data)
             "                                <th style=\"width:50%\">\n" +
             "                                    <div class=\"collect-product-detail-txt ac\">商品详情</div>\n" +
             "                                </th>\n" +
-            "                                <th style=\"width:30%\">金额</th>\n" +
+            "                                <th style=\"width:30%\">价格</th>\n" +
             "                                <th style=\"width:20%\">操作</th>\n" +
             "                            </tr>\n" +
             "\n" +
