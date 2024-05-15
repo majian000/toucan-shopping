@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user.userCollectProduct;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -27,12 +28,16 @@ public class UserCollectProductPageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private LoginUserService loginUserService;
+
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/list")
-    public String orderList()
+    public String userCollectProductList(HttpServletRequest httpServletRequest)
     {
+        loginUserService.setAttributeUser(httpServletRequest);
         return "user/userCollectProduct/collect_product_list";
     }
 

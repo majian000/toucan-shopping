@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.order;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -42,12 +43,15 @@ public class OrderPageController extends BaseController {
     @Autowired
     private FeignUserService feignUserService;
 
+    @Autowired
+    private LoginUserService loginUserService;
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/list")
-    public String orderList()
+    public String orderList(HttpServletRequest httpServletRequest)
     {
+        loginUserService.setAttributeUser(httpServletRequest);
         return "user/order/order_list";
     }
 
@@ -55,6 +59,7 @@ public class OrderPageController extends BaseController {
     @RequestMapping("/detail")
     public String detail(HttpServletRequest httpServletRequest,@RequestParam String docNo)
     {
+        loginUserService.setAttributeUser(httpServletRequest);
         httpServletRequest.setAttribute("docNo",docNo);
         return "user/order/detail";
     }

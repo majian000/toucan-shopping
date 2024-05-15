@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController("apiModifyMobilePhoneController")
 @RequestMapping("/api/user/modify/mobilePhone")
-public class ModifyMobilePhoneController extends BaseController {
+public class ModifyMobilePhoneApiController extends BaseController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

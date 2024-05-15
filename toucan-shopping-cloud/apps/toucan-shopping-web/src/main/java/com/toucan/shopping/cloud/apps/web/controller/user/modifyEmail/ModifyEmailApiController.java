@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @RestController("apiModifyEmailController")
 @RequestMapping("/api/user/modify/email")
-public class ModifyEmailController extends BaseController {
+public class ModifyEmailApiController extends BaseController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

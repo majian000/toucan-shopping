@@ -32,10 +32,14 @@ public class ConsigneeAddressPageController extends BaseController {
     @Autowired
     private FeignAreaService feignAreaService;
 
+    @Autowired
+    private LoginUserService loginUserService;
+
     @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/add")
     public String addPage(HttpServletRequest request)
     {
+        loginUserService.setAttributeUser(request);
         return "user/consigneeAddress/add";
     }
 
@@ -44,6 +48,7 @@ public class ConsigneeAddressPageController extends BaseController {
     @RequestMapping("/edit/{id}")
     public String editPage(HttpServletRequest request, @PathVariable String id)
     {
+        loginUserService.setAttributeUser(request);
         request.setAttribute("id",String.valueOf(id));
         return "user/consigneeAddress/edit";
     }
@@ -52,6 +57,7 @@ public class ConsigneeAddressPageController extends BaseController {
     @RequestMapping("/list")
     public String listPage(HttpServletRequest request)
     {
+        loginUserService.setAttributeUser(request);
         return "user/consigneeAddress/list";
     }
 

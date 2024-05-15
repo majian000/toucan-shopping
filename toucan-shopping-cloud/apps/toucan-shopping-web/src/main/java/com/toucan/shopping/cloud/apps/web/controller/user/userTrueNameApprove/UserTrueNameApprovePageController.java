@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user.userTrueNameApprove;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -40,10 +41,13 @@ public class UserTrueNameApprovePageController extends BaseController {
 
     @Autowired
     private FeignUserService feignUserService;
+    @Autowired
+    private LoginUserService loginUserService;
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
     @RequestMapping("/submit_success")
     public String submit_success(HttpServletRequest request){
+        loginUserService.setAttributeUser(request);
         return "user/trueName/true_name_submit_success";
     }
 
@@ -52,6 +56,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     public String updatePage(HttpServletRequest request)
     {
         try {
+            loginUserService.setAttributeUser(request);
             //从请求头中拿到uid
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
 
@@ -128,6 +133,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     public String page(HttpServletRequest request)
     {
         try {
+            loginUserService.setAttributeUser(request);
             //从请求头中拿到uid
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
 
