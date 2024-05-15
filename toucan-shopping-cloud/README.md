@@ -149,6 +149,53 @@
  | apps/toucan-shopping-message-web              | 8102                 | 消息WEB应用                                        |
  
     
+##### 启动步骤
+
+    1.启动服务配置中心
+    toucan-shopping-config-server
+    
+    2.启动注册中心
+    nacos-server
+    
+    3.启动网关
+    toucan-shopping-gateway
+    
+    4.启动中间件
+    下列中间件有些并不是必须,如不需要商品服务,不需要启动elasticsearch
+    redis 3.2
+    apache-zookeeper-3.6.2
+    kafka_2.12-2.7.0
+    elasticsearch-7.10.2
+    FastDFS_v5.08
+    canal.deployer-1.1.7
+    
+    5.启动服务
+    toucan-shopping-product
+    toucan-shopping-order
+    toucan-shopping-stock
+    toucan-shopping-user
+    toucan-shopping-admin-auth
+    toucan-shopping-seller
+    toucan-shopping-message
+    toucan-shopping-common-data
+    toucan-shopping-content
+    toucan-shopping-search
+    
+    6.启动应用
+    toucan-shopping-web
+    toucan-shopping-admin
+    toucan-shopping-admin-auth-web
+    toucan-shopping-scheduler
+    toucan-shopping-user-scheduler
+    toucan-shopping-seller-web
+    toucan-shopping-admin-auth-scheduler
+    toucan-shopping-message-web
+    
+    7.访问
+    http://localhost:8083/ 商城端
+    http://localhost:8101/ 卖家管理后台
+    http://localhost:8098/ 权限管理中心
+    http://localhost:8088/ 商城管理后台 
     
 
 #### 应用编码
