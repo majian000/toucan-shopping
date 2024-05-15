@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 栏目类型服务
+ * 栏目服务
  */
 @Component
 public class FeignColumnServiceFallbackFactory implements FallbackFactory<FeignColumnService> {

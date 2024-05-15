@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 用户地区服务
+ * 轮播图服务
  */
 @Component
 public class FeignBannerServiceFallbackFactory implements FallbackFactory<FeignBannerService> {

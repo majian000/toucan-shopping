@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 栏目类型服务
+ * 推荐商品服务
  */
 @Component
 public class FeignHotProductServiceFallbackFactory implements FallbackFactory<FeignHotProductService> {
