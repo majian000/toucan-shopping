@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.content.mapper.ArticleMapper">
+
+    <resultMap id="articleMap" type="com.toucan.shopping.modules.content.entity.Article" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="column_id" jdbcType="BIGINT" property="columnId" />
+        <result column="content_id" jdbcType="BIGINT" property="contentId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content_url" jdbcType="VARCHAR" property="contentUrl" />
+        <result column="cover_img_url" jdbcType="VARCHAR" property="coverImgUrl" />
+        <result column="abstract_content" jdbcType="VARCHAR" property="abstractContent" />
+        <result column="seo_title" jdbcType="VARCHAR" property="seoTitle" />
+        <result column="seo_keywords" jdbcType="VARCHAR" property="seoKeywords" />
+        <result column="seo_description" jdbcType="VARCHAR" property="seoDescription" />
+        <result column="article_sort" jdbcType="BIGINT" property="articleSort" />
+        <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+    </resultMap>
+
+
+    <resultMap id="articleVOMap" type="com.toucan.shopping.modules.content.vo.ArticleVO" extends="articleMap" >
+    </resultMap>
+
+
+</mapper>

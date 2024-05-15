@@ -8,7 +8,7 @@
         <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
         <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
         <result column="position" jdbcType="INTEGER" property="position" />
-        <result column="banner_sort" jdbcType="VARCHAR" property="bannerSort" />
+        <result column="banner_sort" jdbcType="BIGINT" property="bannerSort" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="start_show_date" jdbcType="TIMESTAMP" property="startShowDate" />
         <result column="end_show_date" jdbcType="TIMESTAMP" property="endShowDate" />
