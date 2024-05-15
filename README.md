@@ -5,7 +5,8 @@
 
 #### 标准版
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
-
+    注:标准版的代码较旧,需要手动移植新版代码
+    
 #### 微服务版
     采用技术spring cloud、spring config、lombok、mybatis、nacos、canal、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
