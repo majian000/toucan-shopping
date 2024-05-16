@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <div class="layui-form-item">
+                        <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
+
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">显示状态</label>
+                            <div class="layui-input-inline">
+                                <select id="showStatus" name="showStatus"  lay-search="">
+                                    <option value="-1">全部</option>
+                                    <option value="1">显示</option>
+                                    <option value="0">隐藏</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">展示时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="startShowDate" name="startShowDate" class="layui-input"  readonly >
+                            </div>
+                        </div>
+                        至&nbsp;&nbsp;
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" id="endShowDate" name="endShowDate" class="layui-input"  readonly >
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" > 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+            </div>
+        </script>
+
+        <table class="layui-hide" id="columnTypeTable" lay-filter="columnTypeTableFilter"></table>
+
+        <script type="text/html" id="columnTypeTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree','dtree','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var dtree = layui.dtree;
+        var roleTree;
+        var roleTreeDataArray = new Array();
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        var laydate = layui.laydate;
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#columnTypeTable',
+            url: "[[@{/}]]column/indexRecommendColumn/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id', width:200, title: '主键'},
+                    {field: 'title',width:300, title: '标题'},
+                    {field: 'startShowDate',width:200,  title: '开始展示时间'},
+                    {field: 'endShowDate', width:200, title: '结束展示时间'},
+                    {field: 'type',width:200,  title: '栏目类型',
+                        templet: function (row) {
+                            if(row.type=="1") {
+                                return "PC端";
+                            }
+                            if(row.type=="2") {
+                                return "移动端";
+                            }
+                            return row.type;
+                        }},
+                    {field: 'columnSort', width:200, title: '排序'},
+                    {field: 'showStatus', width:200, title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus=="1") {
+                                return "显示";
+                            }
+                            if(row.showStatus=="0") {
+                                return "隐藏";
+                            }
+                            return row.showStatus;
+                        }},
+                    {field: 'position',width:200, title: '位置',
+                        templet: function (row) {
+                            if(row.position=="1") {
+                                return "首页";
+                            }
+                            return row.position;
+                        }},
+                    {field: 'columnTypeCode', width:200,  title: '栏目类型编码'},
+                    {field: 'createAdminName', width:200,title: '创建人'},
+                    {field: 'createDate', width:200, title: '创建时间'},
+                    {field: 'updateAdminName', width:200, title: '修改人'},
+                    {field: 'updateDate', width:200, title: '修改时间'},
+                    {field: 'remark', width:200, title: '备注'},
+                    {title: '操作', minWidth: 300, toolbar: '#columnTypeTableBar',fixed:"right", align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('columnTypeTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(columnTypeTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加栏目',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/column/indexRecommendColumn/addPage}]]"
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('columnTypeTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除栏目?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]column/indexRecommendColumn/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('columnTypeTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+
+
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                roleTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
+                }
+                if(data[i].children!=null&&data[i].children.length>0)
+                {
+                    getCheckdNodeId(data[i].children,idArray);
+                }
+            }
+        }
+
+
+        /**
+         * 拿到指定节点对象
+         */
+        function getNodeObject(nodeId)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+                if(roleTreeDataArray[i].id==nodeId)
+                {
+                    return roleTreeDataArray[i];
+                }
+            }
+            return null;
+        }
+
+
+        /**
+         * 拿到上级节点信息
+         */
+        function getParentNode(rolesArray,pid)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+
+                if(roleTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<rolesArray.length;j++)
+                    {
+                        if(rolesArray[j].id==pid) {
+                            exists = true;
+                        }
+                    }
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
+                    }
+                    if(roleTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
+                    }
+                }
+            }
+        }
+
+
+        //监听表格复选框选择
+        table.on('checkbox(columnTypeTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(columnTypeTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'edit') {
+
+                var index = layer.open({
+                    title: '编辑栏目',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]column/indexRecommendColumn/editPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event == 'delete') {
+                layer.confirm('确定删除该栏目?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]column/indexRecommendColumn/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('columnTypeTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event == 'show') {
+
+                var index = layer.open({
+                    title: '查看栏目',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]column/indexRecommendColumn/showPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
