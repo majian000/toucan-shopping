@@ -4,6 +4,7 @@
 
     <resultMap id="columnMap" type="com.toucan.shopping.modules.column.entity.Column" >
         <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
@@ -84,8 +85,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column(id,title,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id,column_type_code,start_show_date,end_show_date)
-        values(#{id},#{title},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{columnTypeCode},#{startShowDate},#{endShowDate})
+        insert into t_column(id,pid,title,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id,column_type_code,start_show_date,end_show_date)
+        values(#{id},#{pid},#{title},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{columnTypeCode},#{startShowDate},#{endShowDate})
     </insert>
 
 
@@ -104,7 +105,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
-        update t_column set title=#{title},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update t_column set title=#{title},pid=#{pid},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
         column_type_code=#{columnTypeCode},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}

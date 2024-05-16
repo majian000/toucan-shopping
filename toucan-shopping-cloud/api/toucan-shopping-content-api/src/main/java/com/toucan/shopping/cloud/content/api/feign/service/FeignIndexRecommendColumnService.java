@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.content.api.feign.service;
 
-import com.toucan.shopping.cloud.content.api.feign.fallback.FeignColumnServiceFallbackFactory;
-import com.toucan.shopping.cloud.content.api.feign.fallback.FeignPcIndexColumnServiceFallbackFactory;
+import com.toucan.shopping.cloud.content.api.feign.fallback.FeignIndexRecommendColumnServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * PC首页栏目服务
  */
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/column/pc/index",fallbackFactory = FeignPcIndexColumnServiceFallbackFactory.class)
-public interface FeignPcIndexColumnService {
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/column/index/recommend",fallbackFactory = FeignIndexRecommendColumnServiceFallbackFactory.class)
+public interface FeignIndexRecommendColumnService {
 
 
     /**

@@ -8,9 +8,8 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
@@ -19,17 +18,14 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
-import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,17 +37,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 首页栏目管理
+ * 首页推荐栏目
  */
 @Controller
-@RequestMapping("/column/pcIndexColumn")
-public class PcIndexColumnController extends UIController {
+@RequestMapping("/column/indexRecommendColumn")
+public class IndexRecommendColumnController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,7 +60,7 @@ public class PcIndexColumnController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignPcIndexColumnService feignPcIndexColumnService;
+    private FeignIndexRecommendColumnService feignIndexRecommendColumnService;
 
     @Autowired
     private FeignAdminService feignAdminService;
@@ -91,11 +86,11 @@ public class PcIndexColumnController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/pcIndexColumn/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/indexRecommendColumn/listPage",feignFunctionService);
 
         initColumnTypeCode(request);
 
-        return "pages/column/pcIndexColumn/list.html";
+        return "pages/column/indexRecommendColumn/list.html";
     }
 
     private void initColumnTypeCode(HttpServletRequest request)
@@ -117,7 +112,7 @@ public class PcIndexColumnController extends UIController {
     public String addPage(HttpServletRequest request)
     {
         initColumnTypeCode(request);
-        return "pages/column/pcIndexColumn/add.html";
+        return "pages/column/indexRecommendColumn/add.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -125,7 +120,7 @@ public class PcIndexColumnController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         request.setAttribute("id",id);
-        return "pages/column/pcIndexColumn/edit.html";
+        return "pages/column/indexRecommendColumn/edit.html";
     }
 
 
@@ -134,28 +129,28 @@ public class PcIndexColumnController extends UIController {
     public String showPage(HttpServletRequest request,@PathVariable Long id)
     {
         request.setAttribute("id",id);
-        return "pages/column/pcIndexColumn/show.html";
+        return "pages/column/indexRecommendColumn/show.html";
     }
 
 
     /**
      * 保存
-     * @param pcIndexColumnVO
+     * @param indexRecommendColumnVO
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request,@RequestBody PcIndexColumnVO pcIndexColumnVO)
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody PcIndexColumnVO indexRecommendColumnVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            pcIndexColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            pcIndexColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            pcIndexColumnVO.setPosition(1);
-            pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
-            resultObjectVO = feignPcIndexColumnService.save(requestJsonVO);
+            indexRecommendColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            indexRecommendColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            indexRecommendColumnVO.setPosition(1);
+            indexRecommendColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, indexRecommendColumnVO);
+            resultObjectVO = feignIndexRecommendColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -182,7 +177,7 @@ public class PcIndexColumnController extends UIController {
             entity.setPosition(1);
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignPcIndexColumnService.update(requestJsonVO);
+            resultObjectVO = feignIndexRecommendColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -208,44 +203,44 @@ public class PcIndexColumnController extends UIController {
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignPcIndexColumnService.findById(requestJsonVO);
+            resultObjectVO = feignIndexRecommendColumnService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                PcIndexColumnVO pcIndexColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
+                PcIndexColumnVO indexRecommendColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
 
                 //右侧顶部预览图
-                pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
+                indexRecommendColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+indexRecommendColumnVO.getRightTopBanner().getImgPath());
                 //右侧底部预览图
-                pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                indexRecommendColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+indexRecommendColumnVO.getRightBottomBanner().getImgPath());
                 //左侧轮播图
-                for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
+                for(ColumnBannerVO columnBannerVO:indexRecommendColumnVO.getColumnLeftBannerVOS())
                 {
                     columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
                 }
 
                 //顶部预览图
-                if(pcIndexColumnVO.getTopBanner()!=null&&pcIndexColumnVO.getTopBanner().getImgPath()!=null)
+                if(indexRecommendColumnVO.getTopBanner()!=null&&indexRecommendColumnVO.getTopBanner().getImgPath()!=null)
                 {
-                    pcIndexColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getTopBanner().getImgPath());
+                    indexRecommendColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+indexRecommendColumnVO.getTopBanner().getImgPath());
                 }
 
                 //底部预览图
-                if(pcIndexColumnVO.getBottomBanner()!=null&&pcIndexColumnVO.getBottomBanner().getImgPath()!=null)
+                if(indexRecommendColumnVO.getBottomBanner()!=null&&indexRecommendColumnVO.getBottomBanner().getImgPath()!=null)
                 {
-                    pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                    indexRecommendColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+indexRecommendColumnVO.getBottomBanner().getImgPath());
                 }
 
                 //商品推荐图
-                if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+                if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getColumnRecommendProducts()))
                 {
-                    for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
+                    for(ColumnRecommendProductVO columnRecommendProductVO:indexRecommendColumnVO.getColumnRecommendProducts())
                     {
                         columnRecommendProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnRecommendProductVO.getImgPath());
                     }
                 }
 
 
-                resultObjectVO.setData(pcIndexColumnVO);
+                resultObjectVO.setData(indexRecommendColumnVO);
             }
         }catch(Exception e)
         {
@@ -274,7 +269,7 @@ public class PcIndexColumnController extends UIController {
             pageInfo.setPosition(1);
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -476,7 +471,7 @@ public class PcIndexColumnController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
 
-            resultObjectVO = feignPcIndexColumnService.deleteById(requestVo);
+            resultObjectVO = feignIndexRecommendColumnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

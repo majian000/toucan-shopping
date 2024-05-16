@@ -1,8 +1,7 @@
 package com.toucan.shopping.cloud.content.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
@@ -14,14 +13,14 @@ import org.springframework.stereotype.Component;
  * 栏目类型服务
  */
 @Component
-public class FeignPcIndexColumnServiceFallbackFactory implements FallbackFactory<FeignPcIndexColumnService> {
+public class FeignIndexRecommendColumnServiceFallbackFactory implements FallbackFactory<FeignIndexRecommendColumnService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignPcIndexColumnService create(Throwable throwable) {
+    public FeignIndexRecommendColumnService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignPcIndexColumnService(){
+        return new FeignIndexRecommendColumnService(){
 
             @Override
             public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {

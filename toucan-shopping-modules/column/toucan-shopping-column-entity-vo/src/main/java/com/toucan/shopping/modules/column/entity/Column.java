@@ -19,6 +19,11 @@ public class Column {
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long pid = -1L; //上级ID
+
     private String title; //标题
     private Integer type; //类型 1:pc端 2:移动端
     private Integer showStatus; //显示状态 0隐藏 1显示

@@ -2,14 +2,11 @@ package com.toucan.shopping.cloud.apps.web.controller.index;
 
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.cloud.apps.web.vo.index.LikeProductVo;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
-import com.toucan.shopping.modules.column.vo.HotProductVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;

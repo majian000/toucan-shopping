@@ -30,11 +30,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 用户端栏目操作
+ * 首页推荐栏目操作
  */
 @RestController
-@RequestMapping("/column/pc/index")
-public class PcIndexColumnController {
+@RequestMapping("/column/index/recommend")
+public class IndexRecommendColumnController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -118,26 +118,26 @@ public class PcIndexColumnController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        PcIndexColumnVO pcIndexColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
-        if(StringUtils.isEmpty(pcIndexColumnVO.getTitle()))
+        PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
+        if(StringUtils.isEmpty(indexRecommendColumnVO.getTitle()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("栏目标题不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(pcIndexColumnVO.getColumnTypeCode()))
+        if(StringUtils.isEmpty(indexRecommendColumnVO.getColumnTypeCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("栏目类型编码不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(pcIndexColumnVO.getAppCode()))
+        if(StringUtils.isEmpty(indexRecommendColumnVO.getAppCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
-        String lockKey = pcIndexColumnVO.getAppCode()+"_"+pcIndexColumnVO.getColumnTypeCode();
+        String lockKey = indexRecommendColumnVO.getAppCode()+"_"+indexRecommendColumnVO.getColumnTypeCode();
         try {
             boolean lockStatus = skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
@@ -147,9 +147,9 @@ public class PcIndexColumnController {
             }
 
             ColumnVO query = new ColumnVO();
-            query.setTitle(pcIndexColumnVO.getTitle());
-            query.setColumnTypeCode(pcIndexColumnVO.getColumnTypeCode());
-            query.setAppCode(pcIndexColumnVO.getAppCode());
+            query.setTitle(indexRecommendColumnVO.getTitle());
+            query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
+            query.setAppCode(indexRecommendColumnVO.getAppCode());
             List<ColumnVO> columnVOS = columnService.queryList(query);
             if(!CollectionUtils.isEmpty(columnVOS))
             {
@@ -158,13 +158,13 @@ public class PcIndexColumnController {
                 return resultObjectVO;
             }
 
-            pcIndexColumnVO.setId(idGenerator.id());
-            pcIndexColumnVO.setDeleteStatus((short)0);
-            pcIndexColumnVO.setCreateDate(new Date());
-            int ret = columnService.save(pcIndexColumnVO);
+            indexRecommendColumnVO.setId(idGenerator.id());
+            indexRecommendColumnVO.setDeleteStatus((short)0);
+            indexRecommendColumnVO.setCreateDate(new Date());
+            int ret = columnService.save(indexRecommendColumnVO);
             if(ret<=0)
             {
-                logger.warn("保存栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),pcIndexColumnVO.getId());
+                logger.warn("保存栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),indexRecommendColumnVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
@@ -174,17 +174,17 @@ public class PcIndexColumnController {
 
             //顶部图片预览
             ColumnBanner topBanner = new ColumnBanner();
-            BeanUtils.copyProperties(topBanner,pcIndexColumnVO.getTopBanner());
+            BeanUtils.copyProperties(topBanner,indexRecommendColumnVO.getTopBanner());
             topBanner.setId(idGenerator.id());
-            topBanner.setColumnId(pcIndexColumnVO.getId());
+            topBanner.setColumnId(indexRecommendColumnVO.getId());
             topBanner.setPosition(1);
             topBanner.setCreateDate(new Date());
-            topBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            topBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            topBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            topBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             topBanner.setBannerSort(0);
             columnBanners.add(topBanner);
 
-            List<ColumnBannerVO> columnLeftBannerVOS = pcIndexColumnVO.getColumnLeftBannerVOS();
+            List<ColumnBannerVO> columnLeftBannerVOS = indexRecommendColumnVO.getColumnLeftBannerVOS();
 
 
             //左侧顶部轮播图
@@ -195,11 +195,11 @@ public class PcIndexColumnController {
                     ColumnBanner columnBanner = new ColumnBanner();
                     BeanUtils.copyProperties(columnBanner,columnBannerVO);
                     columnBanner.setId(idGenerator.id());
-                    columnBanner.setColumnId(pcIndexColumnVO.getId());
+                    columnBanner.setColumnId(indexRecommendColumnVO.getId());
                     columnBanner.setPosition(2);
                     columnBanner.setCreateDate(new Date());
-                    columnBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-                    columnBanner.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+                    columnBanner.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnBanner.setBannerSort(0);
                     columnBanners.add(columnBanner);
                 }
@@ -207,39 +207,39 @@ public class PcIndexColumnController {
 
             //右侧顶部图片预览
             ColumnBanner rightTopBanner = new ColumnBanner();
-            BeanUtils.copyProperties(rightTopBanner,pcIndexColumnVO.getRightTopBanner());
+            BeanUtils.copyProperties(rightTopBanner,indexRecommendColumnVO.getRightTopBanner());
             rightTopBanner.setId(idGenerator.id());
-            rightTopBanner.setColumnId(pcIndexColumnVO.getId());
+            rightTopBanner.setColumnId(indexRecommendColumnVO.getId());
             rightTopBanner.setPosition(3);
             rightTopBanner.setCreateDate(new Date());
-            rightTopBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            rightTopBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightTopBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            rightTopBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             rightTopBanner.setBannerSort(0);
             columnBanners.add(rightTopBanner);
 
 
             //右侧底部图片预览
             ColumnBanner rightBottomBanner = new ColumnBanner();
-            BeanUtils.copyProperties(rightBottomBanner,pcIndexColumnVO.getRightBottomBanner());
+            BeanUtils.copyProperties(rightBottomBanner,indexRecommendColumnVO.getRightBottomBanner());
             rightBottomBanner.setId(idGenerator.id());
-            rightBottomBanner.setColumnId(pcIndexColumnVO.getId());
+            rightBottomBanner.setColumnId(indexRecommendColumnVO.getId());
             rightBottomBanner.setPosition(4);
             rightBottomBanner.setCreateDate(new Date());
-            rightBottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            rightBottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightBottomBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            rightBottomBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             rightBottomBanner.setBannerSort(0);
             columnBanners.add(rightBottomBanner);
 
 
             //底部图片预览
             ColumnBanner bottomBanner = new ColumnBanner();
-            BeanUtils.copyProperties(bottomBanner,pcIndexColumnVO.getBottomBanner());
+            BeanUtils.copyProperties(bottomBanner,indexRecommendColumnVO.getBottomBanner());
             bottomBanner.setId(idGenerator.id());
-            bottomBanner.setColumnId(pcIndexColumnVO.getId());
+            bottomBanner.setColumnId(indexRecommendColumnVO.getId());
             bottomBanner.setPosition(5);
             bottomBanner.setCreateDate(new Date());
-            bottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            bottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            bottomBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            bottomBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             bottomBanner.setBannerSort(0);
             columnBanners.add(bottomBanner);
 
@@ -252,17 +252,17 @@ public class PcIndexColumnController {
 
 
             //栏目顶部标签
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getTopLabels()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getTopLabels()))
             {
-                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getTopLabels())
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:indexRecommendColumnVO.getTopLabels())
                 {
                     ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
                     BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
                     columnRecommendLabel.setId(idGenerator.id());
-                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendLabel.setCreateDate(new Date());
-                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)1);
                     columnRecommendLabel.setLabelSort(0L);
 
@@ -272,17 +272,17 @@ public class PcIndexColumnController {
             }
 
             //栏目左侧标签
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getLeftLabels()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getLeftLabels()))
             {
-                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getLeftLabels())
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:indexRecommendColumnVO.getLeftLabels())
                 {
                     ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
                     BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
                     columnRecommendLabel.setId(idGenerator.id());
-                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendLabel.setCreateDate(new Date());
-                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)2);
                     columnRecommendLabel.setLabelSort(0L);
 
@@ -299,20 +299,20 @@ public class PcIndexColumnController {
 
             List<ColumnArea> columnAreas = new LinkedList<>();
             //保存栏目地区
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getAreaCodeList()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getAreaCodeList()))
             {
-                for(int i=0;i<pcIndexColumnVO.getAreaCodeList().size();i++)
+                for(int i=0;i<indexRecommendColumnVO.getAreaCodeList().size();i++)
                 {
-                    String areaCode = pcIndexColumnVO.getAreaCodeList().get(i);
-                    String areaName = pcIndexColumnVO.getAreaNameList().get(i);
+                    String areaCode = indexRecommendColumnVO.getAreaCodeList().get(i);
+                    String areaName = indexRecommendColumnVO.getAreaNameList().get(i);
                     ColumnArea columnArea = new ColumnArea();
                     columnArea.setId(idGenerator.id());
-                    columnArea.setColumnId(pcIndexColumnVO.getId());
-                    columnArea.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnArea.setColumnId(indexRecommendColumnVO.getId());
+                    columnArea.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnArea.setCreateDate(new Date());
                     columnArea.setAreaCode(areaCode);
                     columnArea.setAreaName(areaName);
-                    columnArea.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnArea.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnAreas.add(columnArea);
                 }
             }
@@ -322,24 +322,24 @@ public class PcIndexColumnController {
 
             //保存商品推荐
             List<ColumnRecommendProduct> columnRecommendProducts = new LinkedList<>();
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getColumnRecommendProducts()))
             {
-                for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
+                for(ColumnRecommendProductVO columnRecommendProductVO:indexRecommendColumnVO.getColumnRecommendProducts()) {
                     ColumnRecommendProduct columnRecommendProduct = new ColumnRecommendProduct();
                     BeanUtils.copyProperties(columnRecommendProduct,columnRecommendProductVO);
                     columnRecommendProduct.setId(idGenerator.id());
-                    columnRecommendProduct.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendProduct.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendProduct.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendProduct.setCreateDate(new Date());
                     columnRecommendProduct.setProductSort(0L);
-                    columnRecommendProduct.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendProduct.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendProducts.add(columnRecommendProduct);
                 }
             }
             columnRecommendProductService.saves(columnRecommendProducts);
 
 
-            resultObjectVO.setData(pcIndexColumnVO);
+            resultObjectVO.setData(indexRecommendColumnVO);
 
         }catch(Exception e)
         {
@@ -372,26 +372,26 @@ public class PcIndexColumnController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        PcIndexColumnVO pcIndexColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
-        if(StringUtils.isEmpty(pcIndexColumnVO.getTitle()))
+        PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
+        if(StringUtils.isEmpty(indexRecommendColumnVO.getTitle()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("栏目标题不能为空");
             return resultObjectVO;
         }
-        if(pcIndexColumnVO.getId()==null)
+        if(indexRecommendColumnVO.getId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("栏目ID不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(pcIndexColumnVO.getAppCode()))
+        if(StringUtils.isEmpty(indexRecommendColumnVO.getAppCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
-        String lockKey = pcIndexColumnVO.getAppCode()+"_"+pcIndexColumnVO.getColumnTypeCode();
+        String lockKey = indexRecommendColumnVO.getAppCode()+"_"+indexRecommendColumnVO.getColumnTypeCode();
         try {
             boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
             if (!lockStatus) {
@@ -401,48 +401,48 @@ public class PcIndexColumnController {
             }
 
             ColumnVO query = new ColumnVO();
-            query.setTitle(pcIndexColumnVO.getTitle());
-            query.setColumnTypeCode(pcIndexColumnVO.getColumnTypeCode());
-            query.setAppCode(pcIndexColumnVO.getAppCode());
+            query.setTitle(indexRecommendColumnVO.getTitle());
+            query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
+            query.setAppCode(indexRecommendColumnVO.getAppCode());
             List<ColumnVO> columnVOS = columnService.queryList(query);
             if(!CollectionUtils.isEmpty(columnVOS))
             {
-                if(columnVOS.get(0).getId().longValue()!=pcIndexColumnVO.getId().longValue()) {
+                if(columnVOS.get(0).getId().longValue()!=indexRecommendColumnVO.getId().longValue()) {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("该栏目已存在");
                     return resultObjectVO;
                 }
             }
 
-            pcIndexColumnVO.setUpdateDate(new Date());
-            int ret = columnService.update(pcIndexColumnVO);
+            indexRecommendColumnVO.setUpdateDate(new Date());
+            int ret = columnService.update(indexRecommendColumnVO);
             if(ret<=0)
             {
-                logger.warn("修改栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),pcIndexColumnVO.getId());
+                logger.warn("修改栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),indexRecommendColumnVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
 
 
             //删除栏目轮播图
-            columnBannerService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnBannerService.deleteByColumnId(indexRecommendColumnVO.getId());
 
             List<ColumnBanner> columnBanners = new LinkedList<>();
 
 
             //顶部图片预览
             ColumnBanner topBanner = new ColumnBanner();
-            BeanUtils.copyProperties(topBanner,pcIndexColumnVO.getTopBanner());
+            BeanUtils.copyProperties(topBanner,indexRecommendColumnVO.getTopBanner());
             topBanner.setId(idGenerator.id());
-            topBanner.setColumnId(pcIndexColumnVO.getId());
+            topBanner.setColumnId(indexRecommendColumnVO.getId());
             topBanner.setPosition(1);
             topBanner.setCreateDate(new Date());
-            topBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            topBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            topBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            topBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             topBanner.setBannerSort(0);
             columnBanners.add(topBanner);
 
-            List<ColumnBannerVO> columnLeftBannerVOS = pcIndexColumnVO.getColumnLeftBannerVOS();
+            List<ColumnBannerVO> columnLeftBannerVOS = indexRecommendColumnVO.getColumnLeftBannerVOS();
             //左侧顶部轮播图
             if(!CollectionUtils.isEmpty(columnLeftBannerVOS))
             {
@@ -451,11 +451,11 @@ public class PcIndexColumnController {
                     ColumnBanner columnBanner = new ColumnBanner();
                     BeanUtils.copyProperties(columnBanner,columnBannerVO);
                     columnBanner.setId(idGenerator.id());
-                    columnBanner.setColumnId(pcIndexColumnVO.getId());
+                    columnBanner.setColumnId(indexRecommendColumnVO.getId());
                     columnBanner.setPosition(2);
                     columnBanner.setCreateDate(new Date());
-                    columnBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-                    columnBanner.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+                    columnBanner.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnBanner.setBannerSort(0);
                     columnBanners.add(columnBanner);
                 }
@@ -463,38 +463,38 @@ public class PcIndexColumnController {
 
             //右侧顶部图片预览
             ColumnBanner rightTopBanner = new ColumnBanner();
-            BeanUtils.copyProperties(rightTopBanner,pcIndexColumnVO.getRightTopBanner());
+            BeanUtils.copyProperties(rightTopBanner,indexRecommendColumnVO.getRightTopBanner());
             rightTopBanner.setId(idGenerator.id());
-            rightTopBanner.setColumnId(pcIndexColumnVO.getId());
+            rightTopBanner.setColumnId(indexRecommendColumnVO.getId());
             rightTopBanner.setPosition(3);
             rightTopBanner.setCreateDate(new Date());
-            rightTopBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            rightTopBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightTopBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            rightTopBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             rightTopBanner.setBannerSort(0);
             columnBanners.add(rightTopBanner);
 
 
             //右侧底部图片预览
             ColumnBanner rightBottomBanner = new ColumnBanner();
-            BeanUtils.copyProperties(rightBottomBanner,pcIndexColumnVO.getRightBottomBanner());
+            BeanUtils.copyProperties(rightBottomBanner,indexRecommendColumnVO.getRightBottomBanner());
             rightBottomBanner.setId(idGenerator.id());
-            rightBottomBanner.setColumnId(pcIndexColumnVO.getId());
+            rightBottomBanner.setColumnId(indexRecommendColumnVO.getId());
             rightBottomBanner.setPosition(4);
             rightBottomBanner.setCreateDate(new Date());
-            rightBottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            rightBottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightBottomBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            rightBottomBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             rightBottomBanner.setBannerSort(0);
             columnBanners.add(rightBottomBanner);
 
             //底部图片预览
             ColumnBanner bottomBanner = new ColumnBanner();
-            BeanUtils.copyProperties(bottomBanner,pcIndexColumnVO.getBottomBanner());
+            BeanUtils.copyProperties(bottomBanner,indexRecommendColumnVO.getBottomBanner());
             bottomBanner.setId(idGenerator.id());
-            bottomBanner.setColumnId(pcIndexColumnVO.getId());
+            bottomBanner.setColumnId(indexRecommendColumnVO.getId());
             bottomBanner.setPosition(5);
             bottomBanner.setCreateDate(new Date());
-            bottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
-            bottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            bottomBanner.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
+            bottomBanner.setAppCode(indexRecommendColumnVO.getAppCode());
             bottomBanner.setBannerSort(0);
             columnBanners.add(bottomBanner);
 
@@ -504,21 +504,21 @@ public class PcIndexColumnController {
 
 
             //删除栏目标签
-            columnRecommendLabelService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnRecommendLabelService.deleteByColumnId(indexRecommendColumnVO.getId());
 
             List<ColumnRecommendLabel> columnRecommendLabels = new LinkedList<>();
             //栏目顶部标签
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getTopLabels()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getTopLabels()))
             {
-                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getTopLabels())
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:indexRecommendColumnVO.getTopLabels())
                 {
                     ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
                     BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
                     columnRecommendLabel.setId(idGenerator.id());
-                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendLabel.setCreateDate(new Date());
-                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)1);
                     columnRecommendLabel.setLabelSort(0L);
 
@@ -528,17 +528,17 @@ public class PcIndexColumnController {
             }
 
             //栏目左侧标签
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getLeftLabels()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getLeftLabels()))
             {
-                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getLeftLabels())
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:indexRecommendColumnVO.getLeftLabels())
                 {
                     ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
                     BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
                     columnRecommendLabel.setId(idGenerator.id());
-                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendLabel.setCreateDate(new Date());
-                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)2);
                     columnRecommendLabel.setLabelSort(0L);
 
@@ -553,24 +553,24 @@ public class PcIndexColumnController {
             }
 
             //删除栏目地区
-            columnAreaService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnAreaService.deleteByColumnId(indexRecommendColumnVO.getId());
 
             List<ColumnArea> columnAreas = new LinkedList<>();
             //保存栏目地区
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getAreaCodeList()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getAreaCodeList()))
             {
-                for(int i=0;i<pcIndexColumnVO.getAreaCodeList().size();i++)
+                for(int i=0;i<indexRecommendColumnVO.getAreaCodeList().size();i++)
                 {
-                    String areaCode = pcIndexColumnVO.getAreaCodeList().get(i);
-                    String areaName = pcIndexColumnVO.getAreaNameList().get(i);
+                    String areaCode = indexRecommendColumnVO.getAreaCodeList().get(i);
+                    String areaName = indexRecommendColumnVO.getAreaNameList().get(i);
                     ColumnArea columnArea = new ColumnArea();
                     columnArea.setId(idGenerator.id());
-                    columnArea.setColumnId(pcIndexColumnVO.getId());
-                    columnArea.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnArea.setColumnId(indexRecommendColumnVO.getId());
+                    columnArea.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnArea.setCreateDate(new Date());
                     columnArea.setAreaCode(areaCode);
                     columnArea.setAreaName(areaName);
-                    columnArea.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnArea.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnAreas.add(columnArea);
                 }
             }
@@ -580,28 +580,28 @@ public class PcIndexColumnController {
 
 
             //删除栏目推荐商品
-            columnRecommendProductService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnRecommendProductService.deleteByColumnId(indexRecommendColumnVO.getId());
 
             //保存商品推荐
             List<ColumnRecommendProduct> columnRecommendProducts = new LinkedList<>();
-            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVO.getColumnRecommendProducts()))
             {
-                for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
+                for(ColumnRecommendProductVO columnRecommendProductVO:indexRecommendColumnVO.getColumnRecommendProducts()) {
                     ColumnRecommendProduct columnRecommendProduct = new ColumnRecommendProduct();
                     BeanUtils.copyProperties(columnRecommendProduct,columnRecommendProductVO);
                     columnRecommendProduct.setId(idGenerator.id());
-                    columnRecommendProduct.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendProduct.setColumnId(indexRecommendColumnVO.getId());
+                    columnRecommendProduct.setCreateAdminId(indexRecommendColumnVO.getCreateAdminId());
                     columnRecommendProduct.setCreateDate(new Date());
                     columnRecommendProduct.setProductSort(0L);
-                    columnRecommendProduct.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendProduct.setAppCode(indexRecommendColumnVO.getAppCode());
                     columnRecommendProducts.add(columnRecommendProduct);
                 }
             }
             columnRecommendProductService.saves(columnRecommendProducts);
 
 
-            resultObjectVO.setData(pcIndexColumnVO);
+            resultObjectVO.setData(indexRecommendColumnVO);
 
         }catch(Exception e)
         {
@@ -644,18 +644,18 @@ public class PcIndexColumnController {
         }
 
         try {
-            PcIndexColumnVO pcIndexColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
+            PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
 
-            if(pcIndexColumnVO.getId()==null)
+            if(indexRecommendColumnVO.getId()==null)
             {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(pcIndexColumnVO));
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(indexRecommendColumnVO));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
                 return resultObjectVO;
             }
 
 
-            int ret = columnService.deleteById(pcIndexColumnVO.getId());
+            int ret = columnService.deleteById(indexRecommendColumnVO.getId());
             if(ret<=0)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -663,10 +663,10 @@ public class PcIndexColumnController {
                 return resultObjectVO;
             }
 
-            columnBannerService.deleteByColumnId(pcIndexColumnVO.getId());
-            columnAreaService.deleteByColumnId(pcIndexColumnVO.getId());
-            columnRecommendLabelService.deleteByColumnId(pcIndexColumnVO.getId());
-            columnRecommendProductService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnBannerService.deleteByColumnId(indexRecommendColumnVO.getId());
+            columnAreaService.deleteByColumnId(indexRecommendColumnVO.getId());
+            columnRecommendLabelService.deleteByColumnId(indexRecommendColumnVO.getId());
+            columnRecommendProductService.deleteByColumnId(indexRecommendColumnVO.getId());
 
 
         }catch(Exception e)
@@ -701,19 +701,19 @@ public class PcIndexColumnController {
         }
         try {
             ColumnVO columnVO = requestVo.formatEntity(ColumnVO.class);
-            List<PcIndexColumnVO> pcIndexColumnVOS = columnService.queryPcIndexColumns(columnVO);
+            List<PcIndexColumnVO> indexRecommendColumnVOS = columnService.queryPcIndexColumns(columnVO);
             List<Long> columnIds = new LinkedList<>();
-            if(!CollectionUtils.isEmpty(pcIndexColumnVOS))
+            if(!CollectionUtils.isEmpty(indexRecommendColumnVOS))
             {
-                for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS)
+                for(PcIndexColumnVO indexRecommendColumnVO:indexRecommendColumnVOS)
                 {
-                    columnIds.add(pcIndexColumnVO.getId());
+                    columnIds.add(indexRecommendColumnVO.getId());
 
-                    pcIndexColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
-                    pcIndexColumnVO.setTopLabels(new LinkedList<>());
-                    pcIndexColumnVO.setLeftLabels(new LinkedList<>());
-                    pcIndexColumnVO.setColumnRecommendProducts(new LinkedList<>());
-                    pcIndexColumnVO.setColumnAreas(new LinkedList<>());
+                    indexRecommendColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
+                    indexRecommendColumnVO.setTopLabels(new LinkedList<>());
+                    indexRecommendColumnVO.setLeftLabels(new LinkedList<>());
+                    indexRecommendColumnVO.setColumnRecommendProducts(new LinkedList<>());
+                    indexRecommendColumnVO.setColumnAreas(new LinkedList<>());
                 }
             }
             if(!CollectionUtils.isEmpty(columnIds))
@@ -723,23 +723,23 @@ public class PcIndexColumnController {
                 List<ColumnBannerVO> columnBannerVOS = columnBannerService.queryListByColumnIds(columnIds);
                 if(!CollectionUtils.isEmpty(columnBannerVOS))
                 {
-                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                    for(PcIndexColumnVO indexRecommendColumnVO:indexRecommendColumnVOS) {
                         for (ColumnBannerVO columnBannerVO : columnBannerVOS) {
-                            if(pcIndexColumnVO.getId().longValue()==columnBannerVO.getColumnId().longValue()) {
+                            if(indexRecommendColumnVO.getId().longValue()==columnBannerVO.getColumnId().longValue()) {
                                 //左侧顶部
                                 if (columnBannerVO.getPosition().intValue() == 1) {
-                                    pcIndexColumnVO.setTopBanner(columnBannerVO);
+                                    indexRecommendColumnVO.setTopBanner(columnBannerVO);
                                 } else if (columnBannerVO.getPosition().intValue() == 2) {
-                                    pcIndexColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
+                                    indexRecommendColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
                                 } else if (columnBannerVO.getPosition().intValue() == 3)  //右侧顶部
                                 {
-                                    pcIndexColumnVO.setRightTopBanner(columnBannerVO);
+                                    indexRecommendColumnVO.setRightTopBanner(columnBannerVO);
                                 } else if (columnBannerVO.getPosition().intValue() == 4)  //右侧底部
                                 {
-                                    pcIndexColumnVO.setRightBottomBanner(columnBannerVO);
+                                    indexRecommendColumnVO.setRightBottomBanner(columnBannerVO);
                                 } else if (columnBannerVO.getPosition().intValue() == 5)  //底部
                                 {
-                                    pcIndexColumnVO.setBottomBanner(columnBannerVO);
+                                    indexRecommendColumnVO.setBottomBanner(columnBannerVO);
                                 }
                             }
                         }
@@ -751,15 +751,15 @@ public class PcIndexColumnController {
                 List<ColumnRecommendLabelVO> columnRecommendLabelVOS = columnRecommendLabelService.queryListByColumnIds(columnIds);
                 if(!CollectionUtils.isEmpty(columnRecommendLabelVOS))
                 {
-                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                    for(PcIndexColumnVO indexRecommendColumnVO:indexRecommendColumnVOS) {
                         for (ColumnRecommendLabelVO columnRecommendLabelVO : columnRecommendLabelVOS) {
-                            if(pcIndexColumnVO.getId().longValue()==columnRecommendLabelVO.getColumnId().longValue()) {
+                            if(indexRecommendColumnVO.getId().longValue()==columnRecommendLabelVO.getColumnId().longValue()) {
                                 //顶部标签
                                 if (columnRecommendLabelVO.getPosition().intValue() == 1) {
-                                    pcIndexColumnVO.getTopLabels().add(columnRecommendLabelVO);
+                                    indexRecommendColumnVO.getTopLabels().add(columnRecommendLabelVO);
                                 } else if (columnRecommendLabelVO.getPosition().intValue() == 2) //左侧
                                 {
-                                    pcIndexColumnVO.getLeftLabels().add(columnRecommendLabelVO);
+                                    indexRecommendColumnVO.getLeftLabels().add(columnRecommendLabelVO);
                                 }
                             }
                         }
@@ -772,11 +772,11 @@ public class PcIndexColumnController {
                 List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListCreateDateAscByColumnIds(columnIds);
                 if(!CollectionUtils.isEmpty(columnRecommendProductVOS))
                 {
-                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                    for(PcIndexColumnVO indexRecommendColumnVO:indexRecommendColumnVOS) {
                         for (int i = 0; i < columnRecommendProductVOS.size(); i++) {
                             ColumnRecommendProductVO columnRecommendProductVO = columnRecommendProductVOS.get(i);
-                            if(pcIndexColumnVO.getId().longValue()==columnRecommendProductVO.getColumnId().longValue()) {
-                                pcIndexColumnVO.getColumnRecommendProducts().add(columnRecommendProductVO);
+                            if(indexRecommendColumnVO.getId().longValue()==columnRecommendProductVO.getColumnId().longValue()) {
+                                indexRecommendColumnVO.getColumnRecommendProducts().add(columnRecommendProductVO);
                             }
                         }
                     }
@@ -786,11 +786,11 @@ public class PcIndexColumnController {
                 List<ColumnAreaVO> columnAreaVOS = columnAreaService.queryListByColumnIds(columnIds);
                 if(!CollectionUtils.isEmpty(columnAreaVOS))
                 {
-                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                    for(PcIndexColumnVO indexRecommendColumnVO:indexRecommendColumnVOS) {
                         for(ColumnAreaVO columnAreaVO:columnAreaVOS)
                         {
-                            if(pcIndexColumnVO.getId().longValue()==columnAreaVO.getColumnId().longValue()) {
-                                pcIndexColumnVO.getColumnAreas().add(columnAreaVO);
+                            if(indexRecommendColumnVO.getId().longValue()==columnAreaVO.getColumnId().longValue()) {
+                                indexRecommendColumnVO.getColumnAreas().add(columnAreaVO);
                             }
                         }
                     }
@@ -798,7 +798,7 @@ public class PcIndexColumnController {
 
             }
 
-            resultObjectVO.setData(pcIndexColumnVOS);
+            resultObjectVO.setData(indexRecommendColumnVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -844,65 +844,65 @@ public class PcIndexColumnController {
                 return resultObjectVO;
             }
 
-            PcIndexColumnVO pcIndexColumnVO = new PcIndexColumnVO();
-            BeanUtils.copyProperties(pcIndexColumnVO,columnVO);
+            PcIndexColumnVO indexRecommendColumnVO = new PcIndexColumnVO();
+            BeanUtils.copyProperties(indexRecommendColumnVO,columnVO);
 
             //查询轮播图以及预览图相关
-            List<ColumnBannerVO> columnBannerVOS = columnBannerService.queryListByColumnId(pcIndexColumnVO.getId());
+            List<ColumnBannerVO> columnBannerVOS = columnBannerService.queryListByColumnId(indexRecommendColumnVO.getId());
             if(!CollectionUtils.isEmpty(columnBannerVOS))
             {
-                pcIndexColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
+                indexRecommendColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
                 for(ColumnBannerVO columnBannerVO:columnBannerVOS)
                 {
                     //左侧顶部
                     if(columnBannerVO.getPosition().intValue()==1)
                     {
-                        pcIndexColumnVO.setTopBanner(columnBannerVO);
+                        indexRecommendColumnVO.setTopBanner(columnBannerVO);
                     }else if(columnBannerVO.getPosition().intValue()==2)
                     {
-                        pcIndexColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
+                        indexRecommendColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
                     }else if(columnBannerVO.getPosition().intValue()==3)  //右侧顶部
                     {
-                        pcIndexColumnVO.setRightTopBanner(columnBannerVO);
+                        indexRecommendColumnVO.setRightTopBanner(columnBannerVO);
                     }else if(columnBannerVO.getPosition().intValue()==4)  //右侧底部
                     {
-                        pcIndexColumnVO.setRightBottomBanner(columnBannerVO);
+                        indexRecommendColumnVO.setRightBottomBanner(columnBannerVO);
                     }else if(columnBannerVO.getPosition().intValue()==5)  //底部
                     {
-                        pcIndexColumnVO.setBottomBanner(columnBannerVO);
+                        indexRecommendColumnVO.setBottomBanner(columnBannerVO);
                     }
                 }
             }
 
             //查询栏目标签
-            List<ColumnRecommendLabelVO> columnRecommendLabelVOS = columnRecommendLabelService.queryListByColumnId(pcIndexColumnVO.getId());
+            List<ColumnRecommendLabelVO> columnRecommendLabelVOS = columnRecommendLabelService.queryListByColumnId(indexRecommendColumnVO.getId());
             if(!CollectionUtils.isEmpty(columnRecommendLabelVOS))
             {
 
-                pcIndexColumnVO.setTopLabels(new LinkedList<>());
-                pcIndexColumnVO.setLeftLabels(new LinkedList<>());
+                indexRecommendColumnVO.setTopLabels(new LinkedList<>());
+                indexRecommendColumnVO.setLeftLabels(new LinkedList<>());
                 for(ColumnRecommendLabelVO columnRecommendLabelVO:columnRecommendLabelVOS)
                 {
                     //顶部标签
                     if(columnRecommendLabelVO.getPosition().intValue()==1)
                     {
-                        pcIndexColumnVO.getTopLabels().add(columnRecommendLabelVO);
+                        indexRecommendColumnVO.getTopLabels().add(columnRecommendLabelVO);
                     }else if(columnRecommendLabelVO.getPosition().intValue()==2) //左侧
                     {
-                        pcIndexColumnVO.getLeftLabels().add(columnRecommendLabelVO);
+                        indexRecommendColumnVO.getLeftLabels().add(columnRecommendLabelVO);
                     }
                 }
             }
 
             //查询推荐商品
-            List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListCreateDateAscByColumnId(pcIndexColumnVO.getId());
-            pcIndexColumnVO.setColumnRecommendProducts(columnRecommendProductVOS);
+            List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListCreateDateAscByColumnId(indexRecommendColumnVO.getId());
+            indexRecommendColumnVO.setColumnRecommendProducts(columnRecommendProductVOS);
 
             //查询栏目地区
-            List<ColumnAreaVO> columnAreaVOS = columnAreaService.queryListByColumnId(pcIndexColumnVO.getId());
-            pcIndexColumnVO.setColumnAreas(columnAreaVOS);
+            List<ColumnAreaVO> columnAreaVOS = columnAreaService.queryListByColumnId(indexRecommendColumnVO.getId());
+            indexRecommendColumnVO.setColumnAreas(columnAreaVOS);
 
-            resultObjectVO.setData(pcIndexColumnVO);
+            resultObjectVO.setData(indexRecommendColumnVO);
 
         }catch(Exception e)
         {

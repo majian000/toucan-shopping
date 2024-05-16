@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.content.api.feign.service;
 
 import com.toucan.shopping.cloud.content.api.feign.fallback.FeignHotProductServiceFallbackFactory;
-import com.toucan.shopping.cloud.content.api.feign.fallback.FeignPcIndexColumnServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;

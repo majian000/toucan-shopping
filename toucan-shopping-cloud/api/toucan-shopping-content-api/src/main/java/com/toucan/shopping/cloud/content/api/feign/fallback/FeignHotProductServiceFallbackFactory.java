@@ -2,7 +2,6 @@ package com.toucan.shopping.cloud.content.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;

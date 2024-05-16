@@ -3,12 +3,11 @@ package com.toucan.shopping.cloud.apps.web.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
-import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.vo.BannerVO;
@@ -20,17 +19,14 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.order.entity.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -58,7 +54,7 @@ public class IndexServiceImpl implements IndexService {
     private CategoryRedisService categoryRedisService;
 
     @Autowired
-    private FeignPcIndexColumnService feignPcIndexColumnService;
+    private FeignIndexRecommendColumnService feignIndexRecommendColumnService;
 
     @Autowired
     private FeignHotProductService feignHotProductService;
@@ -204,7 +200,7 @@ public class IndexServiceImpl implements IndexService {
             query.setPosition(1);
             query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryPcIndexColumns(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryPcIndexColumns(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<PcIndexColumnVO> pcIndexColumnVOS = resultObjectVO.formatDataList(PcIndexColumnVO.class);
                 if(!CollectionUtils.isEmpty(pcIndexColumnVOS)) {
