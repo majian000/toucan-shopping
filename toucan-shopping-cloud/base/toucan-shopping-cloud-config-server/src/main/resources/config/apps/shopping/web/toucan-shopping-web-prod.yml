@@ -118,7 +118,7 @@ toucan:
   # workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   # datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端配置
-    pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
+    pc-index-column-type-code: INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
     freemarker:
       release-mapping-url: /htmls/release/**
       preview-mapping-url: /htmls/preview/**

@@ -103,15 +103,13 @@ public class ColumnController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<ColumnTypeTreeVO> dictCategoryTreeVOS = resultObjectVO.formatDataList(ColumnTypeTreeVO.class);
-                    Set<String> appCodes = new HashSet<>();
-                    for(ColumnTypeTreeVO columnTypeTreeVO:dictCategoryTreeVOS)
+                    List<ColumnTypeTreeVO> columnTypeTreeVOS = resultObjectVO.formatDataList(ColumnTypeTreeVO.class);
+                    for(ColumnTypeTreeVO columnTypeTreeVO:columnTypeTreeVOS)
                     {
                         columnTypeTreeVO.setOpen(false);
                         columnTypeTreeVO.setIcon(null);
-                        appCodes.add(columnTypeTreeVO.getAppCode());
                     }
-                    resultObjectVO.setData(dictCategoryTreeVOS);
+                    resultObjectVO.setData(columnTypeTreeVOS);
                 }
             }
             return resultObjectVO;
@@ -119,6 +117,61 @@ public class ColumnController extends UIController {
         {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询列表
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, ColumnPageInfo pageInfo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = null;
+            if(StringUtils.isEmpty(pageInfo.getColumnTypeCode())){
+                resultObjectVO.setMsg("栏目类型编码不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
+            }
+
+//            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+//            resultObjectVO = feignColumnService.queryTreeTableByPid(requestJsonVO);
+//
+//            if(resultObjectVO.isSuccess()) {
+//                if (resultObjectVO.getData() != null) {
+//
+//                    Set<String> adminIdList = new HashSet<String>();
+//                    Set<String> appCodes = new HashSet<>();
+//                    List<DictTreeVO> dictTreeVOS = resultObjectVO.formatDataList(DictTreeVO.class);
+//                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
+//                        for (DictTreeVO dictTreeVO : dictTreeVOS) {
+//                            if (dictTreeVO.getCreateAdminId() != null) {
+//                                adminIdList.add(dictTreeVO.getCreateAdminId());
+//                            }
+//                            if (dictTreeVO.getUpdateAdminId() != null) {
+//                                adminIdList.add(dictTreeVO.getUpdateAdminId());
+//                            }
+//                            appCodes.add(dictTreeVO.getAppCode());
+//                        }
+//                        this.setAdminNames(adminIdList, dictTreeVOS);
+//                        this.setAppNames(appCodes,dictTreeVOS);
+//                        resultObjectVO.setData(dictTreeVOS);
+//                    }
+//                }
+//            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
