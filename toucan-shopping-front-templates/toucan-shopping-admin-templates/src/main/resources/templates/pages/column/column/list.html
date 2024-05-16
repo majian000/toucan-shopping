@@ -21,7 +21,6 @@
             font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
         }
 
-
     </style>
 
 </head>
@@ -33,7 +32,7 @@
 <div class="layui-layout">
     <div class="layui-side ">
 
-        <div class="layuimini-container" style="height:90%">
+        <div class="layuimini-container" style="height:90%; overflow-x: auto;">
             <div class="layuimini-main">
                 <div class="layui-card">
                     <div class="layui-card-header">栏目类型</div>
@@ -221,17 +220,10 @@
         };
 
         function typeTreeClick(event, treeId, treeNode) {
-            loadListPageApps(treeNode);
             $("#typeId").val(treeNode.id);
             $("#queryButton").click();
         }
 
-        function loadListPageApps(treeNode){
-            $("#selectApp").empty();
-            $("#selectApp").append("<option value='' selected='selected'>请选择</option>");
-            $("#selectApp").append("<option value='" + treeNode.appCode + "' >" + treeNode.appName + "</option>");
-            form.render();
-        }
 
         initCategoryTree();
 
