@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
@@ -13,9 +14,11 @@ import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeServic
 import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.column.constant.ColumnDictConstant;
 import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
@@ -25,6 +28,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +41,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -74,14 +79,16 @@ public class ColumnController extends UIController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignDictService feignDictService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
+    public String page(HttpServletRequest request) throws NoSuchAlgorithmException {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/column/listPage",feignFunctionService);
+        this.setColumnDictList(request);
         return "pages/column/column/list.html";
     }
 
@@ -215,6 +222,30 @@ public class ColumnController extends UIController {
         }
     }
 
+
+
+    private void setColumnDictList(HttpServletRequest request) throws NoSuchAlgorithmException {
+        //栏目字典
+        DictVO queryDict=new DictVO();
+        queryDict.setCategoryCode(ColumnDictConstant.COLUMN_DICT_CATEGORY_CODE);
+        queryDict.setCodes(new LinkedList<>());
+        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_TYPE_CODE);
+        queryDict.setAppCode(toucan.getAppCode());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
+        if(resultObjectVO.isSuccess()) {
+            if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
+                for(DictVO dictVO:resultObjectVO.getData()){
+                    switch (dictVO.getCode()){
+                        case ColumnDictConstant.COLUMN_DICT_TYPE_CODE:
+                            request.setAttribute("columnTypeList",dictVO.getChildren());
+                            break;
+                    }
+                }
+            }
+        }
+
+    }
 
 }
 
