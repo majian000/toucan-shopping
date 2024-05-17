@@ -32,4 +32,14 @@ public class ColumnVO extends Column {
 
     private List<ColumnAreaVO> columnAreas;
 
+
+    private String parentTitle; //上级节点名称
+
+    /**
+     * 是否有子节点
+     */
+    private Boolean haveChild = false;
+
+    private List<Long> idList; //主键集合
+
 }

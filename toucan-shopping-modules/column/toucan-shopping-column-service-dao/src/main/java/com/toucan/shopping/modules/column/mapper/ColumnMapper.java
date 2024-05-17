@@ -61,4 +61,5 @@ public interface ColumnMapper {
      */
     int deleteById(Long id);
 
+    Long queryListCount(ColumnVO entity);
 }

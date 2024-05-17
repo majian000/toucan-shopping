@@ -6,7 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="title" jdbcType="VARCHAR" property="title" />
-        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
         <result column="column_sort" jdbcType="INTEGER" property="columnSort" />
         <result column="position" jdbcType="INTEGER" property="position" />
@@ -76,6 +76,20 @@
         </if>
         <if test="columnTypeCode!=null">
             and t.column_type_code = #{columnTypeCode}
+        </if>
+
+        <if test="idArray!=null and idArray.length>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="idList!=null and idList.size>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
 
         <if test="appCode!=null  ">
@@ -167,5 +181,17 @@
     <select id="findById" resultMap="columnVOMap" parameterType="java.lang.Long">
         select t.* from t_column t where t.id = #{id} and t.delete_status=0 limit 0,1
     </select>
+
+
+    <select id="queryListCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
+        select count(*) from t_column t
+        <where>
+            1=1
+            and t.delete_status=0
+            <include refid="queryListWhere" />
+        </where>
+    </select>
+
+
 
 </mapper>

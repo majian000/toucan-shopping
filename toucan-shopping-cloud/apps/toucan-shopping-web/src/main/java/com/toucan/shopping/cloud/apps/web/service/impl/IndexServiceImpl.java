@@ -196,7 +196,7 @@ public class IndexServiceImpl implements IndexService {
             ColumnVO query = new ColumnVO();
             query.setAppCode(toucan.getAppCode());
             query.setShowStatus(1);
-            query.setType(1);
+            query.setType("10");
             query.setPosition(1);
             query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);

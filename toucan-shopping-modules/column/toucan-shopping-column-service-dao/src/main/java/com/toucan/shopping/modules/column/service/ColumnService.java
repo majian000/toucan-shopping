@@ -65,4 +65,14 @@ public interface ColumnService {
      */
     int deleteById(Long id);
 
+
+    /**
+     * 根据查询对象查询列表数量
+     * @param entity
+     * @return
+     */
+    Long queryListCount(ColumnVO entity);
+
+
+
 }

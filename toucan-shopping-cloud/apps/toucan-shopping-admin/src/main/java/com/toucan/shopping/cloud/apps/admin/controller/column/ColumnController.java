@@ -142,31 +142,30 @@ public class ColumnController extends UIController {
                 return resultObjectVO;
             }
 
-//            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-//            resultObjectVO = feignColumnService.queryTreeTableByPid(requestJsonVO);
-//
-//            if(resultObjectVO.isSuccess()) {
-//                if (resultObjectVO.getData() != null) {
-//
-//                    Set<String> adminIdList = new HashSet<String>();
-//                    Set<String> appCodes = new HashSet<>();
-//                    List<DictTreeVO> dictTreeVOS = resultObjectVO.formatDataList(DictTreeVO.class);
-//                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
-//                        for (DictTreeVO dictTreeVO : dictTreeVOS) {
-//                            if (dictTreeVO.getCreateAdminId() != null) {
-//                                adminIdList.add(dictTreeVO.getCreateAdminId());
-//                            }
-//                            if (dictTreeVO.getUpdateAdminId() != null) {
-//                                adminIdList.add(dictTreeVO.getUpdateAdminId());
-//                            }
-//                            appCodes.add(dictTreeVO.getAppCode());
-//                        }
-//                        this.setAdminNames(adminIdList, dictTreeVOS);
-//                        this.setAppNames(appCodes,dictTreeVOS);
-//                        resultObjectVO.setData(dictTreeVOS);
-//                    }
-//                }
-//            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            resultObjectVO = feignColumnService.queryTreeTableByPid(requestJsonVO);
+
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+
+                    Set<String> adminIdList = new HashSet<String>();
+                    Set<String> appCodes = new HashSet<>();
+                    List<ColumnTreeVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeVO.class);
+                    if(!CollectionUtils.isEmpty(columnTreeVOS)) {
+                        for (ColumnTreeVO dictTreeVO : columnTreeVOS) {
+                            if (dictTreeVO.getCreateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getCreateAdminId());
+                            }
+                            if (dictTreeVO.getUpdateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getUpdateAdminId());
+                            }
+                            appCodes.add(dictTreeVO.getAppCode());
+                        }
+                        this.setAdminNames(adminIdList, columnTreeVOS);
+                        resultObjectVO.setData(columnTreeVOS);
+                    }
+                }
+            }
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -175,6 +174,45 @@ public class ColumnController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+
+
+    /**
+     * 设置管理员名称
+     * @param adminIdList
+     * @throws Exception
+     */
+    private void setAdminNames(Set<String> adminIdList, List<ColumnTreeVO> list) throws Exception{
+
+        //查询创建人和修改人
+        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+        adminIdList.toArray(createOrUpdateAdminIds);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+        ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(adminVOS))
+            {
+                for(ColumnVO dictVO:list)
+                {
+                    for(AdminVO adminVO:adminVOS)
+                    {
+                        if(dictVO.getCreateAdminId()!=null&&dictVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictVO.setCreateAdminName(adminVO.getUsername());
+                        }
+                        if(dictVO.getUpdateAdminId()!=null&&dictVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictVO.setUpdateAdminName(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

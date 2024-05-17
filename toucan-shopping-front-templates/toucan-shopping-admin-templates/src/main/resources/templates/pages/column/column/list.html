@@ -153,7 +153,15 @@
                     [
                         {type: "checkbox", width: 50},
                         {field: 'id', width: 200, title: '主键'},
-                        {field: 'name',width: 200,  title: '名称'},
+                        {field: 'title',width: 200,  title: '名称'},
+                        {field: 'parentTitle',width: 200,  title: '上级栏目'},
+                        {field: 'type',width:200,  title: '栏目类型',
+                            templet: function (row) {
+                                var typeNames="";
+                                return row.type;
+                            }},
+                        {field: 'startShowDate',  title: '开始展示时间'},
+                        {field: 'endShowDate',  title: '结束展示时间'},
                         {field: 'createAdminName',width: 150,  title: '创建人'},
                         {field: 'createDate',width: 200,  title: '创建时间'},
                         {field: 'updateAdminName', width: 150,  title: '修改人'},

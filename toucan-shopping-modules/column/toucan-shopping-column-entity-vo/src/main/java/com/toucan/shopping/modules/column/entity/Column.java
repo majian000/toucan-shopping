@@ -25,7 +25,7 @@ public class Column {
     private Long pid = -1L; //上级ID
 
     private String title; //标题
-    private Integer type; //类型 1:pc端 2:移动端
+    private String type; //类型 10:pc端 11:移动端
     private Integer showStatus; //显示状态 0隐藏 1显示
     private Integer position; //栏目位置 1 PC门户首页
 

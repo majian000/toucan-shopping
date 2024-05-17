@@ -11,6 +11,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 列表查询页对象
@@ -34,6 +35,7 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
     private Short showStatus;  //显示状态 0隐藏 1显示
 
+    private Long pid; //上级节点
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

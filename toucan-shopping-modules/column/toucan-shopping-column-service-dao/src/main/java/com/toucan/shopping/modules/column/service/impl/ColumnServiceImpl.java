@@ -63,4 +63,9 @@ public class ColumnServiceImpl implements ColumnService {
     public int deleteById(Long id) {
         return columnMapper.deleteById(id);
     }
+
+    @Override
+    public Long queryListCount(ColumnVO entity) {
+        return columnMapper.queryListCount(entity);
+    }
 }

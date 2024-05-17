@@ -32,7 +32,7 @@ public class FeignColumnServiceFallbackFactory implements FallbackFactory<FeignC
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignColumnService.queryListPage失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignColumnService.queryListPage失败  params{}",requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -47,7 +47,22 @@ public class FeignColumnServiceFallbackFactory implements FallbackFactory<FeignC
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignColumnService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignColumnService.save失败  params{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignColumnService.queryTreeTableByPid失败  params{}",requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
