@@ -93,6 +93,13 @@ public class ColumnController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request) throws NoSuchAlgorithmException {
+        this.setColumnDictList(request);
+        return "pages/column/column/add.html";
+    }
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/type/list",method = RequestMethod.POST)
     @ResponseBody
