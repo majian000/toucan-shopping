@@ -39,4 +39,14 @@ public interface FeignColumnService {
     @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询栏目树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/column/tree/pid",method = RequestMethod.POST)
+    ResultObjectVO queryColumnTreeByPid(@RequestBody RequestJsonVO requestJsonVO);
+
 }

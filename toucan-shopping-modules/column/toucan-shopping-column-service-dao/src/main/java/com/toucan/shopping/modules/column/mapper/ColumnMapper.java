@@ -62,4 +62,9 @@ public interface ColumnMapper {
     int deleteById(Long id);
 
     Long queryListCount(ColumnVO entity);
+
+    List<ColumnVO> findListByPidAndAppCode(Long pid,String appCode);
+
+    Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode);
+
 }

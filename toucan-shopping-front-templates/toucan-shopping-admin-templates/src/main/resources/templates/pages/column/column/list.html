@@ -278,10 +278,10 @@
         treetable.on('toolbar(columnTable)', function (obj) {
 
             if (obj.event === 'add') {  // 监听添加操作
-                var selectCategoryId = $("#typeId").val();
-                if(selectCategoryId==null||selectCategoryId==""||selectCategoryId=="-1")
+                var columnTypeCode = $("#columnTypeCode").val();
+                if(columnTypeCode==null||columnTypeCode==""||columnTypeCode=="-1")
                 {
-                    layer.msg("请选择栏目分类");
+                    layer.msg("请选择栏目类型");
                     return ;
                 }
                 var index = layer.open({
@@ -291,7 +291,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/column/addPage?columnCategoryId=}]]"+selectCategoryId
+                    content: "[[@{/column/addPage?columnTypeCode=}]]"+columnTypeCode
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

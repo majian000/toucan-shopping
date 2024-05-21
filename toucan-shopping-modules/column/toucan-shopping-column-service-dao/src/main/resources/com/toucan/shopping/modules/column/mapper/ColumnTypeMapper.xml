@@ -39,7 +39,7 @@
         <if test="id!=null">
             and t.id = #{id}
         </if>
-        <if test="code!=null">
+        <if test="code!=null and code!=''">
             and t.code = #{code}
         </if>
         <if test="name!=null">
@@ -89,10 +89,9 @@
         select t.* from t_column_type t
         <where>
             1=1
-
             <include refid="queryListWhere" />
-
         </where>
+        order by t.create_date desc
     </select>
 
 

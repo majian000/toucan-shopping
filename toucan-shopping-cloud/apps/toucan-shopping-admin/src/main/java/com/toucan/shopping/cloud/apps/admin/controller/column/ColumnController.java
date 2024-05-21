@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
@@ -13,6 +14,7 @@ import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
@@ -82,6 +84,9 @@ public class ColumnController extends UIController {
     @Autowired
     private FeignDictService feignDictService;
 
+    @Autowired
+    private FeignAppService feignAppService;
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -95,8 +100,15 @@ public class ColumnController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request) throws NoSuchAlgorithmException {
+    public String addPage(HttpServletRequest request,@RequestParam String columnTypeCode) throws NoSuchAlgorithmException {
         this.setColumnDictList(request);
+        request.setAttribute("columnTypeCode",columnTypeCode);
+        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),columnTypeCode));
+        if(resultTypeObjectVO.isSuccess()){
+            if(resultTypeObjectVO.getData()!=null){
+                request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
+            }
+        }
         return "pages/column/column/add.html";
     }
 
@@ -137,6 +149,52 @@ public class ColumnController extends UIController {
     }
 
 
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @RequestMapping(value = "/query/column/tree")
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,ColumnTreeVO queryColumnTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //默认查询根节点
+            if(queryColumnTreeVO.getId()==null)
+            {
+                App query = new App();
+                query.setCode(toucan.getAppCode());
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+                resultObjectVO = feignAppService.findByCode(appCode,requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    App rootNode = resultObjectVO.formatData(App.class);
+                    ColumnTreeVO columnTreeVO = new ColumnTreeVO();
+                    columnTreeVO.setId(-1L);
+                    columnTreeVO.setPid(-2L);
+                    columnTreeVO.setParentId(-2L);
+                    columnTreeVO.setAppCode(rootNode.getCode());
+                    columnTreeVO.setTitle("根节点");
+                    columnTreeVO.setName(toucan.getAppCode()+" "+rootNode.getName());
+                    columnTreeVO.setIsParent(true);
+                    List<ColumnTreeVO> columnTrees = new LinkedList<>();
+                    columnTrees.add(columnTreeVO);
+                    resultObjectVO.setData(columnTrees);
+                }
+            }else{
+                queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
+                queryColumnTreeVO.setAppCode(toucan.getAppCode());
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
+                return feignColumnService.queryColumnTreeByPid(requestJsonVO);
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 查询列表
@@ -193,6 +251,38 @@ public class ColumnController extends UIController {
 
 
     /**
+     * 保存
+     * @param columnVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody ColumnVO columnVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(columnVO.getColumnTypeCode())){
+                resultObjectVO.setMsg("栏目类型不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
+            }
+            columnVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            columnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, columnVO);
+            resultObjectVO = feignColumnService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 设置管理员名称
      * @param adminIdList
      * @throws Exception
@@ -237,6 +327,7 @@ public class ColumnController extends UIController {
         queryDict.setCategoryCode(ColumnDictConstant.COLUMN_DICT_CATEGORY_CODE);
         queryDict.setCodes(new LinkedList<>());
         queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_TYPE_CODE);
+        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_POSITION_CODE);
         queryDict.setAppCode(toucan.getAppCode());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
         ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
@@ -246,6 +337,9 @@ public class ColumnController extends UIController {
                     switch (dictVO.getCode()){
                         case ColumnDictConstant.COLUMN_DICT_TYPE_CODE:
                             request.setAttribute("columnTypeList",dictVO.getChildren());
+                            break;
+                        case ColumnDictConstant.COLUMN_DICT_POSITION_CODE:
+                            request.setAttribute("columnPositionList",dictVO.getChildren());
                             break;
                     }
                 }

@@ -68,4 +68,16 @@ public class ColumnServiceImpl implements ColumnService {
     public Long queryListCount(ColumnVO entity) {
         return columnMapper.queryListCount(entity);
     }
+
+
+    @Override
+    public List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode) {
+        return columnMapper.findListByPidAndAppCode(id,appCode);
+    }
+
+    @Override
+    public Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode) {
+        return columnMapper.queryOneLevelChildrenCountByIdAndAppCode(id,appCode);
+    }
+
 }

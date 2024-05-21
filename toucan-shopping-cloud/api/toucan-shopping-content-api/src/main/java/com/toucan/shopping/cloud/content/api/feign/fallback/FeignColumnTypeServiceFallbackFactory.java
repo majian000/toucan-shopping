@@ -2,8 +2,10 @@ package com.toucan.shopping.cloud.content.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
+import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +124,21 @@ public class FeignColumnTypeServiceFallbackFactory implements FallbackFactory<Fe
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignColumnTypeService.queryList失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultTypeObjectVO<ColumnTypeVO> findOneByCode(RequestJsonVO requestVo) {
+                ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignColumnTypeService.queryList失败  params{}",requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

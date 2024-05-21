@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
@@ -362,7 +363,53 @@ public class ColumnTypeController {
         return resultObjectVO;
     }
 
+    /**
+     * 根据编码查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/one/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultTypeObjectVO<ColumnTypeVO> findOneByCode(@RequestBody RequestJsonVO requestVo){
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
 
+        try {
+            ColumnTypeVO columnTypeVO = requestVo.formatEntity(ColumnTypeVO.class);
+            if(StringUtils.isEmpty(columnTypeVO.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("编码不能为空");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该对象
+            ColumnTypeVO query=new ColumnTypeVO();
+            query.setCode(columnTypeVO.getCode());
+            List<ColumnTypeVO> entitys = columnTypeService.queryList(query);
+            if(CollectionUtils.isEmpty(entitys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(entitys.get(0));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.ColumnService;
+import com.toucan.shopping.modules.column.vo.ColumnTreeVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -305,5 +306,42 @@ public class ColumnController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询栏目树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/column/tree/pid",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryColumnTreeByPid(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            ColumnTreeVO query = requestJsonVO.formatEntity(ColumnTreeVO.class);
+            List<ColumnVO> functionVOS = columnService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode());
+            List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
+            for(ColumnVO columnVO:functionVOS)
+            {
+                ColumnTreeVO columnTreeVO = new ColumnTreeVO();
+                BeanUtils.copyProperties(columnTreeVO,columnVO);
+                Long childrenCount = columnService.queryOneLevelChildrenCountByIdAndAppCode(columnVO.getId(),columnVO.getAppCode());
+                if(childrenCount!=null&&childrenCount.longValue()>0)
+                {
+                    columnTreeVO.setIsParent(true);
+                }else{
+                    columnTreeVO.setIsParent(false);
+                }
+                columnTreeVOS.add(columnTreeVO);
+            }
+            resultObjectVO.setData(columnTreeVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 }

@@ -1,8 +1,10 @@
 package com.toucan.shopping.cloud.content.api.feign.service;
 
 import com.toucan.shopping.cloud.content.api.feign.fallback.FeignColumnTypeServiceFallbackFactory;
+import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,5 +77,12 @@ public interface FeignColumnTypeService {
 
 
 
+    /**
+     * 根据编码查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/one/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultTypeObjectVO<ColumnTypeVO> findOneByCode(@RequestBody RequestJsonVO requestVo);
 
 }

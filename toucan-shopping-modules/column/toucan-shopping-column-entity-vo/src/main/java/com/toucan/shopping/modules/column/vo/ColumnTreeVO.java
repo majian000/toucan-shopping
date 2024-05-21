@@ -33,6 +33,11 @@ public class ColumnTreeVO extends ColumnVO {
     private String title;
 
     /**
+     * 节点名称
+     */
+    private String name;
+
+    /**
      * 节点名
      */
     private String text;

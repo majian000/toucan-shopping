@@ -74,5 +74,16 @@ public interface ColumnService {
     Long queryListCount(ColumnVO entity);
 
 
+    /**
+     * 查询当前节点下一级子节点
+     * @param id
+     */
+    List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode);
+
+    /**
+     * 查询当前节点下一级子节点数量
+     * @param id
+     */
+    Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode);
 
 }
