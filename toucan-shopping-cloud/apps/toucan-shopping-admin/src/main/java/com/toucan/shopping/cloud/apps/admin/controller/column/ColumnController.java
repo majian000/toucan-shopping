@@ -103,7 +103,9 @@ public class ColumnController extends UIController {
     public String addPage(HttpServletRequest request,@RequestParam String columnTypeCode) throws NoSuchAlgorithmException {
         this.setColumnDictList(request);
         request.setAttribute("columnTypeCode",columnTypeCode);
-        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),columnTypeCode));
+        ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
+        queryColumnTypeVO.setCode(columnTypeCode);
+        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
         if(resultTypeObjectVO.isSuccess()){
             if(resultTypeObjectVO.getData()!=null){
                 request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
