@@ -54,6 +54,13 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label required">点击跳转</label>
+        <div class="layui-input-block">
+            <input type="title" name="clickPath"  maxlength="255"  placeholder="请输入点击跳转"  class="layui-input">
+            <tip>填写栏目标题。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">开始展示时间</label>
         <div class="layui-input-block">
             <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" readonly >
@@ -70,7 +77,7 @@
 
 
     <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
+        <label class="layui-form-label required">状态</label>
         <div class="layui-input-block">
             <input type="radio" name="showStatus" value="1" title="显示" checked="">
             <input type="radio" name="showStatus" value="0" title="隐藏">
@@ -78,16 +85,16 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">栏目类型</label>
+        <label class="layui-form-label required">栏目类型</label>
         <div class="layui-input-block" >
             <input type="checkbox"  th:each="ct : ${columnTypeList}" lay-skin="primary"  th:value="${ct.code}" name="type" th:title="${ct.name}"  />
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">栏目位置</label>
+        <label class="layui-form-label required">栏目位置</label>
         <div class="layui-input-block" >
-            <input type="radio"  th:each="ct : ${columnPositionList}"  th:value="${ct.code}" name="position" th:title="${ct.name}"  />
+            <input type="radio"  th:each="ct : ${columnPositionList}"  th:value="${ct.code}" name="position" th:title="${ct.name}" th:checked="${ct.code eq defaultPosition}"  />
         </div>
     </div>
     <div class="layui-form-item">

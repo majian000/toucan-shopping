@@ -28,6 +28,7 @@ public class Column {
     private String type; //类型 10:pc端 11:移动端
     private Integer showStatus; //显示状态 0隐藏 1显示
     private Integer position; //栏目位置 1 PC门户首页
+    private String clickPath; //点击跳转
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
