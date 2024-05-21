@@ -319,13 +319,13 @@ public class ColumnController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             ColumnTreeVO query = requestJsonVO.formatEntity(ColumnTreeVO.class);
-            List<ColumnVO> functionVOS = columnService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode());
+            List<ColumnVO> columnVOS = columnService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode(),query.getColumnTypeCode());
             List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
-            for(ColumnVO columnVO:functionVOS)
+            for(ColumnVO columnVO:columnVOS)
             {
                 ColumnTreeVO columnTreeVO = new ColumnTreeVO();
                 BeanUtils.copyProperties(columnTreeVO,columnVO);
-                Long childrenCount = columnService.queryOneLevelChildrenCountByIdAndAppCode(columnVO.getId(),columnVO.getAppCode());
+                Long childrenCount = columnService.queryOneLevelChildrenCountByIdAndAppCode(columnVO.getId(),columnVO.getAppCode(),query.getColumnTypeCode());
                 if(childrenCount!=null&&childrenCount.longValue()>0)
                 {
                     columnTreeVO.setIsParent(true);

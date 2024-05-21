@@ -202,12 +202,12 @@
 
 
     <select id="findListByPidAndAppCode" resultMap="columnVOMap" >
-        select * from t_column t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0 order by t.column_sort desc
+        select * from t_column t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and column_type_code=#{columnTypeCode} and t.delete_status = 0 order by t.column_sort desc
     </select>
 
 
     <select id="queryOneLevelChildrenCountByIdAndAppCode" resultType="java.lang.Long" >
-        select count(*) from t_column t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0
+        select count(*) from t_column t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and column_type_code=#{columnTypeCode}  and t.delete_status = 0
     </select>
 
 

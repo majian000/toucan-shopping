@@ -163,25 +163,18 @@ public class ColumnController extends UIController {
             //默认查询根节点
             if(queryColumnTreeVO.getId()==null)
             {
-                App query = new App();
-                query.setCode(toucan.getAppCode());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-                resultObjectVO = feignAppService.findByCode(appCode,requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    App rootNode = resultObjectVO.formatData(App.class);
-                    ColumnTreeVO columnTreeVO = new ColumnTreeVO();
-                    columnTreeVO.setId(-1L);
-                    columnTreeVO.setPid(-2L);
-                    columnTreeVO.setParentId(-2L);
-                    columnTreeVO.setAppCode(rootNode.getCode());
-                    columnTreeVO.setTitle("根节点");
-                    columnTreeVO.setName(toucan.getAppCode()+" "+rootNode.getName());
-                    columnTreeVO.setIsParent(true);
-                    List<ColumnTreeVO> columnTrees = new LinkedList<>();
-                    columnTrees.add(columnTreeVO);
-                    resultObjectVO.setData(columnTrees);
-                }
+                ColumnTreeVO columnTreeVO = new ColumnTreeVO();
+                columnTreeVO.setId(-1L);
+                columnTreeVO.setPid(-2L);
+                columnTreeVO.setParentId(-2L);
+                columnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
+                columnTreeVO.setTitle("根节点");
+                columnTreeVO.setName("根节点");
+                columnTreeVO.setColumnTypeCode(queryColumnTreeVO.getColumnTypeCode());
+                columnTreeVO.setIsParent(true);
+                List<ColumnTreeVO> columnTrees = new LinkedList<>();
+                columnTrees.add(columnTreeVO);
+                resultObjectVO.setData(columnTrees);
             }else{
                 queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
                 queryColumnTreeVO.setAppCode(toucan.getAppCode());

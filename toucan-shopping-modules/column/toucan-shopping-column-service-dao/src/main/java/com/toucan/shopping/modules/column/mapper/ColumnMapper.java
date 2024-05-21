@@ -63,8 +63,8 @@ public interface ColumnMapper {
 
     Long queryListCount(ColumnVO entity);
 
-    List<ColumnVO> findListByPidAndAppCode(Long pid,String appCode);
+    List<ColumnVO> findListByPidAndAppCode(Long pid,String appCode,String columnTypeCode);
 
-    Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode);
+    Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode,String columnTypeCode);
 
 }

@@ -78,12 +78,12 @@ public interface ColumnService {
      * 查询当前节点下一级子节点
      * @param id
      */
-    List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode);
+    List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode,String columnTypeCode);
 
     /**
      * 查询当前节点下一级子节点数量
      * @param id
      */
-    Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode);
+    Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode,String columnTypeCode);
 
 }

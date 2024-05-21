@@ -71,13 +71,13 @@ public class ColumnServiceImpl implements ColumnService {
 
 
     @Override
-    public List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode) {
-        return columnMapper.findListByPidAndAppCode(id,appCode);
+    public List queryOneLevelChildrenByIdAndAppCode(Long id,String appCode,String columnTypeCode) {
+        return columnMapper.findListByPidAndAppCode(id,appCode,columnTypeCode);
     }
 
     @Override
-    public Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode) {
-        return columnMapper.queryOneLevelChildrenCountByIdAndAppCode(id,appCode);
+    public Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode,String columnTypeCode) {
+        return columnMapper.queryOneLevelChildrenCountByIdAndAppCode(id,appCode,columnTypeCode);
     }
 
 }

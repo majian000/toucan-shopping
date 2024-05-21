@@ -28,7 +28,7 @@
 
 <div class="layui-form layuimini-form">
 
-    <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
+    <input type="hidden" name="columnTypeCode" id="columnTypeCode" th:value="${columnTypeCode}">
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目类型</label>
@@ -188,8 +188,8 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]function/query/app/function/tree",
-                autoParam:["id", "pid", "name"],
+                url:"[[@{/}]]column/query/column/tree",
+                autoParam:["id", "pid", "name","columnTypeCode"],
                 dataFilter: filter
             },
             data:{
@@ -213,6 +213,7 @@
             var dataArray = data.data;
             if(dataArray!=null&&dataArray.length>0)
             {
+                var columnTypeCode=$("#columnTypeCode").val();
                 for(var i=0;i<dataArray.length;i++)
                 {
                     dataArray[i].url=null;
@@ -244,6 +245,7 @@
                         url:"[[@{/}]]column/query/column/tree",
                         type:"POST",
                         dataType: "json",
+                        data:{columnTypeCode:$("#columnTypeCode").val()},
                         success: function(data){
                             var zTreeObj = $.fn.zTree.init($("#columnTree"),setting, data.data);
                         },
