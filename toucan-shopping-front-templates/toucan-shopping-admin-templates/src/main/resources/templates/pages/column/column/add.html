@@ -32,7 +32,8 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目类型</label>
-        <div class="layui-input-block" th:value="${columnTypeName}">
+        <div class="layui-input-block">
+            <input type="text" readonly  th:value="${columnTypeName}"  class="layui-input">
         </div>
     </div>
 
@@ -116,12 +117,13 @@
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form','dtree', 'table','laydate'], function () {
+    }).use(['form','dtree', 'table','laydate','jquery'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
@@ -228,7 +230,7 @@
 
         $("#selectPid").click(function(){
             index = layer.open({
-                title: '选择上级功能',
+                title: '选择上级栏目',
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
@@ -239,7 +241,7 @@
                     loadding = layer.load();
 
                     $.ajax({
-                        url:"[[@{/}]]function/query/app/function/tree",
+                        url:"[[@{/}]]column/query/column/tree",
                         type:"POST",
                         dataType: "json",
                         success: function(data){
