@@ -132,7 +132,7 @@ public class ColumnController {
             }
 
             ColumnVO query = new ColumnVO();
-            query.setTitle(columnVO.getTitle());
+            query.setCode(columnVO.getCode());
             query.setColumnTypeCode(columnVO.getColumnTypeCode());
             query.setAppCode(columnVO.getAppCode());
             List<ColumnVO> columnVOS = columnService.queryList(query);

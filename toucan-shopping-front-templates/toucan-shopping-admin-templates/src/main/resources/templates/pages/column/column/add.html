@@ -48,15 +48,23 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
-            <input type="title" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
             <tip>填写栏目标题。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">栏目编码</label>
+        <div class="layui-input-block">
+            <input type="text" name="code" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入栏目编码" value="" class="layui-input">
+            <tip>填写栏目编码。</tip>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">点击跳转地址</label>
         <div class="layui-input-block">
-            <input type="title" name="clickPath"  maxlength="255"  placeholder="请输入点击跳转地址"  class="layui-input">
+            <input type="text" name="clickPath"  maxlength="255"  placeholder="请输入点击跳转地址"  class="layui-input">
             <tip>填写点击跳转地址。</tip>
         </div>
     </div>
@@ -100,12 +108,18 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="text" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
             <tip>值越大越靠前</tip>
         </div>
 
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">扩展属性</label>
+        <div class="layui-input-block">
+            <textarea name="extendProperty" class="layui-textarea" maxlength="255" placeholder="请输入扩展属性"></textarea>
+        </div>
+    </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>

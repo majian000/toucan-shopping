@@ -84,8 +84,11 @@
         <if test="title!=null and title!=''">
             and t.title  like concat(#{title},'%')
         </if>
-        <if test="columnTypeCode!=null">
+        <if test="columnTypeCode!=null and columnTypeCode!='' ">
             and t.column_type_code = #{columnTypeCode}
+        </if>
+        <if test="code!=null and code!=''">
+            and t.code = #{code}
         </if>
 
         <if test="idArray!=null and idArray.length>0 ">
