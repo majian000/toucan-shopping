@@ -7,10 +7,12 @@
         <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
         <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
         <result column="column_sort" jdbcType="INTEGER" property="columnSort" />
         <result column="position" jdbcType="INTEGER" property="position" />
+        <result column="extend_property" jdbcType="VARCHAR" property="extendProperty" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="start_show_date" jdbcType="TIMESTAMP" property="startShowDate" />
         <result column="end_show_date" jdbcType="TIMESTAMP" property="endShowDate" />
@@ -107,8 +109,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column(id,pid,title,click_path,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id,column_type_code,start_show_date,end_show_date)
-        values(#{id},#{pid},#{title},#{clickPath},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{columnTypeCode},#{startShowDate},#{endShowDate})
+        insert into t_column(id,pid,title,code,click_path,column_sort,type,extend_property,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id,column_type_code,start_show_date,end_show_date)
+        values(#{id},#{pid},#{title},#{code},#{clickPath},#{columnSort},#{type},#{extendProperty},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{columnTypeCode},#{startShowDate},#{endShowDate})
     </insert>
 
 
@@ -127,7 +129,8 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
-        update t_column set title=#{title},click_path=#{clickPath},pid=#{pid},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update t_column set title=#{title},code=#{code},click_path=#{clickPath},pid=#{pid},column_sort=#{columnSort},type=#{type},
+        extend_property=#{extendProperty},show_status=#{showStatus},position=#{position},remark=#{remark},
         column_type_code=#{columnTypeCode},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}

@@ -25,6 +25,7 @@ public class Column {
     private Long pid = -1L; //上级ID
 
     private String title; //标题
+    private String code; //编码
     private String type; //类型 10:pc端 11:移动端
     private Integer showStatus; //显示状态 0隐藏 1显示
     private Integer position; //栏目位置 1 PC门户首页
@@ -54,7 +55,7 @@ public class Column {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endShowDate; //结束展示时间
 
-
+    private String extendProperty; //扩展属性
     /**
      * 删除状态 0未删除 1已删除
      */
