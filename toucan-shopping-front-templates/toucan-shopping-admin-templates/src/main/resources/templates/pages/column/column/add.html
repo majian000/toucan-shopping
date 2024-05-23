@@ -108,7 +108,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="text" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
             <tip>值越大越靠前</tip>
         </div>
 
@@ -238,6 +238,7 @@
                 for(var i=0;i<dataArray.length;i++)
                 {
                     dataArray[i].url=null;
+                    dataArray[i].name=dataArray[i].title;
                 }
             }
             return dataArray;

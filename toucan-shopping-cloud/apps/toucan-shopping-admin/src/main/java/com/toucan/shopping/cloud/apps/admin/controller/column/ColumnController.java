@@ -178,7 +178,7 @@ public class ColumnController extends UIController {
                 resultObjectVO.setData(columnTrees);
             }else{
                 queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
-                queryColumnTreeVO.setAppCode(toucan.getAppCode());
+                queryColumnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
                 return feignColumnService.queryColumnTreeByPid(requestJsonVO);
             }
