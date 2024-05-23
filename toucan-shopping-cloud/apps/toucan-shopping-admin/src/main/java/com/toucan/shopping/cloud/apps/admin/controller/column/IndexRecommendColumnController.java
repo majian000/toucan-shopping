@@ -147,7 +147,7 @@ public class IndexRecommendColumnController extends UIController {
         try {
             indexRecommendColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
             indexRecommendColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            indexRecommendColumnVO.setPosition(1);
+            indexRecommendColumnVO.setPosition("1");
             indexRecommendColumnVO.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, indexRecommendColumnVO);
             resultObjectVO = feignIndexRecommendColumnService.save(requestJsonVO);
@@ -174,7 +174,7 @@ public class IndexRecommendColumnController extends UIController {
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            entity.setPosition(1);
+            entity.setPosition("1");
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignIndexRecommendColumnService.update(requestJsonVO);

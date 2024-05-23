@@ -42,4 +42,8 @@ public class ColumnVO extends Column {
 
     private List<Long> idList; //主键集合
 
+    private String typeNames; //栏目类型名称
+
+    private String positionNames; //位置名称
+
 }

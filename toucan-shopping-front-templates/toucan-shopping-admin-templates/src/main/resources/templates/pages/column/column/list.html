@@ -74,6 +74,26 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">栏目类型</label>
+                                    <div class="layui-input-inline">
+                                        <select name="type"  lay-search="" >
+                                            <option th:value="-1">全部</option>
+                                            <option th:each="c:${columnTypeList}" th:value="${c.code}" th:text="${c.name}" >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">栏目位置</label>
+                                    <div class="layui-input-inline">
+                                        <select name="type"  lay-search="" >
+                                            <option th:value="-1">全部</option>
+                                            <option th:each="c:${columnPositionList}" th:value="${c.code}" th:text="${c.name}" >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="layui-inline">
                                     <label class="layui-form-label">展示时间</label>
@@ -186,7 +206,8 @@
                         {field: 'code',width: 200,  title: '编码'},
                         {field: 'clickPath',width: 200,  title: '跳转地址'},
                         {field: 'parentTitle',width: 200,  title: '上级栏目'},
-                        {field: 'typeName',width:200,  title: '栏目类型'},
+                        {field: 'typeNames',width:200,  title: '栏目类型'},
+                        {field: 'positionNames',width:200,  title: '栏目位置'},
                         {field: 'columnSort',width: 200,  title: '排序'},
                         {field: 'startShowDate',width: 180,  title: '开始展示时间'},
                         {field: 'endShowDate',width: 180,  title: '结束展示时间'},

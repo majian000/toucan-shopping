@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * 首页推荐栏目
@@ -91,7 +92,7 @@ public class ColumnController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request) throws NoSuchAlgorithmException {
+    public String listPage(HttpServletRequest request) throws NoSuchAlgorithmException {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/column/listPage",feignFunctionService);
         this.setColumnDictList(request);
@@ -158,7 +159,7 @@ public class ColumnController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
     @RequestMapping(value = "/query/column/tree")
     @ResponseBody
-    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,ColumnTreeVO queryColumnTreeVO)
+    public ResultObjectVO queryColumnTree(HttpServletRequest request,ColumnTreeVO queryColumnTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -181,7 +182,62 @@ public class ColumnController extends UIController {
                 queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
                 queryColumnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
-                return feignColumnService.queryColumnTreeByPid(requestJsonVO);
+                resultObjectVO = feignColumnService.queryColumnTreeByPid(requestJsonVO);
+                if(resultObjectVO.isSuccess()){
+                    this.setColumnDictList(request);
+                    List<DictVO> columnTypeList = request.getAttribute("columnTypeList")!=null
+                            ?(List<DictVO>)request.getAttribute("columnTypeList"):null;
+                    List<DictVO> columnPositionList = request.getAttribute("columnPositionList")!=null
+                            ?(List<DictVO>)request.getAttribute("columnPositionList"):null;
+
+                    Map<String, DictVO> columnTypeMap = null;
+                    if(columnTypeList!=null) {
+                        columnTypeMap = columnTypeList.stream()
+                                .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+                    }
+
+                    Map<String, DictVO> columnPositionMap = null;
+                    if(columnPositionList!=null) {
+                        columnPositionMap = columnPositionList.stream()
+                                .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+                    }
+
+                    List<ColumnTreeVO> columnTrees = resultObjectVO.formatDataList(ColumnTreeVO.class);
+                    if(!CollectionUtils.isEmpty(columnTrees)){
+                        for(ColumnTreeVO columnTreeVO:columnTrees){
+                            if(StringUtils.isNotEmpty(columnTreeVO.getType())){
+                                if(columnTypeMap!=null){
+                                    String[] types = columnTreeVO.getType().split(",");
+                                    String typeNames = "";
+                                    for(int i=0;i<types.length;i++){
+                                        String type = types[i];
+                                        typeNames+=columnTypeMap.get(type).getName();
+                                        if(i>0&&(i+1)<types.length){
+                                            typeNames+=",";
+                                        }
+                                    }
+                                    columnTreeVO.setTypeNames(typeNames);
+                                }
+
+                                if(columnPositionMap!=null){
+                                    String[] positions = columnTreeVO.getPosition().split(",");
+                                    String positionNames = "";
+                                    for(int i=0;i<positions.length;i++){
+                                        String position = positions[i];
+                                        positionNames+=columnPositionMap.get(position).getName();
+                                        if(i>0&&(i+1)<positions.length){
+                                            positionNames+=",";
+                                        }
+                                    }
+                                    columnTreeVO.setPositionNames(positionNames);
+                                }
+
+                            }
+                        }
+                    }
+                    resultObjectVO.setData(columnTrees);
+                }
+                return resultObjectVO;
             }
 
         }catch(Exception e)

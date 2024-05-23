@@ -197,7 +197,7 @@ public class IndexServiceImpl implements IndexService {
             query.setAppCode(toucan.getAppCode());
             query.setShowStatus(1);
             query.setType("10");
-            query.setPosition(1);
+            query.setPosition("1");
             query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
             ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryPcIndexColumns(requestJsonVO);
