@@ -52,7 +52,15 @@
             and t.title  like concat(#{title},'%')
         </if>
 
-        <if test="position!=null and position!=-1 ">
+        <if test="code!=null and code!=''">
+            and t.code  like concat(#{code},'%')
+        </if>
+
+        <if test="type!=null and type!=''">
+            and t.type  like concat(#{type},'%')
+        </if>
+
+        <if test="position!=null and position!='-1' ">
             and t.position =#{position}
         </if>
 
