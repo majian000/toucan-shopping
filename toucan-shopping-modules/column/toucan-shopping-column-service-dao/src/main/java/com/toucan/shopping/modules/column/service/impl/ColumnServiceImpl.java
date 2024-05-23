@@ -80,4 +80,20 @@ public class ColumnServiceImpl implements ColumnService {
         return columnMapper.queryOneLevelChildrenCountByIdAndAppCode(id,appCode,columnTypeCode);
     }
 
+
+
+    @Override
+    public void queryChildren(List children, Column query) {
+        List<ColumnVO> columns = columnMapper.findListByPid(query.getId());
+        children.addAll(columns);
+        for(ColumnVO columnVO:columns)
+        {
+            queryChildren(children,columnVO);
+        }
+    }
+
+    @Override
+    public int deleteByIdList(List<Long> ids) {
+        return columnMapper.deleteByIdList(ids);
+    }
 }

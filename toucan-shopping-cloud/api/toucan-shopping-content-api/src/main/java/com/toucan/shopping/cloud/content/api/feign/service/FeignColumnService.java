@@ -49,4 +49,24 @@ public interface FeignColumnService {
     @RequestMapping(value = "/query/column/tree/pid",method = RequestMethod.POST)
     ResultObjectVO queryColumnTreeByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 删除指定栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 批量删除栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
+
 }

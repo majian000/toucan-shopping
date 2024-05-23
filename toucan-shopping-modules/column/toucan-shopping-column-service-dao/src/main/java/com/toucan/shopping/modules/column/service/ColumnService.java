@@ -86,4 +86,21 @@ public interface ColumnService {
      */
     Long queryOneLevelChildrenCountByIdAndAppCode(Long id,String appCode,String columnTypeCode);
 
+
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
+    void queryChildren(List children,Column query);
+
+
+
+    /**
+     *  根据ID删除
+     * @param ids
+     * @return
+     */
+    int deleteByIdList(List<Long> ids);
+
 }

@@ -218,4 +218,19 @@
     </select>
 
 
+
+    <select id="findListByPid" resultMap="columnVOMap" parameterType="java.lang.Long">
+        select * from t_column t where  1=1 and t.pid = #{pid} and t.delete_status = 0
+    </select>
+
+
+    <update id="deleteByIdList" parameterType="java.util.List">
+        update t_column set delete_status=1 where delete_status=0
+        and id in
+        <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+
 </mapper>

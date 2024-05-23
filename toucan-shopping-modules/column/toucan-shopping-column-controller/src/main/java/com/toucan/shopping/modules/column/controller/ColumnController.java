@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 栏目控制器
@@ -343,5 +344,109 @@ public class ColumnController {
         }
         return resultObjectVO;
     }
+
+
+
+    /**
+     * 删除指定栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ColumnVO columnVO = JSONObject.parseObject(requestVo.getEntityJson(),ColumnVO.class);
+            if(columnVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到栏目ID");
+                return resultObjectVO;
+            }
+
+
+            List<ColumnVO> chidlren = new ArrayList<ColumnVO>();
+            columnService.queryChildren(chidlren,columnVO);
+            //把当前的添加进去
+            chidlren.add(columnVO);
+
+            List<Long> dictIdList = chidlren.stream().map(ColumnVO::getId).collect(Collectors.toList());
+            columnService.deleteByIdList(dictIdList);
+
+
+            resultObjectVO.setData(columnVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 批量删除栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<ColumnVO> columnVOS = JSONObject.parseArray(requestVo.getEntityJson(),ColumnVO.class);
+            if(CollectionUtils.isEmpty(columnVOS))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到栏目ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(ColumnVO columnVO:columnVOS) {
+                if(columnVO.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(columnVO);
+
+
+                    List<ColumnVO> chidlren = new ArrayList<ColumnVO>();
+                    columnService.queryChildren(chidlren,columnVO);
+                    //把当前的添加进去
+                    chidlren.add(columnVO);
+
+                    List<Long> dictIdList = chidlren.stream().map(ColumnVO::getId).collect(Collectors.toList());
+                    columnService.deleteByIdList(dictIdList);
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
 }

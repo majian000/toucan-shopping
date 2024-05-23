@@ -54,6 +54,14 @@ public interface ColumnMapper {
 
     List<PcIndexColumnVO> queryPcIndexColumns(ColumnVO query);
 
+
+    /**
+     * 根据上级节点ID查询
+     * @param pid
+     * @return
+     */
+    List<ColumnVO> findListByPid(Long pid);
+
     /**
      * 根据ID删除
      * @param id
@@ -66,5 +74,14 @@ public interface ColumnMapper {
     List<ColumnVO> findListByPidAndAppCode(Long pid,String appCode,String columnTypeCode);
 
     Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode,String columnTypeCode);
+
+    /**
+     * 根据ID集合删除
+     * @param ids
+     * @return
+     */
+    int deleteByIdList(List<Long> ids);
+
+
 
 }
