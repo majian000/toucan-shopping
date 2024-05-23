@@ -183,60 +183,6 @@ public class ColumnController extends UIController {
                 queryColumnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
                 resultObjectVO = feignColumnService.queryColumnTreeByPid(requestJsonVO);
-                if(resultObjectVO.isSuccess()){
-                    this.setColumnDictList(request);
-                    List<DictVO> columnTypeList = request.getAttribute("columnTypeList")!=null
-                            ?(List<DictVO>)request.getAttribute("columnTypeList"):null;
-                    List<DictVO> columnPositionList = request.getAttribute("columnPositionList")!=null
-                            ?(List<DictVO>)request.getAttribute("columnPositionList"):null;
-
-                    Map<String, DictVO> columnTypeMap = null;
-                    if(columnTypeList!=null) {
-                        columnTypeMap = columnTypeList.stream()
-                                .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
-                    }
-
-                    Map<String, DictVO> columnPositionMap = null;
-                    if(columnPositionList!=null) {
-                        columnPositionMap = columnPositionList.stream()
-                                .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
-                    }
-
-                    List<ColumnTreeVO> columnTrees = resultObjectVO.formatDataList(ColumnTreeVO.class);
-                    if(!CollectionUtils.isEmpty(columnTrees)){
-                        for(ColumnTreeVO columnTreeVO:columnTrees){
-                            if(StringUtils.isNotEmpty(columnTreeVO.getType())){
-                                if(columnTypeMap!=null){
-                                    String[] types = columnTreeVO.getType().split(",");
-                                    String typeNames = "";
-                                    for(int i=0;i<types.length;i++){
-                                        String type = types[i];
-                                        typeNames+=columnTypeMap.get(type).getName();
-                                        if(i>0&&(i+1)<types.length){
-                                            typeNames+=",";
-                                        }
-                                    }
-                                    columnTreeVO.setTypeNames(typeNames);
-                                }
-
-                                if(columnPositionMap!=null){
-                                    String[] positions = columnTreeVO.getPosition().split(",");
-                                    String positionNames = "";
-                                    for(int i=0;i<positions.length;i++){
-                                        String position = positions[i];
-                                        positionNames+=columnPositionMap.get(position).getName();
-                                        if(i>0&&(i+1)<positions.length){
-                                            positionNames+=",";
-                                        }
-                                    }
-                                    columnTreeVO.setPositionNames(positionNames);
-                                }
-
-                            }
-                        }
-                    }
-                    resultObjectVO.setData(columnTrees);
-                }
                 return resultObjectVO;
             }
 
@@ -272,19 +218,64 @@ public class ColumnController extends UIController {
 
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
-
                     Set<String> adminIdList = new HashSet<String>();
                     Set<String> appCodes = new HashSet<>();
                     List<ColumnTreeVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeVO.class);
                     if(!CollectionUtils.isEmpty(columnTreeVOS)) {
-                        for (ColumnTreeVO dictTreeVO : columnTreeVOS) {
-                            if (dictTreeVO.getCreateAdminId() != null) {
-                                adminIdList.add(dictTreeVO.getCreateAdminId());
+                        this.setColumnDictList(request);
+                        List<DictVO> columnTypeList = request.getAttribute("columnTypeList")!=null
+                                ?(List<DictVO>)request.getAttribute("columnTypeList"):null;
+                        List<DictVO> columnPositionList = request.getAttribute("columnPositionList")!=null
+                                ?(List<DictVO>)request.getAttribute("columnPositionList"):null;
+                        Map<String, DictVO> columnTypeMap = null;
+                        if(columnTypeList!=null) {
+                            columnTypeMap = columnTypeList.stream()
+                                    .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+                        }
+
+                        Map<String, DictVO> columnPositionMap = null;
+                        if(columnPositionList!=null) {
+                            columnPositionMap = columnPositionList.stream()
+                                    .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+                        }
+                        for (ColumnTreeVO columnTreeVO : columnTreeVOS) {
+                            if (columnTreeVO.getCreateAdminId() != null) {
+                                adminIdList.add(columnTreeVO.getCreateAdminId());
                             }
-                            if (dictTreeVO.getUpdateAdminId() != null) {
-                                adminIdList.add(dictTreeVO.getUpdateAdminId());
+                            if (columnTreeVO.getUpdateAdminId() != null) {
+                                adminIdList.add(columnTreeVO.getUpdateAdminId());
                             }
-                            appCodes.add(dictTreeVO.getAppCode());
+                            //设置栏目类型名称
+                            if(StringUtils.isNotEmpty(columnTreeVO.getType())){
+                                if(columnTypeMap!=null){
+                                    String[] types = columnTreeVO.getType().split(",");
+                                    String typeNames = "";
+                                    for(int i=0;i<types.length;i++){
+                                        String type = types[i];
+                                        typeNames+=columnTypeMap.get(type).getName();
+                                        if(i>0&&(i+1)<types.length){
+                                            typeNames+=",";
+                                        }
+                                    }
+                                    columnTreeVO.setTypeNames(typeNames);
+                                }
+                            }
+                            //设置栏目位置
+                            if(StringUtils.isNotEmpty(columnTreeVO.getPosition())) {
+                                if (columnPositionMap != null) {
+                                    String[] positions = columnTreeVO.getPosition().split(",");
+                                    String positionNames = "";
+                                    for (int i = 0; i < positions.length; i++) {
+                                        String position = positions[i];
+                                        positionNames += columnPositionMap.get(position).getName();
+                                        if (i > 0 && (i + 1) < positions.length) {
+                                            positionNames += ",";
+                                        }
+                                    }
+                                    columnTreeVO.setPositionNames(positionNames);
+                                }
+                            }
+                            appCodes.add(columnTreeVO.getAppCode());
                         }
                         this.setAdminNames(adminIdList, columnTreeVOS);
                         resultObjectVO.setData(columnTreeVOS);
