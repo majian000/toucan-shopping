@@ -144,7 +144,7 @@
         extend_property=#{extendProperty},show_status=#{showStatus},position=#{position},remark=#{remark},
         column_type_code=#{columnTypeCode},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
-          where id=#{id}
+          where id=#{id} and delete_status=0
     </update>
 
 

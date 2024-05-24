@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
@@ -86,6 +87,95 @@ public class ColumnController {
 
         return resultObjectVO;
     }
+
+
+
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        ColumnVO columnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
+        if(columnVO.getId()==null){
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("栏目ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(columnVO.getTitle()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("栏目标题不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(columnVO.getColumnTypeCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("栏目类型编码不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(columnVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("所属应用不能为空");
+            return resultObjectVO;
+        }
+        String lockKey = columnVO.getAppCode()+"_"+columnVO.getColumnTypeCode();
+        try {
+            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            ColumnVO query = new ColumnVO();
+            query.setCode(columnVO.getCode());
+            query.setColumnTypeCode(columnVO.getColumnTypeCode());
+            query.setAppCode(columnVO.getAppCode());
+            List<ColumnVO> columnVOS = columnService.queryList(query);
+            if(!CollectionUtils.isEmpty(columnVOS))
+            {
+                for(ColumnVO cvo:columnVOS) {
+                    if(!cvo.getId().equals(columnVO.getId())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该编码已存在");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            int ret = columnService.update(columnVO);
+            if(ret<=0)
+            {
+                logger.warn("修改栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),columnVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+            resultObjectVO.setData(columnVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 
@@ -345,6 +435,53 @@ public class ColumnController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultTypeObjectVO<ColumnVO> findById(@RequestBody RequestJsonVO requestVo){
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ColumnVO columnVO = requestVo.formatEntity(ColumnVO.class);
+            if(columnVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            columnVO = columnService.findById(columnVO.getId());
+            if(columnVO!=null){
+                ColumnVO parentColumn = columnService.findById(columnVO.getPid());
+                if(parentColumn!=null){
+                    columnVO.setParentTitle(parentColumn.getTitle());
+                }else{
+                    columnVO.setParentTitle("根节点");
+                }
+            }
+            resultObjectVO.setData(columnVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

@@ -46,4 +46,10 @@ public class ColumnVO extends Column {
 
     private String positionNames; //位置名称
 
+
+    private String startShowDateString; //开始展示时间
+    private String endShowDateString; //结束展示时间
+
+
+
 }

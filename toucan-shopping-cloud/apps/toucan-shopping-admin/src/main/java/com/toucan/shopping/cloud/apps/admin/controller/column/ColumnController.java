@@ -28,10 +28,13 @@ import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
@@ -115,6 +118,94 @@ public class ColumnController extends UIController {
             }
         }
         return "pages/column/column/add.html";
+    }
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnTypeVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请输入编码");
+                return resultObjectVO;
+            }
+            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,100))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-100位");
+                return resultObjectVO;
+            }
+
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateDate(new Date());
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignColumnService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            this.setColumnDictList(request);
+            ColumnVO queryEntity = new ColumnVO();
+            queryEntity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
+            ResultTypeObjectVO<ColumnVO> resultObjectVO = feignColumnService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                ColumnVO columnVO = resultObjectVO.getData();
+
+                if(columnVO!=null){
+                    request.setAttribute("defaultPosition","1");
+                    ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
+                    queryColumnTypeVO.setCode(columnVO.getColumnTypeCode());
+                    ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
+                    if(resultTypeObjectVO.isSuccess()){
+                        if(resultTypeObjectVO.getData()!=null){
+                            request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
+                        }
+                    }
+                    if(columnVO.getStartShowDate()!=null) {
+                        columnVO.setStartShowDateString(DateUtils.FORMATTER_SS.get().format(columnVO.getStartShowDate()));
+                    }
+                    if(columnVO.getEndShowDate()!=null) {
+                        columnVO.setEndShowDateString(DateUtils.FORMATTER_SS.get().format(columnVO.getEndShowDate()));
+                    }
+                    List<String> selectTypes = new LinkedList<>();
+                    if(StringUtils.isNotEmpty(columnVO.getType())){
+                        selectTypes.addAll(Arrays.asList(columnVO.getType().split(",")));
+                    }
+                    request.setAttribute("selectTypes",selectTypes);
+                }
+                request.setAttribute("model",columnVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/column/column/edit.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
@@ -311,6 +402,14 @@ public class ColumnController extends UIController {
                 resultObjectVO.setCode(TableVO.FAILD);
                 return resultObjectVO;
             }
+
+            if(!AlphabetNumberUtils.isAlphabetNumber(columnVO.getCode(),1,100))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-100位");
+                return resultObjectVO;
+            }
+
             columnVO.setAppCode(toucan.getShoppingPC().getAppCode());
             columnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, columnVO);
