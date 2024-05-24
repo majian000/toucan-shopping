@@ -272,7 +272,10 @@
         }
         function columnTreeClick(event, treeId, treeNode) {
             // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
-
+            if(treeNode.id==$("#id").val()){
+                layer.msg("上级节点不能为自己");
+                return;
+            }
             $("#selectPid").val(treeNode.name);
             $("#pid").val(treeNode.id);
             layer.close(index);
