@@ -129,7 +129,7 @@ public class ColumnController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnTypeVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
