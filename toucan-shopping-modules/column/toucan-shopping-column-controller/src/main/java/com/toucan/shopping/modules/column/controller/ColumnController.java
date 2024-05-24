@@ -130,6 +130,11 @@ public class ColumnController {
             resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
+        if(columnVO.getPid().equals(columnVO.getId())){
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("上级节点不能为自己");
+            return resultObjectVO;
+        }
         String lockKey = columnVO.getAppCode()+"_"+columnVO.getColumnTypeCode();
         try {
             boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
