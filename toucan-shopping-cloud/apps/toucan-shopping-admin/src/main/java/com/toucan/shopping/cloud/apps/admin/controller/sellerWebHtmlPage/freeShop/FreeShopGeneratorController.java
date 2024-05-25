@@ -107,7 +107,7 @@ public class FreeShopGeneratorController extends UIController {
                     {
                         HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
                         releaseHtmlGeneratorTable.setName(ip);
-                        releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/release/freeShop.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                        releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/freeShop' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
                         releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
 
                         HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
@@ -120,7 +120,7 @@ public class FreeShopGeneratorController extends UIController {
 
                 HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
                 releaseHtmlGeneratorTable.setName(ipList);
-                releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/htmls/release/freeShop.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/freeShop' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
                 releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
 
                 HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
