@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.generate;
 
+import com.toucan.shopping.cloud.apps.seller.web.service.PageParamService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -38,6 +39,8 @@ public class FreeShopGeneratorController {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    @Autowired
+    private PageParamService pageParamService;
 
     private void generateFile(HttpServletRequest httpServletRequest,String filePath) throws Exception
     {
@@ -71,12 +74,7 @@ public class FreeShopGeneratorController {
 
                 //设置basepath
                 params.put("basePath","");
-                if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getBasePath()!=null) {
-                    params.put("shoppingPcPath", toucan.getShoppingPC().getBasePath());
-                }else{
-                    params.put("shoppingPcPath", "");
-                }
-
+                params.putAll(pageParamService.getPageCommonParams());
 
                 template.process(params, fileWriterWithEncoding);
             }catch(Exception e)
