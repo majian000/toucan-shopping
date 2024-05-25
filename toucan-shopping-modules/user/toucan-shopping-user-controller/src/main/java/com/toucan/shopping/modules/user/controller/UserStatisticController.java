@@ -71,17 +71,18 @@ public class UserStatisticController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             UserStatisticVO userStatisticVO = new UserStatisticVO();
-            Object userTotalObj = toucanStringRedisService.get(UserStatisticKey.getUserTotalKey());
-            if(userTotalObj!=null&&!"0".equals(String.valueOf(userTotalObj)))
-            {
-                userStatisticVO.setTotal(Long.parseLong(String.valueOf(userTotalObj))); //总数
+            Object userStatisticObj = toucanStringRedisService.get(UserStatisticKey.getUserTotalKey());
+            String userStatisticInfoStr= userStatisticObj!=null?String.valueOf(userStatisticObj):"";
+            if(StringUtils.isNotEmpty(userStatisticInfoStr)){
+                userStatisticVO = JSONObject.parseObject(userStatisticInfoStr,UserStatisticVO.class);
             }else{
                 userStatisticVO.setTotal(userStatisticService.queryTotal());
-                toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticVO.getTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
+                userStatisticVO.setTodayCount(userStatisticService.queryTodayTotal()); //今日新增
+                userStatisticVO.setCurMonthCount(userStatisticService.queryCurMonthTotal()); //本月新增
+                userStatisticVO.setCurYearCount(userStatisticService.queryCurYearTotal()); //本年新增
+                toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),
+                        JSONObject.toJSONString(userStatisticVO), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
             }
-            userStatisticVO.setTodayCount(userStatisticService.queryTodayTotal()); //今日新增
-            userStatisticVO.setCurMonthCount(userStatisticService.queryCurMonthTotal()); //本月新增
-            userStatisticVO.setCurYearCount(userStatisticService.queryCurYearTotal()); //本年新增
             resultObjectVO.setData(userStatisticVO);
         }catch(Exception e)
         {
@@ -104,7 +105,13 @@ public class UserStatisticController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),String.valueOf(userStatisticService.queryTotal()), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
+            UserStatisticVO userStatisticVO = new UserStatisticVO();
+            userStatisticVO.setTotal(userStatisticService.queryTotal());
+            userStatisticVO.setTodayCount(userStatisticService.queryTodayTotal()); //今日新增
+            userStatisticVO.setCurMonthCount(userStatisticService.queryCurMonthTotal()); //本月新增
+            userStatisticVO.setCurYearCount(userStatisticService.queryCurYearTotal()); //本年新增
+            toucanStringRedisService.set(UserStatisticKey.getUserTotalKey(),
+                    JSONObject.toJSONString(userStatisticVO), UserStatisticConstant.MAX_CACHE_USER_TOTAL_AGE, TimeUnit.SECONDS);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
