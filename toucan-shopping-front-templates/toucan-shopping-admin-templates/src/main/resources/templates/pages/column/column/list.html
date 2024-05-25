@@ -87,7 +87,7 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">栏目位置</label>
                                     <div class="layui-input-inline">
-                                        <select name="type"  lay-search="" >
+                                        <select name="position"  lay-search="" >
                                             <option th:value="-1">全部</option>
                                             <option th:each="c:${columnPositionList}" th:value="${c.code}" th:text="${c.name}" >
                                             </option>
