@@ -12,7 +12,7 @@
  | colorTable                                    | 颜色表                                                         |
  | column                                        | 栏目                                                           |
  | common                                        | 公共模块(图片上传、日志、redis操作、异常处理等)                |
- | content                                        | 内容(轮播图)                                                  |
+ | content                                        | 内容(轮播图、文章)                                         |
  | message                                        | 消息                                                          |
  | order                                          | 订单                                                          |
  | pay                                          | 支付                                                          |
@@ -22,3 +22,4 @@
  | skylark                                        | 云雀分布式锁                                                 |
  | stock                                          | 库存                                                         |
  | user                                           | 用户                                                         |
+ | sellerDesigner                                 | 卖家中心页面设计器                                           |
