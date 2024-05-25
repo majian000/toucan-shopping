@@ -29,7 +29,7 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
     private String columnTypeCode;
 
-    private Integer position; //栏目位置 1 PC门户首页
+    private String position; //栏目位置 1 PC门户首页
 
     private String title; //标题
 
@@ -45,8 +45,9 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endShowDate; //结束展示时间
 
+    private String code; //栏目编码
 
-
+    private String type; //类型 10:pc端 11:移动端
 
     /**
      * 应用编码

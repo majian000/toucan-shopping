@@ -266,7 +266,7 @@ public class IndexRecommendColumnController extends UIController {
         try {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             pageInfo.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            pageInfo.setPosition(1);
+            pageInfo.setPosition("1");
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryListPage(requestJsonVO);
