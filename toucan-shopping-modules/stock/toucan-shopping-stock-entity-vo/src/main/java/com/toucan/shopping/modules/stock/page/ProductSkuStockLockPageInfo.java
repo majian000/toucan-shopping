@@ -32,6 +32,8 @@ public class ProductSkuStockLockPageInfo extends PageInfo<ProductSkuStockLockVO>
 
     private Integer restoreStatus; //库存还原状态 0:未还原 1:已还原
 
+    private String type; //锁定类型
+
     //==============================================
 
 
