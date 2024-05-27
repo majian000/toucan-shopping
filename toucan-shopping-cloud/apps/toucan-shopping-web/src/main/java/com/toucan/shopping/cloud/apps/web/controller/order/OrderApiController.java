@@ -1066,7 +1066,7 @@ public class OrderApiController {
                         resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                     }
                 }
-                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                 if(resultObjectVO.isSuccess())
                 {
                     mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
