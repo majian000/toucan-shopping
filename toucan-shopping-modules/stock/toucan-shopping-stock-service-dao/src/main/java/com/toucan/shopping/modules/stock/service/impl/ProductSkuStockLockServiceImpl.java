@@ -35,7 +35,7 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
 
     @Override
     public int restores(List<Long> idList) {
-        return productSkuStockLockMapper.deletes(idList);
+        return productSkuStockLockMapper.restores(idList);
     }
     @Override
     public List<ProductSkuStockLockVO> queryStockNumByVO(ProductSkuStockLockVO productSkuStockLockVO) {

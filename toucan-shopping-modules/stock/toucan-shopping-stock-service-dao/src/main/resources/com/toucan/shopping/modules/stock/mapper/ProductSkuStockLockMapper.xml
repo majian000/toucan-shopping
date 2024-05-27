@@ -116,7 +116,7 @@
     </update>
 
     <update id="restores">
-        update t_product_sku_stock_lock set restore_status = 1 where id in
+        update t_product_sku_stock_lock set restore_status = 1 , update_date=sysdate()  where id in
         <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
             #{item}
         </foreach>
