@@ -95,6 +95,10 @@ public class OrderLogController extends UIController {
                 PageInfo orderLogPageInfo = resultPageInfoVO.getData();
                 tableVO.setCount(orderLogPageInfo.getTotal()!=null?orderLogPageInfo.getTotal():0);
                 List<OrderLogVO> orderLogs = orderLogPageInfo.getList();
+
+                for (OrderLogVO orderLogVO : orderLogs) {
+                    orderLogVO.setOperateUserType(2); //先默认为普通用户操作
+                }
                 List<String> operateUserIdList = null;
                 if(CollectionUtils.isNotEmpty(orderLogs)) {
                     operateUserIdList = orderLogs.stream().map(OrderLogVO::getOperateUserId).collect(Collectors.toList());
@@ -119,11 +123,9 @@ public class OrderLogController extends UIController {
                         }
                     }
 
-
                     List<AdminVO> admins = this.queryAdminListByAdminId(operateUserIdList);
                     if(CollectionUtils.isNotEmpty(admins)){
                         for (OrderLogVO orderLogVO : orderLogs) {
-                            orderLogVO.setOperateUserType(2); //先默认为普通用户操作
                             for(AdminVO adminVO:admins){
                                 if(orderLogVO.getOperateUserId().equals(adminVO.getAdminId())){
                                     orderLogVO.setOperateUserName(adminVO.getUsername());
