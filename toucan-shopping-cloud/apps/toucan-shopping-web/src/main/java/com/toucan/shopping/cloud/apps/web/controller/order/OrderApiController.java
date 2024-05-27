@@ -1043,9 +1043,37 @@ public class OrderApiController {
     public ResultObjectVO cancelMainOrder(HttpServletRequest request,@RequestBody MainOrderVO mainOrderVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-            resultObjectVO = feignMainOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
+            ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
+            productSkuStockLockVO.setMainOrderNoList(new LinkedList<>());
+            productSkuStockLockVO.getMainOrderNoList().add(mainOrderVO.getOrderNo());
+            productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
+            resultObjectVO = feignProductSkuStockLockService.findLockStockListByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+            if(resultObjectVO.isSuccess())
+            {
+                List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
+                if(!CollectionUtils.isEmpty(productSkuStockLocks))
+                {
+                    List<InventoryReductionVO> inventoryReductions= new LinkedList<>();
+                    for(ProductSkuStockLockVO pssl:productSkuStockLocks)
+                    {
+                        InventoryReductionVO inventoryReductionVO = new InventoryReductionVO();
+                        inventoryReductionVO.setProductSkuId(pssl.getProductSkuId());
+                        inventoryReductionVO.setStockNum(pssl.getStockNum());
+                        inventoryReductions.add(inventoryReductionVO);
+                    }
+                    if(!CollectionUtils.isEmpty(inventoryReductions)) {
+                        //保存还原锁定库存事件
+                        resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                    }
+                }
+                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                if(resultObjectVO.isSuccess())
+                {
+                    mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
+                    RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
+                    resultObjectVO = feignMainOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
+                }
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
