@@ -50,6 +50,10 @@
             and t.restore_status=#{restoreStatus}
         </if>
 
+        <if test="type!=null and type!=-1 ">
+            and t.type=#{type}
+        </if>
+
         and t.delete_status = 0
 
     </sql>
