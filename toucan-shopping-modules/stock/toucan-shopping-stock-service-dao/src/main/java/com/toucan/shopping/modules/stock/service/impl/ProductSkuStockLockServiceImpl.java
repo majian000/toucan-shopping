@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ProductSkuStockLockServiceImpl implements ProductSkuStockLockServic
         return productSkuStockLockMapper.deletes(idList);
     }
 
+    @Transactional
     @Override
     public int restores(List<Long> idList) {
         return productSkuStockLockMapper.restores(idList);
