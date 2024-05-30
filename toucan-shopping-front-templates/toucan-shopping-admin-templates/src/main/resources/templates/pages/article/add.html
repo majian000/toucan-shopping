@@ -68,9 +68,10 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: 'dtree' //定义该组件模块名
+        dtree: '/lib/layui_ext/dtree/dtree', //定义该组件模块名
+        wangEditor: '/js/lay-module/wangEditor/wangEditor' // echarts图表扩展
     }).use(['form','dtree', 'table','laydate','jquery','wangEditor'], function () {
         var form = layui.form,
             layer = layui.layer,
