@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .layui-table img{
+            max-width: 260px;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+
+<div class="layui-form layuimini-form">
+
+    <input type="hidden" name="columnTypeCode" id="columnId" th:value="${columnId}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">栏目名称</label>
+        <div class="layui-input-block">
+            <input type="text" readonly  th:value="${columnName}"  class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">文章标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入文章标题" value="" class="layui-input">
+            <tip>填写文章标题。</tip>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/common/common.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form','dtree', 'table','laydate','jquery'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+        var dtree = layui.dtree;
+        var loadding;
+
+        var laydate = layui.laydate;
+
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //自定义验证规则
+        form.verify({
+            otherReq: function(value,item){
+                var $ = layui.$;
+                var verifyName=$(item).attr('name')
+                    , verifyType=$(item).attr('type')
+                    ,formElem=$(item).parents('.layui-form')//获取当前所在的form元素，如果存在的话
+                    ,verifyElem=formElem.find("input[name='"+verifyName+"']")//获取需要校验的元素
+                    ,isTrue= verifyElem.is(':checked')//是否命中校验
+                    ,focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
+                if(!isTrue || !value){
+                    //定位焦点
+                    focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
+                    //对非输入框设置焦点
+                    focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
+                        focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
+                    }).focus();
+                    return '必填项不能为空';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/column/save}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
+            });
+
+
+            return false;
+        });
+
+
+
+
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]column/query/column/tree",
+                autoParam:["id", "pid", "name","columnTypeCode"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -2
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: columnTreeClick
+            }
+        };
+
+
+        function filter(treeId, parentNode, data) {
+            var dataArray = data.data;
+            if(dataArray!=null&&dataArray.length>0)
+            {
+                var columnTypeCode=$("#columnTypeCode").val();
+                for(var i=0;i<dataArray.length;i++)
+                {
+                    dataArray[i].url=null;
+                    dataArray[i].name=dataArray[i].title;
+                }
+            }
+            return dataArray;
+        }
+        function columnTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+
+            $("#selectPid").val(treeNode.name);
+            $("#pid").val(treeNode.id);
+            layer.close(index);
+        }
+
+        $("#selectPid").click(function(){
+            index = layer.open({
+                title: '选择上级栏目',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<ul id=\"columnTree\" style='height:90%' class=\"ztree\"></ul>",
+                success:function(layero){
+                    loadding = layer.load();
+
+                    $.ajax({
+                        url:"[[@{/}]]column/query/column/tree",
+                        type:"POST",
+                        dataType: "json",
+                        data:{columnTypeCode:$("#columnTypeCode").val()},
+                        success: function(data){
+                            var zTreeObj = $.fn.zTree.init($("#columnTree"),setting, data.data);
+                        },
+                        error: function(){
+
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
+    });
+</script>
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+
+</body>
+</html>
