@@ -88,7 +88,16 @@ public class ArticleController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@RequestParam String columnCode) {
+    public String addPage(HttpServletRequest request,@RequestParam Long columnId) throws NoSuchAlgorithmException {
+        ColumnVO queryColumnVO= new ColumnVO();
+        queryColumnVO.setId(columnId);
+        ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
+        if(resultTypeObjectVO.isSuccess()){
+            if(resultTypeObjectVO.getData()!=null){
+                request.setAttribute("columnId",resultTypeObjectVO.getData().getId());
+                request.setAttribute("columnName",resultTypeObjectVO.getData().getTitle());
+            }
+        }
         return "pages/article/add.html";
     }
 

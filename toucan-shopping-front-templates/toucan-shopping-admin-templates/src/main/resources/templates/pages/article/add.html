@@ -47,6 +47,44 @@
     </div>
 
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-block">
+            <div id="editor" style="margin: 50px 0 50px 0">
+            </div>
+            <pre class="layui-code">
+                var E = window.wangEditor;
+                var editor = new E('#editor');
+                editor.customConfig.uploadImgServer = "../api/upload.json";
+                editor.customConfig.uploadFileName = 'image';
+                editor.customConfig.pasteFilterStyle = false;
+                editor.customConfig.uploadImgMaxLength = 5;
+                editor.customConfig.uploadImgHooks = {
+                    // 上传超时
+                    timeout: function (xhr, editor) {
+                        layer.msg('上传超时！')
+                    },
+                    // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+                    customInsert: function (insertImg, result, editor) {
+                        console.log(result);
+                        if (result.code == 1) {
+                            var url = result.data.url;
+                            url.forEach(function (e) {
+                                insertImg(e);
+                            })
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    }
+                };
+                editor.customConfig.customAlert = function (info) {
+                    layer.msg(info);
+                };
+                editor.create();
+                </pre>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -63,12 +101,13 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form','dtree', 'table','laydate','jquery'], function () {
+    }).use(['form','dtree', 'table','laydate','jquery','wangEditor'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
             $ = layui.$;
         var dtree = layui.dtree;
+        var wangEditor = layui.wangEditor
         var loadding;
 
         var laydate = layui.laydate;
@@ -229,6 +268,34 @@
 
         });
 
+
+        var editor = new wangEditor('#editor');
+        editor.customConfig.uploadImgServer = "../api/upload.json";
+        editor.customConfig.uploadFileName = 'image';
+        editor.customConfig.pasteFilterStyle = false;
+        editor.customConfig.uploadImgMaxLength = 5;
+        editor.customConfig.uploadImgHooks = {
+            // 上传超时
+            timeout: function (xhr, editor) {
+                layer.msg('上传超时！')
+            },
+            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+            customInsert: function (insertImg, result, editor) {
+                console.log(result);
+                if (result.code == 1) {
+                    var url = result.data.url;
+                    url.forEach(function (e) {
+                        insertImg(e);
+                    })
+                } else {
+                    layer.msg(result.msg);
+                }
+            }
+        };
+        editor.customConfig.customAlert = function (info) {
+            layer.msg(info);
+        };
+        editor.create();
 
     });
 </script>

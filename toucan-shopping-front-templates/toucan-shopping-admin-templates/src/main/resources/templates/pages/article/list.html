@@ -51,8 +51,8 @@
 
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
-                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
-                            <input type="hidden" id="columnId" name="columnId">
+                        <form class="layui-form layui-form-pane" id="articleForm" action="">
+                            <input type="hidden" id="columnId" name="columnId" value="-1">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label">标题</label>
@@ -128,7 +128,7 @@
 
         function getFormParam()
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#articleForm").serializeJson();
             return formParam;
         }
 
@@ -177,7 +177,7 @@
 
         $("#data-reset-btn").click(function(){
             $("#columnId").val("");
-            $("#userSearchForm")[0].reset();
+            $("#articleForm")[0].reset();
             layui.form.render();
         });
 
@@ -241,44 +241,27 @@
          * toolbar监听事件
          */
         table.on('toolbar(articleTableFilter)', function (obj) {
-             if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
-                var checkStatus = table.checkStatus('articleTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
+            if (obj.event === 'add') {  // 监听添加操作
+                var columnId = $("#columnId").val();
+                if(columnId==null||columnId==""||columnId=="-1")
                 {
-                    layer.msg("请选择要操作的记录");
-                    return;
+                    layer.msg("请选择栏目");
+                    return ;
                 }
-                var reqData= new Array();
-                for(var i=0;i<data.length;i++)
-                {
-                    reqData.push({id:data[i].id});
-                }
-                layer.confirm('确定同步到搜索?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]article/flush/search",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify({articleVOList:reqData}),
-                        success:function(data){
-                            layer.msg(data.msg);
+                var index = layer.open({
+                    title: '添加文章',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
 
-                            //执行搜索重载
-                            table.reload('articleTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
+                    area: ['100%', '100%'],
+                    content: "[[@{/article/addPage?columnId=}]]"+columnId
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
                 });
             }
+            
         });
 
 
@@ -290,78 +273,8 @@
 
         table.on('tool(articleTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'detail') {
-                openDetailDialog(data.id);
-            }else if(obj.event=="openDetailDialogDevent")
-            {
-                openDetailDialog(data.id);
-            }else if (obj.event == 'shelves') {
-                shelves(data);
-            }else if (obj.event == 'previewPc') {
-                previewPc(data);
-            }
         });
 
-
-        function openDetailDialog(id)
-        {
-            var index = layer.open({
-                title: '商品详情',
-                type: 2,
-                shade: 0.2,
-                maxmin:true,
-
-                area: ['100%', '100%'],
-                content: '[[@{/}]]article/detailPage/'+id
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-            return false;
-
-        }
-
-
-        function previewPc(data)
-        {
-            var pcProductSkuPreviewPage = $("#pcProductSkuPreviewPage").val();
-            window.open(pcProductSkuPreviewPage+data.id)
-        }
-
-        function shelves(row)
-        {
-            var statusValue="";
-            if(row.status == "0"){
-                statusValue="上架";
-            }
-            if(row.status == "1"){
-                statusValue="下架";
-            }
-            layer.confirm("确定要【"+statusValue+"】\""+row.name+"\"?", function (index) {
-                $.ajax({
-                    url:"[[@{/}]]article/shelves",
-                    contentType: "application/json; charset=utf-8",
-                    type:'POST',
-                    data:JSON.stringify({id:row.id,shopId:row.shopId}),
-                    success:function(data){
-                        layer.msg(data.msg);
-
-                        //执行搜索重载
-                        table.reload('articleTable', {
-                            page: {
-                                curr: 1
-                            }
-                            , where: data.field
-                        }, 'data');
-
-                    },
-                    complete:function(data)
-                    {
-                        layer.close(index);
-                    }
-                });
-            });
-        }
 
     });
 </script>
