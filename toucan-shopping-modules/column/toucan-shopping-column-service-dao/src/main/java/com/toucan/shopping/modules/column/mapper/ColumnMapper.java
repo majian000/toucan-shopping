@@ -85,4 +85,6 @@ public interface ColumnMapper {
 
     Long findCountByParentId(Long parentId);
 
+    List<ColumnVO> queryListByPidAndAppCode(Long pid, String appCode);
+
 }

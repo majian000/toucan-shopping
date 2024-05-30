@@ -103,5 +103,10 @@ public class ColumnServiceImpl implements ColumnService {
         return columnMapper.findCountByParentId(parentId);
     }
 
+    @Override
+    public List<ColumnVO> queryListByPidAndAppCode(Long pid, String appCode) {
+        return columnMapper.queryListByPidAndAppCode(pid,appCode);
+    }
+
 
 }

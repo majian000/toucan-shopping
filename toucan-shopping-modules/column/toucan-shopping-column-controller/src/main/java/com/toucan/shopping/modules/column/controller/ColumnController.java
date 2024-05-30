@@ -609,7 +609,7 @@ public class ColumnController {
         }
         try {
             ColumnVO queryColumn = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
-            List<ColumnVO> columnVOS = columnService.queryList(queryColumn);
+            List<ColumnVO> columnVOS = columnService.queryListByPidAndAppCode(queryColumn.getPid(),queryColumn.getAppCode());
             List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
             if(!CollectionUtils.isEmpty(columnVOS))
             {

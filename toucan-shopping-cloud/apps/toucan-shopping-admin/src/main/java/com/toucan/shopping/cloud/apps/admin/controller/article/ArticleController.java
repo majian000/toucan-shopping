@@ -196,6 +196,7 @@ public class ArticleController extends UIController {
                     List<ColumnTreeVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeVO.class);
                     for(ColumnTreeVO columnTreeVO:columnTreeVOS)
                     {
+                        columnTreeVO.setName("["+columnTreeVO.getColumnTypeName()+"]"+columnTreeVO.getTitle());
                         columnTreeVO.setOpen(false);
                     }
                     resultObjectVO.setData(columnTreeVOS);
