@@ -103,4 +103,7 @@ public interface ColumnService {
      */
     int deleteByIdList(List<Long> ids);
 
+
+    Long findCountByParentId(Long parentId);
+
 }

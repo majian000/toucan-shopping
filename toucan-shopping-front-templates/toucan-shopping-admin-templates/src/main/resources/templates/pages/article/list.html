@@ -38,7 +38,7 @@
                 <div class="layui-card">
                     <div class="layui-card-header">所属栏目</div>
                     <div class="layui-card-body" >
-                        <ul id="categoryTree" class="ztree"></ul>
+                        <ul id="columnTree" class="ztree"></ul>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
                         <form class="layui-form layui-form-pane" id="userSearchForm" action="">
-                            <input type="hidden" id="categoryId" name="categoryId">
+                            <input type="hidden" id="columnId" name="columnId">
                             <div class="layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label">标题</label>
@@ -76,9 +76,9 @@
                     </div>
                 </script>
 
-                <table class="layui-hide" id="productSkuTable" lay-filter="productSkuTableFilter"></table>
+                <table class="layui-hide" id="articleTable" lay-filter="articleTableFilter"></table>
 
-                <script type="text/html" id="productSkuTableBar">
+                <script type="text/html" id="articleTableBar">
                     <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
                 </script>
             </div>
@@ -134,8 +134,8 @@
 
 
         table.render({
-            elem: '#productSkuTable',
-            url: "[[@{/}]]product/productSku/list",
+            elem: '#articleTable',
+            url: "[[@{/}]]article/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -150,36 +150,9 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '商品SKUID', hide:true, width: 260},
-                    {field: 'httpMainPhoto',width:150,  title: '商品主图',
-                        templet: function (row) {
-                            if(row.httpMainPhoto!=null) {
-                                return "<a href='" + row.httpMainPhoto + "' target='_blank'><img src='" + row.httpMainPhoto + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
-                        templet: function (row) {
-                            return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
-                        }},
-                    {field: 'price', width: 150, title: '价格'},
-                    {field: 'stockNum', width: 150, title: '库存数量'},
-                    {field: 'status',width: 150,   title: '上架状态',
-                        templet: function (row) {
-                            if(row.status == null){
-                                return "";
-                            }
-                            if(row.status == "0"){
-                                return "<a style='color:red'>未上架</a>";
-                            }
-                            if(row.status == "1"){
-                                return "<a style='color:green'>已上架</a>";
-                            }
-                            return row.status;
-                        }
-                    },
-                    {field: 'createDate', width: 200, title: '发布时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#productSkuTableBar', align: "center"}
+                    {field: 'id',  title: '文章ID', hide:true, width: 260},
+                    {field: 'createDate', width: 200, title: '创建时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#articleTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -191,7 +164,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('productSkuTable', {
+            table.reload('articleTable', {
                 page: {
                     curr: 1
                 }
@@ -203,7 +176,7 @@
 
 
         $("#data-reset-btn").click(function(){
-            $("#categoryId").val("");
+            $("#columnId").val("");
             $("#userSearchForm")[0].reset();
             layui.form.render();
         });
@@ -212,7 +185,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                url:"[[@{/}]]article/query/column/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -228,13 +201,13 @@
                 showIcon: true
             },
             callback: {
-                onClick: categoryTreeClick
+                onClick: columnTreeClick
             }
         };
 
-        function categoryTreeClick(event, treeId, treeNode) {
+        function columnTreeClick(event, treeId, treeNode) {
             // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
-            $("#categoryId").val(treeNode.id);
+            $("#columnId").val(treeNode.id);
             $("#queryButton").click();
         }
 
@@ -248,11 +221,11 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/productSku/query/category/tree/pid",
+                url:"[[@{/}]]article/query/column/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
-                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                    var zTreeObj = $.fn.zTree.init($("#columnTree"),setting, data.data);
                 },
                 error: function(){
 
@@ -267,9 +240,9 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(productSkuTableFilter)', function (obj) {
+        table.on('toolbar(articleTableFilter)', function (obj) {
              if (obj.event === 'flushSearchToolbar') {  // 监听同步搜索操作
-                var checkStatus = table.checkStatus('productSkuTable')
+                var checkStatus = table.checkStatus('articleTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -283,15 +256,15 @@
                 }
                 layer.confirm('确定同步到搜索?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/productSku/flush/search",
+                        url:"[[@{/}]]article/flush/search",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
-                        data:JSON.stringify({productSkuVOList:reqData}),
+                        data:JSON.stringify({articleVOList:reqData}),
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('productSkuTable', {
+                            table.reload('articleTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -311,11 +284,11 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(productSkuTableFilter)', function (obj) {
+        table.on('checkbox(articleTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(productSkuTableFilter)', function (obj) {
+        table.on('tool(articleTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'detail') {
                 openDetailDialog(data.id);
@@ -339,7 +312,7 @@
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/productSku/detailPage/'+id
+                content: '[[@{/}]]article/detailPage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);
@@ -366,7 +339,7 @@
             }
             layer.confirm("确定要【"+statusValue+"】\""+row.name+"\"?", function (index) {
                 $.ajax({
-                    url:"[[@{/}]]product/productSku/shelves",
+                    url:"[[@{/}]]article/shelves",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
                     data:JSON.stringify({id:row.id,shopId:row.shopId}),
@@ -374,7 +347,7 @@
                         layer.msg(data.msg);
 
                         //执行搜索重载
-                        table.reload('productSkuTable', {
+                        table.reload('articleTable', {
                             page: {
                                 curr: 1
                             }

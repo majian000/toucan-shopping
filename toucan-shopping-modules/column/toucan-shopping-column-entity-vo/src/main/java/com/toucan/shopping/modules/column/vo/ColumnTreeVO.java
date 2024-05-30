@@ -72,6 +72,11 @@ public class ColumnTreeVO extends ColumnVO {
 
 
     /**
+     * 是否展开节点
+     */
+    private Boolean open=true;
+
+    /**
      * 是否是父节点
      */
     private Boolean isParent=true;

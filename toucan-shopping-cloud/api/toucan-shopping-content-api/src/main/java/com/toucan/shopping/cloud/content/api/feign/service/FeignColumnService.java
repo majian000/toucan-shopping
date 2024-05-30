@@ -89,4 +89,15 @@ public interface FeignColumnService {
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 查询指定节点下所有子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO);
+
 }

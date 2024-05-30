@@ -83,5 +83,6 @@ public interface ColumnMapper {
     int deleteByIdList(List<Long> ids);
 
 
+    Long findCountByParentId(Long parentId);
 
 }

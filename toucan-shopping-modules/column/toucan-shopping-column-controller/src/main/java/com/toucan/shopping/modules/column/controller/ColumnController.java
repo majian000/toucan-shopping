@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.column.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.column.entity.Column;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.ColumnService;
@@ -589,6 +590,54 @@ public class ColumnController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 查询指定节点下所有子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+        try {
+            ColumnVO queryColumn = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
+            List<ColumnVO> columnVOS = columnService.queryList(queryColumn);
+            List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
+            if(!CollectionUtils.isEmpty(columnVOS))
+            {
+                for(ColumnVO columnVO:columnVOS) {
+                    ColumnTreeVO columnTreeVO = new ColumnTreeVO();
+                    BeanUtils.copyProperties(columnTreeVO,columnVO);
+                    Long categoryChildCount = columnService.findCountByParentId(columnTreeVO.getId());
+                    if(categoryChildCount!=null&&categoryChildCount.longValue()>0)
+                    {
+                        columnTreeVO.setIsParent(true);
+                    }else{
+                        columnTreeVO.setIsParent(false);
+                    }
+                    columnTreeVOS.add(columnTreeVO);
+                }
+
+            }
+            resultObjectVO.setData(columnTreeVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

@@ -96,4 +96,12 @@ public class ColumnServiceImpl implements ColumnService {
     public int deleteByIdList(List<Long> ids) {
         return columnMapper.deleteByIdList(ids);
     }
+
+
+    @Override
+    public Long findCountByParentId(Long parentId) {
+        return columnMapper.findCountByParentId(parentId);
+    }
+
+
 }

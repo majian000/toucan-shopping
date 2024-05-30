@@ -244,4 +244,11 @@
     </update>
 
 
+    <select id="findCountByParentId" resultType="java.lang.Long" >
+        select count(*) from t_column t
+         where 1=1 and t.pid=#{parentId}   and t.delete_status=0
+
+    </select>
+
+
 </mapper>
