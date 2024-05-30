@@ -52,36 +52,6 @@
         <div class="layui-input-block">
             <div id="editor" style="margin: 50px 0 50px 0">
             </div>
-            <pre class="layui-code">
-                var E = window.wangEditor;
-                var editor = new E('#editor');
-                editor.customConfig.uploadImgServer = "../api/upload.json";
-                editor.customConfig.uploadFileName = 'image';
-                editor.customConfig.pasteFilterStyle = false;
-                editor.customConfig.uploadImgMaxLength = 5;
-                editor.customConfig.uploadImgHooks = {
-                    // 上传超时
-                    timeout: function (xhr, editor) {
-                        layer.msg('上传超时！')
-                    },
-                    // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-                    customInsert: function (insertImg, result, editor) {
-                        console.log(result);
-                        if (result.code == 1) {
-                            var url = result.data.url;
-                            url.forEach(function (e) {
-                                insertImg(e);
-                            })
-                        } else {
-                            layer.msg(result.msg);
-                        }
-                    }
-                };
-                editor.customConfig.customAlert = function (info) {
-                    layer.msg(info);
-                };
-                editor.create();
-                </pre>
         </div>
     </div>
 
@@ -107,7 +77,7 @@
             table = layui.table,
             $ = layui.$;
         var dtree = layui.dtree;
-        var wangEditor = layui.wangEditor
+        var wangEditor = layui.wangEditor;
         var loadding;
 
         var laydate = layui.laydate;
@@ -124,28 +94,6 @@
         laydate.render({
             elem: '#endShowDate' //指定元素
             ,type: 'datetime'
-        });
-
-        //自定义验证规则
-        form.verify({
-            otherReq: function(value,item){
-                var $ = layui.$;
-                var verifyName=$(item).attr('name')
-                    , verifyType=$(item).attr('type')
-                    ,formElem=$(item).parents('.layui-form')//获取当前所在的form元素，如果存在的话
-                    ,verifyElem=formElem.find("input[name='"+verifyName+"']")//获取需要校验的元素
-                    ,isTrue= verifyElem.is(':checked')//是否命中校验
-                    ,focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
-                if(!isTrue || !value){
-                    //定位焦点
-                    focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
-                    //对非输入框设置焦点
-                    focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
-                        focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
-                    }).focus();
-                    return '必填项不能为空';
-                }
-            }
         });
 
         //监听提交
