@@ -186,7 +186,27 @@
 
 
     <select id="queryListByPidAndAppCode" resultMap="columnVOMap" >
-        select t.*,tct.name as columnTypeName from t_column t left join t_column_type tct on t.column_type_code=tct.code
+        select t.id,
+        t.pid,
+        t.title,
+        t.type,
+        t.code,
+        t.click_path,
+        t.show_status,
+        t.column_sort,
+        t.position,
+        t.extend_property,
+        t.remark,
+        t.start_show_date,
+        t.end_show_date,
+        t.create_date,
+        t.update_date,
+        t.create_admin_id,
+        t.update_admin_id,
+        t.delete_status,
+        t.app_code,
+        t.column_type_code,
+        tct.name as columnTypeName from t_column t left join t_column_type tct on t.column_type_code=tct.code
         <where>
             1=1
             and t.delete_status = 0
