@@ -344,7 +344,7 @@ public class ColumnController extends UIController {
                                     for(int i=0;i<types.length;i++){
                                         String type = types[i];
                                         typeNames+=columnTypeMap.get(type).getName();
-                                        if(i>0&&(i+1)<types.length){
+                                        if((i+1)<types.length){
                                             typeNames+=",";
                                         }
                                     }
