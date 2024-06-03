@@ -352,7 +352,7 @@ public class CategoryController extends UIController {
                                 for(int i=0;i<types.length;i++){
                                     String type = types[i];
                                     typeNames+=categoryTypeMap.get(type).getName();
-                                    if(i<types.length){
+                                    if((i+1)<types.length){
                                         typeNames+=",";
                                     }
                                 }
