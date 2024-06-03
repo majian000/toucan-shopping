@@ -359,7 +359,7 @@ public class ColumnController extends UIController {
                                     for (int i = 0; i < positions.length; i++) {
                                         String position = positions[i];
                                         positionNames += columnPositionMap.get(position).getName();
-                                        if (i > 0 && (i + 1) < positions.length) {
+                                        if (i > 0 &&i < positions.length) {
                                             positionNames += ",";
                                         }
                                     }

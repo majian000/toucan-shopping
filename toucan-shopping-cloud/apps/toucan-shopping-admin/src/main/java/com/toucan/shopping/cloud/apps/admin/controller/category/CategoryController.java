@@ -180,6 +180,7 @@ public class CategoryController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignCategoryService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -343,7 +344,7 @@ public class CategoryController extends UIController {
                     for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
                     {
                         categoryTreeVO.setOpen(false);
-                        //设置栏目类型名称
+                        //设置类型名称
                         if(StringUtils.isNotEmpty(categoryTreeVO.getType())){
                             if(categoryTreeVO!=null){
                                 String[] types = categoryTreeVO.getType().split(",");
@@ -351,7 +352,7 @@ public class CategoryController extends UIController {
                                 for(int i=0;i<types.length;i++){
                                     String type = types[i];
                                     typeNames+=categoryTypeMap.get(type).getName();
-                                    if(i>0&&(i+1)<types.length){
+                                    if(i>0&&i<types.length){
                                         typeNames+=",";
                                     }
                                 }

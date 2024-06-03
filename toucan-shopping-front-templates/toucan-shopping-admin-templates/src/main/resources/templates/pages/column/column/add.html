@@ -95,7 +95,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目类型</label>
         <div class="layui-input-block" >
-            <input type="checkbox"   name="type" lay-verify="otherReq"  lay-skin="primary"   th:each="ct : ${columnTypeList}" th:value="${ct.code}"th:title="${ct.name}"  />
+            <input type="checkbox"   name="type" id="type" lay-verify="otherReq"  lay-skin="primary"   th:each="ct : ${columnTypeList}" th:value="${ct.code}"th:title="${ct.name}"  />
         </div>
     </div>
 
@@ -194,6 +194,11 @@
         form.on('submit(saveBtn)', function (data) {
 
             loadding = layer.load();
+            var typeArr = new Array();
+            $("input:checkbox[name='type']:checked").each(function(i){
+                typeArr[i] = $(this).attr("value");
+            });
+            data.field.type=typeArr.join(",");
             $.ajax({
                 url:"[[@{/column/save}]]",
                 contentType: "application/json; charset=utf-8",

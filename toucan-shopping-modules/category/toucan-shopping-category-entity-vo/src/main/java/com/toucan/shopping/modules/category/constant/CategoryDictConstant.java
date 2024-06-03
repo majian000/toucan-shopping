@@ -6,6 +6,7 @@ public class CategoryDictConstant {
     public static final String CATEGORY_DICT_TYPE_CODE="CATEGORY_TYPE"; //分类的类型
 
     public static final String TYPE_PC_VALUE="01"; //PC端字典值
+    public static final String TYPE_MOBILE_VALUE="02"; //移动端字典值
 
 
 }

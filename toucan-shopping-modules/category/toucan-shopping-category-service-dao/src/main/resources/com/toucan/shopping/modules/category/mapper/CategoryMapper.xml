@@ -133,7 +133,7 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.category.entity.Category">
         update t_category set name=#{name},href=#{href},remark=#{remark},show_status=#{showStatus},type=#{type},
-        app_code=#{appCode},icon=#{icon},parent_id=#{parentId},notice_tips=#{noticeTips},
+        icon=#{icon},parent_id=#{parentId},notice_tips=#{noticeTips},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

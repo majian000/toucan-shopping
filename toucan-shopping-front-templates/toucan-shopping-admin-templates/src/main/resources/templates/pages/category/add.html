@@ -42,7 +42,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">类型</label>
         <div class="layui-input-block" >
-            <input type="checkbox"   name="type" lay-verify="otherReq"  lay-skin="primary"   th:each="ct : ${categoryTypeList}" th:value="${ct.code}"th:title="${ct.name}"  />
+            <input type="checkbox"   name="type" id="type" lay-verify="otherReq"  lay-skin="primary"   th:each="ct : ${categoryTypeList}" th:value="${ct.code}"th:title="${ct.name}"  />
         </div>
     </div>
 
@@ -97,6 +97,12 @@
         var loaddingParentTree;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            var typeArr = new Array();
+            $("input:checkbox[name='type']:checked").each(function(i){
+                typeArr[i] = $(this).attr("value");
+            });
+            data.field.type=typeArr.join(",");
+            loadding = layer.load();
             $.ajax({
                 url:"[[@{/category/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -117,6 +123,10 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
                 }
             });
             return false;
