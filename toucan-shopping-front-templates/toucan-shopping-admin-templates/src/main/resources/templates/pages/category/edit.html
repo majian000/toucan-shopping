@@ -39,15 +39,11 @@
             <input type="text" readonly  id="selectPid"  lay-verify="required"  th:value="${model.parentName}"   placeholder="请选择上级节点" value="" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" th:if="${model.type eq 1}" >
-            <input type="radio" name="type" value="1" title="pc端" checked="">
-            <input type="radio" name="type" value="2" title="移动端">
-        </div>
-        <div class="layui-input-block" th:if="${model.type eq 2}" >
-            <input type="radio" name="type" value="1" title="pc端" >
-            <input type="radio" name="type" value="2" title="移动端" checked="">
+        <div class="layui-input-block" >
+            <input type="checkbox"   name="type" lay-verify="otherReq"  lay-skin="primary"   th:each="ct : ${categoryTypeList}" th:value="${ct.code}" th:title="${ct.name}" th:checked="${selectTypes.contains(ct.code)}"  />
         </div>
     </div>
     <div class="layui-form-item">
@@ -129,6 +125,28 @@
             return false;
         });
 
+
+        //自定义验证规则
+        form.verify({
+            otherReq: function(value,item){
+                var $ = layui.$;
+                var verifyName=$(item).attr('name')
+                    , verifyType=$(item).attr('type')
+                    ,formElem=$(item).parents('.layui-form')//获取当前所在的form元素，如果存在的话
+                    ,verifyElem=formElem.find("input[name='"+verifyName+"']")//获取需要校验的元素
+                    ,isTrue= verifyElem.is(':checked')//是否命中校验
+                    ,focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
+                if(!isTrue || !value){
+                    //定位焦点
+                    focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
+                    //对非输入框设置焦点
+                    focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
+                        focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
+                    }).focus();
+                    return '必填项不能为空';
+                }
+            }
+        });
 
         function filter(treeId, parentNode, data) {
             return data.data;

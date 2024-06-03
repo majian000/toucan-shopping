@@ -119,14 +119,7 @@
                         {field: 'name', width: 200, title: '名称'},
                         {field: 'icon', width: 100,  title: '图标'},
                         {field: 'categorySort', title: '排序'},
-                        {field: 'type', title: '类型', templet: function (d) {
-                                if (d.type == 1) {
-                                    return 'PC端';
-                                } else if (d.type == 2) {
-                                    return '移动端';
-                                }
-                                return d.type;
-                            }},
+                        {field: 'typeNames', title: '类型'},
                         {field: 'showStatus', title: '显示状态', templet: function (d) {
                                 if (d.showStatus == 1) {
                                     return '显示';

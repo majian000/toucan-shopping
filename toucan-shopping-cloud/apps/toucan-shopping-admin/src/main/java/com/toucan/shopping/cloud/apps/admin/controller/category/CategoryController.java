@@ -3,10 +3,13 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.constant.CategoryDictConstant;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
@@ -17,6 +20,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +33,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 类别控制器
@@ -53,17 +58,19 @@ public class CategoryController extends UIController {
     @Autowired
     private FeignFunctionService feignFunctionService;
 
-
+    @Autowired
+    private FeignDictService feignDictService;
 
 
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
+    public String page(HttpServletRequest request) throws NoSuchAlgorithmException {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/category/listPage",feignFunctionService);
+
+        this.setCategoryDictList(request);
 
         return "pages/category/list.html";
     }
@@ -72,12 +79,34 @@ public class CategoryController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
+    public String addPage(HttpServletRequest request) throws NoSuchAlgorithmException {
+        this.setCategoryDictList(request);
         return "pages/category/add.html";
     }
 
 
+
+    private void setCategoryDictList(HttpServletRequest request) throws NoSuchAlgorithmException {
+        //栏目字典
+        DictVO queryDict=new DictVO();
+        queryDict.setCategoryCode(CategoryDictConstant.CATEGORY_DICT_CATEGORY_CODE);
+        queryDict.setCodes(new LinkedList<>());
+        queryDict.getCodes().add(CategoryDictConstant.CATEGORY_DICT_TYPE_CODE);
+        queryDict.setAppCode(toucan.getAppCode());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
+        if(resultObjectVO.isSuccess()) {
+            if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
+                for(DictVO dictVO:resultObjectVO.getData()){
+                    switch (dictVO.getCode()){
+                        case CategoryDictConstant.CATEGORY_DICT_TYPE_CODE:
+                            request.setAttribute("categoryTypeList",dictVO.getChildren());
+                            break;
+                    }
+                }
+            }
+        }
+    }
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -85,6 +114,9 @@ public class CategoryController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
+
+            this.setCategoryDictList(request);
+
             Category entity = new Category();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -113,6 +145,13 @@ public class CategoryController extends UIController {
                                 }
                             }
                         }
+
+                        List<String> selectTypes = new LinkedList<>();
+                        if(StringUtils.isNotEmpty(categoryVO.getType())){
+                            selectTypes.addAll(Arrays.asList(categoryVO.getType().split(",")));
+                        }
+                        request.setAttribute("selectTypes",selectTypes);
+
                         request.setAttribute("model",categoryVO);
                     }
                 }
@@ -286,6 +325,8 @@ public class CategoryController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            this.setCategoryDictList(request);
+            
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
             resultObjectVO = feignCategoryService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -293,9 +334,30 @@ public class CategoryController extends UIController {
                 List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
                 if(!CollectionUtils.isEmpty(categoryTreeVOS))
                 {
+                    List<DictVO> categoryTypeList = request.getAttribute("categoryTypeList")!=null
+                            ?(List<DictVO>)request.getAttribute("categoryTypeList"):null;
+                    Map<String, DictVO> categoryTypeMap = null;
+                    if(categoryTypeList!=null) {
+                        categoryTypeMap = categoryTypeList.stream().collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+                    }
                     for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
                     {
                         categoryTreeVO.setOpen(false);
+                        //设置栏目类型名称
+                        if(StringUtils.isNotEmpty(categoryTreeVO.getType())){
+                            if(categoryTreeVO!=null){
+                                String[] types = categoryTreeVO.getType().split(",");
+                                String typeNames = "";
+                                for(int i=0;i<types.length;i++){
+                                    String type = types[i];
+                                    typeNames+=categoryTypeMap.get(type).getName();
+                                    if(i>0&&(i+1)<types.length){
+                                        typeNames+=",";
+                                    }
+                                }
+                                categoryTreeVO.setTypeNames(typeNames);
+                            }
+                        }
                     }
                 }
                 resultObjectVO.setData(categoryTreeVOS);

@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.category.service.impl;
 
+import com.toucan.shopping.modules.category.constant.CategoryDictConstant;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.mapper.CategoryImgMapper;
 import com.toucan.shopping.modules.category.mapper.CategoryMapper;
@@ -38,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> queryPcIndexList(CategoryVO category) {
+        category.setTypeLike(CategoryDictConstant.TYPE_PC_VALUE);
         return categoryMapper.queryPcIndexList(category);
     }
 

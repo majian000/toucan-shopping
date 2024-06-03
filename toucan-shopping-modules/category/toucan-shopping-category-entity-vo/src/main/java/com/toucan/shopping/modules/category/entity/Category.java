@@ -25,7 +25,7 @@ public class Category {
     private Long parentId; //上级类别
 
     private String name; //类别名称
-    private Integer type; //类型 1:pc端 2:移动端
+    private String type; //类型 01:pc端
     private String icon; //图标
     private Long categorySort; //排序
     private Integer showStatus; //显示状态 0隐藏 1显示

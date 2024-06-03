@@ -78,4 +78,14 @@ public class CategoryVO extends Category {
      * 分类路径
      */
     private String path;
+
+    /**
+     * 类型模糊匹配
+     */
+    private String typeLike;
+
+
+    private String typeNames; //类型名称
+
+
 }
