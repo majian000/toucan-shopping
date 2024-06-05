@@ -51,6 +51,10 @@
             <groupId>com.toucan.shopping.modules.content</groupId>
             <artifactId>toucan-shopping-content-cache</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.skylark</groupId>
+            <artifactId>toucan-shopping-skylark-lock</artifactId>
+        </dependency>
     </dependencies>
 
 

@@ -7,16 +7,20 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
+import com.toucan.shopping.modules.content.entity.ArticleContent;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
+import com.toucan.shopping.modules.content.redis.ArticleLockKey;
+import com.toucan.shopping.modules.content.service.ArticleContentService;
 import com.toucan.shopping.modules.content.service.ArticleService;
 import com.toucan.shopping.modules.content.service.BannerAreaService;
 import com.toucan.shopping.modules.content.service.BannerService;
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,9 +43,6 @@ public class ArticleController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private BannerService bannerService;
-
 
     @Autowired
     private IdGenerator idGenerator;
@@ -52,6 +53,11 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ArticleContentService articleContentService;
+
+    @Autowired
+    private SkylarkLock skylarkLock;
 
     /**
      * 查询列表
@@ -88,6 +94,104 @@ public class ArticleController {
             resultObjectVO.setMsg("查询失败!");
         }
 
+        return resultObjectVO;
+    }
+
+
+
+
+
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        ArticleVO articleVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ArticleVO.class);
+        if(StringUtils.isEmpty(articleVO.getTitle()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("标题不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(articleVO.getContent())){
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("内容不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(articleVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("所属应用不能为空");
+            return resultObjectVO;
+        }
+        String lockKey = articleVO.getAppCode()+"_"+articleVO.getCreateAdminId();
+        try {
+            boolean lockStatus = skylarkLock.lock(ArticleLockKey.getSaveLockKey(lockKey), lockKey);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            ArticleVO query = new ArticleVO();
+            query.setTitle(articleVO.getTitle());
+            query.setColumnId(articleVO.getColumnId());
+            List<ArticleVO> articles = articleService.queryList(query);
+            if(!CollectionUtils.isEmpty(articles))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("该文章已存在");
+                return resultObjectVO;
+            }
+
+            Long articleId =idGenerator.id();
+            Long articleContentId =idGenerator.id();
+
+            ArticleContent articleContent = new ArticleContent();
+            articleContent.setId(articleContentId);
+            articleContent.setArticleId(articleId);
+            articleContent.setContent(articleVO.getContent());
+            articleContent.setCreateDate(new Date());
+            articleContent.setCreateAdminId(articleVO.getCreateAdminId());
+            articleContent.setAppCode(articleVO.getAppCode());
+            int ret = articleContentService.save(articleContent);
+            if(ret<=0)
+            {
+                logger.warn("保存文章内容失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+
+            articleVO.setId(articleId);
+            articleVO.setDeleteStatus((short)0);
+            articleVO.setCreateDate(new Date());
+            ret = articleService.save(articleVO);
+            if(ret<=0)
+            {
+                logger.warn("保存文章失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+            resultObjectVO.setData(articleVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(ArticleLockKey.getSaveLockKey(lockKey), lockKey);
+        }
         return resultObjectVO;
     }
 

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.content.service.impl;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.content.entity.Article;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.mapper.ArticleMapper;
 import com.toucan.shopping.modules.content.mapper.BannerMapper;
@@ -29,6 +30,16 @@ public class ArticleServiceImpl implements ArticleService {
         pageInfo.setList(articleMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(articleMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public List<ArticleVO> queryList(ArticleVO query) {
+        return articleMapper.queryList(query);
+    }
+
+    @Override
+    public int save(Article entity) {
+        return articleMapper.insert(entity);
     }
 
 

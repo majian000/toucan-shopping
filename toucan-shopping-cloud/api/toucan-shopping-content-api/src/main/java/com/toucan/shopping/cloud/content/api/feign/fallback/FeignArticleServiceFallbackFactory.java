@@ -37,6 +37,21 @@ public class FeignArticleServiceFallbackFactory implements FallbackFactory<Feign
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignBannerService.save 失败  params:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

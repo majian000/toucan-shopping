@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.content.mapper;
 
+import com.toucan.shopping.modules.content.entity.Article;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
@@ -29,4 +30,8 @@ public interface ArticleMapper {
     Long queryListPageCount(ArticlePageInfo pageInfo);
 
 
+    List<ArticleVO> queryList(ArticleVO entity);
+
+
+    int insert(Article entity);
 }

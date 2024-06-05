@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.content.service.impl;
 
+import com.toucan.shopping.modules.content.entity.ArticleContent;
 import com.toucan.shopping.modules.content.mapper.ArticleContentMapper;
 import com.toucan.shopping.modules.content.mapper.ArticleMapper;
 import com.toucan.shopping.modules.content.service.ArticleContentService;
@@ -14,5 +15,8 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     private ArticleContentMapper articleContentMapper;
 
 
-
+    @Override
+    public int save(ArticleContent entity) {
+        return 0;
+    }
 }

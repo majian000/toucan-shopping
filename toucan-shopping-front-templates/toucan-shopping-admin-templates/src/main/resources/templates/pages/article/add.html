@@ -9,9 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
-    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+    <link rel="stylesheet" th:href="@{/lib/wangEditor/css/style.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -19,6 +17,13 @@
         .layui-table img{
             max-width: 260px;
         }
+    </style>
+
+    <style>
+        #contentEditor { width: 100%; border: 1px solid #ccc; }
+        #toolbar-container { border-bottom: 1px solid #ccc; }
+        #editor-container { height: 500px; }
+        #contentEditor .w-e-textarea-video-container video{ width: 100%; }
     </style>
 </head>
 <body>
@@ -28,7 +33,7 @@
 
 <div class="layui-form layuimini-form">
 
-    <input type="hidden" name="columnTypeCode" id="columnId" th:value="${columnId}">
+    <input type="hidden" name="columnId" id="columnId" th:value="${columnId}">
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目名称</label>
@@ -50,7 +55,10 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">文章内容</label>
         <div class="layui-input-block">
-            <div id="editor" style="margin: 50px 0 50px 0">
+            <div id="contentEditor">
+                <div id="toolbar-container"><!-- 工具栏 --></div>
+                <div id="editor-container"><!-- 编辑器 --></div>
+                <input type="hidden" name="content" id="get_content">
             </div>
         </div>
     </div>
@@ -66,19 +74,20 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/wangEditor/js/index.min.js}" charset="utf-8"></script>
+
 <script>
     layui.config({
         base: basePath //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: '/lib/layui_ext/dtree/dtree', //定义该组件模块名
-        wangEditor: '/js/lay-module/wangEditor/wangEditor' // echarts图表扩展
-    }).use(['form','dtree', 'table','laydate','jquery','wangEditor'], function () {
+        dtree: '/lib/layui_ext/dtree/dtree' //定义该组件模块名
+    }).use(['form', 'element','dtree', 'table','laydate','jquery'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
+            element = layui.element,
             $ = layui.$;
         var dtree = layui.dtree;
-        var wangEditor = layui.wangEditor;
         var loadding;
 
         var laydate = layui.laydate;
@@ -102,7 +111,7 @@
 
             loadding = layer.load();
             $.ajax({
-                url:"[[@{/column/save}]]",
+                url:"[[@{/article/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -134,117 +143,101 @@
 
 
 
-
-        var setting = {
-            async: {
-                enable: true,
-                url:"[[@{/}]]column/query/column/tree",
-                autoParam:["id", "pid", "name","columnTypeCode"],
-                dataFilter: filter
+        //初始化富文本
+        const { createEditor, createToolbar } = window.wangEditor;
+        const editorConfig = {
+            autoFocus: false,
+            placeholder: '',
+            MENU_CONF: {},
+            hoverbarKeys: {
+                'image': {},
+                'video': {}
             },
-            data:{
-                simpleData:{
-                    enable: true,
-                    idKey:'id',
-                    pIdKey:'parentId',
-                    rootPId: -2
-                }
-            },
-            view:{
-                showIcon: true
-            },
-            callback: {
-                onClick: columnTreeClick
+            onChange(editor) {
+                const html = editor.getHtml();
+                document.getElementById('get_content').value = html
+                // console.log('editor content', html)
+                // 也可以同步到 <textarea>
             }
+        }
+        // 上传图片
+        editorConfig.MENU_CONF['uploadImage'] = {
+            server: 'admin/upload/upload', // 上传图片地址
+            timeout: 5 * 1000, // 5s
+            fieldName: 'file',
+            metaWithUrl: false, // 参数拼接到 url 上
+            headers: { Accept: 'text/x-json' },
+            maxFileSize: 10000 * 1024 * 1024, // 10M
+            base64LimitSize: 5 * 1024, // 5kb 以下插入 base64
+            customInsert(res, insertFn) {
+                let str = res.data.split('/');
+                insertFn(res.data, str[str.length - 1], res.data)
+            },
+            onBeforeUpload(files) {
+                // console.log('onBeforeUpload', files)
+                return files // 返回哪些文件可以上传
+                // return false 会阻止上传
+            },
+            onProgress(progress) { },
+            onSuccess(file, res) { },
+            onFailed(file, res) { },
+            onError(file, err, res) { }
+        }
+        // 上传视频
+        editorConfig.MENU_CONF['uploadVideo'] = {
+            server: 'admin/upload/upload', // 上传视频地址
+            timeout: 500 * 1000, // 5s
+            fieldName: 'file',
+            metaWithUrl: false, // 参数拼接到 url 上
+            maxFileSize: 20000 * 1024 * 1024, // 10M
+            customInsert(res, insertFn) { // 自定义插入视频
+                insertFn(res.data, res.data+'?x-oss-process=video/snapshot,t_100,f_jpg')
+            },
+            onBeforeUpload(files) { // 上传之前触发
+                layer.msg('视频上传中...', { icon: 16, shade: 0.01, time: 0 });
+                return files // 返回哪些文件可以上传
+                // return false 会阻止上传
+            },
+            // 上传进度的回调函数
+            onProgress(progress) { },
+            // 单个文件上传成功之后
+            onSuccess(file, res) {
+                layer.close(layer.msg());//关闭上传提示窗口
+            },
+            // 单个文件上传失败
+            onFailed(file, res) { },
+            // 上传错误，或者触发 timeout 超时
+            onError(file, err, res) {
+                layer.msg(`${file.name} 上传出错`);
+                console.log(`${file.name} 上传出错`, err, res)
+            }
+        }
+        const editor = createEditor({
+            selector: '#contentEditor',
+            html: '',
+            // config: editorConfig,
+            mode: 'simple' // 'default' or 'simple'
+        });
+        const toolbarConfig = {
+            toolbarKeys: [
+                "bold","underline","italic","through","clearStyle","color","fontSize","indent",
+                "justifyRight","justifyLeft","justifyCenter","justifyJustify","lineHeight",
+                "deleteImage","editImage","divider","insertLink",
+                "blockquote","headerSelect","header1","header2","bulletedList",
+                "uploadVideo","uploadImage"
+            ]
         };
-
-
-        function filter(treeId, parentNode, data) {
-            var dataArray = data.data;
-            if(dataArray!=null&&dataArray.length>0)
-            {
-                var columnTypeCode=$("#columnTypeCode").val();
-                for(var i=0;i<dataArray.length;i++)
-                {
-                    dataArray[i].url=null;
-                    dataArray[i].name=dataArray[i].title;
-                }
-            }
-            return dataArray;
-        }
-        function columnTreeClick(event, treeId, treeNode) {
-            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
-
-            $("#selectPid").val(treeNode.name);
-            $("#pid").val(treeNode.id);
-            layer.close(index);
-        }
-
-        $("#selectPid").click(function(){
-            index = layer.open({
-                title: '选择上级栏目',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-
-                area: ['20%', '60%'],
-                content: "<ul id=\"columnTree\" style='height:90%' class=\"ztree\"></ul>",
-                success:function(layero){
-                    loadding = layer.load();
-
-                    $.ajax({
-                        url:"[[@{/}]]column/query/column/tree",
-                        type:"POST",
-                        dataType: "json",
-                        data:{columnTypeCode:$("#columnTypeCode").val()},
-                        success: function(data){
-                            var zTreeObj = $.fn.zTree.init($("#columnTree"),setting, data.data);
-                        },
-                        error: function(){
-
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
+        const toolbar = createToolbar({
+            editor,
+            selector: '#toolbar-container',
+            config: toolbarConfig,
+            mode: 'simple' // 'default' or 'simple'
         });
 
 
-        var editor = new wangEditor('#editor');
-        editor.customConfig.uploadImgServer = "../api/upload.json";
-        editor.customConfig.uploadFileName = 'image';
-        editor.customConfig.pasteFilterStyle = false;
-        editor.customConfig.uploadImgMaxLength = 5;
-        editor.customConfig.uploadImgHooks = {
-            // 上传超时
-            timeout: function (xhr, editor) {
-                layer.msg('上传超时！')
-            },
-            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-            customInsert: function (insertImg, result, editor) {
-                console.log(result);
-                if (result.code == 1) {
-                    var url = result.data.url;
-                    url.forEach(function (e) {
-                        insertImg(e);
-                    })
-                } else {
-                    layer.msg(result.msg);
-                }
-            }
-        };
-        editor.customConfig.customAlert = function (info) {
-            layer.msg(info);
-        };
-        editor.create();
+        // 表单重载
+        form.render();
+        element.render();
 
     });
 </script>

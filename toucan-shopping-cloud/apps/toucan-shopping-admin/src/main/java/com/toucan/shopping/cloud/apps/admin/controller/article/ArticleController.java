@@ -222,6 +222,38 @@ public class ArticleController extends UIController {
     }
 
 
+    /**
+     * 保存
+     * @param articleVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody ArticleVO articleVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(articleVO.getColumnId()==null){
+                resultObjectVO.setMsg("栏目不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
+            }
+
+            articleVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            articleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
+            resultObjectVO = feignArticleService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 }
 

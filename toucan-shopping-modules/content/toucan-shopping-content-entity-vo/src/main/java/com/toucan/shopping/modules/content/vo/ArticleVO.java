@@ -18,6 +18,9 @@ public class ArticleVO extends Article {
 
 
     private String createAdminName; //创建人姓名
+
     private String updateAdminName; //修改人姓名
+
+    private String content; //文章内容
 
 }

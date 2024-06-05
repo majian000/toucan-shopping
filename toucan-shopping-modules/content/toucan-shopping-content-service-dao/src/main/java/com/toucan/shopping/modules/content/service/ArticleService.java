@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.content.service;
 
 
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.content.entity.Article;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
@@ -21,5 +22,13 @@ public interface ArticleService {
      * @return
      */
     PageInfo<ArticleVO> queryListPage(ArticlePageInfo pageInfo);
+
+
+
+    List<ArticleVO> queryList(ArticleVO query);
+
+
+    int save(Article entity);
+
 
 }

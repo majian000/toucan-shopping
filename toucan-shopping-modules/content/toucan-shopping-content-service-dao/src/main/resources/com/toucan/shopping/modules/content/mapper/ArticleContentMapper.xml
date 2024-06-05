@@ -20,4 +20,25 @@
     </resultMap>
 
 
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleContent" >
+        insert into t_article(id,
+        article_id,
+        content,
+        content_url,
+        app_code,
+        create_date,
+        delete_status,
+        create_admin_id)
+
+        values(#{id},
+        #{articleId},
+        #{content},
+        #{contentUrl},
+        #{appCode},
+        #{createDate},
+        #{deleteStatus},
+        #{createAdminId})
+    </insert>
+
 </mapper>

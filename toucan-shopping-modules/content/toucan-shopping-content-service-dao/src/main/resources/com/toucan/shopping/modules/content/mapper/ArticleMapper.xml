@@ -29,6 +29,25 @@
     <resultMap id="articleVOMap" type="com.toucan.shopping.modules.content.vo.ArticleVO" extends="articleMap" >
     </resultMap>
 
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="title!=null and title!=''">
+            and t.title = #{title}
+        </if>
+        <if test="columnId!=null">
+            and t.column_id = #{columnId}
+        </if>
+
+        <if test="appCode!=null  ">
+            and t.app_code =#{appCode}
+        </if>
+    </sql>
+
+
     <sql id="queryListPageWhere">
 
         <if test="title!=null and title!='' ">
@@ -68,5 +87,54 @@
 
 
 
+    <select id="queryList" resultMap="articleVOMap" parameterType="com.toucan.shopping.modules.content.vo.ArticleVO">
+        select t.* from t_article t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+        </where>
+        order by t.create_date desc
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.Article" >
+        insert into t_article(id,
+        column_id,
+        content_id,
+        title,
+        content_url,
+        cover_img_url,
+        abstract_content,
+        seo_title,
+        seo_keywords,
+        seo_description,
+        article_sort,
+        show_status,
+        start_show_date,
+        end_show_date,
+        app_code,
+        create_date,
+        delete_status,
+        create_admin_id)
+
+        values(#{id},
+        #{columnId},
+        #{contentId},
+        #{title},
+        #{contentUrl},
+        #{coverImgUrl},
+        #{abstractContent},
+        #{seoTitle},
+        #{seoKeywords},
+        #{seoDescription},
+        #{articleSort},
+        #{showStatus},
+        #{startShowDate},
+        #{endShowDate},
+        #{appCode},
+        #{createDate},
+        #{deleteStatus},
+        #{createAdminId})
+    </insert>
 
 </mapper>

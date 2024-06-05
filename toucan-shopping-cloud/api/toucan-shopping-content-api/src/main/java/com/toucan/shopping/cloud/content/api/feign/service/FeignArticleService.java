@@ -18,4 +18,7 @@ public interface FeignArticleService {
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 }
