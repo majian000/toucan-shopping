@@ -50,6 +50,21 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面图片</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="uploadCoverImgUrl">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="coverImgUrl" name="coverImgUrl" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览封面</label>
+        <div class="layui-input-block">
+            <img  id="previewCoverImgUrl" th:width="240" th:height="220">
+        </div>
+    </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">文章内容</label>
@@ -59,6 +74,8 @@
             </div>
         </div>
     </div>
+
+
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -80,7 +97,7 @@
         base: basePath //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: '/lib/layui_ext/dtree/dtree' //定义该组件模块名
-    }).use(['form', 'element','dtree', 'table','laydate','jquery'], function () {
+    }).use(['form', 'element','dtree','upload', 'table','laydate','jquery'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
@@ -89,6 +106,7 @@
         var dtree = layui.dtree;
         var loadding;
 
+        var upload = layui.upload;
         var laydate = layui.laydate;
 
 
@@ -140,6 +158,24 @@
             return false;
         });
 
+
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadCoverImgUrl' //绑定元素
+            ,url: '/article/upload/img' //上传接口
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewCoverImgUrl").attr("src",res.data.httpCoverImgUrl);
+                $("#coverImgUrl").val(res.data.coverImgUrl);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
 
         var ue = UE.getEditor('content',{
             // autoHeightEnabled: false,

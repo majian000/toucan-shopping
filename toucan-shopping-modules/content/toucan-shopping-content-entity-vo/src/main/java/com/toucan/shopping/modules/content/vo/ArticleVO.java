@@ -16,6 +16,7 @@ import java.util.List;
 public class ArticleVO extends Article {
 
 
+    private String httpCoverImgUrl; //封面图片地址
 
     private String createAdminName; //创建人姓名
 

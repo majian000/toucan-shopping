@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaServic
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * 轮播图管理
@@ -337,11 +339,15 @@ public class BannerController extends UIController {
         resultObjectVO.setCode(0);
         try{
             String fileName = file.getOriginalFilename();
+            if(!ImageUtils.isImage(fileName)){
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("上传图片只支持("+ImageUtils.imageExtScope.stream().collect(Collectors.joining("、"))+")");
+                return resultObjectVO;
+            }
             String fileExt = "jpg";
             if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
             {
                 fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
-
             }
             String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
 
@@ -355,7 +361,7 @@ public class BannerController extends UIController {
             resultObjectVO.setData(bannerVO);
         }catch (Exception e)
         {
-            resultObjectVO.setCode(1);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("上传失败");
             logger.warn(e.getMessage(),e);
         }

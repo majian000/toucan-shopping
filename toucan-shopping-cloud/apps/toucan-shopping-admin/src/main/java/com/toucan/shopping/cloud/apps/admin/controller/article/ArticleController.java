@@ -27,6 +27,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
@@ -76,6 +78,8 @@ public class ArticleController extends UIController {
     @Autowired
     private FeignAdminService feignAdminService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -254,6 +258,45 @@ public class ArticleController extends UIController {
     }
 
 
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping("/upload/img")
+    @ResponseBody
+    public ResultObjectVO  uploadImg(@RequestParam("file") MultipartFile file)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            if(!ImageUtils.isImage(fileName)){
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("上传图片只支持("+ImageUtils.imageExtScope.stream().collect(Collectors.joining("、"))+")");
+                return resultObjectVO;
+            }
+            String fileExt = "jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+            }
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("上传失败");
+            }
+            ArticleVO articleVO = new ArticleVO();
+            articleVO.setCoverImgUrl(groupPath);
+            articleVO.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix()+groupPath);
+            resultObjectVO.setData(articleVO);
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 }
 

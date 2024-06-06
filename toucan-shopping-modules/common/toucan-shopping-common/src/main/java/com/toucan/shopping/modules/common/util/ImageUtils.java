@@ -2,13 +2,23 @@ package com.toucan.shopping.modules.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class ImageUtils {
 
-    public static String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
+    public static List<String> imageExtScope = new ArrayList();
+
+    static{
+        imageExtScope.add(".JPG");
+        imageExtScope.add(".JPEG");
+        imageExtScope.add(".PNG");
+        imageExtScope.add(".GIF");
+        imageExtScope.add(".BMP");
+    }
 
     public static boolean isImage(String fileName){
         if(StringUtils.isEmpty(fileName))
@@ -19,24 +29,7 @@ public class ImageUtils {
         if(fileUpperName.indexOf(".")!=-1)
         {
             String fileExt = fileUpperName.substring(fileUpperName.lastIndexOf("."),fileUpperName.length());
-            if(".JPG".equals(fileExt))
-            {
-                return true;
-            }
-            if(".JPEG".equals(fileExt))
-            {
-                return true;
-            }
-            if(".PNG".equals(fileExt))
-            {
-                return true;
-            }
-            if(".GIF".equals(fileExt))
-            {
-                return true;
-            }
-            if(".BMP".equals(fileExt))
-            {
+            if(imageExtScope.contains(fileExt)){
                 return true;
             }
         }

@@ -309,7 +309,7 @@ public class ProductSkuApiController extends BaseController {
                 resultObjectVO.setMsg("替换失败,商品主图不能为空!");
                 return resultObjectVO;
             }
-            if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),ImageUtils.imageExtScope))
+            if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),new String[]{".JPG",".JPEG",".PNG"}))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("替换失败,商品主图格式只能为:JPG、JPEG、PNG!");
@@ -388,7 +388,7 @@ public class ProductSkuApiController extends BaseController {
                 resultObjectVO.setMsg("替换失败,商品介绍图不能为空!");
                 return resultObjectVO;
             }
-            if(!ImageUtils.isImage(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getOriginalFilename(),ImageUtils.imageExtScope))
+            if(!ImageUtils.isImage(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getOriginalFilename(),new String[]{".JPG",".JPEG",".PNG"}))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("替换失败,商品介绍图格式只能为:JPG、JPEG、PNG!");
