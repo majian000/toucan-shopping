@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
-    <link rel="stylesheet" th:href="@{/lib/wangEditor/css/style.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -55,10 +54,8 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">文章内容</label>
         <div class="layui-input-block">
-            <div id="contentEditor">
-                <div id="toolbar-container"><!-- 工具栏 --></div>
-                <div id="editor-container"><!-- 编辑器 --></div>
-                <input type="hidden" name="content" id="get_content">
+            <div id="content"  style="height:600px" >
+
             </div>
         </div>
     </div>
@@ -74,7 +71,9 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
-<script th:src="@{/lib/wangEditor/js/index.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/ueditor.config.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/ueditor.all.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/lang/zh-cn/zh-cn.js?7a537435}" charset="utf-8"></script>
 
 <script>
     layui.config({
@@ -108,7 +107,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-
+            alert(UE.getEditor('content').getContent());
             loadding = layer.load();
             $.ajax({
                 url:"[[@{/article/save}]]",
@@ -142,96 +141,11 @@
         });
 
 
-
-        //初始化富文本
-        const { createEditor, createToolbar } = window.wangEditor;
-        const editorConfig = {
-            autoFocus: false,
-            placeholder: '',
-            MENU_CONF: {},
-            hoverbarKeys: {
-                'image': {},
-                'video': {}
-            },
-            onChange(editor) {
-                const html = editor.getHtml();
-                document.getElementById('get_content').value = html
-                // console.log('editor content', html)
-                // 也可以同步到 <textarea>
-            }
-        }
-        // 上传图片
-        editorConfig.MENU_CONF['uploadImage'] = {
-            server: 'admin/upload/upload', // 上传图片地址
-            timeout: 5 * 1000, // 5s
-            fieldName: 'file',
-            metaWithUrl: false, // 参数拼接到 url 上
-            headers: { Accept: 'text/x-json' },
-            maxFileSize: 10000 * 1024 * 1024, // 10M
-            base64LimitSize: 5 * 1024, // 5kb 以下插入 base64
-            customInsert(res, insertFn) {
-                let str = res.data.split('/');
-                insertFn(res.data, str[str.length - 1], res.data)
-            },
-            onBeforeUpload(files) {
-                // console.log('onBeforeUpload', files)
-                return files // 返回哪些文件可以上传
-                // return false 会阻止上传
-            },
-            onProgress(progress) { },
-            onSuccess(file, res) { },
-            onFailed(file, res) { },
-            onError(file, err, res) { }
-        }
-        // 上传视频
-        editorConfig.MENU_CONF['uploadVideo'] = {
-            server: 'admin/upload/upload', // 上传视频地址
-            timeout: 500 * 1000, // 5s
-            fieldName: 'file',
-            metaWithUrl: false, // 参数拼接到 url 上
-            maxFileSize: 20000 * 1024 * 1024, // 10M
-            customInsert(res, insertFn) { // 自定义插入视频
-                insertFn(res.data, res.data+'?x-oss-process=video/snapshot,t_100,f_jpg')
-            },
-            onBeforeUpload(files) { // 上传之前触发
-                layer.msg('视频上传中...', { icon: 16, shade: 0.01, time: 0 });
-                return files // 返回哪些文件可以上传
-                // return false 会阻止上传
-            },
-            // 上传进度的回调函数
-            onProgress(progress) { },
-            // 单个文件上传成功之后
-            onSuccess(file, res) {
-                layer.close(layer.msg());//关闭上传提示窗口
-            },
-            // 单个文件上传失败
-            onFailed(file, res) { },
-            // 上传错误，或者触发 timeout 超时
-            onError(file, err, res) {
-                layer.msg(`${file.name} 上传出错`);
-                console.log(`${file.name} 上传出错`, err, res)
-            }
-        }
-        const editor = createEditor({
-            selector: '#contentEditor',
-            html: '',
-            // config: editorConfig,
-            mode: 'simple' // 'default' or 'simple'
+        var ue = UE.getEditor('content',{
+            // autoHeightEnabled: false,
         });
-        const toolbarConfig = {
-            toolbarKeys: [
-                "bold","underline","italic","through","clearStyle","color","fontSize","indent",
-                "justifyRight","justifyLeft","justifyCenter","justifyJustify","lineHeight",
-                "deleteImage","editImage","divider","insertLink",
-                "blockquote","headerSelect","header1","header2","bulletedList",
-                "uploadVideo","uploadImage"
-            ]
-        };
-        const toolbar = createToolbar({
-            editor,
-            selector: '#toolbar-container',
-            config: toolbarConfig,
-            mode: 'simple' // 'default' or 'simple'
+        ue.on('contentchange', function () {
+            // console.log('contentchange', ue.getContent());
         });
 
 
