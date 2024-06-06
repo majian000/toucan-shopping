@@ -171,8 +171,8 @@ public class ArticleController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
-
             articleVO.setId(articleId);
+            articleVO.setContentId(articleContentId);
             articleVO.setDeleteStatus((short)0);
             articleVO.setCreateDate(new Date());
             ret = articleService.save(articleVO);
