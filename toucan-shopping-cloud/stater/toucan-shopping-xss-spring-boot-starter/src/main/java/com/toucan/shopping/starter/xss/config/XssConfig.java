@@ -1,7 +1,9 @@
 package com.toucan.shopping.starter.xss.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.xss.filter.RequestXssWrapperFilter;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
+import java.util.List;
 
 
 @Configuration
@@ -51,16 +54,11 @@ public class XssConfig implements WebMvcConfigurer {
     @Bean(name = "requestXssWrapperFilter")
     public Filter requestXssWrapperFilter() {
         RequestXssWrapperFilter requestXssWrapperFilter = new RequestXssWrapperFilter();
-        String excludePaths = toucan.getPlugins().getXssFilter().getExcludePaths();
-        if(StringUtils.isNotEmpty(excludePaths)) {
-            String[] excludePathArray = excludePaths.split(",");
-            if(excludePathArray!=null&&excludePathArray.length>0)
-            {
-                for(String excludePath:excludePathArray)
-                {
-                    logger.info("XSS过滤器忽略路径{}.........",excludePath);
-                }
-            }
+        List<String> excludePaths = toucan.getPlugins().getXssFilter().getExcludePaths();
+        if(CollectionUtils.isNotEmpty(excludePaths)) {
+            String[] excludePathArray = new String[excludePaths.size()];
+            excludePaths.toArray(excludePathArray);
+            logger.info("XSS过滤器忽略路径{}", JSONObject.toJSONString(excludePathArray));
             requestXssWrapperFilter.setExcludePaths(excludePathArray);
         }
         return requestXssWrapperFilter;

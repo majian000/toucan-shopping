@@ -2,6 +2,8 @@ package com.toucan.shopping.modules.common.properties.plugins;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Xss过滤器
  */
@@ -17,6 +19,6 @@ public class XssFilter {
     /**
      * 忽略的路径
      */
-    private String excludePaths;
+    private List<String> excludePaths;
 
 }
