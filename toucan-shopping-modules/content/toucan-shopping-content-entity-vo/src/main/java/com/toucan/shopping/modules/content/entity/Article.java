@@ -36,6 +36,8 @@ public class Article {
     private String seoKeywords; //seo关键字
     private String seoDescription; //seo简介
     private Long articleSort; //排序 从大到小
+    private String author; //作者
+    private String publishDate; //发布时间
 
     private Short showStatus; //显示状态 0隐藏 1显示
 

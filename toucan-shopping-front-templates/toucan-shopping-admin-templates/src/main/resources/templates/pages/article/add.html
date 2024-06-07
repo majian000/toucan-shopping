@@ -96,11 +96,52 @@
             <input type="number" name="articleSort"  placeholder="请输入排序"  class="layui-input" lay-verify="number">
         </div>
     </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">摘要内容</label>
+        <div class="layui-input-block">
+            <textarea name="abstractContent" class="layui-textarea" maxlength="200" placeholder="请输入摘要内容"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">seo标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="seoTitle" lay-verify="required" maxlength="255"  placeholder="请输入seo标题"  class="layui-input">
+            <tip>填写seo标题。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">seo关键字</label>
+        <div class="layui-input-block">
+            <textarea name="seoKeywords" class="layui-textarea" maxlength="255" placeholder="请输入seo关键字"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">seo简介</label>
+        <div class="layui-input-block">
+            <textarea name="seoDescription" class="layui-textarea" maxlength="255" placeholder="请输入seo简介"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">作者</label>
+        <div class="layui-input-block">
+            <input type="text" name="author" lay-verify="required" maxlength="80"  placeholder="请输入作者"  class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="publishDate" lay-verify="required" maxlength="80"  placeholder="请输入发布时间"  class="layui-input">
+        </div>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">文章内容</label>
         <div class="layui-input-block">
             <div id="content"  style="height:600px" >
-
             </div>
         </div>
     </div>
@@ -155,7 +196,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            alert(UE.getEditor('content').getContent());
+            data.field.content = UE.getEditor('content').getContent();
             loadding = layer.load();
             $.ajax({
                 url:"[[@{/article/save}]]",

@@ -9,6 +9,8 @@
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="content_url" jdbcType="VARCHAR" property="contentUrl" />
         <result column="cover_img_url" jdbcType="VARCHAR" property="coverImgUrl" />
+        <result column="author" jdbcType="VARCHAR" property="author" />
+        <result column="publish_date" jdbcType="VARCHAR" property="publishDate" />
         <result column="abstract_content" jdbcType="VARCHAR" property="abstractContent" />
         <result column="seo_title" jdbcType="VARCHAR" property="seoTitle" />
         <result column="seo_keywords" jdbcType="VARCHAR" property="seoKeywords" />
@@ -105,6 +107,8 @@
         content_url,
         cover_img_url,
         abstract_content,
+        author,
+        publish_date,
         seo_title,
         seo_keywords,
         seo_description,
@@ -124,6 +128,8 @@
         #{contentUrl},
         #{coverImgUrl},
         #{abstractContent},
+        #{author},
+        #{publishDate},
         #{seoTitle},
         #{seoKeywords},
         #{seoDescription},
