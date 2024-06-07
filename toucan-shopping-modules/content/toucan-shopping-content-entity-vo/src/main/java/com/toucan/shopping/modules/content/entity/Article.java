@@ -38,7 +38,7 @@ public class Article {
     private Long articleSort; //排序 从大到小
     private String author; //作者
     private String publishDate; //发布时间
-    private Short perpetualStatus; //永久显示 0:否 1:是
+    private Short perpetualStatus; //永久 0:否 1:是
 
     private Short showStatus; //显示状态 0隐藏 1显示
 

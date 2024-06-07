@@ -140,6 +140,11 @@
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 <script>
+
+    function clickSearch(){
+        $("#queryButton").click();
+    }
+
     layui.config({
         base: basePath+'/lib/layui_ext/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({

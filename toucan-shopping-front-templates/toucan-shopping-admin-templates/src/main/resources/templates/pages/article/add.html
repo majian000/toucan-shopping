@@ -111,7 +111,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">seo标题</label>
         <div class="layui-input-block">
-            <input type="text" name="seoTitle" lay-verify="required" maxlength="255"  placeholder="请输入seo标题"  class="layui-input">
+            <input type="text" name="seoTitle"  maxlength="255"  placeholder="请输入seo标题"  class="layui-input">
             <tip>填写seo标题。</tip>
         </div>
     </div>
@@ -230,7 +230,7 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
-                        parent.location.reload();
+                        parent.clickSearch();
                         parent.layer.close(iframeIndex);
 
                     });

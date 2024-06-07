@@ -181,6 +181,9 @@ public class ArticleController {
             articleVO.setContentId(articleContentId);
             articleVO.setDeleteStatus((short)0);
             articleVO.setCreateDate(new Date());
+            if(articleVO.getPerpetualStatus()==null){
+                articleVO.setPerpetualStatus((short)0);
+            }
             ret = articleService.save(articleVO);
             if(ret<=0)
             {
