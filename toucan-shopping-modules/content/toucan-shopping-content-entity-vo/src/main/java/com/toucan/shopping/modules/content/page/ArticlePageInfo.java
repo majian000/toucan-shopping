@@ -36,6 +36,7 @@ public class ArticlePageInfo extends PageInfo<ArticleVO> {
     private Date endShowDate; //结束展示时间
 
 
+    private Long columnId; //栏目ID
 
     /**
      * 标题

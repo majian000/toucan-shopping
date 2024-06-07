@@ -134,6 +134,9 @@ public class ArticleController extends UIController {
                     for(int i=0;i<list.size();i++)
                     {
                         ArticleVO articleVO = list.get(i);
+                        if(StringUtils.isNotEmpty(articleVO.getCoverImgUrl())){
+                            articleVO.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix()+articleVO.getCoverImgUrl());
+                        }
                         if(articleVO.getCreateAdminId()!=null) {
                             adminIdList.add(articleVO.getCreateAdminId());
                         }
