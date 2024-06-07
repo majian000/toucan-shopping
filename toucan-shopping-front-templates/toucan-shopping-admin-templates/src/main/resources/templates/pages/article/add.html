@@ -205,11 +205,7 @@
 
         $('#perpetualStatus_1').change(function(){
             if($(this).prop('checked')){
-                laydate.setValue({
-                    elem: '#endShowDate', // 指定元素
-                    value: '' // 清空值
-                });
-                form.render();
+                laydate.clear('endShowDate');
             }
         });
 
