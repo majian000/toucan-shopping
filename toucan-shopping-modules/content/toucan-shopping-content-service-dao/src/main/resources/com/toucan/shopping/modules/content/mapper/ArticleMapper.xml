@@ -57,12 +57,20 @@
             and t.title  like concat('%',#{title},'%')
         </if>
 
+        <if test="columnId!=null">
+            and t.column_id = #{columnId}
+        </if>
 
         <if test="startShowDate!=null">
             <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
         <if test="endShowDate!=null">
-            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[
+              and (
+                t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')
+                and t.perpetual_status = 0
+              )
+             ]]>
         </if>
     </sql>
 
