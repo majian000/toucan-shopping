@@ -80,7 +80,7 @@
                 <input type="text" id="endShowDate" name="endShowDate" class="layui-input" readonly >
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" value="1" id="perpetualStatus_1" title="永久显示">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永久显示">
             </div>
         </div>
     </div>
@@ -202,10 +202,10 @@
                 form.render('checkbox');
             }
         });
-
-        $('#perpetualStatus_1').change(function(){
-            if($(this).prop('checked')){
-                laydate.clear('endShowDate');
+        form.on('checkbox(perpetualStatusFilter)', function(data) {
+            if (data.elem.checked == true) {
+                $("#endShowDate").val("");
+                // form.render();
             }
         });
 
