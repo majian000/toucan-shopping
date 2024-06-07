@@ -9,5 +9,6 @@ public interface ArticleContentService {
 
     int save(ArticleContent entity);
 
+    int deleteByArticleId(Long articleId);
 
 }

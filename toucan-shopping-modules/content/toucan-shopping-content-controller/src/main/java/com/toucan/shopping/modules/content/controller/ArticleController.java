@@ -150,7 +150,7 @@ public class ArticleController {
             if(!CollectionUtils.isEmpty(articles))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("该文章已存在");
+                resultObjectVO.setMsg("\""+articleVO.getTitle()+"\"文章已存在");
                 return resultObjectVO;
             }
 
@@ -164,12 +164,14 @@ public class ArticleController {
             articleContent.setCreateDate(new Date());
             articleContent.setCreateAdminId(articleVO.getCreateAdminId());
             articleContent.setAppCode(articleVO.getAppCode());
+            articleContent.setDeleteStatus((short)0);
             int ret = articleContentService.save(articleContent);
             if(ret<=0)
             {
                 logger.warn("保存文章内容失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
             }
             if(articleVO.getArticleSort()==null){
                 Long maxArticleSort = articleService.queryMaxSort(articleVO.getColumnId());
@@ -182,9 +184,11 @@ public class ArticleController {
             ret = articleService.save(articleVO);
             if(ret<=0)
             {
+                articleContentService.deleteByArticleId(articleId);
                 logger.warn("保存文章失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
             }
             resultObjectVO.setData(articleVO);
 

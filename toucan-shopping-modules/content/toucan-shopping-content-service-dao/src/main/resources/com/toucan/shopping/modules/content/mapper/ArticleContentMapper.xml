@@ -22,7 +22,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleContent" >
-        insert into t_article(id,
+        insert into t_article_content(id,
         article_id,
         content,
         content_url,
@@ -40,5 +40,10 @@
         #{deleteStatus},
         #{createAdminId})
     </insert>
+
+
+    <update id="deleteByArticleId" parameterType="java.lang.Long" >
+        update t_article_content set delete_status=1 where article_id=#{articleId} and delete_status=0
+    </update>
 
 </mapper>

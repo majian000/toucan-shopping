@@ -17,6 +17,11 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
     @Override
     public int save(ArticleContent entity) {
-        return 0;
+        return articleContentMapper.insert(entity);
+    }
+
+    @Override
+    public int deleteByArticleId(Long articleId) {
+        return articleContentMapper.deleteByArticleId(articleId);
     }
 }

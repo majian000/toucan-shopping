@@ -9,4 +9,6 @@ public interface ArticleContentMapper {
 
     int insert(ArticleContent entity);
 
+    int deleteByArticleId(Long articleId);
+
 }
