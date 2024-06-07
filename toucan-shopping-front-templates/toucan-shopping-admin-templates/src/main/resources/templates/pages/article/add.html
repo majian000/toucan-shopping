@@ -197,19 +197,20 @@
         laydate.render({
             elem: '#endShowDate' //指定元素
             ,type: 'datetime'
+            ,done: function(date){
+                $('input[name="perpetualStatus"]').prop('checked', false);
+                form.render('checkbox');
+            }
         });
 
-        $("#endShowDate").change(function(){
-            $("#perpetualStatus_1").prop("checked", false);
-        });
-
-        $("#perpetualStatus_1").click(function(){
-           if($(this).is(":checked")){
-               laydate.setValue({
-                   elem: '#endShowDate', // 指定元素
-                   value: '' // 清空值
-               });
-           }
+        $('#perpetualStatus_1').change(function(){
+            if($(this).prop('checked')){
+                laydate.setValue({
+                    elem: '#endShowDate', // 指定元素
+                    value: '' // 清空值
+                });
+                form.render();
+            }
         });
 
         //监听提交
