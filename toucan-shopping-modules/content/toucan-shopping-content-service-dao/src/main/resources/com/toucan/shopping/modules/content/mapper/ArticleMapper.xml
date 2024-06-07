@@ -17,6 +17,7 @@
         <result column="seo_description" jdbcType="VARCHAR" property="seoDescription" />
         <result column="article_sort" jdbcType="BIGINT" property="articleSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="perpetual_status" jdbcType="INTEGER" property="perpetualStatus" />
         <result column="start_show_date" jdbcType="TIMESTAMP" property="startShowDate" />
         <result column="end_show_date" jdbcType="TIMESTAMP" property="endShowDate" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -114,6 +115,7 @@
         seo_description,
         article_sort,
         show_status,
+        perpetual_status,
         start_show_date,
         end_show_date,
         app_code,
@@ -135,6 +137,7 @@
         #{seoDescription},
         #{articleSort},
         #{showStatus},
+        #{perpetualStatus},
         #{startShowDate},
         #{endShowDate},
         #{appCode},

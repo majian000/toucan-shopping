@@ -69,14 +69,19 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">开始展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" readonly >
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" style="width:40%"  readonly  >
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">结束展示时间</label>
+        <label class="layui-form-label ">结束展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" readonly >
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <input type="text" id="endShowDate" name="endShowDate" class="layui-input" readonly >
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" value="1" id="perpetualStatus_1" title="永久显示">
+            </div>
         </div>
     </div>
 
@@ -126,14 +131,14 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">作者</label>
+        <label class="layui-form-label required">作者</label>
         <div class="layui-input-block">
             <input type="text" name="author" lay-verify="required" maxlength="80"  placeholder="请输入作者"  class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">发布时间</label>
+        <label class="layui-form-label required">发布时间</label>
         <div class="layui-input-block">
             <input type="text" name="publishDate" lay-verify="required" maxlength="80"  placeholder="请输入发布时间"  class="layui-input">
         </div>
@@ -194,8 +199,22 @@
             ,type: 'datetime'
         });
 
+        $("#endShowDate").change(function(){
+            $("#perpetualStatus_1").prop("checked", false);
+        });
+
+        $("#perpetualStatus_1").click(function(){
+           if($(this).is(":checked")){
+               laydate.setValue({
+                   elem: '#endShowDate', // 指定元素
+                   value: '' // 清空值
+               });
+           }
+        });
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
             data.field.content = UE.getEditor('content').getContent();
             loadding = layer.load();
             $.ajax({

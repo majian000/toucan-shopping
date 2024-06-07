@@ -150,22 +150,34 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '文章ID', hide:true, width: 260},
-                    {field: 'httpCoverImgUrl', width: 80, title: '封面预览',
+                    {field: 'id',  title: '文章ID', hide:true, width: 20},
+                    {field: 'httpCoverImgUrl', width: 100, title: '封面预览',
                         templet: function (row) {
                             if(row.httpCoverImgUrl!=null&&row.httpCoverImgUrl!="") {
                                 return "<a href='" + row.httpCoverImgUrl + "' target='_blank'><img src='" + row.httpCoverImgUrl + "' width='30' height='30'  /></a>";
                             }
                             return "";
                         }},
-                    {field: 'title',  title: '标题'},
-                    {field: 'startShowDate',  title: '开始展示时间'},
-                    {field: 'endShowDate',  title: '结束展示时间'},
-                    {field: 'contentUrl',  title: '内容链接地址'},
-                    {field: 'abstractContent',  title: '摘要内容'},
-                    {field: 'seoTitle',  title: 'seo标题'},
-                    {field: 'seoKeywords',  title: 'seo关键字'},
-                    {field: 'seoDescription',  title: 'seo简介'},
+                    {field: 'title',  title: '标题', width: 200},
+                    {field: 'startShowDate',  title: '开始展示时间', width: 150},
+                    {field: 'endShowDate',  title: '结束展示时间', width: 150},
+                    {field: 'perpetualStatus', title: '永久显示',
+                        templet: function (row) {
+                            if(row.perpetualStatus == "0"){
+                                return "否"
+                            }else
+                            if(row.perpetualStatus == "1"){
+                                return "是"
+                            }
+                            return row.perpetualStatus;
+                        }, width: 100},
+                    {field: 'author',  title: '作者', width: 100},
+                    {field: 'publishDate',  title: '发布时间', width: 100},
+                    {field: 'contentUrl',  title: '内容链接地址', width: 150},
+                    {field: 'abstractContent',  title: '摘要内容', width: 150},
+                    {field: 'seoTitle',  title: 'seo标题', width: 100},
+                    {field: 'seoKeywords',  title: 'seo关键字', width: 100},
+                    {field: 'seoDescription',  title: 'seo简介', width: 150},
                     {field: 'showStatus', title: '显示状态',
                         templet: function (row) {
                             if(row.showStatus == "0"){
@@ -175,8 +187,8 @@
                                 return "显示"
                             }
                             return row.showStatus;
-                        }},
-                    {field: 'articleSort',  title: '排序值'},
+                        }, width: 100},
+                    {field: 'articleSort',  title: '排序值', width: 100},
                     {field: 'createDate', width: 200, title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#articleTableBar', align: "center"}
                 ]
