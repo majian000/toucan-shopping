@@ -31,4 +31,11 @@ public interface ArticleService {
     int save(Article entity);
 
 
+    /**
+     * 查询排序最大值
+     * @param columnId
+     * @return
+     */
+    Long queryMaxSort(Long columnId);
+
 }

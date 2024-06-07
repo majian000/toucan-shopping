@@ -171,6 +171,10 @@ public class ArticleController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
+            if(articleVO.getArticleSort()==null){
+                Long maxArticleSort = articleService.queryMaxSort(articleVO.getColumnId());
+                articleVO.setArticleSort(maxArticleSort+1);
+            }
             articleVO.setId(articleId);
             articleVO.setContentId(articleContentId);
             articleVO.setDeleteStatus((short)0);

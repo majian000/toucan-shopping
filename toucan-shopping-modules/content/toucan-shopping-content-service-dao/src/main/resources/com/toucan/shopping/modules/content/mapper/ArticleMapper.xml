@@ -137,4 +137,9 @@
         #{createAdminId})
     </insert>
 
+
+    <select id="queryMaxSort" resultType="java.lang.Long">
+        select max(t.article_sort) from t_article t where t.delete_status=0 and t.column_id=#{columnId}
+    </select>
+
 </mapper>

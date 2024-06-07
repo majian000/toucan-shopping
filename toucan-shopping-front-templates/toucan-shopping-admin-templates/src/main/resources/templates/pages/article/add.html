@@ -66,6 +66,36 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block">
+            <select name="showStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>显示</option>
+                <option value="0">隐藏</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="articleSort"  placeholder="请输入排序"  class="layui-input" lay-verify="number">
+        </div>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">文章内容</label>
         <div class="layui-input-block">

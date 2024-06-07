@@ -42,5 +42,10 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.insert(entity);
     }
 
+    @Override
+    public Long queryMaxSort(Long columnId) {
+        return articleMapper.queryMaxSort(columnId);
+    }
+
 
 }
