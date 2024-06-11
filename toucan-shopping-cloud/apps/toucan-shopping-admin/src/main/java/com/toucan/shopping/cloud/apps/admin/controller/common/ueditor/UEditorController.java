@@ -55,7 +55,7 @@ public class UEditorController {
         }
         String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
         ImgUploadResult imgUploadResult = new ImgUploadResult();
-        imgUploadResult.setUrl(imageUploadService.getImageHttpPrefix()+groupPath);
+        imgUploadResult.setUrl(groupPath);
         imgUploadResult.setTitle(file.getOriginalFilename());
         imgUploadResult.setOriginal(file.getOriginalFilename());
         imgUploadResult.setState("SUCCESS");
