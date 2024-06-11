@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -39,9 +40,9 @@ public class ImgUploadController {
         resultObjectVO.setCode(0);
         try{
             String fileName = file.getOriginalFilename();
-            if(!ImageUtils.isStaticImage(fileName))
+            if(!ImageUtils.isImage(fileName))
             {
-                throw new RuntimeException("请上传图片格式(.jpg|.jpeg|.png)");
+                throw new RuntimeException("请上传图片格式("+ImageUtils.imageExtScope.stream().collect(Collectors.joining("、"))+")");
             }
             String fileExt = ".jpg";
             if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)

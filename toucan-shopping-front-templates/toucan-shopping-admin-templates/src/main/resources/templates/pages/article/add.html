@@ -264,9 +264,14 @@
             }
         });
 
+
+        window.UEDITOR_CONFIG = {
+            serverUrl: "[[@{/ueditor/config}]]" //默认配置地址
+        };
         var ue = UE.getEditor('content',{
             // autoHeightEnabled: false,
         });
+
         ue.on('contentchange', function () {
             // console.log('contentchange', ue.getContent());
         });
@@ -279,9 +284,6 @@
     });
 </script>
 
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 
 </body>
 </html>
