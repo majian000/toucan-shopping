@@ -265,9 +265,8 @@
         });
 
 
-        window.UEDITOR_CONFIG = {
-            serverUrl: "[[@{/ueditor/config}]]" //默认配置地址
-        };
+        //设置服务请求地址
+        window.UEDITOR_CONFIG.serverUrl= "[[@{/ueditor/config/}]]";
         var ue = UE.getEditor('content',{
             // autoHeightEnabled: false,
         });
