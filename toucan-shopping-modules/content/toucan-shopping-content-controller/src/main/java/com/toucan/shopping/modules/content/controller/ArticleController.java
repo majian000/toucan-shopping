@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.entity.ArticleContent;
@@ -208,6 +209,24 @@ public class ArticleController {
 
 
 
+    @RequestMapping(value="/queryMaxSort",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<Long> queryMaxSort(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        try {
+            Long maxSort = articleService.queryMaxSort(requestJsonVO.formatEntity(Long.class));
+            if(maxSort==null){
+                maxSort=0L;
+            }
+            resultObjectVO.setData(maxSort);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

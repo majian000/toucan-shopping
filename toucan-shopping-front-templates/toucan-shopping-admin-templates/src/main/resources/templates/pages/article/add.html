@@ -80,7 +80,7 @@
                 <input type="text" id="endShowDate" name="endShowDate" class="layui-input" readonly >
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" checked="checked">
             </div>
         </div>
     </div>
@@ -98,7 +98,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="articleSort"  placeholder="请输入排序"  class="layui-input" lay-verify="number">
+            <input type="number" name="articleSort"  placeholder="请输入排序"   class="layui-input" lay-verify="number" th:value="${maxSort}"  >
         </div>
     </div>
 

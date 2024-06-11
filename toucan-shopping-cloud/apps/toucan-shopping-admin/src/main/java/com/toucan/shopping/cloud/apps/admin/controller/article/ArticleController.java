@@ -102,6 +102,9 @@ public class ArticleController extends UIController {
                 request.setAttribute("columnName",resultTypeObjectVO.getData().getTitle());
             }
         }
+
+        ResultTypeObjectVO<Long> resultMaxSort = feignArticleService.queryMaxSort(RequestJsonVOGenerator.generator(toucan.getAppCode(),columnId));
+        request.setAttribute("maxSort",resultMaxSort.getData()+1);
         return "pages/article/add.html";
     }
 

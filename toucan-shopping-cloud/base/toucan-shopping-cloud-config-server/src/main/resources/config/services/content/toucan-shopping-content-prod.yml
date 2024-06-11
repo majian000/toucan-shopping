@@ -146,6 +146,7 @@ toucan:
   plugins:
     xss-filter:
       enabled: true
-      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+      exclude-paths[0]: /article/save
+      exclude-paths[1]: /article/update
 
 
