@@ -9,22 +9,25 @@ import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.entity.ArticleContent;
+import com.toucan.shopping.modules.content.entity.ArticleImage;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.content.redis.ArticleLockKey;
-import com.toucan.shopping.modules.content.service.ArticleContentService;
-import com.toucan.shopping.modules.content.service.ArticleService;
-import com.toucan.shopping.modules.content.service.BannerAreaService;
-import com.toucan.shopping.modules.content.service.BannerService;
+import com.toucan.shopping.modules.content.service.*;
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.jsoup.utils.JsoupUtil;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleContentService articleContentService;
+
+    @Autowired
+    private ArticleImageService articleImageService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -194,6 +200,19 @@ public class ArticleController {
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
+
+            //更新图片和文章关联
+            List<String> attributeValueList = JsoupUtil.queryAttributeValueList(articleVO.getContent(),"img","src");
+            if(CollectionUtils.isNotEmpty(attributeValueList)){
+                List<ArticleImage> articleImages = articleImageService.queryListByImgPathList(attributeValueList);
+                if(CollectionUtils.isNotEmpty(articleImages)){
+                    for(ArticleImage articleImage:articleImages) {
+                        articleImageService.updateArticleId(articleImage.getId(),articleId);
+                    }
+                }
+            }
+
+
             resultObjectVO.setData(articleVO);
 
         }catch(Exception e)

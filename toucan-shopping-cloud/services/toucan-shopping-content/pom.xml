@@ -145,6 +145,10 @@
             <artifactId>toucan-shopping-column-controller</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-jsoup</artifactId>
+        </dependency>
 
     </dependencies>
 

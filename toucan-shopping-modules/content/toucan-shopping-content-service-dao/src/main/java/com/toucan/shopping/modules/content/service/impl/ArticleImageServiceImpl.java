@@ -9,6 +9,8 @@ import com.toucan.shopping.modules.content.vo.ArticleImageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ArticleImageServiceImpl implements ArticleImageService {
 
@@ -36,6 +38,11 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     }
 
     @Override
+    public List<ArticleImage> queryListByImgPathList(List imgPathList) {
+        return articleImageMapper.queryListByImgPathList(imgPathList);
+    }
+
+    @Override
     public int deleteById(Long id) {
         return articleImageMapper.deleteById(id);
     }
@@ -44,4 +51,10 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     public int deleteByIdAndArticleId(Long id,Long articleId) {
         return articleImageMapper.deleteByIdAndArticleId(id,articleId);
     }
+
+    @Override
+    public int updateArticleId(Long id,Long articleId){
+        return articleImageMapper.updateArticleId(id,articleId);
+    }
+
 }

@@ -6,6 +6,8 @@ import com.toucan.shopping.modules.content.entity.ArticleImage;
 import com.toucan.shopping.modules.content.page.ArticleImagePageInfo;
 import com.toucan.shopping.modules.content.vo.ArticleImageVO;
 
+import java.util.List;
+
 public interface ArticleImageService {
 
 
@@ -26,10 +28,13 @@ public interface ArticleImageService {
      */
     int save(ArticleImage entity);
 
+    List<ArticleImage> queryListByImgPathList(List imgPathList);
 
     int deleteById(Long id);
 
-    int deleteByIdAndArticleId(Long id, Long shopId);
+    int deleteByIdAndArticleId(Long id, Long articleId);
+
+    int updateArticleId(Long id,Long articleId);
 
 
 }

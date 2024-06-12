@@ -55,6 +55,10 @@
             <groupId>com.toucan.shopping.modules.skylark</groupId>
             <artifactId>toucan-shopping-skylark-lock</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-jsoup</artifactId>
+        </dependency>
     </dependencies>
 
 

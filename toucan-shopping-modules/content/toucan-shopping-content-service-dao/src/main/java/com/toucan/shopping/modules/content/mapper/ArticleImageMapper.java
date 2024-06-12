@@ -29,6 +29,13 @@ public interface ArticleImageMapper {
     List<ArticleImageVO> queryListPage(ArticleImagePageInfo pageInfo);
 
     /**
+     * 根据图片路径列表查询
+     * @param imgPathList
+     * @return
+     */
+    List<ArticleImage> queryListByImgPathList(List imgPathList);
+
+    /**
      * 返回列表页数量
      * @param pageInfo
      * @return
@@ -37,6 +44,8 @@ public interface ArticleImageMapper {
 
     int deleteById(Long id);
 
-    int deleteByIdAndArticleId(Long id, Long shopId) ;
+    int deleteByIdAndArticleId(Long id, Long shopId);
+
+    int updateArticleId(Long id,Long articleId);
 
 }
