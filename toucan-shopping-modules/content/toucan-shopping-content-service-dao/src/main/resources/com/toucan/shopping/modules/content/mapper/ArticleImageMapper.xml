@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.content.mapper.ArticleImageMapper">
+
+    <resultMap id="articleImageMap" type="com.toucan.shopping.modules.content.entity.ArticleImage" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="article_id" jdbcType="BIGINT" property="articleId" />
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+        <result column="file_size" jdbcType="BIGINT" property="fileSize" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="creater_id" jdbcType="VARCHAR" property="createrId" />
+        <result column="updater_id" jdbcType="VARCHAR" property="updaterId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+    </resultMap>
+
+
+    <resultMap id="articleImageVOMap" type="com.toucan.shopping.modules.content.vo.ArticleImageVO" extends="articleImageMap" >
+    </resultMap>
+
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="title!=null and title!='' ">
+            and t.title  like concat('%',#{title},'%')
+        </if>
+
+    </sql>
+
+    <select id="findById" resultMap="articleImageMap" parameterType="java.lang.Long"  >
+        select t.* from  t_article_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
+    </select>
+
+
+    <select id="queryListPage" resultMap="articleImageVOMap" parameterType="com.toucan.shopping.modules.content.page.ArticleImagePageInfo">
+        select t.* from t_article_image t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.content.page.ArticleImagePageInfo">
+        select count(*) from t_article_image t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleImage"  keyProperty="id" >
+        insert into  t_article_image(id,article_id,img_path,remark,app_code,create_date,update_date,creater_id,updater_id,delete_status)
+        values(#{id},#{articleId},#{imgPath},#{remark},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId},#{deleteStatus})
+    </insert>
+
+
+
+    <update id="deleteById">
+        update  t_article_image  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+    <update id="deleteByIdAndArticleId">
+        update  t_article_image  set delete_status=1 where id=#{id} and article_id=#{articleId}  and delete_status=0
+    </update>
+
+
+</mapper>

@@ -1,0 +1,42 @@
+package com.toucan.shopping.modules.content.mapper;
+
+import com.toucan.shopping.modules.content.entity.ArticleImage;
+import com.toucan.shopping.modules.content.page.ArticleImagePageInfo;
+import com.toucan.shopping.modules.content.vo.ArticleImageVO;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+
+/**
+ * 店铺图片
+ * @author majian
+ */
+@Mapper
+public interface ArticleImageMapper {
+
+    ArticleImage findById(Long id);
+
+
+    int insert(ArticleImage entity);
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ArticleImageVO> queryListPage(ArticleImagePageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(ArticleImagePageInfo pageInfo);
+
+    int deleteById(Long id);
+
+    int deleteByIdAndArticleId(Long id, Long shopId) ;
+
+}

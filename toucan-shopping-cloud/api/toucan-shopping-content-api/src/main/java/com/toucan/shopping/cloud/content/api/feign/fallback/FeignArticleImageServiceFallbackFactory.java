@@ -1,0 +1,44 @@
+package com.toucan.shopping.cloud.content.api.feign.fallback;
+
+import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleService;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import feign.hystrix.FallbackFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+/**
+ * 文章图片服务
+ */
+@Component
+public class FeignArticleImageServiceFallbackFactory implements FallbackFactory<FeignArticleImageService> {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Override
+    public FeignArticleImageService create(Throwable throwable) {
+        logger.warn(throwable.getMessage(),throwable);
+        return new FeignArticleImageService(){
+
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignArticleImageService.save 失败  params:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+
+        };
+    }
+}
