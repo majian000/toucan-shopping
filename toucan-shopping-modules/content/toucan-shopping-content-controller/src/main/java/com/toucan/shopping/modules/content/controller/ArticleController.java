@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -204,6 +205,9 @@ public class ArticleController {
             //更新图片和文章关联
             List<String> attributeValueList = JsoupUtil.queryAttributeValueList(articleVO.getContent(),"img","src");
             if(CollectionUtils.isNotEmpty(attributeValueList)){
+                for(int i=0;i<attributeValueList.size();i++){
+                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(articleVO.getImageHttpPrefix(),""));
+                }
                 List<ArticleImage> articleImages = articleImageService.queryListByImgPathList(attributeValueList);
                 if(CollectionUtils.isNotEmpty(articleImages)){
                     for(ArticleImage articleImage:articleImages) {

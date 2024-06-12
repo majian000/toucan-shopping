@@ -252,6 +252,7 @@ public class ArticleController extends UIController {
 
             articleVO.setAppCode(toucan.getShoppingPC().getAppCode());
             articleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            articleVO.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
             resultObjectVO = feignArticleService.save(requestJsonVO);
         }catch(Exception e)

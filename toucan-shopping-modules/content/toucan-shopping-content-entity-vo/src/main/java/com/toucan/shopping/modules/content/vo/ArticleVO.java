@@ -24,4 +24,6 @@ public class ArticleVO extends Article {
 
     private String content; //文章内容
 
+    private String imageHttpPrefix; //图片前缀
+
 }
