@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.content.entity.ArticleImage;
 import com.toucan.shopping.modules.content.mapper.ArticleImageMapper;
 import com.toucan.shopping.modules.content.page.ArticleImagePageInfo;
+import com.toucan.shopping.modules.content.page.DeleteArticleImagePageInfo;
 import com.toucan.shopping.modules.content.service.ArticleImageService;
 import com.toucan.shopping.modules.content.vo.ArticleImageVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,21 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     @Override
     public int updateArticleId(Long id,Long articleId){
         return articleImageMapper.updateArticleId(id,articleId);
+    }
+
+
+    @Override
+    public PageInfo<ArticleImageVO> queryInvalidListPage(DeleteArticleImagePageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<ArticleImageVO> pageInfo = new PageInfo();
+        pageInfo.setList(articleImageMapper.queryInvalidListPage(queryPageInfo));
+        pageInfo.setTotal(articleImageMapper.queryInvalidListPageCount(queryPageInfo));
+        return pageInfo;
+    }
+
+    @Override
+    public int deleteByIdList(List idList, String remark) {
+        return articleImageMapper.deleteByIdList(idList,remark);
     }
 
 }

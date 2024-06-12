@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.content.mapper;
 
 import com.toucan.shopping.modules.content.entity.ArticleImage;
 import com.toucan.shopping.modules.content.page.ArticleImagePageInfo;
+import com.toucan.shopping.modules.content.page.DeleteArticleImagePageInfo;
 import com.toucan.shopping.modules.content.vo.ArticleImageVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -28,6 +29,16 @@ public interface ArticleImageMapper {
      */
     List<ArticleImageVO> queryListPage(ArticleImagePageInfo pageInfo);
 
+
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ArticleImageVO> queryInvalidListPage(DeleteArticleImagePageInfo pageInfo);
+
     /**
      * 根据图片路径列表查询
      * @param imgPathList
@@ -42,10 +53,20 @@ public interface ArticleImageMapper {
      */
     Long queryListPageCount(ArticleImagePageInfo pageInfo);
 
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryInvalidListPageCount(DeleteArticleImagePageInfo pageInfo);
+
     int deleteById(Long id);
 
     int deleteByIdAndArticleId(Long id, Long shopId);
 
     int updateArticleId(Long id,Long articleId);
+
+    int deleteByIdList(List idList, String remark);
 
 }

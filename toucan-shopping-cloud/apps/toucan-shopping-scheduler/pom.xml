@@ -162,6 +162,11 @@
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.content</groupId>
+            <artifactId>toucan-shopping-content-entity-vo</artifactId>
+        </dependency>
+
     </dependencies>
 
 

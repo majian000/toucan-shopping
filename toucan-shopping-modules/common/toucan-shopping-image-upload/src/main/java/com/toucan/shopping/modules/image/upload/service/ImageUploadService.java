@@ -13,7 +13,7 @@ public interface ImageUploadService {
     /**
      * 根据路径删除图片
      * @param storagePath
-     * @return
+     * @return 0:成功
      */
     Integer deleteFile(String storagePath);
 

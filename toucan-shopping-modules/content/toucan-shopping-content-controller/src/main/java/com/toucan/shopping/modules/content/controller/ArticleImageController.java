@@ -1,13 +1,18 @@
 package com.toucan.shopping.modules.content.controller;
 
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.content.entity.ArticleImage;
+import com.toucan.shopping.modules.content.page.ArticleImagePageInfo;
 import com.toucan.shopping.modules.content.service.ArticleImageService;
 import com.toucan.shopping.modules.content.vo.ArticleImageVO;
+import com.toucan.shopping.modules.content.page.DeleteArticleImagePageInfo;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -87,6 +94,75 @@ public class ArticleImageController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
+        return resultObjectVO;
+    }
+
+
+
+
+    @RequestMapping(value="/deleteInvalidData",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteInvalidData(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+
+        DeleteArticleImagePageInfo deleteArticleImagePageInfo = requestJsonVO.formatEntity(DeleteArticleImagePageInfo.class);
+        if(deleteArticleImagePageInfo.getEndDate()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("截止时间不能为空");
+            return resultObjectVO;
+        }
+        try {
+            PageInfo pageInfo = null;
+            int page = 1;
+            int limit = 100;
+            DeleteArticleImagePageInfo query = new DeleteArticleImagePageInfo();
+            query.setEndDate(deleteArticleImagePageInfo.getEndDate());
+            query.setLimit(limit);
+            do {
+                logger.info(" 查询无效文章图片列表 页码:{} 每页显示 {} ", page, limit);
+                query.setPage(page);
+                pageInfo =  articleImageService.queryInvalidListPage(query);
+                page++;
+                if(!CollectionUtils.isEmpty(pageInfo.getList()))
+                {
+                    List<ArticleImage> articleImageList = pageInfo.getList();
+                    List<Long> successArticleImageIdList = new LinkedList<>();
+                    List<Long> faildArticleImageIdList = new LinkedList<>();
+                    for(ArticleImage articleImage:articleImageList){
+                        if(StringUtils.isNotEmpty(articleImage.getImgPath())) {
+                            int ret = imageUploadService.deleteFile(articleImage.getImgPath());
+                            if(ret==0){
+                                successArticleImageIdList.add(articleImage.getId());
+                            }else{
+                                faildArticleImageIdList.add(articleImage.getId());
+                            }
+                        }else{
+                            faildArticleImageIdList.add(articleImage.getId());
+                        }
+                    }
+                    articleImageService.deleteByIdList(successArticleImageIdList,"删除成功");
+                    articleImageService.deleteByIdList(faildArticleImageIdList,"删除失败");
+                }
+            } while (pageInfo != null && !CollectionUtils.isEmpty(pageInfo.getList()));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+
+
         return resultObjectVO;
     }
 

@@ -31,6 +31,15 @@
 
     </sql>
 
+
+
+    <sql id="queryInvalidListPageWhere">
+        <![CDATA[
+          and  t.create_date <=  DATE_FORMAT(#{endDate} , '%Y-%m-%d %H:%i:%s')
+         ]]>
+        and t.article_id is null
+    </sql>
+
     <select id="findById" resultMap="articleImageMap" parameterType="java.lang.Long"  >
         select t.* from  t_article_image t where t.id = #{id} and t.delete_status = 0 limit 0,1
     </select>
@@ -47,6 +56,18 @@
     </select>
 
 
+
+    <select id="queryInvalidListPage" resultMap="articleImageVOMap" parameterType="com.toucan.shopping.modules.content.page.DeleteArticleImagePageInfo">
+        select t.* from t_article_image t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryInvalidListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.content.page.ArticleImagePageInfo">
         select count(*) from t_article_image t
         <where>
@@ -57,6 +78,16 @@
 
     </select>
 
+
+    <select id="queryInvalidListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.content.page.DeleteArticleImagePageInfo">
+        select count(*) from t_article_image t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryInvalidListPageWhere" />
+        </where>
+
+    </select>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleImage"  keyProperty="id" >
@@ -92,5 +123,14 @@
     </update>
 
 
+    <update id="deleteByIdList">
+        update t_article_image set delete_status=1 ,remark=#{remark}
+         where delete_status=0
+         and id in
+          <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+             #{item}
+          </foreach>
+
+    </update>
 
 </mapper>
