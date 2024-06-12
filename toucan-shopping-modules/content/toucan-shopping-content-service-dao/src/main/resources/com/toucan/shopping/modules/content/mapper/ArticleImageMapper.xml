@@ -124,7 +124,7 @@
 
 
     <update id="deleteByIdList">
-        update t_article_image set delete_status=1 ,remark=#{remark}
+        update t_article_image set delete_status=1 ,remark=#{remark},update_date=sysdate()
          where delete_status=0
          and id in
           <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">

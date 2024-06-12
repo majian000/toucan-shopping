@@ -41,15 +41,16 @@ public class ArticleImageScheduler {
     private FeignArticleImageService feignArticleImageService;
 
     /**
-     * 删除三天前的图片
+     * 每天0:20执行
      */
     @Scheduled(cron = "0 20 0 * * ?")
     public void rerun()
     {
-        logger.info("处理刷新用户总数 开始=====================");
+        logger.info("删除文章图片 开始=====================");
         try {
             DeleteArticleImagePageInfo deleteArticleImagePageInfo = new DeleteArticleImagePageInfo();
-            String endDateStr = DateUtils.FORMATTER_SS.get().format(DateUtils.advanceDay(new Date(),3));
+            //删除三天前的图片
+            String endDateStr = DateUtils.FORMATTER_DD.get().format(DateUtils.advanceDay(new Date(),3));
             endDateStr+=" 23:59:59";
             deleteArticleImagePageInfo.setEndDate(DateUtils.FORMATTER_SS.get().parse(endDateStr));
             feignArticleImageService.deleteInvalidData(RequestJsonVOGenerator.generator(toucan.getAppCode(),deleteArticleImagePageInfo));
@@ -57,7 +58,7 @@ public class ArticleImageScheduler {
         {
             logger.warn(e.getMessage(),e);
         }
-        logger.info("处理刷新用户总数 结束=====================");
+        logger.info("删除文章图片 结束=====================");
     }
 
 

@@ -142,6 +142,7 @@ public class ArticleImageController {
                     List<Long> faildArticleImageIdList = new LinkedList<>();
                     for(ArticleImage articleImage:articleImageList){
                         if(StringUtils.isNotEmpty(articleImage.getImgPath())) {
+                            logger.info("删除图片 {} ",articleImage.getImgPath());
                             int ret = imageUploadService.deleteFile(articleImage.getImgPath());
                             if(ret==0){
                                 successArticleImageIdList.add(articleImage.getId());
@@ -152,8 +153,13 @@ public class ArticleImageController {
                             faildArticleImageIdList.add(articleImage.getId());
                         }
                     }
-                    articleImageService.deleteByIdList(successArticleImageIdList,"删除成功");
-                    articleImageService.deleteByIdList(faildArticleImageIdList,"删除失败");
+                    if(CollectionUtils.isNotEmpty(successArticleImageIdList)) {
+                        articleImageService.deleteByIdList(successArticleImageIdList, "删除成功");
+                    }
+
+                    if(CollectionUtils.isNotEmpty(faildArticleImageIdList)) {
+                        articleImageService.deleteByIdList(faildArticleImageIdList, "删除失败");
+                    }
                 }
             } while (pageInfo != null && !CollectionUtils.isEmpty(pageInfo.getList()));
 
