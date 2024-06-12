@@ -60,8 +60,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleImage"  keyProperty="id" >
-        insert into  t_article_image(id,article_id,img_path,remark,app_code,create_date,update_date,creater_id,updater_id,delete_status)
-        values(#{id},#{articleId},#{imgPath},#{remark},#{appCode},#{createDate},#{updateDate},#{createrId},#{updaterId},#{deleteStatus})
+        insert into  t_article_image(id,article_id,img_path,remark,app_code,create_date,create_admin_id,delete_status)
+        values(#{id},#{articleId},#{imgPath},#{remark},#{appCode},#{createDate},#{createAdminId},#{deleteStatus})
     </insert>
 
 

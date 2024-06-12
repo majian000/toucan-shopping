@@ -70,7 +70,8 @@ public class UEditorController {
         articleImageVO.setFileSize(file.getSize());
         articleImageVO.setFileExt(fileExt);
         articleImageVO.setImgPath(groupPath);
-        articleImageVO.setCreaterId(adminId);
+        articleImageVO.setCreateAdminId(adminId);
+        articleImageVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
         ResultObjectVO resultObjectVO = feignArticleImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImageVO));
         ImgUploadResult imgUploadResult = new ImgUploadResult();
