@@ -205,12 +205,12 @@ public class ShopApiController extends BaseController {
             if(toucan.getSeller()!=null&&toucan.getSeller().getDefaultShopLogo()!=null) {
                 shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
             }
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO queryShopResult = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             SellerShopVO sellerShopVO = new SellerShopVO();
             sellerShopVO.setId(-1L);
-            if(resultObjectVO.isSuccess())
+            if(queryShopResult.isSuccess())
             {
-                sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                sellerShopVO = queryShopResult.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getLogo()!=null) {
                     shopOverviewVO.setShopLogo(sellerShopVO.getLogo());
                     shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
