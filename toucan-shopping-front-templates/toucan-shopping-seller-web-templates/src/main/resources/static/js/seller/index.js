@@ -1,5 +1,6 @@
 $(function () {
     queryNewestList();
+    queryShopOverview();
 });
 
 
@@ -42,5 +43,29 @@ function queryNewestList()
         {
         }
 
+    });
+}
+
+function queryShopOverview(){
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/shop/shop/overview",
+        contentType: "application/json;charset=utf-8",
+        data: null,
+        dataType: "json",
+        success: function (result) {
+            var data = result.data;
+            if(data!=null) {
+                $("#shop_logo_preview").attr("src", data.httpShopLogo);
+                $("#shelvesProductCount").html(data.shelvesProductCount);
+                $(".shelvesProductCountTitle").attr("title",data.shelvesProductCount);
+                $("#waitApproveProductCount").html(data.waitApproveProductCount);
+                $(".waitApproveProductCountTitle").attr("title",data.waitApproveProductCount);
+            }
+        },
+        error: function (result) {
+        },
+        complete: function () {
+        }
     });
 }

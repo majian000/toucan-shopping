@@ -89,6 +89,11 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
 
 
     @Override
+    public Long queryCount(ShopProductApproveVO shopProductVO) {
+        return shopProductApproveMapper.queryCount(shopProductVO);
+    }
+
+    @Override
     public ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO) {
         return shopProductApproveMapper.queryOne(shopProductVO);
     }

@@ -27,6 +27,11 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         return productSkuMapper.queryList(productSkuVO);
     }
 
+    @Override
+    public Long queryCount(ProductSkuVO productSkuVO) {
+        return productSkuMapper.queryCount(productSkuVO);
+    }
+
 
     @Override
     public ProductSkuVO queryVOByIdAndShelves(Long id) {

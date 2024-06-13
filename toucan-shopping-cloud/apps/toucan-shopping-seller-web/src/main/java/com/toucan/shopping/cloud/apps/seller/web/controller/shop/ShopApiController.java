@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.MobilePhoneVCodeUtil;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -14,11 +16,15 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.seller.vo.ShopOverviewVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
@@ -68,6 +74,12 @@ public class ShopApiController extends BaseController {
 
     @Autowired
     private FeignSmsService feignSmsService;
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
+
+    @Autowired
+    private FeignShopProductApproveService feignShopProductApproveService;
 
 
 
@@ -177,6 +189,58 @@ public class ShopApiController extends BaseController {
 
 
 
+
+
+    @UserAuth
+    @RequestMapping(value="/shop/overview")
+    @ResponseBody
+    public ResultObjectVO shopOverview(HttpServletRequest httpServletRequest){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
+            ShopOverviewVO shopOverviewVO = new ShopOverviewVO();
+            //设置默认店铺图标
+            if(toucan.getSeller()!=null&&toucan.getSeller().getDefaultShopLogo()!=null) {
+                shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
+            }
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            SellerShopVO sellerShopVO = new SellerShopVO();
+            sellerShopVO.setId(-1L);
+            if(resultObjectVO.isSuccess())
+            {
+                sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVO!=null&&sellerShopVO.getLogo()!=null) {
+                    shopOverviewVO.setShopLogo(sellerShopVO.getLogo());
+                    shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
+                }
+            }
+
+            //已上架商品数量
+            ProductSkuVO queryShelversVO=new ProductSkuVO();
+            queryShelversVO.setShopId(sellerShopVO.getId());
+            ResultTypeObjectVO<Long> shelvesProductCount = feignProductSkuService.queryShelvesCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShelversVO));
+            if(shelvesProductCount.isSuccess()) {
+                shopOverviewVO.setShelvesProductCount(shelvesProductCount.getData());
+            }
+
+            //待审核商品数量
+            ShopProductApproveVO queryProductApproveVO=new ShopProductApproveVO();
+            queryProductApproveVO.setShopId(sellerShopVO.getId());
+            ResultTypeObjectVO<Long> queryProductApproveCount = feignShopProductApproveService.queryApproveCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductApproveVO));
+            if(queryProductApproveCount.isSuccess()) {
+                shopOverviewVO.setWaitApproveProductCount(queryProductApproveCount.getData());
+            }
+            resultObjectVO.setData(shopOverviewVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

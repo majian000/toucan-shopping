@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.product.api.feign.fallback.FeignShopProductAppr
 import com.toucan.shopping.cloud.product.api.feign.fallback.FeignShopProductServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -126,5 +127,14 @@ public interface FeignShopProductApproveService {
      */
     @RequestMapping(value="/query/approve/list/shopId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryApproveListByShopId(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 查询审核中数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/approve/count/shopId",produces = "application/json;charset=UTF-8")
+    ResultTypeObjectVO<Long> queryApproveCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

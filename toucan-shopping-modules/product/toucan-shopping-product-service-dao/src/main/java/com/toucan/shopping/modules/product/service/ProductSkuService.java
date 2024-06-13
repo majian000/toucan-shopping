@@ -15,6 +15,9 @@ public interface ProductSkuService {
 
     List<ProductSkuVO> queryList(ProductSkuVO productSkuVO);
 
+
+    Long queryCount(ProductSkuVO productSkuVO);
+
     ProductSkuVO queryVOByIdAndShelves(Long id);
 
     ProductSkuVO queryVOById(Long id);

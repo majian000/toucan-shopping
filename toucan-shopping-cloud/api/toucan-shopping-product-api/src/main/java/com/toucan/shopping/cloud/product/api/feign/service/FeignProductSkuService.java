@@ -4,16 +4,28 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.product.api.feign.fallback.FeignProductSkuServiceFallbackFactory;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/productSku",fallbackFactory = FeignProductSkuServiceFallbackFactory.class)
 public interface FeignProductSkuService {
 
+    /**
+     * 查询上架列表
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
     @RequestMapping(value = "/shelves/list",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody  RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 根据ID查询
+     * @param requestJsonVO
+     * @return
+     */
     @RequestMapping(value = "/query/id",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -170,4 +182,15 @@ public interface FeignProductSkuService {
      */
     @RequestMapping(value="/query/list/by/shopProductIdList",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByShopProductIdList(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据店铺ID查询上架商品数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/shelves/count/by/shopId",produces = "application/json;charset=UTF-8")
+    ResultTypeObjectVO<Long> queryShelvesCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

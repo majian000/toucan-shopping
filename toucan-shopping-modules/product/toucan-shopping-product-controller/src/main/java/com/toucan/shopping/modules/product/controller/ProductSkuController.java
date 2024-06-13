@@ -2,13 +2,10 @@ package com.toucan.shopping.modules.product.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.vo.*;
 import com.toucan.shopping.modules.product.service.ProductSkuRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultListVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
@@ -1254,6 +1251,52 @@ public class ProductSkuController {
             resultObjectVO.setMsg("查询失败!");
         }
 
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 根据店铺ID查询上架商品数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/shelves/count/by/shopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<Long> queryShelvesCountByShopId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
+            if(productSkuVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            Long count = productSkuService.queryCount(productSkuVO);
+            resultObjectVO.setData(count==null ? 0L : count);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
         return resultObjectVO;
     }
 }

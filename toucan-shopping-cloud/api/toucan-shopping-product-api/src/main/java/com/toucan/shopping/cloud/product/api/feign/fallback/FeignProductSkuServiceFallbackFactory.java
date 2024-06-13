@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuServic
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -289,6 +290,21 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                     return resultObjectVO;
                 }
                 logger.warn("FeignProductSkuService queryListByShopProductIdList faild   params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultTypeObjectVO<Long> queryShelvesCountByShopId(RequestJsonVO requestJsonVO) {
+                ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSkuService queryShelvesCountByShopId faild   params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询失败,请重试!");
                 return resultObjectVO;

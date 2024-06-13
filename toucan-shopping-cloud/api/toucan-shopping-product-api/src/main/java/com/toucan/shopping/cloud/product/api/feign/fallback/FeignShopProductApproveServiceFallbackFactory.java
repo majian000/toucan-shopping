@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
@@ -198,6 +199,21 @@ public class FeignShopProductApproveServiceFallbackFactory implements FallbackFa
                     return resultObjectVO;
                 }
                 logger.warn("FeignShopProductApproveService queryApproveListByShopId faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultTypeObjectVO<Long> queryApproveCountByShopId(RequestJsonVO requestJsonVO) {
+                ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductApproveService queryApproveCountByShopId faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

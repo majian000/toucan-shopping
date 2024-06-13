@@ -56,4 +56,6 @@ public interface ShopProductApproveMapper {
 
     int updateShopProductId(Long id, Long shopProductId);
 
+    Long queryCount(ShopProductApproveVO shopProductVO);
+
 }

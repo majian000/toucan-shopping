@@ -167,7 +167,9 @@ img{border:0;vertical-align: middle;}
 .baner_data ul li.li3 { border-right:1px solid #e5e5e5; }
 .baner_data ul li.li4 { padding-left:12px; }
 .baner_data ul li span { width:100%; height:24px; line-height:30px; display:block; color:#acacb0; overflow:hidden; }
-.baner_data ul li b { width:100%; height:24px; line-height:20px; font-size:16px; display:block; color:#000; }
+.baner_data ul li b { width:100%; height:24px; line-height:20px; font-size:16px; display:block; color:#000;    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
 
 /*销售排行榜*/
 .ranking_list { width:198px; height:auto; display:table; margin:0 auto; padding-bottom:12px; }

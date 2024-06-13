@@ -102,4 +102,6 @@ public interface ProductSkuMapper {
 
     List<ProductSkuStatusVO> queryShelvesBuyStatus(Long shopProductId);
 
+    Long queryCount(ProductSkuVO productSkuVO);
+
 }

@@ -339,4 +339,13 @@
     <select id="queryShelvesBuyStatus" resultMap="productSkuBuyStatusVOMap">
       select t.id,t.attribute_value_group,t.stock_num,t.status from t_product_sku t where   t.delete_status=0   and t.shop_product_id = #{shopProductId}
     </select>
+
+
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuVO">
+        select count(*) from t_product_sku t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+        </where>
+    </select>
 </mapper>

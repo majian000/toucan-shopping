@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -1575,5 +1576,45 @@ public class ShopProductApproveController {
     }
 
 
+
+
+    /**
+     * 查询审核中数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/approve/count/shopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<Long> queryApproveCountByShopId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductApproveVO query = requestJsonVO.formatEntity(ShopProductApproveVO.class);
+            if(query.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            query.setApproveStatus(ProductConstant.PROCESSING.shortValue());
+            Long count = shopProductApproveService.queryCount(query);
+            resultObjectVO.setData(count!=null?count:0L);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+        return resultObjectVO;
+    }
 
 }

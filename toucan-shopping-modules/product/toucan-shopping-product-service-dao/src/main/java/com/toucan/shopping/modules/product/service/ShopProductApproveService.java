@@ -52,6 +52,7 @@ public interface ShopProductApproveService {
 
     List<ShopProductApproveVO> queryList(ShopProductApproveVO shopProductVO);
 
+    Long queryCount(ShopProductApproveVO shopProductVO);
 
     ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO);
 
