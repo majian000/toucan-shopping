@@ -81,6 +81,13 @@
          ]]>
     </sql>
 
+    <sql id="queryCountWhere">
+        <if test="shopId!=null and shopId!=''">
+            and t.shop_id = #{shopId}
+        </if>
+
+        and t.delete_status = 0
+    </sql>
 
     <sql id="queryListPageWhere">
 
@@ -128,7 +135,7 @@
             ]]>
         </if>
 
-        and delete_status = 0
+        and t.delete_status = 0
 
     </sql>
 
@@ -317,5 +324,12 @@
     <update id="updateTradeStatus">
         update t_order set trade_status=#{tradeStatus} where id =#{id} and delete_status=0
     </update>
+
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.vo.OrderVO">
+        select count(*) from t_order t
+        where 1=1
+        <include refid="queryCountWhere" />
+
+    </select>
 
 </mapper>

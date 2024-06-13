@@ -17,7 +17,7 @@ public class ShopOverviewVO {
 
     private Long collectShopCount = 0L; //收藏店铺数量
 
-    private Long waitCommentsOrderCount = 0L; //待评价订单数量
+    private Long finishOrderCount = 0L; //待评价订单数量
 
     private Long waitApproveProductCount = 0L; //待审核商品数量
 

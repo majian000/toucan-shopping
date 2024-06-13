@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.MobilePhoneVCodeUtil;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
@@ -19,6 +20,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
@@ -81,6 +83,8 @@ public class ShopApiController extends BaseController {
     @Autowired
     private FeignShopProductApproveService feignShopProductApproveService;
 
+    @Autowired
+    private FeignOrderService feignOrderService;
 
 
     @UserAuth
@@ -232,6 +236,16 @@ public class ShopApiController extends BaseController {
             if(queryProductApproveCount.isSuccess()) {
                 shopOverviewVO.setWaitApproveProductCount(queryProductApproveCount.getData());
             }
+
+            //查询完成订单数量
+            OrderVO queryFinishCount = new OrderVO();
+            queryFinishCount.setShopId(sellerShopVO.getId());
+            ResultTypeObjectVO<Long> queryFinishOrderCount = feignOrderService.queryFinishCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryFinishCount));
+            if(queryFinishOrderCount.isSuccess()) {
+                shopOverviewVO.setFinishOrderCount(queryFinishOrderCount.getData());
+            }
+
+
             resultObjectVO.setData(shopOverviewVO);
         }catch(Exception e)
         {

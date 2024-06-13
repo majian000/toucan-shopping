@@ -67,6 +67,11 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findListByMainOrderNo(mainOrderNo);
     }
 
+    @Override
+    public Long queryCount(OrderVO orderVO) {
+        return orderMapper.queryCount(orderVO);
+    }
+
 
     @Override
     public List<Order> queryOrderListByPayTimeout(Order order) {

@@ -23,6 +23,8 @@ public interface OrderService {
 
     List<Order> findListByMainOrderNo(String mainOrderNo);
 
+    Long queryCount(OrderVO orderVO);
+
 //    int finishOrder(Order order);
 //
 

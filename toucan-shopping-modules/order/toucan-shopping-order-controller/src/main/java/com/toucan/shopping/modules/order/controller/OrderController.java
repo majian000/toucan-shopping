@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
@@ -428,6 +429,39 @@ public class OrderController {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请求失败");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询已完成订单数量
+     */
+    @RequestMapping(value="/queryFinishCountByShopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<Long> queryFinishCountByShopId(@RequestBody RequestJsonVO requestJsonVO){
+
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO(ResultVO.FAILD,"请重试");
+        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+
+            try {
+                OrderVO orderVO = requestJsonVO.formatEntity(OrderVO.class);
+                if(orderVO.getShopId()==null){
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("店铺ID不能为空");
+                    return resultObjectVO;
+                }
+                Long count = orderService.queryCount(orderVO);
+                resultObjectVO.setData(count!=null?count:0L);
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("请求完成");
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+            }
         }
         return resultObjectVO;
     }

@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.order.api.feign.service;
 import com.toucan.shopping.cloud.order.api.feign.fallback.FeignOrderServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,5 +80,13 @@ public interface FeignOrderService {
      */
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 查询已完成订单数量
+     */
+    @RequestMapping(value="/queryFinishCountByShopId",produces = "application/json;charset=UTF-8")
+    ResultTypeObjectVO<Long> queryFinishCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

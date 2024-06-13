@@ -61,6 +61,8 @@ function queryShopOverview(){
                 $(".shelvesProductCountTitle").attr("title",data.shelvesProductCount);
                 $("#waitApproveProductCount").html(data.waitApproveProductCount);
                 $(".waitApproveProductCountTitle").attr("title",data.waitApproveProductCount);
+                $("#finishOrderCount").html(data.finishOrderCount);
+                $(".finishOrderCountTitle").attr("title",data.finishOrderCount);
             }
         },
         error: function (result) {
