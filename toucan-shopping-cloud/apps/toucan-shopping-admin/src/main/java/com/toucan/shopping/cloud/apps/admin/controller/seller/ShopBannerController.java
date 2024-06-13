@@ -114,7 +114,7 @@ public class ShopBannerController extends UIController {
                         if(!bannerVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
                             bannerVO.setCreaterName("掌柜ID:"+bannerVO.getCreaterId());
                         }
-                        if(!bannerVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
+                        if(StringUtils.isNotEmpty(bannerVO.getUpdaterId())&&!bannerVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix())) {
                             bannerVO.setUpdaterName("掌柜ID:"+bannerVO.getUpdaterId());
                         }
                     }
