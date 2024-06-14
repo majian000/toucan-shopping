@@ -23,5 +23,12 @@ public interface FeignArticleImageService {
     ResultObjectVO deleteInvalidData(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 }

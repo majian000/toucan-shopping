@@ -25,8 +25,8 @@
 
     <sql id="queryListPageWhere">
 
-        <if test="title!=null and title!='' ">
-            and t.title  like concat('%',#{title},'%')
+        <if test="articleId!=null ">
+            and t.article_id = #{articleId}
         </if>
 
     </sql>
