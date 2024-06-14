@@ -68,6 +68,36 @@ public class FeignArticleImageServiceFallbackFactory implements FallbackFactory<
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignArticleImageService.deleteById 失败  params:{}",requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignArticleImageService.deleteByIds 失败  params:{}",requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
 
         };
     }

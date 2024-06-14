@@ -101,6 +101,10 @@
         update  t_article_image  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
+    <update id="deleteByIdAndSaveOperateUserId">
+        update  t_article_image  set delete_status=1 , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
+    </update>
+
 
     <update id="deleteByIdAndArticleId">
         update  t_article_image  set delete_status=1 where id=#{id} and article_id=#{articleId}  and delete_status=0

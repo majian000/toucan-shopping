@@ -69,4 +69,6 @@ public interface ArticleImageMapper {
 
     int deleteByIdList(List idList, String remark);
 
+    int deleteByIdAndSaveOperateUserId(Long id, String adminId);
+
 }

@@ -53,6 +53,10 @@
 
     <sql id="queryListPageWhere">
 
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
         <if test="title!=null and title!='' ">
             and t.title  like concat('%',#{title},'%')
         </if>

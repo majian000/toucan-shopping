@@ -49,6 +49,11 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     }
 
     @Override
+    public int deleteById(Long id, String adminId) {
+        return articleImageMapper.deleteByIdAndSaveOperateUserId(id,adminId);
+    }
+
+    @Override
     public int deleteByIdAndArticleId(Long id,Long articleId) {
         return articleImageMapper.deleteByIdAndArticleId(id,articleId);
     }

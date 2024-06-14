@@ -33,6 +33,8 @@ public interface ArticleImageService {
 
     int deleteById(Long id);
 
+    int deleteById(Long id,String adminId);
+
     int deleteByIdAndArticleId(Long id, Long articleId);
 
     int updateArticleId(Long id,Long articleId);
