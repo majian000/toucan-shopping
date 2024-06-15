@@ -163,4 +163,11 @@
         select max(t.article_sort) from t_article t where t.delete_status=0 and t.column_id=#{columnId}
     </select>
 
+
+    <select id="findById" resultType="java.lang.Long" resultMap="articleVOMap">
+        select t.* from t_article t where t.delete_status=0 and t.id=#{id}
+    </select>
+
+
+
 </mapper>

@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.content.redis.ArticleLockKey;
 import com.toucan.shopping.modules.content.service.*;
+import com.toucan.shopping.modules.content.vo.ArticleContentVO;
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -230,6 +231,48 @@ public class ArticleController {
         return resultObjectVO;
     }
 
+
+
+    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultTypeObjectVO<ArticleVO> findById(@RequestBody RequestJsonVO requestJsonVO){
+        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+
+        ArticleVO queryArticleVO = requestJsonVO.formatEntity(ArticleVO.class);
+        if(queryArticleVO.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            ArticleVO articleVO = articleService.findById(queryArticleVO.getId());
+            if(articleVO!=null){
+                ArticleContentVO articleContentVO = articleContentService.findByArticleId(articleVO.getId());
+                if(articleContentVO!=null) {
+                    articleVO.setContent(articleContentVO.getContent());
+                }
+            }
+            resultObjectVO.setData(articleVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     @RequestMapping(value="/queryMaxSort",produces = "application/json;charset=UTF-8")

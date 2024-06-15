@@ -36,4 +36,6 @@ public interface ArticleMapper {
     int insert(Article entity);
 
     Long queryMaxSort(Long columnId);
+
+    ArticleVO findById(Long id);
 }

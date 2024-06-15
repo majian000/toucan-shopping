@@ -39,6 +39,10 @@
             <groupId>com.toucan.shopping.modules.column</groupId>
             <artifactId>toucan-shopping-column-entity-vo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.content</groupId>
+            <artifactId>toucan-shopping-content-entity-vo</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

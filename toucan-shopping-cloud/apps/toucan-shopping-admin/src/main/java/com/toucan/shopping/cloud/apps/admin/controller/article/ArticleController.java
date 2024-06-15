@@ -110,6 +110,30 @@ public class ArticleController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id) throws NoSuchAlgorithmException {
+        try {
+            ArticleVO queryArticleVO = new ArticleVO();
+            queryArticleVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArticleVO);
+            ResultTypeObjectVO<ArticleVO> resultObjectVO = feignArticleService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                ArticleVO articleVO = resultObjectVO.getData();
+                if(StringUtils.isNotEmpty(articleVO.getCoverImgUrl())){
+                    articleVO.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix()+articleVO.getCoverImgUrl());
+                }
+                request.setAttribute("model",articleVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/article/edit.html";
+    }
+
+
     /**
      * 查询列表
      * @param pageInfo

@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.content.mapper.ArticleContentMapper;
 import com.toucan.shopping.modules.content.mapper.ArticleMapper;
 import com.toucan.shopping.modules.content.service.ArticleContentService;
 import com.toucan.shopping.modules.content.service.ArticleService;
+import com.toucan.shopping.modules.content.vo.ArticleContentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,10 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     @Override
     public int deleteByArticleId(Long articleId) {
         return articleContentMapper.deleteByArticleId(articleId);
+    }
+
+    @Override
+    public ArticleContentVO findByArticleId(Long articleId) {
+        return articleContentMapper.findByArticleId(articleId);
     }
 }

@@ -47,5 +47,10 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.queryMaxSort(columnId);
     }
 
+    @Override
+    public ArticleVO findById(Long id) {
+        return articleMapper.findById(id);
+    }
+
 
 }

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .layui-table img{
+            max-width: 260px;
+        }
+    </style>
+
+    <style>
+        /*#contentEditor { width: 100%; border: 1px solid #ccc; }*/
+        #toolbar-container { border-bottom: 1px solid #ccc; }
+        #editor-container { height: 500px; }
+        /*#contentEditor .w-e-textarea-video-container video{ width: 100%; }*/
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+
+<div class="layui-form layuimini-form">
+
+    <input type="hidden" name="columnId" id="columnId" th:value="${model.columnId}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">栏目名称</label>
+        <div class="layui-input-block">
+            <input type="text" readonly  th:value="${model.columnName}"  class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">文章标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入文章标题" th:value="${model.title}" class="layui-input">
+            <tip>填写文章标题。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面图片</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="uploadCoverImgUrl">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="coverImgUrl" th:value="${model.coverImgUrl}"  name="coverImgUrl" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览封面</label>
+        <div class="layui-input-block">
+            <img  id="previewCoverImgUrl" th:src="${model.httpCoverImgUrl}" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" style="width:40%"  readonly  >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">结束展示时间</label>
+        <div class="layui-input-block">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <input type="text" id="endShowDate" name="endShowDate" class="layui-input" readonly >
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" checked="checked">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block">
+            <select name="showStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>显示</option>
+                <option value="0">隐藏</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="articleSort"  placeholder="请输入排序"   class="layui-input" lay-verify="number" th:value="${maxSort}"  >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">摘要内容</label>
+        <div class="layui-input-block">
+            <textarea name="abstractContent" class="layui-textarea" maxlength="200" placeholder="请输入摘要内容"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">seo标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="seoTitle"  maxlength="255"  placeholder="请输入seo标题"  class="layui-input">
+            <tip>填写seo标题。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">seo关键字</label>
+        <div class="layui-input-block">
+            <textarea name="seoKeywords" class="layui-textarea" maxlength="255" placeholder="请输入seo关键字"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">seo简介</label>
+        <div class="layui-input-block">
+            <textarea name="seoDescription" class="layui-textarea" maxlength="255" placeholder="请输入seo简介"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">作者</label>
+        <div class="layui-input-block">
+            <input type="text" name="author" lay-verify="required" maxlength="80"  placeholder="请输入作者"  class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">发布时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="publishDate" lay-verify="required" maxlength="80"  placeholder="请输入发布时间"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-block">
+            <div id="content"  style="height:600px" >
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/common/common.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/ueditor.config.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/ueditor.all.js}" charset="utf-8"></script>
+<script th:src="@{/lib/ueditor-plus/lang/zh-cn/zh-cn.js?7a537435}" charset="utf-8"></script>
+
+<script>
+    layui.config({
+        base: basePath //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: '/lib/layui_ext/dtree/dtree' //定义该组件模块名
+    }).use(['form', 'element','dtree','upload', 'table','laydate','jquery'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            element = layui.element,
+            $ = layui.$;
+        var dtree = layui.dtree;
+        var loadding;
+
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+            ,done: function(date){
+                $('input[name="perpetualStatus"]').prop('checked', false);
+                form.render('checkbox');
+            }
+        });
+        form.on('checkbox(perpetualStatusFilter)', function(data) {
+            if (data.elem.checked == true) {
+                $("#endShowDate").val("");
+                // form.render();
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            data.field.content = UE.getEditor('content').getContent();
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/article/save}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.clickSearch();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
+            });
+
+
+            return false;
+        });
+
+
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadCoverImgUrl' //绑定元素
+            ,url: '/article/upload/img' //上传接口
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewCoverImgUrl").attr("src",res.data.httpCoverImgUrl);
+                $("#coverImgUrl").val(res.data.coverImgUrl);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
+
+        //设置服务请求地址
+        window.UEDITOR_CONFIG.serverUrl= "[[@{/article/ueditor/config/}]]";
+        var ue = UE.getEditor('content',{
+            toolbars: [
+                [
+                    'anchor', //锚点
+                    'undo', //撤销
+                    'redo', //重做
+                    'bold', //加粗
+                    'indent', //首行缩进
+                    // 'snapscreen', //截图
+                    'italic', //斜体
+                    'underline', //下划线
+                    'strikethrough', //删除线
+                    'subscript', //下标
+                    'fontborder', //字符边框
+                    'superscript', //上标
+                    'formatmatch', //格式刷
+                    'source', //源代码
+                    'blockquote', //引用
+                    'pasteplain', //纯文本粘贴模式
+                    'selectall', //全选
+                    'simpleupload', //单图上传
+                    // 'print', //打印
+                    // 'preview', //预览
+                    'horizontal', //分隔线
+                    'removeformat', //清除格式
+                    // 'time', //时间
+                    // 'date', //日期
+                    'unlink', //取消链接
+                    'insertrow', //前插入行
+                    'insertcol', //前插入列
+                    'mergeright', //右合并单元格
+                    'mergedown', //下合并单元格
+                    'deleterow', //删除行
+                    'deletecol', //删除列
+                    'splittorows', //拆分成行
+                    'splittocols', //拆分成列
+                    'splittocells', //完全拆分单元格
+                    'deletecaption', //删除表格标题
+                    'inserttitle', //插入标题
+                    'mergecells', //合并多个单元格
+                    'deletetable', //删除表格
+                    'cleardoc', //清空文档
+                    'insertparagraphbeforetable', //"表格前插入行"
+                    'insertcode', //代码语言
+                    'fontfamily', //字体
+                    'fontsize', //字号
+                    'paragraph', //段落格式
+                    // 'insertimage', //多图上传
+                    // 'edittable', //表格属性
+                    // 'edittd', //单元格属性
+                    'link', //超链接
+                    // 'emotion', //表情
+                    'spechars', //特殊字符
+                    'searchreplace', //查询替换
+                    // 'map', //Baidu地图
+                    // 'gmap', //Google地图
+                    // 'insertvideo', //视频
+                    // 'help', //帮助
+                    'justifyleft', //居左对齐
+                    'justifyright', //居右对齐
+                    'justifycenter', //居中对齐
+                    'justifyjustify', //两端对齐
+                    'forecolor', //字体颜色
+                    'backcolor', //背景色
+                    'insertorderedlist', //有序列表
+                    'insertunorderedlist', //无序列表
+                    'fullscreen', //全屏
+                    'directionalityltr', //从左向右输入
+                    'directionalityrtl', //从右向左输入
+                    'rowspacingtop', //段前距
+                    'rowspacingbottom', //段后距
+                    'pagebreak', //分页
+                    'insertframe', //插入Iframe
+                    'imagenone', //默认
+                    'imageleft', //左浮动
+                    'imageright', //右浮动
+                    'attachment', //附件
+                    'imagecenter', //居中
+                    // 'wordimage', //图片转存
+                    'lineheight', //行间距
+                    'edittip ', //编辑提示
+                    'customstyle', //自定义标题
+                    'autotypeset', //自动排版
+                    // 'webapp', //百度应用
+                    'touppercase', //字母大写
+                    'tolowercase', //字母小写
+                    'background', //背景
+                    // 'template', //模板
+                    // 'scrawl', //涂鸦
+                    // 'music', //音乐
+                    'inserttable' //插入表格
+                    // 'drafts', // 从草稿箱加载
+                    // 'charts' // 图表
+                ]
+            ]
+            // autoHeightEnabled: false,
+        });
+
+        ue.on('contentchange', function () {
+            // console.log('contentchange', ue.getContent());
+        });
+
+
+
+
+        // 表单重载
+        form.render();
+        element.render();
+
+    });
+</script>
+
+
+</body>
+</html>

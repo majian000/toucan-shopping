@@ -38,4 +38,11 @@ public interface ArticleService {
      */
     Long queryMaxSort(Long columnId);
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    ArticleVO findById(Long id);
+
 }
