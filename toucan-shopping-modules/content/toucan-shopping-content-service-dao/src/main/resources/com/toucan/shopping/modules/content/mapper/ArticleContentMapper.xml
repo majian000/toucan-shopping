@@ -46,7 +46,7 @@
         update t_article_content set delete_status=1 where article_id=#{articleId} and delete_status=0
     </update>
 
-    <select id="findByArticleId">
+    <select id="findByArticleId" resultMap="articleContentVOMap" parameterType="java.lang.Long">
         select t.* from t_article_content t where t.delete_status=0 and t.article_id=#{articleId}
     </select>
 

@@ -118,11 +118,19 @@ public class ArticleController extends UIController {
             queryArticleVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArticleVO);
             ResultTypeObjectVO<ArticleVO> resultObjectVO = feignArticleService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            if(resultObjectVO.isSuccess())
             {
                 ArticleVO articleVO = resultObjectVO.getData();
                 if(StringUtils.isNotEmpty(articleVO.getCoverImgUrl())){
                     articleVO.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix()+articleVO.getCoverImgUrl());
+                }
+                ColumnVO queryColumnVO= new ColumnVO();
+                queryColumnVO.setId(articleVO.getColumnId());
+                ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
+                if(resultTypeObjectVO.isSuccess()){
+                    if(resultTypeObjectVO.getData()!=null){
+                        articleVO.setColumnName(resultTypeObjectVO.getData().getTitle());
+                    }
                 }
                 request.setAttribute("model",articleVO);
             }

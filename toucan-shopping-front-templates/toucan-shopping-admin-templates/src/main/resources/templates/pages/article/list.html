@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="layui-inline">
                                     <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" >重 置</button>
                                 </div>
                             </div>
                         </form>
@@ -321,6 +321,20 @@
 
         table.on('tool(articleTableFilter)', function (obj) {
             var data = obj.data;
+            if (obj.event == 'edit') {
+                var index = layer.open({
+                    title: '编辑文章',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]article/editPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
         });
 
 
