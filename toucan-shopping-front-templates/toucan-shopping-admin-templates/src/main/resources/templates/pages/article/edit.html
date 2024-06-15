@@ -33,6 +33,10 @@
 <div class="layui-form layuimini-form">
 
     <input type="hidden" name="columnId" id="columnId" th:value="${model.columnId}">
+    <input type="hidden" id="endShowDateString" th:value="${model.endShowDateString}" />
+    <input type="hidden" id="perpetualStatusVal" th:value="${model.perpetualStatus}" />
+    <input type="hidden" id="contentHtml" th:value="${model.content}" />
+
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目名称</label>
@@ -61,15 +65,15 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">预览封面</label>
-        <div class="layui-input-block">
-            <img  id="previewCoverImgUrl" th:src="${model.httpCoverImgUrl}" th:width="240" th:height="220">
+        <div class="layui-input-block" >
+            <img  id="previewCoverImgUrl" th:src="${model.httpCoverImgUrl}"  th:width="240" th:height="220">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">开始展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" style="width:40%"  readonly  >
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" th:value="${model.startShowDateString}" lay-verify="required" style="width:40%"  readonly  >
         </div>
     </div>
 
@@ -77,10 +81,10 @@
         <label class="layui-form-label ">结束展示时间</label>
         <div class="layui-input-block">
             <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                <input type="text" id="endShowDate" name="endShowDate" class="layui-input" readonly >
+                <input type="text" id="endShowDate" name="endShowDate"  class="layui-input" readonly >
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" checked="checked">
+                &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" >
             </div>
         </div>
     </div>
@@ -88,9 +92,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">显示状态</label>
         <div class="layui-input-block">
-            <select name="showStatus" lay-verify="required" lay-search="">
-                <option value="1" selected>显示</option>
-                <option value="0">隐藏</option>
+            <select name="showStatus"  lay-verify="required" lay-search=""  >
+                <option value="1" th:if="${model.showStatus eq 1}" selected>显示</option>
+                <option value="0" th:if="${model.showStatus eq 1}" >隐藏</option>
+
+                <option value="1" th:if="${model.showStatus eq 0}">显示</option>
+                <option value="0" th:if="${model.showStatus eq 0}" selected>隐藏</option>
             </select>
         </div>
     </div>
@@ -98,20 +105,20 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="articleSort"  placeholder="请输入排序"   class="layui-input" lay-verify="number" th:value="${maxSort}"  >
+            <input type="number" name="articleSort"  placeholder="请输入排序"   class="layui-input" lay-verify="number" th:value="${model.articleSort}"  >
         </div>
     </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">摘要内容</label>
         <div class="layui-input-block">
-            <textarea name="abstractContent" class="layui-textarea" maxlength="200" placeholder="请输入摘要内容"></textarea>
+            <textarea name="abstractContent" class="layui-textarea" maxlength="200" placeholder="请输入摘要内容" th:text="${model.abstractContent}" ></textarea>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">seo标题</label>
         <div class="layui-input-block">
-            <input type="text" name="seoTitle"  maxlength="255"  placeholder="请输入seo标题"  class="layui-input">
+            <input type="text" name="seoTitle"  maxlength="255"  placeholder="请输入seo标题" th:value="${model.seoTitle}"  class="layui-input">
             <tip>填写seo标题。</tip>
         </div>
     </div>
@@ -119,28 +126,28 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">seo关键字</label>
         <div class="layui-input-block">
-            <textarea name="seoKeywords" class="layui-textarea" maxlength="255" placeholder="请输入seo关键字"></textarea>
+            <textarea name="seoKeywords" class="layui-textarea" maxlength="255"  th:text="${model.seoKeywords}"  placeholder="请输入seo关键字"></textarea>
         </div>
     </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">seo简介</label>
         <div class="layui-input-block">
-            <textarea name="seoDescription" class="layui-textarea" maxlength="255" placeholder="请输入seo简介"></textarea>
+            <textarea name="seoDescription" class="layui-textarea" maxlength="255" th:text="${model.seoDescription}"   placeholder="请输入seo简介"></textarea>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">作者</label>
         <div class="layui-input-block">
-            <input type="text" name="author" lay-verify="required" maxlength="80"  placeholder="请输入作者"  class="layui-input">
+            <input type="text" name="author" lay-verify="required" maxlength="80" th:value="${model.author}"   placeholder="请输入作者"  class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">发布时间</label>
         <div class="layui-input-block">
-            <input type="text" name="publishDate" lay-verify="required" maxlength="80"  placeholder="请输入发布时间"  class="layui-input">
+            <input type="text" name="publishDate" lay-verify="required" maxlength="80"  th:value="${model.publishDate}"  placeholder="请输入发布时间"  class="layui-input">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -209,13 +216,25 @@
             }
         });
 
+        var showStatusVal=$("#showStatusVal").val();
+        var endShowDateString=$("#endShowDateString").val();
+        if(endShowDateString!=null&&endShowDateString!=""){
+            $("#endShowDate").val(endShowDateString);
+            $('input[name="perpetualStatus"]').prop('checked', false);
+            form.render('checkbox');
+        }else{
+            $('input[name="perpetualStatus"]').prop('checked', true);
+            form.render('checkbox');
+        }
+
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
             data.field.content = UE.getEditor('content').getContent();
             loadding = layer.load();
             $.ajax({
-                url:"[[@{/article/save}]]",
+                url:"[[@{/article/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -368,7 +387,12 @@
         ue.on('contentchange', function () {
             // console.log('contentchange', ue.getContent());
         });
-
+        ue.ready(function() {
+            var contentHtml = $("#contentHtml").val();
+            if(contentHtml!=null) {
+                ue.setContent(contentHtml);
+            }
+        });
 
 
 

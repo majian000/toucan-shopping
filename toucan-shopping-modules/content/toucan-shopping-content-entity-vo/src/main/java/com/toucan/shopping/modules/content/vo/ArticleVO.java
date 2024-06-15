@@ -28,4 +28,9 @@ public class ArticleVO extends Article {
 
     private String columnName; //栏目名称
 
+
+    private String startShowDateString;
+    private String endShowDateString;
+
+
 }

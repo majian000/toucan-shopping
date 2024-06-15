@@ -124,6 +124,12 @@ public class ArticleController extends UIController {
                 if(StringUtils.isNotEmpty(articleVO.getCoverImgUrl())){
                     articleVO.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix()+articleVO.getCoverImgUrl());
                 }
+                if(articleVO.getStartShowDate()!=null){
+                    articleVO.setStartShowDateString(DateUtils.FORMATTER_SS.get().format(articleVO.getStartShowDate()));
+                }
+                if(articleVO.getEndShowDate()!=null){
+                    articleVO.setEndShowDateString(DateUtils.FORMATTER_SS.get().format(articleVO.getEndShowDate()));
+                }
                 ColumnVO queryColumnVO= new ColumnVO();
                 queryColumnVO.setId(articleVO.getColumnId());
                 ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
