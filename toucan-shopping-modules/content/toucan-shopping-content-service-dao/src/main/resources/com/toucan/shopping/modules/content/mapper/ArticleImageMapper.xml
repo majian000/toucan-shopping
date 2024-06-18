@@ -9,6 +9,7 @@
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="file_name" jdbcType="VARCHAR" property="fileName" />
         <result column="file_size" jdbcType="BIGINT" property="fileSize" />
+        <result column="file_delete_status" jdbcType="INTEGER" property="fileDeleteStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
@@ -91,8 +92,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.ArticleImage"  keyProperty="id" >
-        insert into  t_article_image(id,article_id,img_path,file_name,file_ext,file_size,remark,app_code,create_date,create_admin_id,delete_status)
-        values(#{id},#{articleId},#{imgPath},#{fileName},#{fileExt},#{fileSize},#{remark},#{appCode},#{createDate},#{createAdminId},#{deleteStatus})
+        insert into  t_article_image(id,article_id,img_path,file_name,file_ext,file_size,file_delete_status,remark,app_code,create_date,create_admin_id,delete_status)
+        values(#{id},#{articleId},#{imgPath},#{fileName},#{fileExt},#{fileSize},#{fileDeleteStatus},#{remark},#{appCode},#{createDate},#{createAdminId},#{deleteStatus})
     </insert>
 
 
@@ -103,6 +104,15 @@
 
     <update id="deleteByIdAndSaveOperateUserId">
         update  t_article_image  set delete_status=1 , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
+    </update>
+
+
+    <update id="updateFileDeleteStatusById">
+        update  t_article_image  set file_delete_status=#{fileDeleteStatus} , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
+    </update>
+
+    <update id="updateFileDeleteStatusByIdList">
+        update  t_article_image  set file_delete_status=#{fileDeleteStatus} , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
     </update>
 
 
@@ -136,5 +146,15 @@
           </foreach>
 
     </update>
+
+
+    <select id="queryListByArticleId" resultMap="articleImageMap" parameterType="java.lang.Long">
+        select t.* from t_article_image t
+        <where>
+            1=1 and t.delete_status = 0 and t.article_id=#{articleId}
+        </where>
+
+    </select>
+
 
 </mapper>

@@ -44,6 +44,8 @@ public class ArticleImage {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
 
+    private Short fileDeleteStatus; //文件删除状态 0:未删除 1:已删除
+
     private String remark; //备注
 
     private String appCode; //所属应用

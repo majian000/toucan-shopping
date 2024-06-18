@@ -53,6 +53,12 @@ public interface ArticleImageMapper {
      */
     Long queryListPageCount(ArticleImagePageInfo pageInfo);
 
+    /**
+     * 根据文章ID查询图片关联
+     * @param articleId
+     * @return
+     */
+    List<ArticleImage> queryListByArticleId(Long articleId);
 
     /**
      * 返回列表页数量
@@ -70,5 +76,9 @@ public interface ArticleImageMapper {
     int deleteByIdList(List idList, String remark);
 
     int deleteByIdAndSaveOperateUserId(Long id, String adminId);
+
+    int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId);
+
+    int updateFileDeleteStatusByIdList(List idList,Integer fileDeleteStatus, String adminId);
 
 }

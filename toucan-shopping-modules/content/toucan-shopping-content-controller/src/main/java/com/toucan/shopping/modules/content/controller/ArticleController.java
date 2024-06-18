@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -358,6 +359,53 @@ public class ArticleController {
                 logger.warn("修改文章内容失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+            }
+
+            //更新图片和文章关联
+            List<ArticleImage> oldArticleImages = articleImageService.queryListByArticleId(articleVO.getId());
+            List<String> attributeValueList = JsoupUtil.queryAttributeValueList(articleVO.getContent(),"img","src");
+            if(CollectionUtils.isNotEmpty(attributeValueList)){
+                for(int i=0;i<attributeValueList.size();i++){
+                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(articleVO.getImageHttpPrefix(),""));
+                }
+                List<ArticleImage> currentNotIncludeList = new LinkedList<>(); //本次提交未包含这张图片
+                boolean isInclude = false;
+                //判断当前提交是否进行了图片删除,如果删除了图片,把那些删除的图片进行删除
+                for(ArticleImage articleImage:oldArticleImages){
+                    isInclude = false;
+                    for(String currentSubmitImage:attributeValueList){
+                        if(articleImage.getImgPath().equals(currentSubmitImage)){
+                            isInclude = true;
+                            break;
+                        }
+                    }
+                    if(!isInclude){
+                        currentNotIncludeList.add(articleImage);
+                    }
+                }
+                if(CollectionUtils.isNotEmpty(currentNotIncludeList)){
+                    for(ArticleImage deleteArticleImage:currentNotIncludeList) {
+                        int articleImageRet = imageUploadService.deleteFile(deleteArticleImage.getImgPath());
+                        if(articleImageRet<=0){
+                            articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),0,articleVO.getUpdateAdminId());
+                        }else{
+                            articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),1,articleVO.getUpdateAdminId());
+                            articleImageService.deleteById(deleteArticleImage.getId(),articleVO.getUpdateAdminId());
+                        }
+                    }
+                }
+            }else{ //本次提交没有图片
+                if(CollectionUtils.isNotEmpty(oldArticleImages)){
+                    for(ArticleImage articleImage:oldArticleImages){
+                        int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
+                        if(articleImageRet<=0){
+                            articleImageService.updateFileDeleteStatusById(articleImage.getId(),0,articleVO.getUpdateAdminId());
+                        }else{
+                            articleImageService.updateFileDeleteStatusById(articleImage.getId(),1,articleVO.getUpdateAdminId());
+                            articleImageService.deleteById(articleImage.getId(),articleVO.getUpdateAdminId());
+                        }
+                    }
+                }
             }
 
             resultObjectVO.setData(articleVO);

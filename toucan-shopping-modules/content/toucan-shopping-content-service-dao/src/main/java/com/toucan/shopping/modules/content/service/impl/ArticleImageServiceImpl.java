@@ -44,6 +44,11 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     }
 
     @Override
+    public List<ArticleImage> queryListByArticleId(Long articleId) {
+        return articleImageMapper.queryListByArticleId(articleId);
+    }
+
+    @Override
     public int deleteById(Long id) {
         return articleImageMapper.deleteById(id);
     }
@@ -53,6 +58,10 @@ public class ArticleImageServiceImpl implements ArticleImageService {
         return articleImageMapper.deleteByIdAndSaveOperateUserId(id,adminId);
     }
 
+    @Override
+    public int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId) {
+        return articleImageMapper.updateFileDeleteStatusById(id,fileDeleteStatus, adminId);
+    }
     @Override
     public int deleteByIdAndArticleId(Long id,Long articleId) {
         return articleImageMapper.deleteByIdAndArticleId(id,articleId);
@@ -76,6 +85,11 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     @Override
     public int deleteByIdList(List idList, String remark) {
         return articleImageMapper.deleteByIdList(idList,remark);
+    }
+
+    @Override
+    public int updateFileDeleteStatusByIdList(List idList, Integer fileDeleteStatus, String adminId) {
+        return articleImageMapper.updateFileDeleteStatusByIdList(idList,fileDeleteStatus,adminId);
     }
 
 }

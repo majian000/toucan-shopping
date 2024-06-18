@@ -77,6 +77,7 @@ public class ArticleImageController {
             articleVO.setId(idGenerator.id());
             articleVO.setDeleteStatus((short)0);
             articleVO.setCreateDate(new Date());
+            articleVO.setFileDeleteStatus((short)0);
             int ret = articleImageService.save(articleVO);
             if(ret<=0)
             {
@@ -153,11 +154,13 @@ public class ArticleImageController {
                         }
                     }
                     if(CollectionUtils.isNotEmpty(successArticleImageIdList)) {
-                        articleImageService.deleteByIdList(successArticleImageIdList, "删除成功");
+                        articleImageService.updateFileDeleteStatusByIdList(successArticleImageIdList,1,"-1");
+                        articleImageService.deleteByIdList(successArticleImageIdList, "定时任务-删除成功");
                     }
 
                     if(CollectionUtils.isNotEmpty(faildArticleImageIdList)) {
-                        articleImageService.deleteByIdList(faildArticleImageIdList, "删除失败");
+                        articleImageService.updateFileDeleteStatusByIdList(successArticleImageIdList,0,"-1");
+                        articleImageService.deleteByIdList(faildArticleImageIdList, "定时任务-删除失败");
                     }
                 }
             } while (pageInfo != null && !CollectionUtils.isEmpty(pageInfo.getList()));
@@ -209,6 +212,7 @@ public class ArticleImageController {
 
             int ret = imageUploadService.deleteFile(articleImage.getImgPath());
             if(ret!=0){
+                articleImageService.updateFileDeleteStatusById(articleImage.getId(),0,articleImage.getUpdateAdminId());
                 logger.info("文件中心图片删除失败 {} ",articleImage.getImgPath());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("图片删除失败!");
@@ -220,6 +224,8 @@ public class ArticleImageController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("删除失败!");
                 return resultObjectVO;
+            }else {
+                articleImageService.updateFileDeleteStatusById(articleImage.getId(), 1, articleImage.getUpdateAdminId());
             }
 
 
@@ -275,6 +281,7 @@ public class ArticleImageController {
                     }
                     int ret = imageUploadService.deleteFile(articleImageEntity.getImgPath());
                     if(ret!=0){
+                        articleImageService.updateFileDeleteStatusById(articleImage.getId(),0,articleImage.getUpdateAdminId());
                         logger.info("文件中心图片删除失败 {} ",articleImageEntity.getImgPath());
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("图片删除失败!");
@@ -285,6 +292,8 @@ public class ArticleImageController {
                     if (row != 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("删除失败!");
+                    }else {
+                        articleImageService.updateFileDeleteStatusById(articleImage.getId(), 1, articleImage.getUpdateAdminId());
                     }
                     resultObjectVOList.add(appResultObjectVO);
                 }

@@ -31,9 +31,13 @@ public interface ArticleImageService {
 
     List<ArticleImage> queryListByImgPathList(List imgPathList);
 
+    List<ArticleImage> queryListByArticleId(Long articleId);
+
     int deleteById(Long id);
 
     int deleteById(Long id,String adminId);
+
+    int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId);
 
     int deleteByIdAndArticleId(Long id, Long articleId);
 
@@ -50,5 +54,7 @@ public interface ArticleImageService {
 
 
     int deleteByIdList(List idList,String remark);
+
+    int updateFileDeleteStatusByIdList(List idList,Integer fileDeleteStatus, String adminId);
 
 }
