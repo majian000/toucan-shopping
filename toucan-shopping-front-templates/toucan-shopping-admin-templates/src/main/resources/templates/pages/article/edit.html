@@ -266,6 +266,24 @@
 
 
 
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadCoverImgUrl' //绑定元素
+            ,url: '/article/upload/img' //上传接口
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewCoverImgUrl").attr("src",res.data.httpCoverImgUrl);
+                $("#coverImgUrl").val(res.data.coverImgUrl);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
+
         //设置服务请求地址
         window.UEDITOR_CONFIG.serverUrl= "[[@{/article/ueditor/config/}]]";
         var ue = UE.getEditor('content',{
