@@ -182,7 +182,9 @@
         start_show_date = #{startShowDate},
         end_show_date = #{endShowDate},
         perpetual_status = #{perpetualStatus},
-        article_sort = #{articleSort}
+        article_sort = #{articleSort},
+        update_admin_id = #{updateAdminId},
+        update_date = sysdate()
         where id=#{id} and delete_status=0;
     </update>
 
