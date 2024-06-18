@@ -50,4 +50,8 @@
         select t.* from t_article_content t where t.delete_status=0 and t.article_id=#{articleId}
     </select>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.content.entity.ArticleContent">
+        update t_article_content set content=#{content} where id =#{id} and delete_status=0
+    </update>
+
 </mapper>

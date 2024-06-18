@@ -30,4 +30,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     public ArticleContentVO findByArticleId(Long articleId) {
         return articleContentMapper.findByArticleId(articleId);
     }
+
+    @Override
+    public int update(ArticleContent entity) {
+        return articleContentMapper.update(entity);
+    }
 }

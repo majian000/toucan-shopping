@@ -43,6 +43,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public int update(ArticleVO articleVO) {
+        return articleMapper.update(articleVO);
+    }
+
+    @Override
     public Long queryMaxSort(Long columnId) {
         return articleMapper.queryMaxSort(columnId);
     }

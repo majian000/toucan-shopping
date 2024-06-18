@@ -14,4 +14,6 @@ public interface ArticleContentService {
 
     ArticleContentVO findByArticleId(Long articleId);
 
+    int update(ArticleContent entity);
+
 }

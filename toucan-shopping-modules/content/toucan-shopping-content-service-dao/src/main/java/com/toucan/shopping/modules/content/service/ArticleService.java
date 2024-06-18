@@ -30,6 +30,8 @@ public interface ArticleService {
 
     int save(Article entity);
 
+    int update(ArticleVO articleVO);
+
 
     /**
      * 查询排序最大值

@@ -34,4 +34,9 @@ public interface FeignArticleService {
     @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<ArticleVO> findById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
 }

@@ -14,4 +14,5 @@ public interface ArticleContentMapper {
 
     ArticleContentVO findByArticleId(Long articleId);
 
+    int update(ArticleContent entity);
 }

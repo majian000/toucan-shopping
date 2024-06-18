@@ -296,4 +296,86 @@ public class ArticleController {
 
 
 
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+
+
+        ArticleVO articleVO =requestJsonVO.formatEntity(ArticleVO.class);
+        if(articleVO.getId()==null){
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("文章ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(articleVO.getTitle()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("栏目标题不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(articleVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("所属应用不能为空");
+            return resultObjectVO;
+        }
+        String lockKey = articleVO.getAppCode()+"_"+articleVO.getId();
+        try {
+            boolean lockStatus = skylarkLock.lock(ArticleLockKey.getUpdateLockKey(lockKey), lockKey);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            int ret = articleService.update(articleVO);
+            if(ret<=0)
+            {
+                logger.warn("修改文章失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+
+            ArticleContent articleContent = articleContentService.findByArticleId(articleVO.getId());
+            articleContent.setContent(articleVO.getContent());
+
+            ret = articleContentService.update(articleContent);
+            if(ret<=0)
+            {
+                logger.warn("修改文章内容失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+
+            resultObjectVO.setData(articleVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(ArticleLockKey.getUpdateLockKey(lockKey), lockKey);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+
 }

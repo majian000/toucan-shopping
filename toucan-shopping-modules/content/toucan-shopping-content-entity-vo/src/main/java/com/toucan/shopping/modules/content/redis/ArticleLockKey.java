@@ -17,4 +17,16 @@ public class ArticleLockKey {
     }
 
 
+
+    /**
+     * 文章
+     * @param key
+     * @return
+     */
+    public static String getUpdateLockKey(String key)
+    {
+        return "TOUCAN_SHOPPING_WEB:SERVICES:ARTICLE:UPDATE:"+key+"_LOCK";
+    }
+
+
 }

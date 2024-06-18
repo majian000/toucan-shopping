@@ -169,5 +169,22 @@
     </select>
 
 
+    <update id="update" parameterType="com.toucan.shopping.modules.content.vo.ArticleVO">
+        update t_article
+        set cover_img_url = #{coverImgUrl},
+        abstract_content = #{abstractContent},
+        author = #{author},
+        publish_date = #{publishDate},
+        seo_title = #{seoTitle},
+        seo_keywords = #{seoKeywords},
+        seo_description = #{seoDescription},
+        show_status = #{showStatus},
+        start_show_date = #{startShowDate},
+        end_show_date = #{endShowDate},
+        perpetual_status = #{perpetualStatus},
+        article_sort = #{articleSort}
+        where id=#{id} and delete_status=0;
+    </update>
+
 
 </mapper>

@@ -38,4 +38,7 @@ public interface ArticleMapper {
     Long queryMaxSort(Long columnId);
 
     ArticleVO findById(Long id);
+
+    int update(ArticleVO articleVO);
+
 }
