@@ -171,17 +171,13 @@
                         }},
                     {field: 'title',  title: '标题', width: 200},
                     {field: 'startShowDate',  title: '开始展示时间', width: 220},
-                    {field: 'endShowDate',  title: '结束展示时间', width: 220},
-                    {field: 'perpetualStatus', title: '永远',
+                    {field: 'endShowDate',  title: '结束展示时间', width: 220,
                         templet: function (row) {
-                            if(row.perpetualStatus == "0"){
-                                return "否"
-                            }else
                             if(row.perpetualStatus == "1"){
-                                return "是"
+                                return "永远"
                             }
-                            return row.perpetualStatus;
-                        }, width: 100},
+                            return row.endShowDate;
+                        }},
                     {field: 'author',  title: '作者', width: 100},
                     {field: 'publishDate',  title: '发布时间', width: 100},
                     {field: 'contentUrl',  title: '内容链接地址', width: 150},
