@@ -208,7 +208,7 @@ public class ArticleController {
             List<String> attributeValueList = JsoupUtil.queryAttributeValueList(articleVO.getContent(),"img","src");
             if(CollectionUtils.isNotEmpty(attributeValueList)){
                 for(int i=0;i<attributeValueList.size();i++){
-                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(articleVO.getImageHttpPrefix(),""));
+                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(imageUploadService.getImageHttpPrefix(),""));
                 }
                 List<ArticleImage> articleImages = articleImageService.queryListByImgPathList(attributeValueList);
                 if(CollectionUtils.isNotEmpty(articleImages)){
@@ -366,7 +366,7 @@ public class ArticleController {
             List<String> attributeValueList = JsoupUtil.queryAttributeValueList(articleVO.getContent(),"img","src");
             if(CollectionUtils.isNotEmpty(attributeValueList)){
                 for(int i=0;i<attributeValueList.size();i++){
-                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(articleVO.getImageHttpPrefix(),""));
+                    attributeValueList.set(i,attributeValueList.get(i).replaceAll(imageUploadService.getImageHttpPrefix(),""));
                 }
                 List<ArticleImage> currentNotIncludeList = new LinkedList<>(); //本次提交未包含这张图片
                 boolean isInclude = false;
