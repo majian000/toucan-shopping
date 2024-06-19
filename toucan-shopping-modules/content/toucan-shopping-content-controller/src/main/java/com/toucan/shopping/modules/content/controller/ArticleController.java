@@ -386,7 +386,7 @@ public class ArticleController {
                 if(CollectionUtils.isNotEmpty(currentNotIncludeList)){
                     for(ArticleImage deleteArticleImage:currentNotIncludeList) {
                         int articleImageRet = imageUploadService.deleteFile(deleteArticleImage.getImgPath());
-                        if(articleImageRet<=0){
+                        if(articleImageRet!=0){
                             articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),0,articleVO.getUpdateAdminId());
                         }else{
                             articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),1,articleVO.getUpdateAdminId());
@@ -398,7 +398,7 @@ public class ArticleController {
                 if(CollectionUtils.isNotEmpty(oldArticleImages)){
                     for(ArticleImage articleImage:oldArticleImages){
                         int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
-                        if(articleImageRet<=0){
+                        if(articleImageRet!=0){
                             articleImageService.updateFileDeleteStatusById(articleImage.getId(),0,articleVO.getUpdateAdminId());
                         }else{
                             articleImageService.updateFileDeleteStatusById(articleImage.getId(),1,articleVO.getUpdateAdminId());
