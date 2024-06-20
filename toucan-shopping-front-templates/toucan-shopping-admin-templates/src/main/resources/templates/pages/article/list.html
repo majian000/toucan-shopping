@@ -330,6 +330,30 @@
                     layer.full(index);
                 });
                 return false;
+            }else if (obj.event == 'delete') {
+                layer.confirm("确定要删除\""+data.title+"\"?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]article/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('articleTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 

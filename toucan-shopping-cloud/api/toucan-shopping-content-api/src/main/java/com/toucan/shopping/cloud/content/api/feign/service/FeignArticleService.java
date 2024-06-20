@@ -39,4 +39,9 @@ public interface FeignArticleService {
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    @RequestMapping(value="/deleteById",produces = "application/json;charset=UTF-8")
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+
 }
