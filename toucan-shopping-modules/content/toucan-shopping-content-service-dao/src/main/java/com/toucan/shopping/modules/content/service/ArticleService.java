@@ -32,6 +32,8 @@ public interface ArticleService {
 
     int update(ArticleVO articleVO);
 
+    int deleteById(Long articleId);
+
 
     /**
      * 查询排序最大值

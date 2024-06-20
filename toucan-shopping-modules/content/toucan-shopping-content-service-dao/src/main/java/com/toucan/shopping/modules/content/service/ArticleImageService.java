@@ -39,6 +39,8 @@ public interface ArticleImageService {
 
     int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId);
 
+    int updateFileDeleteStatusAndDeleteStatusById(Long id,Integer fileDeleteStatus,Integer deleteStatus, String adminId);
+
     int deleteByIdAndArticleId(Long id, Long articleId);
 
     int updateArticleId(Long id,Long articleId);

@@ -62,6 +62,14 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     public int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId) {
         return articleImageMapper.updateFileDeleteStatusById(id,fileDeleteStatus, adminId);
     }
+
+
+    @Override
+    public int updateFileDeleteStatusAndDeleteStatusById(Long id,Integer fileDeleteStatus,Integer deleteStatus, String adminId) {
+        return articleImageMapper.updateFileDeleteStatusAndDeleteStatusById(id,fileDeleteStatus,deleteStatus, adminId);
+    }
+
+
     @Override
     public int deleteByIdAndArticleId(Long id,Long articleId) {
         return articleImageMapper.deleteByIdAndArticleId(id,articleId);

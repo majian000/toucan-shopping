@@ -387,9 +387,9 @@ public class ArticleController {
                     for(ArticleImage deleteArticleImage:currentNotIncludeList) {
                         int articleImageRet = imageUploadService.deleteFile(deleteArticleImage.getImgPath());
                         if(articleImageRet!=0){
-                            articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),0,articleVO.getUpdateAdminId());
+                            articleImageService.updateFileDeleteStatusAndDeleteStatusById(deleteArticleImage.getId(),0,1,articleVO.getUpdateAdminId());
                         }else{
-                            articleImageService.updateFileDeleteStatusById(deleteArticleImage.getId(),1,articleVO.getUpdateAdminId());
+                            articleImageService.updateFileDeleteStatusAndDeleteStatusById(deleteArticleImage.getId(),1,1,articleVO.getUpdateAdminId());
                             articleImageService.deleteById(deleteArticleImage.getId(),articleVO.getUpdateAdminId());
                         }
                     }
@@ -399,9 +399,9 @@ public class ArticleController {
                     for(ArticleImage articleImage:oldArticleImages){
                         int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
                         if(articleImageRet!=0){
-                            articleImageService.updateFileDeleteStatusById(articleImage.getId(),0,articleVO.getUpdateAdminId());
+                            articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(),0,1,articleVO.getUpdateAdminId());
                         }else{
-                            articleImageService.updateFileDeleteStatusById(articleImage.getId(),1,articleVO.getUpdateAdminId());
+                            articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(),1,1,articleVO.getUpdateAdminId());
                             articleImageService.deleteById(articleImage.getId(),articleVO.getUpdateAdminId());
                         }
                     }
@@ -423,6 +423,75 @@ public class ArticleController {
 
 
 
+
+    @RequestMapping(value="/deleteById",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+
+
+        ArticleVO articleVO =requestJsonVO.formatEntity(ArticleVO.class);
+        if(articleVO.getId()==null){
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("文章ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(articleVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("所属应用不能为空");
+            return resultObjectVO;
+        }
+        try {
+
+            int ret = articleService.deleteById(articleVO.getId());
+            if(ret<=0)
+            {
+                logger.warn("删除文章失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            ret = articleContentService.deleteByArticleId(articleVO.getId());
+            if(ret<=0)
+            {
+                logger.warn("删除文章内容失败 requestJson{} id{}",requestJsonVO.getEntityJson(),articleVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+            List<ArticleImage> articleImages = articleImageService.queryListByArticleId(articleVO.getId());
+            for(ArticleImage articleImage:articleImages){
+                int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
+                if(articleImageRet!=0){
+                    articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(),0,1,articleVO.getUpdateAdminId());
+                }else{
+                    articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(),1,1,articleVO.getUpdateAdminId());
+                    articleImageService.deleteById(articleImage.getId(),articleVO.getUpdateAdminId());
+                }
+            }
+            resultObjectVO.setData(articleVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

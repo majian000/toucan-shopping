@@ -111,6 +111,12 @@
         update  t_article_image  set file_delete_status=#{fileDeleteStatus} , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
     </update>
 
+
+    <update id="updateFileDeleteStatusAndDeleteStatusById">
+        update  t_article_image  set file_delete_status=#{fileDeleteStatus} ,delete_status=#{deleteStatus} , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
+    </update>
+
+
     <update id="updateFileDeleteStatusByIdList">
         update  t_article_image  set file_delete_status=#{fileDeleteStatus} , update_date = sysdate() , update_admin_id = #{adminId}  where id=#{id}  and delete_status=0
     </update>

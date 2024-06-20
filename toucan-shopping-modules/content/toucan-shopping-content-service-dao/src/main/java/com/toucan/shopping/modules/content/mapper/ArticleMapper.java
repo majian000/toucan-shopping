@@ -32,6 +32,7 @@ public interface ArticleMapper {
 
     List<ArticleVO> queryList(ArticleVO entity);
 
+    int deleteById(Long articleId);
 
     int insert(Article entity);
 

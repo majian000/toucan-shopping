@@ -79,6 +79,8 @@ public interface ArticleImageMapper {
 
     int updateFileDeleteStatusById(Long id,Integer fileDeleteStatus, String adminId);
 
+    int updateFileDeleteStatusAndDeleteStatusById(Long id,Integer fileDeleteStatus,Integer deleteStatus, String adminId);
+
     int updateFileDeleteStatusByIdList(List idList,Integer fileDeleteStatus, String adminId);
 
 }

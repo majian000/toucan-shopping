@@ -48,6 +48,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public int deleteById(Long articleId) {
+        return articleMapper.deleteById(articleId);
+    }
+
+    @Override
     public Long queryMaxSort(Long columnId) {
         return articleMapper.queryMaxSort(columnId);
     }
