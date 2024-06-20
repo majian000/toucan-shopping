@@ -8,10 +8,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
-import com.toucan.shopping.modules.content.entity.ArticleContent;
-import com.toucan.shopping.modules.content.entity.ArticleImage;
-import com.toucan.shopping.modules.content.entity.Banner;
-import com.toucan.shopping.modules.content.entity.BannerArea;
+import com.toucan.shopping.modules.content.entity.*;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.content.redis.ArticleLockKey;
@@ -493,6 +490,92 @@ public class ArticleController {
         return resultObjectVO;
     }
 
+
+
+
+
+
+
+    /**
+     * 批量删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+
+
+        try {
+            List<ArticleVO> articleVOS = requestJsonVO.formatEntityList(ArticleVO.class);
+            if(CollectionUtils.isEmpty(articleVOS))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(ArticleVO articleVO:articleVOS) {
+                ResultObjectVO articleResultObjectVO = new ResultObjectVO();
+                articleResultObjectVO.setData(articleVO);
+                if(articleVO.getId()==null){
+                    articleResultObjectVO.setCode(ResultVO.FAILD);
+                    articleResultObjectVO.setMsg("ID不存在!");
+                    resultObjectVOList.add(articleResultObjectVO);
+                    continue;
+                }
+                int ret = articleService.deleteById(articleVO.getId());
+                if (ret <= 0) {
+                    logger.warn("删除文章失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
+                    articleResultObjectVO.setCode(ResultVO.FAILD);
+                    articleResultObjectVO.setMsg("请稍后重试");
+                    resultObjectVOList.add(articleResultObjectVO);
+                    continue;
+                }
+
+                ret = articleContentService.deleteByArticleId(articleVO.getId());
+                if (ret <= 0) {
+                    logger.warn("删除文章内容失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
+                    articleResultObjectVO.setCode(ResultVO.FAILD);
+                    articleResultObjectVO.setMsg("请稍后重试");
+                    resultObjectVOList.add(articleResultObjectVO);
+                    continue;
+                }
+                List<ArticleImage> articleImages = articleImageService.queryListByArticleId(articleVO.getId());
+                for (ArticleImage articleImage : articleImages) {
+                    int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
+                    if (articleImageRet != 0) {
+                        articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(), 0, 1, articleVO.getUpdateAdminId());
+                    } else {
+                        articleImageService.updateFileDeleteStatusAndDeleteStatusById(articleImage.getId(), 1, 1, articleVO.getUpdateAdminId());
+                        articleImageService.deleteById(articleImage.getId(), articleVO.getUpdateAdminId());
+                    }
+                }
+                resultObjectVOList.add(articleResultObjectVO);
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

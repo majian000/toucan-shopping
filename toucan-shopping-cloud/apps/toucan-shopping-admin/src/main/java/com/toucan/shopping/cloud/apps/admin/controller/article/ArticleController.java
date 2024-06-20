@@ -403,5 +403,36 @@ public class ArticleController extends UIController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ArticleVO> articleVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(articleVOS))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            resultObjectVO = feignArticleService.deleteByIds(RequestJsonVOGenerator.generator(appCode,articleVOS));
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }
 

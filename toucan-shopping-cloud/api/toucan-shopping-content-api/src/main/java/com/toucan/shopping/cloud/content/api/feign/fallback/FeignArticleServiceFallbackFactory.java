@@ -114,6 +114,21 @@ public class FeignArticleServiceFallbackFactory implements FallbackFactory<Feign
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignArticleService.deleteByIds 失败  params:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }
