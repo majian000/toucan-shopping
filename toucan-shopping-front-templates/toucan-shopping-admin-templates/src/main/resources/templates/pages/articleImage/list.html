@@ -31,6 +31,16 @@
                             </div>
                         </div>
 
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文件删除状态</label>
+                            <div class="layui-input-inline">
+                                <select id="fileDeleteStatus" name="fileDeleteStatus"  lay-search="">
+                                    <option value="-1">全部</option>
+                                    <option value="0">未删除</option>
+                                    <option value="1">已删除</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
@@ -126,6 +136,16 @@
                     {field: 'fileName',  title: '文件名称'},
                     {field: 'fileExt',  title: '文件格式'},
                     {field: 'fileSize',  title: '文件大小'},
+                    {field: 'fileDeleteStatus', title: '文件删除状态',
+                        templet: function (row) {
+                            if(row.fileDeleteStatus == "0"){
+                                return "未删除"
+                            }else
+                            if(row.fileDeleteStatus == "1"){
+                                return "已删除"
+                            }
+                            return row.fileDeleteStatus;
+                        }, width: 100},
                     {field: 'remark',  title: '备注'},
                     {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate', width: 150,  title: '创建时间'},

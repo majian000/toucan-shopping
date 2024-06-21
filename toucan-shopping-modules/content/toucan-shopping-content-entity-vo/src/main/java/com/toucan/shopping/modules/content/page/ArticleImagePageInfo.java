@@ -30,6 +30,7 @@ public class ArticleImagePageInfo extends PageInfo<ArticleImageVO> {
 
     private Long articleId; //文章ID
 
+    private Short fileDeleteStatus;
 
     private Long[] idArray; //ID数组
 

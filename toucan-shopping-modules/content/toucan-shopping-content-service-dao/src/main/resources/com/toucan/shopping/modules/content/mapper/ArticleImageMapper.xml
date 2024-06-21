@@ -30,6 +30,10 @@
             and t.article_id = #{articleId}
         </if>
 
+        <if test="fileDeleteStatus!=null and fileDeleteStatus!=-1 ">
+            and t.file_delete_status = #{fileDeleteStatus}
+        </if>
+
     </sql>
 
 
