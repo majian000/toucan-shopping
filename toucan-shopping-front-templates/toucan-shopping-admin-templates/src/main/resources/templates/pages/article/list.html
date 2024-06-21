@@ -89,7 +89,7 @@
                                     <div class="layui-input-inline">
                                         <input type="text" id="endShowDate" name="endShowDate" class="layui-input"  readonly >
                                     </div>
-                                    <input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" >
+                                    <input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" checked="checked" title="永远" >
                                 </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label">显示状态</label>
@@ -175,6 +175,16 @@
         function getFormParam()
         {
             var formParam = $("#articleForm").serializeJson();
+            var perpetualStatusVal = new Array();
+            $('input[name=perpetualStatus]:checked').each(function() {
+                perpetualStatusVal.push($(this).val());
+            });
+            if(perpetualStatusVal!=null&&perpetualStatusVal.length>0) {
+                formParam.perpetualStatus = 1;
+            }else{
+                formParam.perpetualStatus = 0;
+            }
+
             return formParam;
         }
 
@@ -248,7 +258,7 @@
                 page: {
                     curr: 1
                 }
-                , where: data.field
+                , where: getFormParam()
             }, 'data');
 
             return false;
@@ -406,7 +416,7 @@
 
         //监听表格复选框选择
         table.on('checkbox(articleTableFilter)', function (obj) {
-            console.log(obj)
+            // console.log(obj)
         });
 
         table.on('tool(articleTableFilter)', function (obj) {
