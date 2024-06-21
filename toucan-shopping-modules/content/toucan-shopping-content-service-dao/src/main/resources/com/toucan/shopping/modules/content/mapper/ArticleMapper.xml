@@ -82,7 +82,7 @@
         </if>
 
 
-        <if test="columnId!=null">
+        <if test="columnId!=null and columnId!=-1">
             and t.column_id = #{columnId}
         </if>
 
