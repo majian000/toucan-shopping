@@ -79,6 +79,19 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
+                                    <label class="layui-form-label">展示时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="startShowDate" name="startShowDate" class="layui-input"  readonly >
+                                    </div>
+                                    至&nbsp;&nbsp;
+                                </div>
+                                <div class="layui-inline">
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="endShowDate" name="endShowDate" class="layui-input"  readonly >
+                                    </div>
+                                    <input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" >
+                                </div>
+                                <div class="layui-inline">
                                     <label class="layui-form-label">显示状态</label>
                                     <div class="layui-input-inline">
                                         <select id="showStatus" name="showStatus"  lay-search="">
@@ -86,19 +99,6 @@
                                             <option value="1">显示</option>
                                             <option value="0">隐藏</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">展示时间</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" id="startShowDate" name="startShowDate" class="layui-input"  readonly >
-                                    </div>
-                                </div>
-                                至&nbsp;&nbsp;
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline">
-                                        <input type="text" id="endShowDate" name="endShowDate" class="layui-input"  readonly >
-                                        &nbsp;&nbsp;&nbsp;<input type="checkbox" name="perpetualStatus" lay-filter="perpetualStatusFilter" value="1" id="perpetualStatus_1" title="永远" >
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -144,7 +144,7 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree','jquery'], function () {
+    }).use(['form', 'table','tree','dtree','jquery','laydate'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
