@@ -61,6 +61,27 @@
             and t.title  like concat('%',#{title},'%')
         </if>
 
+        <if test="author!=null and author!='' ">
+            and t.author  like concat('%',#{author},'%')
+        </if>
+
+        <if test="seoTitle!=null and seoTitle!='' ">
+            and t.seo_title  like concat('%',#{seoTitle},'%')
+        </if>
+
+        <if test="seoKeywords!=null and seoKeywords!='' ">
+            and t.seo_keywords  like concat('%',#{seoKeywords},'%')
+        </if>
+
+        <if test="showStatus!=null and showStatus!=-1 ">
+            and t.show_status =#{showStatus}
+        </if>
+
+        <if test="perpetualStatus!=null ">
+            and t.perpetual_status =#{perpetualStatus}
+        </if>
+
+
         <if test="columnId!=null">
             and t.column_id = #{columnId}
         </if>

@@ -43,6 +43,26 @@ public class ArticlePageInfo extends PageInfo<ArticleVO> {
      */
     private String title;
 
+    /**
+     * 作者
+     */
+    private String author;
+
+    /**
+     *seo标题
+     */
+    private String seoTitle;
+
+    /**
+     * seo关键字
+     */
+    private String seoKeywords;
+
+
+    private Short showStatus;  //显示状态 0隐藏 1显示 -1全部
+
+    private Short perpetualStatus; //永久 0:否 1:是
+
 
     private Long[] idArray; //ID数组
 
