@@ -35,6 +35,7 @@ public class BannerPageInfo extends PageInfo<BannerVO> {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endShowDate; //结束展示时间
 
+    private Short showStatus;  //显示状态 0隐藏 1显示 -1全部
 
 
     /**

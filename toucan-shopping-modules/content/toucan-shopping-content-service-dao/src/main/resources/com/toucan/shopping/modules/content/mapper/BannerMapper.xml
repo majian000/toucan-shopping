@@ -40,6 +40,10 @@
             <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
 
+        <if test="showStatus!=null and showStatus!=-1 ">
+            and t.show_status =#{showStatus}
+        </if>
+
     </sql>
 
     <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.content.vo.BannerVO">
