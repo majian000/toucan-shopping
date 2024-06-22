@@ -182,6 +182,52 @@ public class RoleFunctionController {
 
 
 
+    /**
+     * 刷新缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/refresh/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO refreshCache(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
+            if(StringUtils.isEmpty(entity.getRoleId()))
+            {
+                throw new IllegalArgumentException("roleId为空");
+            }
+            List<RoleFunction> roleFunctions = roleFunctionService.queryListByRoleId(entity.getRoleId());
+
+            RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+            if (roleFunctionCacheService != null) {
+                roleFunctionCacheService.deleteIndex();
+                //刷新到缓存
+                if (roleFunctions != null && roleFunctions.size() > 0) {
+                    RoleFunctionCacheVO[] roleFunctionCacheVOS = new RoleFunctionCacheVO[roleFunctions.size()];
+                    for (int i = 0; i < roleFunctions.size(); i++) {
+                        RoleFunction roleFunction = roleFunctions.get(i);
+                        RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                        if (roleFunction != null) {
+                            BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
+                        }
+                        roleFunctionCacheVOS[i] = roleFunctionCacheVO;
+                    }
+                    roleFunctionCacheService.saves(roleFunctionCacheVOS);
+                }
+            }
+
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.SUCCESS);
+            resultObjectVO.setMsg("更新缓存出现异常");
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 查询列表分页

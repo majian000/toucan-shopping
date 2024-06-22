@@ -475,8 +475,22 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-
-
+            }else if (obj.event === 'refreshFunctionCache') {
+                layer.confirm('确定刷新角色权限?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]role/refresh/cache/functions",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data: JSON.stringify({roleId: data.roleId}),
+                        success:function(data){
+                            layer.msg(data.msg);
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 

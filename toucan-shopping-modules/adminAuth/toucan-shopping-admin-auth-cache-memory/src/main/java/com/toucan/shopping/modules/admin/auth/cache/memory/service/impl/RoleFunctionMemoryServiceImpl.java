@@ -47,6 +47,7 @@ public class RoleFunctionMemoryServiceImpl implements RoleFunctionCacheService {
 
     @Override
     public boolean deleteIndex() throws Exception {
+        AdminAuthMemoryContext.instance().getRoleFunctionHashMap().clear();
         return true;
     }
 

@@ -38,4 +38,14 @@ public interface FeignRoleFunctionService {
     @RequestMapping(value="/query/function/tree/by/roleId/parentId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryFunctionTreeByRoleIdAndParentId(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 刷新缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/refresh/cache",method = RequestMethod.POST)
+    ResultObjectVO refreshCache(@RequestBody RequestJsonVO requestJsonVO);
+
 }

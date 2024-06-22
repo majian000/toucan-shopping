@@ -284,6 +284,34 @@ public class RoleController extends UIController {
 
 
 
+
+    /**
+     * 刷新缓存
+     * @param roleFunctionVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/refresh/cache/functions",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO refreshFunctionsCache(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            roleFunctionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            roleFunctionVO.setCreateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, roleFunctionVO);
+            resultObjectVO = roleFunctionService.refreshCache(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 查询列表
      * @param pageInfo

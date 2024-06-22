@@ -91,6 +91,22 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO refreshCache(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+
+                logger.warn("FeignRoleFunctionService.refreshCache faild  params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                return resultObjectVO;
+            }
         };
     }
 }
