@@ -1,12 +1,14 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictCategoryService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -48,6 +50,9 @@ public class DictCategoryController extends UIController {
 
     @Autowired
     private FeignAppService feignAppService;
+
+    @Autowired
+    private FeignAdminService feignAdminService;
 
 
 
@@ -95,10 +100,18 @@ public class DictCategoryController extends UIController {
                     tableVO.setCount(dictCategoryPageInfo.getTotal());
                     if(tableVO.getCount()>0) {
                         Set<String> appCodes = new HashSet<>();
+                        Set<String> adminIdList = new HashSet<String>();
                         for (DictCategoryVO dictCategoryVO : dictCategoryPageInfo.getList()) {
+                            if (dictCategoryVO.getCreateAdminId() != null) {
+                                adminIdList.add(dictCategoryVO.getCreateAdminId());
+                            }
+                            if (dictCategoryVO.getUpdateAdminId() != null) {
+                                adminIdList.add(dictCategoryVO.getUpdateAdminId());
+                            }
                             appCodes.add(dictCategoryVO.getAppCode());
                         }
                         this.setAppNames(appCodes,dictCategoryPageInfo.getList());
+                        this.setAdminNames(adminIdList,dictCategoryPageInfo.getList());
                         tableVO.setData(dictCategoryPageInfo.getList());
                     }
                 }
@@ -110,6 +123,45 @@ public class DictCategoryController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+    }
+
+
+
+    /**
+     * 设置管理员名称
+     * @param adminIdList
+     * @throws Exception
+     */
+    private void setAdminNames(Set<String> adminIdList,List<DictCategoryVO> list) throws Exception{
+
+        //查询创建人和修改人
+        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+        adminIdList.toArray(createOrUpdateAdminIds);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+        ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+            if(CollectionUtils.isNotEmpty(adminVOS))
+            {
+                for(DictCategoryVO dictCategoryVO:list)
+                {
+                    for(AdminVO adminVO:adminVOS)
+                    {
+                        if(dictCategoryVO.getCreateAdminId()!=null&&dictCategoryVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictCategoryVO.setCreateAdminUsername(adminVO.getUsername());
+                        }
+                        if(dictCategoryVO.getUpdateAdminId()!=null&&dictCategoryVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            dictCategoryVO.setUpdateAdminUsername(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
