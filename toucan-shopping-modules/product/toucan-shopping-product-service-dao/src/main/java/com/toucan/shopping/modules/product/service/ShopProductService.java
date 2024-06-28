@@ -43,4 +43,6 @@ public interface ShopProductService {
 
     ShopProductVO queryOne(ShopProductVO shopProductVO);
 
+    int updateFreightTemplate(ShopProductVO shopProductVO);
+
 }

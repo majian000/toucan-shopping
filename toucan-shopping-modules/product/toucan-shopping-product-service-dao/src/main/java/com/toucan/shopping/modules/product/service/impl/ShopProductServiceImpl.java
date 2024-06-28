@@ -71,4 +71,9 @@ public class ShopProductServiceImpl implements ShopProductService {
     public ShopProductVO queryOne(ShopProductVO shopProductVO) {
         return shopProductMapper.queryOne(shopProductVO);
     }
+
+    @Override
+    public int updateFreightTemplate(ShopProductVO shopProductVO) {
+        return shopProductMapper.updateFreightTemplate(shopProductVO);
+    }
 }

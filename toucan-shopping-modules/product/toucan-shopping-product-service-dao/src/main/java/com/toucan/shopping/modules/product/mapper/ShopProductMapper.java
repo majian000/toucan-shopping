@@ -47,4 +47,6 @@ public interface ShopProductMapper {
 
     ShopProductVO queryOne(ShopProductVO shopProductVO);
 
+    int updateFreightTemplate(ShopProductVO shopProductVO);
+
 }

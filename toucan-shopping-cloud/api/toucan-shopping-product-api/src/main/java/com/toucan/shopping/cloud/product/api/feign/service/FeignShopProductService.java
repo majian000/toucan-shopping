@@ -72,4 +72,15 @@ public interface FeignShopProductService {
     @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 修改运费模板
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/freightTemplate",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO updateFreightTemplate(@RequestBody RequestJsonVO requestJsonVO);
+
 }

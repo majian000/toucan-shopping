@@ -565,4 +565,72 @@ public class ShopProductController {
 
 
 
+    /**
+     * 修改运费模板
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/freightTemplate",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO updateFreightTemplate(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+
+            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID!");
+                return resultObjectVO;
+            }
+            if(shopProductVO==null||shopProductVO.getShopId()==null||shopProductVO.getShopId().longValue()==-1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到店铺ID!");
+                return resultObjectVO;
+            }
+            if(shopProductVO==null||shopProductVO.getFreightTemplateId()==null||shopProductVO.getFreightTemplateId().longValue()==-1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到运费模板ID!");
+                return resultObjectVO;
+            }
+
+
+            ShopProductVO updateShopProductVO = new ShopProductVO();
+            updateShopProductVO.setId(shopProductVO.getId());
+            updateShopProductVO.setShopId(shopProductVO.getShopId());
+            updateShopProductVO.setFreightTemplateId(shopProductVO.getFreightTemplateId());
+
+            int ret = shopProductService.updateFreightTemplate(updateShopProductVO);
+            if(ret<=0){
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败!");
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }

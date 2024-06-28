@@ -217,4 +217,8 @@
 
 
 
+    <update id="updateFreightTemplate" parameterType="com.toucan.shopping.modules.product.vo.ShopProductVO">
+        update t_shop_product  set freight_template_id=#{freightTemplateId} where id=#{id} and shop_id=#{shopId} and delete_status=0
+    </update>
+
 </mapper>
