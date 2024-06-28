@@ -1129,7 +1129,7 @@ function bindFreightTemplateRowEvent()
                 type: "POST",
                 url: basePath+"/api/shop/product/modifyFreightTemplate",
                 contentType: "application/json;charset=utf-8",
-                data:  JSON.stringify({shopProductId:currentShopProductId,freightTemplateId:attrId}),
+                data:  JSON.stringify({id:currentShopProductId,freightTemplateId:attrId}),
                 dataType: "json",
                 success: function (result) {
                     if(result.code==0)
