@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://www.jq22.com/demo/dropDown201705232359/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>下拉框</title>
+    <style type="text/css">
+        html,body,a,div,i,span{margin: 0;padding: 0;}
+        a{text-decoration: none;}
+        body{margin: 50px;}
+
+
+
+        .moreBtn,.moreBtnNext{cursor:pointer;position:relative;width: 100px;height: 45px;border: 1px solid #CCCCCC;border-radius: 6px;line-height: 45px;font-size: 14px;color: #666666;padding-left: 6px;}
+        .xl-icon,.xl-iconNext{position: absolute;width: 20px;height: 20px;
+            background-image: url("images/xl-icon_03.png");
+            background-position: 4px 0px;
+            background-repeat: no-repeat;
+            right: 0;
+            top:14px;
+        }
+        .moreBtn:hover,.moreBtnNext:hover{background-color: #f7f7f7;}
+        .sq-icon{background-position: 4px -33px;}
+        /*--下拉选择列表样式--*/
+        .moreBtnList,.moreBtnListNext{z-index:999;display:none;width: 175px;border: 1px solid #CCCCCC;border-radius: 6px;position: absolute;top:45px;left: -38px;}
+        .moreBtnItems,.moreBtnItemsNext{width: 100%;height: 40px;line-height: 40px;font-size: 14px;color: #545454;text-align: center;display: block;background-color: #FFFFFF;}
+        .moreBtnItems:hover,.moreBtnItemsNext:hover{background-color: #f7f7f7;color: #b83b43;}
+        .moreBtnItems:first-child,.moreBtnItemsNext:first-child{border-radius: 6px 6px 0 0;}
+        .moreBtnItems:last-child,.moreBtnItemsNext:last-child{border-radius: 0 0 6px 6px;}
+        /*-------------------------------------------------------------------------------------------------*/       
+    </style>
+</head>
+<body style="">
+<!--下拉框-->
+<span style="margin-bottom: 10px;display: block;">下拉列表-点击展开移出区域隐藏列表</span>
+<div class="moreBtn">
+    <!--存放选择的值-->
+    <span class="moreBtnVal" onmoreBtnstart="return false">选择项3</span>
+    <!--放置icon-->
+    <i class="xl-icon"></i>
+    <!--选择项-->
+    <div class="moreBtnList" style="display: none;">
+        <div class="moreBtnItems-all">
+            <a href="javascript:;" class="moreBtnItems">选择项1</a>
+            <a href="javascript:;" class="moreBtnItems">选择项2</a>
+            <a href="javascript:;" class="moreBtnItems">选择项3</a>
+            <a href="javascript:;" class="moreBtnItems">选择项4</a>
+            <a href="javascript:;" class="moreBtnItems">选择项5</a>
+        </div>
+    </div>
+</div>
+<!--下拉框-->
+<span style="margin-bottom: 10px;display: block;margin-top: 10px;">下拉列表-点击展开点击空白区域隐藏列表</span>
+<div class="dropDown">
+    <div class="moreBtnNext">
+        <!--存放选择的值-->
+        <span class="moreBtnValNext" onmoreBtnstart="return false">-请选择-</span>
+        <!--放置icon-->
+        <i class="xl-iconNext"></i>
+    </div>
+    <!--选择项-->
+    <div class="moreBtnListNext" style="display: none;">
+        <i class="frameTriangle"></i>
+        <div class="moreBtnItems-allNext">
+            <a href="javascript:;" class="moreBtnItemsNext">选择项1</a>
+            <a href="javascript:;" class="moreBtnItemsNext">选择项2</a>
+            <a href="javascript:;" class="moreBtnItemsNext">选择项3</a>
+            <a href="javascript:;" class="moreBtnItemsNext">选择项4</a>
+            <a href="javascript:;" class="moreBtnItemsNext">选择项5</a>
+        </div>
+    </div>
+</div>
+
+<script src="./下拉框_files/jquery-1.10.2.js.下载"></script><script src="./下拉框_files/jquery.min.js.下载"></script>
+<script type="text/javascript" src="./下拉框_files/dropDown.js.下载"></script>
+
+</body></html>
