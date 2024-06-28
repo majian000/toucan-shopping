@@ -19,7 +19,7 @@ function bindMoreBtnEvent(){
 
     oChangeA.click(function(){
         var oVal = $(this).text();
-        $(this).parents('.moreBtnItems-all').parents('.moreBtnList').siblings('.moreBtnVal').text(oVal).siblings('.xl-icon').toggleClass('sq-icon');
+        // $(this).parents('.moreBtnItems-all').parents('.moreBtnList').siblings('.moreBtnVal').text(oVal).siblings('.xl-icon').toggleClass('sq-icon');
     });
     /*----------------------------------
         点击展开点击空白区域隐藏列表
@@ -44,6 +44,6 @@ function bindMoreBtnEvent(){
     });
     oChangeANext.click(function(){
         var oVal = $(this).text();
-        $(this).parents('.moreBtnItems-allNext').parents('.moreBtnListNext').siblings('.moreBtnNext').find('.moreBtnValNext').text(oVal).siblings('.xl-iconNext').toggleClass('sq-icon');
+        // $(this).parents('.moreBtnItems-allNext').parents('.moreBtnListNext').siblings('.moreBtnNext').find('.moreBtnValNext').text(oVal).siblings('.xl-iconNext').toggleClass('sq-icon');
     });
 }
