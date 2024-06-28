@@ -85,12 +85,11 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
-            tableHtml+=getMoreBtns();
-            // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"modifySkuRow\" style=\"color:blue;cursor: pointer;\">SKU管理</a>\n" ;
-            // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" ft-attr-id=\""+row.freightTemplateId+"\" class=\"modifyFreightTemplateRow\" style=\"color:blue;cursor: pointer;\">修改运费模板</a>\n" ;
-            // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"delRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
-            // tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
-            // tableHtml+=     "                                &nbsp;&nbsp;\n" ;
+            // tableHtml+=getMoreBtns();
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"modifySkuRow\" style=\"color:blue;cursor: pointer;\">SKU管理</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" ft-attr-id=\""+row.freightTemplateId+"\" class=\"modifyFreightTemplateRow\" style=\"color:blue;cursor: pointer;\">修改运费模板</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"delRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
