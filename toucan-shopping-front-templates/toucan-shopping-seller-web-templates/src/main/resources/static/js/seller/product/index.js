@@ -1147,6 +1147,8 @@ function bindFreightTemplateRowEvent()
                         type: 'success',
                         zIndex: dialogZIndex + 1
                     });
+                    layer.close(g_selectFreightTemplateDialogHandler);
+                    $("#queryBtn").click();
                 },
                 error: function (result) {
                     $.message({
@@ -1163,7 +1165,6 @@ function bindFreightTemplateRowEvent()
             });
 
         });
-        layer.close(g_selectFreightTemplateDialogHandler);
     });
 
 }
