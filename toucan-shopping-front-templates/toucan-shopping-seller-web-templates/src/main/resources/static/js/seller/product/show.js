@@ -113,7 +113,22 @@ $(function () {
                             var httpPreviewPhotoPath = retObj.httpPreviewPhotoPaths[i];
                             bannerArray.push({src:httpPreviewPhotoPath,href:httpPreviewPhotoPath});
                         }
-                        // jq("#defaultBannerPointer").append(pointerHtml);
+
+                        $("#productPreviewPhotosDiv").html("<div class=\"banner\">\n" +
+                            "                                                        <div id=\"productPreviewPhotos\" class=\"tslider\">\n" +
+                            "                                                            <button type=\"button\" class=\"preBtn\" id=\"preBtn\">\n" +
+                            "                                                                &lt;\n" +
+                            "                                                            </button>\n" +
+                            "                                                            <button type=\"button\" class=\"nextBtn\" id=\"nextBtn\">\n" +
+                            "                                                                &gt;\n" +
+                            "                                                            </button>\n" +
+                            "\n" +
+                            "                                                            <ul class=\"pointer\" id=\"defaultBannerPointer\">\n" +
+                            "\n" +
+                            "                                                            </ul>\n" +
+                            "                                                        </div>\n" +
+                            "                                                    </div>");
+
                         $('#productPreviewPhotos').sliders({
                             imgArr: bannerArray,
                             autoLoop: true,
