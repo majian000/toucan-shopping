@@ -89,7 +89,56 @@ $(function () {
                         drawProductSkuTable(retObj);
                     }
 
+                    //商品主图
+                    if(retObj.httpMainPhotoFilePath!=null&&retObj.httpMainPhotoFilePath!="") {
+                        $("#productMainPhoto").html("<a href=\"javascript:window.open('" + retObj.httpMainPhotoFilePath + "')\">" +
+                            "<img width=\"200\" height=\"200\" src=\"" + retObj.httpMainPhotoFilePath + "\">" +
+                            "</a>");
+                    }
 
+
+                    if(retObj.httpPreviewPhotoPaths!=null
+                        &&retObj.httpPreviewPhotoPaths.length>0)
+                    {
+                        var bannerArray = new Array();
+                        var pointerHtml ="";
+                        for(var i=0;i<retObj.httpPreviewPhotoPaths.length;i++)
+                        {
+                            if(i==0)
+                            {
+                                pointerHtml+="<li data-index=\"1\" class=\"current\"></li>";
+                            }else{
+                                pointerHtml+="<li data-index=\""+(i+1)+"\" ></li>";
+                            }
+                            var httpPreviewPhotoPath = retObj.httpPreviewPhotoPaths[i];
+                            bannerArray.push({src:httpPreviewPhotoPath,href:httpPreviewPhotoPath});
+                        }
+                        // jq("#defaultBannerPointer").append(pointerHtml);
+                        $('#productPreviewPhotos').sliders({
+                            imgArr: bannerArray,
+                            autoLoop: true,
+                            current: 1,
+                            time: 3000,
+                            vWidth: 740
+                        });
+
+                    }
+                    //商品介绍图
+                    if(retObj.shopProductDescriptionVO!=null) {
+                        var productDescriptionHtml="";
+                        if(retObj.shopProductDescriptionVO.productDescriptionImgs!=null
+                            &&retObj.shopProductDescriptionVO.productDescriptionImgs.length>0)
+                        {
+                            for(var j=0;j<retObj.shopProductDescriptionVO.productDescriptionImgs.length;j++){
+                                var productDescriptionImg = retObj.shopProductDescriptionVO.productDescriptionImgs[j];
+                                productDescriptionHtml+="<a href=\"javascript:window.open('" + productDescriptionImg.httpFilePath + "')\">" +
+                                    "<img width=\""+productDescriptionImg.width+"\"  src=\"" + productDescriptionImg.httpFilePath + "\">" +
+                                    "</a> <br>"
+                            }
+
+                        }
+                        $("#productDescription").html(productDescriptionHtml);
+                    }
                 }
             }
         },

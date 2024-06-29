@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="${basePath}/static/lib/tabs/tabs-basic.css" />
     <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
     <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
     <style>
         .pay-success-group{
             display:none;
@@ -78,7 +79,7 @@
                                     <a data-index="0" href="#" class="tab-active" >商品信息</a>
                                 </li>
                                 <li>
-                                    <a data-index="1" href="#" class="">商品预览</a>
+                                    <a data-index="1" href="#" class="">商品图片</a>
                                 </li>
                             </ul>
 
@@ -91,6 +92,14 @@
                                             <div class="frm-div-row-item"  >
                                                 <label class="order-detail-item-text"  style="display: inline-block;" >上架状态 :</label>
                                                 <div id="productStatus" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group"  >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="productMainPhoto" >商品主图 :</label>
+                                                <div id="productMainPhoto" class="frm-div-row-item-v-text" ></div>
                                             </div>
                                             <div class="frm-div-row-item" >
                                             </div>
@@ -145,24 +154,47 @@
 
 
 
+                                <div class="tabs-content-placeholder-div">
+                                    <form id="scaf2" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 100%;"  >
+
+
+                                        <div class="frm-div-row-group"  >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="productMainPhoto" >商品预览图 :</label>
+
+                                                <div class="frm-div-row-item-v-text" >
+                                                    <div class="banner">
+                                                        <div id="productPreviewPhotos" class="tslider">
+                                                            <button type="button" class="preBtn" id="preBtn">
+                                                                &lt;
+                                                            </button>
+                                                            <button type="button" class="nextBtn" id="nextBtn">
+                                                                &gt;
+                                                            </button>
+
+                                                            <ul class="pointer" id="defaultBannerPointer">
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group"  >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="productDescription" >商品介绍 :</label>
+                                                <div id="productDescription" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
 
-                            <div class="tabs-content-placeholder-div">
-                                <form id="scaf2" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 100%;"  >
-
-                                    <div class="frm-div-row-group"  >
-                                        <div class="frm-div-row-item" >
-                                            <label class="order-detail-item-text" for="oca_name" >商品主图 :</label>
-                                            <div id="oca_name" class="frm-div-row-item-v-text" ></div>
-                                        </div>
-                                        <div class="frm-div-row-item" >
-                                            <label class="order-detail-item-text"  style="display: inline-block;" >联系电话 :</label>
-                                            <div id="oca_phone" class="frm-div-row-item-v-text" ></div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
 
                         </div>
 
@@ -183,7 +215,7 @@
 <script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <link rel="stylesheet" href="${basePath}/static/lib/areaPlugin/RegionalChoice.css">
 <script src="${basePath}/static/lib/areaPlugin/RegionalChoice.js"></script>
-
+<script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
 
 <script type="text/javascript" src="${basePath}/static/js/seller/product/show.js"></script>
 
