@@ -78,7 +78,7 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.status==1?"<a style='color:green'>已上架</a>":"<a style='color:red'>已下架</a>")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"showRow\" style=\"color:blue;cursor: pointer;\">查看</a>\n" ;
             if(row.status==1)
             {
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:red;cursor: pointer;\">下架</a>\n" ;
@@ -86,7 +86,7 @@ function drawTable(pageResult)
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
             tableHtml+=getMoreBtns(row);
-            tableHtml+=     "                                &nbsp;&nbsp;\n" ;
+            tableHtml+=     "                                &nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -100,10 +100,11 @@ function drawTable(pageResult)
 function getMoreBtns(row){
 
     var moreBtnHtml="";
-    moreBtnHtml+=     "                                &nbsp;<div class=\"moreBtn\"> " ;
+    moreBtnHtml+=     "                                <div class=\"moreBtn\"> " ;
     moreBtnHtml+=     "                                   <span class=\"moreBtnVal\" onmoreBtnstart=\"return false\">更多操作</span> " ;
     moreBtnHtml+=     "                                       <div class=\"moreBtnList\" style=\"display: none;\"> " ;
     moreBtnHtml+=     "                                       <div class=\"moreBtnItems-all\">" ;
+    moreBtnHtml+=     "                                             <a attr-id=\""+row.id+"\" class=\"previewRow moreBtnItems\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
     moreBtnHtml+=     "                                             <a attr-id=\""+row.id+"\" class=\"modifySkuRow moreBtnItems\" style=\"color:blue;cursor: pointer;\">SKU管理</a>\n" ;
     moreBtnHtml+=     "                                             <a attr-id=\""+row.id+"\" ft-attr-id=\""+row.freightTemplateId+"\" class=\"modifyFreightTemplateRow moreBtnItems\" style=\"color:blue;cursor: pointer;\">修改运费</a>\n" ;
     moreBtnHtml+=     "                                             <a attr-id=\""+row.id+"\" class=\"delRow moreBtnItems\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
@@ -117,6 +118,7 @@ function getMoreBtns(row){
 
 function bindRowEvents()
 {
+    bindShowEvent();
     bindPreviewEvent();
     bindShelvesEvent();
     bindDelEvent();
@@ -137,6 +139,17 @@ function bindPreviewEvent()
         window.open(shoppingPcPath+productPreviewPage+attrId);
     });
 }
+
+function bindShowEvent()
+{
+    //查看事件
+    $(".showRow").unbind("click");
+    $(".showRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        window.location.href = basePath+"/page/shop/product/show/"+attrId;
+    });
+}
+
 
 
 

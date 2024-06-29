@@ -1,0 +1,176 @@
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/order/orderShow.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/tabs/tabs-basic.css" />
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+    <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
+    <style>
+        .pay-success-group{
+            display:none;
+        }
+        .pay-cancel-group{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "productList">
+<#assign menuType = "productMenu">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/shop/product/index">商品列表</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">查看商品</a>
+        </li>
+    </ol>
+
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+
+        <input type="hidden" id="id" value="${id!''}" />
+
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+
+                <div class="title" style="border-bottom: 1px solid#9a9999;">
+                    <span>查看商品</span>
+                    <a id="backBtn" style="cursor:pointer;font-size:15px;">返回列表</a>
+                </div>
+                <div class="right_panel" style="min-height: 900px;">
+                        <div class="tabs-basic" >
+                            <ul>
+                                <li>
+                                    <a data-index="0" href="#" class="tab-active" >订单信息</a>
+                                </li>
+                            </ul>
+
+                            <div class="tabs-content-placeholder" style="min-height: 700px;">
+
+                                <div class="tab-content-active tabs-content-placeholder-div">
+                                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 100%;"  >
+
+                                        <div class="frm-div-row-group" style="margin-top:0;" >
+                                            <div class="frm-div-row-item"  >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >上架状态 :</label>
+                                                <div id="productStatus" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="productName" >商品名称 :</label>
+                                                <div id="productName" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >商品分类 :</label>
+                                                <div id="categoryPath" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                        </div>
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text" for="productName" >品牌名称 :</label>
+                                                <div id="brandName" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >商品分类 :</label>
+                                                <div id="categoryPath1" class="frm-div-row-item-v-text" ></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="frm-div-row-group" >
+                                            <div class="frm-div-row-item"  >
+                                                <label class="order-detail-item-text"  style="display: inline-block;" >商品规格 </label>
+                                                <div  class="frm-div-row-item-v-text" style="width: 70%;">
+                                                </div>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+
+                                        <div class="frm-div-row-group" style="margin-top:1%">
+                                            <div class="frm-div-row-item"  >
+                                                <table id="productSkuList" class="freezeTable" border="1" width="800" >
+                                                    <tbody id="productSkuTableBody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="frm-div-row-item" >
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="pcaDiv">
+</div>
+
+
+<script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
+<link rel="stylesheet" href="${basePath}/static/lib/areaPlugin/RegionalChoice.css">
+<script src="${basePath}/static/lib/areaPlugin/RegionalChoice.js"></script>
+
+
+<script type="text/javascript" src="${basePath}/static/js/seller/product/show.js"></script>
+
+
+
+<#include "/footer.html"/>
+
+</body></html>
+
+

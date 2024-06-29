@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +91,16 @@ public class ShopProductPageController extends BaseController {
     public String index(HttpServletRequest request){
 
         return "product/index";
+    }
+
+
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/show/{id}")
+    public String show(HttpServletRequest request, @PathVariable String id ){
+        request.setAttribute("id",id);
+        return "product/show";
     }
 
 
