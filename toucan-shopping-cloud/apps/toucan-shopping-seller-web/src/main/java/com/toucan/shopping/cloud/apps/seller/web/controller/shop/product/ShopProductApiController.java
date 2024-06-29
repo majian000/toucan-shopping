@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
@@ -84,6 +85,9 @@ public class ShopProductApiController extends BaseController {
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
+    @Autowired
+    private FeignBrandService feignBrandService;
+
     private String[] imageExtScope = new String[]{".JPG", ".JPEG", ".PNG"};
 
 
@@ -116,6 +120,85 @@ public class ShopProductApiController extends BaseController {
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * 查询店铺类别
+     * @param list
+     * @param shopCategoryIds
+     */
+    void queryShopCategory(List<ShopProductVO> list,Long[] shopCategoryIds)
+    {
+        try {
+            ShopCategoryVO queryShopCategoryVO = new ShopCategoryVO();
+            queryShopCategoryVO.setIdArray(shopCategoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO);
+            ResultObjectVO resultObjectVO = feignShopCategoryService.findByIdArray(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
+                if(CollectionUtils.isNotEmpty(shopCategoryVOS))
+                {
+                    for(ShopProductVO shopProductVO:list)
+                    {
+                        for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
+                        {
+                            if(shopProductVO.getShopCategoryId()!=null&&shopProductVO.getShopCategoryId().longValue()==shopCategoryVO.getId().longValue())
+                            {
+                                shopProductVO.setShopCategoryName(shopCategoryVO.getName());
+                                shopProductVO.setShopCategoryPath(shopCategoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
+    /**
+     * 查询品牌
+     * @param list
+     * @param brandIdList
+     */
+    void queryBrand(List<ShopProductVO> list,List<Long> brandIdList)
+    {
+        try {
+            BrandVO queryBrandVO = new BrandVO();
+            queryBrandVO.setIdList(brandIdList);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
+            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
+                if(CollectionUtils.isNotEmpty(brandVOS))
+                {
+                    for(ShopProductVO shopProductVO:list)
+                    {
+                        for(BrandVO brandVO:brandVOS)
+                        {
+                            if(shopProductVO.getBrandId()!=null&&shopProductVO.getBrandId().longValue()==brandVO.getId().longValue())
+                            {
+                                shopProductVO.setBrandChineseName(brandVO.getChineseName());
+                                shopProductVO.setBrandEnglishName(brandVO.getEnglishName());
+                                shopProductVO.setBrandLogo(brandVO.getLogoPath());
+                                if(brandVO.getLogoPath()!=null) {
+                                    shopProductVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
         }
     }
 
@@ -428,6 +511,13 @@ public class ShopProductApiController extends BaseController {
 
                     //查询类别名称
                     this.queryCategory(list, categoryIds);
+
+
+                    //查询店铺类别名称
+                    this.queryShopCategory(list,shopCategoryIds);
+
+                    //查询品牌名称
+                    this.queryBrand(list,brandIdList);
 
                     for (ShopProductVO shopProductVOTmp : list) {
                         if (shopProductVOTmp.getMainPhotoFilePath() != null) {

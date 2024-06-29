@@ -72,6 +72,19 @@ $(function () {
                     $("#productName").html(retObj.name);
                     $("#categoryPath").html(retObj.categoryPath);
 
+                    var brandName="";
+                    if(retObj.brandChineseName!=null && retObj.brandChineseName!=""){
+                        brandName+=retObj.brandChineseName;
+                    }
+                    if(retObj.brandEnglishName!=null && retObj.brandEnglishName!=""){
+                        if(brandName!=""){
+                            brandName+=" / ";
+                        }
+                        brandName+=retObj.brandEnglishName;
+                    }
+                    $("#brandName").html(brandName);
+                    $("#shopCategoryPath").html(retObj.shopCategoryPath);
+
                     if(retObj.productSkuVOList!=null&&retObj.productSkuVOList.length>0){
                         drawProductSkuTable(retObj);
                     }
