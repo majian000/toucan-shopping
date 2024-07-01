@@ -112,7 +112,7 @@ $(function () {
                     $("#etractMethod").html(etractMethodName);
 
                     if(retObj.freightTemplateName!=null) {
-                        $("#freightTemplate").html(freightTemplateName+"  <a href='/page/freightTemplate/show/"+retObj.freightTemplateId+"'>查看</a>");
+                        $("#freightTemplate").html(retObj.freightTemplateName+"&nbsp;&nbsp;<a href='/page/freightTemplate/show/"+retObj.freightTemplateId+"' target='_blank' style='color:blue;padding:0px;'>查看</a>");
                     }
 
                     if(retObj.productSkuVOList!=null&&retObj.productSkuVOList.length>0){
