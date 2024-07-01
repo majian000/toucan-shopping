@@ -85,9 +85,40 @@ $(function () {
                     $("#brandName").html(brandName);
                     $("#shopCategoryPath").html(retObj.shopCategoryPath);
 
+                    if(retObj.payMethod==1){
+                        $("#payMethod").html("一口价(普通交易模式)")
+                    }
+                    var buckleInventoryMethodName="";
+                    if(retObj.buckleInventoryMethod==1){
+                        buckleInventoryMethodName="买家拍下减库存";
+                    }else if(retObj.buckleInventoryMethod==2){
+                        buckleInventoryMethodName="买家付款减库存";
+                    }
+                    $("#buckleInventoryMethod").html(buckleInventoryMethodName);
+
+                    var afterSaleServiceName="";
+                    if(retObj.giveInvoice==1){
+                        afterSaleServiceName+="开发票";
+                    }
+                    if(retObj.changeOrReturn==1){
+                        afterSaleServiceName+=" 退换货承诺";
+                    }
+                    $("#afterSaleService").html(afterSaleServiceName);
+
+                    var etractMethodName="";
+                    if(retObj.etractMethod.indexOf("1")!=-1){
+                        etractMethodName+="物流配送";
+                    }
+                    $("#etractMethod").html(etractMethodName);
+
+                    if(retObj.freightTemplateName!=null) {
+                        $("#freightTemplate").html(freightTemplateName+"  <a href='/page/freightTemplate/show/"+retObj.freightTemplateId+"'>查看</a>");
+                    }
+
                     if(retObj.productSkuVOList!=null&&retObj.productSkuVOList.length>0){
                         drawProductSkuTable(retObj);
                     }
+
 
                     //商品主图
                     if(retObj.httpMainPhotoFilePath!=null&&retObj.httpMainPhotoFilePath!="") {

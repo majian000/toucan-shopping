@@ -102,5 +102,10 @@ public class ShopProductVO extends ShopProduct {
      */
     private String attrPath;
 
+    /**
+     * 运费模板名称
+     */
+    private String freightTemplateName;
+
 
 }

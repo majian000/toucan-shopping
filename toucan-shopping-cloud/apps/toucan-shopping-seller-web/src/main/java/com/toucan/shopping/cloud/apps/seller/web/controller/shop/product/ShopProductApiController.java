@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValu
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -29,6 +30,7 @@ import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -84,6 +86,9 @@ public class ShopProductApiController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
+
+    @Autowired
+    private FeignFreightTemplateService feignFreightTemplateService;
 
     @Autowired
     private FeignBrandService feignBrandService;
@@ -554,6 +559,20 @@ public class ShopProductApiController extends BaseController {
                             list.get(0).setShopProductDescriptionJson(JSONObject.toJSONString(list.get(0).getShopProductDescriptionVO()));
                         }
                     }
+
+
+                    //查询运费模板
+                    FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+                    freightTemplateVO.setId(list.get(0).getFreightTemplateId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
+                    resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+                    if (resultObjectVO.isSuccess()) {
+                        freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
+                        if (freightTemplateVO != null) {
+                            list.get(0).setFreightTemplateName(freightTemplateVO.getName());
+                        }
+                    }
+
                     resultObjectVO.setData(list.get(0));
                 }
             }
