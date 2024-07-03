@@ -8,9 +8,12 @@
     注:标准版的代码较旧,需要手动移植新版代码
     
 #### 微服务版
-    采用技术
+    前端技术 jquery、jquery-layui
+    
+    后端技术
     spring cloud
     spring config
+    spring gateway
     lombok
     mybatis
     nacos
@@ -22,6 +25,8 @@
     redis
     mysql
     qlexpress
+    freemarker
+    fastDFS
 
    
 ### 访问
