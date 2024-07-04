@@ -908,7 +908,7 @@ var freightTemplatePagegizationConfigObject={
     per_num:10,//每页条目数
     current_page:1//当前页
 };
-var g_freightTemplate_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
+var g_freightTemplate_query_obj={page:freightTemplatePagegizationConfigObject.current_page,limit:freightTemplatePagegizationConfigObject.per_num};
 var g_selectFreightTemplateDialogHandler;
 
 //修改运费模板
@@ -983,10 +983,10 @@ function initFreightTemplatePagination()
                 return ;
             }
             if(result.data!=null) {
-                pagegizationConfigObject.total_item = result.data.total;
-                pagegizationConfigObject.current_page = result.data.page;
+                freightTemplatePagegizationConfigObject.total_item = result.data.total;
+                freightTemplatePagegizationConfigObject.current_page = result.data.page;
                 drawFreightTemplateTable(result.data);
-                page_ctrl(pagegizationConfigObject, doFreightTemplatePage);
+                page_ctrl(freightTemplatePagegizationConfigObject, doFreightTemplatePage);
             }
         },
         error: function (result) {
@@ -1010,7 +1010,7 @@ function doFreightTemplatePage()
         type:6,
         tip:"查询中..."
     });
-    g_freightTemplate_query_obj.page = pagegizationConfigObject.current_page;
+    g_freightTemplate_query_obj.page = freightTemplatePagegizationConfigObject.current_page;
     $.ajax({
         type: "POST",
         url: basePath+"/api/freightTemplate/list",
@@ -1027,8 +1027,8 @@ function doFreightTemplatePage()
                 return ;
             }
             if(result.data!=null) {
-                pagegizationConfigObject.total_item = result.data.total;
-                pagegizationConfigObject.current_page = result.data.page;
+                freightTemplatePagegizationConfigObject.total_item = result.data.total;
+                freightTemplatePagegizationConfigObject.current_page = result.data.page;
                 drawFreightTemplateTable(result.data);
             }
         },
