@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="${basePath}/static/lib/pagination/toPage.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/order/index.css" />
 
     <style type="text/css">
 
@@ -65,22 +66,22 @@
                         <input type="hidden" id="sortBy" />
 
                         <label style="width:40%;float: left;">
-                            <span>订单编号 :</span>
+                            <span class="query-form-label">订单编号 :</span>
                             <input type="text" id="orderNo" maxlength="32"  name="orderNo"   tabindex="1"  style="width:50%" />
                         </label>
                         <label style="width:40%;float: left;">
-                            <span>支付流水号 :</span>
+                            <span class="query-form-label">支付流水号 :</span>
                             <input type="text" id="outerTradeNo" maxlength="48"  name="outerTradeNo"   tabindex="1"  style="width:50%" />
                         </label>
                         <label style="width:40%;float: left;">
-                            <span>下单时间 :</span>
+                            <span class="query-form-label">下单时间 :</span>
                             <input type="text" id="startDate"  style="width:30%" />
-                            至
+                            <a class="query-form-label">至</a>
                             <input type="text" id="endDate"   style="width:30%" />
                         </label>
                         <label style="width:40%;float: left;">
                             <div style="width:45%;float:left;">
-                                <span>订单状态 :</span>
+                                <span class="query-form-label">订单状态 :</span>
                                 <select id="tradeStatus" style="width:150px;">
                                     <option value="-1">全部</option>
                                     <option value="0">待付款</option>

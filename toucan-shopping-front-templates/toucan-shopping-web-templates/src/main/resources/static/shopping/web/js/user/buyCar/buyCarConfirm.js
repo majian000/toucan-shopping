@@ -815,7 +815,7 @@ function updateRow(cid,bnum)
             if(result.code==1)
             {
                 $(this).val(bnum);
-                $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
+                $("#buyItemTotal_"+cid).html((parseFloat((new BigNumber(parseInt(bnum)).times(new BigNumber($("#productPrice_"+cid).val()))).toFixed(2))));
                 calculatePriceTotal();
                 if(g_cache_buy_items!=null&&g_cache_buy_items.length>0)
                 {

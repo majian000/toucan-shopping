@@ -97,5 +97,8 @@ function bindBuyCarIntInputKeyUp(id)
             var temp_amount=c.val().replace(/[^\d]/g,'');
             $(this).val(temp_amount);
         }
+        if(c.val()<=0){
+            $(this).val(1);
+        }
     });
 }
