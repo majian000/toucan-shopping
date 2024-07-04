@@ -766,13 +766,13 @@ function bindBuyItemNumEvent()
 function subNum(cid)
 {
     var c = $("#num_"+cid).val();
-    if(c<=1){
+    if(c==null||c==""||c<=0){
         c=1;
     }else{
         c=parseInt(c)-1;
-        $("#num_"+cid).val(c);
     }
-    updateRow(cid,$("#num_"+cid).val());
+    $("#num_"+cid).val(c);
+    updateRow(cid,c);
 }
 
 
@@ -780,17 +780,26 @@ function subNum(cid)
 function addNum(cid)
 {
     var c = $("#num_"+cid).val();
-    c=parseInt(c)+1;
+    if(c==null||c==""||c<=0){
+        c=1;
+    }else {
+        c = parseInt(c) + 1;
+    }
     $("#num_"+cid).val(c);
 
-    updateRow(cid,$("#num_"+cid).val());
+    updateRow(cid,c);
 }
 
 
 
 function updateRow(cid,bnum)
 {
+    if(bnum==null || bnum==""){
+        bnum=1;
+    }
+
     g_buy_car_item_req = 1;
+
 
     //卸载支付按钮事件
     $(".confirm_payment_btn").unbind();
@@ -814,7 +823,7 @@ function updateRow(cid,bnum)
         success: function (result) {
             if(result.code==1)
             {
-                $(this).val(bnum);
+                $("#num_"+cid).val(bnum);
                 $("#buyItemTotal_"+cid).html((parseFloat((new BigNumber(parseInt(bnum)).times(new BigNumber($("#productPrice_"+cid).val()))).toFixed(2))));
                 calculatePriceTotal();
                 if(g_cache_buy_items!=null&&g_cache_buy_items.length>0)
@@ -834,7 +843,7 @@ function updateRow(cid,bnum)
                 bindPaymentBtnEvent();
             }else{
                 $.message({
-                    message: "请稍后重试",
+                    message: result.msg,
                     type: 'error'
                 });
             }

@@ -225,6 +225,12 @@ function clearBuyCar()
 
 function updateRow(cid,bnum)
 {
+
+    if(bnum==null || bnum==""){
+        bnum=1;
+    }
+
+
     loading.showLoading({
         type:1,
         tip:"提交中..."
@@ -244,7 +250,7 @@ function updateRow(cid,bnum)
         success: function (result) {
             if(result.code==1)
             {
-                $(this).val(bnum);
+                $("#num_"+cid).val(bnum);
                 var productNumber = new BigNumber(bnum);
                 var productPrice = new BigNumber($("#productPrice_"+cid).val());
                 //数量*单价
@@ -289,13 +295,13 @@ function bindClearBuyCar()
 function subNum(cid)
 {
     var c = $("#num_"+cid).val();
-    if(c<=1){
+    if(c==null||c==""||c<=0){
         c=1;
     }else{
         c=parseInt(c)-1;
-        $("#num_"+cid).val(c);
     }
-    updateRow(cid,$("#num_"+cid).val());
+    $("#num_"+cid).val(c);
+    updateRow(cid,c);
 }
 
 
@@ -303,10 +309,13 @@ function subNum(cid)
 function addNum(cid)
 {
     var c = $("#num_"+cid).val();
-    c=parseInt(c)+1;
+    if(c==null||c==""||c<=0){
+        c=1;
+    }else {
+        c = parseInt(c) + 1;
+    }
     $("#num_"+cid).val(c);
-
-    updateRow(cid,$("#num_"+cid).val());
+    updateRow(cid,c);
 }
 
 function calculatePriceTotal()
