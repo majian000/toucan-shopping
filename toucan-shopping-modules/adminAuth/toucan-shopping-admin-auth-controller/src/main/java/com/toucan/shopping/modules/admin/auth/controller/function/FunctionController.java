@@ -651,6 +651,7 @@ public class FunctionController {
             }
 
             List<Function> chidlren = new ArrayList<Function>();
+            //查询当前节点下所有的子节点
             functionService.queryChildren(chidlren,entity);
 
             //把当前功能项添加进去,循环这个集合
@@ -665,7 +666,7 @@ public class FunctionController {
                     continue;
                 }
 
-                //删除功能项下所有关联
+                //删除角色功能项关联
                 RoleFunction queryRoleFunction = new RoleFunction();
                 queryRoleFunction.setFunctionId(f.getFunctionId());
 
