@@ -116,6 +116,8 @@ public class RoleFunctionController {
                 throw new IllegalArgumentException("functions为空");
             }
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
+
+            //查询要关联到的所有功能项
             roleFunctionService.queryReleaseFunctionList(entity,functionTreeVOS);
 
             //去重
