@@ -967,6 +967,8 @@ function initFreightTemplatePagination()
         tip:"查询中..."
     });
 
+    g_freightTemplate_query_obj.page=1;
+
     $.ajax({
         type: "POST",
         url: basePath+"/api/freightTemplate/list",
