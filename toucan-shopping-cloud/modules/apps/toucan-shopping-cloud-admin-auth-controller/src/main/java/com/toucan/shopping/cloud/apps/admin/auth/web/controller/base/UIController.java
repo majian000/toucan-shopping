@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class UIController extends BaseController {
@@ -103,5 +104,38 @@ public abstract class UIController extends BaseController {
         }
     }
 
+
+
+    /**
+     * 初始化更多按钮
+     * @param request
+     */
+    public void initRowMoreButtons(HttpServletRequest request,String moreButtonText)
+    {
+        try{
+            List<String> rowButtons = (List<String>)request.getAttribute("rowButtons");
+            //行按钮只保留3个
+            if(rowButtons!=null&&rowButtons.size()>3){
+                List<String> newRowButtons = new LinkedList<>();
+                List<String> moreRowButtons = new LinkedList<>();
+                for(int i=0;i<rowButtons.size();i++){
+                    if(i<3){
+                        if(i!=2){
+                            newRowButtons.add(rowButtons.get(i));
+                        }else { //最后一个按钮显示更多按钮
+                            newRowButtons.add(moreButtonText);
+                        }
+                    }
+                    moreRowButtons.add(rowButtons.get(i));
+                }
+                request.setAttribute("rowButtons",newRowButtons);
+                request.setAttribute("moreRowButtons",moreRowButtons);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            request.setAttribute("rowButtons",new ArrayList<String>());
+        }
+    }
 
 }

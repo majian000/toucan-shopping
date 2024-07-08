@@ -8,10 +8,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.9.13/src/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
 </head>
 <body>
 
@@ -75,27 +73,23 @@
 
         <script type="text/html" id="bannerTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+            <div class="moreRowButtons" style="display: none;">
+                <span th:each="btn : ${moreRowButtons}" th:utext="${btn}"></span>
+            </div>
         </script>
 
     </div>
 </div>
-<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree','laydate'], function () {
+    layui.use(['form', 'table','tree','laydate','dropdown'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
         var index;
-        var tree = layui.tree;
         var loadding;
-        var dtree = layui.dtree;
-        var roleTree;
-        var roleTreeDataArray = new Array();
+        var dropdown = layui.dropdown;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -160,11 +154,11 @@
                         templet: function (row) {
                             return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
                         }},
-                    {field: 'startShowDate',  title: '开始展示时间'},
-                    {field: 'endShowDate',  title: '结束展示时间'},
+                    {field: 'startShowDate',  width: 180, title: '开始展示时间'},
+                    {field: 'endShowDate',   width: 180,title: '结束展示时间'},
                     {field: 'imgPath',  title: '图片路径'},
-                    {field: 'clickPath',  title: '点击路径'},
-                    {field: 'showStatus', title: '显示状态',
+                    {field: 'clickPath',  width: 180, title: '点击路径'},
+                    {field: 'showStatus', width: 150, title: '显示状态',
                         templet: function (row) {
                             if(row.showStatus == "0"){
                                 return "隐藏"
@@ -174,18 +168,18 @@
                             }
                             return row.showStatus;
                         }},
-                    {field: 'position', title: '类型',
+                    {field: 'position', width: 150, title: '类型',
                         templet: function (row) {
                             if(row.position == "0"){
                                 return "首页顶部"
                             }
                             return row.position;
                         }},
-                    {field: 'bannerSort',  title: '排序'},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'bannerSort', width: 150, title: '排序'},
+                    {field: 'createAdminName',width: 150, title: '创建人'},
+                    {field: 'createDate',  width: 150,title: '创建时间'},
+                    {field: 'updateAdminName',width: 150,  title: '修改人'},
+                    {field: 'updateDate',width: 150,  title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#bannerTableBar', align: "center"}
                 ]
             ],
@@ -324,76 +318,6 @@
 
 
 
-        /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
-         */
-        function getCheckdNodeId(data,idArray)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                roleTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
-                {
-                    idArray.push(data[i].id);
-                }
-                if(data[i].children!=null&&data[i].children.length>0)
-                {
-                    getCheckdNodeId(data[i].children,idArray);
-                }
-            }
-        }
-
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-                if(roleTreeDataArray[i].id==nodeId)
-                {
-                    return roleTreeDataArray[i];
-                }
-            }
-            return null;
-        }
-
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(rolesArray,pid)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-
-                if(roleTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<rolesArray.length;j++)
-                    {
-                        if(rolesArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
-                    }
-                    if(roleTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
-                    }
-                }
-            }
-        }
-
-
         //监听表格复选框选择
         table.on('checkbox(bannerTableFilter)', function (obj) {
             console.log(obj)
@@ -402,45 +326,79 @@
         table.on('tool(bannerTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
-
-                var index = layer.open({
-                    title: '编辑轮播图',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]banner/editPage/'+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                editRow(data);
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该轮播图?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]banner/delete/"+data.id,
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        success:function(data){
-                            layer.msg(data.msg);
+                deleteRow(data);
+            }else if (obj.event == 'more') {
+                //读取更多按钮
+                var moreRowButtons = $(this).parent().parent().find(".moreRowButtons");
+                if(moreRowButtons!=null&&moreRowButtons.length>0){
+                    var spans = moreRowButtons.find("span");
+                    var menus = new Array();
+                    for(var i=0;i<spans.length;i++){
+                        var a=$(spans[i]).find("a");
+                        var title = $(a).html();
+                        var layEvent = $(a).attr("lay-event");
 
-                            //执行搜索重载
-                            table.reload('bannerTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
+                        menus.push({title:title,id:layEvent});
+                    }
+                    dropdown.render({
+                        elem: this //触发事件的 DOM 对象
+                        ,show: true //外部事件触发即显示
+                        ,data: menus
+                        ,click: function(menu){
+                            if(menu.id === 'delete'){
+                                deleteRow(data);
+                            } else if(menu.id === 'edit'){
+                                editRow(data);
+                            }
                         }
                     });
-                });
+                }
+
             }
         });
+
+        function deleteRow(data){
+            layer.confirm('确定删除该轮播图?', function (index) {
+                $.ajax({
+                    url:"[[@{/}]]banner/delete/"+data.id,
+                    contentType: "application/json; charset=utf-8",
+                    type:'DELETE',
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('bannerTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function editRow(data){
+            var index = layer.open({
+                title: '编辑轮播图',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                area: ['100%', '100%'],
+                content: '[[@{/}]]banner/editPage/'+data.id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
 
     });
 </script>

@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.layui.constant.TableButtons;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -67,6 +68,9 @@ public class UserController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/user/listPage",feignFunctionService);
+
+        this.initRowMoreButtons(request, TableButtons.TABLE_MORE_BUTTON);
+
         return "pages/user/db/list.html";
     }
 
