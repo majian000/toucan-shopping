@@ -8,7 +8,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.9.13/src/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
 </head>
 <body>
@@ -65,16 +65,21 @@
         <script type="text/html" id="userTableBar">
 
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+            <div class="moreRowButtons" style="display: none;">
+                <span th:each="btn : ${moreRowButtons}" th:utext="${btn}"></span>
+            </div>
         </script>
 
     </div>
 </div>
-<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table','dropdown'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+
+        var dropdown = layui.dropdown;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -205,7 +210,7 @@
                             return row.isVip;
                         }},
                     {field: 'createDate', width: 240, title: '注册时间'},
-                    {title: '操作', minWidth: 560, toolbar: '#userTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#userTableBar', align: "center"}
                 ]
             ],
             limits: [15,50,100,300],
@@ -246,7 +251,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/user/registPage}]]",
+                    content: "[[@{/user/registPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -294,141 +299,218 @@
         table.on('tool(userTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'mobilePhoneBtn') {
-
-                var index = layer.open({
-                    title: '手机号列表',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/mobilePhoneListPage/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                mobilePhoneBtnRow(data);
                 return false;
             }else if (obj.event === 'emailBtn') {
-
-                var index = layer.open({
-                    title: '邮箱列表',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/emailListPage/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                emailBtnRow(data);
                 return false;
             }else if (obj.event === 'usernameBtn') {
-
-                var index = layer.open({
-                    title: '用户名列表',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/userNameListPage/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                usernameBtnRow(data);
                 return false;
             } else if (obj.event === 'resetPwd') {
-
-                var index = layer.open({
-                    title: '重置密码',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/resetPasswordPage/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                resetPwdRow(data);
                 return false;
             } else if (obj.event === 'detailPage') {
-
-                var index = layer.open({
-                    title: '查看',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/detail/page/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                detailPageRow(data);
                 return false;
             }else if (obj.event === 'updateDetailPage') {
-
-                var index = layer.open({
-                    title: '修改资料',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/}]]user/update/detail/page/"+data.userMainIdString,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+                updateDetailPageRow(data);
                 return false;
             } else if (obj.event === 'flushCache') {
-                layer.confirm("确定刷新该用户?", function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]user/flush/cache/"+data.userMainIdString,
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        success:function(data){
-                            layer.msg(data.msg);
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
+                flushCacheRow(data);
             }else if (obj.event === 'disabledEnabledBtn') {
-                var optText = "启用";
-                if(data.enableStatus==1)
-                {
-                    optText="禁用";
-                }
-                layer.confirm("确定"+optText+"该用户?", function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]user/disabled/enabled/"+data.userMainIdString,
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        success:function(data){
-                            layer.msg(data.msg);
+                disabledEnabledBtn(data);
+            }else if (obj.event == 'more') {
+                //读取更多按钮
+                var moreRowButtons = $(this).parent().parent().find(".moreRowButtons");
+                if(moreRowButtons!=null&&moreRowButtons.length>0){
+                    var spans = moreRowButtons.find("span");
+                    var menus = new Array();
+                    for(var i=0;i<spans.length;i++){
+                        var a=$(spans[i]).find("a");
+                        var title = $(a).html();
+                        var layEvent = $(a).attr("lay-event");
 
-                            //执行搜索重载
-                            table.reload('userTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
+                        menus.push({title:title,id:layEvent});
+                    }
+                    dropdown.render({
+                        elem: this //触发事件的 DOM 对象
+                        ,show: true //外部事件触发即显示
+                        ,data: menus
+                        ,click: function(menu){
+                            //在这里需要把上面的时间再判断下
+                            if (menu.id === 'mobilePhoneBtn') {
+                                mobilePhoneBtnRow(data);
+                                return false;
+                            }else if (menu.id === 'emailBtn') {
+                                emailBtnRow(data);
+                                return false;
+                            }else if (menu.id === 'usernameBtn') {
+                                usernameBtnRow(data);
+                                return false;
+                            } else if (menu.id === 'resetPwd') {
+                                resetPwdRow(data);
+                                return false;
+                            } else if (menu.id === 'detailPage') {
+                                detailPageRow(data);
+                                return false;
+                            }else if (menu.id === 'updateDetailPage') {
+                                updateDetailPageRow(data);
+                                return false;
+                            } else if (menu.id === 'flushCache') {
+                                flushCacheRow(data);
+                            }else if (menu.id === 'disabledEnabledBtn') {
+                                disabledEnabledBtn(data);
+                            }
                         }
                     });
-                });
+                }
+
             }
         });
+
+        function mobilePhoneBtnRow(data){
+            var index = layer.open({
+                title: '手机号列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/mobilePhoneListPage/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+        function emailBtnRow(data){
+
+            var index = layer.open({
+                title: '邮箱列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/emailListPage/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+        function usernameBtnRow(data){
+
+            var index = layer.open({
+                title: '用户名列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/userNameListPage/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+        function resetPwdRow(data){
+
+            var index = layer.open({
+                title: '重置密码',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/resetPasswordPage/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+        function detailPageRow(data){
+
+            var index = layer.open({
+                title: '查看',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/detail/page/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+
+        function updateDetailPageRow(data){
+            var index = layer.open({
+                title: '修改资料',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/}]]user/update/detail/page/"+data.userMainIdString
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
+
+        function flushCacheRow(data){
+            layer.confirm("确定刷新该用户?", function (index) {
+                $.ajax({
+                    url:"[[@{/}]]user/flush/cache/"+data.userMainIdString,
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    success:function(data){
+                        layer.msg(data.msg);
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
+
+        function disabledEnabledBtn(data){
+            var optText = "启用";
+            if(data.enableStatus==1)
+            {
+                optText="禁用";
+            }
+            layer.confirm("确定"+optText+"该用户?", function (index) {
+                $.ajax({
+                    url:"[[@{/}]]user/disabled/enabled/"+data.userMainIdString,
+                    contentType: "application/json; charset=utf-8",
+                    type:'DELETE',
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('userTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
 
     });
 </script>

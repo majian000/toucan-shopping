@@ -125,8 +125,9 @@ public abstract class UIController extends BaseController {
                         }else { //最后一个按钮显示更多按钮
                             newRowButtons.add(moreButtonText);
                         }
+                    }else { //后面的按钮都放到更多下拉菜单里
+                        moreRowButtons.add(rowButtons.get(i));
                     }
-                    moreRowButtons.add(rowButtons.get(i));
                 }
                 request.setAttribute("rowButtons",newRowButtons);
                 request.setAttribute("moreRowButtons",moreRowButtons);
@@ -135,6 +136,7 @@ public abstract class UIController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             request.setAttribute("rowButtons",new ArrayList<String>());
+            request.setAttribute("moreRowButtons",new ArrayList<String>());
         }
     }
 
