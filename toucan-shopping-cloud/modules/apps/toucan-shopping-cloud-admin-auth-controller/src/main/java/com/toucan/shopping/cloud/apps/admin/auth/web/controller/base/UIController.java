@@ -124,6 +124,8 @@ public abstract class UIController extends BaseController {
                             newRowButtons.add(rowButtons.get(i));
                         }else { //最后一个按钮显示更多按钮
                             newRowButtons.add(moreButtonText);
+                            //最后一个按钮被放到更多下拉菜单里
+                            moreRowButtons.add(rowButtons.get(i));
                         }
                     }else { //后面的按钮都放到更多下拉菜单里
                         moreRowButtons.add(rowButtons.get(i));
