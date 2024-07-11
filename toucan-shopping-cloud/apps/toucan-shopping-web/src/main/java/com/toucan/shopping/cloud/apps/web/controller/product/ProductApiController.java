@@ -193,14 +193,22 @@ public class ProductApiController {
         Map<String, JSONArray> allAttributeMap = JSONObject.parseObject(productSkuVO.getProductAttributes(),Map.class);
         if(allAttributeMap.size()>0) {
             Object[] attributeKeys = allAttributeMap.keySet().toArray();
-            int elementSize = allAttributeMap.get(attributeKeys[0]).size();
-            String[][] attributeValueArray = new String[attributeKeys.length][elementSize];
+            int maxElementSize = 1;
+            for(int i=0;i<attributeKeys.length;i++){
+                int attrValueSize = allAttributeMap.get(attributeKeys[i]).size();
+                if(attrValueSize>maxElementSize){
+                    maxElementSize = attrValueSize;
+                }
+            }
+            String[][] attributeValueArray = new String[attributeKeys.length][maxElementSize];
             //填充属性二维数组
             for(int i=0;i<attributeKeys.length;i++)
             {
-                for(int j=0;j<elementSize;j++)
+                for(int j=0;j<maxElementSize;j++)
                 {
-                    attributeValueArray[i][j] = String.valueOf(allAttributeMap.get(attributeKeys[i]).get(j));
+                    if(j<allAttributeMap.get(attributeKeys[i]).size()) {
+                        attributeValueArray[i][j] = String.valueOf(allAttributeMap.get(attributeKeys[i]).get(j));
+                    }
                 }
             }
             List<AttributeValueStatusVO> attributeValueStatusVOS = new LinkedList<>();
@@ -302,17 +310,19 @@ public class ProductApiController {
         }
         for(int s=0;s<attributeValueArray[hier].length;s++)
         {
-            AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
-            attributeValueStatusVO.setStatus(1);
-            attributeValueStatusVO.setValue(attributeValueArray[hier][s]);
-            attributeValueStatusVO.setValuePath(parent.getValuePath()+"_"+attributeValueStatusVO.getValue());
-            if((hier+1)<attributeValueArray.length)
-            {
-                //填充这个属性值树结构
-                fillAttributeValueTree(attributeValueStatusVO,hier+1,attributeValueArray);
+            String value = attributeValueArray[hier][s];
+            if(StringUtils.isNotEmpty(value)) {
+                AttributeValueStatusVO attributeValueStatusVO = new AttributeValueStatusVO();
+                attributeValueStatusVO.setStatus(1);
+                attributeValueStatusVO.setValue(value);
+                attributeValueStatusVO.setValuePath(parent.getValuePath() + "_" + attributeValueStatusVO.getValue());
+                if ((hier + 1) < attributeValueArray.length) {
+                    //填充这个属性值树结构
+                    fillAttributeValueTree(attributeValueStatusVO, hier + 1, attributeValueArray);
+                }
+                attributeValueStatusVO.setParentValuePath(parent.getValuePath());
+                parent.getChildren().add(attributeValueStatusVO);
             }
-            attributeValueStatusVO.setParentValuePath(parent.getValuePath());
-            parent.getChildren().add(attributeValueStatusVO);
         }
     }
 
