@@ -20,3 +20,7 @@
 ### 商城后台管理界面
     toucan-shopping-admin-templates
     权限中台界面
+
+### 数据统计中心界面
+    toucan-shopping-data-analysis-center
+    统计中心界面

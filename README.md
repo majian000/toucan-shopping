@@ -8,7 +8,7 @@
     注:标准版的代码较旧,需要手动移植新版代码
     
 #### 微服务版
-    前端技术 jquery、jquery-layui
+    前端技术 jquery、jquery-layui、vue3
     
     后端技术
     spring cloud
