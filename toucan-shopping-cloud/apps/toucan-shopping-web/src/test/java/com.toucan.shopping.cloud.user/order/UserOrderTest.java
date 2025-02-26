@@ -25,6 +25,7 @@ import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
@@ -204,19 +205,22 @@ public class UserOrderTest {
         CreateOrderVO createOrderVO = JSONObject.parseObject(orderTemplate,CreateOrderVO.class);
 
         //查询所有收货地址
-        ConsigneeAddressVO consigneeAddressVO = new ConsigneeAddressVO();
-        consigneeAddressVO.setUserMainId(Long.parseLong("891099441195384848"));
-        consigneeAddressVO.setAppCode(toucan.getAppCode());
+        ConsigneeAddressPageInfo consigneeAddressPageInfo = new ConsigneeAddressPageInfo();
+        consigneeAddressPageInfo.setUserMainId(Long.parseLong("891099441195384848"));
+        consigneeAddressPageInfo.setAppCode(toucan.getAppCode());
+        consigneeAddressPageInfo.setPage(1);
+        consigneeAddressPageInfo.setLimit(100);
 
-        ResultObjectVO resultObjectVO = feignConsigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
-        List<ConsigneeAddressVO> consigneeAddressVOS =  resultObjectVO.formatDataList(ConsigneeAddressVO.class);
+        ResultObjectVO resultObjectVO = feignConsigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
+        List<ConsigneeAddress> consigneeAddressVOS =  consigneeAddressPageInfo.getList();
         int page=0;
         int spage=0;
         while(true) {
             ShopProductPageInfo shopPageInfo = new ShopProductPageInfo();
             shopPageInfo.setCategoryId(889589266080858188L);
-            shopPageInfo.setPage(spage++);
-            shopPageInfo.setLimit(500);
+            spage++;
+            shopPageInfo.setPage(spage);
+            shopPageInfo.setLimit(100);
             if(shopPageInfo.getCategoryId()!=null&&shopPageInfo.getCategoryId().longValue()!=-1) {
                 //查询分类以及子分类
                 CategoryVO categoryVO = new CategoryVO();
@@ -241,29 +245,36 @@ public class UserOrderTest {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopPageInfo);
             resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
-                List<ShopProductVO> shopProductVOS = resultObjectVO.formatDataList(ShopProductVO.class);
-                for (ShopProductVO shopProductVO : shopProductVOS) {
+                ShopProductPageInfo shopProductPageInfo = resultObjectVO.formatData(ShopProductPageInfo.class);
+                if (shopProductPageInfo == null || CollectionUtils.isEmpty(shopProductPageInfo.getList())) {
+                    break;
+                }
+                for (ShopProductVO shopProductVO : shopProductPageInfo.getList()) {
                     //查询店铺商品
                     ProductSkuPageInfo pageInfo = new ProductSkuPageInfo();
-                    pageInfo.setPage(page++);
+                    page++;
+                    pageInfo.setPage(page);
                     pageInfo.setShopProductId(shopProductVO.getId());
-                    pageInfo.setLimit(500);
-                    ResultObjectVO skuResult = feignProductSkuService.queryList(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
-                    List<ProductSkuVO> productSkuVOS = skuResult.formatDataList(ProductSkuVO.class);
-                    if (productSkuVOS == null || CollectionUtils.isEmpty(productSkuVOS)) {
+                    pageInfo.setLimit(10);
+                    ResultObjectVO skuResult = feignProductSkuService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
+                    pageInfo = skuResult.formatData(ProductSkuPageInfo.class);
+                    if (pageInfo == null || CollectionUtils.isEmpty(pageInfo.getList())) {
                         break;
                     }
-                    for (ProductSkuVO productSkuVO : productSkuVOS) {
+                    for (ProductSkuVO productSkuVO : pageInfo.getList()) {
                         UserBuyCarItemVO userBuyCarItemVO = createOrderVO.getBuyCarItems().get(0);
                         userBuyCarItemVO.setProductSkuName(productSkuVO.getName());
                         userBuyCarItemVO.setShopProductSkuId(productSkuVO.getId());
                         userBuyCarItemVO.setBuyCount(rand.nextInt(10));
                         userBuyCarItemVO.setRoughWeight(productSkuVO.getRoughWeight());
 
-                        ConsigneeAddressVO cav = consigneeAddressVOS.get(rand.nextInt(consigneeAddressVOS.size() - 1));
-                        createOrderVO.setConsigneeAddress(cav);
 
                         try {
+                            ConsigneeAddress ca = consigneeAddressVOS.get(rand.nextInt(consigneeAddressVOS.size() - 1));
+                            ConsigneeAddressVO cav = new ConsigneeAddressVO();
+                            BeanUtils.copyProperties(cav,ca);
+                            createOrderVO.setConsigneeAddress(cav);
+
                             insertOrder(createOrderVO);
                         } catch (Exception e) {
                             logger.error(e.getMessage(), e);
