@@ -213,7 +213,6 @@ public class UserOrderTest {
 
         ResultObjectVO resultObjectVO = feignConsigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
         List<ConsigneeAddress> consigneeAddressVOS =  resultObjectVO.formatData(ConsigneeAddressPageInfo.class).getList();
-        int page=0;
         int spage=0;
         while(true) {
             ShopProductPageInfo shopPageInfo = new ShopProductPageInfo();
@@ -252,8 +251,7 @@ public class UserOrderTest {
                 for (ShopProductVO shopProductVO : shopProductPageInfo.getList()) {
                     //查询店铺商品
                     ProductSkuPageInfo pageInfo = new ProductSkuPageInfo();
-                    page++;
-                    pageInfo.setPage(page);
+                    pageInfo.setPage(1);
                     pageInfo.setShopProductId(shopProductVO.getId());
                     pageInfo.setLimit(10);
                     ResultObjectVO skuResult = feignProductSkuService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
@@ -280,9 +278,9 @@ public class UserOrderTest {
                             /**
                              *
                              修改子订单表
-                             UPDATE t_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1 WHERE create_date>='2025-2-26 11:00:16'
+                             UPDATE t_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1 WHERE create_date>='2025-2-26 11:00:16' AND  trade_status=0
                              修改主订单表
-                             UPDATE t_main_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1,pay_type=1 WHERE create_date>='2025-2-26 11:00:16'
+                             UPDATE t_main_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1,pay_type=1 WHERE create_date>='2025-2-26 11:00:16' AND  trade_status=0
                              */
 
                         } catch (Exception e) {
