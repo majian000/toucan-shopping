@@ -57,15 +57,35 @@
     响应头
     Set-Cookie: uid=177898789778;lt=355edd51285d4188a42c70c108683b7e
 
-
-#### 首页静态化
+#### 访问
+    直接访问首页(不使用页面缓存)
+    http://localhost:8083/dynamic/index
     
-    1.生成预览版静态化
-    http://localhost:8083/api/html/index/generate/preview
-    
-    2.生成最终版静态化
-    http://localhost:8083/api/html/index/generate/release
+    需要启动以下服务:
+    base/toucan-shopping-cloud-config-server
+    base/toucan-shopping-gateway
+    apps/toucan-shopping-web
+    services/toucan-shopping-user
+    services/toucan-shopping-stock
+    services/toucan-shopping-seller
+    services/toucan-shopping-product
+    services/toucan-shopping-order
+    services/toucan-shopping-common-data
 
+#### 页面缓存
+    
+    
+    需要启动以下服务:
+    apps/toucan-shopping-admin
+    base/toucan-shopping-cloud-config-server
+    base/toucan-shopping-gateway
+    services/toucan-shopping-admin-auth
+    services/toucan-shopping-common-data
+    services/toucan-shopping-product
+    services/toucan-shopping-content
+    services/toucan-shopping-user
+    
+    然后进入首页管理》静态页面生成
 
 
 
