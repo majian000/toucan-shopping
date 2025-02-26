@@ -212,7 +212,7 @@ public class UserOrderTest {
         consigneeAddressPageInfo.setLimit(100);
 
         ResultObjectVO resultObjectVO = feignConsigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
-        List<ConsigneeAddress> consigneeAddressVOS =  consigneeAddressPageInfo.getList();
+        List<ConsigneeAddress> consigneeAddressVOS =  resultObjectVO.formatData(ConsigneeAddressPageInfo.class).getList();
         int page=0;
         int spage=0;
         while(true) {
@@ -276,6 +276,15 @@ public class UserOrderTest {
                             createOrderVO.setConsigneeAddress(cav);
 
                             insertOrder(createOrderVO);
+
+                            /**
+                             *
+                             修改子订单表
+                             UPDATE t_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1 WHERE create_date>='2025-2-26 11:00:16'
+                             修改主订单表
+                             UPDATE t_main_order_2025_2 SET pay_status=1 ,trade_status=3,pay_method=1,pay_type=1 WHERE create_date>='2025-2-26 11:00:16'
+                             */
+
                         } catch (Exception e) {
                             logger.error(e.getMessage(), e);
                         }
@@ -370,11 +379,11 @@ public class UserOrderTest {
 
             //===================================查询当前库中的所有购物车项
             resultObjectVO = this.queryBuyCarItems(createOrderVO,Long.parseLong(userId));
-            if(!resultObjectVO.isSuccess())
-            {
-                resultObjectVO.setMsg("购物车商品不存在");
-                return resultObjectVO;
-            }
+//            if(!resultObjectVO.isSuccess())
+//            {
+//                resultObjectVO.setMsg("购物车商品不存在");
+//                return resultObjectVO;
+//            }
 
             //商品库存锁定对象
             List<ProductSkuStockLockVO> productSkuStockLocks = new LinkedList<>();
