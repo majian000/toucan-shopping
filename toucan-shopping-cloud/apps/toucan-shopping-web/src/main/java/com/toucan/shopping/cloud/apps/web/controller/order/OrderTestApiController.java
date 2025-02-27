@@ -1,74 +1,81 @@
-package com.toucan.shopping.cloud.user.order;
+package com.toucan.shopping.cloud.apps.web.controller.order;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.apps.web.app.CloudWebApplication;
+import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
+import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
+import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.util.HttpParamUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
+import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
-import com.toucan.shopping.modules.order.vo.CreateOrderVO;
-import com.toucan.shopping.modules.order.vo.MainOrderVO;
-import com.toucan.shopping.modules.order.vo.OrderItemVO;
-import com.toucan.shopping.modules.order.vo.OrderVO;
+import com.toucan.shopping.modules.order.no.OrderNoService;
+import com.toucan.shopping.modules.order.page.OrderPageInfo;
+import com.toucan.shopping.modules.order.vo.*;
+import com.toucan.shopping.modules.pay.vo.PayCallbackVO;
+import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
-import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
-import com.toucan.shopping.modules.order.constant.OrderConstant;
-import com.toucan.shopping.modules.order.entity.MainOrder;
-import com.toucan.shopping.modules.order.vo.*;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
-import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.order.no.OrderNoService;
-import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
-import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
-import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
 
-
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = CloudWebApplication.class)
-public class UserOrderTest {
+/**
+ * 订单测试服务
+ * @author majian
+ * @date 2022-11-17 09:41:58
+ */
+@RestController
+@RequestMapping("/api/order/test")
+public class OrderTestApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -114,10 +121,11 @@ public class UserOrderTest {
     private FeignShopProductService feignShopProductService;
 
     /**
-     * 批量插入订单
+     * TODO:临时代码，果断时间删掉
      */
-//    @Test
-    public void batchInsertOrder() throws NoSuchAlgorithmException {
+    @RequestMapping(value = "/batchInsertOrder",method = RequestMethod.GET)
+    @ResponseBody
+    public void batchInsertOrder(String endDateStr) throws NoSuchAlgorithmException, ParseException {
         Random rand = new Random();
         String orderTemplate="{\n" +
                 "\t\"buyCarItems\": [{\n" +
@@ -213,6 +221,7 @@ public class UserOrderTest {
 
         ResultObjectVO resultObjectVO = feignConsigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
         List<ConsigneeAddress> consigneeAddressVOS =  resultObjectVO.formatData(ConsigneeAddressPageInfo.class).getList();
+        Date endDate = DateUtils.parse(endDateStr,DateUtils.FORMATTER_SS.get());
         int spage=0;
         while(true) {
             ShopProductPageInfo shopPageInfo = new ShopProductPageInfo();
@@ -257,6 +266,9 @@ public class UserOrderTest {
                     ResultObjectVO skuResult = feignProductSkuService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
                     pageInfo = skuResult.formatData(ProductSkuPageInfo.class);
                     if (pageInfo == null || CollectionUtils.isEmpty(pageInfo.getList())) {
+                        break;
+                    }
+                    if(new Date().getTime()>endDate.getTime()){
                         break;
                     }
                     for (ProductSkuVO productSkuVO : pageInfo.getList()) {
@@ -1101,6 +1113,5 @@ public class UserOrderTest {
         }
         return resultObjectVO;
     }
-
 
 }
