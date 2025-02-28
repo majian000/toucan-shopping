@@ -2,6 +2,14 @@
 
 server:
   port: ${toucan.port}
+  #最小空闲线程
+  min-spare-threads: 100
+  #最大线程数
+  max-threads: 500
+  #最大链接数
+  max-connections: 500
+  #最大等待队列长度
+  accept-count: 200
 spring:
   application:
     name: toucan-shopping-order #应用名称
