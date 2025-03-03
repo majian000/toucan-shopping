@@ -1,7 +1,13 @@
 
 
+
 <!--Begin 限时特卖 Begin-->
-<div class="i_t_c mar_10">
+<div
+        class="i_t_c mar_10"
+        <#if rootCategoryCount != 0>
+        style="margin-top:${rootCategoryCount*6}px"
+        </#if>
+>
     <span class="fl">限时特卖</span>
     <span class="i_mores fr"><a href="#">更多</a></span>
 </div>

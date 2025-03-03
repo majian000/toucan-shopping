@@ -44,6 +44,7 @@
 </div>
 <!--End Header End-->
 <!--Begin Menu Begin-->
+<#assign rootCategoryCount = 0>
 <div class="menu_bg">
     <div class="menu">
         <!--Begin 商品分类详情 Begin-->
@@ -54,6 +55,8 @@
                     <#if categorys??>
                         <#list categorys as category>
                             <#if category.showStatus?? && category.showStatus==1>
+
+                                <#assign rootCategoryCount = rootCategoryCount + 1>
                                  <li>
                                     <div class="fj">
                                         <span class="n_img"><span></span><img src="${category.icon!}" /></span>
