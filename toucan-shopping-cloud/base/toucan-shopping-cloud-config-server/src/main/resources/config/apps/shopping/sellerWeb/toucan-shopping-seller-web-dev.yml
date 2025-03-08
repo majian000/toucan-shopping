@@ -73,7 +73,7 @@ hystrix:
           thread:
             timeoutInMilliseconds: 20000 #请求时间超过20秒产生熔断
       circuitBreaker:
-        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+        requestVolumeThreshold: 8  #20秒内8个以上请求失败,产生熔断
 
 
 
