@@ -157,8 +157,6 @@ public class MainOrderServiceImpl implements MainOrderService {
     public int cancelMainOrderAndOrders(String orderNo,String userId,String appCode,String cancelRemark, Date mainOrderShardingDate) {
         int row = mainOrderMapper.cancelMainOrderAndSaveCancelRemark(orderNo,userId,cancelRemark);
         if(row>0){
-            //锁住这些记录
-            List<Order> orders = orderMapper.queryByMainOrderNoForUpdate(orderNo,appCode,mainOrderShardingDate);
             return orderMapper.cancelByMainOrderNo(orderNo,appCode,cancelRemark);
         }
         return row;
