@@ -119,7 +119,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         {
             for(OrderItemVO orderItemVO:orderVO.getOrderItems())
             {
-                orderItemVO.setShardingDate(orderItemVO.getCreateDate());
+                orderItemVO.setShardingDate(mainOrderVO.getShardingDate());
             }
             ret = orderItemMapper.insertByVoList(orderVO.getOrderItems());
             if(ret!=orderVO.getOrderItems().size())
