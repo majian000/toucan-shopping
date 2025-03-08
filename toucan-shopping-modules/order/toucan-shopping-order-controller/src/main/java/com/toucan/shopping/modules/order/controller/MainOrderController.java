@@ -259,10 +259,8 @@ public class MainOrderController {
                 String cancelRemark = "支付超时,自动取消订单";
                 if(!CollectionUtils.isEmpty(mainOrders)) {
                     for(MainOrderVO mainOrderVO:mainOrders) {
-                        //取消主订单
-                        mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),cancelRemark);
-                        //取消所有子订单
-                        orderService.cancelByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getAppCode(),cancelRemark);
+                        //取消订单和子订单
+                        mainOrderService.cancelMainOrderAndOrders(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),mainOrderVO.getAppCode(),cancelRemark,mainOrderVO.getShardingDate());
                     }
                 }
                 resultObjectVO.setData(pageResult);

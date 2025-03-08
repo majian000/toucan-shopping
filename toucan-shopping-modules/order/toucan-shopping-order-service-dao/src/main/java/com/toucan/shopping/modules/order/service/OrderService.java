@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public interface OrderService {
      * @param cancelRemark
      * @return
      */
-    int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
+    int cancelByMainOrderNo(String mainOrderNo, String appCode, String cancelRemark, Date shardingDate);
 
     /**
      * 根据订单编号取消订单

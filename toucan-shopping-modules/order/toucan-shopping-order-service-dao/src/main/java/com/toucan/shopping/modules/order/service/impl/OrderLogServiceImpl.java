@@ -82,7 +82,7 @@ public class OrderLogServiceImpl implements OrderLogService {
     }
 
     @Override
-    public int saves(String operateUserId,List<OrderVO> orderVOS,String appCode,String remark,Integer logType) {
+    public int saves(String operateUserId,List<OrderVO> orderVOS,String appCode,String remark,Integer logType,Date shardingDate) {
         List<OrderLog> orderLogs = new LinkedList<>();
         if(CollectionUtils.isNotEmpty(orderVOS)){
             String batchId = GlobalUUID.uuid();
@@ -95,7 +95,7 @@ public class OrderLogServiceImpl implements OrderLogService {
                 orderLog.setAppCode(appCode);
                 orderLog.setId(idGenerator.id());
                 orderLog.setCreateDate(createDate);
-                orderLog.setShardingDate(orderLog.getCreateDate());
+                orderLog.setShardingDate(shardingDate);
                 orderLog.setOrderNo(orderVO.getOrderNo());
                 orderLog.setRemark(remark);
                 orderLog.loadOldData(null).loadUpdateData(null).setDataBodyType(logType).loadDataBody();

@@ -271,8 +271,8 @@
         select t.* from t_order t where 1=1 and t.delete_status=0 and t.main_order_no = #{mainOrderNo}
     </select>
 
-    <select id="queryByMainOrderNo" resultMap="orderMap" >
-        select * from t_order where main_order_no=#{mainOrderNo} and app_code=#{appCode} for update
+    <select id="queryByMainOrderNoForUpdate" resultMap="orderMap" >
+        select * from t_order where main_order_no=#{mainOrderNo} and app_code=#{appCode} and sharding_date=#{shardingDate} for update
     </select>
 
     <update id="cancelByMainOrderNo">

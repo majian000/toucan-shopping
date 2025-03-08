@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,7 +52,7 @@ public interface OrderMapper {
 
     int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark);
 
-    List<Order> queryByMainOrderNo(String mainOrderNo,String appCode);
+    List<Order> queryByMainOrderNoForUpdate(String mainOrderNo, String appCode, Date shardingDate);
 
     List<Order> queryByOrderNo(String orderNo);
 

@@ -83,7 +83,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         if(!CollectionUtils.isEmpty(mainOrderVO.getOrders()))
         {
             for(OrderVO orderVO:mainOrderVO.getOrders()){
-                orderVO.setShardingDate(orderVO.getCreateDate());
+                orderVO.setShardingDate(mainOrderVO.getShardingDate());
             }
         }
         //保存子订单
@@ -92,7 +92,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         {
             throw new IllegalArgumentException("保存子订单失败");
         }
-        orderLogService.saves(mainOrderVO.getUserId(),mainOrderVO.getOrders(),mainOrderVO.getAppCode(),"创建订单", OrderConstant.ORDER_LOG_TYPE_CREATE_ORDER);
+        orderLogService.saves(mainOrderVO.getUserId(),mainOrderVO.getOrders(),mainOrderVO.getAppCode(),"创建订单", OrderConstant.ORDER_LOG_TYPE_CREATE_ORDER,mainOrderVO.getShardingDate());
 
         List<OrderConsigneeAddress> orderConsigneeAddresss = new LinkedList<>();
         for(OrderVO orderVO:mainOrderVO.getOrders())
@@ -106,7 +106,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             orderConsigneeAddress.setDeleteStatus((short)0);
             orderConsigneeAddress.setCreateDate(orderVO.getCreateDate());
             orderConsigneeAddress.setAppCode(orderVO.getAppCode());
-            orderConsigneeAddress.setShardingDate(orderConsigneeAddress.getCreateDate());
+            orderConsigneeAddress.setShardingDate(mainOrderVO.getShardingDate());
             orderConsigneeAddresss.add(orderConsigneeAddress);
         }
         ret = orderConsigneeAddressMapper.inserts(orderConsigneeAddresss);
@@ -148,6 +148,20 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public int cancelMainOrder(String orderNo,String userId,String cancelRemark) {
         return mainOrderMapper.cancelMainOrderAndSaveCancelRemark(orderNo,userId,cancelRemark);
+    }
+
+
+
+    @Transactional
+    @Override
+    public int cancelMainOrderAndOrders(String orderNo,String userId,String appCode,String cancelRemark, Date mainOrderShardingDate) {
+        int row = mainOrderMapper.cancelMainOrderAndSaveCancelRemark(orderNo,userId,cancelRemark);
+        if(row>0){
+            //锁住这些记录
+            List<Order> orders = orderMapper.queryByMainOrderNoForUpdate(orderNo,appCode,mainOrderShardingDate);
+            return orderMapper.cancelByMainOrderNo(orderNo,appCode,cancelRemark);
+        }
+        return row;
     }
 
     @Override

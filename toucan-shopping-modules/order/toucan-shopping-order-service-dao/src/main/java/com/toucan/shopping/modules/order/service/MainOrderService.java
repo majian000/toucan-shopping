@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public interface MainOrderService {
     int cancelMainOrder(String orderNo,String userId);
 
     int cancelMainOrder(String orderNo,String userId,String cancelRemark);
+
+    int cancelMainOrderAndOrders(String orderNo, String userId, String appCode, String cancelRemark, Date mainOrderShardingDate);
 
     /**
      * 查询支付超时列表

@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderLogVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderLogService {
@@ -18,7 +19,7 @@ public interface OrderLogService {
 
     int save(String operateUserId,String appCode,String orderNo,String remark,Object oldObj,Object updateObj,Integer logType);
 
-    int saves(String operateUserId,List<OrderVO> orderVOS,String appCode,String remark,Integer logType);
+    int saves(String operateUserId, List<OrderVO> orderVOS, String appCode, String remark, Integer logType, Date shardingDate);
 
 
     /**

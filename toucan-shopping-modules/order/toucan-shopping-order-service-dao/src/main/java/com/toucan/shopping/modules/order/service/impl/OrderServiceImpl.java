@@ -130,9 +130,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark) {
+    public int cancelByMainOrderNo(String mainOrderNo,String appCode,String cancelRemark,Date shardingDate) {
         //锁住这些记录
-        List<Order> orders = orderMapper.queryByMainOrderNo(mainOrderNo,appCode);
+        List<Order> orders = orderMapper.queryByMainOrderNoForUpdate(mainOrderNo,appCode,shardingDate);
         return orderMapper.cancelByMainOrderNo(mainOrderNo,appCode,cancelRemark);
     }
 
