@@ -6,4 +6,5 @@ public class ResultVO {
     public static Integer HTTPCODE_302=302;
     public static Integer HTTPCODE_401=401;
     public static Integer HTTPCODE_403=403;
+    public static Integer HTTPCODE_404=404;
 }
