@@ -196,8 +196,9 @@
     http://localhost:8083/ 商城端(静态首页(需要在管理端生成页面缓存))
     http://localhost:8101/ 卖家管理后台
     http://localhost:8098/ 权限管理中心
-    http://localhost:8088/ 商城管理后台 
-    
+    http://localhost:8088/ 商城管理后台
+     
+    参考resources/页面缓存/README.MD
 
 #### 应用编码
     注意:建议应用编码由字母、数字、下划线组成
