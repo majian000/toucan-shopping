@@ -19,8 +19,7 @@
       <el-container class="ng-main-container">
         <el-aside width="260px" class="item-panel">
           <slot name="drag"></slot>
-          <DragPanel :basic-item="basicItem" :decorate-item="decorateItem" :layout-item="layoutItem"
-            :application-item="applicationItem" />
+          <DragPanel  />
         </el-aside>
         <el-main class="center-panel form-main">
           <ContainerPanel :formTemplate="formTemplate" @handleSelectItem="handleSelectItem" :selectItem="selectItem"
@@ -209,26 +208,6 @@ export default {
     config: {
       type: Object
     },
-    //基础组件是否要展示或待选组件列表集合
-    basicItem: {
-      type: [Array, Boolean],
-      default: true
-    },
-    //装饰组件是否要展示或待选组件列表集合
-    decorateItem: {
-      type: [Array, Boolean],
-      default: true
-    },
-    //布局组件是否要展示或待选组件列表集合
-    layoutItem: {
-      type: [Array, Boolean],
-      default: true
-    },
-    //应用组件是否要展示或待选组件列表集合
-    applicationItem: {
-      type: [Array, Boolean],
-      default: true
-    }
   },
   computed: {
 

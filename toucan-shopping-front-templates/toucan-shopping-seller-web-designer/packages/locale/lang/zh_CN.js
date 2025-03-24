@@ -1,13 +1,9 @@
 export default {
   ngform: {
     header: {
-      imp: "导入",
-      exp: "导出",
       clear: "清空",
       preview: "预览",
-      export_code: "导出代码",
       template_data: "模板数据",
-      get_data: "获取数据",
       write_mode: "填写模式",
       read_mode: "查看模式",
       prompt: "提示",
