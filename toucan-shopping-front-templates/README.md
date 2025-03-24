@@ -10,6 +10,10 @@
     toucan-shopping-seller-web-templates
     卖家中心等各种前端模板
     
+### 卖家中心页面设计器
+    toucan-shopping-seller-web-designer
+    页面设计器前端模板
+    
 ## 后台管理端
 
 
@@ -24,3 +28,4 @@
 ### 数据统计中心界面
     toucan-shopping-data-analysis-center
     统计中心界面
+    
