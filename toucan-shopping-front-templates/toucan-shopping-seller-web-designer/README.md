@@ -10,7 +10,7 @@
     npm run build
     
     编译后的文件复制到
-    toucan-shopping\toucan-shopping-front-templates\toucan-shopping-seller-web-templates\src\main\resources\static\lib\pcDesigner
+    toucan-shopping\toucan-shopping-front-templates\toucan-shopping-seller-web-templates\src\main\resources\static\lib\designer\vue\pc\index
 
 # 特别感谢
     本项目的脚手架选自 ng-form-element
