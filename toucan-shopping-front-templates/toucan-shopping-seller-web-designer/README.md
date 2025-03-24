@@ -6,6 +6,8 @@
 # 启动命令
     npm run dev
 
+# 编译命令
+    npm run build
 
 # 特别感谢
     本项目的脚手架选自 ng-form-element
