@@ -5,7 +5,7 @@ export default {
   	ngImage: {
   		name: 'ngImage',
   		style: 'style' ,
-      no_data: 'no config image',
+      	no_data: 'no config image',
   		img_path: 'Image Path'
   	}
   }

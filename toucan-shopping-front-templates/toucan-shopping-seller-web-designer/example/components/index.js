@@ -1,4 +1,5 @@
 import NgImage from './ng-image/index.js'
+import Banner from './banner/index.js'
 import city from './city/index.js'
 
 import { utils , addCustomConfig } from '../../packages/index.js'
@@ -9,4 +10,5 @@ const transCity = utils.translateConfig(city)
 // 将此组件追加到依赖ng-form还原配置中
 addCustomConfig(city.type , city)
 
-export default [ NgImage]
+//引入自定义组件
+export default [ NgImage,Banner]

@@ -38,6 +38,7 @@ export default {
       top: "顶部对齐",
       label_width: "标签宽度",
       label_suffix: "标签后缀",
+      page_title: "页面标题",
       validate_prompt: "效验提示",
       validate_prompt_tip: "是否打开element-ui中hide-required-asterisk开关，即 是否隐藏必填字段的标签旁边的红色星号",
       open: "打开",

@@ -7,6 +7,12 @@ export default {
   		style: '样式' ,
       no_data: '暂无配置图片',
   		img_path: '图片地址'
-  	}
+  	},
+  	banner: {
+		  name: '轮播图',
+		  style: '样式' ,
+		  no_data: '暂无配置图片',
+		  img_path: '图片地址'
+	  }
   }
 }

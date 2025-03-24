@@ -173,6 +173,7 @@ export default {
             hideRequiredMark: false,
             syncLabelRequired: false,
             labelSuffix: '', // 标签后缀
+            pageTitle: '', // 页面标题
             customStyle: ''
           }
         }

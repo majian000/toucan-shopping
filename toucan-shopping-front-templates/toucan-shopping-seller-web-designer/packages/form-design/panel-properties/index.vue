@@ -1,11 +1,11 @@
 <template>
 	<el-tabs type="card" v-model="active" class="design-properties" >
 	    <el-tab-pane :label="t('ngform.properties.page_property')" name="page" class="tab-pane">
-	    	<FormProperties :config="config"  >
+	    	<PageProperties :config="config"  >
 	    	 	<template slot="form-extend-properties"  >
                     <slot name="form-extend-properties"  ></slot>
                 </template> 
-	    	</FormProperties>
+	    	</PageProperties>
 	    </el-tab-pane>
 		<el-tab-pane :label="t('ngform.properties.form_property')" name="item" class="tab-pane" >
 			<ItemProperties :selectItem="selectItem" >
@@ -21,14 +21,14 @@
 	</el-tabs> 
 </template>
 <script>
-import FormProperties from './form-properties.vue'
+import PageProperties from './page-properties.vue'
 import ItemProperties from './item-properties.vue'
 import LocalMixin from '../../locale/mixin.js'
 
 export default {
 	mixins: [LocalMixin],
 	components: {
-		FormProperties , ItemProperties
+		PageProperties , ItemProperties
 	},
 	props: { 
 		selectItem: { 
