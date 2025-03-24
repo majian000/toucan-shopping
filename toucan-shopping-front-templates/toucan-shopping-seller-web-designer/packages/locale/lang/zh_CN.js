@@ -26,8 +26,8 @@ export default {
     select_item: "从左侧选择组件拖入",
 
     properties: {
-      feature_property: "要素属性",
-      form_property: "表单属性",
+      page_property: "页面设置",
+      form_property: "组件属性",
 
       select: "请选择",
 

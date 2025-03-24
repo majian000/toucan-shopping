@@ -1,21 +1,21 @@
 <template>
 	<el-tabs type="card" v-model="active" class="design-properties" >
-	    <el-tab-pane :label="t('ngform.properties.feature_property')" name="item" class="tab-pane" >
-	    	<ItemProperties :selectItem="selectItem" >
-	    	 	<template slot="custom-properties"  >
-                    <slot name="custom-properties" :selectItem="selectItem"></slot>
-          </template>
-	    	</ItemProperties>
-	    </el-tab-pane> 
-	    <el-tab-pane :label="t('ngform.properties.form_property')" name="form" class="tab-pane"> 
+	    <el-tab-pane :label="t('ngform.properties.page_property')" name="page" class="tab-pane">
 	    	<FormProperties :config="config"  >
 	    	 	<template slot="form-extend-properties"  >
                     <slot name="form-extend-properties"  ></slot>
                 </template> 
 	    	</FormProperties>
-	    </el-tab-pane> 
+	    </el-tab-pane>
+		<el-tab-pane :label="t('ngform.properties.form_property')" name="item" class="tab-pane" >
+			<ItemProperties :selectItem="selectItem" >
+				<template slot="custom-properties"  >
+					<slot name="custom-properties" :selectItem="selectItem"></slot>
+				</template>
+			</ItemProperties>
+		</el-tab-pane>
 
-	    <slot name="extend-tab" class="tab-pane">
+		<slot name="extend-tab" class="tab-pane">
 	     	<!-- 扩展插槽,扩展对应要素属性 -->
 	    </slot> 
 	</el-tabs> 
@@ -36,7 +36,7 @@ export default {
 	},
 	data() {
 		return {
-			active: 'item'
+			active: 'page'
 		}
 	},
 	inject: ['configC'],
