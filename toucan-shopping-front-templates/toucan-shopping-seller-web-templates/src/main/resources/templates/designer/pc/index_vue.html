@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "pageDesigner">
+<#assign menuType = "shopSetting">
+
+
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/designer/index">页面装修</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">PC首页装修</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <input type="hidden" id="position" value="1" />
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="right_panel">
+                    <iframe src="${basePath}/static/lib/designer/pc/index/vue/index.html"  style="width:100%" />
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<#include "/footer.html"/>
+
+
+</body>
+
+</html>

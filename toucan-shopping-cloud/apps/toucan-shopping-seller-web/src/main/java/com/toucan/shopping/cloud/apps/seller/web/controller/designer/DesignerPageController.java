@@ -32,4 +32,9 @@ public class DesignerPageController extends BaseController {
         return "designer/pc/index";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)
+    @RequestMapping("/pc/index/vue")
+    public String pcVueIndex(HttpServletRequest request){
+        return "designer/pc/index_vue";
+    }
 }
