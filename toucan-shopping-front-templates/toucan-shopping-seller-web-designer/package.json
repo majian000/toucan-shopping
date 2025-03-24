@@ -1,12 +1,12 @@
 {
-  "name": "ng-form-element",
+  "name": "toucan-shopping-designer",
   "version": "2.4.6",
   "scripts": {
     "dev": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name ng-form-element --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name toucan-shopping-designer --dest lib packages/index.js"
   },
   "dependencies": {
     "axios": "0.21.2",
@@ -62,25 +62,17 @@
     "not ie <= 8"
   ],
   "private": false,
-  "description": "ng-form-element",
-  "main": "lib/ng-form-element.umd.min.js",
+  "description": "toucan-shopping-designer",
+  "main": "lib/toucan-shopping-designer.umd.min.js",
   "directories": {
     "example": "example",
     "lib": "lib"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitee.com/jjxliu306/ng-form-element.git"
-  },
   "author": "liuyufeng",
   "license": "MIT",
-  "bugs": {
-    "url": "https://gitee.com/jjxliu306/ng-form-element/issues"
-  },
-  "homepage": "https://gitee.com/jjxliu306/ng-form-element#readme",
+  "homepage": "",
   "keywords": [
     "ng-form",
-    "ng-form-element",
     "vue-form-design",
     "form-build-element",
     "formdesign",
