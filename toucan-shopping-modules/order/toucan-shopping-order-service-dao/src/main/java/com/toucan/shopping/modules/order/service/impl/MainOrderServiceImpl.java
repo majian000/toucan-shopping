@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.order.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.entity.Order;
@@ -157,7 +158,17 @@ public class MainOrderServiceImpl implements MainOrderService {
     public int cancelMainOrderAndOrders(String orderNo,String userId,String appCode,String cancelRemark, Date mainOrderShardingDate) {
         int row = mainOrderMapper.cancelMainOrderAndSaveCancelRemark(orderNo,userId,cancelRemark);
         if(row>0){
-            return orderMapper.cancelByMainOrderNo(orderNo,appCode,cancelRemark);
+            List<Order> orderList = orderMapper.findListByMainOrderNo(orderNo);
+            row = orderMapper.cancelByMainOrderNo(orderNo,appCode,cancelRemark);
+            if(row>0){
+                if(!CollectionUtils.isEmpty(orderList)) {
+                    String logBatchId = GlobalUUID.uuid();
+                    for(Order order:orderList) {
+                        orderLogService.save(logBatchId, userId, appCode, order.getOrderNo(),
+                                "自动取消订单", null,null, OrderConstant.ORDER_LOG_TYPE_AUTO_CANCEL_ORDER);
+                    }
+                }
+            }
         }
         return row;
     }

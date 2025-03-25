@@ -32,6 +32,8 @@ public class OrderConstant {
     public static final int ORDER_LOG_TYPE_EXPRESS_DELIVERY=4; //修改订单快递信息
     public static final int ORDER_LOG_TYPE_UPDATE_ORDER_TRADE_STATUS=5; //修改订单交易状态
     public static final int ORDER_LOG_TYPE_DELETE_EXPRESS_DELIVERY=6; //删除订单快递信息
+    public static final int ORDER_LOG_TYPE_CANCEL_ORDER=7; //手动取消订单
+    public static final int ORDER_LOG_TYPE_AUTO_CANCEL_ORDER=8; //自动取消订单
 
 
 }

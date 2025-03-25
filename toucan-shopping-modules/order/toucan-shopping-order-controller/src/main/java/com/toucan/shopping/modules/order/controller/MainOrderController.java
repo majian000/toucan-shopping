@@ -5,15 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.service.MainOrderService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
+import com.toucan.shopping.modules.order.service.OrderLogService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
@@ -55,6 +58,9 @@ public class MainOrderController {
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private OrderLogService orderLogService;
 
     /**
      * 测试分片
@@ -175,7 +181,19 @@ public class MainOrderController {
                     return resultObjectVO;
                 }
 
+
+                List<Order> orderList = orderService.findListByMainOrderNo(mainOrderVO.getOrderNo());
+
+                if(!CollectionUtils.isEmpty(orderList)) {
+                    String logBatchId = GlobalUUID.uuid();
+                    for(Order order:orderList) {
+                        orderLogService.save(logBatchId, mainOrderVO.getUserId(), requestJsonVO.getAppCode(), order.getOrderNo(),
+                                "手动取消订单", null,null, OrderConstant.ORDER_LOG_TYPE_CANCEL_ORDER);
+                    }
+                }
+
                 orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
+
 
             }catch(Exception e)
             {

@@ -126,6 +126,9 @@ public class OrderController {
 
                 orderService.cancelOrderByOrderNo(orderVO.getOrderNo(),orderVO.getCancelRemark());
 
+                String logBatchId = GlobalUUID.uuid();
+                orderLogService.save(logBatchId, orderVO.getUserId(), requestJsonVO.getAppCode(), orderVO.getOrderNo(),
+                            "手动取消订单", null,null, OrderConstant.ORDER_LOG_TYPE_CANCEL_ORDER);
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
