@@ -27,10 +27,10 @@ module.exports = {
    lintOnSave: false,
   /* 开启vue运行时模板编译功能！！ */
   runtimeCompiler: true,
-  // 修改 src 目录 为 examples 目录
+  // 修改 src 目录 为 srcs 目录
   pages: {
     index: {
-      entry: 'example/main.js',
+      entry: 'src/main.js',
       template: 'public/index.html',
       filename: 'index.html',
       chunks: ['chunk-vendors', 'chunk-common', 'index'],
@@ -90,7 +90,7 @@ module.exports = {
       .rule('js')
       .include
         .add('/packages')
-        .add('/example')
+        .add('/src')
         .end()
 
       .use('babel')

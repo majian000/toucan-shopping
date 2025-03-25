@@ -3,30 +3,7 @@
   <ng-form-design ref="formDesign"  :config="formConfig">
      
     <template slot="controlButton" >
-     <el-popover
-        placement="bottom-start"
-        :title="t('ngform.example')"
-        width="240"
-        trigger="hover" >
-        <div>
-          <el-row :gutter="20">
-            <el-col :span="11" v-for="item in  examples" :key="item.name" class="example-col">
-              <span class="example-span" @click="initDemo(item)">{{item.name}}</span>
-            </el-col>
 
-          </el-row>
-
-        </div> 
-         <el-button style="margin: 0px 10px;" icon="el-icon-document" slot="reference" type="text" size="medium" >{{t('ngform.example')}}</el-button>
-      </el-popover>
-      <el-select v-model="i18n" style="width: 100px;" placeholder="语言" size="mini">
-        <el-option
-          v-for="item in i18nList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
     </template>
     
 

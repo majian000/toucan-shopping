@@ -27,7 +27,7 @@
         </Item>
       </div>
       <template v-if="isDrag">
-        <div class="key-box" v-text="record.model"/>
+        <div class="key-box" v-show="false" v-text="record.model"/>
         <div class="node-control">
           <div
               class="copy pointer"
