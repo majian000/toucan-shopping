@@ -20,6 +20,15 @@ public interface FeignFunctionService {
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 添加功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
+    ResultObjectVO saves(@RequestBody RequestJsonVO requestVo);
+
     /**
      * 编辑
      * @param signHeader

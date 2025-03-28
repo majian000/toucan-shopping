@@ -240,7 +240,20 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'batchAdd') {  // 监听添加操作
+                var index = layer.open({
+                    title: '批量添加功能',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/function/batchAddPage}]]"
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }else if (obj.event === 'delete') {  // 监听删除操作
                 var data = treetableHandler.checkStatus();
                 console.log(data);
                 if(data==null||data.length<=0)

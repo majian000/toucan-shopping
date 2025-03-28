@@ -98,7 +98,7 @@ public class FunctionController {
             try {
                 FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
                 if(functionCacheService!=null) {
-                    //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+                    //同步es缓存,在这里要求缓存和数据库是一致的
                     FunctionCacheVO functionCacheVO = new FunctionCacheVO();
                     BeanUtils.copyProperties(functionCacheVO, entity);
                     functionCacheService.save(functionCacheVO);
@@ -119,6 +119,69 @@ public class FunctionController {
     }
 
 
+
+    /**
+     * 添加功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO saves(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("添加失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<Function> entitys = requestVo.formatEntityList(Function.class);
+
+            for(Function entity:entitys) {
+                if (StringUtils.isEmpty(entity.getName())) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("添加失败,请输入功能项名称");
+                    return resultObjectVO;
+                }
+
+
+                entity.setFunctionId(GlobalUUID.uuid());
+                entity.setCreateDate(new Date());
+                entity.setDeleteStatus((short) 0);
+                int row = functionService.save(entity);
+                if (row < 1) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("添加失败,请重试!");
+                    return resultObjectVO;
+                }
+
+                resultObjectVO.setData(entity);
+
+                try {
+                    FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                    if (functionCacheService != null) {
+                        //同步es缓存,在这里要求缓存和数据库是一致的
+                        FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                        BeanUtils.copyProperties(functionCacheVO, entity);
+                        functionCacheService.save(functionCacheVO);
+                    }
+                } catch (Exception e) {
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
+                    resultObjectVO.setMsg("更新缓存出现异常");
+                    logger.warn(e.getMessage(), e);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("添加失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

@@ -100,6 +100,16 @@ public class FunctionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/batchAddPage",method = RequestMethod.GET)
+    public String batchAddPage(HttpServletRequest request)
+    {
+        super.initSelectApp(request,toucan,feignAppService);
+
+
+        return "pages/function/batchAdd.html";
+    }
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -206,6 +216,37 @@ public class FunctionController extends UIController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 批量保存
+     * @param entitys
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/saves",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO saves(HttpServletRequest request, @RequestBody List<Function> entitys)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(entitys)){
+                resultObjectVO.setMsg("功能项列表不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            for(Function function:entitys){
+                function.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entitys);
+            resultObjectVO = feignFunctionService.saves(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
     /**

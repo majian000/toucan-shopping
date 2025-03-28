@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>权限管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        /* 横向滚动容器 */
+        .scroll-wrapper {
+            overflow-x: auto;
+            min-width: 800px; /* 触发滚动的最小宽度 */
+            min-height:500px;
+            margin: 15px 0;
+            border: 1px solid #eee;
+        }
+
+        /* 固定操作列 */
+        .layui-table td:last-child,
+        .layui-table th:last-child {
+            position: sticky;
+            right: 0;
+            background: #fff;
+            z-index: 2;
+            box-shadow: -2px 0 5px rgba(0,0,0,.1);
+        }
+
+        /* 输入框样式 */
+        .layui-table input,
+        .layui-table select {
+            border: none !important;
+            background: transparent !important;
+        }
+        .layui-table input:focus,
+        .layui-table select:focus {
+            background: #fff !important;
+            box-shadow: 0 0 5px #1E9FFF;
+        }
+        .required-star {
+            color: red;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">上级功能</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="pid" id="pid">
+            <input type="hidden" name="appCode" id="appCode">
+            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <!-- 滚动容器 -->
+        <div class="scroll-wrapper">
+            <table class="layui-table" lay-size="sm">
+                <!-- 工具条 -->
+                <thead>
+                <tr>
+                    <th colspan="10">
+                        <div class="layui-table-tool">
+                            <div class="layui-table-tool-temp">
+                                <button class="layui-btn layui-btn-sm" id="addRow">
+                                    <i class="layui-icon">&#xe654;</i> 添加行
+                                </button>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th width="150">功能名称<span class="required-star">*</span></th>
+                    <th width="150">功能链接</th>
+                    <th width="150">权限标识<span class="required-star">*</span></th>
+                    <th width="100">功能类型<span class="required-star">*</span></th>
+                    <th width="200">功能内容</th>
+                    <th width="100">图标</th>
+                    <th width="100">排序</th>
+                    <th width="80">状态<span class="required-star">*</span></th>
+                    <th width="200">备注信息</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody id="functionDataBody">
+                <!-- 初始行 -->
+                <tr>
+                    <td><input type="text" maxlength="100" placeholder="请输入功能名称"  class="layui-input name"></td>
+                    <td><input type="text" maxlength="500" placeholder="请输入功能链接" class="layui-input url"></td>
+                    <td><input type="text" maxlength="255" placeholder="请输入功能权限标识" class="layui-input permission"></td>
+                    <td>
+                        <select class="layui-select type">
+                            <option value="0">目录</option>
+                            <option value="1">菜单</option>
+                            <option value="2">操作按钮</option>
+                            <option value="3">工具条按钮</option>
+                            <option value="4">API</option>
+                            <option value="5">页面控件</option>
+                        </select>
+                    </td>
+                    <td> <textarea  class="layui-textarea functionText"  placeholder="请输入功能内容"></textarea></td>
+                    <td><input type="text" maxlength="60"  class="layui-input icon" placeholder="请输入功能图标"  ></td>
+                    <td><input type="number" maxlength="60"  class="layui-input functionSort" placeholder="请输入排序"  ></td>
+                    <td>
+                        <select class="layui-select enableStatus">
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </td>
+                    <td> <textarea  class="layui-textarea remark" maxlength="255" placeholder="请输入备注信息"></textarea></td>
+                    <td>
+                        <button class="layui-btn layui-btn-danger layui-btn-xs deleteRow">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','layer','tree','jquery'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            var data = [];
+            var isValid = true;
+
+            var pid=$("#pid").val();
+            var appCode=$("#appCode").val();
+            var selectPid=$("#selectPid").val();
+
+            $('#functionDataBody tr').each(function(){
+                var $row = $(this);
+                var rowData = {
+                    name: $row.find('.name').val().trim(),
+                    url: $row.find('.url').val().trim(),
+                    permission: $row.find('.permission').val().trim(),
+                    type: $row.find('.type').val(),
+                    functionText: $row.find('.functionText').val().trim(),
+                    icon: $row.find('.icon').val().trim(),
+                    functionSort: $row.find('.functionSort').val().trim(),
+                    enableStatus: $row.find('.enableStatus').val(),
+                    remark: $row.find('.remark').val().trim(),
+                    pid:pid,
+                    appCode:appCode,
+                    selectPid:selectPid
+                };
+
+                // 清除旧错误样式
+                $row.find('input, select').removeClass('layui-input-danger');
+
+                if(!rowData.name){
+                    $row.find('.name').addClass('layui-input-danger');
+                    isValid = false;
+                }
+
+                if(!rowData.permission){
+                    $row.find('.permission').addClass('layui-input-danger');
+                    isValid = false;
+                }
+
+                if(!rowData.functionSort || isNaN(rowData.functionSort) || rowData.functionSort < 0){
+                    $row.find('.functionSort').addClass('layui-input-danger');
+                    isValid = false;
+                }
+                if(!rowData.address){
+                    $row.find('.address').addClass('layui-input-danger');
+                    isValid = false;
+                }
+
+                data.push(rowData);
+            });
+
+            if(!isValid){
+                layer.msg('请检查红色标记的必填项');
+                return;
+            }
+
+
+            $.ajax({
+                url:"[[@{/function/saves}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
+
+
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]function/query/app/function/tree",
+                autoParam:["id", "pid", "name","appCode","isAppNode"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -2
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: functionTreeClick
+            }
+        };
+
+
+        function filter(treeId, parentNode, data) {
+            var dataArray = data.data;
+            if(dataArray!=null&&dataArray.length>0)
+            {
+                for(var i=0;i<dataArray.length;i++)
+                {
+                    dataArray[i].url=null;
+                }
+            }
+            return dataArray;
+        }
+        function functionTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+
+            $("#selectPid").val(treeNode.name);
+            if(treeNode.isAppNode)
+            {
+                $("#pid").val("-1");
+            }else {
+                $("#pid").val(treeNode.id);
+            }
+            $("#appCode").val(treeNode.appCode);
+            layer.close(index);
+        }
+
+
+
+        $("#selectPid").click(function(){
+            index = layer.open({
+                title: '选择上级功能',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<ul id=\"appFunctionTree\" style='height:90%' class=\"ztree\"></ul>",
+                success:function(layero){
+                    loadding = layer.load();
+
+                    $.ajax({
+                        url:"[[@{/}]]function/query/app/function/tree",
+                        type:"POST",
+                        dataType: "json",
+                        success: function(data){
+                            var zTreeObj = $.fn.zTree.init($("#appFunctionTree"),setting, data.data);
+                        },
+                        error: function(){
+
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
+        // 添加新行
+        $('#addRow').click(function(){
+            var newRow = `
+              <tr>
+                    <td><input type="text" maxlength="100" placeholder="请输入功能名称"  class="layui-input name"></td>
+                    <td><input type="text" maxlength="500" placeholder="请输入功能链接" class="layui-input url"></td>
+                    <td><input type="text" maxlength="255" placeholder="请输入功能权限标识" class="layui-input permission"></td>
+                    <td>
+                        <select class="layui-select type">
+                            <option value="0">目录</option>
+                            <option value="1">菜单</option>
+                            <option value="2">操作按钮</option>
+                            <option value="3">工具条按钮</option>
+                            <option value="4">API</option>
+                            <option value="5">页面控件</option>
+                        </select>
+                    </td>
+                    <td> <textarea  class="layui-textarea functionText"  placeholder="请输入功能内容"></textarea></td>
+                    <td><input type="text" maxlength="60"  class="layui-input icon" placeholder="请输入功能图标"  ></td>
+                    <td><input type="number" maxlength="60"  class="layui-input functionSort" placeholder="请输入排序"  ></td>
+                    <td>
+                        <select class="layui-select enableStatus">
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </td>
+                    <td> <textarea  class="layui-textarea remark" maxlength="255" placeholder="请输入备注信息"></textarea></td>
+                    <td>
+                        <button class="layui-btn layui-btn-danger layui-btn-xs deleteRow">删除</button>
+                    </td>
+                </tr>
+        `;
+            $('#functionDataBody').append(newRow);
+            form.render('select'); // 重新渲染选择框
+        });
+
+        // 删除行
+        $('#functionDataBody').on('click', '.deleteRow', function(){
+            if($('#functionDataBody tr').length > 1) {
+                var delRow = $(this);
+                layer.confirm("确定删除该行?", function (index) {
+                    delRow.closest('tr').remove();
+                    layer.close(index);
+                });
+            } else {
+                layer.msg('至少保留一行数据');
+            }
+        });
+
+    });
+</script>
+
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+
+
+</body>
+</html>
