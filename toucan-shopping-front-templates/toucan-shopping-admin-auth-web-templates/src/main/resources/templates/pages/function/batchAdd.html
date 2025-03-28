@@ -86,7 +86,7 @@
                     <th width="100">功能类型<span class="required-star">*</span></th>
                     <th width="200">功能内容</th>
                     <th width="100">图标</th>
-                    <th width="100">排序</th>
+                    <th width="100">排序<span class="required-star">*</span></th>
                     <th width="80">状态<span class="required-star">*</span></th>
                     <th width="200">备注信息</th>
                     <th width="150">操作</th>
@@ -146,13 +146,15 @@
         form.on('submit(saveBtn)', function (data) {
 
             var data = [];
-            var isValid = true;
 
             var pid=$("#pid").val();
             var appCode=$("#appCode").val();
             var selectPid=$("#selectPid").val();
 
+            var rowPos=0;
+            var isValid=true;
             $('#functionDataBody tr').each(function(){
+                rowPos++;
                 var $row = $(this);
                 var rowData = {
                     name: $row.find('.name').val().trim(),
@@ -173,29 +175,27 @@
                 $row.find('input, select').removeClass('layui-input-danger');
 
                 if(!rowData.name){
-                    $row.find('.name').addClass('layui-input-danger');
-                    isValid = false;
+                    layer.msg("第"+rowPos+'行的功能名称不能为空');
+                    isValid=false;
+                    return;
                 }
 
                 if(!rowData.permission){
-                    $row.find('.permission').addClass('layui-input-danger');
-                    isValid = false;
+                    layer.msg("第"+rowPos+'行的权限标识不能为空');
+                    isValid=false;
+                    return;
                 }
 
-                if(!rowData.functionSort || isNaN(rowData.functionSort) || rowData.functionSort < 0){
-                    $row.find('.functionSort').addClass('layui-input-danger');
-                    isValid = false;
-                }
-                if(!rowData.address){
-                    $row.find('.address').addClass('layui-input-danger');
-                    isValid = false;
+                if(!rowData.functionSort || isNaN(rowData.functionSort) ){
+                    layer.msg("第"+rowPos+'行的排序不能为空且只能输入数字');
+                    isValid=false;
+                    return;
                 }
 
                 data.push(rowData);
             });
 
             if(!isValid){
-                layer.msg('请检查红色标记的必填项');
                 return;
             }
 
@@ -204,7 +204,15 @@
                 url:"[[@{/function/saves}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:JSON.stringify(data.field),
+                data:JSON.stringify(data),
+                statusCode: {
+                    403: function(xhr) {
+                        layer.msg("您没有权限执行此操作");
+                    },
+                    500: function() {
+                        layer.msg("服务器内部错误");
+                    }
+                },
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
