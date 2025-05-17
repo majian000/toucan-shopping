@@ -46,7 +46,7 @@ public class ThreadPoolTaskConfig {
         executor.setThreadNamePrefix(threadNamePrefix);
 
         executor.setTaskDecorator(new ThreadContextDecorator());
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()); //如果线程池已满,由调用线程执行该任务
         executor.initialize();
         return executor;
     }
