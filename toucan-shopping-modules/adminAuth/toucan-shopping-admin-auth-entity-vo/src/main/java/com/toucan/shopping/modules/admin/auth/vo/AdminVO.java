@@ -41,4 +41,16 @@ public class AdminVO extends Admin {
      */
     private Integer loginSrcType;
 
+
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
+
 }
