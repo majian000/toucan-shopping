@@ -146,7 +146,8 @@
     </modules>
 
     <properties>
-        <nacos-server-version>2025.1.0.0</nacos-server-version>
+        <nacos-server-version>2025.0.0.0</nacos-server-version>
+        <spring.cloud.bootstrap.enabled>true</spring.cloud.bootstrap.enabled>
     </properties>
 
 
@@ -363,7 +364,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2025.1.0.0</version>
+                <version>2025.0.0.0</version>
                 <type>pom</type>
             </dependency>
 
