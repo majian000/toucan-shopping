@@ -134,7 +134,12 @@
         </root>
     </springProfile>
 
-
+    <!-- 默认配置：当非 native profile 时使用 -->
+    <springProfile name="!native">
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
 
 
 </configuration>
