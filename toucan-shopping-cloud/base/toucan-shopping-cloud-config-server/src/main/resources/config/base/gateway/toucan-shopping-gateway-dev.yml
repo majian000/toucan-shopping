@@ -58,6 +58,8 @@ spring:
         ip: ${toucan.ip}    #使用IP地址注册
         port: ${server.port}
         server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
+        username: ${toucan.nacos.username}
+        password: ${toucan.nacos.password}
         metadata:
           preserved.heart.beat.interval: 2000 #心跳间隔。时间单位:秒。心跳间隔
           preserved.heart.beat.timeout: 2500 #心跳暂停。时间单位:秒。 即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例设为不健康：

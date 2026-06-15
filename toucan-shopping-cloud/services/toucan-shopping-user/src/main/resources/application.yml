@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  config:
+    import: configserver:http://localhost:9090
+  cloud:
+    config:
+      username: toucan_sp
+      password: toucan_sp_0987
+      label: master
+    nacos:
+      discovery:
+        fail-fast: false
+      username: ${toucan.nacos.username}
+      password: ${toucan.nacos.password}
+  application:
+    name: toucan-shopping-user
+
+logging:
+  config: classpath:logback-spring.xml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: configserver:http://${toucan.config.server.ip}:${toucan.config.server.port}
+  cloud:
+    config:
+      profile: prod
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  cloud:
+    config:
+      profile: dev
