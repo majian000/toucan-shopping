@@ -112,7 +112,7 @@
  | --------------------------------------------- | -------------------- | ---------------------------------------------------|
  | base/toucan-shopping-config-server           | 9090                  | 配置中心服务                                       |
  | base/toucan-shopping-eureka                  | 8081                   | 服务中心(替换成nacos,下载地址参考上面依赖第三方)  |
- | nacos-server-2.0.4                           | 8081                   | 服务中心                                           |
+ | nacos-server-3.2.2                           | 8081                   | 服务中心                                           |
  | base/toucan-shopping-gateway                 | 8089                   | 服务网关                                           |
  
  
