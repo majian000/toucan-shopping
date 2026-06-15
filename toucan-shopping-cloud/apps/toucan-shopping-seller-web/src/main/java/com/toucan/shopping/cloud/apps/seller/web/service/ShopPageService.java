@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.service;
 
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

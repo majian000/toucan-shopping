@@ -146,7 +146,7 @@
     </modules>
 
     <properties>
-        <nacos-server-version>2.2.0.RELEASE</nacos-server-version>
+        <nacos-server-version>2025.1.0.0</nacos-server-version>
     </properties>
 
 
@@ -156,7 +156,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-            <version>1.18.8</version>
+            <version>1.18.36</version>
         </dependency>
 
         <!--JSON解析 -->
@@ -355,9 +355,16 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR8</version>
+                <version>2025.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2025.1.0.0</version>
+                <type>pom</type>
             </dependency>
 
             <dependency>

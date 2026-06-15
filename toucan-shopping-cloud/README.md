@@ -4,7 +4,8 @@
 
 #### 介绍
     采用技术
-    spring cloud
+    jdk17 
+    spring cloud 2025.1.0.0
     spring config
     lombok
     nacos

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.common.util;
 
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class IPUtil {
 

@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.web.service;
 
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface VerifyCodeService {
 

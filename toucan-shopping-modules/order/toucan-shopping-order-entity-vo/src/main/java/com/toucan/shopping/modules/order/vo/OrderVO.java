@@ -4,7 +4,6 @@ import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
-import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

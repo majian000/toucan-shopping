@@ -7,7 +7,9 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.commons.io.output.FileWriterWithEncoding;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -65,9 +67,9 @@ public class IndexGeneratorController {
                 direFile.mkdirs();
             }
             String outFilePath = outDirePath+templateAndStatisFileName;
-            FileWriterWithEncoding fileWriterWithEncoding = null;
+            OutputStreamWriter fileWriterWithEncoding = null;
             try {
-                fileWriterWithEncoding = new FileWriterWithEncoding(outFilePath, "UTF-8");
+                fileWriterWithEncoding = new OutputStreamWriter(new FileOutputStream(outFilePath), StandardCharsets.UTF_8);
                 Map<String,Object> params= new HashMap<String,Object>();
 
                 //查询轮播图

@@ -19,8 +19,8 @@ import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.Filter;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.Filter;
 import java.util.List;
 
 

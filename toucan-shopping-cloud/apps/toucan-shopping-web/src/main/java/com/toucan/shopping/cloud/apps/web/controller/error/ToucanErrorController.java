@@ -9,17 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ToucanErrorController implements ErrorController {
 
 
-    /**
-     * 报错默认会跳转到首页
-     * @return
-     */
-    @Override
-    public String getErrorPath() {
-        return "/htmls/release/index";
-    }
-
     @RequestMapping
     public String error() {
-        return getErrorPath();
+        return "/htmls/release/index";
     }
 }

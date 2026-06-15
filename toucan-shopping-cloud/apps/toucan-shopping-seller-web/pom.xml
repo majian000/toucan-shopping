@@ -37,10 +37,10 @@
             <version>${nacos-server-version}</version>
         </dependency>
 
-        <!--增加hystrix支持熔断 -->
+        <!--断路器支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
 
         <!--使用配置中心 客户端-->

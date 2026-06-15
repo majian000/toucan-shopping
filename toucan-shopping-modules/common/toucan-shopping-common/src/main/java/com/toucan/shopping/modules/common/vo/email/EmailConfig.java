@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.common.vo.email;
 
 
-import com.sun.mail.util.MailSSLSocketFactory;
 import lombok.Data;
 
 import java.security.GeneralSecurityException;
@@ -98,11 +97,9 @@ public class EmailConfig {
         props.setProperty("mail.smtp.socketFactory.class", smtpSocketFactoryClass);
         props.setProperty("mail.smtp.socketFactory.fallback", smtpSocketFactoryFallback);
         props.setProperty("mail.smtp.socketFactory.port", port);
-        //忽略SSL证书
-        MailSSLSocketFactory mailSSLSocketFactory = new MailSSLSocketFactory();
-        mailSSLSocketFactory.setTrustAllHosts(true);
+        //信任所有SSL证书
         props.put("mail.smtp.ssl.enable", "true");
-        props.put("mail.smtp.ssl.socketFactory", mailSSLSocketFactory);
+        props.put("mail.smtp.ssl.trust", "*");
         return props;
     }
 

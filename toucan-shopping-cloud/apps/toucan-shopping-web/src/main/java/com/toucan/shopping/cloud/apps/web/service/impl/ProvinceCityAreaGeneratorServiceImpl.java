@@ -11,12 +11,14 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.commons.io.output.FileWriterWithEncoding;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -60,9 +62,9 @@ public class ProvinceCityAreaGeneratorServiceImpl implements ProvinceCityAreaGen
                 direFile.mkdirs();
             }
             String outFilePath = outDirePath+templateAndStatisFileName;
-            FileWriterWithEncoding fileWriterWithEncoding = null;
+            OutputStreamWriter fileWriterWithEncoding = null;
             try {
-                fileWriterWithEncoding = new FileWriterWithEncoding(outFilePath, "UTF-8");
+                fileWriterWithEncoding = new OutputStreamWriter(new FileOutputStream(outFilePath), StandardCharsets.UTF_8);
                 Map<String,Object> params= new HashMap<String,Object>();
 
 

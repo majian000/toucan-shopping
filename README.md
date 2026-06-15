@@ -11,7 +11,8 @@
     前端技术 jquery、jquery-layui、vue3
     
     后端技术
-    spring cloud
+    jdk17 
+    spring cloud 2025.1.0.0
     spring config
     spring gateway
     lombok

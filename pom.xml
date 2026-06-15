@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
+        <version>3.5.5</version>
         <relativePath/>
     </parent>
 
@@ -23,6 +23,7 @@
 
 
     <properties>
+        <java.version>17</java.version>
         <elasticsearch.version>7.8.0</elasticsearch.version>
     </properties>
 
@@ -55,7 +56,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-            <version>1.18.8</version>
+            <version>1.18.36</version>
         </dependency>
 
         <!--JSON解析 -->
@@ -86,7 +87,11 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-
+        <!-- Jakarta 注解 API（@PostConstruct 等） -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -132,8 +137,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>

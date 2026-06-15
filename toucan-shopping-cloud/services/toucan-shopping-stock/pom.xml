@@ -56,10 +56,10 @@
         </dependency>
 
 
-        <!--对sleuth链路追踪支持 -->
+        <!--链路追踪支持 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
         <!--我们自己的包 -->

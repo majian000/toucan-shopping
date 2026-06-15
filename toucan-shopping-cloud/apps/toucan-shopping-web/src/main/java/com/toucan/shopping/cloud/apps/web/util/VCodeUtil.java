@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.web.util;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class VCodeUtil {
 
