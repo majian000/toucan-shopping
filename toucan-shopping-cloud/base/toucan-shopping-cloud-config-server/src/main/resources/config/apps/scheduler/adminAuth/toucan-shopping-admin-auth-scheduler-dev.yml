@@ -36,23 +36,28 @@ spring:
 #      defaultZone: http://localhost:8081/eureka
 
 feign:
-  hystrix:
-    enabled: true
+
   client:
     config:
       default:
         connectTimeout: 30000
         readTimeout: 30000
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 30000 #请求时间超过30秒超时
-      circuitBreaker:
-        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
-
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 30s
+        cancelRunningFuture: true
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 8
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
 
 
 
