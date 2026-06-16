@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Properties;
 
 /**
  * 默认自定义分表
@@ -17,7 +16,6 @@ import java.util.Properties;
 public class TableDateMonthAlgorithm implements StandardShardingAlgorithm<Date> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private Properties props = new Properties();
     private String instanceName;
     private int num;
 
@@ -41,27 +39,10 @@ public class TableDateMonthAlgorithm implements StandardShardingAlgorithm<Date> 
 
     @Override
     public Collection<String> doSharding(Collection<String> collection, RangeShardingValue<Date> rangeShardingValue) {
-        return null;
+        return collection;
     }
-
-    @Override
-    public void init() {
-    }
-
     @Override
     public String getType() {
-        return "TableDateMonthAlgorithm";
-    }
-
-
-    @Override
-    public Properties getProps() {
-        return props;
-    }
-
-    @Override
-    public void setProps(Properties properties) {
-        this.props=properties;
-        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
+        return getClass().getSimpleName();
     }
 }

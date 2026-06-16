@@ -1,11 +1,12 @@
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
+      - com.alibaba.cloud.nacos.endpoint.NacosDiscoveryEndpointAutoConfiguration
   profiles:
     active: dev
   main:
     allow-bean-definition-overriding: true
-  autoconfigure:
-    exclude:
-      - com.alibaba.cloud.nacos.endpoint.NacosDiscoveryEndpointAutoConfiguration
   config:
     import: configserver:http://localhost:9090
   cloud:
@@ -26,6 +27,9 @@ logging:
 
 ---
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
   config:
     activate:
       on-profile: prod
@@ -36,6 +40,9 @@ spring:
 
 ---
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
   config:
     activate:
       on-profile: dev

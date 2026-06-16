@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Properties;
 
 /**
  * 自定义分库
@@ -18,7 +17,6 @@ public class DBLongAlgorithm implements StandardShardingAlgorithm<Long> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Properties props = new Properties();
     private String instanceName;
     private int num;
 
@@ -38,34 +36,7 @@ public class DBLongAlgorithm implements StandardShardingAlgorithm<Long> {
 
     @Override
     public Collection<String> doSharding(Collection<String> collection, RangeShardingValue<Long> rangeShardingValue) {
-        return null;
-    }
-
-    @Override
-    public void init() {
-
-    }
-
-    @Override
-    public String getType() {
-        return "DBLongAlgorithm";
-    }
-
-
-    @Override
-    public Properties getProps() {
-        return props;
-    }
-
-    @Override
-    public void setProps(Properties properties) {
-        this.props=properties;
-        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
-        this.num = Integer.parseInt(String.valueOf(props.get("num")!=null?props.get("num"):"0"));
-        if(this.num==0)
-        {
-            throw new IllegalArgumentException("请配置分库数量");
-        }
+        return collection;
     }
 
     public String getInstanceName() {
@@ -82,5 +53,9 @@ public class DBLongAlgorithm implements StandardShardingAlgorithm<Long> {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+    @Override
+    public String getType() {
+        return getClass().getSimpleName();
     }
 }

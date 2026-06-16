@@ -1,12 +1,11 @@
 package com.toucan.shopping.standard.apps.web.app;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
+@SpringBootApplication
 @MapperScan({"com.toucan.shopping.modules.common.persistence.event.mapper",
                 "com.toucan.shopping.modules.admin.auth.mapper",
                 "com.toucan.shopping.modules.area.mapper",

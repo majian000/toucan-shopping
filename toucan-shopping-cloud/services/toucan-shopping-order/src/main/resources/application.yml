@@ -1,4 +1,7 @@
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
   profiles:
     active: dev
   main:
@@ -23,6 +26,9 @@ logging:
 
 ---
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
   config:
     activate:
       on-profile: prod
@@ -33,6 +39,9 @@ spring:
 
 ---
 spring:
+  autoconfigure:
+    exclude:
+      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
   config:
     activate:
       on-profile: dev
