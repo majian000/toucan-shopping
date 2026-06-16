@@ -14,14 +14,12 @@ public class IdGeneratorConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
     @Autowired
     private Toucan toucan;
 
     @Bean
-    public IdGenerator idGenerator()
-    {
-        logger.info(" 初始化雪花算法ID生成器 工作ID {} 数据中心ID {}", toucan.getWorkerId(), toucan.getDatacenterId());
+    public IdGenerator idGenerator() {
+        logger.info("初始化雪花算法ID生成器 工作ID {} 数据中心ID {}", toucan.getWorkerId(), toucan.getDatacenterId());
         SnowflakeIdWorker snowflakeIdWorker = new SnowflakeIdWorker(toucan.getWorkerId(), toucan.getDatacenterId());
         IdGenerator idGenerator = new IdGenerator();
         idGenerator.setSnowflakeIdWorker(snowflakeIdWorker);

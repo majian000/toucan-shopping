@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
                 "com.toucan.shopping.modules.area.mapper",
                 "com.toucan.shopping.modules.category.mapper",
                 "com.toucan.shopping.modules.column.mapper",
+                "com.toucan.shopping.modules.content.mapper",
                 "com.toucan.shopping.modules.order.mapper",
                 "com.toucan.shopping.modules.product.mapper",
                 "com.toucan.shopping.modules.stock.mapper",
