@@ -69,10 +69,6 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-db-sharding</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log</artifactId>
         </dependency>
         <dependency>
@@ -171,6 +167,10 @@
             <artifactId>toucan-shopping-content-entity-vo</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-db-sharding</artifactId>
+        </dependency>
     </dependencies>
 
 
