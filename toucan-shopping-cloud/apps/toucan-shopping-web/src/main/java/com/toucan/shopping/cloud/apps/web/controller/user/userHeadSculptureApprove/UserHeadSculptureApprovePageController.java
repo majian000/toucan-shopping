@@ -14,7 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove;
 import com.toucan.shopping.modules.user.vo.UserHeadSculptureApproveVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
