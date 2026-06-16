@@ -9,7 +9,6 @@ import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardS
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,7 +19,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Configuration
-@ConditionalOnProperty(prefix = "spring.shardingsphere", name = "datasource.names")
 public class ShardingSphereDataSourceConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -31,6 +29,13 @@ public class ShardingSphereDataSourceConfig {
     @Bean
     @Primary
     public DataSource shardingSphereDataSource() throws SQLException {
+        // Check at runtime (config server properties loaded after @ConditionalOnProperty evaluation)
+        String dsNames = environment.getProperty("spring.shardingsphere.datasource.names");
+        if (dsNames == null || dsNames.isEmpty()) {
+            logger.info("No spring.shardingsphere.datasource.names configured, skipping DataSource creation");
+            return null;
+        }
+
         // 1. Build data source map
         Map<String, DataSource> dataSourceMap = createDataSourceMap();
 

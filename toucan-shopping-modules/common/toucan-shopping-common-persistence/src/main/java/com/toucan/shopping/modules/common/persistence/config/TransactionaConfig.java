@@ -12,6 +12,7 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Aspect
 @Configuration
+@ConditionalOnBean(TransactionManager.class)
 public class TransactionaConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

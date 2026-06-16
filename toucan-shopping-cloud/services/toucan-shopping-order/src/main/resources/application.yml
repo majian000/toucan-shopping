@@ -1,7 +1,7 @@
 spring:
   autoconfigure:
     exclude:
-      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   profiles:
     active: dev
   main:
@@ -28,7 +28,7 @@ logging:
 spring:
   autoconfigure:
     exclude:
-      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   config:
     activate:
       on-profile: prod
@@ -41,7 +41,7 @@ spring:
 spring:
   autoconfigure:
     exclude:
-      - org.apache.shardingsphere.driver.autoconfigure.ShardingSphereAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   config:
     activate:
       on-profile: dev
