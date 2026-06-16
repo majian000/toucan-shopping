@@ -114,13 +114,31 @@ public class ShardingSphereDataSourceConfig {
             String tableName = entry.getKey();
             Map<String, String> rule = entry.getValue();
 
+            // Per-table database sharding strategy
+            String dbShardingColumn = rule.get("database-strategy.standard.sharding-column");
+            String dbShardingAlgorithm = rule.get("database-strategy.standard.sharding-algorithm-name");
+
+            // Per-table table sharding strategy
+            String tableShardingColumn = rule.get("table-strategy.standard.sharding-column");
+            String tableShardingAlgorithm = rule.get("table-strategy.standard.sharding-algorithm-name");
+
+            // Skip tables without any sharding strategy (non-sharded/single-node tables)
+            if ((dbShardingColumn == null || dbShardingColumn.isEmpty() || dbShardingAlgorithm == null || dbShardingAlgorithm.isEmpty()) &&
+                (tableShardingColumn == null || tableShardingColumn.isEmpty() || tableShardingAlgorithm == null || tableShardingAlgorithm.isEmpty())) {
+                continue;
+            }
+
             ShardingTableRuleConfiguration tableRuleConfig = new ShardingTableRuleConfiguration(
                 tableName, rule.getOrDefault("actual-data-nodes", ""));
 
-            // Table sharding strategy
-            String tableShardingColumn = rule.get("table-strategy.standard.sharding-column");
-            String tableShardingAlgorithm = rule.get("table-strategy.standard.sharding-algorithm-name");
-            if (tableShardingColumn != null && tableShardingAlgorithm != null) {
+            if (dbShardingColumn != null && !dbShardingColumn.isEmpty()
+                && dbShardingAlgorithm != null && !dbShardingAlgorithm.isEmpty()) {
+                tableRuleConfig.setDatabaseShardingStrategy(
+                    new StandardShardingStrategyConfiguration(dbShardingColumn, dbShardingAlgorithm));
+            }
+
+            if (tableShardingColumn != null && !tableShardingColumn.isEmpty()
+                && tableShardingAlgorithm != null && !tableShardingAlgorithm.isEmpty()) {
                 tableRuleConfig.setTableShardingStrategy(
                     new StandardShardingStrategyConfiguration(tableShardingColumn, tableShardingAlgorithm));
             }
@@ -243,6 +261,10 @@ public class ShardingSphereDataSourceConfig {
             Map<String, String> rule = new LinkedHashMap<>();
             String tablePrefix = prefix + tableName + ".";
             rule.put("actual-data-nodes", environment.getProperty(tablePrefix + "actual-data-nodes", ""));
+            rule.put("database-strategy.standard.sharding-column",
+                environment.getProperty(tablePrefix + "database-strategy.standard.sharding-column", ""));
+            rule.put("database-strategy.standard.sharding-algorithm-name",
+                environment.getProperty(tablePrefix + "database-strategy.standard.sharding-algorithm-name", ""));
             rule.put("table-strategy.standard.sharding-column",
                 environment.getProperty(tablePrefix + "table-strategy.standard.sharding-column", ""));
             rule.put("table-strategy.standard.sharding-algorithm-name",

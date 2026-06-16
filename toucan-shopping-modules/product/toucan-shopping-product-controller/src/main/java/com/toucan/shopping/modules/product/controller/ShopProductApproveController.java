@@ -18,7 +18,7 @@ import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +104,7 @@ public class ShopProductApproveController {
             logger.warn("发布商品失败 回滚店铺商品图片失败 {}", JSONObject.toJSONString(productSkus));
         }
 
-        if(publishProductApproveVO.getProductDescription()!=null&&CollectionUtils.isNotEmpty(publishProductApproveVO.getProductDescription().getProductDescriptionImgs())) {
+        if(publishProductApproveVO.getProductDescription()!=null&& CollectionUtils.isNotEmpty(publishProductApproveVO.getProductDescription().getProductDescriptionImgs())) {
             ret = shopProductApproveDescriptionImgService.deleteByProductApproveId(publishProductApproveVO.getId());
             if (ret < publishProductApproveVO.getProductDescription().getProductDescriptionImgs().size()) {
                 logger.warn("发布商品失败 回滚店铺商品介绍图片失败 {}", JSONObject.toJSONString(productSkus));

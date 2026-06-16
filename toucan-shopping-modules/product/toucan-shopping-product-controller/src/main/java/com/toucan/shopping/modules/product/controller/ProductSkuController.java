@@ -103,7 +103,7 @@ public class ProductSkuController {
                     ShopProductImgVO shopProductImgVO = new ShopProductImgVO();
                     shopProductImgVO.setShopProductId(shopProductVO.getId());
                     List<ShopProductImg> shopProductImgs = shopProductImgService.queryListOrderByImgSortAsc(shopProductImgVO);
-                    if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(shopProductImgs)) {
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(shopProductImgs)) {
                         for (ShopProductImg shopProductImg : shopProductImgs) {
                             //如果是商品主图
                             if (shopProductImg.getImgType().intValue() == 1) {
