@@ -39,18 +39,24 @@ public class ShardingSphereDataSourceConfig {
         // 1. Build data source map
         Map<String, DataSource> dataSourceMap = createDataSourceMap();
 
-        // 2. Build sharding rules
+        // 2. Build sharding rules - check if any actual sharding tables are configured
         Collection<RuleConfiguration> ruleConfigs = new ArrayList<>();
         ShardingRuleConfiguration shardingRuleConfig = createShardingRuleConfiguration();
-        if (shardingRuleConfig != null) {
+        if (shardingRuleConfig != null && !shardingRuleConfig.getTables().isEmpty()) {
             ruleConfigs.add(shardingRuleConfig);
+        } else {
+            logger.info("No sharding table rules configured, skipping ShardingSphere wrapper, using plain DataSource");
+            // Return the first (master) data source directly without ShardingSphere wrapper
+            String firstName = dsNames.split(",")[0].trim();
+            return dataSourceMap.get(firstName);
         }
 
         // 3. Create ShardingSphere DataSource
         Properties props = new Properties();
         props.setProperty("sql-show", environment.getProperty("spring.shardingsphere.props.sql-show", "false"));
 
-        logger.info("Creating ShardingSphere DataSource with {} data sources", dataSourceMap.size());
+        logger.info("Creating ShardingSphere DataSource with {} data sources and {} sharding tables",
+            dataSourceMap.size(), shardingRuleConfig.getTables().size());
         return ShardingSphereDataSourceFactory.createDataSource(dataSourceMap, ruleConfigs, props);
     }
 
