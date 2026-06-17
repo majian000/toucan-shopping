@@ -11,6 +11,12 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: mj_tocan_redis_7612
+      timeout: 3000
   zipkin: #链路追踪
     enabled: true
     base-url: http://localhost:9411

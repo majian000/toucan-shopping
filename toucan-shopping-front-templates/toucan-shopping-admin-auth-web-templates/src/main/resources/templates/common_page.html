@@ -4,8 +4,8 @@
 
 <div th:fragment="common">
     <script th:inline="javascript" type="text/javascript">
-        var ctxPath  = [[@{/static}]];
-        var basePath=[[@{/}]];
+        var ctxPath  = [[@{/}]];
+        var basePath= [[@{/}]].replace(/\/$/, '');
     </script>
 
 </div>
