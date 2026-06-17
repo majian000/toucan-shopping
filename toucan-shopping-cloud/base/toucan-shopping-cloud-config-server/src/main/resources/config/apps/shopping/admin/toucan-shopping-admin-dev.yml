@@ -86,6 +86,12 @@ ribbon:
               toucan-shopping-stock"
 
 
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
 
 
 

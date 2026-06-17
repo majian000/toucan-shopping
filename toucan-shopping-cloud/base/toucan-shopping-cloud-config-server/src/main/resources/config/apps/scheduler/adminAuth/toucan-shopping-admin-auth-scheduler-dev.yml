@@ -73,6 +73,13 @@ ribbon:
               toucan-shopping-gateway"
 
 
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
+
 
 toucan:
   machine-id: 2201 #机器编码
