@@ -147,7 +147,6 @@
 
     <properties>
         <nacos-server-version>2025.0.0.0</nacos-server-version>
-        <spring.cloud.bootstrap.enabled>true</spring.cloud.bootstrap.enabled>
     </properties>
 
 
