@@ -17,7 +17,16 @@ spring:
   cloud:
     loadbalancer:
       retry:
-        enabled: true #开启重试机制
+        enabled: true
+        retry-on-all-operations: true
+        max-retries-on-next-service-instance: 2
+        max-retries-on-same-service-instance: 1
+      cache:
+        ttl: 3s #开启重试机制
+      eager-load:
+        clients:
+          - toucan-shopping-admin-auth
+          - toucan-shopping-gateway
     nacos:
       discovery:
         ip: ${toucan.ip}    #使用IP地址注册
@@ -66,16 +75,6 @@ resilience4j:
         automaticTransitionFromOpenToHalfOpenEnabled: true
 
 
-#开启饥饿加载
-ribbon:
-  OkToRetryOnAllOperations: true #开启重试机制
-  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
-  MaxAutoRetries: 1 #同一实例重试次数
-  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
-  eager-load:
-    enabled: true
-    clients: "toucan-shopping-admin-auth,\
-              toucan-shopping-gateway"
 
 
 toucan:
