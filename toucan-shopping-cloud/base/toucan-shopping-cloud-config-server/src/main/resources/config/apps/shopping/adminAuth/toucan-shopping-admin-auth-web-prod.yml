@@ -144,3 +144,10 @@ toucan:
         receiver-list[0]:
           email: 695391446@qq.com
           name: majian
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false

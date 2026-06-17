@@ -254,3 +254,10 @@ toucan:
         minIdle: 0 #最小核心线程数
 
 
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
