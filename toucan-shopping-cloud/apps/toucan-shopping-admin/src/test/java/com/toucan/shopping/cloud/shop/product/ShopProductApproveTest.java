@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.apps.admin.app.CloudAdminApplication;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
@@ -17,11 +16,8 @@ import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Random;
 
