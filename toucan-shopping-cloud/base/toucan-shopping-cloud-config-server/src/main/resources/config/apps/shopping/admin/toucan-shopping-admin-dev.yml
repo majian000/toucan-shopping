@@ -24,7 +24,7 @@ spring:
         enabled: true
         retry-on-all-operations: true
         max-retries-on-next-service-instance: 2
-        max-retries-on-same-service-instance: 1
+        max-retries-on-same-service-instance: 0
       cache:
         ttl: 3s
       eager-load:
