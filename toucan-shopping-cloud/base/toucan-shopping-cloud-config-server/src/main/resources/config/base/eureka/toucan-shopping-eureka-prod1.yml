@@ -6,7 +6,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-    instance-id: 127.0.0.1:8761    #使用IP地址注册
+    instance-id: 8.140.187.184:8761    #使用IP地址注册
   client:
     registerWithEureka: true  #注册自己
     fetchRegistry: false #要不要去注册中心获取其他服务的地址

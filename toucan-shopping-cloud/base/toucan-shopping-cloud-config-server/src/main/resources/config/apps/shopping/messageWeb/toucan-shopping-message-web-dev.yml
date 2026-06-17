@@ -107,7 +107,7 @@ toucan:
   message-web-pc:
     #允许跨域访问的地址
     allowed-origins[0]: http://localhost:8083
-    allowed-origins[1]: http://127.0.0.1:8083
+    allowed-origins[1]: http://8.140.187.184:8083
   plugins:
     xss-filter:
       enabled: true

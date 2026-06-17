@@ -13,7 +13,7 @@ spring:
     mode: HTML
   data:
     redis:
-      host: 127.0.0.1
+      host: 8.140.187.184
       port: 6379
       password: mj_tocan_redis_7612
       timeout: 3000

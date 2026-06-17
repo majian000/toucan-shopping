@@ -31,7 +31,7 @@ spring:
     name: toucan-shopping-gateway
   data:
     redis:
-      host: 127.0.0.1
+      host: 8.140.187.184
       port: 6379
       database: 0
   zipkin: #链路追踪

@@ -8,7 +8,7 @@ server:
 #    lease-expiration-duration-in-seconds: 3 #3秒没有心跳就剔除
 #    lease-renewal-interval-in-seconds: 3 #心跳3秒
 #    prefer-ip-address: true
-#    instance-id: 127.0.0.1:8089    #使用IP地址注册
+#    instance-id: 8.140.187.184:8089    #使用IP地址注册
 #  client:
 #    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
 #    serviceUrl:
@@ -32,7 +32,7 @@ spring:
     name: toucan-shopping-gateway
   data:
     redis:
-      host: 127.0.0.1
+      host: 8.140.187.184
       port: 6379
       database: 0
   zipkin: #链路追踪
