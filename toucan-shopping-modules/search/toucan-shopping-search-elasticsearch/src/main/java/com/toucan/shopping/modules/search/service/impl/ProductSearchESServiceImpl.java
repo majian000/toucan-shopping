@@ -1,6 +1,17 @@
 package com.toucan.shopping.modules.search.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.Refresh;
+import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.ChildScoreMode;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch.indices.GetIndicesSettingsResponse;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
@@ -10,575 +21,278 @@ import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.search.vo.ProductSearchVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
-import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.PutMappingRequest;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.Requests;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.common.collect.ImmutableOpenMap;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.rest.RestStatus;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Stream;
-
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("productSearchESServiceImpl")
 public class ProductSearchESServiceImpl implements ProductSearchService {
 
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
     @Autowired
-    private RestHighLevelClient restHighLevelClient;
+    private ElasticsearchClient elasticsearchClient;
 
     @Override
     public void createIndex() {
         try {
-            CreateIndexRequest request = new CreateIndexRequest(ProductIndex.PRODUCT_SKU_INDEX);
-
-            //配置IK分词器
-            XContentBuilder builder = XContentFactory.jsonBuilder();
-            builder.startObject();
-            {
-                builder.startObject("properties");
-                {
-                    builder.startObject("id");
-                    {
-                        builder.field("type", "long");
-                    }
-                    builder.endObject();
-
-                    builder.startObject("skuId");
-                    {
-                        builder.field("type", "long");
-                    }
-                    builder.endObject();
-
-                    //商品名称
-                    builder.startObject("name");
-                    {
-                        builder.field("type", "text")
-                                //插入时分词
-                                .field("analyzer", "ik_max_word")
-                                //搜索时分词
-                                .field("search_analyzer", "ik_smart");
-                    }
-                    builder.endObject();
-
-                    //价格
-                    builder.startObject("price");
-                    {
-                        builder.field("type", "double");
-                    }
-                    builder.endObject();
-
-                    //品牌名称
-                    builder.startObject("brandName");
-                    {
-                        builder.field("type", "text")
-                                //插入时分词
-                                .field("analyzer", "ik_max_word")
-                                //搜索时分词
-                                .field("search_analyzer", "ik_smart");
-                    }
-                    builder.endObject();
-
-
-                    //品牌中文名称
-                    builder.startObject("brandNameCN");
-                    {
-                        builder.field("type", "text")
-                                //插入时分词
-                                .field("analyzer", "ik_max_word")
-                                //搜索时分词
-                                .field("search_analyzer", "ik_smart");
-                    }
-                    builder.endObject();
-
-                    //品牌英文名称
-                    builder.startObject("brandNameEN");
-                    {
-                        builder.field("type", "text")
-                                //插入时分词
-                                .field("analyzer", "ik_max_word")
-                                //搜索时分词
-                                .field("search_analyzer", "ik_smart");
-                    }
-                    builder.endObject();
-
-                    //分类名称
-                    builder.startObject("categoryName");
-                    {
-                        builder.field("type", "text")
-                                //插入时分词
-                                .field("analyzer", "ik_max_word")
-                                //搜索时分词
-                                .field("search_analyzer", "ik_smart");
-                    }
-                    builder.endObject();
-
-
-                    //分类ID数组
-                    builder.startObject("categoryIds");
-                    {
-                        builder.field("type", "text");
-                    }
-                    builder.endObject();
-
-                    //店铺分类ID数组
-                    builder.startObject("shopCategoryIds");
-                    {
-                        builder.field("type", "text");
-                    }
-                    builder.endObject();
-
-
-                    //属性数组
-                    builder.startObject("attributes");
-                    {
-                        builder.field("type", "nested");
-
-                        builder.startObject("properties");
-                        {
-                            builder.startObject("name");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("value");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-                        }
-                        builder.endObject();
-                    }
-                    builder.endObject();
-
-                    //搜索属性
-                    builder.startObject("searchAttributes");
-                    {
-                        builder.field("type", "nested");
-
-                        builder.startObject("properties");
-                        {
-                            builder.startObject("nameId");
-                            {
-                                builder.field("type", "long");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("name");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("valueId");
-                            {
-                                builder.field("type", "long");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("value");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-                        }
-                        builder.endObject();
-                    }
-                    builder.endObject();
-
-
-                    //搜索店铺属性
-                    builder.startObject("searchShopAttributes");
-                    {
-                        builder.field("type", "nested");
-
-                        builder.startObject("properties");
-                        {
-                            builder.startObject("nameId");
-                            {
-                                builder.field("type", "long");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("name");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("valueId");
-                            {
-                                builder.field("type", "long");
-                            }
-                            builder.endObject();
-
-                            builder.startObject("value");
-                            {
-                                builder.field("type", "keyword");
-                            }
-                            builder.endObject();
-                        }
-                        builder.endObject();
-                    }
-                    builder.endObject();
-
-                    //品牌ID
-                    builder.startObject("brandId");
-                    {
-                        builder.field("type", "long");
-                    }
-                    builder.endObject();
-
-                    //店铺ID
-                    builder.startObject("shopId");
-                    {
-                        builder.field("type", "long");
-                    }
-                    builder.endObject();
-
-                    //店铺分类ID
-                    builder.startObject("shopCategoryId");
-                    {
-                        builder.field("type", "long");
-                    }
-                    builder.endObject();
-
-                    //新品权重值
-                    builder.startObject("newestRank");
-                    {
-                        builder.field("type", "double");
-                    }
-                    builder.endObject();
-
-                    //权重值
-                    builder.startObject("randk");
-                    {
-                        builder.field("type", "double");
-                    }
-                    builder.endObject();
-
-                }
-                builder.endObject();
-            }
-            builder.endObject();
-            request.mapping(builder);
-            restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+            elasticsearchClient.indices().create(c -> c
+                    .index(ProductIndex.PRODUCT_SKU_INDEX)
+                    .mappings(m -> m
+                            .properties("id", p -> p.long_(l -> l))
+                            .properties("skuId", p -> p.long_(l -> l))
+                            .properties("name", p -> p.text(t -> t.analyzer("ik_max_word").searchAnalyzer("ik_smart")))
+                            .properties("price", p -> p.double_(d -> d))
+                            .properties("brandName", p -> p.text(t -> t.analyzer("ik_max_word").searchAnalyzer("ik_smart")))
+                            .properties("brandNameCN", p -> p.text(t -> t.analyzer("ik_max_word").searchAnalyzer("ik_smart")))
+                            .properties("brandNameEN", p -> p.text(t -> t.analyzer("ik_max_word").searchAnalyzer("ik_smart")))
+                            .properties("categoryName", p -> p.text(t -> t.analyzer("ik_max_word").searchAnalyzer("ik_smart")))
+                            .properties("categoryIds", p -> p.text(t -> t))
+                            .properties("shopCategoryIds", p -> p.text(t -> t))
+                            .properties("attributes", p -> p.nested(n -> n
+                                    .properties("name", np -> np.keyword(k -> k))
+                                    .properties("value", np -> np.keyword(k -> k))))
+                            .properties("searchAttributes", p -> p.nested(n -> n
+                                    .properties("nameId", np -> np.long_(l -> l))
+                                    .properties("name", np -> np.keyword(k -> k))
+                                    .properties("valueId", np -> np.long_(l -> l))
+                                    .properties("value", np -> np.keyword(k -> k))))
+                            .properties("searchShopAttributes", p -> p.nested(n -> n
+                                    .properties("nameId", np -> np.long_(l -> l))
+                                    .properties("name", np -> np.keyword(k -> k))
+                                    .properties("valueId", np -> np.long_(l -> l))
+                                    .properties("value", np -> np.keyword(k -> k))))
+                            .properties("brandId", p -> p.long_(l -> l))
+                            .properties("shopId", p -> p.long_(l -> l))
+                            .properties("shopCategoryId", p -> p.long_(l -> l))
+                            .properties("newestRank", p -> p.double_(d -> d))
+                            .properties("randk", p -> p.double_(d -> d))
+                    )
+            );
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
         }
     }
 
     @Override
     public PageInfo<ProductSearchResultVO> search(ProductSearchVO productSearchVO) throws Exception {
-
         List<ProductSearchResultVO> queryResult = new LinkedList<>();
 
-        SearchRequest request = new SearchRequest(ProductIndex.PRODUCT_SKU_INDEX);
+        int from = productSearchVO.getPage() == 1 ? productSearchVO.getPage() - 1
+                : ((productSearchVO.getPage() - 1) * productSearchVO.getSize());
 
-        //名称查询
-        SearchSourceBuilder sourceBuilder =  initSourceBuilder(productSearchVO);
-        sourceBuilder.from(productSearchVO.getPage()==1?productSearchVO.getPage()-1:((productSearchVO.getPage()-1)*productSearchVO.getSize()));
-        sourceBuilder.size(productSearchVO.getSize());
-        request.source(sourceBuilder);
+        Query boolQuery = buildBoolQuery(productSearchVO);
 
-        try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            SearchHits searchHits = response.getHits();
-            SearchHit[] searchHitsHits = searchHits.getHits();
-            for (SearchHit searchHit : searchHitsHits) {
-                String sourceString = searchHit.getSourceAsString();
-                if (StringUtils.isNotEmpty(sourceString)) {
-                    queryResult.add(JSONObject.parseObject(sourceString, ProductSearchResultVO.class));
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
+        SearchRequest.Builder searchBuilder = new SearchRequest.Builder()
+                .index(ProductIndex.PRODUCT_SKU_INDEX)
+                .query(boolQuery)
+                .from(from)
+                .size(productSearchVO.getSize());
+
+        // 默认排序,根据rank值最大在最前面
+        if (StringUtils.isEmpty(productSearchVO.getPst()) && StringUtils.isEmpty(productSearchVO.getPdst())) {
+            searchBuilder.sort(s -> s.field(f -> f.field("randk").order(SortOrder.Desc)));
+        }
+        // 价格排序
+        if (StringUtils.isNotEmpty(productSearchVO.getPst())) {
+            SortOrder order = "asc".equals(productSearchVO.getPst()) ? SortOrder.Asc : SortOrder.Desc;
+            searchBuilder.sort(s -> s.field(f -> f.field("price").order(order)));
+        }
+        // 新品排序
+        if (StringUtils.isNotEmpty(productSearchVO.getPdst())) {
+            SortOrder order = "asc".equals(productSearchVO.getPdst()) ? SortOrder.Asc : SortOrder.Desc;
+            searchBuilder.sort(s -> s.field(f -> f.field("newestRank").order(order)));
         }
 
+        try {
+            SearchResponse<ProductSearchResultVO> response = elasticsearchClient.search(
+                    searchBuilder.build(), ProductSearchResultVO.class);
+            for (Hit<ProductSearchResultVO> hit : response.hits().hits()) {
+                if (hit.source() != null) {
+                    queryResult.add(hit.source());
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
         PageInfo pageInfo = new PageInfo();
         pageInfo.setList(queryResult);
         pageInfo.setPage(productSearchVO.getPage());
         pageInfo.setSize(productSearchVO.getSize());
-        pageInfo.setTotal(queryCountBySearchBuilder(sourceBuilder).longValue());
+        pageInfo.setTotal(queryCountByVO(productSearchVO));
         pageInfo.setMaxTotal(queryMaxResultWindowCount());
-        pageInfo.setPageTotal(pageInfo.getTotal()%pageInfo.getSize()==0?(pageInfo.getTotal()/pageInfo.getSize()):((pageInfo.getTotal()/pageInfo.getSize())+1));
+        pageInfo.setPageTotal(pageInfo.getTotal() % pageInfo.getSize() == 0
+                ? (pageInfo.getTotal() / pageInfo.getSize())
+                : ((pageInfo.getTotal() / pageInfo.getSize()) + 1));
         return pageInfo;
     }
 
     /**
      * 构造查询条件
-     * @param productSearchVO
-     * @return
      */
-    private SearchSourceBuilder initSourceBuilder(ProductSearchVO productSearchVO){
-        //名称查询
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        if(StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
-            boolQueryBuilder.must(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getKeyword(), new String[]{"name", "brandName","brandNameCN","brandNameEN", "categoryName"})
-            );
-        }
-        //分类查询
-        if(StringUtils.isNotEmpty(productSearchVO.getCid())) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("categoryIds",productSearchVO.getCid()));
-        }
-        //店铺分类查询
-        if(StringUtils.isNotEmpty(productSearchVO.getScid())) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("shopCategoryIds",productSearchVO.getScid()));
-        }
-        //店铺查询
-        if(StringUtils.isNotEmpty(productSearchVO.getSid())) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("shopId",productSearchVO.getSid()));
-        }
-        //商品名称查询
-        if(StringUtils.isNotEmpty(productSearchVO.getProductName()))
-        {
-            boolQueryBuilder.must(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getProductName(), new String[]{"name"})
-            );
-        }
-        //品牌名称查询
-        if(StringUtils.isNotEmpty(productSearchVO.getBn()))
-        {
-            boolQueryBuilder.must(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getBn(), new String[]{"brandName","brandNameCN","brandNameEN"})
-            );
-        }
-        //分类名称查询
-        if(StringUtils.isNotEmpty(productSearchVO.getCategoryName()))
-        {
-            boolQueryBuilder.must(QueryBuilders
-                    .multiMatchQuery(productSearchVO.getCategoryName(), new String[]{"categoryName"})
-            );
-        }
+    private Query buildBoolQuery(ProductSearchVO productSearchVO) {
+        BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
 
-
-        //SKU ID查询
-        if(StringUtils.isNotEmpty(productSearchVO.getSkuId()))
-        {
-            boolQueryBuilder.must(QueryBuilders.termQuery("skuId",productSearchVO.getSkuId()));
+        // 关键词查询
+        if (StringUtils.isNotEmpty(productSearchVO.getKeyword())) {
+            boolBuilder.must(Query.of(q -> q.multiMatch(m -> m
+                    .query(productSearchVO.getKeyword())
+                    .fields("name", "brandName", "brandNameCN", "brandNameEN", "categoryName"))));
         }
-
-
-        //品牌查询
-        if(CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
-            boolQueryBuilder.must(QueryBuilders.termsQuery("brandId",productSearchVO.getBrandIds()));
+        // 分类查询
+        if (StringUtils.isNotEmpty(productSearchVO.getCid())) {
+            boolBuilder.must(Query.of(q -> q.term(t -> t.field("categoryIds").value(productSearchVO.getCid()))));
         }
-        //品牌查询
-        if(StringUtils.isNotEmpty(productSearchVO.getBid()))
-        {
-            boolQueryBuilder.must(QueryBuilders.termQuery("brandId",productSearchVO.getBid()));
+        // 店铺分类查询
+        if (StringUtils.isNotEmpty(productSearchVO.getScid())) {
+            boolBuilder.must(Query.of(q -> q.term(t -> t.field("shopCategoryIds").value(productSearchVO.getScid()))));
         }
-        //属性查询
-        if(CollectionUtils.isNotEmpty(productSearchVO.getSearchAttributes()))
-        {
-            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getSearchAttributes()) {
-                BoolQueryBuilder attributeQuery = QueryBuilders.boolQuery();
-                attributeQuery.must(QueryBuilders.termQuery("searchAttributes.name", productSearchAttributeVO.getName()));
-                attributeQuery.must(QueryBuilders.termQuery("searchAttributes.value", productSearchAttributeVO.getValue()));
-                NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("searchAttributes", attributeQuery, ScoreMode.None);
-                boolQuery.filter(nestedQuery);
+        // 店铺查询
+        if (StringUtils.isNotEmpty(productSearchVO.getSid())) {
+            boolBuilder.must(Query.of(q -> q.term(t -> t.field("shopId").value(productSearchVO.getSid()))));
+        }
+        // 商品名称查询
+        if (StringUtils.isNotEmpty(productSearchVO.getProductName())) {
+            boolBuilder.must(Query.of(q -> q.multiMatch(m -> m
+                    .query(productSearchVO.getProductName()).fields("name"))));
+        }
+        // 品牌名称查询
+        if (StringUtils.isNotEmpty(productSearchVO.getBn())) {
+            boolBuilder.must(Query.of(q -> q.multiMatch(m -> m
+                    .query(productSearchVO.getBn()).fields("brandName", "brandNameCN", "brandNameEN"))));
+        }
+        // 分类名称查询
+        if (StringUtils.isNotEmpty(productSearchVO.getCategoryName())) {
+            boolBuilder.must(Query.of(q -> q.multiMatch(m -> m
+                    .query(productSearchVO.getCategoryName()).fields("categoryName"))));
+        }
+        // SKU ID查询
+        if (StringUtils.isNotEmpty(productSearchVO.getSkuId())) {
+            boolBuilder.must(Query.of(q -> q.term(t -> t.field("skuId").value(productSearchVO.getSkuId()))));
+        }
+        // 品牌ID查询
+        if (CollectionUtils.isNotEmpty(productSearchVO.getBrandIds())) {
+            boolBuilder.must(Query.of(q -> q.terms(t -> t.field("brandId")
+                    .terms(tv -> tv.value(productSearchVO.getBrandIds().stream()
+                            .map(b -> FieldValue.of(b)).collect(Collectors.toList()))))));
+        }
+        if (StringUtils.isNotEmpty(productSearchVO.getBid())) {
+            boolBuilder.must(Query.of(q -> q.term(t -> t.field("brandId").value(productSearchVO.getBid()))));
+        }
+        // 属性查询
+        if (CollectionUtils.isNotEmpty(productSearchVO.getSearchAttributes())) {
+            BoolQuery.Builder nestedBool = new BoolQuery.Builder();
+            for (ProductSearchAttributeVO attr : productSearchVO.getSearchAttributes()) {
+                BoolQuery.Builder attrQuery = new BoolQuery.Builder();
+                attrQuery.must(Query.of(q -> q.term(t -> t.field("searchAttributes.name").value(attr.getName()))));
+                attrQuery.must(Query.of(q -> q.term(t -> t.field("searchAttributes.value").value(attr.getValue()))));
+                nestedBool.filter(Query.of(q -> q.nested(n -> n
+                        .path("searchAttributes").query(attrQuery.build()._toQuery())
+                        .scoreMode(ChildScoreMode.None))));
             }
-            boolQueryBuilder.must(boolQuery);
+            boolBuilder.must(nestedBool.build()._toQuery());
         }
-        //店铺属性查询
-        if(CollectionUtils.isNotEmpty(productSearchVO.getSearchShopAttributes()))
-        {
-            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-            for(ProductSearchAttributeVO productSearchAttributeVO:productSearchVO.getSearchShopAttributes()) {
-                BoolQueryBuilder attributeQuery = QueryBuilders.boolQuery();
-                attributeQuery.must(QueryBuilders.termQuery("searchShopAttributes.name", productSearchAttributeVO.getName()));
-                attributeQuery.must(QueryBuilders.termQuery("searchShopAttributes.value", productSearchAttributeVO.getValue()));
-                NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("searchShopAttributes", attributeQuery, ScoreMode.None);
-                boolQuery.filter(nestedQuery);
+        // 店铺属性查询
+        if (CollectionUtils.isNotEmpty(productSearchVO.getSearchShopAttributes())) {
+            BoolQuery.Builder nestedBool = new BoolQuery.Builder();
+            for (ProductSearchAttributeVO attr : productSearchVO.getSearchShopAttributes()) {
+                BoolQuery.Builder attrQuery = new BoolQuery.Builder();
+                attrQuery.must(Query.of(q -> q.term(t -> t.field("searchShopAttributes.name").value(attr.getName()))));
+                attrQuery.must(Query.of(q -> q.term(t -> t.field("searchShopAttributes.value").value(attr.getValue()))));
+                nestedBool.filter(Query.of(q -> q.nested(n -> n
+                        .path("searchShopAttributes").query(attrQuery.build()._toQuery())
+                        .scoreMode(ChildScoreMode.None))));
             }
-            boolQueryBuilder.must(boolQuery);
+            boolBuilder.must(nestedBool.build()._toQuery());
         }
 
-        if(productSearchVO.getPsd() != null||productSearchVO.getPed() != null) {
-            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-            /**
-             gt：大于 >
-             gte：大于等于 >=
-             lt：小于  <
-             lte：小于等于  <=
-             */
-            //价格查询 大于等于
+        // 价格查询
+        if (productSearchVO.getPsd() != null || productSearchVO.getPed() != null) {
+            BoolQuery.Builder rangeBool = new BoolQuery.Builder();
             if (productSearchVO.getPsd() != null) {
-                boolQuery.filter(QueryBuilders.rangeQuery("price").gte(productSearchVO.getPsd()));
+                rangeBool.filter(Query.of(q -> q.range(r -> r.number(nr -> nr.field("price").gte(productSearchVO.getPsd())))));
             }
-            //价格查询 小于等于
             if (productSearchVO.getPed() != null) {
-                boolQuery.filter(QueryBuilders.rangeQuery("price").lte(productSearchVO.getPed()));
+                rangeBool.filter(Query.of(q -> q.range(r -> r.number(nr -> nr.field("price").lte(productSearchVO.getPed())))));
             }
-            boolQueryBuilder.must(boolQuery);
+            boolBuilder.must(rangeBool.build()._toQuery());
         }
 
-        //默认排序,根据rank值最大在最前面
-        if(StringUtils.isEmpty(productSearchVO.getPst())&&StringUtils.isEmpty(productSearchVO.getPdst()))
-        {
-            sourceBuilder.sort("randk", SortOrder.DESC);
-        }
-
-        //价格排序
-        if(StringUtils.isNotEmpty(productSearchVO.getPst()))
-        {
-            if("asc".equals(productSearchVO.getPst()))
-            {
-                sourceBuilder.sort("price", SortOrder.ASC);
-            }else if("desc".equals(productSearchVO.getPst())){
-                sourceBuilder.sort("price", SortOrder.DESC);
-            }
-        }
-
-        //新品排序
-        if(StringUtils.isNotEmpty(productSearchVO.getPdst()))
-        {
-            if("asc".equals(productSearchVO.getPdst()))
-            {
-                sourceBuilder.sort("newestRank", SortOrder.ASC);
-            }else if("desc".equals(productSearchVO.getPdst())){
-                sourceBuilder.sort("newestRank", SortOrder.DESC);
-            }
-        }
-
-        sourceBuilder.query(boolQueryBuilder);
-        return sourceBuilder;
+        return boolBuilder.build()._toQuery();
     }
 
     @Override
     public Long queryCount(ProductSearchVO productSearchVO) throws Exception {
-        return queryCountBySearchBuilder(initSourceBuilder(productSearchVO)).longValue();
+        return queryCountByVO(productSearchVO);
     }
 
-
-    public Long queryCountBySearchBuilder(SearchSourceBuilder searchSourceBuilder)  throws Exception {
-        CountRequest countRequest=new CountRequest(ProductIndex.PRODUCT_SKU_INDEX);
-        countRequest.source(searchSourceBuilder);
-        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
-        return response.getCount();
+    public Long queryCountByVO(ProductSearchVO productSearchVO) throws Exception {
+        Query query = buildBoolQuery(productSearchVO);
+        CountResponse response = elasticsearchClient.count(c -> c
+                .index(ProductIndex.PRODUCT_SKU_INDEX).query(query));
+        return response.count();
     }
-
 
     @Override
     public boolean existsIndex() {
         try {
-            GetAliasesRequest request = new GetAliasesRequest();
-            GetAliasesResponse getAliasesResponse = restHighLevelClient.indices().getAlias(request, RequestOptions.DEFAULT);
-            Map<String, Set<AliasMetadata>> map = getAliasesResponse.getAliases();
-            Set<String> indices = map.keySet();
-            for (String key : indices) {
-                if(key.toLowerCase().equals(ProductIndex.PRODUCT_SKU_INDEX))
-                {
-                    return true;
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+            BooleanResponse exists = elasticsearchClient.indices()
+                    .exists(e -> e.index(ProductIndex.PRODUCT_SKU_INDEX));
+            return exists.value();
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
         }
         return false;
     }
 
     @Override
     public List<ProductSearchResultVO> queryBySkuId(Long id) throws Exception {
-        List<ProductSearchResultVO> productSearchResultVOS = new ArrayList<ProductSearchResultVO>();
-        //创建请求对象
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(ProductIndex.PRODUCT_SKU_INDEX);
-        //创建查询对象
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(10);
-        //设置查询条件
-        searchSourceBuilder.query(QueryBuilders.termQuery("skuId", id));
-        //设置查询条件到请求对象中
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
-        SearchHits searchHits = searchResponse.getHits();
-        SearchHit[] searchHitsHits = searchHits.getHits();
-        for(SearchHit searchHit:searchHitsHits) {
-            String sourceString = searchHit.getSourceAsString();
-            if (StringUtils.isNotEmpty(sourceString)){
-                productSearchResultVOS.add(JSONObject.parseObject(sourceString,ProductSearchResultVO.class));
+        List<ProductSearchResultVO> result = new ArrayList<>();
+        SearchResponse<ProductSearchResultVO> response = elasticsearchClient.search(s -> s
+                        .index(ProductIndex.PRODUCT_SKU_INDEX)
+                        .query(q -> q.term(t -> t.field("skuId").value(id)))
+                        .size(10),
+                ProductSearchResultVO.class);
+        for (Hit<ProductSearchResultVO> hit : response.hits().hits()) {
+            if (hit.source() != null) {
+                result.add(hit.source());
             }
         }
-        return productSearchResultVOS;
+        return result;
     }
 
     @Override
     public void setMaxResultWindow(Long maxCount) {
         try {
-            Settings settings = Settings.builder().put("index.max_result_window", maxCount).build();
-            UpdateSettingsRequest request = new UpdateSettingsRequest(ProductIndex.PRODUCT_SKU_INDEX);
-            request.settings(settings);
-            AcknowledgedResponse acknowledgedResponse = restHighLevelClient.indices().putSettings(request, RequestOptions.DEFAULT);
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
+            elasticsearchClient.indices().putSettings(p -> p
+                    .index(ProductIndex.PRODUCT_SKU_INDEX)
+                    .settings(s -> s.maxResultWindow(maxCount.intValue())));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
     @Override
     public Long queryMaxResultWindowCount() throws IOException {
-        GetSettingsRequest request = new GetSettingsRequest();
-        request.indices(ProductIndex.PRODUCT_SKU_INDEX);
-        GetSettingsResponse getSettingsResponse = restHighLevelClient.indices().getSettings(request, RequestOptions.DEFAULT);
-        Settings settings = getSettingsResponse.getIndexToSettings().get("product_sku_index");
-        if(settings!=null)
-        {
-            String indexMaxResultWindow = settings.get("index.max_result_window");
-            if(indexMaxResultWindow!=null)
-            {
-                return Long.parseLong(indexMaxResultWindow);
+        try {
+            GetIndicesSettingsResponse settingsResponse = elasticsearchClient.indices()
+                    .getSettings(g -> g.index(ProductIndex.PRODUCT_SKU_INDEX));
+            var indexSettings = settingsResponse.get(ProductIndex.PRODUCT_SKU_INDEX);
+            if (indexSettings != null && indexSettings.settings() != null
+                    && indexSettings.settings().index() != null
+                    && indexSettings.settings().index().maxResultWindow() != null) {
+                return Long.valueOf(indexSettings.settings().index().maxResultWindow());
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
         return ProductIndex.MAX_RESULT_WINDOW;
     }
@@ -586,60 +300,46 @@ public class ProductSearchESServiceImpl implements ProductSearchService {
     @Override
     public void save(ProductSearchResultVO productSearchResultVO) throws IOException {
         productSearchResultVO.setCreateDate(DateUtils.FORMATTER_SS.get().format(DateUtils.currentDate()));
-        IndexRequest request = new IndexRequest(ProductIndex.PRODUCT_SKU_INDEX).id(String.valueOf(productSearchResultVO.getSkuId())).source(JSONObject.toJSONString(productSearchResultVO), XContentType.JSON);
-
-        restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        elasticsearchClient.index(i -> i
+                .index(ProductIndex.PRODUCT_SKU_INDEX)
+                .id(String.valueOf(productSearchResultVO.getSkuId()))
+                .document(productSearchResultVO)
+                .refresh(Refresh.True));
     }
 
     @Override
     public void update(ProductSearchResultVO productSearchResultVO) throws Exception {
         List<Long> deleteFaildList = new ArrayList<>();
-        this.removeById(productSearchResultVO.getSkuId(),deleteFaildList);
+        this.removeById(productSearchResultVO.getSkuId(), deleteFaildList);
         this.save(productSearchResultVO);
     }
 
     @Override
-    public boolean removeById(Long id,List<Long> deleteFaildIdList) throws Exception {
-        //创建请求对象
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(ProductIndex.PRODUCT_SKU_INDEX);
-        //创建查询对象
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        //设置查询条件
-        searchSourceBuilder.query(QueryBuilders.termQuery("skuId", id));
-        searchSourceBuilder.size(queryCountBySearchBuilder(searchSourceBuilder).intValue());
-        //设置查询条件到请求对象中
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
-        SearchHits searchHits = searchResponse.getHits();
-        SearchHit[] searchHitsHits = searchHits.getHits();
-        for(SearchHit searchHit:searchHitsHits) {
-            DeleteRequest deleteRequest = new DeleteRequest(ProductIndex.PRODUCT_SKU_INDEX);
-            deleteRequest.id(searchHit.getId());
-            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
-            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
-            {
-                //强制刷新
-                deleteResponse.forcedRefresh();
-            }else{
-                //保存删除失败ID
-                deleteFaildIdList.add(Long.parseLong(searchHit.getId()));
+    public boolean removeById(Long id, List<Long> deleteFaildIdList) throws Exception {
+        Query skuQuery = Query.of(q -> q.term(t -> t.field("skuId").value(id)));
+        long total = elasticsearchClient.count(c -> c
+                .index(ProductIndex.PRODUCT_SKU_INDEX).query(skuQuery)).count();
+
+        SearchResponse<ProductSearchResultVO> response = elasticsearchClient.search(s -> s
+                        .index(ProductIndex.PRODUCT_SKU_INDEX)
+                        .query(skuQuery)
+                        .size((int) total),
+                ProductSearchResultVO.class);
+
+        for (Hit<ProductSearchResultVO> hit : response.hits().hits()) {
+            DeleteResponse deleteResponse = elasticsearchClient.delete(d -> d
+                    .index(ProductIndex.PRODUCT_SKU_INDEX)
+                    .id(hit.id())
+                    .refresh(Refresh.True));
+            if (!"deleted".equals(deleteResponse.result().jsonValue())) {
+                deleteFaildIdList.add(Long.parseLong(hit.id()));
             }
         }
-        //没有删除失败的ID
-        if(CollectionUtils.isEmpty(deleteFaildIdList))
-        {
-            return true;
-        }
-        return false;
+        return CollectionUtils.isEmpty(deleteFaildIdList);
     }
-
 
     @Override
     public void deleteIndex() throws Exception {
-        DeleteIndexRequest request = new DeleteIndexRequest(ProductIndex.PRODUCT_SKU_INDEX);
-        restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
+        elasticsearchClient.indices().delete(d -> d.index(ProductIndex.PRODUCT_SKU_INDEX));
     }
-
-
 }
