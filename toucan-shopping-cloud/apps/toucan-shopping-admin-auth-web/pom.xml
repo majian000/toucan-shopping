@@ -142,7 +142,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.apps.admin.auth.web.app.CloudAdminAuthWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.admin.auth.web.CloudAdminAuthWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

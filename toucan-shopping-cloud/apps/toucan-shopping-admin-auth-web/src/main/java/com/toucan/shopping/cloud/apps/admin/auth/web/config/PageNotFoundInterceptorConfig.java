@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.app.config;
+package com.toucan.shopping.cloud.apps.admin.auth.web.config;
 
 import com.toucan.shopping.cloud.apps.admin.auth.web.interceptor.PageNotFoundInterceptor;
 import org.slf4j.Logger;

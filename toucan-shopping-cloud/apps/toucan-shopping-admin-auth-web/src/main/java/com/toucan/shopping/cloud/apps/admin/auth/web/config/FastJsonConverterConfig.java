@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.app.config;
+package com.toucan.shopping.cloud.apps.admin.auth.web.config;
 
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
