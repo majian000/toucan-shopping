@@ -7,8 +7,6 @@ server:
 spring:
   application:
     name: toucan-shopping-admin-auth-web #应用名称
-  mvc:
-    static-path-pattern: /static/**
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

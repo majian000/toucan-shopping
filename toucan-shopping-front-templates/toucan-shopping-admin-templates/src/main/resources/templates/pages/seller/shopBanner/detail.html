@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<span th:replace="common_page::common"></span>
+<span th:replace="~{common_page::common}"></span>
 <form class="layui-form layuimini-form"  id="shopBannerForm"  >
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <input type="hidden" name="shopId"  th:value="${model.shopId}">
