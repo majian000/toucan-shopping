@@ -1,14 +1,4 @@
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.jdbc.DataSourceHealthContributorAutoConfiguration
-      - org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration
-      - org.mybatis.spring.boot.autoconfigure.MybatisLanguageDriverAutoConfiguration
   profiles:
     active: dev
   main:

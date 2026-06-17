@@ -1,8 +1,4 @@
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - com.alibaba.cloud.nacos.endpoint.NacosDiscoveryEndpointAutoConfiguration
   profiles:
     active: dev
   main:
@@ -27,9 +23,6 @@ logging:
 
 ---
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   config:
     activate:
       on-profile: prod
@@ -40,9 +33,6 @@ spring:
 
 ---
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   config:
     activate:
       on-profile: dev
