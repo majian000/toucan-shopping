@@ -176,3 +176,14 @@ toucan:
         maxWaitMillis: 15 #最大等待数
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数
+
+
+
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
+

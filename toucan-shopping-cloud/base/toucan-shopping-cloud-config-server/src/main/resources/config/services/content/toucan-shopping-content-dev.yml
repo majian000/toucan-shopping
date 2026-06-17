@@ -155,3 +155,13 @@ toucan:
       enabled: true
       exclude-paths[0]: /article/save
       exclude-paths[1]: /article/update
+
+
+
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false

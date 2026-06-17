@@ -69,3 +69,12 @@ toucan:
         maxWaitMillis: 15
         maxIdle: 50
         minIdle: 0
+
+
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
