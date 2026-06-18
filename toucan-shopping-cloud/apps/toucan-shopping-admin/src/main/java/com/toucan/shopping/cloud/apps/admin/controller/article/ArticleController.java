@@ -92,7 +92,7 @@ public class ArticleController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@RequestParam Long columnId) throws NoSuchAlgorithmException {
+    public String addPage(HttpServletRequest request,@RequestParam(required = false) Long columnId) throws NoSuchAlgorithmException {
         ColumnVO queryColumnVO= new ColumnVO();
         queryColumnVO.setId(columnId);
         ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
@@ -294,14 +294,10 @@ public class ArticleController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/column/tree/pid",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryColumnTreeByParentId(@RequestParam Long id)
+    public ResultObjectVO queryColumnTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(id==null)
-            {
-                id=-1L;
-            }
             ColumnVO query = new ColumnVO();
             query.setPid(id);
             query.setAppCode(toucan.getShoppingPC().getAppCode());

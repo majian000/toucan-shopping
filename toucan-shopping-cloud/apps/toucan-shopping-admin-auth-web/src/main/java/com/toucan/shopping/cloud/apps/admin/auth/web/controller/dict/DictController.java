@@ -287,13 +287,10 @@ public class DictController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/category/list",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam Long id)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(id==null){
-                id=-1L;
-            }
             DictCategoryVO query = new DictCategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = feignDictCategoryService.queryList(requestJsonVO);

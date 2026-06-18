@@ -146,14 +146,10 @@ public class ProductSkuSearchController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam Long id)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(id==null)
-            {
-                id=-1L;
-            }
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
