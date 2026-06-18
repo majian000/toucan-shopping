@@ -27,9 +27,8 @@ spring:
         username: ${toucan.nacos.username}
         password: ${toucan.nacos.password}
         metadata:
-          preserved.heart.beat.interval: 4000 #心跳间隔。时间单位:秒。心跳间隔
-          preserved.heart.beat.timeout: 4500 #心跳暂停。时间单位:秒。 即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例设为不健康：
-          preserved.ip.delete.timeout: 4500 #Ip删除超时。时间单位:秒。即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例删除：
+          preserved.heart.beat.interval: 4000 #心跳间隔(毫秒)
+          preserved.heart.beat.timeout: 4500 #心跳超时(毫秒)
   zipkin: #链路追踪
     enabled: false
     base-url: http://localhost:9411
