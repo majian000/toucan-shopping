@@ -4,7 +4,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   config:
-    import: configserver:http://localhost:9090
+    import: configserver:http://${toucan.config.server.ip:localhost}:${toucan.config.server.port:9090}
   cloud:
     config:
       username: toucan_sp
@@ -26,7 +26,6 @@ spring:
   config:
     activate:
       on-profile: prod
-    import: configserver:http://${toucan.config.server.ip}:${toucan.config.server.port}
   cloud:
     config:
       profile: prod
