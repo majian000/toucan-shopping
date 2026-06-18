@@ -39,6 +39,13 @@ public class LogEmailQueueThread extends Thread {
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
+                // 异常时休眠，避免死循环空转消耗 CPU
+                try {
+                    this.sleep(5000);
+                } catch(InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
         }
     }
