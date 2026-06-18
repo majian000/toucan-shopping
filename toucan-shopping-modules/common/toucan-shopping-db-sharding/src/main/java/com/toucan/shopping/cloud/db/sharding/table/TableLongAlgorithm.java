@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Properties;
 
 /**
  * 默认自定义分表
@@ -33,6 +34,16 @@ public class TableLongAlgorithm implements StandardShardingAlgorithm<Long> {
     @Override
     public Collection<String> doSharding(Collection<String> collection, RangeShardingValue<Long> rangeShardingValue) {
         return collection;
+    }
+
+    @Override
+    public void init(Properties props) {
+        if (props.containsKey("num")) {
+            this.num = Integer.parseInt(props.getProperty("num"));
+        }
+        if (props.containsKey("instance-name")) {
+            this.instanceName = props.getProperty("instance-name");
+        }
     }
 
     public String getInstanceName() {
