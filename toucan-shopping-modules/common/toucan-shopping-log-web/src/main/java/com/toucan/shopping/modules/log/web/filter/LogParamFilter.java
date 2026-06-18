@@ -193,6 +193,7 @@ public class LogParamFilter extends OncePerRequestFilter {
             }
 
         } finally {
+            resp.setCharacterEncoding("UTF-8");
             resp.copyBodyToResponse();
         }
     }
