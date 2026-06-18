@@ -33,6 +33,7 @@ spring:
     redis:
       host: 8.140.187.184
       port: 6379
+      password: mj_tocan_redis_7612
       database: 0
   zipkin: #链路追踪
     enabled: false
