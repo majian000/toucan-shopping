@@ -139,7 +139,7 @@ toucan:
     # 例如 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
     http-toucan-auth-header: Cookie
     #当前项目登录页
-    login-page: /login/page
+    login-page: login/page
     #没有权限时跳转页面
     page-403: /403
     #拦截指定路径
