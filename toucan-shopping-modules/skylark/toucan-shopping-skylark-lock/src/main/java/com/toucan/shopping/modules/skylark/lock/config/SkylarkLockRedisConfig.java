@@ -26,6 +26,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.time.Duration;
 import java.util.HashMap;
+
+import io.lettuce.core.ClientOptions;
 import java.util.Map;
 
 @Slf4j
@@ -87,11 +89,18 @@ public class SkylarkLockRedisConfig {
             genericObjectPoolConfig.setMaxWaitMillis(toucan.getModules().getSkylarkLock().getRedis().getMaxWaitMillis());
             genericObjectPoolConfig.setMaxIdle(toucan.getModules().getSkylarkLock().getRedis().getMaxIdle());
             genericObjectPoolConfig.setMinIdle(toucan.getModules().getSkylarkLock().getRedis().getMinIdle());
+            genericObjectPoolConfig.setTimeBetweenEvictionRuns(Duration.ofSeconds(30));
+            genericObjectPoolConfig.setTestWhileIdle(true);
+            genericObjectPoolConfig.setMinEvictableIdleTime(Duration.ofSeconds(60));
 
             //redis客户端配置
             LettucePoolingClientConfiguration.LettucePoolingClientConfigurationBuilder
                     builder = LettucePoolingClientConfiguration.builder().
                     commandTimeout(Duration.ofSeconds(toucan.getModules().getSkylarkLock().getRedis().getTimeout()));
+            ClientOptions clientOptions = ClientOptions.builder()
+                    .pingBeforeActivateConnection(true)
+                    .build();
+            builder.clientOptions(clientOptions);
             builder.poolConfig(genericObjectPoolConfig);
             LettuceClientConfiguration lettuceClientConfiguration = builder.build();
 
