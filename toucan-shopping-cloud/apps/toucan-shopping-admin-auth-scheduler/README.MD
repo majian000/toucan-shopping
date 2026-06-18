@@ -17,8 +17,33 @@
 
 ###### 配置ElasticSearch
 
-    1.设置用户返回最大记录数
-    PUT http://localhost:9200/user_index/_settings
+    1.设置返回最大记录数
+    PUT http://localhost:9200/admin_auth_admin_role_index/_settings
+    请求头
+    Content-Type:application/json
+    请求体
+    {
+      "index": {
+        "max_result_window": 10000
+      }
+    }
+
+
+    2.设置返回最大记录数
+    PUT http://localhost:9200/admin_auth_role_function_index/_settings
+    请求头
+    Content-Type:application/json
+    请求体
+    {
+      "index": {
+        "max_result_window": 10000
+      }
+    }
+
+
+
+    3.设置返回最大记录数
+    PUT http://localhost:9200/admin_auth_function_index/_settings
     请求头
     Content-Type:application/json
     请求体
