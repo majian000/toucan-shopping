@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.message.web.app.config;
+package com.toucan.shopping.cloud.apps.seller.web.config;
 
 import feign.Logger;
 import org.springframework.context.annotation.Bean;

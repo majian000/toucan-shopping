@@ -1,25 +1,17 @@
 package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.apps.seller.web.app.CloudSellerWebApplication;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.vo.*;
-import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 

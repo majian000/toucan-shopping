@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.seller.web.app;
+package com.toucan.shopping.cloud.apps.seller.web;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

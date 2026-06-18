@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.seller.web.app.config;
+package com.toucan.shopping.cloud.apps.message.web.config;
 
 
 import feign.Response;

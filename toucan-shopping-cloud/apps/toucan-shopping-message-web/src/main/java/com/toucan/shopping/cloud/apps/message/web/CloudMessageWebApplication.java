@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.message.web.app;
+package com.toucan.shopping.cloud.apps.message.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

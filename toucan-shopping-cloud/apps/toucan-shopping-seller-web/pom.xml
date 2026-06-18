@@ -233,7 +233,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.apps.seller.web.app.CloudSellerWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.seller.web.CloudSellerWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

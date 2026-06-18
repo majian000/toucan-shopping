@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.message.web.app.config;
+package com.toucan.shopping.cloud.apps.message.web.config;
 
 
 import org.apache.kafka.clients.producer.ProducerConfig;
