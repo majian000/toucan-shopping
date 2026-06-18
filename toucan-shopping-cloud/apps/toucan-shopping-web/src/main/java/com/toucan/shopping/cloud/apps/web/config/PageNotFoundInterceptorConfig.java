@@ -1,6 +1,6 @@
-package com.toucan.shopping.cloud.apps.web.app.config;
+package com.toucan.shopping.cloud.apps.web.config;
 
-import com.toucan.shopping.cloud.apps.web.interceptor.BasePathInterceptor;
+import com.toucan.shopping.cloud.apps.web.interceptor.PageNotFoundInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +10,20 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class BasePathInterceptorConfig implements WebMvcConfigurer {
+public class PageNotFoundInterceptorConfig implements WebMvcConfigurer {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private BasePathInterceptor basePathInterceptor;
+    private PageNotFoundInterceptor pageNotFoundInterceptor;
 
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        logger.info("初始化BasePath路径拦截器");
+        logger.info("初始化404拦截器");
 
-        InterceptorRegistration interceptorRegistration = registry.addInterceptor(basePathInterceptor);
+        InterceptorRegistration interceptorRegistration = registry.addInterceptor(pageNotFoundInterceptor);
         interceptorRegistration.addPathPatterns("/**");
     }
 

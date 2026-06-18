@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.app.config;
+package com.toucan.shopping.cloud.apps.web.config;
 
 
 import com.toucan.shopping.modules.qlexpress.service.QLExpressService;
