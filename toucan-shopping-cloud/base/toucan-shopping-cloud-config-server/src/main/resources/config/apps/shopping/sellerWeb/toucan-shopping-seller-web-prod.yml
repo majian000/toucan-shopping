@@ -16,7 +16,13 @@ spring:
         ttl: 3s #开启重试机制
       eager-load:
         clients:
+          - toucan-shopping-category
+          - toucan-shopping-order
+          - toucan-shopping-product
+          - toucan-shopping-user
+          - toucan-shopping-area
           - toucan-shopping-gateway
+          - toucan-shopping-stock
     nacos:
       discovery:
         ip: ${toucan.ip}    #使用IP地址注册

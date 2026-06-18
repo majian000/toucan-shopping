@@ -28,7 +28,7 @@ spring:
     nacos:
       discovery:
         ip: ${toucan.ip}    #使用IP地址注册
-        port: ${server.port}
+        port: ${toucan.port}
         register-enabled: false
     openfeign:
       circuitbreaker:
