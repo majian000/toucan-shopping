@@ -9,7 +9,6 @@
     spring config
     lombok
     nacos
-    hystrix
     elasticsearch
     kafka
     shardingsphere
@@ -56,9 +55,9 @@
     2.redis 3.2
     3.apache-zookeeper-3.6.2
     4.kafka_2.12-2.7.0
-    5.elasticsearch-7.10.2
+    5.elasticsearch-8.18.8
     6.FastDFS_v5.08
-    7.nacos-server-2.0.4 下载地址:https://github.com/alibaba/nacos/releases
+    7.nacos-server-3.2.2 下载地址:https://github.com/alibaba/nacos/releases
     8.canal.deployer-1.1.7
 
 ##### 第三方配置
