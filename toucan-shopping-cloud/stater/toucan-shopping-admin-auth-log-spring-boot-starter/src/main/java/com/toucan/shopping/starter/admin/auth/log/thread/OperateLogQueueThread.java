@@ -1,6 +1,6 @@
 package com.toucan.shopping.starter.admin.auth.log.thread;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignOperateLogService;
+import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -28,7 +28,7 @@ public class OperateLogQueueThread extends Thread {
     private OperateLogQueue operateLogQueue;
 
     @Autowired
-    private FeignOperateLogService feignOperateLogService;
+    private OperateLogServiceAPI operateLogServiceAPI;
 
     @Autowired
     private Toucan toucan;
@@ -51,7 +51,7 @@ public class OperateLogQueueThread extends Thread {
                     requestLogVOList.add(requestLogVO);
                     if(requestLogVOList.size()>=GROUP_ITEM_COUNT) {
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), requestLogVOList);
-                        resultObjectVO = feignOperateLogService.saves(requestJsonVO);
+                        resultObjectVO = operateLogServiceAPI.saves(requestJsonVO);
                         if (!resultObjectVO.isSuccess()) {
                             logger.warn("保存访问日志失败 {}", resultObjectVO.getData());
                         }
@@ -63,7 +63,7 @@ public class OperateLogQueueThread extends Thread {
                     if(CollectionUtils.isNotEmpty(requestLogVOList))
                     {
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), requestLogVOList);
-                        resultObjectVO = feignOperateLogService.saves(requestJsonVO);
+                        resultObjectVO = operateLogServiceAPI.saves(requestJsonVO);
                         if (!resultObjectVO.isSuccess()) {
                             logger.warn("保存访问日志失败 {}", resultObjectVO.getData());
                         }

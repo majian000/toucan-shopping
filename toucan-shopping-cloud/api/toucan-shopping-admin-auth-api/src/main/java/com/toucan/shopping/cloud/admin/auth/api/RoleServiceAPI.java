@@ -1,0 +1,77 @@
+package com.toucan.shopping.cloud.admin.auth.api;
+
+
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+
+public interface RoleServiceAPI {
+
+    /**
+     * 保存
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+
+
+    /**
+     * 编辑
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+
+
+    /**
+     * 查询列表
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO listPage( String signHeader,  RequestJsonVO requestVo);
+
+
+
+    /**
+     * 查询指定用户的角色树
+     * @param requestJsonVO
+     * @return
+     */
+    public ResultObjectVO queryAdminRoleTree( String signHeader, RequestJsonVO requestJsonVO);
+
+
+
+
+    /**
+     * 根据ID删除指定角色
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+
+
+
+
+    /**
+     * 根据ID查询
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO findById( String signHeader,  RequestJsonVO requestVo);
+
+
+    /**
+     * 批量删除
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+
+
+
+}

@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
@@ -56,10 +56,10 @@ public class CategoryController extends UIController {
     private FeignCategoryService feignCategoryService;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignDictService feignDictService;
+    private DictServiceAPI dictServiceAPI;
 
 
 
@@ -68,7 +68,7 @@ public class CategoryController extends UIController {
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request) throws NoSuchAlgorithmException {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/category/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/category/listPage", functionServiceAPI);
 
         this.setCategoryDictList(request);
 
@@ -94,7 +94,7 @@ public class CategoryController extends UIController {
         queryDict.getCodes().add(CategoryDictConstant.CATEGORY_DICT_TYPE_CODE);
         queryDict.setAppCode(toucan.getAppCode());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
-        ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
         if(resultObjectVO.isSuccess()) {
             if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
                 for(DictVO dictVO:resultObjectVO.getData()){

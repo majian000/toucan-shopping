@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
@@ -12,7 +12,6 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dictCategory")
@@ -42,16 +40,16 @@ public class DictCategoryController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignDictCategoryService feignDictCategoryService;
+    private DictCategoryServiceAPI dictCategoryServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
 
@@ -64,10 +62,10 @@ public class DictCategoryController extends UIController {
     {
 
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/dictCategory/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/dictCategory/listPage", functionServiceAPI);
         return "pages/dict/dictCategory/list.html";
     }
 
@@ -89,7 +87,7 @@ public class DictCategoryController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignDictCategoryService.listPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = dictCategoryServiceAPI.listPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -138,7 +136,7 @@ public class DictCategoryController extends UIController {
         AdminVO queryAdminVO = new AdminVO();
         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-        ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
         if(resultObjectVO.isSuccess())
         {
             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -173,7 +171,7 @@ public class DictCategoryController extends UIController {
             AppVO appVO=new AppVO();
             appVO.setCodes(new ArrayList(appCodes));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
-            ResultObjectVO resultObjectVO = feignAppService.queryListByCodes(requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.queryListByCodes(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
                 if(CollectionUtils.isNotEmpty(apps)) {
@@ -194,7 +192,7 @@ public class DictCategoryController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         return "pages/dict/dictCategory/add.html";
     }
@@ -215,7 +213,7 @@ public class DictCategoryController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignDictCategoryService.save(requestJsonVO);
+            resultObjectVO = dictCategoryServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -232,12 +230,12 @@ public class DictCategoryController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Integer id)
     {
         try {
-            super.initSelectApp(request,toucan,feignAppService);
+            super.initSelectApp(request,toucan, appServiceAPI);
 
             DictCategoryVO dictCategory = new DictCategoryVO();
             dictCategory.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
-            ResultObjectVO resultObjectVO = feignDictCategoryService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = dictCategoryServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -276,7 +274,7 @@ public class DictCategoryController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignDictCategoryService.update(requestJsonVO);
+            resultObjectVO = dictCategoryServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -312,7 +310,7 @@ public class DictCategoryController extends UIController {
             dictCategory.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,dictCategory);
-            resultObjectVO = feignDictCategoryService.deleteById(requestVo);
+            resultObjectVO = dictCategoryServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -344,7 +342,7 @@ public class DictCategoryController extends UIController {
             }
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,dictCategories);
-            resultObjectVO = feignDictCategoryService.deleteByIds(requestVo);
+            resultObjectVO = dictCategoryServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -1,29 +1,19 @@
 package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
-import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
-import com.toucan.shopping.modules.area.vo.AreaTreeVO;
-import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.constant.ColumnDictConstant;
-import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.Column;
-import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -49,7 +39,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -68,13 +57,13 @@ public class ColumnController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignColumnService feignColumnService;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
     @Autowired
     private FeignColumnTypeService feignColumnTypeService;
@@ -87,17 +76,17 @@ public class ColumnController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignDictService feignDictService;
+    private DictServiceAPI dictServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request) throws NoSuchAlgorithmException {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/listPage", functionServiceAPI);
         this.setColumnDictList(request);
         return "pages/column/column/list.html";
     }
@@ -435,7 +424,7 @@ public class ColumnController extends UIController {
         AdminVO queryAdminVO = new AdminVO();
         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-        ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
         if(resultObjectVO.isSuccess())
         {
             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -538,7 +527,7 @@ public class ColumnController extends UIController {
         queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_POSITION_CODE);
         queryDict.setAppCode(toucan.getAppCode());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
-        ResultTypeObjectVO<List<DictVO>> resultObjectVO = feignDictService.queryDictByCodesAndCategoryCode(requestJsonVO);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
         if(resultObjectVO.isSuccess()) {
             if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
                 for(DictVO dictVO:resultObjectVO.getData()){

@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.chart;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminAppServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -27,7 +27,7 @@ public class OnlineUserChartController {
 
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     /**
      * 查询登录用户数
@@ -42,7 +42,7 @@ public class OnlineUserChartController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appLoginUserVO);
-            resultObjectVO = feignAdminAppService.queryAppLoginUserCountList(requestJsonVO);
+            resultObjectVO = adminAppServiceAPI.queryAppLoginUserCountList(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

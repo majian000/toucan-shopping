@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.function;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
@@ -54,19 +54,19 @@ public class FunctionController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @Autowired
-    private FeignRoleFunctionService feignRoleFunctionService;
+    private RoleFunctionServiceAPI roleFunctionServiceAPI;
 
     @Autowired
-    private FeignRoleService feignRoleService;
+    private RoleServiceAPI roleServiceAPI;
     @Autowired
     private IdGenerator idGenerator;
 
@@ -77,10 +77,10 @@ public class FunctionController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/function/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/function/listPage", functionServiceAPI);
 
         return "pages/function/list.html";
     }
@@ -91,7 +91,7 @@ public class FunctionController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
 
         return "pages/function/add.html";
@@ -103,7 +103,7 @@ public class FunctionController extends UIController {
     @RequestMapping(value = "/batchAddPage",method = RequestMethod.GET)
     public String batchAddPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
 
         return "pages/function/batchAdd.html";
@@ -117,7 +117,7 @@ public class FunctionController extends UIController {
             Function entity = new Function();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignFunctionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -132,7 +132,7 @@ public class FunctionController extends UIController {
                             App queryApp = new App();
                             queryApp.setCode(functionVO.getAppCode());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryApp);
-                            resultObjectVO = feignAppService.findByCode(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            resultObjectVO = appServiceAPI.findByCode(SignUtil.sign(requestJsonVO),requestJsonVO);
                             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                                 App app = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
                                 if(app!=null) {
@@ -143,7 +143,7 @@ public class FunctionController extends UIController {
                             Function queryParentFunction = new Function();
                             queryParentFunction.setId(functionVO.getPid());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentFunction);
-                            resultObjectVO = feignFunctionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            resultObjectVO = functionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
                             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                                 List<Function> parentFunctionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
                                 if(!CollectionUtils.isEmpty(parentFunctionList)) {
@@ -180,7 +180,7 @@ public class FunctionController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignFunctionService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -206,7 +206,7 @@ public class FunctionController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignFunctionService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -238,7 +238,7 @@ public class FunctionController extends UIController {
                 function.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entitys);
-            resultObjectVO = feignFunctionService.saves(requestJsonVO);
+            resultObjectVO = functionServiceAPI.saves(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -263,7 +263,7 @@ public class FunctionController extends UIController {
         try {
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignFunctionService.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -289,7 +289,7 @@ public class FunctionController extends UIController {
         try {
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignFunctionService.queryAppFunctionTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -327,7 +327,7 @@ public class FunctionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignFunctionService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = functionServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -365,7 +365,7 @@ public class FunctionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignFunctionService.deleteByAppCode(requestVo);
+            resultObjectVO = functionServiceAPI.deleteByAppCode(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -399,7 +399,7 @@ public class FunctionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignFunctionService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = functionServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -423,7 +423,7 @@ public class FunctionController extends UIController {
             {
                 App query = new App();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-                resultObjectVO = feignAppService.list(appCode,requestJsonVO);
+                resultObjectVO = appServiceAPI.list(appCode,requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<App> rootNodes = resultObjectVO.formatDataList(App.class);
@@ -453,7 +453,7 @@ public class FunctionController extends UIController {
                     functionTreeVO.setParentId(functionTreeVO.getId());
                 }
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,functionTreeVO);
-                resultObjectVO = feignFunctionService.queryAppFunctionTreeByPid(requestJsonVO);
+                resultObjectVO = functionServiceAPI.queryAppFunctionTreeByPid(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<FunctionTreeVO> functionTreeVOS = resultObjectVO.formatDataList(FunctionTreeVO.class);
@@ -519,7 +519,7 @@ public class FunctionController extends UIController {
             App query = new App();
             query.setCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
@@ -529,7 +529,7 @@ public class FunctionController extends UIController {
                 RoleFunction queryRoleFunction = new RoleFunction();
                 queryRoleFunction.setRoleId(roleId);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
-                resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
@@ -588,7 +588,7 @@ public class FunctionController extends UIController {
             roleFunctionVO.setRoleId(roleId);
             roleFunctionVO.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
-            resultObjectVO = feignRoleFunctionService.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
+            resultObjectVO = roleFunctionServiceAPI.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<FunctionTreeVO> fucntionTreeVOS = resultObjectVO.formatDataList(FunctionTreeVO.class);

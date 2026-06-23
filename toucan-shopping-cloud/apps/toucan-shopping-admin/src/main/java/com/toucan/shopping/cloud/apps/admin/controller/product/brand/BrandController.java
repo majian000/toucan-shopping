@@ -3,8 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.brand;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandCategoryService;
@@ -15,15 +14,12 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
@@ -62,7 +58,7 @@ public class BrandController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignBrandService feignBrandService;
@@ -82,7 +78,7 @@ public class BrandController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/brand/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/brand/listPage", functionServiceAPI);
         return "pages/product/brand/list.html";
     }
 

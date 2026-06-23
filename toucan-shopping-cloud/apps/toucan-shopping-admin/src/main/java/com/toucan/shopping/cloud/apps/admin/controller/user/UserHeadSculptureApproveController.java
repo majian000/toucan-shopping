@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
@@ -57,7 +57,7 @@ public class UserHeadSculptureApproveController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignUserHeadSculptureApproveService feignUserHeadSculptureApproveService;
@@ -81,7 +81,7 @@ public class UserHeadSculptureApproveController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/head/sculpture/approve/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/head/sculpture/approve/listPage", functionServiceAPI);
         return "pages/user/headSculptureApprove/list.html";
     }
 

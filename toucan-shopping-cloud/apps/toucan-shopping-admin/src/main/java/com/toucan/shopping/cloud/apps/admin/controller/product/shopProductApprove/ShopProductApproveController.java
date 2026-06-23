@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.shopProductAppro
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
@@ -64,7 +64,7 @@ public class ShopProductApproveController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignShopProductApproveService feignShopProductApproveService;
@@ -107,7 +107,7 @@ public class ShopProductApproveController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/shopProductApprove/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/shopProductApprove/listPage", functionServiceAPI);
         request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductApprovePreviewPage());
         return "pages/product/shopProductApprove/list.html";
     }
@@ -119,7 +119,7 @@ public class ShopProductApproveController extends UIController {
     public String spuListPage(HttpServletRequest request,@PathVariable Long categoryId)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/shopProductApprove/spuListPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/shopProductApprove/spuListPage", functionServiceAPI);
 
         request.setAttribute("categoryId",categoryId);
         return "pages/product/shopProductApprove/spu_list.html";

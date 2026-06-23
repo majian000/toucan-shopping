@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSku;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
@@ -20,24 +20,18 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
-import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
-import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
-import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
-import com.toucan.shopping.modules.search.vo.ProductSearchResultVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +41,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 商品SKU管理
@@ -66,7 +59,7 @@ public class ProductSkuController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignShopProductService feignShopProductService;
@@ -107,7 +100,7 @@ public class ProductSkuController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/productSku/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/productSku/listPage", functionServiceAPI);
         request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
         return "pages/product/productSku/list.html";
     }

@@ -3,13 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.statistic.produc
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderStatisticService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -20,12 +19,9 @@ import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.page.OrderHotSellPageInfo;
 import com.toucan.shopping.modules.order.vo.OrderHotSellStatisticVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.vo.CategoryProductSkuStatisticVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuStatusVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.user.vo.UserCollectProductVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +59,7 @@ public class ProductSkuStatisticController extends UIController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignProductSkuStatisticService feignProductSkuStatisticService;
@@ -251,7 +247,7 @@ public class ProductSkuStatisticController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSkuStatistic/categoryStatisticPage",feignFunctionService);
+        super.initButtons(request,toucan,"/productSkuStatistic/categoryStatisticPage", functionServiceAPI);
         return "pages/product/statistic/productSku/statistic_list.html";
     }
 
@@ -268,7 +264,7 @@ public class ProductSkuStatisticController extends UIController {
     public String hotSellStatisticPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSkuStatistic/hotSellStatisticPage",feignFunctionService);
+        super.initButtons(request,toucan,"/productSkuStatistic/hotSellStatisticPage", functionServiceAPI);
         return "pages/product/statistic/productSku/hot_sell_statistic_list.html";
     }
 

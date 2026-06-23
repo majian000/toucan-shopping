@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.orgnazition;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.AdminOrgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -51,19 +51,19 @@ public class OrgnazitionController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOrgnazitionService feignOrgnazitionService;
+    private OrgnazitionServiceAPI orgnazitionServiceAPI;
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @Autowired
-    private FeignAdminOrgnazitionService feignAdminOrgnazitionService;
+    private AdminOrgnazitionServiceAPI adminOrgnazitionServiceAPI;
 
 
 
@@ -73,10 +73,10 @@ public class OrgnazitionController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/orgnazition/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/orgnazition/listPage", functionServiceAPI);
 
         return "pages/orgnazition/list.html";
     }
@@ -87,7 +87,7 @@ public class OrgnazitionController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
 
         return "pages/orgnazition/add.html";
@@ -101,12 +101,12 @@ public class OrgnazitionController extends UIController {
     {
         try {
 
-            super.initSelectApp(request,toucan,feignAppService);
+            super.initSelectApp(request,toucan, appServiceAPI);
 
             Orgnazition entity = new Orgnazition();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignOrgnazitionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = orgnazitionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -119,7 +119,7 @@ public class OrgnazitionController extends UIController {
                         Orgnazition queryParentOrgnazition = new Orgnazition();
                         queryParentOrgnazition.setId(orgnazitionVO.getPid());
                         requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
-                        resultObjectVO = feignOrgnazitionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                        resultObjectVO = orgnazitionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
                         if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                             List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
                             if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
@@ -178,7 +178,7 @@ public class OrgnazitionController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignOrgnazitionService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -207,7 +207,7 @@ public class OrgnazitionController extends UIController {
             entity.setAppCodes(appCodes);
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignOrgnazitionService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -234,7 +234,7 @@ public class OrgnazitionController extends UIController {
             queryPageInfo.setAppCode(toucan.getAppCode());
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignOrgnazitionService.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -273,7 +273,7 @@ public class OrgnazitionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignOrgnazitionService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = orgnazitionServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -295,7 +295,7 @@ public class OrgnazitionController extends UIController {
             App query = new App();
             query.setCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignOrgnazitionService.queryOrgnazationTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return orgnazitionServiceAPI.queryOrgnazationTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");
@@ -343,7 +343,7 @@ public class OrgnazitionController extends UIController {
         try {
             //查询对应账户的应用
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
-            resultObjectVO = feignOrgnazitionService.queryAdminOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.queryAdminOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到组织机构树
@@ -356,7 +356,7 @@ public class OrgnazitionController extends UIController {
                 queryAdminOrgnazition.setAdminId(entity.getAdminId());
                 queryAdminOrgnazition.setAppCode(appCode);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminOrgnazition);
-                resultObjectVO = feignAdminOrgnazitionService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = adminOrgnazitionServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AdminOrgnazition> adminOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminOrgnazition.class);
@@ -412,7 +412,7 @@ public class OrgnazitionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignOrgnazitionService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = orgnazitionServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

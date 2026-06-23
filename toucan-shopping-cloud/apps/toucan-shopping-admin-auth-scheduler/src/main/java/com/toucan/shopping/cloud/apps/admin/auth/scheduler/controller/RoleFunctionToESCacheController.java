@@ -3,13 +3,9 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.RoleFunctionServiceAPI;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
-import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -44,7 +40,7 @@ public class RoleFunctionToESCacheController {
     private Toucan toucan;
 
     @Autowired
-    private FeignRoleFunctionService feignRoleFunctionService;
+    private RoleFunctionServiceAPI roleFunctionServiceAPI;
 
 
     @Autowired
@@ -54,7 +50,7 @@ public class RoleFunctionToESCacheController {
     public PageInfo queryPage(RoleFunctionPageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = feignRoleFunctionService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = roleFunctionServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson=JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询角色功能项列表 {}",dataJson);

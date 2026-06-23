@@ -6,13 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.auth.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.cloud.apps.admin.auth.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class LoginController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -117,7 +116,7 @@ public class LoginController {
             requestVo.setAppCode(appCode);
             requestVo.setSign(SignUtil.sign(appCode, entityJson));
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAdminService.login(requestVo.getSign(),requestVo);
+            resultObjectVO = adminServiceAPI.login(requestVo.getSign(),requestVo);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

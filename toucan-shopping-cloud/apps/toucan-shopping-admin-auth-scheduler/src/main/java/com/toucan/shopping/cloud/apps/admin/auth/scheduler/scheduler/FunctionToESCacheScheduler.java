@@ -2,15 +2,11 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
-import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
-import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -45,14 +41,14 @@ public class FunctionToESCacheScheduler {
 
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
 
 
     public PageInfo queryPage(FunctionTreeInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = feignFunctionService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = functionServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson=JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询功能项列表 {}",dataJson);

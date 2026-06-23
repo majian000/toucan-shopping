@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
@@ -46,32 +46,32 @@ public class AdminController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAdminRoleService feignAdminRoleService;
+    private AdminRoleServiceAPI adminRoleServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @Autowired
     private IdGenerator idGenerator;
 
     @Autowired
-    private FeignAdminOrgnazitionService feignAdminOrgnazitionService;
+    private AdminOrgnazitionServiceAPI adminOrgnazitionServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         return "pages/admin/add.html";
     }
@@ -85,7 +85,7 @@ public class AdminController extends UIController {
             AdminApp adminApp = new AdminApp();
             adminApp.setAdminId(adminId);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminApp);
-            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminAppServiceAPI.queryAppListByAdminId(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
@@ -106,12 +106,12 @@ public class AdminController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            super.initSelectApp(request,toucan,feignAppService);
+            super.initSelectApp(request,toucan, appServiceAPI);
 
             Admin admin = new Admin();
             admin.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = feignAdminService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -159,7 +159,7 @@ public class AdminController extends UIController {
             Admin admin = new Admin();
             admin.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = feignAdminService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -189,7 +189,7 @@ public class AdminController extends UIController {
             Admin admin = new Admin();
             admin.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -216,10 +216,10 @@ public class AdminController extends UIController {
     {
 
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/admin/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/admin/listPage", functionServiceAPI);
         return "pages/admin/list.html";
     }
 
@@ -251,7 +251,7 @@ public class AdminController extends UIController {
                 }
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAdminService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -280,7 +280,7 @@ public class AdminController extends UIController {
             adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminRoleVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminRoleVO);
-            resultObjectVO = feignAdminRoleService.saveRoles(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminRoleServiceAPI.saveRoles(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -306,7 +306,7 @@ public class AdminController extends UIController {
             adminOrgnazitionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminOrgnazitionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminOrgnazitionVO);
-            resultObjectVO = feignAdminOrgnazitionService.saveOrgnazitions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminOrgnazitionServiceAPI.saveOrgnazitions(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -331,7 +331,7 @@ public class AdminController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAdminService.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -357,7 +357,7 @@ public class AdminController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAdminService.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -394,7 +394,7 @@ public class AdminController extends UIController {
                 }
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAdminService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -419,7 +419,7 @@ public class AdminController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAdminService.list(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.list(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -469,7 +469,7 @@ public class AdminController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAdminService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = adminServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -503,7 +503,7 @@ public class AdminController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAdminService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = adminServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

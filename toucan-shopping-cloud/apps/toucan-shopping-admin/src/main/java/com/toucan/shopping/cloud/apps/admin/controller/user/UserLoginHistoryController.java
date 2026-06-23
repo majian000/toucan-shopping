@@ -3,9 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerLoginHistoryService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserLoginHistoryService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -45,7 +44,7 @@ public class UserLoginHistoryController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignUserLoginHistoryService feignUserLoginHistoryService;
@@ -57,7 +56,7 @@ public class UserLoginHistoryController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/loginHistory/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/seller/loginHistory/listPage", functionServiceAPI);
         return "pages/user/loginHistory/list.html";
     }
 

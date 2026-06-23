@@ -3,9 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
@@ -50,10 +49,10 @@ public class IndexController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
@@ -94,7 +93,7 @@ public class IndexController {
             AdminVO adminVO = new AdminVO();
             adminVO.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
-            ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
                 if (!CollectionUtils.isEmpty(admins)) {
@@ -124,7 +123,7 @@ public class IndexController {
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
-            ResultObjectVO resultObjectVO = feignFunctionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
@@ -214,7 +213,7 @@ public class IndexController {
             query.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            ResultObjectVO resultObjectVO = feignFunctionService.queryAdminAppFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.queryAdminAppFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
             {
                 List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),FunctionVO.class);

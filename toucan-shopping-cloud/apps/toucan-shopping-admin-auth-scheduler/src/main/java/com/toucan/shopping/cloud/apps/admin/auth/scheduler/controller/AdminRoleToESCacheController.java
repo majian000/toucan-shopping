@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminRoleServiceAPI;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
@@ -20,7 +20,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +40,7 @@ public class AdminRoleToESCacheController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAdminRoleService feignAdminRoleService;
+    private AdminRoleServiceAPI adminRoleServiceAPI;
 
 
     @Autowired
@@ -51,7 +50,7 @@ public class AdminRoleToESCacheController {
     public PageInfo queryPage(AdminRolePageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = feignAdminRoleService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = adminRoleServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson= JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询账号角色列表 {}",dataJson);

@@ -3,14 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.controller.banner;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Joiner;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.admin.auth.vo.*;
-import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
@@ -28,7 +26,6 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.layui.constant.TableButtons;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,7 +58,7 @@ public class BannerController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignBannerAreaService feignBannerAreaService;
@@ -76,14 +73,14 @@ public class BannerController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/banner/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/banner/listPage", functionServiceAPI);
 
         return "pages/banner/list.html";
     }
@@ -131,7 +128,7 @@ public class BannerController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

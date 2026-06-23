@@ -1,28 +1,22 @@
 package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerLoginHistoryService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.ImageUtils;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
-import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.page.ShopBannerPageInfo;
 import com.toucan.shopping.modules.seller.vo.ShopBannerVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,7 +33,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 卖家轮播图
@@ -57,7 +50,7 @@ public class ShopBannerController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignShopBannerService feignShopBannerService;
@@ -66,7 +59,7 @@ public class ShopBannerController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -74,7 +67,7 @@ public class ShopBannerController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shopBanner/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/seller/shopBanner/listPage", functionServiceAPI);
         return "pages/seller/shopBanner/list.html";
     }
 
@@ -141,7 +134,7 @@ public class ShopBannerController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
-                        resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
                         if (resultObjectVO.isSuccess()) {
                             List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
                             if (!org.springframework.util.CollectionUtils.isEmpty(adminVOS)) {

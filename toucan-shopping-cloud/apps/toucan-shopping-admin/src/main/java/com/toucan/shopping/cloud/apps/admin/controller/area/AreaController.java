@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.area;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -20,7 +20,6 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,10 +55,10 @@ public class AreaController extends UIController {
     private FeignAreaService feignAreaService;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
 
@@ -69,7 +68,7 @@ public class AreaController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/area/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/area/listPage", functionServiceAPI);
 
         return "pages/area/list.html";
     }
@@ -289,7 +288,7 @@ public class AreaController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

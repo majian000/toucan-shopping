@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -50,13 +50,13 @@ public class ColumnTypeController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignColumnTypeService feignColumnTypeService;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -64,7 +64,7 @@ public class ColumnTypeController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/columnType/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/columnType/listPage", functionServiceAPI);
         return "pages/column/columnType/list.html";
     }
 
@@ -230,7 +230,7 @@ public class ColumnTypeController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

@@ -3,19 +3,17 @@ package com.toucan.shopping.cloud.apps.admin.controller.message;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
-import com.toucan.shopping.modules.message.entity.MessageType;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
@@ -49,7 +47,7 @@ public class MessageUserController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignMessageUserService feignMessageUserService;
@@ -83,7 +81,7 @@ public class MessageUserController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/message/messageUser/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/message/messageUser/listPage", functionServiceAPI);
         initMessageTypes(request);
         return "pages/message/messageUser/list.html";
     }

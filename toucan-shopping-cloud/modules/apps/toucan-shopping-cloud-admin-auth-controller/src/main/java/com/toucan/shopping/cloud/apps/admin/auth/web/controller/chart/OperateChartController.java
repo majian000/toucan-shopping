@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.chart;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignOperateLogService;
+import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -38,7 +38,7 @@ public class OperateChartController extends UIController {
     private String appCode;
 
     @Autowired
-    private FeignOperateLogService feignOperateLogService;
+    private OperateLogServiceAPI operateLogServiceAPI;
 
     /**
      * 查询操作数
@@ -61,7 +61,7 @@ public class OperateChartController extends UIController {
             operateLogChartVO.setEndDate(endDate);
             operateLogChartVO.setAdvanceDay(adviceDay); //查询前5天数据
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, operateLogChartVO);
-            resultObjectVO = feignOperateLogService.queryOperateChart(requestJsonVO);
+            resultObjectVO = operateLogServiceAPI.queryOperateChart(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 operateLogChartVO = new OperateLogChartVO();
                 List<OperateLogChartVO> datas = resultObjectVO.formatDataList(OperateLogChartVO.class);

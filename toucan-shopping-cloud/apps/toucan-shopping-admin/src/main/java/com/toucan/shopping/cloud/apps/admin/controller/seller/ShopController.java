@@ -3,11 +3,9 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -21,8 +19,6 @@ import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
-import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +52,7 @@ public class ShopController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
@@ -70,7 +66,7 @@ public class ShopController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shop/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/seller/shop/listPage", functionServiceAPI);
         return "pages/seller/shop/list.html";
     }
 

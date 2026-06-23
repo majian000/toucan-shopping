@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.role;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
@@ -48,23 +48,23 @@ public class RoleController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignRoleService feignRoleService;
+    private RoleServiceAPI roleServiceAPI;
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     @Autowired
-    private FeignRoleFunctionService roleFunctionService;
+    private RoleFunctionServiceAPI roleFunctionService;
 
     @Autowired
-    private FeignAdminRoleService feignAdminRoleService;
+    private AdminRoleServiceAPI adminRoleServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -72,10 +72,10 @@ public class RoleController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/role/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/role/listPage", functionServiceAPI);
 
         return "pages/role/list.html";
     }
@@ -90,7 +90,7 @@ public class RoleController extends UIController {
     public String addPage(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
         return "pages/role/add.html";
     }
 
@@ -103,12 +103,12 @@ public class RoleController extends UIController {
         try {
 
             //初始化选择应用控件
-            super.initSelectApp(request,toucan,feignAppService);
+            super.initSelectApp(request,toucan, appServiceAPI);
 
             Role entity = new Role();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignRoleService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -144,7 +144,7 @@ public class RoleController extends UIController {
             role.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             role.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
-            resultObjectVO = feignRoleService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -191,7 +191,7 @@ public class RoleController extends UIController {
         try {
             //查询对应账户的应用
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
-            resultObjectVO = feignRoleService.queryAdminRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.queryAdminRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到角色树
@@ -203,7 +203,7 @@ public class RoleController extends UIController {
                 AdminRole queryAdminRole = new AdminRole();
                 queryAdminRole.setAdminId(entity.getAdminId());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminRole);
-                resultObjectVO = feignAdminRoleService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = adminRoleServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
@@ -245,7 +245,7 @@ public class RoleController extends UIController {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignRoleService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -325,7 +325,7 @@ public class RoleController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignRoleService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceAPI.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -374,7 +374,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignRoleService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = roleServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -408,7 +408,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignRoleService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = roleServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

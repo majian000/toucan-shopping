@@ -24,6 +24,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
         <!--断路器支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -1,10 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignDictService;
+import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -29,15 +26,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +57,7 @@ public class OrderLogController extends UIController {
     private FeignOrderLogService feignOrderLogService;
 
     @Autowired
-    private FeignDictService feignDictService;
+    private DictServiceAPI dictServiceAPI;
 
     @Autowired
     private FeignUserService feignUserService;
@@ -108,7 +103,7 @@ public class OrderLogController extends UIController {
                     query.setCode(OrderDictConstant.ORDER_LOG_DICT_TYPE_CODE);
                     query.setAppCode(toucan.getAppCode());
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-                    ResultObjectVO resultObjectVO = feignDictService.queryDictByCodeAndCategoryCode(requestJsonVO);
+                    ResultObjectVO resultObjectVO = dictServiceAPI.queryDictByCodeAndCategoryCode(requestJsonVO);
                     if(resultObjectVO.isSuccess()) {
                         DictVO dictVO = resultObjectVO.formatData(DictVO.class);
                         if(CollectionUtils.isNotEmpty(dictVO.getChildren())) {

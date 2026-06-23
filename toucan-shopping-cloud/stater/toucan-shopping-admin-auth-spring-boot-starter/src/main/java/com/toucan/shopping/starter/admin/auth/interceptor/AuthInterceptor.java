@@ -2,10 +2,7 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAuthService;
-import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.cloud.admin.auth.api.AuthServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -124,9 +121,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         authVerifyVO.setAppCode(toucan.getAppCode());
 
         //这里可以优化,初始化的时候 传入这个bean
-        FeignAuthService feignAuthService = springContextHolder.getBean(FeignAuthService.class);
+        AuthServiceAPI authServiceAPI = springContextHolder.getBean(AuthServiceAPI.class);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),authVerifyVO);
-        ResultObjectVO resultObjectVO = feignAuthService.verifyLoginAndUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+        ResultObjectVO resultObjectVO = authServiceAPI.verifyLoginAndUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
 
         //-1 登录超时 -2没有权限
         if(resultObjectVO.getData()!=null) {

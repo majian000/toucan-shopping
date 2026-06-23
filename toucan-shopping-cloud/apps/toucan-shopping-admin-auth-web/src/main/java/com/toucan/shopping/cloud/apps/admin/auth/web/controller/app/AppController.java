@@ -3,13 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminAppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -49,13 +48,13 @@ public class AppController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAdminAppService feignAdminAppService;
+    private AdminAppServiceAPI adminAppServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -63,7 +62,7 @@ public class AppController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/app/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/app/listPage", functionServiceAPI);
 
         return "pages/app/list.html";
     }
@@ -86,7 +85,7 @@ public class AppController extends UIController {
             App app = new App();
             app.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            ResultObjectVO resultObjectVO = feignAppService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -120,7 +119,7 @@ public class AppController extends UIController {
         try {
             app.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            resultObjectVO = feignAppService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = appServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -145,7 +144,7 @@ public class AppController extends UIController {
         try {
             app.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            resultObjectVO = feignAppService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = appServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -170,7 +169,7 @@ public class AppController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAppService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -218,7 +217,7 @@ public class AppController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAppService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = appServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -251,7 +250,7 @@ public class AppController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAppService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = appServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

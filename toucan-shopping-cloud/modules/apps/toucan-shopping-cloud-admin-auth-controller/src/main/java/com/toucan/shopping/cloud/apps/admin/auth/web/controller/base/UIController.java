@@ -2,10 +2,8 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
@@ -35,14 +33,14 @@ public abstract class UIController extends BaseController {
      * 初始化选择应用控件
      * @param request
      * @param toucan
-     * @param feignAppService
+     * @param appServiceAPI
      */
-    public void initSelectApp(HttpServletRequest request, Toucan toucan, FeignAppService feignAppService)
+    public void initSelectApp(HttpServletRequest request, Toucan toucan, AppServiceAPI appServiceAPI)
     {
         try {
             App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignAppService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 List<AppVO> apps = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AppVO.class);
@@ -61,9 +59,9 @@ public abstract class UIController extends BaseController {
      * @param request
      * @param toucan
      * @param url
-     * @param feignFunctionService
+     * @param functionServiceAPI
      */
-    public void initButtons(HttpServletRequest request, Toucan toucan,String url, FeignFunctionService feignFunctionService)
+    public void initButtons(HttpServletRequest request, Toucan toucan,String url, FunctionServiceAPI functionServiceAPI)
     {
         try {
             FunctionVO function = new FunctionVO();
@@ -71,7 +69,7 @@ public abstract class UIController extends BaseController {
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
-            ResultObjectVO resultObjectVO = feignFunctionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);

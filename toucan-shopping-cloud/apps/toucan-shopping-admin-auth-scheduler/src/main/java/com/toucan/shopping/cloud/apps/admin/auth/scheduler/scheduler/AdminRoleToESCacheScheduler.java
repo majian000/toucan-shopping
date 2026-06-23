@@ -2,9 +2,8 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminRoleServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
-import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
@@ -42,7 +41,7 @@ public class AdminRoleToESCacheScheduler {
 
 
     @Autowired
-    private FeignAdminRoleService feignAdminRoleService;
+    private AdminRoleServiceAPI adminRoleServiceAPI;
 
 
 
@@ -50,7 +49,7 @@ public class AdminRoleToESCacheScheduler {
     public PageInfo queryPage(AdminRolePageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = feignAdminRoleService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = adminRoleServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson=JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询账号角色列表 {}",dataJson);

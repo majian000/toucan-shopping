@@ -3,17 +3,14 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.shopProduct;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.*;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -23,16 +20,12 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
-import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.entity.ShopProduct;
 import com.toucan.shopping.modules.product.page.*;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
@@ -68,7 +61,7 @@ public class ShopProductController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignCategoryService feignCategoryService;
@@ -102,7 +95,7 @@ public class ShopProductController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/shopProduct/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/shopProduct/listPage", functionServiceAPI);
         request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductPreviewPage());
         return "pages/product/shopProduct/list.html";
     }

@@ -1,24 +1,18 @@
 package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerLoginHistoryService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
-import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerDesignerPageModelPageInfo;
-import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -37,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +49,7 @@ public class SellerDesignerPageModelController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
@@ -70,7 +63,7 @@ public class SellerDesignerPageModelController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/designer/page/model/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/seller/designer/page/model/listPage", functionServiceAPI);
         return "pages/seller/designer/pageModel/list.html";
     }
 

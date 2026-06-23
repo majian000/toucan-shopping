@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -11,8 +11,6 @@ import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -52,7 +50,7 @@ public class ShopCategoryController extends UIController {
     private FeignShopCategoryService feignShopCategoryService;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
 
 
@@ -64,7 +62,7 @@ public class ShopCategoryController extends UIController {
     public String listPage(HttpServletRequest request,@PathVariable Long shopId)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shop/category/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/seller/shop/category/listPage", functionServiceAPI);
 
         request.setAttribute("shopId",shopId);
 

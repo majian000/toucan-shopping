@@ -3,42 +3,27 @@ package com.toucan.shopping.cloud.apps.admin.controller.component;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
-import com.toucan.shopping.modules.area.vo.AreaTreeVO;
-import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
-import com.toucan.shopping.modules.column.entity.ColumnArea;
-import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
-import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
-import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.SelectShopProductPageInfo;
-import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -52,11 +37,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 选择店铺商品
@@ -100,7 +84,7 @@ public class SelectShopProductController extends UIController {
     private FeignCategoryService feignCategoryService;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -108,7 +92,7 @@ public class SelectShopProductController extends UIController {
     public String spuListPage(HttpServletRequest request,@RequestParam(required = false) Long categoryId,@RequestParam String selectProductIds)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/component/selectShopProduct/shopProductListPage",feignFunctionService);
+        super.initButtons(request,toucan,"/component/selectShopProduct/shopProductListPage", functionServiceAPI);
 
         request.setAttribute("categoryId",categoryId);
         request.setAttribute("selectProductIds",selectProductIds);

@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.base;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -18,7 +18,7 @@ public abstract class BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
     @Autowired
     private Toucan toucan;
@@ -31,7 +31,7 @@ public abstract class BaseController {
             AdminVO queryAdminVO = new AdminVO();
             queryAdminVO.setAdminIds(createOrUpdateAdminIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
-            ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<AdminVO> adminVOS = (List<AdminVO>) resultObjectVO.formatDataList(AdminVO.class);
                 if (!CollectionUtils.isEmpty(adminVOS)) {

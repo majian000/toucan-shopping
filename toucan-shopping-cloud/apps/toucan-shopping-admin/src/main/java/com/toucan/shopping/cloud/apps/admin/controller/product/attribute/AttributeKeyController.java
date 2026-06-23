@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.attribute;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
@@ -50,7 +50,7 @@ public class AttributeKeyController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignAttributeKeyService feignAttributeKeyService;
@@ -59,7 +59,7 @@ public class AttributeKeyController extends UIController {
     private FeignCategoryService feignCategoryService;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private AdminServiceAPI adminServiceAPI;
 
 
 
@@ -69,7 +69,7 @@ public class AttributeKeyController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/attribute/attributeKey/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/product/attribute/attributeKey/listPage", functionServiceAPI);
         return "pages/product/attribute/attributeKey/list.html";
     }
 
@@ -162,7 +162,7 @@ public class AttributeKeyController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                        resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -502,7 +502,7 @@ public class AttributeKeyController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                        resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

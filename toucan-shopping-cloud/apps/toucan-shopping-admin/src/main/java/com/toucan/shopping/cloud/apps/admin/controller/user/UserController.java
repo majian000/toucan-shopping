@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -59,7 +59,7 @@ public class UserController extends UIController {
 
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -67,7 +67,7 @@ public class UserController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/listPage", functionServiceAPI);
 
         this.initRowMoreButtons(request, TableButtons.TABLE_MORE_BUTTON);
 
@@ -92,7 +92,7 @@ public class UserController extends UIController {
     public String mobilePhoneListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/mobilePhoneListPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/mobilePhoneListPage", functionServiceAPI);
         request.setAttribute("userMainId",userMainId);
         return "pages/user/db/mobile_phone_list.html";
     }
@@ -106,7 +106,7 @@ public class UserController extends UIController {
     public String emailListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/emailListPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/emailListPage", functionServiceAPI);
         request.setAttribute("userMainId",userMainId);
         return "pages/user/db/email_list.html";
     }
@@ -120,7 +120,7 @@ public class UserController extends UIController {
     public String userNameListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/userNameListPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/userNameListPage", functionServiceAPI);
         request.setAttribute("userMainId",userMainId);
         return "pages/user/db/username_list.html";
     }

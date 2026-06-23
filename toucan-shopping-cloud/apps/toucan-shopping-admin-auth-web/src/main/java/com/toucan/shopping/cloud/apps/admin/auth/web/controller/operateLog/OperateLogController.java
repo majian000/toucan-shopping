@@ -3,17 +3,15 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.operateLog;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignOperateLogService;
+import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
-import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -46,21 +44,21 @@ public class OperateLogController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOperateLogService feignOperateLogService;
+    private OperateLogServiceAPI operateLogServiceAPI;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAppService feignAppService;
+    private AppServiceAPI appServiceAPI;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
+        super.initSelectApp(request,toucan, appServiceAPI);
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/operateLog/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/operateLog/listPage", functionServiceAPI);
 
         return "pages/operateLog/list.html";
     }
@@ -75,7 +73,7 @@ public class OperateLogController extends UIController {
             OperateLogVO operateLogVO = new OperateLogVO();
             operateLogVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, operateLogVO);
-            ResultObjectVO resultObjectVO = feignOperateLogService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = operateLogServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -108,7 +106,7 @@ public class OperateLogController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignOperateLogService.listPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = operateLogServiceAPI.listPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

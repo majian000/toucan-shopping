@@ -3,9 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -22,7 +21,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
-import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
@@ -59,7 +57,7 @@ public class UserTrueNameApproveController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFunctionService feignFunctionService;
+    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
@@ -82,7 +80,7 @@ public class UserTrueNameApproveController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/true/name/approve/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/true/name/approve/listPage", functionServiceAPI);
         return "pages/user/trueNameApprove/list.html";
     }
 
