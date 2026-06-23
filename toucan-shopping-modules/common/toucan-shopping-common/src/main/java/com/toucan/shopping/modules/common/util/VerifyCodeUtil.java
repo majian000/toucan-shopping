@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.common.util;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -11,14 +10,62 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
 
 public class VerifyCodeUtil {
-    //使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符，以及占用太宽的字符W
+    // 去掉了1,0,i,o几个容易混淆的字符，以及占用太宽的字符W
     public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVXYZ";
     private static Random random = new Random();
+
+    // ========== 内嵌位图字体（5宽 × 7高）==========
+    // 每个字符用7个byte表示，每个byte的低5位代表一行，bit4=最左像素, bit0=最右像素
+    // 完全不依赖操作系统字体，在 Windows / Linux / Docker 容器中均可正常渲染
+    private static final Map<Character, byte[]> BITMAP_FONT = new HashMap<>();
+
+    static {
+        // @formatter:off
+        BITMAP_FONT.put('2', new byte[]{0b11110, 0b10001, 0b00001, 0b00010, 0b00100, 0b01000, 0b11111});
+        BITMAP_FONT.put('3', new byte[]{0b11110, 0b10001, 0b00001, 0b00110, 0b00001, 0b10001, 0b11110});
+        BITMAP_FONT.put('4', new byte[]{0b10010, 0b10010, 0b10010, 0b11111, 0b00010, 0b00010, 0b00010});
+        BITMAP_FONT.put('5', new byte[]{0b11111, 0b10000, 0b11110, 0b00001, 0b00001, 0b10001, 0b11110});
+        BITMAP_FONT.put('6', new byte[]{0b11110, 0b10001, 0b10000, 0b11110, 0b10001, 0b10001, 0b11110});
+        BITMAP_FONT.put('7', new byte[]{0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b01000, 0b01000});
+        BITMAP_FONT.put('8', new byte[]{0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110});
+        BITMAP_FONT.put('9', new byte[]{0b11110, 0b10001, 0b10001, 0b11111, 0b00001, 0b00001, 0b11110});
+        BITMAP_FONT.put('A', new byte[]{0b00100, 0b01010, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001});
+        BITMAP_FONT.put('B', new byte[]{0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110});
+        BITMAP_FONT.put('C', new byte[]{0b01110, 0b10001, 0b10000, 0b10000, 0b10000, 0b10001, 0b01110});
+        BITMAP_FONT.put('D', new byte[]{0b11100, 0b10010, 0b10001, 0b10001, 0b10001, 0b10010, 0b11100});
+        BITMAP_FONT.put('E', new byte[]{0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b11111});
+        BITMAP_FONT.put('F', new byte[]{0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b10000});
+        BITMAP_FONT.put('G', new byte[]{0b01110, 0b10001, 0b10000, 0b10111, 0b10001, 0b10001, 0b01111});
+        BITMAP_FONT.put('H', new byte[]{0b10001, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001});
+        BITMAP_FONT.put('J', new byte[]{0b00111, 0b00010, 0b00010, 0b00010, 0b00010, 0b10010, 0b01100});
+        BITMAP_FONT.put('K', new byte[]{0b10001, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b10001});
+        BITMAP_FONT.put('L', new byte[]{0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111});
+        BITMAP_FONT.put('M', new byte[]{0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001});
+        BITMAP_FONT.put('N', new byte[]{0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b10001});
+        BITMAP_FONT.put('P', new byte[]{0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000});
+        BITMAP_FONT.put('Q', new byte[]{0b01110, 0b10001, 0b10001, 0b10001, 0b10101, 0b10010, 0b01101});
+        BITMAP_FONT.put('R', new byte[]{0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001});
+        BITMAP_FONT.put('S', new byte[]{0b01111, 0b10000, 0b10000, 0b11110, 0b00001, 0b00001, 0b11110});
+        BITMAP_FONT.put('T', new byte[]{0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100});
+        BITMAP_FONT.put('U', new byte[]{0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11110});
+        BITMAP_FONT.put('V', new byte[]{0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01010, 0b00100});
+        BITMAP_FONT.put('X', new byte[]{0b10001, 0b10001, 0b01010, 0b00100, 0b01010, 0b10001, 0b10001});
+        BITMAP_FONT.put('Y', new byte[]{0b10001, 0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b00100});
+        BITMAP_FONT.put('Z', new byte[]{0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b10000, 0b11111});
+        // @formatter:on
+    }
+
+    /** 位图字体固有宽度（列数） */
+    private static final int BITMAP_COLS = 5;
+    /** 位图字体固有高度（行数） */
+    private static final int BITMAP_ROWS = 7;
 
 
     /**
@@ -113,10 +160,10 @@ public class VerifyCodeUtil {
     /**
      * 输出指定验证码图片流
      *
-     * @param w
-     * @param h
-     * @param os
-     * @param code
+     * @param w      图片宽度
+     * @param h      图片高度
+     * @param os     输出流
+     * @param code   验证码字符串
      * @throws IOException
      */
     public static void outputImage(int w, int h, OutputStream os, String code) throws IOException {
@@ -166,16 +213,47 @@ public class VerifyCodeUtil {
 
         shear(g2, w, h, c);// 使图片扭曲
 
-        g2.setColor(getRandColor(100, 160));
-        int fontSize = h - 4;
-        Font font = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
-        g2.setFont(font);
+        // ========== 使用内嵌位图字体绘制验证码（不依赖操作系统字体）==========
+        int textColor = getRandColor(100, 160).getRGB();
+        // 计算每个位图像素的物理尺寸，使字符适配图片区域
+        int dotSize = Math.min((w - 10) / (verifySize * BITMAP_COLS), (h - 4) / BITMAP_ROWS);
+        int charPixelWidth = BITMAP_COLS * dotSize;
+        int charPixelHeight = BITMAP_ROWS * dotSize;
+        // 每个字符分配的水平区域宽度
+        int charAreaWidth = (w - 10) / verifySize;
+        // 垂直居中
+        int baseY = (h - charPixelHeight) / 2;
+
         char[] chars = code.toCharArray();
         for (int i = 0; i < verifySize; i++) {
-            //AffineTransform affine = new AffineTransform();
-            //affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1), (w / verifySize) * i + fontSize/2, h/2);
-            //g2.setTransform(affine);
-            g2.drawChars(chars, i, 1, ((w - 10) / verifySize) * i + 5, h / 2 + fontSize / 2 - 10);
+            byte[] bitmap = BITMAP_FONT.get(chars[i]);
+            if (bitmap == null) {
+                continue; // 跳过未定义的字符
+            }
+            // 字符在图像中的起始X坐标（在分配区域内水平居中）
+            int charStartX = charAreaWidth * i + 5 + (charAreaWidth - charPixelWidth) / 2;
+
+            // 逐行逐列绘制位图像素
+            for (int row = 0; row < BITMAP_ROWS; row++) {
+                int rowBits = bitmap[row] & 0xFF;
+                for (int col = 0; col < BITMAP_COLS; col++) {
+                    // bit4 对应 col=0（最左），bit0 对应 col=4（最右）
+                    if ((rowBits & (1 << (BITMAP_COLS - 1 - col))) != 0) {
+                        int px = charStartX + col * dotSize;
+                        int py = baseY + row * dotSize;
+                        // 填充 dotSize × dotSize 的像素块
+                        for (int dx = 0; dx < dotSize; dx++) {
+                            for (int dy = 0; dy < dotSize; dy++) {
+                                int ix = px + dx;
+                                int iy = py + dy;
+                                if (ix >= 0 && ix < w && iy >= 0 && iy < h) {
+                                    image.setRGB(ix, iy, textColor);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         g2.dispose();
