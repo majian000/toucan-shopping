@@ -1,19 +1,17 @@
-package com.toucan.shopping.cloud.admin.auth.api;
+package com.toucan.shopping.cloud.admin.auth.api.cloud.feign.service;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignRoleServiceFallbackFactory;
+import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.cloud.feign.fallback.FeignAppServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/role",fallbackFactory = FeignRoleServiceFallbackFactory.class)
-public interface FeignRoleService {
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/app",fallbackFactory = FeignAppServiceFallbackFactory.class)
+public interface FeignAppService extends AppServiceAPI {
 
     /**
-     * 保存
+     * 保存应用
      * @param signHeader
      * @param requestVo
      * @return
@@ -23,7 +21,7 @@ public interface FeignRoleService {
 
 
     /**
-     * 编辑
+     * 编辑应用
      * @param signHeader
      * @param requestVo
      * @return
@@ -33,7 +31,7 @@ public interface FeignRoleService {
 
 
     /**
-     * 查询列表
+     * 查询应用列表
      * @param signHeader
      * @param requestVo
      * @return
@@ -42,20 +40,8 @@ public interface FeignRoleService {
     ResultObjectVO listPage(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
-
     /**
-     * 查询指定用户的角色树
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
-    public ResultObjectVO queryAdminRoleTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-
-
-
-
-    /**
-     * 根据ID删除指定角色
+     * 根据ID删除指定应用
      * @param signHeader
      * @param requestVo
      * @return
@@ -77,7 +63,7 @@ public interface FeignRoleService {
 
 
     /**
-     * 批量删除
+     * 批量删除应用
      * @param signHeader
      * @param requestVo
      * @return
@@ -86,5 +72,40 @@ public interface FeignRoleService {
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 应用列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 根据编码查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findByCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 根据编码查询启用状态
+     * @param requestVo
+     * @return true:启用 false:停用
+     */
+    @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryListByCodes",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByCodes(@RequestBody RequestJsonVO requestVo);
 
 }

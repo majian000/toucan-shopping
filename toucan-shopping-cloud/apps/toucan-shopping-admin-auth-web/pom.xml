@@ -137,6 +137,12 @@
         </dependency>
 
 
+        <!--微服务调用 -->
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
+        </dependency>
+
 
     </dependencies>
 

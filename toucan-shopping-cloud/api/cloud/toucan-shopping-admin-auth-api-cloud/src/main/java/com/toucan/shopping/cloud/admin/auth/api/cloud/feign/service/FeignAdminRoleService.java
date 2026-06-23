@@ -1,7 +1,7 @@
-package com.toucan.shopping.cloud.admin.auth.api;
+package com.toucan.shopping.cloud.admin.auth.api.cloud.feign.service;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignAdminAppServiceFallbackFactory;
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignAdminRoleServiceFallbackFactory;
+import com.toucan.shopping.cloud.admin.auth.api.AdminRoleServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.cloud.feign.fallback.FeignAdminRoleServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminRole",fallbackFactory = FeignAdminRoleServiceFallbackFactory.class)
-public interface FeignAdminRoleService {
+public interface FeignAdminRoleService extends AdminRoleServiceAPI {
 
     @RequestMapping(value = "/save/roles",method = RequestMethod.POST)
     public ResultObjectVO saveRoles(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);

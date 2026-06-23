@@ -1,8 +1,7 @@
-package com.toucan.shopping.cloud.admin.auth.api.feign.fallback;
+package com.toucan.shopping.cloud.admin.auth.api.cloud.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.FeignAuthService;
+import com.toucan.shopping.cloud.admin.auth.api.cloud.feign.service.FeignAuthService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FallbackFactory;

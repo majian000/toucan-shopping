@@ -1,7 +1,7 @@
-package com.toucan.shopping.cloud.admin.auth.api;
+package com.toucan.shopping.cloud.admin.auth.api.cloud.feign.service;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignAdminAppServiceFallbackFactory;
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignAdminOrgnazitionServiceFallbackFactory;
+import com.toucan.shopping.cloud.admin.auth.api.AdminOrgnazitionServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.cloud.feign.fallback.FeignAdminOrgnazitionServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminOrgnazition",fallbackFactory = FeignAdminOrgnazitionServiceFallbackFactory.class)
-public interface FeignAdminOrgnazitionService {
+public interface FeignAdminOrgnazitionService extends AdminOrgnazitionServiceAPI {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);

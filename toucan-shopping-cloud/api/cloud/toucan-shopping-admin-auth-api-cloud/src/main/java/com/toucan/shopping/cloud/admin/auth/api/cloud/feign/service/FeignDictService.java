@@ -1,7 +1,7 @@
-package com.toucan.shopping.cloud.admin.auth.api;
+package com.toucan.shopping.cloud.admin.auth.api.cloud.feign.service;
 
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignDictCategoryServiceFallbackFactory;
-import com.toucan.shopping.cloud.admin.auth.api.feign.fallback.FeignDictServiceFallbackFactory;
+import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.cloud.feign.fallback.FeignDictServiceFallbackFactory;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/dict",fallbackFactory = FeignDictServiceFallbackFactory.class)
-public interface FeignDictService {
+public interface FeignDictService extends DictServiceAPI {
 
     /**
      * 添加字典分类
