@@ -168,7 +168,7 @@ public class VerifyCodeUtil {
 
         g2.setColor(getRandColor(100, 160));
         int fontSize = h - 4;
-        Font font = new Font("Algerian", Font.PLAIN, fontSize);
+        Font font = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
         g2.setFont(font);
         char[] chars = code.toCharArray();
         for (int i = 0; i < verifySize; i++) {
