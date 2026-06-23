@@ -24,25 +24,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
-        <!--对Open Feign方式调用支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <!--断路器支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos-server-version}</version>
-        </dependency>
-
         <!--使用配置中心 客户端-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -137,16 +118,69 @@
         </dependency>
 
 
-        <!--微服务调用 -->
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
-        </dependency>
 
 
     </dependencies>
 
 
+    <profiles>
+        <profile>
+            <id>cloud-deps</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>cloud</value>
+                </property>
+            </activation>
+            <dependencies>
+
+
+                <!--对Open Feign方式调用支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </dependency>
+
+                <!--断路器支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <version>${nacos-server-version}</version>
+                </dependency>
+
+                <!--我们的包 -->
+                <!--微服务调用 -->
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>single-deps</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>single</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <!--单项目 -->
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+                </dependency>
+
+
+            </dependencies>
+        </profile>
+    </profiles>
 
 
     <build>
