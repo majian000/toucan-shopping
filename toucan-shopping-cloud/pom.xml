@@ -60,6 +60,7 @@
         <!--管理权限中台API -->
         <module>api/toucan-shopping-admin-auth-api</module>
         <module>api/cloud/toucan-shopping-admin-auth-api-cloud</module>
+        <module>api/single/toucan-shopping-admin-auth-api-single</module>
 
         <!--库存API -->
         <module>api/toucan-shopping-stock-api</module>
@@ -240,6 +241,14 @@
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.config</groupId>
