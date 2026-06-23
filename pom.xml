@@ -35,9 +35,6 @@
 
         <module>toucan-shopping-modules</module>
 
-        <!--  =================================标准版 =================================-->
-        <module>toucan-shopping-standard</module>
-
         <!--  =================================微服务版 =================================-->
         <module>toucan-shopping-cloud</module>
 
