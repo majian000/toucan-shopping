@@ -25,6 +25,9 @@
     <properties>
         <java.version>17</java.version>
         <elasticsearch.version>8.18.8</elasticsearch.version>
+
+        <!-- 默认微服务模式，命令行 -Ddeploy.mode=single 切换 -->
+        <deploy.mode>cloud</deploy.mode>
     </properties>
 
 
@@ -45,6 +48,27 @@
 
 
     </modules>
+
+    <profiles>
+        <!--微服务版 -->
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <deploy.mode>cloud</deploy.mode>
+            </properties>
+        </profile>
+
+        <!-- 单项目版-->
+        <profile>
+            <id>single</id>
+            <properties>
+                <deploy.mode>single</deploy.mode>
+            </properties>
+        </profile>
+    </profiles>
 
 
     <dependencies>

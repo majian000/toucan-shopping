@@ -152,14 +152,41 @@
         <nacos-server-version>2025.0.0.0</nacos-server-version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>cloud-deps</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>cloud</value>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- Spring Cloud LoadBalancer -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                    <version>4.3.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>standard-deps</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>standard</value>
+                </property>
+            </activation>
+            <dependencies>
+
+            </dependencies>
+        </profile>
+    </profiles>
+
 
     <dependencies>
 
-        <!-- Spring Cloud LoadBalancer -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
