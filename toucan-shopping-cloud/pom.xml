@@ -175,7 +175,7 @@
             <activation>
                 <property>
                     <name>deploy.mode</name>
-                    <value>standard</value>
+                    <value>single</value>
                 </property>
             </activation>
             <dependencies>
