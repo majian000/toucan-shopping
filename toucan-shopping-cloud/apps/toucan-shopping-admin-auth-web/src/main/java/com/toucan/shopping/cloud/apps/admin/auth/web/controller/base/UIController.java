@@ -13,8 +13,10 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class UIController {
 
@@ -101,5 +104,28 @@ public abstract class UIController {
         }
     }
 
+
+    /**
+     * 兼容 single/cloud 两种模式下的分页数据格式
+     * cloud 模式: data 是 Map (HTTP JSON 反序列化后丢失类型)
+     * single 模式: data 是 PageInfo (直接 Java 对象)
+     */
+    @SuppressWarnings("unchecked")
+    protected void fillTableVOPageData(TableVO tableVO, Object data) {
+        if (data instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) data;
+            Object totalObj = map.get("total");
+            tableVO.setCount(totalObj != null ? Long.parseLong(String.valueOf(totalObj)) : 0L);
+            if (tableVO.getCount() > 0) {
+                tableVO.setData((List<Object>) map.get("list"));
+            }
+        } else if (data instanceof PageInfo) {
+            PageInfo<?> pageInfo = (PageInfo<?>) data;
+            tableVO.setCount(pageInfo.getTotal() != null ? pageInfo.getTotal() : 0L);
+            if (tableVO.getCount() > 0 && pageInfo.getList() != null) {
+                tableVO.setData((List<Object>) (List<?>) pageInfo.getList());
+            }
+        }
+    }
 
 }

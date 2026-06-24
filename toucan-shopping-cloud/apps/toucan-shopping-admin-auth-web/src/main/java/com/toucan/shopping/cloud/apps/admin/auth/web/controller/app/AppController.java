@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
+
 
 
 /**
@@ -174,11 +174,7 @@ public class AppController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
-                    }
+                    fillTableVOPageData(tableVO, resultObjectVO.getData());
                 }
             }
         }catch(Exception e)
