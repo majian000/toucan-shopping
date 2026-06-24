@@ -37,25 +37,6 @@ import java.util.List;
 public class FunctionController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private FunctionService functionService;
-
-    @Autowired
-    private AppService appService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
-    private RoleFunctionService roleFunctionService;
 
     @Autowired
     private FunctionBusinessService functionBusinessService;

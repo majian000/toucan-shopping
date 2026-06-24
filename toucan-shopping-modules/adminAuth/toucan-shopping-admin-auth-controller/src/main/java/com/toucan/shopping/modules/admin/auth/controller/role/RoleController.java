@@ -36,28 +36,6 @@ import java.util.List;
 public class RoleController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private RoleFunctionService roleFunctionService;
-
-    @Autowired
-    private AdminService adminService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
-    private AppService appService;
-
     @Autowired
     private RoleBusinessService roleBusinessService;
 

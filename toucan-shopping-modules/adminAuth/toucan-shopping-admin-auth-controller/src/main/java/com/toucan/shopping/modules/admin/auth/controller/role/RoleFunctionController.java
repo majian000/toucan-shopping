@@ -41,21 +41,6 @@ import java.util.stream.Collectors;
 public class RoleFunctionController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private RoleFunctionService roleFunctionService;
-
-    @Autowired
-    private FunctionService functionService;
-
     @Autowired
     private RoleFunctionBusinessService roleFunctionBusinessService;
 

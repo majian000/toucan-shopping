@@ -39,18 +39,6 @@ import java.util.concurrent.TimeUnit;
 public class AuthController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private RoleFunctionService roleFunctionService;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-
-    @Autowired
-    private FunctionService functionService;
-
     @Autowired
     private AuthBusinessService authBusinessService;
 

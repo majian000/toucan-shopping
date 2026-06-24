@@ -39,18 +39,6 @@ import java.util.List;
 public class AppController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-
-    @Autowired
-    private AppService appService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
-    private OrgnazitionAppService orgnazitionAppService;
 
     @Autowired
     private AppBusinessService appBusinessService;

@@ -34,24 +34,6 @@ import java.util.List;
 public class OrgnazitionController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private OrgnazitionService orgnazitionService;
-
-    @Autowired
-    private AppService appService;
-
-
-    @Autowired
-    private AdminOrgnazitionService adminOrgnazitionService;
-
-    @Autowired
-    private OrgnazitionAppService orgnazitionAppService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
     @Autowired
     private OrgnazitionBusinessService orgnazitionBusinessService;
 

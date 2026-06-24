@@ -34,13 +34,6 @@ import java.util.stream.Collectors;
 public class AdminOrgnazitionController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
-    private AdminOrgnazitionService adminOrgnazitionService;
 
     @Autowired
     private AdminOrgnazitionBusinessService adminOrgnazitionBusinessService;

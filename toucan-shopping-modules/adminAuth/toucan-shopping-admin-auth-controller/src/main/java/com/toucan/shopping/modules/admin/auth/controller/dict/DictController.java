@@ -35,19 +35,6 @@ import java.util.stream.Collectors;
 public class DictController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private DictService dictService;
-
-    @Autowired
-    private AppService appService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
-    private IdGenerator idGenerator;
 
     @Autowired
     private DictBusinessService dictBusinessService;

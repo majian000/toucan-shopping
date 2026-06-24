@@ -40,31 +40,6 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/admin")
 public class AdminController {
 
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private AdminService adminService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private AdminOrgnazitionService adminOrgnazitionService;
-
-    @Autowired
-    private IdGenerator idGenerator;
-
-    @Autowired
-    private AppService appService;
-
-    @Autowired
-    private AdminLoginHistoryAsyncService adminLoginHistoryAsyncService;
-
     @Autowired
     private AdminBusinessService adminBusinessService;
 

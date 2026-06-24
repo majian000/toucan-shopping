@@ -37,15 +37,6 @@ import java.util.List;
 public class AdminRoleController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
     @Autowired
     private AdminRoleBusinessService adminRoleBusinessService;
 
