@@ -45,10 +45,6 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-controller</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-business-service</artifactId>
         </dependency>
         <dependency>

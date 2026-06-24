@@ -23,10 +23,7 @@ import org.springframework.web.client.RestTemplate;
         XADataSourceAutoConfiguration.class,
         DataSourceHealthContributorAutoConfiguration.class
 })
-@ComponentScan(value = "com.toucan.shopping",
-    excludeFilters = @ComponentScan.Filter(
-        type = FilterType.REGEX,
-        pattern = "com\\.toucan\\.shopping\\.modules\\.admin\\.auth\\.(controller|log\\.controller)\\..*"))
+@ComponentScan("com.toucan.shopping")
 public class CloudAdminAuthWebApplication {
 
     public static void main(String[] args) {
