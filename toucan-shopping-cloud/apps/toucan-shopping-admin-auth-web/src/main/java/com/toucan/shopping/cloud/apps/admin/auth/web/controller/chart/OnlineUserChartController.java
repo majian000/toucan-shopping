@@ -37,10 +37,13 @@ public class OnlineUserChartController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/queryAppLoginUserCountList",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO)
+    public ResultObjectVO queryAppLoginUserCountList(@RequestBody(required = false) AppLoginUserVO appLoginUserVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if(appLoginUserVO == null) {
+                appLoginUserVO = new AppLoginUserVO();
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appLoginUserVO);
             resultObjectVO = adminAppServiceAPI.queryAppLoginUserCountList(requestJsonVO);
         }catch(Exception e)
