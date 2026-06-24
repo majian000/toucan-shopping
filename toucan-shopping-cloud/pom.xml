@@ -34,23 +34,7 @@
         <module>base/toucan-shopping-gateway</module>
         <!-- ===============================================-->
 
-
-
-        <!-- =======================业务服务层=========================-->
-        <!--订单服务 -->
-        <module>services/toucan-shopping-order</module>
-        <!--商品服务 -->
-        <module>services/toucan-shopping-product</module>
-        <!--秒杀服务 -->
-        <module>services/toucan-shopping-second-kill</module>
-        <!--库存服务 -->
-        <module>services/toucan-shopping-stock</module>
-        <!--公共数据服务 -->
-        <module>services/toucan-shopping-common-data</module>
-        <!--内容服务-->
-        <module>services/toucan-shopping-content</module>
-
-
+        <!-- =======================API层=========================-->
         <!--商品服务API -->
         <module>api/toucan-shopping-product-api</module>
         <!--订单服务API -->
@@ -77,6 +61,26 @@
 
 
 
+        <!-- ===============================================-->
+
+
+
+
+        <!-- =======================微服务业务服务层=========================-->
+        <!--订单服务 -->
+        <module>services/toucan-shopping-order</module>
+        <!--商品服务 -->
+        <module>services/toucan-shopping-product</module>
+        <!--秒杀服务 -->
+        <module>services/toucan-shopping-second-kill</module>
+        <!--库存服务 -->
+        <module>services/toucan-shopping-stock</module>
+        <!--公共数据服务 -->
+        <module>services/toucan-shopping-common-data</module>
+        <!--内容服务-->
+        <module>services/toucan-shopping-content</module>
+
+
         <!--用户中心服务 -->
         <module>services/toucan-shopping-user</module>
         <!--管理员权限中台 -->
@@ -89,6 +93,8 @@
         <module>services/toucan-shopping-search</module>
 
         <!-- ===============================================-->
+
+
 
 
         <!-- =======================应用层=========================-->
@@ -116,10 +122,13 @@
 
 
 
-        <!-- =======================公共模块层=========================-->
+        <!-- =======================微服务公共模块层=========================-->
 
         <!-- 权限管理公共控制器-->
         <module>modules/apps/toucan-shopping-cloud-admin-auth-controller</module>
+        <!--权限中心微服务配置 -->
+        <module>modules/apps/toucan-shopping-admin-auth-web-config</module>
+
         <!-- 启动配置公共模块-->
         <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>
         <!-- 商品搜索同步-->
@@ -404,6 +413,15 @@
                 <scope>compile</scope>
             </dependency>
 
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-admin-auth-web-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -415,7 +433,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2025.0.0.0</version>
+                <version>2025.1.0.0</version>
                 <type>pom</type>
             </dependency>
 
@@ -425,7 +443,6 @@
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

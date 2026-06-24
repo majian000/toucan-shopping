@@ -81,10 +81,6 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
-            <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-admin-auth-log-spring-boot-starter</artifactId>
         </dependency>
 
@@ -112,10 +108,6 @@
             <artifactId>toucan-shopping-log-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
-            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
 
 
 
@@ -134,31 +126,27 @@
             </activation>
             <dependencies>
 
-
-                <!--对Open Feign方式调用支持 -->
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-openfeign</artifactId>
-                </dependency>
-
-                <!--断路器支持 -->
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                    <version>${nacos-server-version}</version>
-                </dependency>
-
-                <!--我们的包 -->
                 <!--微服务调用 -->
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+                    <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+                </dependency>
+
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.api</groupId>
                     <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
                 </dependency>
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                    <artifactId>toucan-shopping-admin-auth-web-config</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.starter</groupId>
+                    <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
+                </dependency>
+
             </dependencies>
         </profile>
         <profile>

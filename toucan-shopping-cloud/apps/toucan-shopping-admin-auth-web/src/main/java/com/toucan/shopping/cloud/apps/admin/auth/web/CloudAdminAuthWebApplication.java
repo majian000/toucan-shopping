@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration
 import org.springframework.boot.actuate.autoconfigure.jdbc.DataSourceHealthContributorAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 })
 @EnableDiscoveryClient
 @ComponentScan("com.toucan.shopping")
-@EnableFeignClients(basePackages = "com.toucan.shopping")
 public class CloudAdminAuthWebApplication {
 
     public static void main(String[] args) {
