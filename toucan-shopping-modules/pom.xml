@@ -103,6 +103,8 @@
         <module>adminAuth/toucan-shopping-admin-auth-entity-vo</module>
         <!--权限服务日志相关的实体和VO -->
         <module>adminAuth/toucan-shopping-admin-auth-log-entity-vo</module>
+        <!--权限服务业务服务 -->
+        <module>adminAuth/toucan-shopping-admin-auth-business-service</module>
         <!--权限服务Service和Dao -->
         <module>adminAuth/toucan-shopping-admin-auth-service-dao</module>
         <!--权限日志服务Service和Dao -->
