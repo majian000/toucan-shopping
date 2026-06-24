@@ -154,7 +154,7 @@
 
     <profiles>
         <profile>
-            <id>cloud-deps</id>
+            <id>cloud</id>
             <activation>
                 <property>
                     <name>deploy.mode</name>
@@ -171,7 +171,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>single-deps</id>
+            <id>single</id>
             <activation>
                 <property>
                     <name>deploy.mode</name>
