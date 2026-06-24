@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration
 import org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.jdbc.DataSourceHealthContributorAutoConfiguration;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
         XADataSourceAutoConfiguration.class,
         DataSourceHealthContributorAutoConfiguration.class
 })
-@EnableDiscoveryClient
 @ComponentScan("com.toucan.shopping")
 public class CloudAdminAuthWebApplication {
 
