@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: cloud_dev
   main:
     allow-bean-definition-overriding: true
   config:
@@ -25,16 +25,16 @@ logging:
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: cloud_prod
   cloud:
     config:
-      profile: prod
+      profile: cloud_prod
 
 ---
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: cloud_dev
   cloud:
     config:
-      profile: dev
+      profile: cloud_dev
