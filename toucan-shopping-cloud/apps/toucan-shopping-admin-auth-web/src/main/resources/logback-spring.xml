@@ -3,30 +3,18 @@
 
     <contextName>logback</contextName>
 
-    <springProfile name="cloud_dev">
+    <springProfile name="cloud_dev,single_dev">
         <property name="log.path" value="C:/log/dev/toucan_shopping/toucan_shopping_admin_auth_web" />
     </springProfile>
 
-    <springProfile name="cloud_test">
+    <springProfile name="cloud_test,single_test">
         <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_admin_auth_web" />
     </springProfile>
 
-    <springProfile name="cloud_prod">
+    <springProfile name="cloud_prod,single_prod">
         <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_admin_auth_web" />
     </springProfile>
 
-
-    <springProfile name="single_dev">
-        <property name="log.path" value="C:/log/dev/toucan_shopping/toucan_shopping_admin_auth_web" />
-    </springProfile>
-
-    <springProfile name="single_test">
-        <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_admin_auth_web" />
-    </springProfile>
-
-    <springProfile name="single_prod">
-        <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_admin_auth_web" />
-    </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -161,7 +149,7 @@
     </appender>
 
 
-    <springProfile name="cloud_dev">
+    <springProfile name="cloud_dev,single_dev">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
@@ -172,7 +160,7 @@
     </springProfile>
 
 
-    <springProfile name="cloud_test">
+    <springProfile name="cloud_test,single_test">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
@@ -181,7 +169,7 @@
 
 
 
-    <springProfile name="cloud_prod">
+    <springProfile name="cloud_prod,single_prod">
         <logger name="com.toucan.shopping" level="info"/>
         <root level="info">
             <appender-ref ref="CONSOLE_FILE" />
@@ -195,39 +183,5 @@
     </springProfile>
 
 
-
-
-    <springProfile name="single_dev">
-        <logger name="com.toucan.shopping" level="debug"/>
-        <root level="info">
-            <appender-ref ref="CONSOLE" />
-            <!--日志邮件 -->
-            <appender-ref ref="WARN_EMAIL" />
-            <appender-ref ref="ERROR_EMAIL" />
-        </root>
-    </springProfile>
-
-
-    <springProfile name="single_test">
-        <logger name="com.toucan.shopping" level="debug"/>
-        <root level="info">
-            <appender-ref ref="CONSOLE" />
-        </root>
-    </springProfile>
-
-
-
-    <springProfile name="single_prod">
-        <logger name="com.toucan.shopping" level="info"/>
-        <root level="info">
-            <appender-ref ref="CONSOLE_FILE" />
-            <appender-ref ref="INFO_FILE" />
-            <appender-ref ref="ERROR_FILE" />
-            <appender-ref ref="WARN_FILE" />
-            <!--日志邮件 -->
-            <appender-ref ref="WARN_EMAIL" />
-            <appender-ref ref="ERROR_EMAIL" />
-        </root>
-    </springProfile>
 
 </configuration>
