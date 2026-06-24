@@ -11,25 +11,37 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <description>权限中台API</description>
+    <description>权限中心单服务配置启动类</description>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.toucan.shopping.cloud.api</groupId>
-    <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+    <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+    <artifactId>toucan-shopping-admin-auth-web-single-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
+
     <dependencies>
 
+
+
+        <!--集成redis -->
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-admin-auth-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
         </dependency>
+
+
+        <!-- 健康监控 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
@@ -37,24 +49,25 @@
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-business-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-log-business-service</artifactId>
-        </dependency>
+
+
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-cache</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
@@ -65,19 +78,24 @@
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
-            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-db-sharding</artifactId>
-        </dependency>
-
-
-
     </dependencies>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

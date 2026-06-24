@@ -135,7 +135,7 @@
 
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-                    <artifactId>toucan-shopping-admin-auth-web-config</artifactId>
+                    <artifactId>toucan-shopping-admin-auth-web-cloud-config</artifactId>
                 </dependency>
 
                 <dependency>
@@ -166,6 +166,11 @@
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.api</groupId>
                     <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                    <artifactId>toucan-shopping-admin-auth-web-single-config</artifactId>
                 </dependency>
 
 

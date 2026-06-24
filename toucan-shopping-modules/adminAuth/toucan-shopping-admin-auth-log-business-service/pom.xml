@@ -3,8 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-
-
     <parent>
         <groupId>com.toucan.shopping.modules</groupId>
         <artifactId>toucan-shopping-modules</artifactId>
@@ -15,20 +13,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-    <artifactId>toucan-shopping-admin-auth-log-controller</artifactId>
+    <artifactId>toucan-shopping-admin-auth-log-business-service</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
     <dependencies>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-log-entity-vo</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-log-service-dao</artifactId>
@@ -38,15 +27,14 @@
             <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-log-business-service</artifactId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-log-entity-vo</artifactId>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
@@ -55,7 +43,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -65,5 +52,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

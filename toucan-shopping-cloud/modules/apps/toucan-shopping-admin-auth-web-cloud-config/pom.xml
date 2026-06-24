@@ -11,10 +11,10 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <description>权限管理控制器公共模块</description>
+    <description>权限中心微服务配置启动类</description>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-    <artifactId>toucan-shopping-admin-auth-web-config</artifactId>
+    <artifactId>toucan-shopping-admin-auth-web-cloud-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 

@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.admin.auth.api.single;
 
 import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
-import com.toucan.shopping.modules.admin.auth.business.service.OperateLogBusinessService;
+import com.toucan.shopping.modules.admin.auth.log.business.service.OperateLogBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
