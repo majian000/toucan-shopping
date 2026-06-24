@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: single_dev
+    active: cloud_dev
   main:
     allow-bean-definition-overriding: true
   config:
