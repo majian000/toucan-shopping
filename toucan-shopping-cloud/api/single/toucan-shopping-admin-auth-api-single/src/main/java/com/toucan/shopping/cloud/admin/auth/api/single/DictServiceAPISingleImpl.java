@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.admin.auth.api.single;
 
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
-import com.toucan.shopping.modules.admin.auth.controller.dict.DictController;
+import com.toucan.shopping.modules.admin.auth.business.service.DictBusinessService;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -15,55 +15,55 @@ import java.util.List;
 public class DictServiceAPISingleImpl implements DictServiceAPI {
 
     @Autowired
-    private DictController dictController;
+    private DictBusinessService dictBusinessService;
 
     @Override
     public ResultObjectVO save(RequestJsonVO requestVo) {
-        return dictController.save(requestVo);
+        return dictBusinessService.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(RequestJsonVO requestVo) {
-        return dictController.update(requestVo);
+        return dictBusinessService.update(requestVo);
     }
 
     @Override
     public ResultObjectVO listPage(RequestJsonVO requestVo) {
-        return dictController.listPage(requestVo);
+        return dictBusinessService.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(RequestJsonVO requestVo) {
-        return dictController.findById(requestVo);
+        return dictBusinessService.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
-        return dictController.deleteById(requestVo);
+        return dictBusinessService.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
-        return dictController.deleteByIds(requestVo);
+        return dictBusinessService.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
-        return dictController.queryTreeTableByPid(requestJsonVO);
+        return dictBusinessService.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO) {
-        return dictController.queryTreeChildByPid(requestJsonVO);
+        return dictBusinessService.queryTreeChildByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryDictByCodeAndCategoryCode(RequestJsonVO requestJsonVO) {
-        return dictController.queryDictByCodeAndCategoryCode(requestJsonVO);
+        return dictBusinessService.queryDictByCodeAndCategoryCode(requestJsonVO);
     }
 
     @Override
     public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO) {
-        return dictController.queryDictByCodesAndCategoryCode(requestJsonVO);
+        return dictBusinessService.queryDictByCodesAndCategoryCode(requestJsonVO);
     }
 }

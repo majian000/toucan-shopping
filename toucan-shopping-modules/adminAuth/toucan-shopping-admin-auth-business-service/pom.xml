@@ -25,6 +25,26 @@
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-log-service-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-log-entity-vo</artifactId>
+        </dependency>
 
     </dependencies>
 

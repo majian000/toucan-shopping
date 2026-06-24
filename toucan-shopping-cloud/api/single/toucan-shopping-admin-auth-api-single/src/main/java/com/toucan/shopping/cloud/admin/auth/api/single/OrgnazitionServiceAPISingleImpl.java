@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.admin.auth.api.single;
 
 import com.toucan.shopping.cloud.admin.auth.api.OrgnazitionServiceAPI;
-import com.toucan.shopping.modules.admin.auth.controller.orgnization.OrgnazitionController;
+import com.toucan.shopping.modules.admin.auth.business.service.OrgnazitionBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,45 +11,45 @@ import org.springframework.stereotype.Service;
 public class OrgnazitionServiceAPISingleImpl implements OrgnazitionServiceAPI {
 
     @Autowired
-    private OrgnazitionController orgnazitionController;
+    private OrgnazitionBusinessService orgnazitionBusinessService;
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return orgnazitionController.save(requestVo);
+        return orgnazitionBusinessService.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return orgnazitionController.update(requestVo);
+        return orgnazitionBusinessService.update(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppOrgnazitionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
-        return orgnazitionController.queryAppOrgnazitionTreeTable(requestJsonVO);
+        return orgnazitionBusinessService.queryAppOrgnazitionTreeTable(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return orgnazitionController.deleteById(requestVo);
+        return orgnazitionBusinessService.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return orgnazitionController.findById(requestVo);
+        return orgnazitionBusinessService.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return orgnazitionController.deleteByIds(requestVo);
+        return orgnazitionBusinessService.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryOrgnazationTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return orgnazitionController.queryOrgnazationTree(requestJsonVO);
+        return orgnazitionBusinessService.queryOrgnazationTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAdminOrgnazitionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return orgnazitionController.queryAdminOrgnazitionTree(requestJsonVO);
+        return orgnazitionBusinessService.queryAdminOrgnazitionTree(requestJsonVO);
     }
 }

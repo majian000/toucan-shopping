@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.controller.role;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.business.service.RoleBusinessService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -57,6 +58,9 @@ public class RoleController {
     @Autowired
     private AppService appService;
 
+    @Autowired
+    private RoleBusinessService roleBusinessService;
+
 
 
     /**
@@ -67,43 +71,7 @@ public class RoleController {
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Role role = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(StringUtils.isEmpty(role.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入角色名称");
-                return resultObjectVO;
-            }
-
-
-            role.setRoleId(GlobalUUID.uuid());
-            role.setDeleteStatus((short)0);
-            int row = roleService.save(role);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
-                return resultObjectVO;
-            }
-
-            resultObjectVO.setData(role);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.save(requestVo);
     }
 
 
@@ -117,60 +85,7 @@ public class RoleController {
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入角色名称");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入角色ID");
-                return resultObjectVO;
-            }
-
-
-            Role query=new Role();
-            query.setId(entity.getId());
-            query.setDeleteStatus((short)0);
-            List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该角色不存在!");
-                return resultObjectVO;
-            }
-
-            entity.setUpdateDate(new Date());
-            int row = roleService.update(entity);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
-
-
-            resultObjectVO.setData(entity);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.update(requestVo);
     }
 
 
@@ -183,68 +98,7 @@ public class RoleController {
     @ResponseBody
     public ResultObjectVO queryAdminRoleTree(@RequestBody RequestJsonVO requestJsonVO)
     {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
-            //查询查询指定用户下的应用角色树
-            List<AdminApp> adminApps = adminAppService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
-            {
-                List<App> apps=new ArrayList<App>();
-                for(AdminApp adminApp:adminApps)
-                {
-                    App queryApp =new App();
-                    queryApp.setCode(adminApp.getAppCode());
-                    apps.addAll(appService.findListByEntity(queryApp));
-                }
-                List<RoleTreeVO> roleTreeVOS = new ArrayList<RoleTreeVO>();
-                for(App app:apps)
-                {
-                    //查询所有应用
-                    if(!CollectionUtils.isEmpty(apps))
-                    {
-                        RoleTreeVO roleTreeVO = new RoleTreeVO();
-                        roleTreeVO.setId(app.getId());
-                        roleTreeVO.setTitle(app.getCode()+" "+app.getName());
-                        roleTreeVO.setText(app.getCode()+" "+app.getName());
-                        roleTreeVO.setChildren(new ArrayList<RoleTreeVO>());
-                        roleTreeVO.setRoleId("-1");
-
-                        Role queryRole = new Role();
-                        queryRole.setAppCode(app.getCode());
-                        queryRole.setEnableStatus((short)1);
-                        queryRole.setDeleteStatus((short)0);
-                        //查询所有角色
-                        List<Role> roles = roleService.findListByEntity(queryRole);
-                        if(!CollectionUtils.isEmpty(roles))
-                        {
-                            for(Role role:roles) {
-                                RoleTreeVO roleTreeChild = new RoleTreeVO();
-                                roleTreeChild.setId(role.getId());
-                                roleTreeChild.setTitle(role.getName());
-                                roleTreeChild.setText(role.getName());
-                                roleTreeChild.setRoleId(role.getRoleId());
-                                roleTreeChild.setAppCode(role.getAppCode());
-
-                                roleTreeVO.getChildren().add(roleTreeChild);
-                            }
-
-                        }
-
-                        roleTreeVOS.add(roleTreeVO);
-                    }
-                }
-
-                resultObjectVO.setData(roleTreeVOS);
-            }
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.queryAdminRoleTree(requestJsonVO);
     }
 
 
@@ -256,26 +110,7 @@ public class RoleController {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            RolePageInfo rolePageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RolePageInfo.class);
-            resultObjectVO.setData(roleService.queryListPage(rolePageInfo));
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.listPage(requestVo);
     }
 
     /**
@@ -286,43 +121,7 @@ public class RoleController {
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
-
-            //查询是否存在该角色
-            Role query=new Role();
-            query.setId(entity.getId());
-            List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("角色不存在!");
-                return resultObjectVO;
-            }
-            resultObjectVO.setData(roleList);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.findById(requestVo);
     }
 
 
@@ -334,49 +133,7 @@ public class RoleController {
     @RequestMapping(value="/list/admin/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findListByAdminId(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            AdminVO adminVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminVO.class);
-            if(StringUtils.isEmpty(adminVO.getAdminId()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到AdminID");
-                return resultObjectVO;
-            }
-
-            List<AdminRole> adminRoles = adminRoleService.findListByAdminId(adminVO.getAdminId());
-
-            if(!CollectionUtils.isEmpty(adminRoles)) {
-                List<Role> roles = new ArrayList<>();
-                for(AdminRole adminRole:adminRoles)
-                {
-                    //查询是否存在该角色
-                    Role query = new Role();
-                    query.setRoleId(adminRole.getRoleId());
-                    List<Role> roleList = roleService.findListByEntity(query);
-                    if(!CollectionUtils.isEmpty(roleList))
-                    {
-                        roles.addAll(roleList);
-                    }
-                }
-                resultObjectVO.setData(roles);
-            }
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.findListByAdminId(requestVo);
     }
 
 
@@ -388,60 +145,7 @@ public class RoleController {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
-
-            //查询是否存在该角色
-            Role query=new Role();
-            query.setId(entity.getId());
-            List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("角色不存在!");
-                return resultObjectVO;
-            }
-
-
-            int row = roleService.deleteById(entity.getId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
-
-
-            //删除账号关联
-            adminRoleService.deleteByRoleId(roleList.get(0).getRoleId());
-
-            //删除功能关联
-            roleFunctionService.deleteByRoleId(roleList.get(0).getRoleId());
-
-
-            resultObjectVO.setData(entity);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.deleteById(requestVo);
     }
 
 
@@ -453,64 +157,7 @@ public class RoleController {
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            List<Role> roleList = JSONObject.parseArray(requestVo.getEntityJson(),Role.class);
-            if(CollectionUtils.isEmpty(roleList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Role role:roleList) {
-                if(role.getId()!=null) {
-                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(role);
-
-                    //查询是否存在该角色
-                    Role query = new Role();
-                    query.setId(role.getId());
-                    List<Role> roleEntityList = roleService.findListByEntity(query);
-                    if (CollectionUtils.isEmpty(roleEntityList)) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("角色不存在!");
-                        continue;
-                    }
-
-
-                    int row = roleService.deleteById(role.getId());
-                    if (row < 1) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请重试!");
-                        continue;
-                    }
-
-                    //删除账号关联
-                    adminRoleService.deleteByRoleId(roleList.get(0).getRoleId());
-
-                    //删除功能关联
-                    roleFunctionService.deleteByRoleId(roleList.get(0).getRoleId());
-
-                }
-            }
-            resultObjectVO.setData(resultObjectVOList);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return roleBusinessService.deleteByIds(requestVo);
     }
 
 

@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.business.service.AdminRoleBusinessService;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
@@ -45,6 +46,8 @@ public class AdminRoleController {
     @Autowired
     private AdminAppService adminAppService;
 
+    @Autowired
+    private AdminRoleBusinessService adminRoleBusinessService;
 
     /**
      * 保存角色功能项
@@ -55,95 +58,7 @@ public class AdminRoleController {
     @ResponseBody
     public ResultObjectVO saveRoles(@RequestBody RequestJsonVO requestJsonVO)
     {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            AdminRoleVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminRoleVO.class);
-            if(StringUtils.isEmpty(entity.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
-            if(CollectionUtils.isEmpty(entity.getRoles()))
-            {
-                throw new IllegalArgumentException("roles为空");
-            }
-
-            AdminApp queryAdminApp = new AdminApp();
-            queryAdminApp.setAdminId(entity.getCreateAdminId());
-
-            List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
-
-            if(CollectionUtils.isEmpty(adminApps))
-            {
-                throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
-            }
-
-            //拿到当前这个账户的操作人可管理的所有应用
-            String[] appCodes = new String[adminApps.size()];
-            for(int i=0;i<adminApps.size();i++)
-            {
-                appCodes[i] = adminApps.get(i).getAppCode();
-            }
-            //创建账户角色的前提是这个账户和操作这个账户的操作人属于同一个应用,这个操作人也只能操作他俩所属同一应用下面的所有角色
-            adminRoleService.deleteByAdminIdAndAppCodes(entity.getAdminId(),appCodes);
-
-            int length=0;
-            for(AdminRole adminRole:entity.getRoles())
-            {
-                //-1为应用节点
-                if(!"-1".equals(adminRole.getRoleId())) {
-                    adminRole.setAdminId(entity.getAdminId());
-                    adminRole.setCreateAdminId(entity.getCreateAdminId());
-                    adminRole.setCreateDate(new Date());
-                    adminRole.setDeleteStatus((short) 0);
-                    length++;
-                }
-            }
-            AdminRole[] adminRoles = new AdminRole[length];
-            int pos = 0;
-            for(AdminRole adminRole:entity.getRoles()) {
-                //-1为应用节点
-                if (!"-1".equals(adminRole.getRoleId())) {
-                    adminRoles[pos] = adminRole;
-                    pos++;
-                }
-            }
-            adminRoleService.saves(adminRoles);
-
-
-            try {
-                AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
-                if(adminRoleCacheService!=null) {
-                    //同步缓存
-                    List<String> deleteFaildIdList = new ArrayList<String>();
-                    for (int i = 0; i < adminApps.size(); i++) {
-                        //删除指定账号下的指定所有应用下的所有账号角色关联
-                        adminRoleCacheService.deleteByAdminIdAndAppCodes(entity.getAdminId(), adminApps.get(i).getAppCode(), deleteFaildIdList);
-                    }
-                    if (adminRoles != null && adminRoles.length > 0) {
-                        AdminRoleCacheVO[] adminRoleCacheVOS = new AdminRoleCacheVO[length];
-                        for (int i = 0; i < adminRoles.length; i++) {
-                            AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
-                            if (adminRoles[i] != null) {
-                                BeanUtils.copyProperties(adminRoleCacheVO, adminRoles[i]);
-                            }
-                            adminRoleCacheVOS[i] = adminRoleCacheVO;
-                        }
-                        adminRoleCacheService.saves(adminRoleCacheVOS);
-                    }
-                }
-            }catch(Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.SUCCESS);
-                resultObjectVO.setMsg("更新缓存出现异常");
-                logger.warn(e.getMessage(),e);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return adminRoleBusinessService.saveRoles(requestJsonVO);
     }
 
 
@@ -158,26 +73,7 @@ public class AdminRoleController {
     @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
-
-        try {
-            AdminRole queryAdminRole = JSONObject.parseObject(requestVo.getEntityJson(),AdminRole.class);
-            List<AdminRole> adminRoles = adminRoleService.findListByEntity(queryAdminRole);
-            resultObjectVO.setData(adminRoles);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return adminRoleBusinessService.queryListByEntity(requestVo);
     }
 
 
@@ -192,30 +88,7 @@ public class AdminRoleController {
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            AdminRolePageInfo adminRolePageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminRolePageInfo.class);
-
-
-            //查询账号角色关联
-            PageInfo<AdminRole> pageInfo =  adminRoleService.queryListPage(adminRolePageInfo);
-            resultObjectVO.setData(pageInfo);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return adminRoleBusinessService.list(requestVo);
     }
 
 

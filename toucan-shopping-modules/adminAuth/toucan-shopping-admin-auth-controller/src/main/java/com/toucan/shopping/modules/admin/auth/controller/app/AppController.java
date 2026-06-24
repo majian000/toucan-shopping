@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.admin.auth.controller.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.business.service.AppBusinessService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
@@ -51,6 +52,9 @@ public class AppController {
     @Autowired
     private OrgnazitionAppService orgnazitionAppService;
 
+    @Autowired
+    private AppBusinessService appBusinessService;
+
 
     /**
      * 添加应用
@@ -60,64 +64,7 @@ public class AppController {
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
-            if(StringUtils.isEmpty(app.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入应用名称");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(app.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入应用编码");
-                return resultObjectVO;
-            }
-
-            if(!AlphabetNumberUtils.isAlphabetNumber(app.getCode(),1,8))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,应用编码只允许字母、数字、下划线组成,长度1-8位");
-                return resultObjectVO;
-            }
-
-            //应用编码全局唯一,删除的数据也会被校验
-            //删除应用的话并没有级联删除所有业务数据,如果编码重复,进行编码查询的话会将旧应用的数据也查询出来
-            if(appService.existsByCode(app.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该应用编码已被使用了!");
-                return resultObjectVO;
-            }
-            app.setCreateDate(new Date());
-            app.setEnableStatus((short)1);
-            app.setDeleteStatus((short)0);
-            int row = appService.save(app);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
-                return resultObjectVO;
-            }
-
-            resultObjectVO.setData(app);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.save(requestVo);
     }
 
 
@@ -131,90 +78,7 @@ public class AppController {
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
-            if(StringUtils.isEmpty(app.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入应用名称");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(app.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入应用编码");
-                return resultObjectVO;
-            }
-            if(app.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入应用ID");
-                return resultObjectVO;
-            }
-
-
-            App query=new App();
-            query.setId(app.getId());
-            query.setDeleteStatus((short)0);
-            List<App> appList = appService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该应用不存在!");
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(appList.get(0).getCode(),app.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不允许修改!");
-                return resultObjectVO;
-            }
-
-            app.setUpdateDate(new Date());
-            int row = appService.update(app);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
-
-            AdminAuthCacheHelper.getAppCacheService().deleteByAppCode(app.getCode());
-
-            //应用禁用
-            if(app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==0)
-            {
-                //直接删除所有关联这个应用的登录账号会话
-                AdminApp adminApp = new AdminApp();
-                adminApp.setAppCode(app.getCode());
-                List<AdminApp> adminApps = adminAppService.findListByEntity(adminApp);
-                for(AdminApp aa:adminApps)
-                {
-                    //删除所有的登录会话
-                    AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(aa.getAdminId(),aa.getAppCode());
-                    //更新登录状态
-                    adminAppService.updateLoginStatus(aa.getAdminId(), aa.getAppCode(), (short) 0);
-                }
-
-            }
-
-            resultObjectVO.setData(app);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.update(requestVo);
     }
 
 
@@ -227,26 +91,7 @@ public class AppController {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            AppPageInfo appPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AppPageInfo.class);
-            resultObjectVO.setData(appService.queryListPage(appPageInfo));
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.listPage(requestVo);
     }
 
 
@@ -259,24 +104,7 @@ public class AppController {
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(), App.class);
-            resultObjectVO.setData(appService.findListByEntity(app));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.list(requestVo);
     }
 
 
@@ -288,24 +116,7 @@ public class AppController {
     @RequestMapping(value="/queryListByCodes",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByCodes(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-        try {
-            AppVO appVO = JSONObject.parseObject(requestVo.getEntityJson(), AppVO.class);
-            resultObjectVO.setData(appService.queryListByCodesIngoreDelete(appVO.getCodes()));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.queryListByCodes(requestVo);
     }
 
 
@@ -317,43 +128,7 @@ public class AppController {
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
-            if(app.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用ID");
-                return resultObjectVO;
-            }
-
-            //查询是否存在该应用
-            App query=new App();
-            query.setId(app.getId());
-            List<App> appList = appService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用不存在!");
-                return resultObjectVO;
-            }
-            resultObjectVO.setData(appList);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.findById(requestVo);
     }
 
 
@@ -365,54 +140,7 @@ public class AppController {
     @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryEnableStatusByCode(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setData(false);
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(), App.class);
-            if (app.getCode() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            AppVO appVO = AdminAuthCacheHelper.getAppCacheService().findByAppCode(app.getCode());
-            if(appVO!=null)
-            {
-                if(appVO.getEnableStatus()!=null&&appVO.getEnableStatus().intValue()==1)
-                {
-                    resultObjectVO.setData(true);
-                }else{
-                    resultObjectVO.setData(false);
-                }
-                return resultObjectVO;
-            }
-            //查询是否存在该应用
-            app = appService.findByAppCode(app.getCode());
-            if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==1)
-            {
-                resultObjectVO.setData(true);
-            }
-            if(app!=null)
-            {
-                appVO = new AppVO();
-                BeanUtils.copyProperties(appVO,app);
-                AdminAuthCacheHelper.getAppCacheService().save(appVO);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
-
+        return appBusinessService.queryEnableStatusByCode(requestVo);
     }
 
 
@@ -424,43 +152,7 @@ public class AppController {
     @RequestMapping(value="/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByCode(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
-            if(app.getCode()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
-            //查询是否存在该应用
-            App query=new App();
-            query.setCode(app.getCode());
-            List<App> appList = appService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用不存在!");
-                return resultObjectVO;
-            }
-            resultObjectVO.setData(appList.get(0));
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.findByCode(requestVo);
     }
 
 
@@ -472,72 +164,7 @@ public class AppController {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
-            if(app.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用ID");
-                return resultObjectVO;
-            }
-
-            //查询是否存在该应用
-            App query=new App();
-            query.setId(app.getId());
-            List<App> appList = appService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用不存在!");
-                return resultObjectVO;
-            }
-
-
-            int row = appService.deleteById(app.getId(),app.getUpdateAdminId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
-
-            //删除应用下所有关联
-
-            AdminApp queryAdminApp =new AdminApp();
-            queryAdminApp.setAppCode(appList.get(0).getCode());
-
-            List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
-            if(!CollectionUtils.isEmpty(adminApps)) {
-                row = adminAppService.deleteByAppCode(appList.get(0).getCode());
-
-                if (row <= 0) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("删除应用下所有管理账户失败!");
-                    return resultObjectVO;
-                }
-            }
-
-            //删除应用机构关联
-            orgnazitionAppService.deleteByAppCode(appList.get(0).getCode());
-
-
-            resultObjectVO.setData(app);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.deleteById(requestVo);
     }
 
 
@@ -549,76 +176,7 @@ public class AppController {
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            List<App> appList = JSONObject.parseArray(requestVo.getEntityJson(),App.class);
-            if(CollectionUtils.isEmpty(appList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用ID");
-                return resultObjectVO;
-            }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(App app:appList) {
-                if(app.getId()!=null) {
-                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(app);
-
-                    //查询是否存在该应用
-                    App query = new App();
-                    query.setId(app.getId());
-                    List<App> appEntityList = appService.findListByEntity(query);
-                    if (CollectionUtils.isEmpty(appEntityList)) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("应用不存在!");
-                        continue;
-                    }
-
-
-                    int row = appService.deleteById(app.getId());
-                    if (row < 1) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请重试!");
-                        continue;
-                    }
-
-                    //删除应用下所有关联
-                    AdminApp queryAdminApp =new AdminApp();
-                    queryAdminApp.setAppCode(appList.get(0).getCode());
-
-                    List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
-                    if(!CollectionUtils.isEmpty(adminApps)) {
-                        row = adminAppService.deleteByAppCode(appList.get(0).getCode());
-
-                        if (row <= 0) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("删除应用下所有管理账户失败!");
-                            continue;
-                        }
-                    }
-
-                    //删除应用机构关联
-                    orgnazitionAppService.deleteByAppCode(appList.get(0).getCode());
-
-                }
-            }
-            resultObjectVO.setData(resultObjectVOList);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
+        return appBusinessService.deleteByIds(requestVo);
     }
 
 

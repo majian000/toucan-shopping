@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.admin.auth.api.single;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.modules.admin.auth.controller.function.FunctionController;
+import com.toucan.shopping.modules.admin.auth.business.service.FunctionBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,85 +11,85 @@ import org.springframework.stereotype.Service;
 public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
 
     @Autowired
-    private FunctionController functionController;
+    private FunctionBusinessService functionBusinessService;
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return functionController.save(requestVo);
+        return functionBusinessService.save(requestVo);
     }
 
     @Override
     public ResultObjectVO saves(RequestJsonVO requestVo) {
-        return functionController.saves(requestVo);
+        return functionBusinessService.saves(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return functionController.update(requestVo);
+        return functionBusinessService.update(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryAppFunctionTreeTable(requestJsonVO);
+        return functionBusinessService.queryAppFunctionTreeTable(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryAppFunctionTreeTableByPid(requestJsonVO);
+        return functionBusinessService.queryAppFunctionTreeTableByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return functionController.deleteById(requestVo);
+        return functionBusinessService.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByAppCode(RequestJsonVO requestVo) {
-        return functionController.deleteByAppCode(requestVo);
+        return functionBusinessService.deleteByAppCode(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return functionController.findById(requestVo);
+        return functionBusinessService.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return functionController.deleteByIds(requestVo);
+        return functionBusinessService.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryAppFunctionTree(requestJsonVO);
+        return functionBusinessService.queryAppFunctionTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeByPid(RequestJsonVO requestJsonVO) {
-        return functionController.queryAppFunctionTreeByPid(requestJsonVO);
+        return functionBusinessService.queryAppFunctionTreeByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryFunctionTree(requestJsonVO);
+        return functionBusinessService.queryFunctionTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAdminAppFunctions(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryAdminAppFunctions(requestJsonVO);
+        return functionBusinessService.queryAdminAppFunctions(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryChildren(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryChildren(requestJsonVO);
+        return functionBusinessService.queryChildren(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(String signHeader, RequestJsonVO requestJsonVO) {
-        return functionController.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
+        return functionBusinessService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-        return functionController.list(requestVo);
+        return functionBusinessService.list(requestVo);
     }
 }
