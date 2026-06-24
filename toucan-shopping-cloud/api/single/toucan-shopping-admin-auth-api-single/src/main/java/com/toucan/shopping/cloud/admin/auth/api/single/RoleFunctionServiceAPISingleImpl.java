@@ -15,26 +15,26 @@ public class RoleFunctionServiceAPISingleImpl implements RoleFunctionServiceAPI 
 
     @Override
     public ResultObjectVO saveFunctions(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return roleFunctionController.saveFunctions(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryRoleFunctionList(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return roleFunctionController.queryRoleFunctionList(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleFunctionController.list(requestVo);
     }
 
     @Override
     public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(RequestJsonVO requestVo) {
-        return null;
+        return roleFunctionController.queryFunctionTreeByRoleIdAndParentId(requestVo);
     }
 
     @Override
     public ResultObjectVO refreshCache(RequestJsonVO requestJsonVO) {
-        return null;
+        return roleFunctionController.refreshCache(requestJsonVO);
     }
 }

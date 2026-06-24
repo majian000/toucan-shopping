@@ -15,51 +15,51 @@ public class AppServiceAPISingleImpl implements AppServiceAPI {
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.list(requestVo);
     }
 
     @Override
     public ResultObjectVO findByCode(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return appController.findByCode(requestVo);
     }
 
     @Override
     public ResultObjectVO enableStatusByCode(RequestJsonVO requestVo) {
-        return null;
+        return appController.queryEnableStatusByCode(requestVo);
     }
 
     @Override
     public ResultObjectVO queryListByCodes(RequestJsonVO requestVo) {
-        return null;
+        return appController.queryListByCodes(requestVo);
     }
 }

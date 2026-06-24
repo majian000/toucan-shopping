@@ -15,12 +15,12 @@ public class AdminOrgnazitionServiceAPISingleImpl implements AdminOrgnazitionSer
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminOrgnazitionController.saveOrgnazitions(requestVo);
     }
 
     @Override
     public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminOrgnazitionController.queryListByEntity(requestVo);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class AdminOrgnazitionServiceAPISingleImpl implements AdminOrgnazitionSer
 
     @Override
     public ResultObjectVO saveOrgnazitions(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return adminOrgnazitionController.saveOrgnazitions(requestJsonVO);
     }
 }

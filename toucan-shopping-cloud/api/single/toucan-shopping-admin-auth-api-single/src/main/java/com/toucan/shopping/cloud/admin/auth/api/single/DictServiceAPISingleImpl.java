@@ -19,51 +19,51 @@ public class DictServiceAPISingleImpl implements DictServiceAPI {
 
     @Override
     public ResultObjectVO save(RequestJsonVO requestVo) {
-        return null;
+        return dictController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(RequestJsonVO requestVo) {
-        return null;
+        return dictController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO listPage(RequestJsonVO requestVo) {
-        return null;
+        return dictController.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(RequestJsonVO requestVo) {
-        return null;
+        return dictController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
-        return null;
+        return dictController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
-        return null;
+        return dictController.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
-        return null;
+        return dictController.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO) {
-        return null;
+        return dictController.queryTreeChildByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryDictByCodeAndCategoryCode(RequestJsonVO requestJsonVO) {
-        return null;
+        return dictController.queryDictByCodeAndCategoryCode(requestJsonVO);
     }
 
     @Override
     public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO) {
-        return null;
+        return dictController.queryDictByCodesAndCategoryCode(requestJsonVO);
     }
 }

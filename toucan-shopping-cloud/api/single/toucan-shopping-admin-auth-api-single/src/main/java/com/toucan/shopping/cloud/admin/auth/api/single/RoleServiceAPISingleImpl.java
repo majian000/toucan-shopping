@@ -15,36 +15,36 @@ public class RoleServiceAPISingleImpl implements RoleServiceAPI {
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAdminRoleTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return roleController.queryAdminRoleTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return roleController.deleteByIds(requestVo);
     }
 }

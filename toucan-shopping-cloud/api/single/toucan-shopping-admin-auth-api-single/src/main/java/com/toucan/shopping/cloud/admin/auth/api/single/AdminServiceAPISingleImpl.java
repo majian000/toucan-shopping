@@ -15,61 +15,61 @@ public class AdminServiceAPISingleImpl implements AdminServiceAPI {
 
     @Override
     public ResultObjectVO login(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.login(requestVo);
     }
 
     @Override
     public ResultObjectVO queryLoginToken(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.queryLoginToken(requestVo);
     }
 
     @Override
     public ResultObjectVO isOnline(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.isOnline(requestVo);
     }
 
     @Override
     public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.queryListByEntity(requestVo);
     }
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.list(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO logout(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.logout(requestVo);
     }
 
     @Override
     public ResultObjectVO updatePassword(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.updatePassword(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminController.deleteByIds(requestVo);
     }
 }

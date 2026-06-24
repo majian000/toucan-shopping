@@ -15,41 +15,41 @@ public class OrgnazitionServiceAPISingleImpl implements OrgnazitionServiceAPI {
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return orgnazitionController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return orgnazitionController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppOrgnazitionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return orgnazitionController.queryAppOrgnazitionTreeTable(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return orgnazitionController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return orgnazitionController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return orgnazitionController.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryOrgnazationTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return orgnazitionController.queryOrgnazationTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAdminOrgnazitionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return orgnazitionController.queryAdminOrgnazitionTree(requestJsonVO);
     }
 }

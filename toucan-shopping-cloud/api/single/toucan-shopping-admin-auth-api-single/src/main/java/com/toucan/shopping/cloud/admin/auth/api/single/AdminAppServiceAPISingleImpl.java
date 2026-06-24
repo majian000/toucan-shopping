@@ -21,46 +21,46 @@ public class AdminAppServiceAPISingleImpl implements AdminAppServiceAPI {
 
     @Override
     public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.queryListByEntity(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByAppCode(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.deleteByAppCode(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppListByAdminId(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.queryAppListByAdminId(requestVo);
     }
 
     @Override
     public ResultObjectVO list(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.list(requestVo);
     }
 
     @Override
     public ResultObjectVO onlineList(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.onlineList(requestVo);
     }
 
     @Override
     public ResultObjectVO loginList(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.loginList(requestVo);
     }
 
     @Override
     public ResultObjectVO batchUpdateLoginStatus(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.batchUpdateLoginStatus(requestVo);
     }
 
     @Override
     public ResultObjectVO logout(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.logout(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppLoginUserCountList(RequestJsonVO requestVo) {
-        return null;
+        return adminAppController.queryAppLoginUserCountList(requestVo);
     }
 }

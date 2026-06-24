@@ -15,36 +15,36 @@ public class DictCategoryServiceAPISingleImpl implements DictCategoryServiceAPI 
 
     @Override
     public ResultObjectVO save(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO update(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO listPage(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryList(RequestJsonVO requestVo) {
-        return null;
+        return dictCategoryController.queryList(requestVo);
     }
 }

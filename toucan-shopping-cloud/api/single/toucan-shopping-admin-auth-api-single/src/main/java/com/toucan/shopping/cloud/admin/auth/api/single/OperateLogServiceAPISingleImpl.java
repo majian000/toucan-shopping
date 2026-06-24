@@ -15,21 +15,21 @@ public class OperateLogServiceAPISingleImpl implements OperateLogServiceAPI {
 
     @Override
     public ResultObjectVO saves(RequestJsonVO requestJsonVO) {
-        return null;
+        return operateLogController.saves(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOperateChart(RequestJsonVO requestJsonVO) {
-        return null;
+        return operateLogController.queryOperateChart(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO listPage(RequestJsonVO requestVo) {
-        return null;
+        return operateLogController.listPage(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(RequestJsonVO requestVo) {
-        return null;
+        return operateLogController.findById(requestVo);
     }
 }

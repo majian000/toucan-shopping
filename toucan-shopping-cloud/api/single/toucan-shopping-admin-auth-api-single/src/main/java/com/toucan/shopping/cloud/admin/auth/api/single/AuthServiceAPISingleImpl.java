@@ -15,11 +15,11 @@ public class AuthServiceAPISingleImpl implements AuthServiceAPI {
 
     @Override
     public ResultObjectVO verify(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return authController.verify(requestVo);
     }
 
     @Override
     public ResultObjectVO verifyLoginAndUrl(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return authController.verifyLoginAndUrl(requestVo);
     }
 }

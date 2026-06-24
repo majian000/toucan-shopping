@@ -15,81 +15,81 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
 
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.save(requestVo);
     }
 
     @Override
     public ResultObjectVO saves(RequestJsonVO requestVo) {
-        return null;
+        return functionController.saves(requestVo);
     }
 
     @Override
     public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.update(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryAppFunctionTreeTable(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryAppFunctionTreeTableByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByAppCode(RequestJsonVO requestVo) {
-        return null;
+        return functionController.deleteByAppCode(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.findById(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.deleteByIds(requestVo);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryAppFunctionTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAppFunctionTreeByPid(RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryAppFunctionTreeByPid(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryFunctionTree(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryAdminAppFunctions(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryAdminAppFunctions(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryChildren(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryChildren(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(String signHeader, RequestJsonVO requestJsonVO) {
-        return null;
+        return functionController.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-        return null;
+        return functionController.list(requestVo);
     }
 }

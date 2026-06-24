@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: cloud_dev
+    active: single_dev
   main:
     allow-bean-definition-overriding: true
   config:
@@ -33,3 +33,22 @@ spring:
   cloud:
     config:
       profile: cloud_dev
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: single_prod
+  cloud:
+    config:
+      profile: single_prod
+
+---
+spring:
+  config:
+    activate:
+      on-profile: single_dev
+  cloud:
+    config:
+      profile: single_dev
