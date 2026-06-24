@@ -134,10 +134,6 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>com.toucan.shopping.cloud.api</groupId>
-                    <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
-                </dependency>
-                <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-auth-web-config</artifactId>
                 </dependency>
@@ -145,6 +141,13 @@
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.starter</groupId>
                     <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
+                </dependency>
+
+
+                <!--我们的包 -->
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
                 </dependency>
 
             </dependencies>
