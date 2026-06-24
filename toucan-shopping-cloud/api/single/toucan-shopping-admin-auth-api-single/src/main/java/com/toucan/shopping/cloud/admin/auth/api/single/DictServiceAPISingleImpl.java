@@ -1,10 +1,12 @@
 package com.toucan.shopping.cloud.admin.auth.api.single;
 
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
+import com.toucan.shopping.modules.admin.auth.controller.dict.DictController;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Service
 public class DictServiceAPISingleImpl implements DictServiceAPI {
 
+    @Autowired
+    private DictController dictController;
 
     @Override
     public ResultObjectVO save(RequestJsonVO requestVo) {
