@@ -42,6 +42,9 @@ spring:
         ip: ${toucan.ip}    #使用IP地址注册
         port: ${toucan.port}
         register-enabled: false
+        fail-fast: false
+        username: ${toucan.nacos.username}
+        password: ${toucan.nacos.password}
     openfeign:
       circuitbreaker:
         enabled: true
