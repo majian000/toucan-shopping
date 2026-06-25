@@ -1,0 +1,19 @@
+package com.toucan.shopping.cloud.content.api.single;
+
+import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FeignColumnAreaServiceSingleImpl implements FeignColumnAreaService {
+
+    @Override
+    public ResultObjectVO queryColumnAreaList(String signHeader, RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(ResultObjectVO.FAILD);
+        resultObjectVO.setMsg("单机模式暂不支持此服务");
+        return resultObjectVO;
+    }
+
+}

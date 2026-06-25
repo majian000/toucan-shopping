@@ -110,6 +110,14 @@
 
 
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+
+
+
+
 
 
     </dependencies>
@@ -150,6 +158,19 @@
                     <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
                 </dependency>
 
+
+                <dependency>
+                    <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                    <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                    <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
+                </dependency>
+
+
             </dependencies>
         </profile>
         <profile>
@@ -173,6 +194,17 @@
                     <artifactId>toucan-shopping-admin-auth-web-single-config</artifactId>
                 </dependency>
 
+
+                <dependency>
+                    <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                    <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                    <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
+                </dependency>
 
             </dependencies>
         </profile>
