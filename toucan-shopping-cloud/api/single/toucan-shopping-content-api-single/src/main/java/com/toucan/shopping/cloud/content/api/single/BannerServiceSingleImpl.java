@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.content.api.single;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.content.business.service.BannerBusinessService;
@@ -8,58 +8,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BannerServiceSingleImpl implements FeignBannerService {
+public class BannerServiceSingleImpl implements BannerServiceAPI {
 
     @Autowired
     private BannerBusinessService bannerBusinessService;
 
     @Override
-    public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         return bannerBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryList(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         return bannerBusinessService.queryList(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO flushWebIndexCache(RequestJsonVO requestVo) {
         return bannerBusinessService.flushWebIndexCache(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryIndexList(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryIndexList(RequestJsonVO requestJsonVO) {
         return bannerBusinessService.queryIndexList(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
         return bannerBusinessService.clearWebIndexCache(requestVo);
     }
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return bannerBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return bannerBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return bannerBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return bannerBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return bannerBusinessService.deleteByIds(requestVo);
     }
 

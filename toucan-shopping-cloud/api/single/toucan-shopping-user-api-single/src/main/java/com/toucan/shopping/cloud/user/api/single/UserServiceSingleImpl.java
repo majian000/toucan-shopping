@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.user.api.single;
 
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.business.service.UserBusinessService;
@@ -9,33 +9,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceSingleImpl implements FeignUserService {
+public class UserServiceSingleImpl implements UserServiceAPI {
 
     @Autowired
     private UserBusinessService userBusinessService;
 
     @Override
-    public ResultObjectVO registByMobilePhone(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO registByMobilePhone(RequestJsonVO requestJsonVO) {
         return userBusinessService.registByMobilePhone(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO resetPassword(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO resetPassword(RequestJsonVO requestJsonVO) {
         return userBusinessService.resetPassword(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO connectUsername(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO connectUsername(RequestJsonVO requestJsonVO) {
         return userBusinessService.connectUsername(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO connectEmail(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO connectEmail(RequestJsonVO requestJsonVO) {
         return userBusinessService.connectEmail(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO connectMobilePhone(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO connectMobilePhone(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -43,12 +43,12 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO updateDetail(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO updateDetail(RequestJsonVO requestJsonVO) {
         return userBusinessService.updateDetail(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO registByUsername(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO registByUsername(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -56,12 +56,12 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO loginByPassword(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO loginByPassword(RequestJsonVO requestJsonVO) {
         return userBusinessService.loginByPassword(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO logout(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO logout(RequestJsonVO requestVo) {
         return userBusinessService.logout(requestVo);
     }
 
@@ -74,27 +74,27 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO isOnline(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO isOnline(RequestJsonVO requestVo) {
         return userBusinessService.isOnline(requestVo);
     }
 
     @Override
-    public ResultObjectVO verifyLoginToken(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO verifyLoginToken(RequestJsonVO requestVo) {
         return userBusinessService.verifyLoginToken(requestVo);
     }
 
     @Override
-    public ResultObjectVO verifyLoginTokenAndIsOnline(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO verifyLoginTokenAndIsOnline(RequestJsonVO requestVo) {
         return userBusinessService.verifyLoginTokenAndIsOnline(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryLoginInfo(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryLoginInfo(RequestJsonVO requestVo) {
         return userBusinessService.queryLoginInfo(requestVo);
     }
 
     @Override
-    public ResultObjectVO findByUserMainIdForCacheOrDB(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findByUserMainIdForCacheOrDB(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -102,52 +102,52 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO verifyRealName(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO verifyRealName(RequestJsonVO requestVo) {
         return userBusinessService.verifyRealName(requestVo);
     }
 
     @Override
-    public ResultObjectVO findByMobilePhone(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO findByMobilePhone(RequestJsonVO requestJsonVO) {
         return userBusinessService.findByMobilePhone(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         return userBusinessService.list(requestVo);
     }
 
     @Override
-    public ResultObjectVO mobilePhoneList(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO mobilePhoneList(RequestJsonVO requestVo) {
         return userBusinessService.mobilePhoneList(requestVo);
     }
 
     @Override
-    public ResultObjectVO emailList(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO emailList(RequestJsonVO requestVo) {
         return userBusinessService.emailList(requestVo);
     }
 
     @Override
-    public ResultObjectVO usernameList(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO usernameList(RequestJsonVO requestVo) {
         return userBusinessService.usernameList(requestVo);
     }
 
     @Override
-    public ResultObjectVO findUsernameListByUsername(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO findUsernameListByUsername(RequestJsonVO requestJsonVO) {
         return userBusinessService.findUsernameListByUsername(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO findEmailListByEmail(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO findEmailListByEmail(RequestJsonVO requestJsonVO) {
         return userBusinessService.findEmailListByEmail(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO disabledEnabledById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledEnabledById(RequestJsonVO requestVo) {
         return userBusinessService.disabledEnabledById(requestVo);
     }
 
     @Override
-    public ResultObjectVO disabledEnabledMobilePhone(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledEnabledMobilePhone(RequestJsonVO requestVo) {
         return userBusinessService.disabledEnabledMobilePhone(requestVo);
     }
 
@@ -162,12 +162,12 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO disabledEnabledEmail(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledEnabledEmail(RequestJsonVO requestVo) {
         return userBusinessService.disabledEnabledEmail(requestVo);
     }
 
     @Override
-    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -175,7 +175,7 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO disabledByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -183,7 +183,7 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO findByUserMainId(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findByUserMainId(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -191,7 +191,7 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO flushCache(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO flushCache(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -199,17 +199,17 @@ public class UserServiceSingleImpl implements FeignUserService {
     }
 
     @Override
-    public ResultObjectVO editInfo(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO editInfo(RequestJsonVO requestJsonVO) {
         return userBusinessService.editInfo(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO updateIsShop(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO updateIsShop(RequestJsonVO requestJsonVO) {
         return userBusinessService.updateIsShop(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO updateHeadsculpture(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO updateHeadsculpture(RequestJsonVO requestJsonVO) {
         return userBusinessService.updateHeadsculpture(requestJsonVO);
     }
 

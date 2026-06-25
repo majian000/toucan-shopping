@@ -1,23 +1,26 @@
 package com.toucan.shopping.cloud.order.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
 import com.toucan.shopping.cloud.order.api.cloud.feign.fallback.FeignOrderServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-order-proxy/order",fallbackFactory = FeignOrderServiceFallbackFactory.class)
-public interface FeignOrderService {
+public interface FeignOrderService extends OrderServiceAPI {
 
     @RequestMapping(value="/querySkuUuids/orderNo",produces = "application/json;charset=UTF-8")
-    ResultObjectVO querySkuUuidsByOrderNo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO querySkuUuidsByOrderNo(@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
-    ResultObjectVO finish(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryOrderByPayTimeOut(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOrderByPayTimeOut(@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);

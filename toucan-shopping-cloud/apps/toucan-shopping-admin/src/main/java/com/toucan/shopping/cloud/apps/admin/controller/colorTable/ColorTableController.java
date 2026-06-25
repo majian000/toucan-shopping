@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignColorTableService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.color.table.page.ColorTablePageInfo;

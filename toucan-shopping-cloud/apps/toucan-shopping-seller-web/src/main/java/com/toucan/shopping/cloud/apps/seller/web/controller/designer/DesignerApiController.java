@@ -2,15 +2,14 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.designer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.designer.core.exception.validator.ValidatorException;
 import com.toucan.shopping.modules.designer.core.parser.IPageParser;
 import com.toucan.shopping.modules.designer.core.validator.IPageValidator;
 import com.toucan.shopping.modules.designer.seller.model.container.ShopPageContainer;
@@ -20,7 +19,6 @@ import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.util.ShopUtils;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerPageModelVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +43,13 @@ public class DesignerApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopServiceAPI;
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
+    private SellerDesignerPageModelServiceAPI sellerDesignerPageModelServiceAPI;
 
     @Autowired
     private IPageParser pageParser;
@@ -75,7 +73,7 @@ public class DesignerApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
@@ -96,7 +94,7 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
-                    resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    resultObjectVO = sellerDesignerPageModelServiceAPI.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
                     if(resultObjectVO.isSuccess()) {
                         resultObjectVO.setData(toucan.getShoppingPC().getBasePath() + toucan.getShoppingPC().getShopPcIndexPreviewPage() + "/" + ShopUtils.encShopId(shopId) + "/" + shopId);
                     }else{
@@ -134,7 +132,7 @@ public class DesignerApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
@@ -155,12 +153,12 @@ public class DesignerApiController extends BaseController {
                     sellerDesignerPageVO.setPageJson(JSONObject.toJSONString(shopPageContainer));
                     sellerDesignerPageVO.setUserMainId(Long.parseLong(userMainId));
 
-                    resultObjectVO = feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    resultObjectVO = sellerDesignerPageModelServiceAPI.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
                     resultObjectVO.setData(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getShopPcIndexReleasePage()+"/"+shopId);
 
                     //同步更新预览页
                     sellerDesignerPageVO.setType(1);
-                    feignSellerDesignerPageModelService.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
+                    sellerDesignerPageModelServiceAPI.onlySaveOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerPageVO));
 
                 }catch(Exception e)
                 {
@@ -194,7 +192,7 @@ public class DesignerApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null&&sellerShopVO.getEnableStatus().intValue()==1) {
@@ -207,7 +205,7 @@ public class DesignerApiController extends BaseController {
                 query.setShopId(Long.parseLong(shopId));
                 query.setType(2);
                 query.setPosition(1);
-                resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+                resultObjectVO = sellerDesignerPageModelServiceAPI.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
             }
         }catch(Exception e)
         {

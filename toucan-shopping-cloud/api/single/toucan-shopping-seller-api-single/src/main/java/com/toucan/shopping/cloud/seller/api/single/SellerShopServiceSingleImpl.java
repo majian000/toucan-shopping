@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.single;
 
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.SellerShopBusinessService;
@@ -8,23 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SellerShopServiceSingleImpl implements FeignSellerShopService {
+public class SellerShopServiceSingleImpl implements SellerShopServiceAPI {
 
     @Autowired
     private SellerShopBusinessService sellerShopBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         return sellerShopBusinessService.save(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryListPage(RequestJsonVO requestVo) {
         return sellerShopBusinessService.queryListPage(requestVo);
     }
 
     @Override
-    public ResultObjectVO findByUser(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findByUser(RequestJsonVO requestVo) {
         return sellerShopBusinessService.findByUser(requestVo);
     }
 
@@ -39,37 +39,37 @@ public class SellerShopServiceSingleImpl implements FeignSellerShopService {
     }
 
     @Override
-    public ResultObjectVO disabledEnabled(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO disabledEnabled(RequestJsonVO requestVo) {
         return sellerShopBusinessService.disabledEnabled(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return sellerShopBusinessService.deleteByIds(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         return sellerShopBusinessService.deleteById(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return sellerShopBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         return sellerShopBusinessService.update(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO updateLogo(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO updateLogo(RequestJsonVO requestJsonVO) {
         return sellerShopBusinessService.updateLogo(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO updateInfo(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO updateInfo(RequestJsonVO requestJsonVO) {
         return sellerShopBusinessService.updateInfo(requestJsonVO);
     }
 

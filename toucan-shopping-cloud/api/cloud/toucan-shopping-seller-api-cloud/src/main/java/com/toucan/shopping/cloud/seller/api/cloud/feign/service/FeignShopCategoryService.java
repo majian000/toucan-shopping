@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignShopCategoryServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,16 +12,15 @@ import org.springframework.web.bind.annotation.*;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/shop/category", fallbackFactory = FeignShopCategoryServiceFallbackFactory.class)
-public interface FeignShopCategoryService {
+public interface FeignShopCategoryService extends ShopCategoryServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @PostMapping("/save")
-    ResultObjectVO save(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 管理员保存
@@ -69,7 +69,7 @@ public interface FeignShopCategoryService {
      * @return
      */
     @PostMapping("/query/ids")
-    ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryByIdList( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 刷新缓存

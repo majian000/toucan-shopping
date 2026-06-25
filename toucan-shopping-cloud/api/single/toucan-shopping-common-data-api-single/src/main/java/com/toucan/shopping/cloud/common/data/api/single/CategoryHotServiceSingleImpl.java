@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.common.data.api.single;
 
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryHotService;
+import com.toucan.shopping.cloud.common.data.api.CategoryHotServiceAPI;
 import com.toucan.shopping.modules.category.business.service.CategoryHotBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
+public class CategoryHotServiceSingleImpl implements CategoryHotServiceAPI {
 
     @Autowired
     private CategoryHotBusinessService categoryHotBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
-        return categoryHotBusinessService.save(signHeader, requestJsonVO);
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+        return categoryHotBusinessService.save(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryById(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -35,7 +35,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO findByIdArray(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO findByIdArray(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -43,7 +43,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -51,7 +51,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO queryTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -59,7 +59,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -67,12 +67,12 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO queryTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
         return categoryHotBusinessService.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -80,7 +80,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO queryWebIndexTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryWebIndexTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -88,7 +88,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO flushWebIndexCache(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -96,7 +96,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -104,7 +104,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -112,7 +112,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");
@@ -120,7 +120,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
     }
 
     @Override
-    public ResultObjectVO queryListByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(ResultObjectVO.FAILD);
         resultObjectVO.setMsg("单机模式暂不支持此服务");

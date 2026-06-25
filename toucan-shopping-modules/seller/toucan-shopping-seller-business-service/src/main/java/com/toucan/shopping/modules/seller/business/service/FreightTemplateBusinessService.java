@@ -1240,11 +1240,10 @@ public class FreightTemplateBusinessService {
 
     /**
      * 根据ID删除
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO)
+    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -1285,13 +1284,6 @@ public class FreightTemplateBusinessService {
         String userMainId = String.valueOf(freightTemplate.getUserMainId());
         try {
 
-            String newSign = FreightTemplateUtils.getDeleteSignHeader(userMainId);
-            if(!signHeader.equals(newSign))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("签名校验失败,请稍后重试");
-                return resultObjectVO;
-            }
 
             boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
             if (!lockStatus) {

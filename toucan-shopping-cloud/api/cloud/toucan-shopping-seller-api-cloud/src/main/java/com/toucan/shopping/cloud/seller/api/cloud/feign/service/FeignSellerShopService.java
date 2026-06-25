@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignSellerShopServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,34 +12,31 @@ import org.springframework.web.bind.annotation.*;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/sellerShop", fallbackFactory = FeignSellerShopServiceFallbackFactory.class)
-public interface FeignSellerShopService {
+public interface FeignSellerShopService extends SellerShopServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @PostMapping("/save")
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 查询列表页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @GetMapping("/list/page")
-    ResultObjectVO queryListPage(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListPage( @RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据用户查询
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @GetMapping("/find/by/user")
-    ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByUser( @RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据ID列表查询
@@ -58,65 +56,58 @@ public interface FeignSellerShopService {
 
     /**
      * 启用/禁用
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @PostMapping("/disabled/enabled")
-    ResultObjectVO disabledEnabled(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabled( @RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据ID列表删除
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @DeleteMapping("/delete/ids")
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds( @RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据ID删除
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @DeleteMapping("/delete/id")
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO deleteById( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @PostMapping("/find/id")
-    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById( @RequestBody RequestJsonVO requestVo);
 
     /**
      * 修改
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @PostMapping("/update")
-    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO update( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 修改Logo
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @PostMapping("/update/logo")
-    ResultObjectVO updateLogo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateLogo( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 修改信息
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @PostMapping("/update/info")
-    ResultObjectVO updateInfo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateInfo( @RequestBody RequestJsonVO requestJsonVO);
 
 }

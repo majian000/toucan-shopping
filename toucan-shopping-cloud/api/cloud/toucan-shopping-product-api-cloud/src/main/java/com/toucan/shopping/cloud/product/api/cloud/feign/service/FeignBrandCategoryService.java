@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.product.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.product.api.BrandCategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.cloud.feign.fallback.FeignBrandCategoryServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/brand/category",fallbackFactory = FeignBrandCategoryServiceFallbackFactory.class)
-public interface FeignBrandCategoryService {
+public interface FeignBrandCategoryService extends BrandCategoryServiceAPI {
 
 
     /**
@@ -21,6 +22,7 @@ public interface FeignBrandCategoryService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value="/find/brand/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findByBrandId(@RequestBody RequestJsonVO requestVo);
 

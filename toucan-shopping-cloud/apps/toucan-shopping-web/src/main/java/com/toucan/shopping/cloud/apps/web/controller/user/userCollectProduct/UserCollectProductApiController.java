@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userCollectProduct;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.VerifyCodeService;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

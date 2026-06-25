@@ -22,7 +22,7 @@ public class FeignAdminProductSkuServiceFallbackFactory implements FallbackFacto
         logger.warn(throwable.getMessage(),throwable);
         return new FeignAdminProductSkuService(){
             @Override
-            public ResultObjectVO saveSku(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO saveSku(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

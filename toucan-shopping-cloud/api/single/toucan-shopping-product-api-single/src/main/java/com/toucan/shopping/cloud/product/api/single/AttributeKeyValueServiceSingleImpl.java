@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.product.api.single;
 
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.business.service.AttributeKeyValueBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AttributeKeyValueServiceSingleImpl implements FeignAttributeKeyValueService {
+public class AttributeKeyValueServiceSingleImpl implements AttributeKeyValueServiceAPI {
 
     @Autowired
     private AttributeKeyValueBusinessService attributeKeyValueBusinessService;

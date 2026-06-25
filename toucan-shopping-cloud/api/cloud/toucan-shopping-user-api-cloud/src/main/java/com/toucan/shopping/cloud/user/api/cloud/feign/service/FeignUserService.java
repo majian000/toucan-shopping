@@ -1,12 +1,12 @@
 package com.toucan.shopping.cloud.user.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.cloud.user.api.cloud.feign.fallback.FeignUserServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 用户服务
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/user",fallbackFactory = FeignUserServiceFallbackFactory.class)
-public interface FeignUserService extends com.toucan.shopping.cloud.user.api.feign.service.FeignUserService {
+public interface FeignUserService extends UserServiceAPI {
 
 
     /**
@@ -24,7 +24,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
-    ResultObjectVO registByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO registByMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 重置密码
@@ -33,7 +33,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")
-    ResultObjectVO resetPassword(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO resetPassword(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -44,7 +44,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/connect/username",produces = "application/json;charset=UTF-8")
-    ResultObjectVO connectUsername(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO connectUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -54,7 +54,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/connect/email",produces = "application/json;charset=UTF-8")
-    ResultObjectVO connectEmail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO connectEmail(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -65,7 +65,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/connect/mobile/phone",produces = "application/json;charset=UTF-8")
-    ResultObjectVO connectMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO connectMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -75,7 +75,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/update/detail",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updateDetail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateDetail(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -85,7 +85,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/regist/username",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO registByUsername(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    public ResultObjectVO registByUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -95,7 +95,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO loginByPassword(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    public ResultObjectVO loginByPassword(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -106,7 +106,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
-    ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 用户短信验证码登录
@@ -120,67 +120,61 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
 
     /**
      * 查询用户是否在线
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value = "/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 校验用户token
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value = "/verify/login/token",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO verifyLoginToken(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO verifyLoginToken(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 校验用户token以及判断登录会话
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value = "/verify/login/token/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO verifyLoginTokenAndIsOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO verifyLoginTokenAndIsOnline(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 获取登录信息
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryLoginInfo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryLoginInfo(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 查询用户信息(从缓存和数据库中查询)
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findByUserMainIdForCacheOrDB(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByUserMainIdForCacheOrDB(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 查询是否实名
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
-    ResultObjectVO verifyRealName(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO verifyRealName(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -190,52 +184,48 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
-    ResultObjectVO findByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO findByMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
      * 列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
 
     /**
      * 手机号列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO mobilePhoneList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO mobilePhoneList(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 邮箱列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/email/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO emailList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO emailList(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 用户名列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/username/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO usernameList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO usernameList(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -245,7 +235,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findUsernameListByUsername(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO findUsernameListByUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -257,7 +247,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findEmailListByEmail(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO findEmailListByEmail(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -267,18 +257,17 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/disabled/enabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledById(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 根据用户ID和手机号 禁用手机号关联
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledMobilePhone(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -303,56 +292,51 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
 
     /**
      * 根据用户ID和邮箱 禁用邮箱关联
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledEmail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledEmail(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 根据用户ID和用户名 禁用用户名关联
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/username/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 批量禁用
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/disabled/ids",method = RequestMethod.DELETE)
-    ResultObjectVO disabledByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO disabledByIds(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 根据用户ID查询
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @Override
     @RequestMapping(value="/find/by/user/main/id",produces = "application/json;charset=UTF-8")
-    ResultObjectVO findByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByUserMainId(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 刷新用户缓存
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @Override
     @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
-    ResultObjectVO flushCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -362,7 +346,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/edit/info",produces = "application/json;charset=UTF-8")
-    ResultObjectVO editInfo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO editInfo(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -373,7 +357,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/update/is/shop",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updateIsShop(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateIsShop(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -383,7 +367,7 @@ public interface FeignUserService extends com.toucan.shopping.cloud.user.api.fei
      */
     @Override
     @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updateHeadsculpture(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateHeadsculpture(@RequestBody RequestJsonVO requestJsonVO);
 
 
 

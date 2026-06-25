@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.message.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.message.api.cloud.feign.fallback.FeignMessageUserServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 消息服务
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-message-proxy/message/user",fallbackFactory = FeignMessageUserServiceFallbackFactory.class)
-public interface FeignMessageUserService {
+public interface FeignMessageUserService extends MessageUserServiceAPI {
 
     @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
     ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO);
@@ -41,7 +42,7 @@ public interface FeignMessageUserService {
 
 
     /**
-     * 編輯
+     * 编辑
      * @param requestVo
      * @return
      */

@@ -34,6 +34,10 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.order</groupId>
+            <artifactId>toucan-shopping-order-entity-vo</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

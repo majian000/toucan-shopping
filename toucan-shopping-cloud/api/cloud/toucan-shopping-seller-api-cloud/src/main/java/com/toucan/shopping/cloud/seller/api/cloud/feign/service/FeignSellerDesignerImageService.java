@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignSellerDesignerImageServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/seller/designer/image", fallbackFactory = FeignSellerDesignerImageServiceFallbackFactory.class)
-public interface FeignSellerDesignerImageService {
+public interface FeignSellerDesignerImageService extends SellerDesignerImageServiceAPI {
 
     /**
      * 根据ID查询

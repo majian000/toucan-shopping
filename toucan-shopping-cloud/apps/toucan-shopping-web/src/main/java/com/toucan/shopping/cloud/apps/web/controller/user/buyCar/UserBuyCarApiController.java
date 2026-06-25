@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.buyCar;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;

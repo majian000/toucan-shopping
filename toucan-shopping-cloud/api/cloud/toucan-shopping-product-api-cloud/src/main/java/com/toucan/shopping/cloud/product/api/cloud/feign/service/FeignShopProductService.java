@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.product.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
 import com.toucan.shopping.cloud.product.api.cloud.feign.fallback.FeignShopProductServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/shopProduct",fallbackFactory = FeignShopProductServiceFallbackFactory.class)
-public interface FeignShopProductService {
+public interface FeignShopProductService extends ShopProductServiceAPI {
 
 
     /**
@@ -17,9 +18,11 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
+    @Override
     @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -28,6 +31,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -37,6 +41,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -47,6 +52,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -55,6 +61,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
     ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -64,6 +71,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
@@ -74,6 +82,7 @@ public interface FeignShopProductService {
      * @param requestJsonVO
      * @return
      */
+    @Override
     @RequestMapping(value="/update/freightTemplate",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO updateFreightTemplate(@RequestBody RequestJsonVO requestJsonVO);
 

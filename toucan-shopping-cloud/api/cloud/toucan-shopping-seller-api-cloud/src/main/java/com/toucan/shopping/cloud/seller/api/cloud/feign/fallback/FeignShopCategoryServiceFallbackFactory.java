@@ -23,7 +23,7 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
         logger.warn(throwable.getMessage(),throwable);
         return new FeignShopCategoryService(){
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -31,7 +31,7 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
                     resultObjectVO.setMsg("保存店铺分类失败");
                     return resultObjectVO;
                 }
-                logger.warn("FeignShopCategoryService.save失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopCategoryService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存店铺分类失败");
                 return resultObjectVO;
@@ -114,7 +114,7 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
             }
 
             @Override
-            public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryByIdList( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

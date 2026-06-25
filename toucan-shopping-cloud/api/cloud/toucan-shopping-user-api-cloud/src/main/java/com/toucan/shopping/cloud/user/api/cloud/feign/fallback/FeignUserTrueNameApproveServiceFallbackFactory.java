@@ -23,7 +23,7 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
         return new FeignUserTrueNameApproveService(){
 
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -31,14 +31,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.save失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserTrueNameApproveService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO update( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -46,14 +46,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.update失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserTrueNameApproveService.update失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryByUserMainId(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryByUserMainId( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -61,14 +61,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.queryByUserMainId失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserTrueNameApproveService.queryByUserMainId失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -76,13 +76,13 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.queryListByUserMainIdAndOrderByUpdateDateDesc失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserTrueNameApproveService.queryListByUserMainIdAndOrderByUpdateDateDesc失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             @Override
-            public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO queryListPage( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -90,14 +90,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.listPage失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserTrueNameApproveService.listPage失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO passById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO passById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -105,14 +105,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.passById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserTrueNameApproveService.passById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -120,14 +120,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.deleteByIds失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserTrueNameApproveService.deleteByIds失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryById(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryById( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -135,14 +135,14 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.queryById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserTrueNameApproveService.queryById失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO rejectById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO rejectById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -150,7 +150,7 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.rejectById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserTrueNameApproveService.rejectById失败  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

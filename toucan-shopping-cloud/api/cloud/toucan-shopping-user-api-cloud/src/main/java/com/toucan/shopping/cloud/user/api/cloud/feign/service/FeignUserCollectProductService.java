@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.user.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.cloud.user.api.cloud.feign.fallback.FeignUserCollectProductServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 用户收藏商品
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/user/collect/product",fallbackFactory = FeignUserCollectProductServiceFallbackFactory.class)
-public interface FeignUserCollectProductService extends com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService {
+public interface FeignUserCollectProductService extends UserCollectProductServiceAPI {
 
 
 

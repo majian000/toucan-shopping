@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.single;
 
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.SellerDesignerImageBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SellerDesignerImageServiceSingleImpl implements FeignSellerDesignerImageService {
+public class SellerDesignerImageServiceSingleImpl implements SellerDesignerImageServiceAPI {
 
     @Autowired
     private SellerDesignerImageBusinessService sellerDesignerImageBusinessService;

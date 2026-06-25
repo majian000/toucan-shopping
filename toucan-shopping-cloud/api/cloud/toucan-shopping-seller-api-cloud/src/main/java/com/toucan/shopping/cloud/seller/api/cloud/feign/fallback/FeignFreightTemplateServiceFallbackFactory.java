@@ -101,7 +101,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO deleteById( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -109,7 +109,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerLoginHistoryService.deleteById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerLoginHistoryService.deleteById失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

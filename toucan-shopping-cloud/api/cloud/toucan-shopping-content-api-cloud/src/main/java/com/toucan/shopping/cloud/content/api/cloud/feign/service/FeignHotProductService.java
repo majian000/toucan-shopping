@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.content.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.content.api.HotProductServiceAPI;
 import com.toucan.shopping.cloud.content.api.cloud.feign.fallback.FeignHotProductServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-content-proxy/hot/product", fallbackFactory = FeignHotProductServiceFallbackFactory.class)
-public interface FeignHotProductService extends com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService {
+public interface FeignHotProductService extends HotProductServiceAPI {
 
     @Override
     @RequestMapping(value = "/query/list/page", produces = "application/json;charset=UTF-8")

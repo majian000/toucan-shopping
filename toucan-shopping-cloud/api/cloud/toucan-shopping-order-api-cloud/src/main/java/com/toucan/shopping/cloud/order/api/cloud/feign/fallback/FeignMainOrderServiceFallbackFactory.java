@@ -24,7 +24,7 @@ public class FeignMainOrderServiceFallbackFactory implements FallbackFactory<Fei
         return new FeignMainOrderService(){
 
             @Override
-            public ResultObjectVO create( String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO create(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -32,7 +32,7 @@ public class FeignMainOrderServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignMainOrderServiceFallbackFactory create header {}  params{}:",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignMainOrderServiceFallbackFactory create params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("订单创建失败");
                 return resultObjectVO;
@@ -40,7 +40,7 @@ public class FeignMainOrderServiceFallbackFactory implements FallbackFactory<Fei
 
 
             @Override
-            public ResultObjectVO cancel(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO cancel(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -48,14 +48,14 @@ public class FeignMainOrderServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignMainOrderServiceFallbackFactory finish  header {}  params{}:",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignMainOrderServiceFallbackFactory finish  params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("取消订单失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryOrderByPayTimeOut(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryOrderByPayTimeOut(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -63,7 +63,7 @@ public class FeignMainOrderServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignMainOrderServiceFallbackFactory queryOrderByPayTimeOut header {}  params{}:",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignMainOrderServiceFallbackFactory queryOrderByPayTimeOut params{}:",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询支付超时订单失败");
                 return resultObjectVO;

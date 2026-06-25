@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderItemService;
+import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderItemService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

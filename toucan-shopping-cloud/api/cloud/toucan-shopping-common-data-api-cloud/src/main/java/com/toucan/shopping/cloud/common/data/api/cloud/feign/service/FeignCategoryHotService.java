@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.common.data.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.common.data.api.CategoryHotServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.cloud.feign.fallback.FeignCategoryHotServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -10,24 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-common-data-proxy/category/hot",fallbackFactory = FeignCategoryHotServiceFallbackFactory.class)
-public interface FeignCategoryHotService extends com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryHotService {
+public interface FeignCategoryHotService extends CategoryHotServiceAPI {
 
 
-    @Override
     @RequestMapping(value = "/save",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
-    @Override
     @RequestMapping(value = "/query/id",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
-    @Override
     @RequestMapping(value = "/query/ids",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdList(@RequestBody RequestJsonVO requestJsonVO);
 
 
-    @Override
     @RequestMapping(value = "/find/idArray",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO findByIdArray(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
@@ -37,7 +34,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/find/id",method = RequestMethod.POST)
     ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
@@ -48,9 +44,9 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeTable(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
 
 
 
@@ -60,7 +56,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/update",method = RequestMethod.POST)
     ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
@@ -71,7 +66,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
@@ -81,7 +75,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     ResultObjectVO queryTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
@@ -93,9 +86,9 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value = "/query/web/index/tree",method = RequestMethod.POST)
     ResultObjectVO queryWebIndexTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
 
 
 
@@ -105,9 +98,9 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO flushWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestVo);
+
 
 
 
@@ -116,7 +109,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO clearWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestVo);
 
@@ -128,7 +120,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
@@ -140,7 +131,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestVo
      * @return
      */
-    @Override
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
@@ -152,7 +142,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryListByPid(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
@@ -164,7 +153,6 @@ public interface FeignCategoryHotService extends com.toucan.shopping.cloud.commo
      * @param requestJsonVO
      * @return
      */
-    @Override
     @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 

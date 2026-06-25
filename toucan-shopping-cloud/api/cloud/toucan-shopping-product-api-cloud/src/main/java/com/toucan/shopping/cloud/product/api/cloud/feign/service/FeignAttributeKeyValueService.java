@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.product.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
 import com.toucan.shopping.cloud.product.api.cloud.feign.fallback.FeignAttributeKeyValueServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/attributeKeyValue",fallbackFactory = FeignAttributeKeyValueServiceFallbackFactory.class)
-public interface FeignAttributeKeyValueService {
+public interface FeignAttributeKeyValueService extends AttributeKeyValueServiceAPI {
 
 
     /**
@@ -17,6 +18,7 @@ public interface FeignAttributeKeyValueService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value="/find/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findByCategoryId(@RequestBody RequestJsonVO requestVo);
 
@@ -26,6 +28,7 @@ public interface FeignAttributeKeyValueService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value="/query/attribute/tree/page",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryAttributeTreePage(@RequestBody RequestJsonVO requestVo);
 
@@ -41,6 +44,7 @@ public interface FeignAttributeKeyValueService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO querySearchAttributeList(@RequestBody RequestJsonVO requestVo);
 

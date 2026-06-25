@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.common.data.api.single;
 
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.modules.category.business.service.CategoryBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryServiceSingleImpl implements FeignCategoryService {
+public class CategoryServiceSingleImpl implements CategoryServiceAPI {
 
     @Autowired
     private CategoryBusinessService categoryBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
-        return categoryBusinessService.save(signHeader, requestJsonVO);
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+        return categoryBusinessService.save("",requestJsonVO);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CategoryServiceSingleImpl implements FeignCategoryService {
     }
 
     @Override
-    public ResultObjectVO findByIdArray(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO findByIdArray(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.findByIdArray(requestJsonVO);
     }
 
@@ -44,27 +44,27 @@ public class CategoryServiceSingleImpl implements FeignCategoryService {
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return categoryBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.queryTreeTable(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return categoryBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTree(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.queryTree(requestJsonVO);
     }
 
@@ -74,12 +74,12 @@ public class CategoryServiceSingleImpl implements FeignCategoryService {
     }
 
     @Override
-    public ResultObjectVO queryWebIndexTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryWebIndexTree(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.queryWebIndexTree(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO flushWebIndexCache(RequestJsonVO requestVo) {
         return categoryBusinessService.flushWebIndexCache(requestVo);
     }
 
@@ -99,22 +99,22 @@ public class CategoryServiceSingleImpl implements FeignCategoryService {
     }
 
     @Override
-    public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
         return categoryBusinessService.clearWebIndexCache(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return categoryBusinessService.deleteByIds(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
-        return categoryBusinessService.deleteById(signHeader, requestVo);
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
+        return categoryBusinessService.deleteById("",requestVo);
     }
 
     @Override
-    public ResultObjectVO queryListByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
         return categoryBusinessService.queryListByPid(requestJsonVO);
     }
 

@@ -91,7 +91,7 @@ public class MainOrderBusinessService {
     /**
      * 创建订单
      */
-    public ResultObjectVO create(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO create(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
         {

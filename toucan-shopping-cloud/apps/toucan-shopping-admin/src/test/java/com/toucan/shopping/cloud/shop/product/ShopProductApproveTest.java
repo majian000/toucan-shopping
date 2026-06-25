@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;

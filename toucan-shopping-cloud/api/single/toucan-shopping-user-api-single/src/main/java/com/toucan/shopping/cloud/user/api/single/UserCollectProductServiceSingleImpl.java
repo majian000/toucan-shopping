@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.user.api.single;
 
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
+import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.business.service.UserCollectProductBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserCollectProductServiceSingleImpl implements FeignUserCollectProductService {
+public class UserCollectProductServiceSingleImpl implements UserCollectProductServiceAPI {
 
     @Autowired
     private UserCollectProductBusinessService userCollectProductBusinessService;

@@ -27,8 +27,8 @@ public class MainOrderController {
      */
     @RequestMapping(value="/create",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO create(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO) {
-        return mainOrderBusinessService.create(signHeader, requestJsonVO);
+    public ResultObjectVO create( @RequestBody RequestJsonVO requestJsonVO) {
+        return mainOrderBusinessService.create( requestJsonVO);
     }
 
     /**

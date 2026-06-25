@@ -12,8 +12,8 @@ import com.toucan.shopping.modules.common.persistence.event.service.EventPublish
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;

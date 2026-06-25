@@ -2,7 +2,7 @@ package com.toucan.shopping.starter.user.auth.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -98,7 +98,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                     //由用户中心做权限判断
                     if (authAnnotation.verifyMethod() == UserAuth.VERIFYMETHOD_USER_AUTH) {
                         //拿到用户中心账号服务
-                        FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
+                        UserServiceAPI feignUserService = springContextHolder.getBean(UserServiceAPI.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getUserAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader());
@@ -204,7 +204,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                                     //判断用户登录状态是否在线
                                     RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-                                    ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                    ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(requestJsonVO);
                                     if(!resultObjectVO.isSuccess())
                                     {
                                         logger.info(" 校验loginToken不一致 或用户会话超时 {} loginToken {}" ,authHeader,lt);
@@ -304,7 +304,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                                 //判断登录用户会话是否超时
                                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLoginVO);
-                                ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(requestJsonVO);
                                 if(!resultObjectVO.isSuccess())
                                 {
                                     logger.info("登录token校验失败 {} loginToken {}" + authHeader,lt);

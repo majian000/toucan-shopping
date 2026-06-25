@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.web.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.web.service.ProvinceCityAreaGeneratorService;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

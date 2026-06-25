@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.generate;
 
 import com.toucan.shopping.cloud.apps.seller.web.service.ProvinceCityAreaGeneratorService;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;

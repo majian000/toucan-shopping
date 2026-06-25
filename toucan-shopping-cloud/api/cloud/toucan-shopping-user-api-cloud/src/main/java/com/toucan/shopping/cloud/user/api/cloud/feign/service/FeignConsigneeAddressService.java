@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.user.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.user.api.ConsigneeAddressServiceAPI;
 import com.toucan.shopping.cloud.user.api.cloud.feign.fallback.FeignConsigneeAddressServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 收货地址服务
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/consignee/address",fallbackFactory = FeignConsigneeAddressServiceFallbackFactory.class)
-public interface FeignConsigneeAddressService extends com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService {
+public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI {
 
 
 

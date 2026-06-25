@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.single;
 
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.ShopCategoryBusinessService;
@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShopCategoryServiceSingleImpl implements FeignShopCategoryService {
+public class ShopCategoryServiceSingleImpl implements ShopCategoryServiceAPI {
 
     @Autowired
     private ShopCategoryBusinessService shopCategoryBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
-        return shopCategoryBusinessService.save(signHeader, requestJsonVO);
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+        return shopCategoryBusinessService.save(requestJsonVO);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class ShopCategoryServiceSingleImpl implements FeignShopCategoryService {
     }
 
     @Override
-    public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
-        return shopCategoryBusinessService.queryByIdList(signHeader, requestJsonVO);
+    public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
+        return shopCategoryBusinessService.queryByIdList(requestJsonVO);
     }
 
     @Override

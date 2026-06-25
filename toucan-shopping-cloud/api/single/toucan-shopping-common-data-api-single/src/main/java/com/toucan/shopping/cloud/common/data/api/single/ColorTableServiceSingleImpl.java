@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.common.data.api.single;
 
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
+import com.toucan.shopping.cloud.common.data.api.ColorTableServiceAPI;
 import com.toucan.shopping.modules.color.table.business.service.ColorTableBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ColorTableServiceSingleImpl implements FeignColorTableService {
+public class ColorTableServiceSingleImpl implements ColorTableServiceAPI {
 
     @Autowired
     private ColorTableBusinessService colorTableBusinessService;
 
     @Override
-    public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         return colorTableBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryList(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         return colorTableBusinessService.queryList(requestJsonVO);
     }
 
@@ -29,27 +29,27 @@ public class ColorTableServiceSingleImpl implements FeignColorTableService {
     }
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return colorTableBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return colorTableBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return colorTableBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return colorTableBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return colorTableBusinessService.deleteByIds(requestVo);
     }
 }

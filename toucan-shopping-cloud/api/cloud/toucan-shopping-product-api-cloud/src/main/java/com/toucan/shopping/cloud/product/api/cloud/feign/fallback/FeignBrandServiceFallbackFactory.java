@@ -23,7 +23,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
         logger.warn(throwable.getMessage(),throwable);
         return new FeignBrandService(){
             @Override
-            public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -38,7 +38,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
             }
 
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO save(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -53,7 +53,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -68,7 +68,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -98,7 +98,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -113,7 +113,7 @@ public class FeignBrandServiceFallbackFactory implements FallbackFactory<FeignBr
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {

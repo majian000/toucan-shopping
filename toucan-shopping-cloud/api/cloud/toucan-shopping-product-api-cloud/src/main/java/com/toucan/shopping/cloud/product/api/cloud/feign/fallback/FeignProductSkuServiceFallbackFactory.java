@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * 商品服务
@@ -25,7 +24,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
         logger.warn(throwable.getMessage(),throwable);
         return new FeignProductSkuService(){
             @Override
-            public ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultListVO queryShelvesList(RequestJsonVO requestJsonVO) {
                 ResultListVO resultListVO = new ResultListVO();
                 if(requestJsonVO==null)
                 {
@@ -33,7 +32,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                     resultListVO.setMsg("请求超时,请稍后重试");
                     return resultListVO;
                 }
-                logger.warn("查询上架商品列表服务失败 headers:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("查询上架商品列表服务失败 params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultListVO.setCode(ResultObjectVO.FAILD);
                 resultListVO.setMsg("请求超时,请稍后重试");
                 return resultListVO;
@@ -56,7 +55,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
             }
 
             @Override
-            public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -64,7 +63,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignProductSkuService.queryByIdList faild sign {} , params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignProductSkuService.queryByIdList faild params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询失败,请重试!");
                 return resultObjectVO;

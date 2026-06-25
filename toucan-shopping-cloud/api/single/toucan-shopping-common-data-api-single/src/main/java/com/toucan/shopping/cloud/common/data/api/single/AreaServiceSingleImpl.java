@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.common.data.api.single;
 
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.business.service.AreaBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AreaServiceSingleImpl implements FeignAreaService {
+public class AreaServiceSingleImpl implements AreaServiceAPI {
 
     @Autowired
     private AreaBusinessService areaBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         return areaBusinessService.save(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryAll(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAll(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryAll(requestJsonVO);
     }
 
@@ -29,57 +29,57 @@ public class AreaServiceSingleImpl implements FeignAreaService {
     }
 
     @Override
-    public ResultObjectVO queryAreaTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAreaTreeTable(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryTreeTable(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return areaBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryTree(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryTree(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return areaBusinessService.deleteByIds(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return areaBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return areaBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryListByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryListByPid(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryListByParentCode(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListByParentCode(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryListByParentCode(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO flushAllCache(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO flushAllCache(RequestJsonVO requestVo) {
         return areaBusinessService.flushAllCache(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryFullCache(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryFullCache(RequestJsonVO requestJsonVO) {
         return areaBusinessService.queryFullCache(requestJsonVO);
     }
 

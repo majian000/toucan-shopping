@@ -1,10 +1,10 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.waitDeliveryOrder;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

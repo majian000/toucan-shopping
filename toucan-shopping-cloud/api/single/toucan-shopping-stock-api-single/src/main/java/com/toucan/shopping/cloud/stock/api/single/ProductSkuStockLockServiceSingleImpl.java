@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.stock.api.single;
 
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.stock.business.service.ProductSkuStockLockBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductSkuStockLockServiceSingleImpl implements FeignProductSkuStockLockService {
+public class ProductSkuStockLockServiceSingleImpl implements ProductSkuStockLockServiceAPI {
 
     @Autowired
     private ProductSkuStockLockBusinessService productSkuStockLockBusinessService;

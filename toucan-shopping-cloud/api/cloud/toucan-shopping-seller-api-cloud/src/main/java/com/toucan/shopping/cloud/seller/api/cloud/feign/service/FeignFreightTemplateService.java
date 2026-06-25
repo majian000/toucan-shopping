@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignFreightTemplateServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022-9-21 14:14:06
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/freightTemplate", fallbackFactory = FeignFreightTemplateServiceFallbackFactory.class)
-public interface FeignFreightTemplateService {
+public interface FeignFreightTemplateService extends FreightTemplateServiceAPI {
 
     /**
      * 查询列表页
@@ -60,7 +61,7 @@ public interface FeignFreightTemplateService {
      * @return
      */
     @DeleteMapping("/delete/id")
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询

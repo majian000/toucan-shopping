@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.content.api.single;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleService;
+import com.toucan.shopping.cloud.content.api.ArticleServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticleServiceSingleImpl implements FeignArticleService {
+public class ArticleServiceSingleImpl implements ArticleServiceAPI {
 
     @Autowired
     private ArticleBusinessService articleBusinessService;

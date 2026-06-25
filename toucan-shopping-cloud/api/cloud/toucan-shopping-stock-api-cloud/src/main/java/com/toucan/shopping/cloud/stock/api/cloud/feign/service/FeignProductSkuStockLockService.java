@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.stock.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.cloud.stock.api.cloud.feign.fallback.FeignProductSkuStockLockServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-stock-proxy/productSkuStockLock",fallbackFactory = FeignProductSkuStockLockServiceFallbackFactory.class)
-public interface FeignProductSkuStockLockService {
+public interface FeignProductSkuStockLockService extends ProductSkuStockLockServiceAPI {
 
     @RequestMapping(value="/lock/stock",produces = "application/json;charset=UTF-8")
     ResultObjectVO lockStock(@RequestBody RequestJsonVO requestJsonVO);

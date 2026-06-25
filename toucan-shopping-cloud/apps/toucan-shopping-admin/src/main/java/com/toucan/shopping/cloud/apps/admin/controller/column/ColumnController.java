@@ -8,7 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;

@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.user.order;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -38,15 +38,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.toucan.shopping.cloud.order.api.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignMainOrderService;
+import com.toucan.shopping.cloud.seller.api.cloud.feign.service.FeignFreightTemplateService;
+import com.toucan.shopping.cloud.user.api.cloud.feign.service.FeignConsigneeAddressService;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.vo.*;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockLockService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.user.api.cloud.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;

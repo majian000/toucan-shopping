@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.content.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
 import com.toucan.shopping.cloud.content.api.cloud.feign.fallback.FeignColumnTypeServiceFallbackFactory;
 import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-content-proxy/columnType", fallbackFactory = FeignColumnTypeServiceFallbackFactory.class)
-public interface FeignColumnTypeService extends com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService {
+public interface FeignColumnTypeService extends ColumnTypeServiceAPI {
 
     @Override
     @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")

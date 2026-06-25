@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.designer.image;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -44,10 +44,10 @@ public class SellerDesignerImageApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private FeignSellerDesignerImageService feignSellerDesignerImageService;
+    private SellerDesignerImageServiceAPI sellerDesignerImageServiceAPI;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopServiceAPI;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -82,7 +82,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             querySellerShop.setEnableStatus((short)1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -91,7 +91,7 @@ public class SellerDesignerImageApiController extends BaseController {
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-                    resultObjectVO = feignSellerDesignerImageService.queryListPage(requestJsonVO);
+                    resultObjectVO = sellerDesignerImageServiceAPI.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
                         SellerDesignerImagePageInfo sellerDesignerImagePageInfo = resultObjectVO.formatData(SellerDesignerImagePageInfo.class);
                         if(sellerDesignerImagePageInfo !=null&& sellerDesignerImagePageInfo.getList()!=null)
@@ -125,7 +125,7 @@ public class SellerDesignerImageApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -181,7 +181,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -204,7 +204,7 @@ public class SellerDesignerImageApiController extends BaseController {
                 shopImageVO.setImgPath(logoImgFilePath);
                 shopImageVO.setFileName(imageImgFile.getOriginalFilename());
                 shopImageVO.setFileSize(imageImgFile.getSize());
-                resultObjectVO = feignSellerDesignerImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
+                resultObjectVO = sellerDesignerImageServiceAPI.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(!resultObjectVO.isSuccess())
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -250,7 +250,7 @@ public class SellerDesignerImageApiController extends BaseController {
             shopImageVO.setId(id);
             shopImageVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO);
-            resultObjectVO = feignSellerDesignerImageService.deleteById(requestJsonVO);
+            resultObjectVO = sellerDesignerImageServiceAPI.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -306,7 +306,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -334,7 +334,7 @@ public class SellerDesignerImageApiController extends BaseController {
 
                 SellerDesignerImageVO queryShopImageVO = new SellerDesignerImageVO();
                 queryShopImageVO.setId(shopImageVO.getId());
-                resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
+                resultObjectVO = sellerDesignerImageServiceAPI.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopImageVO));
                 if(resultObjectVO.isSuccess()) {
                     SellerDesignerImageVO resultShopImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
                     if (resultShopImageVO != null && resultShopImageVO.getShopId().equals(sellerShopVORet.getId())) {
@@ -348,7 +348,7 @@ public class SellerDesignerImageApiController extends BaseController {
                         }else{
                             imageUploadService.deleteFile(resultShopImageVO.getImgPath());
                         }
-                        resultObjectVO = feignSellerDesignerImageService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
+                        resultObjectVO = sellerDesignerImageServiceAPI.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopImageVO));
                         if (!resultObjectVO.isSuccess()) {
                             resultObjectVO.setCode(ResultObjectVO.FAILD);
                             resultObjectVO.setMsg("修改失败,请稍后重试");

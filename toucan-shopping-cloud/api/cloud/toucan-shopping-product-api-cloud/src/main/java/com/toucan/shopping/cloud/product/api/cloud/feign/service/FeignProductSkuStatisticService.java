@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.product.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.product.api.ProductSkuStatisticServiceAPI;
 import com.toucan.shopping.cloud.product.api.cloud.feign.fallback.FeignProductSkuStatisticServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/productSkuStatistic",fallbackFactory = FeignProductSkuStatisticServiceFallbackFactory.class)
-public interface FeignProductSkuStatisticService {
+public interface FeignProductSkuStatisticService extends ProductSkuStatisticServiceAPI {
 
 
     /**
@@ -18,6 +19,7 @@ public interface FeignProductSkuStatisticService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
 
@@ -27,6 +29,7 @@ public interface FeignProductSkuStatisticService {
      * @param requestVo
      * @return
      */
+    @Override
     @RequestMapping(value = "/queryCategoryProductStatistic",method = RequestMethod.POST)
     ResultObjectVO queryCategoryProductStatistic(@RequestBody RequestJsonVO requestVo);
 

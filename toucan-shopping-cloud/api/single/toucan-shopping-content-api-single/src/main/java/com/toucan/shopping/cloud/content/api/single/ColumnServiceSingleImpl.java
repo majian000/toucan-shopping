@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.content.api.single;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
+import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
 import com.toucan.shopping.modules.column.business.service.ColumnBusinessService;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ColumnServiceSingleImpl implements FeignColumnService {
+public class ColumnServiceSingleImpl implements ColumnServiceAPI {
 
     @Autowired
     private ColumnBusinessService columnBusinessService;

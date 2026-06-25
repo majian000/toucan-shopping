@@ -25,7 +25,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
         return new FeignSellerShopService(){
 
             @Override
-            public ResultObjectVO save(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -33,14 +33,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.save失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerShopService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("注册店铺失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListPage(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO queryListPage(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -48,14 +48,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.queryListPage 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.queryListPage 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findByUser(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO findByUser(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -63,7 +63,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.findByUser 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.findByUser 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -100,7 +100,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
             }
 
             @Override
-            public ResultObjectVO disabledEnabled(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO disabledEnabled( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -108,14 +108,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.disabledEnabled 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.disabledEnabled 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -123,7 +123,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.deleteByIds 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.deleteByIds 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -131,7 +131,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
 
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -139,14 +139,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.deleteById 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.deleteById 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -154,14 +154,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.findById 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerShopService.findById 失败 sign {}  params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO update( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -169,14 +169,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.update 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerShopService.update 失败 sign {}  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO updateLogo(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO updateLogo(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -184,14 +184,14 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.updateLogo 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerShopService.updateLogo 失败 sign {}  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO updateInfo(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO updateInfo( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -199,7 +199,7 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerShopService.updateInfo 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerShopService.updateInfo 失败 sign {}  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

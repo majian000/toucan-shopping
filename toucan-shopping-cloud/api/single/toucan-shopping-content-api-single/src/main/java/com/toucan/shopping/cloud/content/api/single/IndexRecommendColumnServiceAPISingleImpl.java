@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.content.api.single;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
+import com.toucan.shopping.cloud.content.api.IndexRecommendColumnServiceAPI;
 import com.toucan.shopping.modules.column.business.service.IndexRecommendColumnBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IndexRecommendColumnServiceAPISingleImpl implements FeignIndexRecommendColumnService {
+public class IndexRecommendColumnServiceAPISingleImpl implements IndexRecommendColumnServiceAPI {
 
     @Autowired
     private IndexRecommendColumnBusinessService indexRecommendColumnBusinessService;

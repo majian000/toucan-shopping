@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignSellerDesignerPageModelServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/seller/designer/page/model", fallbackFactory = FeignSellerDesignerPageModelServiceFallbackFactory.class)
-public interface FeignSellerDesignerPageModelService {
+public interface FeignSellerDesignerPageModelService extends SellerDesignerPageModelServiceAPI {
 
     /**
      * 只保存一条

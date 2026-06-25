@@ -8,7 +8,6 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * 商品服务
@@ -39,7 +38,7 @@ public class FeignShopProductApproveSkuServiceFallbackFactory implements Fallbac
             }
 
             @Override
-            public ResultObjectVO queryByIdList(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -47,7 +46,7 @@ public class FeignShopProductApproveSkuServiceFallbackFactory implements Fallbac
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("查询商品服务 sign {} , params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("查询商品服务 params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询失败,请重试!");
                 return resultObjectVO;

@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.single;
 
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.FreightTemplateBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FreightTemplateServiceSingleImpl implements FeignFreightTemplateService {
+public class FreightTemplateServiceSingleImpl implements FreightTemplateServiceAPI {
 
     @Autowired
     private FreightTemplateBusinessService freightTemplateBusinessService;
@@ -39,8 +39,8 @@ public class FreightTemplateServiceSingleImpl implements FeignFreightTemplateSer
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO) {
-        return freightTemplateBusinessService.deleteById(signHeader, requestJsonVO);
+    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
+        return freightTemplateBusinessService.deleteById(requestJsonVO);
     }
 
     @Override

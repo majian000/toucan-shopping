@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.user.api.single;
 
-import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.cloud.user.api.ConsigneeAddressServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.business.service.ConsigneeAddressBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConsigneeAddressServiceSingleImpl implements FeignConsigneeAddressService {
+public class ConsigneeAddressServiceSingleImpl implements ConsigneeAddressServiceAPI {
 
     @Autowired
     private ConsigneeAddressBusinessService consigneeAddressBusinessService;

@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.search.api.single;
 
-import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
+import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductSearchServiceAPISingleImpl implements FeignProductSearchService {
+public class ProductSearchServiceAPISingleImpl implements ProductSearchServiceAPI {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

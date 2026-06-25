@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.order.api.single;
 
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderStatisticService;
+import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.order.business.service.OrderStatisticBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderStatisticServiceSingleImpl implements FeignOrderStatisticService {
+public class OrderStatisticServiceSingleImpl implements OrderStatisticServiceAPI {
 
     @Autowired
     private OrderStatisticBusinessService orderStatisticBusinessService;

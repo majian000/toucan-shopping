@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;

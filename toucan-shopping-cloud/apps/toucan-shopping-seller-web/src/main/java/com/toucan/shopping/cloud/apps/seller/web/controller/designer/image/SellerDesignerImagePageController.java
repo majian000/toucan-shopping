@@ -1,14 +1,12 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.designer.image;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -35,16 +33,14 @@ public class SellerDesignerImagePageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignSellerDesignerImageService feignSellerDesignerImageService;
+    private SellerDesignerImageServiceAPI sellerDesignerImageServiceAPI;
 
     @Autowired
     private Toucan toucan;
 
-    @Autowired
-    private FeignUserService feignUserService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopServiceAPI;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -74,7 +70,7 @@ public class SellerDesignerImagePageController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -94,7 +90,7 @@ public class SellerDesignerImagePageController extends BaseController {
             {
                 SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
                 sellerDesignerImageVO.setId(id);
-                ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerImageVO));
+                ResultObjectVO resultObjectVO = sellerDesignerImageServiceAPI.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerDesignerImageVO));
                 if(resultObjectVO.isSuccess())
                 {
                     SellerDesignerImageVO resultDesignerImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);

@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.content.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
 import com.toucan.shopping.cloud.content.api.cloud.feign.fallback.FeignArticleImageServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-content-proxy/articleImage", fallbackFactory = FeignArticleImageServiceFallbackFactory.class)
-public interface FeignArticleImageService extends com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService {
+public interface FeignArticleImageService extends ArticleImageServiceAPI {
 
     @Override
     @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")

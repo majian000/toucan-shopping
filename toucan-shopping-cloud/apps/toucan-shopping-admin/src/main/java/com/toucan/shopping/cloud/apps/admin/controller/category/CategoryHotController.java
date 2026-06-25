@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryHotService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryHotService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryHotVO;

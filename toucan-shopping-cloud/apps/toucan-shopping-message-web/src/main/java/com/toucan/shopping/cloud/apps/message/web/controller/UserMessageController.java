@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.message.web.controller;
 
-import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -11,7 +11,6 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.message.constant.AppCodeConstant;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class UserMessageController {
     private Toucan toucan;
 
     @Autowired
-    private FeignMessageUserService feignMessageUserService;
+    private MessageUserServiceAPI messageUserServiceAPI;
 
     @UserAuth
     @RequestMapping("/list")
@@ -51,7 +50,7 @@ public class UserMessageController {
                 messageUserPageInfo.setMessageTypeAppCode(AppCodeConstant.SELLER_WEB);
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserPageInfo);
-            resultObjectVO = feignMessageUserService.queryListPageByUserMianId(requestJsonVO);
+            resultObjectVO = messageUserServiceAPI.queryListPageByUserMianId(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -83,7 +82,7 @@ public class UserMessageController {
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
-            resultObjectVO = feignMessageUserService.queryUnreadCountByUserMainId(requestJsonVO);
+            resultObjectVO = messageUserServiceAPI.queryUnreadCountByUserMainId(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -108,7 +107,7 @@ public class UserMessageController {
             messageUserVO.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
-            resultObjectVO = feignMessageUserService.updateReadStatus(requestJsonVO);
+            resultObjectVO = messageUserServiceAPI.updateReadStatus(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -141,7 +140,7 @@ public class UserMessageController {
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
-            resultObjectVO = feignMessageUserService.updateAllReadStatus(requestJsonVO);
+            resultObjectVO = messageUserServiceAPI.updateAllReadStatus(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -2,9 +2,9 @@ package com.toucan.shopping.cloud.apps.admin.config;
 
 
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.cloud.search.helper.service.ProductSearchHelper;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;

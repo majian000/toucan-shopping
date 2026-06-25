@@ -1,9 +1,9 @@
 package com.toucan.shopping.cloud.search.helper.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.helper.service.ProductSearchHelper;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;

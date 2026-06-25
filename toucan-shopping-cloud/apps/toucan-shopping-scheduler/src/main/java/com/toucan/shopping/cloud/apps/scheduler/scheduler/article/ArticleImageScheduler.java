@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler.article;
 
 import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService;
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

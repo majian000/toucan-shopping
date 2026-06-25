@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.product.api.single;
 
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.product.api.AttributeKeyServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.business.service.AttributeKeyBusinessService;
@@ -8,28 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AttributeKeyServiceSingleImpl implements FeignAttributeKeyService {
+public class AttributeKeyServiceSingleImpl implements AttributeKeyServiceAPI {
 
     @Autowired
     private AttributeKeyBusinessService attributeKeyBusinessService;
 
     @Override
-    public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         return attributeKeyBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return attributeKeyBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return attributeKeyBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return attributeKeyBusinessService.findById(requestVo);
     }
 
@@ -39,12 +39,12 @@ public class AttributeKeyServiceSingleImpl implements FeignAttributeKeyService {
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return attributeKeyBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return attributeKeyBusinessService.deleteByIds(requestVo);
     }
 

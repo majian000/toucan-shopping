@@ -23,8 +23,9 @@ public class FeignSellerLoginHistoryServiceFallbackFactory implements FallbackFa
         logger.warn(throwable.getMessage(),throwable);
         return new FeignSellerLoginHistoryService(){
 
+
             @Override
-            public ResultObjectVO save(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -32,14 +33,14 @@ public class FeignSellerLoginHistoryServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerLoginHistoryService.save失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignSellerLoginHistoryService.save失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存登录历史失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO queryListPage( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -47,14 +48,14 @@ public class FeignSellerLoginHistoryServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerLoginHistoryService.queryListPage失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerLoginHistoryService.queryListPage失败 sign{} params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存登录历史失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByLatest10(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO queryListByLatest10( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -62,7 +63,7 @@ public class FeignSellerLoginHistoryServiceFallbackFactory implements FallbackFa
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignSellerLoginHistoryService.queryListByLatest10失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignSellerLoginHistoryService.queryListByLatest10失败 sign{} params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存登录历史失败");
                 return resultObjectVO;

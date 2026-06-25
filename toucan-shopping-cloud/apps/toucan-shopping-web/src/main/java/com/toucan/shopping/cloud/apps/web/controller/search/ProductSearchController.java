@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.search;
 
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;

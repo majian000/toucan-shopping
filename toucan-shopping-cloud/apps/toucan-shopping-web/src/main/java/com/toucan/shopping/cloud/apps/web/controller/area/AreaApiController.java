@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.web.controller.area;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
-import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;

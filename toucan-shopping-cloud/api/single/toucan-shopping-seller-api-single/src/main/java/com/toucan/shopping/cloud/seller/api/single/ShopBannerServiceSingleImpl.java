@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.single;
 
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.ShopBannerBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShopBannerServiceSingleImpl implements FeignShopBannerService {
+public class ShopBannerServiceSingleImpl implements ShopBannerServiceAPI {
 
     @Autowired
     private ShopBannerBusinessService shopBannerBusinessService;

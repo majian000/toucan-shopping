@@ -2,6 +2,7 @@ package com.toucan.shopping.second.kill.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.util.SignUtil;
@@ -9,7 +10,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.modules.order.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.modules.order.message.CreateOrderMessage;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
@@ -45,7 +45,7 @@ public class SecondKillController {
     private String appCode;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuServiceAPI;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -70,7 +70,7 @@ public class SecondKillController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,"","");
-            ResultListVO  resultListVO = feignProductSkuService.queryShelvesList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+            ResultListVO  resultListVO = productSkuServiceAPI.queryShelvesList(requestJsonVO);
             if(resultListVO.getCode().intValue()==ResultVO.FAILD)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

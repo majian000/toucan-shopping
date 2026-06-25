@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -61,13 +61,13 @@ public class ShopAuthInterceptor implements HandlerInterceptor {
                     if(authAnnotation.userRealName())
                     {
                         //拿到用户中心账号服务
-                        FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
+                        UserServiceAPI feignUserService = springContextHolder.getBean(UserServiceAPI.class);
 
                         UserVO userVO = new UserVO();
                         String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
                         userVO.setUserMainId(Long.parseLong(userMainId));
                         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                        ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+                        ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                             if (!result) {
@@ -89,14 +89,14 @@ public class ShopAuthInterceptor implements HandlerInterceptor {
                     if(authAnnotation.existsShop())
                     {
                         //拿到店铺服务
-                        FeignSellerShopService feignSellerShopService = springContextHolder.getBean(FeignSellerShopService.class);
+                        SellerShopServiceAPI feignSellerShopService = springContextHolder.getBean(SellerShopServiceAPI.class);
 
                         SellerShop querySellerShop = new SellerShop();
                         String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
                         querySellerShop.setUserMainId(Long.parseLong(userMainId));
                         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShop);
                         //判断是个人店铺还是企业店铺
-                        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO);
                         if(!resultObjectVO.isSuccess()||resultObjectVO.getData()==null) {
                             if(authAnnotation.requestType()==ShopAuth.REQUEST_FORM) {
                                 response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()

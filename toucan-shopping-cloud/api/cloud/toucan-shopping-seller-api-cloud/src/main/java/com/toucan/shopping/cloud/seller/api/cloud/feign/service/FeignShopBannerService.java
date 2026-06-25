@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.seller.api.cloud.feign.service;
 
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
 import com.toucan.shopping.cloud.seller.api.cloud.feign.fallback.FeignShopBannerServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @author majian
  */
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-seller-proxy/shop/banner", fallbackFactory = FeignShopBannerServiceFallbackFactory.class)
-public interface FeignShopBannerService {
+public interface FeignShopBannerService extends ShopBannerServiceAPI {
 
     /**
      * 查询列表页

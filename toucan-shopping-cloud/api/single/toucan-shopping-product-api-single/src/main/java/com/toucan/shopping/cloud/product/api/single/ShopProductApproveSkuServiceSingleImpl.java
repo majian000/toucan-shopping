@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.product.api.single;
 
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveSkuService;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveSkuServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.business.service.ShopProductApproveSkuBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ShopProductApproveSkuServiceSingleImpl implements FeignShopProductApproveSkuService {
+public class ShopProductApproveSkuServiceSingleImpl implements ShopProductApproveSkuServiceAPI {
 
     @Autowired
     private ShopProductApproveSkuBusinessService shopProductApproveSkuBusinessService;
@@ -19,7 +19,7 @@ public class ShopProductApproveSkuServiceSingleImpl implements FeignShopProductA
     }
 
     @Override
-    public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
         return shopProductApproveSkuBusinessService.queryByIdList(requestJsonVO);
     }
 

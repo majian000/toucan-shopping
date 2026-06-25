@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.message.api.single;
 
-import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.message.business.service.MessageUserBusinessService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageUserServiceSingleImpl implements FeignMessageUserService {
+public class MessageUserServiceSingleImpl implements MessageUserServiceAPI {
 
     @Autowired
     private MessageUserBusinessService messageUserBusinessService;

@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderLogService;
+import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderLogService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;

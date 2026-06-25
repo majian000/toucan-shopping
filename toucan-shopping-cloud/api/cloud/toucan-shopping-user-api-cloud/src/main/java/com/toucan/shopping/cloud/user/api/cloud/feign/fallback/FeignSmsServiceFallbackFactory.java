@@ -23,7 +23,7 @@ public class FeignSmsServiceFallbackFactory implements FallbackFactory<FeignSmsS
         return new FeignSmsService(){
 
             @Override
-            public ResultObjectVO send(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO send(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -31,7 +31,7 @@ public class FeignSmsServiceFallbackFactory implements FallbackFactory<FeignSmsS
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignSmsService.send失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignSmsService.send失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

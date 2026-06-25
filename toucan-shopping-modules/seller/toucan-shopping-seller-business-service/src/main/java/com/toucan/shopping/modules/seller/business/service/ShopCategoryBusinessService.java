@@ -57,7 +57,7 @@ public class ShopCategoryBusinessService {
     /**
      * 保存分类
      */
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO)
+    public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -1308,7 +1308,7 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID查询
      */
-    public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
