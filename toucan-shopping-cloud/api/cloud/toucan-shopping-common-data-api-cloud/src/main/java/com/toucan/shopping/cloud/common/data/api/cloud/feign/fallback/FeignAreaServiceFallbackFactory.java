@@ -24,7 +24,7 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
 
 
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save( RequestJsonVO requestJsonVO) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
@@ -33,14 +33,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService save faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryAll(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryAll( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -48,7 +48,7 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryAll失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryAll失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -63,14 +63,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.findByCodes失败 header:{} params:{}",JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.findByCodes失败  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryAreaTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryAreaTreeTable( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -78,14 +78,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryAreaTreeTable失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryAreaTreeTable失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryTreeTableByPid( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -93,14 +93,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryTreeTableByPid失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryTreeTableByPid失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -108,14 +108,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.findById header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.findById  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryTree( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -123,14 +123,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryTree失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryTree失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -138,14 +138,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.deleteByIds 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.deleteByIds 失败  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -153,14 +153,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.deleteById 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.deleteById 失败  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -168,14 +168,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.update 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.update 失败  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByPid(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListByPid( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -183,14 +183,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryListByPid 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryListByPid 失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByParentCode(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListByParentCode( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -198,14 +198,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryListByParentCode 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryListByParentCode 失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO flushAllCache(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO flushAllCache(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -213,14 +213,14 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.flushAllCache 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAreaService.flushAllCache 失败  params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryFullCache(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryFullCache( RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -228,7 +228,7 @@ public class FeignAreaServiceFallbackFactory implements FallbackFactory<FeignAre
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAreaService.queryFullCache 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAreaService.queryFullCache 失败  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

@@ -177,7 +177,7 @@ public class UserApiController extends BaseController {
             userLoginVO.setSrcType(1); //PC端登录
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
-            resultObjectVO = userService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.loginByPassword(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userLoginVO = resultObjectVO.formatData(UserLoginVO.class);
@@ -359,7 +359,7 @@ public class UserApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            resultObjectVO = userService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.queryLoginInfo(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);

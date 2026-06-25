@@ -96,7 +96,7 @@ public class ShopApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -170,7 +170,7 @@ public class ShopApiController extends BaseController {
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了店铺注册,验证码是"+code);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
-            resultObjectVO = smsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = smsService.send(requestJsonVO);
             if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
             {
                 //将验证码保存到缓存
@@ -210,7 +210,7 @@ public class ShopApiController extends BaseController {
             if(toucan.getSeller()!=null&&toucan.getSeller().getDefaultShopLogo()!=null) {
                 shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
             }
-            ResultObjectVO queryShopResult = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO queryShopResult = sellerShopService.findByUser(requestJsonVO);
             SellerShopVO sellerShopVO = new SellerShopVO();
             sellerShopVO.setId(-1L);
             if(queryShopResult.isSuccess())

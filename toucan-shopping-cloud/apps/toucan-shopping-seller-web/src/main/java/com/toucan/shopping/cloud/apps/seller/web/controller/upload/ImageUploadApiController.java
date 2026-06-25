@@ -89,7 +89,7 @@ public class ImageUploadApiController extends BaseController {
                 sellerShop.setUserMainId(Long.parseLong(userMainId));
 
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShop);
-                resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = sellerShopService.findByUser(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -141,7 +141,7 @@ public class ImageUploadApiController extends BaseController {
 
             //修改店铺图标
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-            resultObjectVO = sellerShopService.updateLogo(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.updateLogo(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
 
                 //设置预览

@@ -49,7 +49,7 @@ public class ShopPageServiceImpl implements ShopPageService {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName( requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
@@ -59,7 +59,7 @@ public class ShopPageServiceImpl implements ShopPageService {
                     querySellerShop.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShop);
                     //判断是个人店铺还是企业店铺
-                    resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerShopService.findByUser(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //该账号存在店铺

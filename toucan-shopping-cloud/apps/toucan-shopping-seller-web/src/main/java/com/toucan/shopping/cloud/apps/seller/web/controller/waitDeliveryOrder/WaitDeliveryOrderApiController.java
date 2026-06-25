@@ -172,7 +172,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;

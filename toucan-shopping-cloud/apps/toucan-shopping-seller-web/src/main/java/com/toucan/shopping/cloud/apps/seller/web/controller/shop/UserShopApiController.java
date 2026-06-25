@@ -111,7 +111,7 @@ public class UserShopApiController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            resultObjectVO = userService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userService.verifyRealName( requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
@@ -120,13 +120,13 @@ public class UserShopApiController extends BaseController {
                     sellerShopVO.setType(1);
                     sellerShopVO.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = sellerShopService.save(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerShopService.save(requestJsonVO);
                     //店铺注册成功修改用户状态为存在店铺
                     if(resultObjectVO.isSuccess())
                     {
                         userVO.setIsShop((short)1); // 存在店铺
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-                        userService.updateIsShop(requestJsonVO.sign(),requestJsonVO);
+                        userService.updateIsShop(requestJsonVO);
                     }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -230,7 +230,7 @@ public class UserShopApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
 
@@ -250,7 +250,7 @@ public class UserShopApiController extends BaseController {
                 {
                     sellerShopVO.setUserMainId(Long.parseLong(userMainId));
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = sellerShopService.updateInfo(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = sellerShopService.updateInfo( requestJsonVO);
                 }
             }
 

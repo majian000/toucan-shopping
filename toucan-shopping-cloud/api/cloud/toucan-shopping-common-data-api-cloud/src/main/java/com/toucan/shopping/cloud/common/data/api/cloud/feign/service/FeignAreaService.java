@@ -15,10 +15,10 @@ public interface FeignAreaService extends AreaServiceAPI {
 
 
     @RequestMapping(value="/save",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value="/query/all",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryAll(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAll(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -37,12 +37,12 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryAreaTreeTable(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAreaTreeTable( @RequestBody RequestJsonVO requestJsonVO);
 
 
 
     @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryTreeTableByPid(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询
@@ -51,7 +51,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/find/id",method = RequestMethod.POST)
-    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -62,7 +62,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
-    ResultObjectVO queryTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryTree( @RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -73,7 +73,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -84,7 +84,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteById( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -95,7 +95,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/update",method = RequestMethod.POST)
-    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO update( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -104,7 +104,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryListByPid(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryListByPid( @RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -115,7 +115,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/query/list/by/parentCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryListByParentCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryListByParentCode(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -124,7 +124,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO flushAllCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -134,7 +134,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @return
      */
     @RequestMapping(value="/query/full/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryFullCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryFullCache(@RequestBody RequestJsonVO requestJsonVO);
 
 
 

@@ -566,7 +566,7 @@ public class ShopProductApproveApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
-            resultObjectVO = sellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,请稍后重试!");
@@ -853,7 +853,7 @@ public class ShopProductApproveApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
-            resultObjectVO = sellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,请稍后重试!");
@@ -1291,7 +1291,7 @@ public class ShopProductApproveApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(userMainId);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
-            ResultObjectVO resultObjectVO = sellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 return -1L;
             }
