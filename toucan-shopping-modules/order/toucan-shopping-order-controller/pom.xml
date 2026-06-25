@@ -46,6 +46,10 @@
             <groupId>com.toucan.shopping.modules.pay</groupId>
             <artifactId>toucan-shopping-pay-entity-vo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.order</groupId>
+            <artifactId>toucan-shopping-order-business-service</artifactId>
+        </dependency>
     </dependencies>
 
 

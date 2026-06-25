@@ -67,6 +67,11 @@
             <artifactId>toucan-shopping-kafka</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-business-service</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -85,6 +85,8 @@
         <module>user/toucan-shopping-user-service-dao</module>
         <!--用户登录缓存 -->
         <module>user/toucan-shopping-user-login-cache</module>
+        <!--用户业务服务层 -->
+        <module>user/toucan-shopping-user-business-service</module>
         <!--用户控制层 -->
         <module>user/toucan-shopping-user-controller</module>
 
@@ -95,6 +97,8 @@
         <module>area/toucan-shopping-area-service-dao</module>
         <!--地区功能 缓存模块 -->
         <module>area/toucan-shopping-area-cache</module>
+        <!--地区功能 业务服务 -->
+        <module>area/toucan-shopping-area-business-service</module>
         <!--地区功能 控制器 -->
         <module>area/toucan-shopping-area-controller</module>
 
@@ -130,6 +134,8 @@
         <module>content/toucan-shopping-content-service-dao</module>
         <!--内容服务控制器 -->
         <module>content/toucan-shopping-content-controller</module>
+        <!--内容业务服务层 -->
+        <module>content/toucan-shopping-content-business-service</module>
         <!-- 内容服务缓存-->
         <module>content/toucan-shopping-content-cache</module>
 
@@ -139,6 +145,8 @@
         <module>category/toucan-shopping-category-service-dao</module>
         <!--类别 缓存模块 -->
         <module>category/toucan-shopping-category-cache</module>
+        <!--类别业务服务 -->
+        <module>category/toucan-shopping-category-business-service</module>
         <!--类别控制器 -->
         <module>category/toucan-shopping-category-controller</module>
 
@@ -146,6 +154,8 @@
         <module>column/toucan-shopping-column-entity-vo</module>
         <!--栏目服务Service和DAO -->
         <module>column/toucan-shopping-column-service-dao</module>
+        <!--栏目业务服务 -->
+        <module>column/toucan-shopping-column-business-service</module>
         <!--栏目控制器 -->
         <module>column/toucan-shopping-column-controller</module>
 
@@ -155,6 +165,8 @@
         <module>order/toucan-shopping-order-service-dao</module>
         <!--订单控制层-->
         <module>order/toucan-shopping-order-controller</module>
+        <!--订单业务服务层-->
+        <module>order/toucan-shopping-order-business-service</module>
         <!-- 订单编号生成 -->
         <module>order/toucan-shopping-order-no</module>
 
@@ -167,6 +179,8 @@
         <module>product/toucan-shopping-product-service-dao</module>
         <!--商品控制层 -->
         <module>product/toucan-shopping-product-controller</module>
+        <!--商品业务服务层 -->
+        <module>product/toucan-shopping-product-business-service</module>
 
         <!--搜索模块 -->
         <module>search/toucan-shopping-search-common</module>
@@ -179,6 +193,8 @@
         <module>stock/toucan-shopping-stock-service-dao</module>
         <!--库存控制层 -->
         <module>stock/toucan-shopping-stock-controller</module>
+        <!--库存业务服务层 -->
+        <module>stock/toucan-shopping-stock-business-service</module>
 
         <!--消息实体和VO -->
         <module>message/toucan-shopping-message-entity-vo</module>
@@ -186,6 +202,8 @@
         <module>message/toucan-shopping-message-service-dao</module>
         <!--消息控制器层-->
         <module>message/toucan-shopping-message-controller</module>
+        <!--消息业务服务层-->
+        <module>message/toucan-shopping-message-business-service</module>
         <!--消息的redis -->
         <module>message/toucan-shopping-message-redis</module>
 
@@ -195,6 +213,8 @@
         <module>seller/toucan-shopping-seller-service-dao</module>
         <!--卖家控制层 -->
         <module>seller/toucan-shopping-seller-controller</module>
+        <!--卖家业务服务层 -->
+        <module>seller/toucan-shopping-seller-business-service</module>
 
         <!--颜色表实体和VO -->
         <module>colorTable/toucan-shopping-color-table-entity-vo</module>
@@ -202,6 +222,8 @@
         <module>colorTable/toucan-shopping-color-table-service-dao</module>
         <!-- 颜色表控制器-->
         <module>colorTable/toucan-shopping-color-table-controller</module>
+        <!-- 颜色表业务服务层 -->
+        <module>colorTable/toucan-shopping-color-table-business-service</module>
 
 
         <!-- 云雀分布式锁-->
@@ -371,6 +393,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.category</groupId>
+                <artifactId>toucan-shopping-category-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.modules.adminAuth</groupId>
                 <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
@@ -434,6 +463,13 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.area</groupId>
+                <artifactId>toucan-shopping-area-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.category</groupId>
@@ -478,6 +514,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.content</groupId>
+                <artifactId>toucan-shopping-content-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.modules.column</groupId>
                 <artifactId>toucan-shopping-column-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
@@ -499,8 +542,22 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.column</groupId>
+                <artifactId>toucan-shopping-column-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.modules.order</groupId>
                 <artifactId>toucan-shopping-order-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -515,6 +572,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.product</groupId>
                 <artifactId>toucan-shopping-product-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.product</groupId>
+                <artifactId>toucan-shopping-product-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -536,6 +600,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.user</groupId>
                 <artifactId>toucan-shopping-user-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-user-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -570,6 +641,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.stock</groupId>
+                <artifactId>toucan-shopping-stock-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-layui</artifactId>
                 <version>1.0-SNAPSHOT</version>
@@ -591,8 +669,15 @@
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.modules.user</groupId>
+                <groupId>com.toucan.shopping.modules.message</groupId>
                 <artifactId>toucan-shopping-message-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -607,6 +692,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.message</groupId>
                 <artifactId>toucan-shopping-message-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -635,6 +727,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.colorTable</groupId>
                 <artifactId>toucan-shopping-color-table-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.colorTable</groupId>
+                <artifactId>toucan-shopping-color-table-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -705,6 +804,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.seller</groupId>
                 <artifactId>toucan-shopping-seller-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.seller</groupId>
+                <artifactId>toucan-shopping-seller-business-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

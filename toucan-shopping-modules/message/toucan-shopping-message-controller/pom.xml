@@ -35,8 +35,8 @@
             <artifactId>toucan-shopping-message-entity-vo</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-message-service-dao</artifactId>
+            <groupId>com.toucan.shopping.modules.message</groupId>
+            <artifactId>toucan-shopping-message-business-service</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.message</groupId>

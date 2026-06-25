@@ -44,20 +44,12 @@
             <artifactId>toucan-shopping-content-service-dao</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-image-upload</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.content</groupId>
             <artifactId>toucan-shopping-content-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.skylark</groupId>
-            <artifactId>toucan-shopping-skylark-lock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-jsoup</artifactId>
+            <groupId>com.toucan.shopping.modules.content</groupId>
+            <artifactId>toucan-shopping-content-business-service</artifactId>
         </dependency>
     </dependencies>
 

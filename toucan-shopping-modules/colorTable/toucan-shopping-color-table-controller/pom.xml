@@ -43,6 +43,10 @@
             <groupId>com.toucan.shopping.modules.colorTable</groupId>
             <artifactId>toucan-shopping-color-table-service-dao</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-business-service</artifactId>
+        </dependency>
     </dependencies>
 
 

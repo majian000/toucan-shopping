@@ -12,7 +12,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.toucan.shopping.modules.user</groupId>
+    <groupId>com.toucan.shopping.modules.message</groupId>
     <artifactId>toucan-shopping-message-service-dao</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>

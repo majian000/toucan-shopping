@@ -127,6 +127,10 @@
             <groupId>com.toucan.shopping.modules.colorTable</groupId>
             <artifactId>toucan-shopping-color-table-controller</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-business-service</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>
