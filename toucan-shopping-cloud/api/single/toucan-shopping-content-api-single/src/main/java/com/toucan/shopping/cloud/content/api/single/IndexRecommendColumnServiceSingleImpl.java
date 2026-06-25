@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IndexRecommendColumnServiceAPISingleImpl implements FeignIndexRecommendColumnService {
+public class IndexRecommendColumnServiceSingleImpl implements FeignIndexRecommendColumnService {
 
     @Autowired
     private IndexRecommendColumnBusinessService indexRecommendColumnBusinessService;

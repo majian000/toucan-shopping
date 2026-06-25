@@ -3,16 +3,18 @@ package com.toucan.shopping.cloud.user.api.single;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.user.business.service.SmsBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SmsServiceSingleImpl implements FeignSmsService {
 
+    @Autowired
+    private SmsBusinessService smsBusinessService;
+
     @Override
     public ResultObjectVO send(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return smsBusinessService.send(requestJsonVO);
     }
 }

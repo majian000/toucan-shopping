@@ -3,56 +3,43 @@ package com.toucan.shopping.cloud.user.api.single;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.user.business.service.UserBuyCarBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserBuyCarServiceSingleImpl implements FeignUserBuyCarService {
 
+    @Autowired
+    private UserBuyCarBusinessService userBuyCarBusinessService;
+
     @Override
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.save(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO removeBuyCar(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.removeBuyCar(requestVo);
     }
 
     @Override
     public ResultObjectVO listByUserMainId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.listByUserMainId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO clearByUserMainId(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.clearByUserMainId(requestVo);
     }
 
     @Override
     public ResultObjectVO updates(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.updates(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userBuyCarBusinessService.update(requestJsonVO);
     }
 }

@@ -4,33 +4,29 @@ import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderExpressDelive
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.order.business.service.OrderExpressDeliveryBusinessService;
 import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FeignOrderExpressDeliveryServiceSingleImpl implements FeignOrderExpressDeliveryService {
+public class OrderExpressDeliveryServiceSingleImpl implements FeignOrderExpressDeliveryService {
+
+    @Autowired
+    private OrderExpressDeliveryBusinessService orderExpressDeliveryBusinessService;
 
     @Override
     public ResultObjectVO saveOrUpdate(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return orderExpressDeliveryBusinessService.saveOrUpdate(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO removeByOrderId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return orderExpressDeliveryBusinessService.removeByOrderId(requestJsonVO);
     }
 
     @Override
     public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(RequestJsonVO requestJsonVO) {
-        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return orderExpressDeliveryBusinessService.findOneByOrderIdAndShopId(requestJsonVO);
     }
 }

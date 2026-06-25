@@ -1,19 +1,21 @@
 package com.toucan.shopping.cloud.common.data.api.single;
 
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryHotService;
+import com.toucan.shopping.modules.category.business.service.CategoryHotBusinessService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
 
+    @Autowired
+    private CategoryHotBusinessService categoryHotBusinessService;
+
     @Override
     public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return categoryHotBusinessService.save(signHeader, requestJsonVO);
     }
 
     @Override
@@ -66,10 +68,7 @@ public class CategoryHotServiceSingleImpl implements FeignCategoryHotService {
 
     @Override
     public ResultObjectVO queryTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return categoryHotBusinessService.queryTreeTableByPid(requestJsonVO);
     }
 
     @Override

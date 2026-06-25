@@ -5,160 +5,108 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.product.business.service.ProductSkuBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductSkuServiceSingleImpl implements FeignProductSkuService {
 
+    @Autowired
+    private ProductSkuBusinessService productSkuBusinessService;
+
     @Override
     public ResultListVO queryShelvesList(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultListVO resultObjectVO = new ResultListVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryShelvesList(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryById(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryByIdList(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryList(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByIdForFront(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryByIdForFront(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updateStock(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.updateStock(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updatePrice(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.updatePrice(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOneByShopProductIdForFrontPreview(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryOneByShopProductIdForFrontPreview(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByIdForFrontPreview(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryByIdForFrontPreview(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOneByShopProductIdForFront(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryOneByShopProductIdForFront(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO shelves(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.shelves(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO inventoryReduction(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.inventoryReduction(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO restoreStock(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.restoreStock(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updatePreviewPhoto(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.updatePreviewPhoto(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updateDescriptionPhoto(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.updateDescriptionPhoto(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO removeDescriptionPhoto(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.removeDescriptionPhoto(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListByShopProductIdList(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryListByShopProductIdList(requestJsonVO);
     }
 
     @Override
     public ResultTypeObjectVO<Long> queryShelvesCountByShopId(RequestJsonVO requestJsonVO) {
-        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuBusinessService.queryShelvesCountByShopId(requestJsonVO);
     }
 }

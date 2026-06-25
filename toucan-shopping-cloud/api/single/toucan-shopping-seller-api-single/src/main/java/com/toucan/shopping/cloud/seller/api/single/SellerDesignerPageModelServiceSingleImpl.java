@@ -3,41 +3,34 @@ package com.toucan.shopping.cloud.seller.api.single;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.seller.business.service.SellerDesignerPageModelBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SellerDesignerPageModelServiceSingleImpl implements FeignSellerDesignerPageModelService {
 
+    @Autowired
+    private SellerDesignerPageModelBusinessService sellerDesignerPageModelBusinessService;
+
     @Override
     public ResultObjectVO onlySaveOne(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return sellerDesignerPageModelBusinessService.onlySaveOne(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryLastOne(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return sellerDesignerPageModelBusinessService.queryLastOne(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return sellerDesignerPageModelBusinessService.queryListPage(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteByIdForAdmin(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return sellerDesignerPageModelBusinessService.deleteByIdForAdmin(requestJsonVO);
     }
 
 }

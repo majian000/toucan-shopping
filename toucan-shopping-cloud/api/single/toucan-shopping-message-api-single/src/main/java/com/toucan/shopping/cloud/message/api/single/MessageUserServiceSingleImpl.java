@@ -3,80 +3,58 @@ package com.toucan.shopping.cloud.message.api.single;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.message.business.service.MessageUserBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MessageUserServiceSingleImpl implements FeignMessageUserService {
 
+    @Autowired
+    private MessageUserBusinessService messageUserBusinessService;
+
     @Override
     public ResultObjectVO send(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.send(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPageByUserMianId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.queryListPageByUserMianId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO update(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.update(requestVo);
     }
 
     @Override
     public ResultObjectVO findById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.findById(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.deleteById(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryUnreadCountByUserMainId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.queryUnreadCountByUserMainId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updateReadStatus(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.updateReadStatus(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO updateAllReadStatus(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return messageUserBusinessService.updateAllReadStatus(requestJsonVO);
     }
 }

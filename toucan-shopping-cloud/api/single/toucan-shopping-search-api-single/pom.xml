@@ -46,6 +46,10 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.search</groupId>
+            <artifactId>toucan-shopping-search-elasticsearch</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

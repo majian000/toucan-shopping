@@ -3,24 +3,23 @@ package com.toucan.shopping.cloud.order.api.single;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderStatisticService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.order.business.service.OrderStatisticBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FeignOrderStatisticServiceSingleImpl implements FeignOrderStatisticService {
+public class OrderStatisticServiceSingleImpl implements FeignOrderStatisticService {
+
+    @Autowired
+    private OrderStatisticBusinessService orderStatisticBusinessService;
 
     @Override
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return orderStatisticBusinessService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
     }
 
     @Override
     public ResultObjectVO queryHotSellListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return orderStatisticBusinessService.queryHotSellListPage(requestJsonVO);
     }
 }

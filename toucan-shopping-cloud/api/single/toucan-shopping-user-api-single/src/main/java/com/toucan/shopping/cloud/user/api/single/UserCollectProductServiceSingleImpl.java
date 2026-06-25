@@ -3,56 +3,43 @@ package com.toucan.shopping.cloud.user.api.single;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.user.business.service.UserCollectProductBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserCollectProductServiceSingleImpl implements FeignUserCollectProductService {
 
+    @Autowired
+    private UserCollectProductBusinessService userCollectProductBusinessService;
+
     @Override
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.save(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.deleteBySkuIdAndUserMainIdAndAppCode(requestVo);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.deleteById(requestVo);
     }
 
     @Override
     public ResultObjectVO queryCollectProducts(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.queryCollectProducts(requestVo);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("单机模式暂不支持此服务");
-        return resultObjectVO;
+        return userCollectProductBusinessService.deleteByIds(requestVo);
     }
 }

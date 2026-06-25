@@ -46,6 +46,18 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.area</groupId>
+            <artifactId>toucan-shopping-area-business-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.category</groupId>
+            <artifactId>toucan-shopping-category-business-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-business-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

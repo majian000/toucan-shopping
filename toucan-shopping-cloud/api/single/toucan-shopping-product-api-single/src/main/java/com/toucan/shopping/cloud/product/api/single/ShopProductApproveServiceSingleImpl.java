@@ -4,112 +4,78 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductAppro
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.product.business.service.ShopProductApproveBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ShopProductApproveServiceSingleImpl implements FeignShopProductApproveService {
 
+    @Autowired
+    private ShopProductApproveBusinessService shopProductApproveBusinessService;
+
     @Override
     public ResultObjectVO publish(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.publish(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO republish(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.republish(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByProductApproveId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryByProductApproveId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByProductApproveIdAndShopId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryByProductApproveIdAndShopId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO reject(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.reject(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO pass(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.pass(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.deleteById(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO deleteByProductApproveIdAndShopId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.deleteByProductApproveIdAndShopId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryNewestListByShopId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryNewestListByShopId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO findOneUnderReviewByFreightTemplateId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryApproveListByShopId(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryApproveListByShopId(requestJsonVO);
     }
 
     @Override
     public ResultTypeObjectVO<Long> queryApproveCountByShopId(RequestJsonVO requestJsonVO) {
-        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveBusinessService.queryApproveCountByShopId(requestJsonVO);
     }
 }

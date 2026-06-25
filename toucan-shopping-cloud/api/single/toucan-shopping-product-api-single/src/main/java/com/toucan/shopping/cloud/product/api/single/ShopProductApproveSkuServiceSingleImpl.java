@@ -3,48 +3,38 @@ package com.toucan.shopping.cloud.product.api.single;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveSkuService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.business.service.ShopProductApproveSkuBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ShopProductApproveSkuServiceSingleImpl implements FeignShopProductApproveSkuService {
 
+    @Autowired
+    private ShopProductApproveSkuBusinessService shopProductApproveSkuBusinessService;
+
     @Override
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveSkuBusinessService.queryById(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveSkuBusinessService.queryByIdList(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveSkuBusinessService.queryListPage(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryByIdForFront(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveSkuBusinessService.queryByIdForFront(requestJsonVO);
     }
 
     @Override
     public ResultObjectVO queryOneByProductApproveIdForFront(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return shopProductApproveSkuBusinessService.queryOneByProductApproveIdForFront(requestJsonVO);
     }
 }

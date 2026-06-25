@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ColumnTypeServiceAPISingleImpl implements FeignColumnTypeService {
+public class ColumnTypeServiceSingleImpl implements FeignColumnTypeService {
 
     @Autowired
     private ColumnTypeBusinessService columnTypeBusinessService;

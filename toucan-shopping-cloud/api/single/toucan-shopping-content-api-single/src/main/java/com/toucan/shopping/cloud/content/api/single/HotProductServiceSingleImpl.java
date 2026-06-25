@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HotProductServiceAPISingleImpl implements FeignHotProductService {
+public class HotProductServiceSingleImpl implements FeignHotProductService {
 
     @Autowired
     private HotProductBusinessService hotProductBusinessService;

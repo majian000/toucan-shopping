@@ -3,24 +3,23 @@ package com.toucan.shopping.cloud.product.api.single;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuStatisticService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.business.service.ProductSkuStatisticBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductSkuStatisticServiceSingleImpl implements FeignProductSkuStatisticService {
 
+    @Autowired
+    private ProductSkuStatisticBusinessService productSkuStatisticBusinessService;
+
     @Override
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuStatisticBusinessService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
     }
 
     @Override
     public ResultObjectVO queryCategoryProductStatistic(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        resultObjectVO.setCode(ResultObjectVO.FAILD);
-        resultObjectVO.setMsg("请稍后重试!");
-        return resultObjectVO;
+        return productSkuStatisticBusinessService.queryCategoryProductStatistic(requestVo);
     }
 }
