@@ -21,29 +21,6 @@
 
     <dependencies>
 
-        <!--对Open Feign方式调用支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <!-- 重试机制 -->
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-        </dependency>
-
-        <!--断路器支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos-server-version}</version>
-        </dependency>
-
         <!--使用配置中心 客户端-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -219,11 +196,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
-            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.toucan.shopping.modules.search</groupId>
             <artifactId>toucan-shopping-search-elasticsearch</artifactId>
         </dependency>
@@ -260,6 +232,73 @@
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>cloud</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <!--微服务调用 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </dependency>
+                <!-- 重试机制 -->
+                <dependency>
+                    <groupId>org.springframework.retry</groupId>
+                    <artifactId>spring-retry</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <version>${nacos-server-version}</version>
+                </dependency>
+
+                <!--断路器支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+                    <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                    <artifactId>toucan-shopping-web-cloud-config</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+        <profile>
+            <id>single</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>single</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <!--单项目 -->
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                    <artifactId>toucan-shopping-web-single-config</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+    </profiles>
 
 
 

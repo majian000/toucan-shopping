@@ -3,15 +3,15 @@
 
     <contextName>logback</contextName>
 
-    <springProfile name="dev">
+    <springProfile name="cloud_dev,single_dev">
         <property name="log.path" value="C:/log/dev/toucan_shopping/toucan_shopping_web" />
     </springProfile>
 
-    <springProfile name="test">
+    <springProfile name="cloud_test,single_test">
         <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_web" />
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="cloud_prod,single_prod">
         <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_web" />
     </springProfile>
 
@@ -20,25 +20,6 @@
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</Pattern>
             <charset>UTF-8</charset>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>debug</level>
-        </filter>
-    </appender>
-
-    <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/log_console.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/console/log_console-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>15</maxHistory>
-        </rollingPolicy>
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>info</level>
         </filter>
@@ -59,14 +40,30 @@
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>debug</level>
-            <!--只接受该等级日志 -->
             <onMatch>ACCEPT</onMatch>
-            <!--不属于该等级将拒绝 -->
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
 
+    <appender name="CONSOLE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/log_console.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/console/log_console-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+    </appender>
 
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/log_info.log</file>
@@ -136,7 +133,6 @@
     </appender>
 
 
-
     <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>warn</level>
@@ -149,8 +145,9 @@
         </filter>
     </appender>
 
-    <springProfile name="dev">
-        <logger name="com.toucan.shopping" level="info"/>
+
+    <springProfile name="cloud_dev,single_dev">
+        <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
             <!--日志邮件 -->
@@ -159,14 +156,17 @@
         </root>
     </springProfile>
 
-    <springProfile name="test">
-        <logger name="com.toucan.shopping" level="info"/>
+
+    <springProfile name="cloud_test,single_test">
+        <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
-    <springProfile name="prod">
+
+
+    <springProfile name="cloud_prod,single_prod">
         <logger name="com.toucan.shopping" level="info"/>
         <root level="info">
             <appender-ref ref="CONSOLE_FILE" />
@@ -178,5 +178,6 @@
             <appender-ref ref="ERROR_EMAIL" />
         </root>
     </springProfile>
+
 
 </configuration>

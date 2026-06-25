@@ -45,6 +45,16 @@
         <module>api/toucan-shopping-admin-auth-api</module>
         <module>api/cloud/toucan-shopping-admin-auth-api-cloud</module>
         <module>api/single/toucan-shopping-admin-auth-api-single</module>
+        <module>api/cloud/toucan-shopping-product-api-cloud</module>
+        <module>api/single/toucan-shopping-product-api-single</module>
+        <module>api/cloud/toucan-shopping-order-api-cloud</module>
+        <module>api/single/toucan-shopping-order-api-single</module>
+        <module>api/cloud/toucan-shopping-user-api-cloud</module>
+        <module>api/single/toucan-shopping-user-api-single</module>
+        <module>api/cloud/toucan-shopping-seller-api-cloud</module>
+        <module>api/single/toucan-shopping-seller-api-single</module>
+        <module>api/cloud/toucan-shopping-message-api-cloud</module>
+        <module>api/single/toucan-shopping-message-api-single</module>
 
         <!--库存API -->
         <module>api/toucan-shopping-stock-api</module>
@@ -58,6 +68,14 @@
         <module>api/toucan-shopping-common-data-api</module>
         <!--搜索服务API -->
         <module>api/toucan-shopping-search-api</module>
+        <module>api/cloud/toucan-shopping-stock-api-cloud</module>
+        <module>api/single/toucan-shopping-stock-api-single</module>
+        <module>api/cloud/toucan-shopping-content-api-cloud</module>
+        <module>api/single/toucan-shopping-content-api-single</module>
+        <module>api/cloud/toucan-shopping-common-data-api-cloud</module>
+        <module>api/single/toucan-shopping-common-data-api-single</module>
+        <module>api/cloud/toucan-shopping-search-api-cloud</module>
+        <module>api/single/toucan-shopping-search-api-single</module>
 
 
 
@@ -130,6 +148,22 @@
         <module>modules/apps/toucan-shopping-admin-auth-web-cloud-config</module>
         <!--单服务 -->
         <module>modules/apps/toucan-shopping-admin-auth-web-single-config</module>
+        <!--商城后台管理微服务配置 -->
+        <module>modules/apps/toucan-shopping-admin-cloud-config</module>
+        <!--商城后台管理单服务配置 -->
+        <module>modules/apps/toucan-shopping-admin-single-config</module>
+        <!--卖家Web端微服务配置 -->
+        <module>modules/apps/toucan-shopping-seller-web-cloud-config</module>
+        <!--卖家Web端单服务配置 -->
+        <module>modules/apps/toucan-shopping-seller-web-single-config</module>
+        <!--商城Web端微服务配置 -->
+        <module>modules/apps/toucan-shopping-web-cloud-config</module>
+        <!--商城Web端单服务配置 -->
+        <module>modules/apps/toucan-shopping-web-single-config</module>
+        <!--消息Web端微服务配置 -->
+        <module>modules/apps/toucan-shopping-message-web-cloud-config</module>
+        <!--消息Web端单服务配置 -->
+        <module>modules/apps/toucan-shopping-message-web-single-config</module>
 
         <!-- 启动配置公共模块-->
         <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>
@@ -287,6 +321,132 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-product-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-product-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-order-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-order-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-user-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-user-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-seller-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-seller-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-message-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-message-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-stock-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-stock-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-content-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-content-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-common-data-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-common-data-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-search-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-search-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.config</groupId>
@@ -426,6 +586,62 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                 <artifactId>toucan-shopping-admin-auth-web-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-admin-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-admin-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-seller-web-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-seller-web-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-web-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-web-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-message-web-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-message-web-single-config</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
