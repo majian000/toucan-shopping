@@ -63,6 +63,18 @@
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
+        </dependency>
+
     </dependencies>
 
 
