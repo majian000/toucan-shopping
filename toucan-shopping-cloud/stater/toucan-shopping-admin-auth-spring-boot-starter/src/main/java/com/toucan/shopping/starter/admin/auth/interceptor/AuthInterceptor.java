@@ -24,6 +24,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -48,6 +49,37 @@ public class AuthInterceptor implements HandlerInterceptor {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(content);
+    }
+
+    /**
+     * 从已缓存的RequestWrapper中读取请求body,不消费InputStream
+     * 遍历HttpServletRequestWrapper链找到RequestWrapper,直接读取其缓存的body字段
+     */
+    private String getCachedRequestBody(HttpServletRequest request) {
+        // 先尝试从最外层的RequestWrapper读取(如果当前请求就是)
+        if (request instanceof RequestWrapper) {
+            RequestWrapper rw = (RequestWrapper) request;
+            return new String(rw.body);
+        }
+        // 遍历wrapper链查找RequestWrapper
+        jakarta.servlet.ServletRequest current = request;
+        while (current instanceof jakarta.servlet.http.HttpServletRequestWrapper) {
+            jakarta.servlet.http.HttpServletRequestWrapper wrapper = (jakarta.servlet.http.HttpServletRequestWrapper) current;
+            jakarta.servlet.ServletRequest inner = wrapper.getRequest();
+            if (inner instanceof RequestWrapper) {
+                RequestWrapper rw = (RequestWrapper) inner;
+                return new String(rw.body);
+            }
+            current = inner;
+        }
+        // 兜底: 如果找不到缓存的RequestWrapper,尝试直接读取(可能会消费流)
+        try {
+            RequestWrapper rw = new RequestWrapper(request);
+            return new String(rw.body);
+        } catch (Exception e) {
+            logger.warn("读取请求body失败: {}", e.getMessage());
+            return "";
+        }
     }
 
 
@@ -156,9 +188,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                             //ajax请求
                             if (authAnnotation.responseType() == AdminAuth.RESPONSE_JSON) {
                                 logger.info("request uri {} " , request.getRequestURI());
-                                //JSON类型请求
-                                RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
-                                String jsonBody = new String(RequestWrapper.body);
+                                //JSON类型请求 - 从已缓存的RequestWrapper中读取body,避免重复消费InputStream
+                                String jsonBody = getCachedRequestBody(request);
                                 logger.info("recive param {} " , jsonBody);
 
                                 if (StringUtils.isEmpty(authHeader)) {
