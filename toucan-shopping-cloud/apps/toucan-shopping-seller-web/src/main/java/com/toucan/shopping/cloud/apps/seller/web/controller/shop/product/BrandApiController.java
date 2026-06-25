@@ -4,9 +4,9 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.vo.selectPage.SelectPageTableVO;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandCategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -47,13 +47,13 @@ public class BrandApiController {
     private Toucan toucan;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
-    private FeignBrandCategoryService feignBrandCategoryService;
+    private BrandCategoryServiceAPI brandCategoryService;
 
 
 
@@ -84,7 +84,7 @@ public class BrandApiController {
             selectPageTableVO.getValues().getGridResult().setPageSize(pageInfo.getPageSize());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = brandService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -127,4 +127,3 @@ public class BrandApiController {
 
 
 }
-

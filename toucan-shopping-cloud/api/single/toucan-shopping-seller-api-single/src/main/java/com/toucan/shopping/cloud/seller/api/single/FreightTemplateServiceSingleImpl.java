@@ -39,8 +39,8 @@ public class FreightTemplateServiceSingleImpl implements FreightTemplateServiceA
     }
 
     @Override
-    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
-        return freightTemplateBusinessService.deleteById(requestJsonVO);
+    public ResultObjectVO deleteById(String signHeader,RequestJsonVO requestJsonVO) {
+        return freightTemplateBusinessService.deleteById(signHeader,requestJsonVO);
     }
 
     @Override

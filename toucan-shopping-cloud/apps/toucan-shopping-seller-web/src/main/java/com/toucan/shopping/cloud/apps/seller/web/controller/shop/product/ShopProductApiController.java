@@ -5,14 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -65,33 +65,33 @@ public class ShopProductApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
 
     @Autowired
-    private FeignAttributeKeyValueService feignAttributeKeyValueService;
+    private AttributeKeyValueServiceAPI attributeKeyValueService;
 
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignFreightTemplateService feignFreightTemplateService;
+    private FreightTemplateServiceAPI freightTemplateService;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandService;
 
     private String[] imageExtScope = new String[]{".JPG", ".JPEG", ".PNG"};
 
@@ -108,7 +108,7 @@ public class ShopProductApiController extends BaseController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryService.findByIdArray( requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -140,7 +140,7 @@ public class ShopProductApiController extends BaseController {
             ShopCategoryVO queryShopCategoryVO = new ShopCategoryVO();
             queryShopCategoryVO.setIdArray(shopCategoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopCategoryService.findByIdArray(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
@@ -177,7 +177,7 @@ public class ShopProductApiController extends BaseController {
             BrandVO queryBrandVO = new BrandVO();
             queryBrandVO.setIdList(brandIdList);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
-            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            ResultObjectVO resultObjectVO = brandService.findByIdList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
@@ -234,7 +234,7 @@ public class ShopProductApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
@@ -242,7 +242,7 @@ public class ShopProductApiController extends BaseController {
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-                    resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+                    resultObjectVO = shopProductService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                         Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
                         List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
@@ -322,7 +322,7 @@ public class ShopProductApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //查询店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -330,7 +330,7 @@ public class ShopProductApiController extends BaseController {
                     shopProductVO.setShopId(sellerShopVORet.getId());
 
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-                    resultObjectVO = feignShopProductService.shelves(requestJsonVO);
+                    resultObjectVO = shopProductService.shelves(requestJsonVO);
                 }
             }
         }catch(Exception e) {
@@ -362,7 +362,7 @@ public class ShopProductApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //查询店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -370,7 +370,7 @@ public class ShopProductApiController extends BaseController {
                     shopProductVO.setId(queryShopProductVO.getId());
                     shopProductVO.setShopId(sellerShopVORet.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductVO);
-                    resultObjectVO = feignShopProductService.deleteById(requestJsonVO);
+                    resultObjectVO = shopProductService.deleteById(requestJsonVO);
 
                 }
             }
@@ -403,7 +403,7 @@ public class ShopProductApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //查询店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -412,7 +412,7 @@ public class ShopProductApiController extends BaseController {
                     shopProductVO.setShopId(sellerShopVORet.getId());
                     shopProductVO.setFreightTemplateId(requestShopProductVO.getFreightTemplateId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductVO);
-                    resultObjectVO = feignShopProductService.updateFreightTemplate(requestJsonVO);
+                    resultObjectVO = shopProductService.updateFreightTemplate(requestJsonVO);
 
                 }
             }
@@ -443,7 +443,7 @@ public class ShopProductApiController extends BaseController {
             ShopProductVO requestShopProductVO = new ShopProductVO();
             requestShopProductVO.setId(shopProductVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),requestShopProductVO);
-            resultObjectVO = feignShopProductService.queryByShopProductId(requestJsonVO);
+            resultObjectVO = shopProductService.queryByShopProductId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
@@ -565,7 +565,7 @@ public class ShopProductApiController extends BaseController {
                     FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
                     freightTemplateVO.setId(list.get(0).getFreightTemplateId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
-                    resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+                    resultObjectVO = freightTemplateService.findById(requestJsonVO);
                     if (resultObjectVO.isSuccess()) {
                         freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
                         if (freightTemplateVO != null) {

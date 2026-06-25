@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -21,7 +21,7 @@ import java.util.Random;
 public class ShopProductApproveTest {
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
     private Toucan toucan;
@@ -44,7 +44,7 @@ public class ShopProductApproveTest {
                 shopProductApproveSkuVO.setPrice(new BigDecimal(randomNum));
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
-            ResultObjectVO resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopProductApproveService.publish(requestJsonVO);
         }
 
 //        this.batchApproveList();
@@ -54,7 +54,7 @@ public class ShopProductApproveTest {
     public void batchApproveList() throws NoSuchAlgorithmException {
         PublishProductApproveVO queryPublishProductApprove=new PublishProductApproveVO();
         queryPublishProductApprove.setShopId(983769356921995303L);
-        ResultObjectVO resultObjectVO = feignShopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
+        ResultObjectVO resultObjectVO = shopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
         if(resultObjectVO.isSuccess())
         {
             List<ShopProductApproveVO> shopProductApproves = resultObjectVO.formatDataList(ShopProductApproveVO.class);
@@ -65,7 +65,7 @@ public class ShopProductApproveTest {
                 passVo.setProductId(1152261441160478746L);
                 passVo.setProductUuid("4e5b511f3b5943d3a628e78a0d88755f");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), passVo);
-                resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
+                resultObjectVO = shopProductApproveService.pass(requestJsonVO);
 
             }
         }

@@ -3,12 +3,12 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -55,16 +55,16 @@ public class ProductSkuApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
 
 
@@ -95,13 +95,13 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                    resultObjectVO = feignProductSkuService.queryList(requestJsonVO);
+                    resultObjectVO = productSkuService.queryList(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<ProductSkuVO> productSkuVOS = resultObjectVO.formatDataList(ProductSkuVO.class);
@@ -163,13 +163,13 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                    resultObjectVO = feignProductSkuService.updateStock(requestJsonVO);
+                    resultObjectVO = productSkuService.updateStock(requestJsonVO);
                 }
             }
         } catch (Exception e) {
@@ -216,13 +216,13 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                    resultObjectVO = feignProductSkuService.updatePrice(requestJsonVO);
+                    resultObjectVO = productSkuService.updatePrice(requestJsonVO);
                 }
             }
         } catch (Exception e) {
@@ -257,13 +257,13 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                    resultObjectVO = feignProductSkuService.shelves(requestJsonVO);
+                    resultObjectVO = productSkuService.shelves(requestJsonVO);
                 }
             }
         } catch (Exception e) {
@@ -319,14 +319,14 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
                     //判断该用户有权限操作该商品
-                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    resultObjectVO = productSkuService.queryById(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //旧的预览图
@@ -334,7 +334,7 @@ public class ProductSkuApiController extends BaseController {
                         productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                         productSkuVO.setMainPhotoFile(null);
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                        resultObjectVO = feignProductSkuService.updatePreviewPhoto(requestJsonVO);
+                        resultObjectVO = productSkuService.updatePreviewPhoto(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             this.deleteOldProductImage(oldProductSkuVO.getProductPreviewPath());
@@ -398,14 +398,14 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
                     //判断该用户有权限操作该商品
-                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    resultObjectVO = productSkuService.queryById(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //旧的介绍图
@@ -413,7 +413,7 @@ public class ProductSkuApiController extends BaseController {
                         productSkuVO.setDescriptionImgFilePath(imageUploadService.uploadFile(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).getImgFile().getOriginalFilename())));
                         productSkuVO.getShopProductDescriptionVO().getProductDescriptionImgs().get(0).setImgFile(null);
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                        resultObjectVO = feignProductSkuService.updateDescriptionPhoto(requestJsonVO);
+                        resultObjectVO = productSkuService.updateDescriptionPhoto(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             if(StringUtils.isNotEmpty(oldProductSkuVO.getDescriptionImgFilePath())) {
@@ -464,20 +464,20 @@ public class ProductSkuApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser( requestJsonVO);
             if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if (sellerShopVO != null) {
                     productSkuVO.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
                     //判断该用户有权限操作该商品
-                    resultObjectVO = feignProductSkuService.queryById(requestJsonVO);
+                    resultObjectVO = productSkuService.queryById(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //旧的介绍图
                         ProductSkuVO oldProductSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), productSkuVO);
-                        resultObjectVO = feignProductSkuService.removeDescriptionPhoto(requestJsonVO);
+                        resultObjectVO = productSkuService.removeDescriptionPhoto(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             if(StringUtils.isNotEmpty(oldProductSkuVO.getDescriptionImgFilePath())) {

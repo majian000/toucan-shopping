@@ -6,9 +6,9 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.queue.SellerLoginHistoryQueue;
 import com.toucan.shopping.cloud.apps.seller.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.SmsServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
@@ -60,13 +60,13 @@ public class UserApiController extends BaseController {
 
 
     @Autowired
-    private FeignSmsService feignSmsService;
+    private SmsServiceAPI smsService;
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private Toucan toucan;
@@ -75,7 +75,7 @@ public class UserApiController extends BaseController {
     private SellerLoginHistoryQueue sellerLoginHistoryQueue;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
 
     /**
@@ -177,7 +177,7 @@ public class UserApiController extends BaseController {
             userLoginVO.setSrcType(1); //PC端登录
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
-            resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userLoginVO = resultObjectVO.formatData(UserLoginVO.class);
@@ -217,7 +217,7 @@ public class UserApiController extends BaseController {
                         UserVO queryUserVO = new UserVO();
                         queryUserVO.setUserMainId(userLoginVO.getUserMainId());
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-                        feignSellerShopService.flushCache(requestJsonVO);
+                        sellerShopService.flushCache(requestJsonVO);
                     }catch(Exception e)
                     {
                         logger.warn(e.getMessage(),e);
@@ -359,7 +359,7 @@ public class UserApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);

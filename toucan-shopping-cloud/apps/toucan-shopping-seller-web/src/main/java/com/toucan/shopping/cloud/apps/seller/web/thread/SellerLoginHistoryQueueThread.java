@@ -40,7 +40,7 @@ public class SellerLoginHistoryQueueThread extends Thread {
                 SellerLoginHistoryVO sellerLoginHistoryVO = sellerLoginHistoryQueue.pop();
                 if (sellerLoginHistoryVO != null) {
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),sellerLoginHistoryVO);
-                    resultObjectVO = sellerLoginHistoryServiceAPI.save(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerLoginHistoryServiceAPI.save(requestJsonVO);
                     if(!resultObjectVO.isSuccess())
                     {
                         logger.warn("保存卖家登录信息失败 {}",requestJsonVO.getEntityJson());

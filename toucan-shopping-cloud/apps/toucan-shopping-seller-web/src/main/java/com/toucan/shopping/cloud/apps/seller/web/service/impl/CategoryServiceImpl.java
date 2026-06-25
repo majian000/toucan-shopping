@@ -3,9 +3,9 @@ package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -31,16 +31,16 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
     private Toucan toucan;
 
     @Autowired
-    private FeignBannerService feignBannerService;
+    private BannerServiceAPI bannerService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private CategoryRedisService categoryRedisService;
@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWMiniTreeCache(requestJsonVO);
+                resultObjectVO = categoryService.flushWMiniTreeCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     return categoryRedisService.queryMiniTree();
                 }else{

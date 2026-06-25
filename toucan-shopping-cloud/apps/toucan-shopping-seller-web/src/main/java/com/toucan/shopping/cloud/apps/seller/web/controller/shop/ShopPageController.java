@@ -2,9 +2,9 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -37,16 +37,16 @@ public class ShopPageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private Toucan toucan;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -66,7 +66,7 @@ public class ShopPageController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
@@ -76,7 +76,7 @@ public class ShopPageController extends BaseController {
                     querySellerShop.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
                     //判断是个人店铺还是企业店铺
-                    resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //该账号存在店铺
@@ -113,7 +113,7 @@ public class ShopPageController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
@@ -123,7 +123,7 @@ public class ShopPageController extends BaseController {
                     querySellerShop.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
                     //判断是个人店铺还是企业店铺
-                    resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         //该账号存在店铺

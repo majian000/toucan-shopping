@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -33,7 +33,7 @@ public class OrderPageController extends BaseController {
     private CategoryService categoryService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM,responseType = UserAuth.RESPONSE_FORM)

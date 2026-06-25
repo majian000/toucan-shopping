@@ -4,12 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.MobilePhoneVCodeUtil;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.SmsServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -55,10 +55,10 @@ public class ShopApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private Toucan toucan;
@@ -75,16 +75,16 @@ public class ShopApiController extends BaseController {
 
 
     @Autowired
-    private FeignSmsService feignSmsService;
+    private SmsServiceAPI smsService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
 
     @UserAuth
@@ -96,7 +96,7 @@ public class ShopApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -170,7 +170,7 @@ public class ShopApiController extends BaseController {
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了店铺注册,验证码是"+code);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
-            resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = smsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
             {
                 //将验证码保存到缓存
@@ -195,6 +195,7 @@ public class ShopApiController extends BaseController {
 
 
 
+
     @UserAuth
     @RequestMapping(value="/shop/overview")
     @ResponseBody
@@ -209,7 +210,7 @@ public class ShopApiController extends BaseController {
             if(toucan.getSeller()!=null&&toucan.getSeller().getDefaultShopLogo()!=null) {
                 shopOverviewVO.setHttpShopLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
             }
-            ResultObjectVO queryShopResult = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO queryShopResult = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             SellerShopVO sellerShopVO = new SellerShopVO();
             sellerShopVO.setId(-1L);
             if(queryShopResult.isSuccess())
@@ -224,7 +225,7 @@ public class ShopApiController extends BaseController {
             //已上架商品数量
             ProductSkuVO queryShelversVO=new ProductSkuVO();
             queryShelversVO.setShopId(sellerShopVO.getId());
-            ResultTypeObjectVO<Long> shelvesProductCount = feignProductSkuService.queryShelvesCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShelversVO));
+            ResultTypeObjectVO<Long> shelvesProductCount = productSkuService.queryShelvesCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShelversVO));
             if(shelvesProductCount.isSuccess()) {
                 shopOverviewVO.setShelvesProductCount(shelvesProductCount.getData());
             }
@@ -232,7 +233,7 @@ public class ShopApiController extends BaseController {
             //待审核商品数量
             ShopProductApproveVO queryProductApproveVO=new ShopProductApproveVO();
             queryProductApproveVO.setShopId(sellerShopVO.getId());
-            ResultTypeObjectVO<Long> queryProductApproveCount = feignShopProductApproveService.queryApproveCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductApproveVO));
+            ResultTypeObjectVO<Long> queryProductApproveCount = shopProductApproveService.queryApproveCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductApproveVO));
             if(queryProductApproveCount.isSuccess()) {
                 shopOverviewVO.setWaitApproveProductCount(queryProductApproveCount.getData());
             }
@@ -240,7 +241,7 @@ public class ShopApiController extends BaseController {
             //查询完成订单数量
             OrderVO queryFinishCount = new OrderVO();
             queryFinishCount.setShopId(sellerShopVO.getId());
-            ResultTypeObjectVO<Long> queryFinishOrderCount = feignOrderService.queryFinishCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryFinishCount));
+            ResultTypeObjectVO<Long> queryFinishOrderCount = orderService.queryFinishCountByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryFinishCount));
             if(queryFinishOrderCount.isSuccess()) {
                 shopOverviewVO.setFinishOrderCount(queryFinishOrderCount.getData());
             }

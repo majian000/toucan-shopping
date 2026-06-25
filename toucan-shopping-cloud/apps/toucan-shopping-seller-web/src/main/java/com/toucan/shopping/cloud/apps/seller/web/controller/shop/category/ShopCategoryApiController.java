@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.category;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopCategoryRedisKey;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -36,7 +36,7 @@ public class ShopCategoryApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
 
     /**
@@ -53,7 +53,7 @@ public class ShopCategoryApiController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.save(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = shopCategoryService.save(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -82,7 +82,7 @@ public class ShopCategoryApiController extends BaseController {
 
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.update(requestJsonVO);
+            resultObjectVO = shopCategoryService.update(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -109,7 +109,7 @@ public class ShopCategoryApiController extends BaseController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveTop(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveTop(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -137,7 +137,7 @@ public class ShopCategoryApiController extends BaseController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveBottom(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveBottom(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -164,7 +164,7 @@ public class ShopCategoryApiController extends BaseController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveUp(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveUp(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -191,7 +191,7 @@ public class ShopCategoryApiController extends BaseController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveDown(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveDown(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -220,7 +220,7 @@ public class ShopCategoryApiController extends BaseController {
             shopCategoryVO.setId(id);
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.deleteById(requestJsonVO);
+            resultObjectVO = shopCategoryService.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -249,7 +249,7 @@ public class ShopCategoryApiController extends BaseController {
             ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
+            resultObjectVO = shopCategoryService.queryAllList(requestJsonVO);
 
         }catch(Exception e)
         {

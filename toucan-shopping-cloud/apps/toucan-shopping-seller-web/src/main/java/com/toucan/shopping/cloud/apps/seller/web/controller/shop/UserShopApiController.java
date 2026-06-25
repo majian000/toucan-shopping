@@ -4,8 +4,8 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -45,10 +45,10 @@ public class UserShopApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private Toucan toucan;
@@ -111,7 +111,7 @@ public class UserShopApiController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
@@ -120,13 +120,13 @@ public class UserShopApiController extends BaseController {
                     sellerShopVO.setType(1);
                     sellerShopVO.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = feignSellerShopService.save(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = sellerShopService.save(requestJsonVO.sign(),requestJsonVO);
                     //店铺注册成功修改用户状态为存在店铺
                     if(resultObjectVO.isSuccess())
                     {
                         userVO.setIsShop((short)1); // 存在店铺
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-                        feignUserService.updateIsShop(requestJsonVO.sign(),requestJsonVO);
+                        userService.updateIsShop(requestJsonVO.sign(),requestJsonVO);
                     }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -143,6 +143,7 @@ public class UserShopApiController extends BaseController {
         }
         return resultObjectVO;
     }
+
 
 
 
@@ -229,7 +230,7 @@ public class UserShopApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
 
@@ -249,7 +250,7 @@ public class UserShopApiController extends BaseController {
                 {
                     sellerShopVO.setUserMainId(Long.parseLong(userMainId));
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = feignSellerShopService.updateInfo(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = sellerShopService.updateInfo(requestJsonVO.sign(), requestJsonVO);
                 }
             }
 

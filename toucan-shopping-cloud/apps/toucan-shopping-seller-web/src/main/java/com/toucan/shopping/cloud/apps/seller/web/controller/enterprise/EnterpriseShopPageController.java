@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.enterprise;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -29,7 +29,7 @@ public class EnterpriseShopPageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
 
     @Autowired
@@ -50,7 +50,7 @@ public class EnterpriseShopPageController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName( requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));

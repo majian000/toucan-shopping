@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.upload;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -38,10 +38,10 @@ public class ImageUploadApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private Toucan toucan;
@@ -89,7 +89,7 @@ public class ImageUploadApiController extends BaseController {
                 sellerShop.setUserMainId(Long.parseLong(userMainId));
 
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShop);
-                resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -141,7 +141,7 @@ public class ImageUploadApiController extends BaseController {
 
             //修改店铺图标
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-            resultObjectVO = feignSellerShopService.updateLogo(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.updateLogo(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()) {
 
                 //设置预览

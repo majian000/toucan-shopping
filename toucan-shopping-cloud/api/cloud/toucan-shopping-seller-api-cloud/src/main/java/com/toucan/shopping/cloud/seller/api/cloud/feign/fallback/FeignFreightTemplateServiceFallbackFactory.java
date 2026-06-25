@@ -101,7 +101,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
             }
 
             @Override
-            public ResultObjectVO deleteById( RequestJsonVO requestJsonVO) {
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

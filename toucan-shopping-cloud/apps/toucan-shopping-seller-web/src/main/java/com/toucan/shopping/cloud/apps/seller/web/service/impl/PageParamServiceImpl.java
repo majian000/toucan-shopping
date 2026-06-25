@@ -2,9 +2,6 @@ package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.apps.seller.web.service.PageParamService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

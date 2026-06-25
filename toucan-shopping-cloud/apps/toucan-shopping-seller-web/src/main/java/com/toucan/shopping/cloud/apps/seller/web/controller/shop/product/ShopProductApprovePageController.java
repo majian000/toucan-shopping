@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -45,7 +45,7 @@ public class ShopProductApprovePageController extends BaseController {
     private CategoryService categoryService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
@@ -80,7 +80,7 @@ public class ShopProductApprovePageController extends BaseController {
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategory);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopCategoryService.queryAllList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataList(ShopCategoryVO.class);

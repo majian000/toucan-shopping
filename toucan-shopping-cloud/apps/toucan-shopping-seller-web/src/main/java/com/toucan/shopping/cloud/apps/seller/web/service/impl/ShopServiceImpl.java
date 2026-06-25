@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopPageService;
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopService;
 import com.toucan.shopping.cloud.apps.seller.web.service.UserPageService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
@@ -30,7 +30,7 @@ public class ShopServiceImpl implements ShopService {
     private Toucan toucan;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
 
     public SellerShopVO queryByShop(String userMainId) throws Exception
@@ -38,7 +38,7 @@ public class ShopServiceImpl implements ShopService {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;

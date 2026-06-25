@@ -61,7 +61,7 @@ public interface FeignFreightTemplateService extends FreightTemplateServiceAPI {
      * @return
      */
     @DeleteMapping("/delete/id")
-    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询

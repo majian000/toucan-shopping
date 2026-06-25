@@ -1,9 +1,9 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.banner;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -47,10 +47,10 @@ public class ShopBannerApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private FeignShopBannerService feignShopBannerService;
+    private ShopBannerServiceAPI shopBannerService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -84,7 +84,7 @@ public class ShopBannerApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -93,7 +93,7 @@ public class ShopBannerApiController extends BaseController {
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-                    resultObjectVO = feignShopBannerService.queryListPage(requestJsonVO);
+                    resultObjectVO = shopBannerService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
                         ShopBannerPageInfo shopBannerPageInfo = resultObjectVO.formatData(ShopBannerPageInfo.class);
                         if(shopBannerPageInfo!=null&&shopBannerPageInfo.getList()!=null)
@@ -125,7 +125,7 @@ public class ShopBannerApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -184,7 +184,7 @@ public class ShopBannerApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -207,7 +207,7 @@ public class ShopBannerApiController extends BaseController {
                 shopBannerVO.setImgPath(logoImgFilePath);
 
 
-                resultObjectVO = feignShopBannerService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                resultObjectVO = shopBannerService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
                 if(!resultObjectVO.isSuccess())
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -253,7 +253,7 @@ public class ShopBannerApiController extends BaseController {
             shopBannerVO.setId(id);
             shopBannerVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO);
-            resultObjectVO = feignShopBannerService.deleteById(requestJsonVO);
+            resultObjectVO = shopBannerService.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -312,7 +312,7 @@ public class ShopBannerApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -338,7 +338,7 @@ public class ShopBannerApiController extends BaseController {
 
                 ShopBannerVO queryShopBannerVO = new ShopBannerVO();
                 queryShopBannerVO.setId(shopBannerVO.getId());
-                resultObjectVO = feignShopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                resultObjectVO = shopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
                 if(resultObjectVO.isSuccess()) {
                     ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);
                     if (resultShopBannerVO != null && resultShopBannerVO.getShopId().equals(sellerShopVORet.getId())) {
@@ -350,7 +350,7 @@ public class ShopBannerApiController extends BaseController {
                         }else{
                             imageUploadService.deleteFile(resultShopBannerVO.getImgPath());
                         }
-                        resultObjectVO = feignShopBannerService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopBannerVO));
+                        resultObjectVO = shopBannerService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopBannerVO));
                         if (!resultObjectVO.isSuccess()) {
                             resultObjectVO.setCode(ResultObjectVO.FAILD);
                             resultObjectVO.setMsg("修改失败,请稍后重试");

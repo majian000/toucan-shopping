@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.seller.api;
 
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * 运费模板
@@ -50,7 +51,7 @@ public interface FreightTemplateServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO deleteById(RequestJsonVO requestJsonVO);
+    ResultObjectVO deleteById(String signHeader,RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询

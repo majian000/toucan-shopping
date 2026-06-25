@@ -3,15 +3,15 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderExpressDeliveryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderItemService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderStatisticService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderExpressDeliveryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderItemServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -63,13 +63,13 @@ public class OrderExpressDeliveryApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
+    private OrderExpressDeliveryServiceAPI orderExpressDeliveryService;
 
     @Autowired
     private ShopService shopService;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
 
     /**
@@ -98,7 +98,7 @@ public class OrderExpressDeliveryApiController extends BaseController {
             orderExpressDeliveryVO.setSellerUserMainId(sellerShopVO.getUserMainId());
             orderExpressDeliveryVO.setAppCode(toucan.getAppCode());
             orderExpressDeliveryVO.setShopId(sellerShopVO.getId());
-            resultObjectVO = feignOrderExpressDeliveryService.saveOrUpdate(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
+            resultObjectVO = orderExpressDeliveryService.saveOrUpdate(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -132,7 +132,7 @@ public class OrderExpressDeliveryApiController extends BaseController {
             }
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             orderExpressDeliveryVO.setOperateUserId(userMainId);
-            resultObjectVO = feignOrderExpressDeliveryService.removeByOrderId(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
+            resultObjectVO = orderExpressDeliveryService.removeByOrderId(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO));
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

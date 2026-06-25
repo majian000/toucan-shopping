@@ -3,14 +3,14 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.order;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderExpressDeliveryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderItemService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderExpressDeliveryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderItemServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -61,29 +61,29 @@ public class OrderApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
-    private FeignOrderItemService feignOrderItemService;
+    private OrderItemServiceAPI orderItemService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
-    private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
+    private OrderExpressDeliveryServiceAPI orderExpressDeliveryService;
 
     @Autowired
     private ShopService shopService;
@@ -143,7 +143,7 @@ public class OrderApiController extends BaseController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            resultObjectVO = orderService.queryListPage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -183,7 +183,7 @@ public class OrderApiController extends BaseController {
             queryVO.setId(orderVO.getId());
             queryVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
-            resultObjectVO = feignOrderService.findById(requestJsonVO);
+            resultObjectVO = orderService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 orderVO = resultObjectVO.formatData(OrderVO.class);
@@ -192,7 +192,7 @@ public class OrderApiController extends BaseController {
                 queryOrderItemVO.setOrderId(orderVO.getId());
 
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryOrderItemVO);
-                ResultObjectVO orderItemResultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);
+                ResultObjectVO orderItemResultObjectVO = orderItemService.queryAllListByOrderId(requestJsonVO);
                 if(orderItemResultObjectVO.isSuccess()) {
                     if (orderItemResultObjectVO.getData() != null) {
                         List<OrderItemVO> orderItemVOList = orderItemResultObjectVO.formatDataList(OrderItemVO.class);
@@ -236,7 +236,7 @@ public class OrderApiController extends BaseController {
                 orderExpressDeliveryVO.setOrderId(orderVO.getId());
                 orderExpressDeliveryVO.setShopId(sellerShopVO.getId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
-                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = orderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
                 if(orderExpressDeliveryResultObjectVO.isSuccess()){
                     orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
                 }
@@ -268,7 +268,7 @@ public class OrderApiController extends BaseController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {

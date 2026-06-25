@@ -61,13 +61,13 @@ public class ShopAuthInterceptor implements HandlerInterceptor {
                     if(authAnnotation.userRealName())
                     {
                         //拿到用户中心账号服务
-                        UserServiceAPI feignUserService = springContextHolder.getBean(UserServiceAPI.class);
+                        UserServiceAPI userService = springContextHolder.getBean(UserServiceAPI.class);
 
                         UserVO userVO = new UserVO();
                         String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
                         userVO.setUserMainId(Long.parseLong(userMainId));
                         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                        ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO);
+                        ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                             if (!result) {
@@ -89,14 +89,14 @@ public class ShopAuthInterceptor implements HandlerInterceptor {
                     if(authAnnotation.existsShop())
                     {
                         //拿到店铺服务
-                        SellerShopServiceAPI feignSellerShopService = springContextHolder.getBean(SellerShopServiceAPI.class);
+                        SellerShopServiceAPI sellerShopService = springContextHolder.getBean(SellerShopServiceAPI.class);
 
                         SellerShop querySellerShop = new SellerShop();
                         String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
                         querySellerShop.setUserMainId(Long.parseLong(userMainId));
                         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShop);
                         //判断是个人店铺还是企业店铺
-                        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO);
+                        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
                         if(!resultObjectVO.isSuccess()||resultObjectVO.getData()==null) {
                             if(authAnnotation.requestType()==ShopAuth.REQUEST_FORM) {
                                 response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()

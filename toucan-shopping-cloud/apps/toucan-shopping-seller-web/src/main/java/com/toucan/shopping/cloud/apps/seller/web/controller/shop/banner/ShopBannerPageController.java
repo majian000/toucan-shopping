@@ -1,10 +1,10 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.banner;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -37,16 +37,16 @@ public class ShopBannerPageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignShopBannerService feignShopBannerService;
+    private ShopBannerServiceAPI shopBannerService;
 
     @Autowired
     private Toucan toucan;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -76,7 +76,7 @@ public class ShopBannerPageController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -96,7 +96,7 @@ public class ShopBannerPageController extends BaseController {
             {
                 ShopBannerVO shopBannerVO = new ShopBannerVO();
                 shopBannerVO.setId(id);
-                ResultObjectVO resultObjectVO = feignShopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
+                ResultObjectVO resultObjectVO = shopBannerService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),shopBannerVO));
                 if(resultObjectVO.isSuccess())
                 {
                     ShopBannerVO resultShopBannerVO = resultObjectVO.formatData(ShopBannerVO.class);

@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.service.ProvinceCityAreaGeneratorService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -32,7 +32,7 @@ public class ProvinceCityAreaGeneratorServiceImpl implements ProvinceCityAreaGen
     private Toucan toucan;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
 
     @Value("${spring.profiles.active}")
@@ -70,7 +70,7 @@ public class ProvinceCityAreaGeneratorServiceImpl implements ProvinceCityAreaGen
 
                 //查询省市区大对象
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());
-                ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO resultObjectVO = areaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     params.put("areaList", JSONArray.toJSONString(resultObjectVO.getData()));

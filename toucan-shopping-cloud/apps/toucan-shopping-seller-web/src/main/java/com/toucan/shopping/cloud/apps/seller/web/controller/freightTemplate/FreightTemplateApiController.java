@@ -1,11 +1,11 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.freightTemplate;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -52,19 +52,19 @@ public class FreightTemplateApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignFreightTemplateService feignFreightTemplateService;
+    private FreightTemplateServiceAPI freightTemplateService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
 
     /**
@@ -102,7 +102,7 @@ public class FreightTemplateApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -116,7 +116,7 @@ public class FreightTemplateApiController extends BaseController {
                 return resultObjectVO;
             }
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-            resultObjectVO = feignFreightTemplateService.queryListPage(requestJsonVO);
+            resultObjectVO = freightTemplateService.queryListPage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -150,7 +150,7 @@ public class FreightTemplateApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -210,7 +210,7 @@ public class FreightTemplateApiController extends BaseController {
                     AreaVO queryAreaVO = new AreaVO();
                     queryAreaVO.setCityNameList(cityNameList);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAreaVO);
-                    resultObjectVO = feignAreaService.queryCityListByNames(requestJsonVO);
+                    resultObjectVO = areaService.queryCityListByNames(requestJsonVO);
                     if (resultObjectVO.isSuccess()) {
 
                         List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
@@ -232,7 +232,7 @@ public class FreightTemplateApiController extends BaseController {
                 }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), freightTemplateVO);
-            resultObjectVO = feignFreightTemplateService.save(requestJsonVO);
+            resultObjectVO = freightTemplateService.save(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -270,7 +270,7 @@ public class FreightTemplateApiController extends BaseController {
             queryVO.setId(freightTemplateVO.getId());
             queryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
-            resultObjectVO = feignFreightTemplateService.findByIdAndUserMainId(requestJsonVO);
+            resultObjectVO = freightTemplateService.findByIdAndUserMainId(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -312,7 +312,7 @@ public class FreightTemplateApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -372,7 +372,7 @@ public class FreightTemplateApiController extends BaseController {
                     AreaVO queryAreaVO = new AreaVO();
                     queryAreaVO.setCityNameList(cityNameList);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAreaVO);
-                    resultObjectVO = feignAreaService.queryCityListByNames(requestJsonVO);
+                    resultObjectVO = areaService.queryCityListByNames(requestJsonVO);
                     if (resultObjectVO.isSuccess()) {
 
                         List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
@@ -394,7 +394,7 @@ public class FreightTemplateApiController extends BaseController {
                 }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), freightTemplateVO);
-            resultObjectVO = feignFreightTemplateService.update(requestJsonVO);
+            resultObjectVO = freightTemplateService.update(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -411,7 +411,7 @@ public class FreightTemplateApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -445,7 +445,7 @@ public class FreightTemplateApiController extends BaseController {
             shopProductApproveVO.setShopId(sellerShopVO.getId());
             shopProductApproveVO.setApproveStatus(ProductConstant.PROCESSING.shortValue()); //发布中
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApproveVO);
-            resultObjectVO = feignShopProductApproveService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
+            resultObjectVO = shopProductApproveService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -463,7 +463,7 @@ public class FreightTemplateApiController extends BaseController {
             shopProductVO.setFreightTemplateId(id);
             shopProductVO.setShopId(sellerShopVO.getId());
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            resultObjectVO = feignShopProductService.queryOneByFreightTemplateId(requestJsonVO);
+            resultObjectVO = shopProductService.queryOneByFreightTemplateId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -481,7 +481,7 @@ public class FreightTemplateApiController extends BaseController {
             freightTemplateVO.setId(id);
             freightTemplateVO.setUserMainId(Long.parseLong(userMainId));
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),freightTemplateVO);
-            resultObjectVO = feignFreightTemplateService.deleteById(FreightTemplateUtils.getDeleteSignHeader(userMainId),requestJsonVO);
+            resultObjectVO = freightTemplateService.deleteById(FreightTemplateUtils.getDeleteSignHeader(userMainId),requestJsonVO);
 
 
         }catch(Exception e)

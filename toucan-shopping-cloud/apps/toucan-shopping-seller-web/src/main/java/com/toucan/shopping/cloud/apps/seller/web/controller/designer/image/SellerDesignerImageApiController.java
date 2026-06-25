@@ -82,7 +82,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             querySellerShop.setEnableStatus((short)1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
@@ -125,7 +125,7 @@ public class SellerDesignerImageApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
@@ -181,7 +181,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
@@ -306,7 +306,7 @@ public class SellerDesignerImageApiController extends BaseController {
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
             //判断是个人店铺还是企业店铺
-            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopServiceAPI.findByUser(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);

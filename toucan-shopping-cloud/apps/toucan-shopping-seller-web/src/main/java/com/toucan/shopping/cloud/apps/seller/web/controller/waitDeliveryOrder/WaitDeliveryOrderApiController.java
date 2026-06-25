@@ -1,11 +1,11 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.waitDeliveryOrder;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -44,19 +44,19 @@ public class WaitDeliveryOrderApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
 
     /**
@@ -115,7 +115,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            resultObjectVO = orderService.queryListPage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -155,7 +155,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
             queryVO.setId(orderVO.getId());
             queryVO.setShopId(sellerShopVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
-            resultObjectVO = feignOrderService.findById(requestJsonVO);
+            resultObjectVO = orderService.findById(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -172,7 +172,7 @@ public class WaitDeliveryOrderApiController extends BaseController {
         SellerShop querySellerShop = new SellerShop();
         querySellerShop.setUserMainId(Long.parseLong(userMainId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
         if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
             return sellerShopVO;
