@@ -237,6 +237,10 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-elasticsearch</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.toucan.shopping.cloud.modules.search</groupId>
             <artifactId>toucan-shopping-cloud-search-helper</artifactId>
         </dependency>
