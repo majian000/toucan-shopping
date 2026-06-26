@@ -54,10 +54,7 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-entity-vo</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
@@ -74,10 +71,7 @@
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-entity-vo</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.modules.order</groupId>
             <artifactId>toucan-shopping-order-no</artifactId>
@@ -90,10 +84,7 @@
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-stock-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.stock</groupId>
-            <artifactId>toucan-shopping-stock-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.modules.search</groupId>
@@ -135,10 +126,7 @@
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>

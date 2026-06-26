@@ -75,10 +75,7 @@
             <artifactId>toucan-shopping-admin-auth-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-admin-auth-log-spring-boot-starter</artifactId>

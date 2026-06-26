@@ -80,30 +80,21 @@
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-admin-auth-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-message-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.message</groupId>
-            <artifactId>toucan-shopping-message-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.front.templates</groupId>
@@ -131,10 +122,7 @@
             <artifactId>toucan-shopping-content-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.content</groupId>
-            <artifactId>toucan-shopping-content-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>
@@ -158,15 +146,9 @@
             <artifactId>toucan-shopping-seller-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.column</groupId>
-            <artifactId>toucan-shopping-column-entity-vo</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.seller</groupId>
-            <artifactId>toucan-shopping-seller-entity-vo</artifactId>
-        </dependency>
+
+
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
@@ -178,10 +160,7 @@
             <artifactId>toucan-shopping-order-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-entity-vo</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>

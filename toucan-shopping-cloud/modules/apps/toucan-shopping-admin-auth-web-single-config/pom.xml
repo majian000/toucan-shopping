@@ -49,11 +49,6 @@
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
 
