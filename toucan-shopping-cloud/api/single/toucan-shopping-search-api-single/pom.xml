@@ -50,6 +50,10 @@
             <groupId>com.toucan.shopping.modules.search</groupId>
             <artifactId>toucan-shopping-search-elasticsearch</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.search</groupId>
+            <artifactId>toucan-shopping-search-business-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
