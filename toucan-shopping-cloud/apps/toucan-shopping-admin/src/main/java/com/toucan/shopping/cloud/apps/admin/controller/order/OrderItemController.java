@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderItemService;
+import com.toucan.shopping.cloud.order.api.OrderItemServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -46,7 +46,7 @@ public class OrderItemController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignOrderItemService feignOrderItemService;
+    private OrderItemServiceAPI orderItemService;
 
     /**
      * 查询列表
@@ -66,7 +66,7 @@ public class OrderItemController extends UIController {
             }
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            ResultObjectVO resultObjectVO = feignOrderItemService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderItemService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
@@ -109,7 +109,7 @@ public class OrderItemController extends UIController {
             queryOrderItemVO.setOrderId(pageInfo.getOrderId());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryOrderItemVO);
-            ResultObjectVO resultObjectVO = feignOrderItemService.queryAllListByOrderId(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderItemService.queryAllListByOrderId(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     List<OrderItemVO> list = resultObjectVO.formatDataList(OrderItemVO.class);
@@ -150,7 +150,7 @@ public class OrderItemController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, itemVOS);
-            resultObjectVO = feignOrderItemService.updatesFromOrderList(requestJsonVO);
+            resultObjectVO = orderItemService.updatesFromOrderList(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("修改失败,请重试");

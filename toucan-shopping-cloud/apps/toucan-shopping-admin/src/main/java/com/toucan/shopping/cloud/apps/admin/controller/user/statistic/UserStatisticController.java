@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.user.statistic;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
+import com.toucan.shopping.cloud.user.api.UserStatisticServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -41,7 +41,7 @@ public class UserStatisticController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignUserStatisticService feignUserStatisticService;
+    private UserStatisticServiceAPI userStatisticService;
 
     /**
      * 查询统计数据
@@ -56,7 +56,7 @@ public class UserStatisticController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
-            resultObjectVO = feignUserStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
+            resultObjectVO = userStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

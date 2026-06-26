@@ -11,7 +11,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.constant.TableButtons;
@@ -52,7 +52,7 @@ public class UserController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -163,7 +163,7 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO =   resultObjectVO.formatData(UserVO.class);
@@ -202,7 +202,7 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO =  resultObjectVO.formatData(UserVO.class);
@@ -269,7 +269,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.list(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.list(SignUtil.sign(requestVo),requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -320,7 +320,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -358,7 +358,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.emailList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.emailList(SignUtil.sign(requestVo),requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -395,7 +395,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.usernameList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.usernameList(SignUtil.sign(requestVo),requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -486,7 +486,7 @@ public class UserController extends UIController {
             //查询是否已注册用户名
             if(StringUtils.isNotEmpty(user.getUsername()))
             {
-                resultObjectVO = feignUserService.findUsernameListByUsername(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = userService.findUsernameListByUsername(requestJsonVO.sign(),requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     return resultObjectVO;
@@ -503,7 +503,7 @@ public class UserController extends UIController {
             //查询是否已注册邮箱
             if(StringUtils.isNotEmpty(user.getEmail()))
             {
-                resultObjectVO = feignUserService.findEmailListByEmail(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = userService.findEmailListByEmail(requestJsonVO.sign(),requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     return resultObjectVO;
@@ -520,7 +520,7 @@ public class UserController extends UIController {
 
             logger.info(" 用户注册 {} ", user.getMobilePhone());
 
-            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 //拿到用户主ID
                 UserRegistVO userRegistResult = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
@@ -529,18 +529,18 @@ public class UserController extends UIController {
                 //如果输入了用户名,进行用户名的关联
                 if(StringUtils.isNotEmpty(user.getUsername())) {
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userService.connectUsername(requestJsonVO.sign(), requestJsonVO);
                 }
 
                 //如果输入了邮箱,进行邮箱关联
                 if (StringUtils.isNotEmpty(user.getEmail())) {
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userService.connectEmail(requestJsonVO.sign(), requestJsonVO);
                 }
 
                 //修改用户详情
                 requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                resultObjectVO = feignUserService.updateDetail(requestJsonVO.sign(), requestJsonVO);
+                resultObjectVO = userService.updateDetail(requestJsonVO.sign(), requestJsonVO);
             }
 
             resultObjectVO.setData(null);
@@ -600,13 +600,13 @@ public class UserController extends UIController {
             logger.info(" 修改详情 {} ", user.getUserMainId());
             UserVO userVO=null;
             //保存旧的详情数据,用于删除旧的图片资源
-            resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO = resultObjectVO.formatData(UserVO.class);
             }
             //修改详情
-            resultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(userVO!=null)
@@ -684,7 +684,7 @@ public class UserController extends UIController {
             UserRegistVO user = new UserRegistVO();
             user.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
-            resultObjectVO = feignUserService.flushCache(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.flushCache(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -760,7 +760,7 @@ public class UserController extends UIController {
 
             logger.info(" 重置密码 {} ", user.getUserMainId());
 
-            resultObjectVO = feignUserService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
             resultObjectVO.setData(null);
         }catch(Exception e)
         {
@@ -823,7 +823,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联手机号 {} ", user.getMobilePhone());
 
-            resultObjectVO = feignUserService.connectMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -885,7 +885,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联邮箱 {} ", user.getEmail());
 
-            resultObjectVO = feignUserService.connectEmail(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectEmail(SignUtil.sign(requestJsonVO),requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -947,7 +947,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联用户名 {} ", user.getUsername());
 
-            resultObjectVO = feignUserService.connectUsername(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectUsername(SignUtil.sign(requestJsonVO),requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -990,7 +990,7 @@ public class UserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(shoppingAppCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1020,7 +1020,7 @@ public class UserController extends UIController {
             userMobilePhoneVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userMobilePhoneVO);
-            resultObjectVO = feignUserService.disabledEnabledMobilePhone(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledMobilePhone(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1051,7 +1051,7 @@ public class UserController extends UIController {
             }
             userEmailVO.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userEmailVO);
-            resultObjectVO = feignUserService.disabledEnabledEmail(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledEmail(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1084,7 +1084,7 @@ public class UserController extends UIController {
             userUserNameVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userUserNameVO);
-            resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1123,7 +1123,7 @@ public class UserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserService.disabledByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = userService.disabledByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1164,7 +1164,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setHeadSculpture(groupPath);
@@ -1221,7 +1221,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) {
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setIdcardImg1(groupPath);
@@ -1279,7 +1279,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) {
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setIdcardImg2(groupPath);

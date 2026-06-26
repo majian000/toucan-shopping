@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.cloud.feign.service.FeignMessageTypeService;
+import com.toucan.shopping.cloud.message.api.MessageTypeServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -49,7 +49,7 @@ public class MessageTypeController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignMessageTypeService feignMessageTypeService;
+    private MessageTypeServiceAPI messageTypeService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -78,7 +78,7 @@ public class MessageTypeController extends UIController {
             MessageTypeVO queryEntity = new MessageTypeVO();
             queryEntity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultObjectVO resultObjectVO = feignMessageTypeService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = messageTypeService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -126,7 +126,7 @@ public class MessageTypeController extends UIController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignMessageTypeService.save(requestJsonVO);
+            resultObjectVO = messageTypeService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -163,7 +163,7 @@ public class MessageTypeController extends UIController {
             }
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignMessageTypeService.update(requestJsonVO);
+            resultObjectVO = messageTypeService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -186,7 +186,7 @@ public class MessageTypeController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, null);
-            resultObjectVO = feignMessageTypeService.flushCache(requestJsonVO);
+            resultObjectVO = messageTypeService.flushCache(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -210,7 +210,7 @@ public class MessageTypeController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignMessageTypeService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = messageTypeService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -260,7 +260,7 @@ public class MessageTypeController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignMessageTypeService.deleteById(requestVo);
+            resultObjectVO = messageTypeService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignAdminOrgnazitionService extends AdminOrgnazitionServiceAPI {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryListByEntity(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity( @RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/deleteByAppCode",produces = "application/json;charset=UTF-8")
-    ResultObjectVO deleteByAppCode(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByAppCode( @RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/queryAppListByAdminId",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryAppListByAdminId(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryAppListByAdminId( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -35,6 +35,6 @@ public interface FeignAdminOrgnazitionService extends AdminOrgnazitionServiceAPI
      * @return
      */
     @RequestMapping(value = "/save/orgnazition",method = RequestMethod.POST)
-    ResultObjectVO saveOrgnazitions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO saveOrgnazitions(@RequestBody RequestJsonVO requestJsonVO);
 
 }

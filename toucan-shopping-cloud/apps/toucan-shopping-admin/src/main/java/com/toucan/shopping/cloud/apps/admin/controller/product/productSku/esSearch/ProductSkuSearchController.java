@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSku.esSea
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -50,13 +50,13 @@ public class ProductSkuSearchController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSearchService feignProductSearchService;
+    private ProductSearchServiceAPI productSearchService;
 
 
     @Autowired
@@ -86,7 +86,7 @@ public class ProductSkuSearchController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchVO);
-            ResultObjectVO resultObjectVO = feignProductSearchService.search(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSearchService.search(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 PageInfo pageInfo = resultObjectVO.formatData(PageInfo.class);
@@ -131,7 +131,7 @@ public class ProductSkuSearchController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
+            resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -174,7 +174,7 @@ public class ProductSkuSearchController extends UIController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchResultVO.getSkuId());
-            resultObjectVO = feignProductSearchService.removeById(requestJsonVO);
+            resultObjectVO = productSearchService.removeById(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("操作失败,请重试");
@@ -197,7 +197,7 @@ public class ProductSkuSearchController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -225,7 +225,7 @@ public class ProductSkuSearchController extends UIController {
     {
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),id);
-            ResultObjectVO resultObjectVO = feignProductSearchService.queryBySkuId(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSearchService.queryBySkuId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSearchResultVO> productSearchResultVOS = resultObjectVO.formatDataList(ProductSearchResultVO.class);
@@ -294,7 +294,7 @@ public class ProductSkuSearchController extends UIController {
 
             for(ProductSearchResultVO productSearchResultVO:productSearchResultVOS) {
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO.getSkuId());
-                resultObjectVO = feignProductSearchService.removeById(requestJsonVO);
+                resultObjectVO = productSearchService.removeById(requestJsonVO);
             }
         }catch(Exception e)
         {
@@ -318,7 +318,7 @@ public class ProductSkuSearchController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            resultObjectVO = feignProductSearchService.clear(RequestJsonVOGenerator.generator(toucan.getAppCode(),null));
+            resultObjectVO = productSearchService.clear(RequestJsonVOGenerator.generator(toucan.getAppCode(),null));
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

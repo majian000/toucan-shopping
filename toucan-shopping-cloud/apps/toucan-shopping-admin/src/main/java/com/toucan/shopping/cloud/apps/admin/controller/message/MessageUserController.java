@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.cloud.feign.service.FeignMessageTypeService;
-import com.toucan.shopping.cloud.message.api.cloud.feign.service.FeignMessageUserService;
+import com.toucan.shopping.cloud.message.api.MessageTypeServiceAPI;
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -50,17 +50,17 @@ public class MessageUserController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignMessageUserService feignMessageUserService;
+    private MessageUserServiceAPI messageUserService;
 
     @Autowired
-    private FeignMessageTypeService feignMessageTypeService;
+    private MessageTypeServiceAPI messageTypeService;
 
     void initMessageTypes(HttpServletRequest request)
     {
         try {
             MessageTypeVO messageTypeVO = new MessageTypeVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), messageTypeVO);
-            ResultObjectVO resultObjectVO = feignMessageTypeService.queryList(requestJsonVO);
+            ResultObjectVO resultObjectVO = messageTypeService.queryList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -114,7 +114,7 @@ public class MessageUserController extends UIController {
             MessageUserVO queryEntity = new MessageUserVO();
             queryEntity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultObjectVO resultObjectVO = feignMessageUserService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = messageUserService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -159,7 +159,7 @@ public class MessageUserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignMessageUserService.deleteById(requestVo);
+            resultObjectVO = messageUserService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -185,7 +185,7 @@ public class MessageUserController extends UIController {
         try {
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignMessageUserService.update(requestJsonVO);
+            resultObjectVO = messageUserService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -236,7 +236,7 @@ public class MessageUserController extends UIController {
             //发送消息
             messageVO.setMessageTypeCode(entity.getMessageTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, messageVO);
-            resultObjectVO = feignMessageUserService.send(requestJsonVO);
+            resultObjectVO = messageUserService.send(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -261,7 +261,7 @@ public class MessageUserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignMessageUserService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = messageUserService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -52,7 +52,7 @@ public class ProductSkuStockLockController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
@@ -105,7 +105,7 @@ public class ProductSkuStockLockController extends UIController {
             ProductSkuStockLockVO query = new ProductSkuStockLockVO();
             query.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = feignProductSkuStockLockService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuStockLockService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 ProductSkuStockLockVO productSkuStockLockVO = resultObjectVO.formatData(ProductSkuStockLockVO.class);
@@ -134,7 +134,7 @@ public class ProductSkuStockLockController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignProductSkuStockLockService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuStockLockService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

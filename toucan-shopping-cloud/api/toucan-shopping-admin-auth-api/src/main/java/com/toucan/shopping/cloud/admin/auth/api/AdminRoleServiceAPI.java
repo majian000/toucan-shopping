@@ -5,11 +5,11 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 
 public interface AdminRoleServiceAPI {
 
-    public ResultObjectVO saveRoles( String signHeader, RequestJsonVO requestJsonVO);
+    public ResultObjectVO saveRoles(RequestJsonVO requestJsonVO);
 
 
 
-    ResultObjectVO queryListByEntity( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(   RequestJsonVO requestVo);
 
 
     /**
@@ -18,7 +18,7 @@ public interface AdminRoleServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO list( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO list(  RequestJsonVO requestVo);
 
 
 }

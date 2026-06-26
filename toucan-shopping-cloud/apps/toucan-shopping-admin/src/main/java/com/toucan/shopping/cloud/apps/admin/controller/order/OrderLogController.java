@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderLogService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.order.api.OrderLogServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -54,13 +54,13 @@ public class OrderLogController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignOrderLogService feignOrderLogService;
+    private OrderLogServiceAPI orderLogService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
 
     /**
@@ -85,7 +85,7 @@ public class OrderLogController extends UIController {
                 return tableVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            ResultPageInfoVO<OrderLogVO> resultPageInfoVO = feignOrderLogService.queryListPage(requestJsonVO);
+            ResultPageInfoVO<OrderLogVO> resultPageInfoVO = orderLogService.queryListPage(requestJsonVO);
             if(resultPageInfoVO.isSuccess()) {
                 PageInfo orderLogPageInfo = resultPageInfoVO.getData();
                 tableVO.setCount(orderLogPageInfo.getTotal()!=null?orderLogPageInfo.getTotal():0);

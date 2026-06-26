@@ -5,12 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -57,16 +57,16 @@ public class SelectShopProductController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -76,11 +76,11 @@ public class SelectShopProductController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private FunctionServiceAPI functionServiceAPI;
@@ -120,7 +120,7 @@ public class SelectShopProductController extends UIController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopProductVO);
-            resultObjectVO = feignShopProductService.queryList(requestJsonVO);
+            resultObjectVO = shopProductService.queryList(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
                     List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
@@ -244,7 +244,7 @@ public class SelectShopProductController extends UIController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(pageInfo.getCategoryId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -263,7 +263,7 @@ public class SelectShopProductController extends UIController {
             pageInfo.setOrderColumn("update_date");
             pageInfo.setOrderSort("desc");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            resultObjectVO = shopProductService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
@@ -396,7 +396,7 @@ public class SelectShopProductController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
+            resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -433,7 +433,7 @@ public class SelectShopProductController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -466,7 +466,7 @@ public class SelectShopProductController extends UIController {
             ShopCategoryVO queryShopCategoryVO = new ShopCategoryVO();
             queryShopCategoryVO.setIdArray(shopCategoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopCategoryService.findByIdArray(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
@@ -503,7 +503,7 @@ public class SelectShopProductController extends UIController {
             BrandVO queryBrandVO = new BrandVO();
             queryBrandVO.setIdList(brandIdList);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
-            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            ResultObjectVO resultObjectVO = brandService.findByIdList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
@@ -545,7 +545,7 @@ public class SelectShopProductController extends UIController {
             SellerShopVO queryShopVO = new SellerShopVO();
             queryShopVO.setIdList(shopIdList);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopVO);
-            ResultObjectVO resultObjectVO = feignSellerShopService.findByIdList(requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.findByIdList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
@@ -585,7 +585,7 @@ public class SelectShopProductController extends UIController {
             BrandVO queryBrandVO = new BrandVO();
             queryBrandVO.setIdList(brandIdList);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
-            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            ResultObjectVO resultObjectVO = brandService.findByIdList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
@@ -631,7 +631,7 @@ public class SelectShopProductController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -664,7 +664,7 @@ public class SelectShopProductController extends UIController {
             ShopProductVO shopProductVO = new ShopProductVO();
             shopProductVO.setId(id);;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            ResultObjectVO resultObjectVO = feignShopProductService.queryByShopProductId(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopProductService.queryByShopProductId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
@@ -830,7 +830,7 @@ public class SelectShopProductController extends UIController {
                 return tableVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

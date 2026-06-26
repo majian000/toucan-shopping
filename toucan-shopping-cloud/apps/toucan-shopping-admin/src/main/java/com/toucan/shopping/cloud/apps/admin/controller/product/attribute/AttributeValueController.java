@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeValueService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeValueServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -54,10 +54,10 @@ public class AttributeValueController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAttributeValueService feignAttributeValueService;
+    private AttributeValueServiceAPI attributeValueService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
@@ -89,7 +89,7 @@ public class AttributeValueController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAttributeValueService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = attributeValueService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -118,7 +118,7 @@ public class AttributeValueController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -172,7 +172,7 @@ public class AttributeValueController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAttributeValueService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = attributeValueService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -210,7 +210,7 @@ public class AttributeValueController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAttributeValueService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = attributeValueService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -229,7 +229,7 @@ public class AttributeValueController extends UIController {
             AttributeValueVO attributeValueVO = new AttributeValueVO();
             attributeValueVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeValueVO);
-            ResultObjectVO resultObjectVO = feignAttributeValueService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = attributeValueService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -279,7 +279,7 @@ public class AttributeValueController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAttributeValueService.deleteById(requestVo.sign(), requestVo);
+            resultObjectVO = attributeValueService.deleteById( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -312,7 +312,7 @@ public class AttributeValueController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAttributeValueService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = attributeValueService.deleteByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

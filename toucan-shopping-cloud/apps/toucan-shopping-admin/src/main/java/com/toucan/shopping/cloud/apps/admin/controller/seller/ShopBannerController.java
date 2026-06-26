@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -53,7 +53,7 @@ public class ShopBannerController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignShopBannerService feignShopBannerService;
+    private ShopBannerServiceAPI shopBannerService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -86,7 +86,7 @@ public class ShopBannerController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignShopBannerService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopBannerService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 ShopBannerPageInfo shopBannerPageInfo = resultObjectVO.formatData(ShopBannerPageInfo.class);
@@ -194,7 +194,7 @@ public class ShopBannerController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignShopBannerService.deleteByIdForAdmin(requestVo);
+            resultObjectVO = shopBannerService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -219,7 +219,7 @@ public class ShopBannerController extends UIController {
             ShopBannerVO banner = new ShopBannerVO();
             banner.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = feignShopBannerService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopBannerService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -262,7 +262,7 @@ public class ShopBannerController extends UIController {
             ShopBannerVO banner = new ShopBannerVO();
             banner.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = feignShopBannerService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopBannerService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -341,7 +341,7 @@ public class ShopBannerController extends UIController {
                 ShopBannerVO banner = new ShopBannerVO();
                 banner.setId(shopBannerVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-                resultObjectVO = feignShopBannerService.findById(requestJsonVO);
+                resultObjectVO = shopBannerService.findById(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     if (resultObjectVO.getData() != null) {
                         banner = resultObjectVO.formatData(ShopBannerVO.class);
@@ -370,7 +370,7 @@ public class ShopBannerController extends UIController {
             shopBannerVO.setUpdateDate(new Date());
             shopBannerVO.setUpdaterId(AuthHeaderUtil.getAdminIdAndPrefix(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, shopBannerVO);
-            resultObjectVO = feignShopBannerService.update(requestJsonVO);
+            resultObjectVO = shopBannerService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

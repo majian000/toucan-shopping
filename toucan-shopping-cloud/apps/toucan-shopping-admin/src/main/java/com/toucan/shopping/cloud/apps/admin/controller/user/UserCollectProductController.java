@@ -4,8 +4,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -50,10 +50,10 @@ public class UserCollectProductController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignUserCollectProductService feignUserCollectProductService;
+    private UserCollectProductServiceAPI userCollectProductService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -84,7 +84,7 @@ public class UserCollectProductController extends UIController {
         TableVO<UserCollectProductVO> tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignUserCollectProductService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = userCollectProductService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -98,7 +98,7 @@ public class UserCollectProductController extends UIController {
                         productSkus.add(productSkuVO);
                     }
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
-                    ResultObjectVO productResultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                    ResultObjectVO productResultObjectVO = productSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
                     if(productResultObjectVO.isSuccess())
                     {
                         List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
@@ -168,7 +168,7 @@ public class UserCollectProductController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserCollectProductService.deleteById(requestVo);
+            resultObjectVO = userCollectProductService.deleteById(requestVo);
 
         }catch(Exception e)
         {
@@ -204,7 +204,7 @@ public class UserCollectProductController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserCollectProductService.deleteByIds(requestVo);
+            resultObjectVO = userCollectProductService.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

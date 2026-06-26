@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.order.statistic;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderStatisticService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -44,10 +44,10 @@ public class OrderStatisticController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignOrderStatisticService feignOrderStatisticService;
+    private OrderStatisticServiceAPI orderStatisticService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     /**
      * 总金额
@@ -61,7 +61,7 @@ public class OrderStatisticController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
-            resultObjectVO = feignOrderStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
+            resultObjectVO = orderStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerImageService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -52,7 +52,7 @@ public class SellerDesignerImageController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignSellerDesignerImageService feignSellerDesignerImageService;
+    private SellerDesignerImageServiceAPI sellerDesignerImageService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -85,7 +85,7 @@ public class SellerDesignerImageController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignSellerDesignerImageService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerDesignerImageService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 SellerDesignerImagePageInfo shopBannerPageInfo = resultObjectVO.formatData(SellerDesignerImagePageInfo.class);
@@ -193,7 +193,7 @@ public class SellerDesignerImageController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignSellerDesignerImageService.deleteByIdForAdmin(requestVo);
+            resultObjectVO = sellerDesignerImageService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -218,7 +218,7 @@ public class SellerDesignerImageController extends UIController {
             SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
             sellerDesignerImageVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
-            ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerDesignerImageService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -253,7 +253,7 @@ public class SellerDesignerImageController extends UIController {
             SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
             sellerDesignerImageVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
-            ResultObjectVO resultObjectVO = feignSellerDesignerImageService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerDesignerImageService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -315,7 +315,7 @@ public class SellerDesignerImageController extends UIController {
                 SellerDesignerImageVO banner = new SellerDesignerImageVO();
                 banner.setId(sellerDesignerImageVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-                resultObjectVO = feignSellerDesignerImageService.findById(requestJsonVO);
+                resultObjectVO = sellerDesignerImageService.findById(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     if (resultObjectVO.getData() != null) {
                         banner = resultObjectVO.formatData(SellerDesignerImageVO.class);
@@ -344,7 +344,7 @@ public class SellerDesignerImageController extends UIController {
             sellerDesignerImageVO.setUpdateDate(new Date());
             sellerDesignerImageVO.setUpdaterId(AuthHeaderUtil.getAdminIdAndPrefix(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
-            resultObjectVO = feignSellerDesignerImageService.update(requestJsonVO);
+            resultObjectVO = sellerDesignerImageService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

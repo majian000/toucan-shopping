@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.cloud.feign.service.FeignMessageUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserTrueNameApproveServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -60,13 +60,13 @@ public class UserTrueNameApproveController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
+    private UserTrueNameApproveServiceAPI userTrueNameApproveService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignMessageUserService feignMessageUserService;
+    private MessageUserServiceAPI messageUserService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -99,7 +99,7 @@ public class UserTrueNameApproveController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -176,7 +176,7 @@ public class UserTrueNameApproveController extends UIController {
             //设置审核人
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
-            resultObjectVO = feignUserTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //发送消息
@@ -191,7 +191,7 @@ public class UserTrueNameApproveController extends UIController {
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-                resultObjectVO = feignMessageUserService.send(requestJsonVO);
+                resultObjectVO = messageUserService.send(requestJsonVO);
                 if (resultObjectVO.isSuccess())
                 {
                     //设置消息为已发送
@@ -221,7 +221,7 @@ public class UserTrueNameApproveController extends UIController {
         try {
             userTrueNameApproveVO.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userTrueNameApproveVO);
-            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataList(UserTrueNameApproveVO.class);
@@ -268,7 +268,7 @@ public class UserTrueNameApproveController extends UIController {
             //设置审核人
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
-            resultObjectVO = feignUserTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
 
@@ -284,7 +284,7 @@ public class UserTrueNameApproveController extends UIController {
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-                resultObjectVO = feignMessageUserService.send(requestJsonVO);
+                resultObjectVO = messageUserService.send(requestJsonVO);
 
                 if (resultObjectVO.isSuccess())
                 {

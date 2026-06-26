@@ -12,7 +12,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO save(   RequestJsonVO requestVo);
 
 
     /**
@@ -21,7 +21,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO update(   RequestJsonVO requestVo);
 
 
     /**
@@ -30,7 +30,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO listPage( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO listPage(   RequestJsonVO requestVo);
 
 
     /**
@@ -39,7 +39,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteById(   RequestJsonVO requestVo);
 
 
 
@@ -50,7 +50,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO findById(   RequestJsonVO requestVo);
 
 
     /**
@@ -59,7 +59,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(   RequestJsonVO requestVo);
 
 
     /**
@@ -67,7 +67,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO list( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO list(  RequestJsonVO requestVo);
 
 
     /**
@@ -75,7 +75,7 @@ public interface AppServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO findByCode( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO findByCode(  RequestJsonVO requestVo);
 
 
     /**

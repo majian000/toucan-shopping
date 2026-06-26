@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
+import com.toucan.shopping.cloud.content.api.ArticleServiceAPI;
+import com.toucan.shopping.cloud.column.api.ColumnServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.vo.ColumnTreeVO;
@@ -58,10 +58,10 @@ public class ArticleController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignColumnService feignColumnService;
+    private ColumnServiceAPI columnService;
 
     @Autowired
-    private FeignArticleService feignArticleService;
+    private ArticleServiceAPI articleService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
@@ -83,7 +83,7 @@ public class ArticleController extends UIController {
     public String addPage(HttpServletRequest request,@RequestParam(required = false) Long columnId) throws NoSuchAlgorithmException {
         ColumnVO queryColumnVO= new ColumnVO();
         queryColumnVO.setId(columnId);
-        ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
+        ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = columnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
         if(resultTypeObjectVO.isSuccess()){
             if(resultTypeObjectVO.getData()!=null){
                 request.setAttribute("columnId",resultTypeObjectVO.getData().getId());
@@ -91,7 +91,7 @@ public class ArticleController extends UIController {
             }
         }
 
-        ResultTypeObjectVO<Long> resultMaxSort = feignArticleService.queryMaxSort(RequestJsonVOGenerator.generator(toucan.getAppCode(),columnId));
+        ResultTypeObjectVO<Long> resultMaxSort = articleService.queryMaxSort(RequestJsonVOGenerator.generator(toucan.getAppCode(),columnId));
         request.setAttribute("maxSort",resultMaxSort.getData()+1);
         return "pages/article/add.html";
     }
@@ -115,7 +115,7 @@ public class ArticleController extends UIController {
             entity.setUpdateDate(new Date());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignArticleService.update(requestJsonVO);
+            resultObjectVO = articleService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -134,7 +134,7 @@ public class ArticleController extends UIController {
             ArticleVO queryArticleVO = new ArticleVO();
             queryArticleVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArticleVO);
-            ResultTypeObjectVO<ArticleVO> resultObjectVO = feignArticleService.findById(requestJsonVO);
+            ResultTypeObjectVO<ArticleVO> resultObjectVO = articleService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 ArticleVO articleVO = resultObjectVO.getData();
@@ -149,7 +149,7 @@ public class ArticleController extends UIController {
                 }
                 ColumnVO queryColumnVO= new ColumnVO();
                 queryColumnVO.setId(articleVO.getColumnId());
-                ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = feignColumnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
+                ResultTypeObjectVO<ColumnVO> resultTypeObjectVO = columnService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnVO));
                 if(resultTypeObjectVO.isSuccess()){
                     if(resultTypeObjectVO.getData()!=null){
                         articleVO.setColumnName(resultTypeObjectVO.getData().getTitle());
@@ -178,7 +178,7 @@ public class ArticleController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignArticleService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = articleService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -268,7 +268,7 @@ public class ArticleController extends UIController {
             article.setId(Long.parseLong(id));
             article.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
-            resultObjectVO = feignArticleService.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),article));
+            resultObjectVO = articleService.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),article));
         }catch(Exception e)
         {
             resultObjectVO.setMsg("删除失败,请稍后重试");
@@ -290,7 +290,7 @@ public class ArticleController extends UIController {
             query.setPid(id);
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignColumnService.queryListByPid(requestJsonVO);
+            resultObjectVO = columnService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -336,7 +336,7 @@ public class ArticleController extends UIController {
             articleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             articleVO.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
-            resultObjectVO = feignArticleService.save(requestJsonVO);
+            resultObjectVO = articleService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -408,7 +408,7 @@ public class ArticleController extends UIController {
                 return resultObjectVO;
             }
 
-            resultObjectVO = feignArticleService.deleteByIds(RequestJsonVOGenerator.generator(appCode,articleVOS));
+            resultObjectVO = articleService.deleteByIds(RequestJsonVOGenerator.generator(appCode,articleVOS));
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -6,11 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.content.api.ColumnAreaServiceAPI;
+import com.toucan.shopping.cloud.content.api.IndexRecommendColumnServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -60,22 +59,20 @@ public class IndexRecommendColumnController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignIndexRecommendColumnService feignIndexRecommendColumnService;
+    private IndexRecommendColumnServiceAPI indexRecommendColumnService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
 
-    @Autowired
-    private FeignColumnTypeService feignColumnTypeService;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
-    private FeignColumnAreaService feignColumnAreaService;
+    private ColumnAreaServiceAPI columnAreaService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -150,7 +147,7 @@ public class IndexRecommendColumnController extends UIController {
             indexRecommendColumnVO.setPosition("1");
             indexRecommendColumnVO.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, indexRecommendColumnVO);
-            resultObjectVO = feignIndexRecommendColumnService.save(requestJsonVO);
+            resultObjectVO = indexRecommendColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -177,7 +174,7 @@ public class IndexRecommendColumnController extends UIController {
             entity.setPosition("1");
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignIndexRecommendColumnService.update(requestJsonVO);
+            resultObjectVO = indexRecommendColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -203,7 +200,7 @@ public class IndexRecommendColumnController extends UIController {
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignIndexRecommendColumnService.findById(requestJsonVO);
+            resultObjectVO = indexRecommendColumnService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 PcIndexColumnVO indexRecommendColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
@@ -269,7 +266,7 @@ public class IndexRecommendColumnController extends UIController {
             pageInfo.setPosition("1");
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = indexRecommendColumnService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -376,7 +373,7 @@ public class IndexRecommendColumnController extends UIController {
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
 
-            resultObjectVO = feignAreaService.queryTree(requestJsonVO);
+            resultObjectVO = areaService.queryTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
@@ -389,7 +386,7 @@ public class IndexRecommendColumnController extends UIController {
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
 
-                resultObjectVO = feignColumnAreaService.queryColumnAreaList(requestJsonVO);
+                resultObjectVO = columnAreaService.queryColumnAreaList(requestJsonVO);
                 List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {
@@ -471,7 +468,7 @@ public class IndexRecommendColumnController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
 
-            resultObjectVO = feignIndexRecommendColumnService.deleteById(requestVo);
+            resultObjectVO = indexRecommendColumnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

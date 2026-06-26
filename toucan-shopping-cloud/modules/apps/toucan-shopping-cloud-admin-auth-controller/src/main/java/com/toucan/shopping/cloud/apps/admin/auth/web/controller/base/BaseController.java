@@ -31,7 +31,7 @@ public abstract class BaseController {
             AdminVO queryAdminVO = new AdminVO();
             queryAdminVO.setAdminIds(createOrUpdateAdminIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
-            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<AdminVO> adminVOS = (List<AdminVO>) resultObjectVO.formatDataList(AdminVO.class);
                 if (!CollectionUtils.isEmpty(adminVOS)) {

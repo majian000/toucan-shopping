@@ -6,10 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderExpressDeliveryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.order.api.OrderExpressDeliveryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -57,16 +57,16 @@ public class OrderController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
-    private FeignOrderExpressDeliveryService feignOrderExpressDeliveryService;
+    private OrderExpressDeliveryServiceAPI orderExpressDeliveryService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
@@ -100,7 +100,7 @@ public class OrderController extends UIController {
             }
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            ResultObjectVO resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
@@ -136,7 +136,7 @@ public class OrderController extends UIController {
             OrderVO query = new OrderVO();
             query.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = feignOrderService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
@@ -145,7 +145,7 @@ public class OrderController extends UIController {
                 orderExpressDeliveryVO.setOrderId(orderVO.getId());
                 orderExpressDeliveryVO.setShopId(orderVO.getShopId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
-                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = orderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
                 if(orderExpressDeliveryResultObjectVO.isSuccess()){
                     orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
                 }
@@ -176,7 +176,7 @@ public class OrderController extends UIController {
             OrderVO query = new OrderVO();
             query.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = feignOrderService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
@@ -185,7 +185,7 @@ public class OrderController extends UIController {
                 orderExpressDeliveryVO.setOrderId(orderVO.getId());
                 orderExpressDeliveryVO.setShopId(orderVO.getShopId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), orderExpressDeliveryVO);
-                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = feignOrderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
+                ResultTypeObjectVO<OrderExpressDeliveryVO> orderExpressDeliveryResultObjectVO = orderExpressDeliveryService.findOneByOrderIdAndShopId(requestJsonVO);
                 if(orderExpressDeliveryResultObjectVO.isSuccess()){
                     orderVO.setOrderExpressDelivery(orderExpressDeliveryResultObjectVO.getData());
                 }
@@ -251,7 +251,7 @@ public class OrderController extends UIController {
             ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
             productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
             productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+            resultObjectVO = productSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
@@ -267,13 +267,13 @@ public class OrderController extends UIController {
                     }
                     if(!CollectionUtils.isEmpty(inventoryReductions)) {
                         //保存还原锁定库存事件
-                        resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                        resultObjectVO = productSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                     }
                 }
-                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                resultObjectVO = productSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                 if(resultObjectVO.isSuccess())
                 {
-                    resultObjectVO = feignOrderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
+                    resultObjectVO = orderService.cancel(RequestJsonVOGenerator.generator(toucan.getAppCode(), orderVO));
                 }
             }
 
@@ -306,14 +306,14 @@ public class OrderController extends UIController {
                 OrderVO query = new OrderVO();
                 query.setId(entity.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-                ResultObjectVO queryOrderResultObjectVO = feignOrderService.findById(requestJsonVO);
+                ResultObjectVO queryOrderResultObjectVO = orderService.findById(requestJsonVO);
                 if(queryOrderResultObjectVO.isSuccess()) {
                     OrderVO orderVO = queryOrderResultObjectVO.formatData(OrderVO.class);
                     if(orderVO!=null) {
                         ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
                         productSkuStockLockVO.setOrderNo(orderVO.getOrderNo());
                         productSkuStockLockVO.setType((short) 1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-                        resultObjectVO = feignProductSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                        resultObjectVO = productSkuStockLockService.findLockStockNumByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                         if (resultObjectVO.isSuccess()) {
                             List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
                             if (!CollectionUtils.isEmpty(productSkuStockLocks)) {
@@ -328,17 +328,17 @@ public class OrderController extends UIController {
                                     }
                                 }
                                 if (!CollectionUtils.isEmpty(inventoryReductions)) {
-                                    resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                                    resultObjectVO = productSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                                 }
                             }
-                            resultObjectVO = feignProductSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                            resultObjectVO = productSkuStockLockService.deleteLockStockByOrderNo(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                         }
                     }
                 }
             }
             entity.setOperateUserId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignOrderService.update(requestJsonVO);
+            resultObjectVO = orderService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("修改失败,请重试");

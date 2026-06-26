@@ -12,15 +12,15 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO login( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO login(  RequestJsonVO requestVo);
 
-    ResultObjectVO queryLoginToken( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO queryLoginToken(  RequestJsonVO requestVo);
 
-    ResultObjectVO isOnline( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO isOnline(  RequestJsonVO requestVo);
 
 
 
-    ResultObjectVO queryListByEntity( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(  RequestJsonVO requestVo);
 
     /**
      * 保存
@@ -28,7 +28,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO save(   RequestJsonVO requestVo);
 
 
 
@@ -38,7 +38,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO update(   RequestJsonVO requestVo);
 
 
 
@@ -48,7 +48,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO list( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO list(  RequestJsonVO requestVo);
 
 
     /**
@@ -56,7 +56,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO findById(  RequestJsonVO requestVo);
 
 
     /**
@@ -65,7 +65,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO logout( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO logout(  RequestJsonVO requestVo);
 
 
     /**
@@ -74,7 +74,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO updatePassword( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO updatePassword(  RequestJsonVO requestVo);
 
 
 
@@ -86,7 +86,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteById(   RequestJsonVO requestVo);
 
 
     /**
@@ -95,7 +95,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(   RequestJsonVO requestVo);
 
 
 

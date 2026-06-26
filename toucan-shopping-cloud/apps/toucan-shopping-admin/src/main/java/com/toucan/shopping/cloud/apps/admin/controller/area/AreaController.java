@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.enums.BigAreaCodeEnum;

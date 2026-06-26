@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.controller.article.ueditor;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService;
+import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -38,7 +38,7 @@ public class UEditorController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignArticleImageService feignArticleImageService;
+    private ArticleImageServiceAPI articleImageService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/config")
@@ -73,7 +73,7 @@ public class UEditorController {
         articleImageVO.setCreateAdminId(adminId);
         articleImageVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
-        ResultObjectVO resultObjectVO = feignArticleImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImageVO));
+        ResultObjectVO resultObjectVO = articleImageService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImageVO));
         ImgUploadResult imgUploadResult = new ImgUploadResult();
         if(resultObjectVO.isSuccess()) {
             imgUploadResult.setUrl(groupPath);

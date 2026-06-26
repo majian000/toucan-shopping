@@ -17,7 +17,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/save",method = RequestMethod.POST)
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -27,7 +27,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/update",method = RequestMethod.POST)
-    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO update( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -37,7 +37,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value = "/list/page",method = RequestMethod.POST)
-    ResultObjectVO listPage(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO listPage( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -47,7 +47,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteById( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -59,7 +59,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/find/id",method = RequestMethod.POST)
-    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -69,7 +69,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -78,7 +78,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
-    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -87,7 +87,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @return
      */
     @RequestMapping(value="/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findByCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByCode(@RequestBody RequestJsonVO requestVo);
 
 
     /**

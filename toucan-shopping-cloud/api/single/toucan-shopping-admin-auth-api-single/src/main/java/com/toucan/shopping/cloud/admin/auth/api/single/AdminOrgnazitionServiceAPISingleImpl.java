@@ -14,27 +14,27 @@ public class AdminOrgnazitionServiceAPISingleImpl implements AdminOrgnazitionSer
     private AdminOrgnazitionBusinessService adminOrgnazitionBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save( RequestJsonVO requestVo) {
         return adminOrgnazitionBusinessService.saveOrgnazitions(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryListByEntity( RequestJsonVO requestVo) {
         return adminOrgnazitionBusinessService.queryListByEntity(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByAppCode(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByAppCode( RequestJsonVO requestVo) {
         return null;
     }
 
     @Override
-    public ResultObjectVO queryAppListByAdminId(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryAppListByAdminId( RequestJsonVO requestVo) {
         return null;
     }
 
     @Override
-    public ResultObjectVO saveOrgnazitions(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO saveOrgnazitions( RequestJsonVO requestJsonVO) {
         return adminOrgnazitionBusinessService.saveOrgnazitions(requestJsonVO);
     }
 }

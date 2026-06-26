@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeKeyServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
@@ -53,10 +53,10 @@ public class AttributeKeyController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignAttributeKeyService feignAttributeKeyService;
+    private AttributeKeyServiceAPI attributeKeyService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
@@ -91,7 +91,7 @@ public class AttributeKeyController extends UIController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(pageInfo.getCategoryId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -109,7 +109,7 @@ public class AttributeKeyController extends UIController {
             }
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignAttributeKeyService.queryTreeTableByPid(requestJsonVO);
+            resultObjectVO = attributeKeyService.queryTreeTableByPid(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -135,7 +135,7 @@ public class AttributeKeyController extends UIController {
                         CategoryVO queryCategoryVO = new CategoryVO();
                         queryCategoryVO.setIdArray(categoryIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
-                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+                        resultObjectVO = categoryService.findByIdArray(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -162,7 +162,7 @@ public class AttributeKeyController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -215,7 +215,7 @@ public class AttributeKeyController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAttributeKeyService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = attributeKeyService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -237,7 +237,7 @@ public class AttributeKeyController extends UIController {
                 CategoryVO queryCategoryVO = new CategoryVO();
                 queryCategoryVO.setId(categoryId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                ResultObjectVO resultObjectVO = categoryService.queryById(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
@@ -276,7 +276,7 @@ public class AttributeKeyController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAttributeKeyService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = attributeKeyService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -295,7 +295,7 @@ public class AttributeKeyController extends UIController {
             AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
             attributeKeyVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeKeyVO);
-            ResultObjectVO resultObjectVO = feignAttributeKeyService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = attributeKeyService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -308,7 +308,7 @@ public class AttributeKeyController extends UIController {
                         CategoryVO queryCategoryVO = new CategoryVO();
                         queryCategoryVO.setId(attributeKeyVO.getCategoryId());
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
-                        resultObjectVO = feignCategoryService.findById(requestJsonVO);
+                        resultObjectVO = categoryService.findById(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
@@ -365,7 +365,7 @@ public class AttributeKeyController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAttributeKeyService.deleteById(requestVo.sign(), requestVo);
+            resultObjectVO = attributeKeyService.deleteById( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -398,7 +398,7 @@ public class AttributeKeyController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAttributeKeyService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = attributeKeyService.deleteByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -430,7 +430,7 @@ public class AttributeKeyController extends UIController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(pageInfo.getCategoryId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -447,7 +447,7 @@ public class AttributeKeyController extends UIController {
                 }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignAttributeKeyService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = attributeKeyService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -475,7 +475,7 @@ public class AttributeKeyController extends UIController {
                         CategoryVO queryCategoryVO = new CategoryVO();
                         queryCategoryVO.setIdArray(categoryIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
-                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+                        resultObjectVO = categoryService.findByIdArray(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
@@ -502,7 +502,7 @@ public class AttributeKeyController extends UIController {
                         AdminVO queryAdminVO = new AdminVO();
                         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
                             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -550,7 +550,7 @@ public class AttributeKeyController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryTree(requestJsonVO);
+            resultObjectVO = categoryService.queryTree(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -574,7 +574,7 @@ public class AttributeKeyController extends UIController {
             attributeKeyVO.setCategoryId(categoryId);
             attributeKeyVO.setAttributeType(attributeType);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,attributeKeyVO);
-            resultObjectVO = feignAttributeKeyService.queryTreeByCategoryId(requestJsonVO);
+            resultObjectVO = attributeKeyService.queryTreeByCategoryId(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -598,7 +598,7 @@ public class AttributeKeyController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
+            resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {

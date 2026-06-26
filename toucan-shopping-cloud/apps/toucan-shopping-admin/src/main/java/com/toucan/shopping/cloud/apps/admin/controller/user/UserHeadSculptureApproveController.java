@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.cloud.feign.service.FeignMessageUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
+import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserHeadSculptureApproveServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -60,13 +60,13 @@ public class UserHeadSculptureApproveController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignUserHeadSculptureApproveService feignUserHeadSculptureApproveService;
+    private UserHeadSculptureApproveServiceAPI userHeadSculptureApproveService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignMessageUserService feignMessageUserService;
+    private MessageUserServiceAPI messageUserService;
 
 
     @Autowired
@@ -100,7 +100,7 @@ public class UserHeadSculptureApproveController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignUserHeadSculptureApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -157,7 +157,7 @@ public class UserHeadSculptureApproveController extends UIController {
             //设置审核人
             userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
-            resultObjectVO = feignUserHeadSculptureApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userHeadSculptureApproveService.passById(requestJsonVO.sign(), requestJsonVO);
 
         }catch(Exception e)
         {
@@ -181,7 +181,7 @@ public class UserHeadSculptureApproveController extends UIController {
         try {
             userHeadSculptureApproveVO.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userHeadSculptureApproveVO);
-            ResultObjectVO resultObjectVO = feignUserHeadSculptureApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserHeadSculptureApproveVO> userHeadSculptureApproveVOS = resultObjectVO.formatDataList(UserHeadSculptureApproveVO.class);
@@ -246,7 +246,7 @@ public class UserHeadSculptureApproveController extends UIController {
             //设置审核人
             userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
-            resultObjectVO = feignUserHeadSculptureApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userHeadSculptureApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
 
             if(resultObjectVO.isSuccess())
             {
@@ -263,7 +263,7 @@ public class UserHeadSculptureApproveController extends UIController {
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-                resultObjectVO = feignMessageUserService.send(requestJsonVO);
+                resultObjectVO = messageUserService.send(requestJsonVO);
 
                 if (resultObjectVO.isSuccess())
                 {

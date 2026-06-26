@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderStatisticService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuStatisticService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuStatisticServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -62,16 +62,16 @@ public class ProductSkuStatisticController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignProductSkuStatisticService feignProductSkuStatisticService;
+    private ProductSkuStatisticServiceAPI productSkuStatisticService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
-    private FeignOrderStatisticService feignOrderStatisticService;
+    private OrderStatisticServiceAPI orderStatisticService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     /**
      * 查询统计数据
@@ -86,7 +86,7 @@ public class ProductSkuStatisticController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),null);
-            resultObjectVO = feignProductSkuStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
+            resultObjectVO = productSkuStatisticService.queryTotalAndTodayAndCurrentMonthAndCurrentYear(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -120,7 +120,7 @@ public class ProductSkuStatisticController extends UIController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(productSkuStatisticVO.getCategoryId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         categorys = resultObjectVO.formatDataList(CategoryVO.class);
@@ -139,14 +139,14 @@ public class ProductSkuStatisticController extends UIController {
                 CategoryVO queryCategoryVO = new CategoryVO();
                 queryCategoryVO.setId(categoryId);
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                resultObjectVO = categoryService.queryById(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     categorys.add(resultObjectVO.formatData(CategoryVO.class));
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStatisticVO);
-                resultObjectVO = feignProductSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
+                resultObjectVO = productSkuStatisticService.queryCategoryProductStatistic(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<ProductSkuStatisticVO> productSkuStatistics = resultObjectVO.formatDataList(ProductSkuStatisticVO.class);
@@ -284,7 +284,7 @@ public class ProductSkuStatisticController extends UIController {
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             //先查询热卖的订单类型
-            ResultObjectVO resultObjectVO = feignOrderStatisticService.queryHotSellListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = orderStatisticService.queryHotSellListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -301,7 +301,7 @@ public class ProductSkuStatisticController extends UIController {
                             productSkus.add(productSkuVO);
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
-                        ResultObjectVO productResultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                        ResultObjectVO productResultObjectVO = productSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
                         if(productResultObjectVO.isSuccess()) {
                             List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
 

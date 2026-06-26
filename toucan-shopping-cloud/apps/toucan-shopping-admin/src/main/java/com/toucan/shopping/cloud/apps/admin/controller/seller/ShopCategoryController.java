@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -47,7 +47,7 @@ public class ShopCategoryController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
     @Autowired
     private FunctionServiceAPI functionServiceAPI;
@@ -91,7 +91,7 @@ public class ShopCategoryController extends UIController {
             Category entity = new Category();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopCategoryService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -129,7 +129,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignShopCategoryService.saveForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.saveForAdmin(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -153,7 +153,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveUpForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveUpForAdmin(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -177,7 +177,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveDownForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveDownForAdmin(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -201,7 +201,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveBottomForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveBottomForAdmin(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -224,7 +224,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.moveTopForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.moveTopForAdmin(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -251,7 +251,7 @@ public class ShopCategoryController extends UIController {
         try {
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignShopCategoryService.updateForAdmin(requestJsonVO);
+            resultObjectVO = shopCategoryService.updateForAdmin(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -280,7 +280,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignShopCategoryService.queryTreeTable(requestJsonVO);
+            resultObjectVO = shopCategoryService.queryTreeTable(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -303,7 +303,7 @@ public class ShopCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),ShopCategoryTreeInfo);
-            resultObjectVO = feignShopCategoryService.queryTreeTableByPid(requestJsonVO);
+            resultObjectVO = shopCategoryService.queryTreeTableByPid(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -340,7 +340,7 @@ public class ShopCategoryController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignShopCategoryService.deleteByIdForAdmin(requestVo);
+            resultObjectVO = shopCategoryService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -374,7 +374,7 @@ public class ShopCategoryController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignShopCategoryService.deleteByIds(requestVo);
+            resultObjectVO = shopCategoryService.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

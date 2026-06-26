@@ -24,7 +24,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
         return new FeignAppService(){
 
             @Override
-            public ResultObjectVO save(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO save(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -39,7 +39,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -54,7 +54,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO listPage( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -69,7 +69,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -84,7 +84,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -99,7 +99,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -114,7 +114,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO list(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO list(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -122,14 +122,14 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求查询应用列表失败 {} params {}",signHeader, JSONObject.toJSONString(requestVo));
+                logger.warn("请求查询应用列表失败  params {}", JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findByCode(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findByCode( RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -137,7 +137,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAppService.findByCode faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAppService.findByCode faild  params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;

@@ -2,13 +2,11 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
+import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -60,26 +58,17 @@ public class ColumnController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignColumnService feignColumnService;
+    private ColumnServiceAPI columnService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
 
     @Autowired
-    private FeignColumnTypeService feignColumnTypeService;
+    private ColumnTypeServiceAPI columnTypeService;
 
-
-    @Autowired
-    private FeignShopProductService feignShopProductService;
-
-    @Autowired
-    private ImageUploadService imageUploadService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
-
-    @Autowired
-    private AppServiceAPI appServiceAPI;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -100,7 +89,7 @@ public class ColumnController extends UIController {
         request.setAttribute("defaultPosition","1");
         ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
         queryColumnTypeVO.setCode(columnTypeCode);
-        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
+        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = columnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
         if(resultTypeObjectVO.isSuccess()){
             if(resultTypeObjectVO.getData()!=null){
                 request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
@@ -141,7 +130,7 @@ public class ColumnController extends UIController {
             entity.setUpdateDate(new Date());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignColumnService.update(requestJsonVO);
+            resultObjectVO = columnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -161,7 +150,7 @@ public class ColumnController extends UIController {
             ColumnVO queryEntity = new ColumnVO();
             queryEntity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultTypeObjectVO<ColumnVO> resultObjectVO = feignColumnService.findById(requestJsonVO);
+            ResultTypeObjectVO<ColumnVO> resultObjectVO = columnService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 ColumnVO columnVO = resultObjectVO.getData();
@@ -170,7 +159,7 @@ public class ColumnController extends UIController {
                     request.setAttribute("defaultPosition","1");
                     ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
                     queryColumnTypeVO.setCode(columnVO.getColumnTypeCode());
-                    ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = feignColumnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
+                    ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = columnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
                     if(resultTypeObjectVO.isSuccess()){
                         if(resultTypeObjectVO.getData()!=null){
                             request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
@@ -207,7 +196,7 @@ public class ColumnController extends UIController {
             ColumnTypeVO query = new ColumnTypeVO();
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignColumnTypeService.queryList(requestJsonVO);
+            resultObjectVO = columnTypeService.queryList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -259,7 +248,7 @@ public class ColumnController extends UIController {
                 queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
                 queryColumnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
-                resultObjectVO = feignColumnService.queryColumnTreeByPid(requestJsonVO);
+                resultObjectVO = columnService.queryColumnTreeByPid(requestJsonVO);
                 return resultObjectVO;
             }
 
@@ -291,7 +280,7 @@ public class ColumnController extends UIController {
             }
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignColumnService.queryTreeTableByPid(requestJsonVO);
+            resultObjectVO = columnService.queryTreeTableByPid(requestJsonVO);
 
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
@@ -399,7 +388,7 @@ public class ColumnController extends UIController {
             columnVO.setAppCode(toucan.getShoppingPC().getAppCode());
             columnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, columnVO);
-            resultObjectVO = feignColumnService.save(requestJsonVO);
+            resultObjectVO = columnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -424,7 +413,7 @@ public class ColumnController extends UIController {
         AdminVO queryAdminVO = new AdminVO();
         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
         if(resultObjectVO.isSuccess())
         {
             List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -473,7 +462,7 @@ public class ColumnController extends UIController {
 
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,entity);
-            resultObjectVO = feignColumnService.deleteById(requestVo);
+            resultObjectVO = columnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -506,7 +495,7 @@ public class ColumnController extends UIController {
             }
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,columns);
-            resultObjectVO = feignColumnService.deleteByIds(requestVo);
+            resultObjectVO = columnService.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

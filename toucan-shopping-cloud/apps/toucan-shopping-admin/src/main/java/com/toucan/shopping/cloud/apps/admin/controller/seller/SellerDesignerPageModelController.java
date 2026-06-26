@@ -4,8 +4,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -52,10 +52,10 @@ public class SellerDesignerPageModelController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
+    private SellerDesignerPageModelServiceAPI sellerDesignerPageModelService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
@@ -85,7 +85,7 @@ public class SellerDesignerPageModelController extends UIController {
             pageInfo.setExTypes(new LinkedList<>());
             pageInfo.getExTypes().add(1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerDesignerPageModelService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -101,7 +101,7 @@ public class SellerDesignerPageModelController extends UIController {
                                 SellerShopVO queryShopVO = new SellerShopVO();
                                 queryShopVO.setIdList(shopIdList);
                                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopVO);
-                                resultObjectVO = feignSellerShopService.findByIdList(requestJsonVO);
+                                resultObjectVO = sellerShopService.findByIdList(requestJsonVO);
                                 if(resultObjectVO.isSuccess())
                                 {
                                     List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
@@ -165,7 +165,7 @@ public class SellerDesignerPageModelController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignSellerDesignerPageModelService.deleteByIdForAdmin(requestVo);
+            resultObjectVO = sellerDesignerPageModelService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

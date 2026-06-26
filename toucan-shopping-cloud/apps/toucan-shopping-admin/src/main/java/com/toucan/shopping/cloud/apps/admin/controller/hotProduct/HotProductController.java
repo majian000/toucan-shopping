@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.content.api.HotProductServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.page.HotProductPageInfo;
@@ -54,14 +54,14 @@ public class HotProductController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignHotProductService feignHotProductService;
+    private HotProductServiceAPI hotProductService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
 
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
 
     @Autowired
@@ -97,7 +97,7 @@ public class HotProductController extends UIController {
             HotProductVO hotProductVO = new HotProductVO();
             hotProductVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
-            ResultObjectVO resultObjectVO = feignHotProductService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = hotProductService.findById(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 hotProductVO = resultObjectVO.formatData(HotProductVO.class);
                 if(hotProductVO!=null)
@@ -124,7 +124,7 @@ public class HotProductController extends UIController {
             HotProductVO hotProductVO = new HotProductVO();
             hotProductVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
-            ResultObjectVO resultObjectVO = feignHotProductService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = hotProductService.findById(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 hotProductVO = resultObjectVO.formatData(HotProductVO.class);
                 if(hotProductVO!=null)
@@ -156,7 +156,7 @@ public class HotProductController extends UIController {
             hotProductVO.setAppCode(toucan.getShoppingPC().getAppCode());
             hotProductVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
-            resultObjectVO = feignHotProductService.save(requestJsonVO);
+            resultObjectVO = hotProductService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -181,7 +181,7 @@ public class HotProductController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignHotProductService.update(requestJsonVO);
+            resultObjectVO = hotProductService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -209,7 +209,7 @@ public class HotProductController extends UIController {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignHotProductService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = hotProductService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -236,7 +236,7 @@ public class HotProductController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -308,7 +308,7 @@ public class HotProductController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
 
-            resultObjectVO = feignHotProductService.deleteById(requestVo);
+            resultObjectVO = hotProductService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

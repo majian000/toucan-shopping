@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -27,13 +27,13 @@ import java.util.Random;
 public class ShopProductApproveTest {
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private ShopProductApproveServiceAPI shopProductApproveService;
 
     @Autowired
     private Toucan toucan;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
 
     /**
@@ -55,7 +55,7 @@ public class ShopProductApproveTest {
                 shopProductApproveSkuVO.setPrice(new BigDecimal(randomNum));
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
-            ResultObjectVO resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopProductApproveService.publish(requestJsonVO);
         }
 
 //        this.batchApproveListAndSyncSearch();
@@ -67,7 +67,7 @@ public class ShopProductApproveTest {
     public void batchApproveList() throws Exception {
         PublishProductApproveVO queryPublishProductApprove=new PublishProductApproveVO();
         queryPublishProductApprove.setShopId(983769356921995303L);
-        ResultObjectVO resultObjectVO = feignShopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
+        ResultObjectVO resultObjectVO = shopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
         if(resultObjectVO.isSuccess())
         {
             int i=1;
@@ -79,7 +79,7 @@ public class ShopProductApproveTest {
                 passVo.setProductId(1152261441160478746L);
                 passVo.setProductUuid("4e5b511f3b5943d3a628e78a0d88755f");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), passVo);
-                resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
+                resultObjectVO = shopProductApproveService.pass(requestJsonVO);
 
                 log.info("同步商品 {} ",i);
                 i++;
@@ -90,7 +90,7 @@ public class ShopProductApproveTest {
     public void batchApproveListAndSyncSearch() throws Exception {
         PublishProductApproveVO queryPublishProductApprove=new PublishProductApproveVO();
         queryPublishProductApprove.setShopId(983769356921995303L);
-        ResultObjectVO resultObjectVO = feignShopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
+        ResultObjectVO resultObjectVO = shopProductApproveService.queryApproveListByShopId(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPublishProductApprove));
         if(resultObjectVO.isSuccess())
         {
             int i=1;
@@ -102,7 +102,7 @@ public class ShopProductApproveTest {
                 passVo.setProductId(1152261441160478746L);
                 passVo.setProductUuid("4e5b511f3b5943d3a628e78a0d88755f");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), passVo);
-                resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
+                resultObjectVO = shopProductApproveService.pass(requestJsonVO);
 
                 log.info("同步商品 {} ",i);
                 i++;
@@ -114,7 +114,7 @@ public class ShopProductApproveTest {
                     if(resultShopProductApproveVO.getShopProductId()!=null) {
                         queryProductSkuVO.setShopProductId(resultShopProductApproveVO.getShopProductId());
                         RequestJsonVO querySkuRequestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSkuVO);
-                        ResultObjectVO querySkuResultObjectVO = feignProductSkuService.queryListByShopProductIdList(querySkuRequestJsonVO);
+                        ResultObjectVO querySkuResultObjectVO = productSkuService.queryListByShopProductIdList(querySkuRequestJsonVO);
                         if (querySkuResultObjectVO.isSuccess()) {
                             List<ProductSkuVO> productSkuVOS = querySkuResultObjectVO.formatDataList(ProductSkuVO.class);
                             if (CollectionUtils.isNotEmpty(productSkuVOS)) {

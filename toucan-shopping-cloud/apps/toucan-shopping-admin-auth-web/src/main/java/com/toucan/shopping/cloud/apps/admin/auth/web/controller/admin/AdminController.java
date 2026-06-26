@@ -110,7 +110,7 @@ public class AdminController extends UIController {
             Admin admin = new Admin();
             admin.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = adminServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -158,7 +158,7 @@ public class AdminController extends UIController {
             Admin admin = new Admin();
             admin.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = adminServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -188,7 +188,7 @@ public class AdminController extends UIController {
             Admin admin = new Admin();
             admin.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
-            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -250,7 +250,7 @@ public class AdminController extends UIController {
                 }
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = adminServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -279,7 +279,7 @@ public class AdminController extends UIController {
             adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminRoleVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminRoleVO);
-            resultObjectVO = adminRoleServiceAPI.saveRoles(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminRoleServiceAPI.saveRoles(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -305,7 +305,7 @@ public class AdminController extends UIController {
             adminOrgnazitionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminOrgnazitionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminOrgnazitionVO);
-            resultObjectVO = adminOrgnazitionServiceAPI.saveOrgnazitions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminOrgnazitionServiceAPI.saveOrgnazitions(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -330,7 +330,7 @@ public class AdminController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = adminServiceAPI.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.updatePassword(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -356,7 +356,7 @@ public class AdminController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = adminServiceAPI.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.updatePassword(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -393,7 +393,7 @@ public class AdminController extends UIController {
                 }
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = adminServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = adminServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -418,7 +418,7 @@ public class AdminController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = adminServiceAPI.list(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.list(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -464,7 +464,7 @@ public class AdminController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = adminServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = adminServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -498,7 +498,7 @@ public class AdminController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = adminServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = adminServiceAPI.deleteByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

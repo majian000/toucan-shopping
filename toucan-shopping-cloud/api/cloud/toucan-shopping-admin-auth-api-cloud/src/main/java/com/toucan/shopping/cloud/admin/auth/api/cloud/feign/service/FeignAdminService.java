@@ -17,18 +17,18 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @PostMapping("/login")
-    ResultObjectVO login(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO login(@RequestBody RequestJsonVO requestVo);
 
     @PostMapping("/query/login/token")
-    ResultObjectVO queryLoginToken(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryLoginToken(@RequestBody RequestJsonVO requestVo);
 
     @PostMapping("/is/online")
-    ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo);
 
 
 
     @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryListByEntity(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 保存
@@ -37,7 +37,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/save",method = RequestMethod.POST)
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO save( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -48,7 +48,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/update",method = RequestMethod.POST)
-    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO update( @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -59,7 +59,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -68,7 +68,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -78,7 +78,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
-    ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -88,7 +88,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updatePassword(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO updatePassword(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -101,7 +101,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteById( @RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -111,7 +111,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @return
      */
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds( @RequestBody RequestJsonVO requestVo);
 
 
 
