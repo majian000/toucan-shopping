@@ -12,9 +12,13 @@ spring:
       label: master
     nacos:
       discovery:
+        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
         fail-fast: false
-      username: ${toucan.nacos.username}
-      password: ${toucan.nacos.password}
+        username: ${toucan.nacos.username}
+        password: ${toucan.nacos.password}
+    loadbalancer:
+      nacos:
+        enabled: true
   application:
     name: toucan-shopping-gateway
 

@@ -74,13 +74,11 @@ spring:
           preserved.heart.beat.interval: 2000 #心跳间隔(毫秒)
           preserved.heart.beat.timeout: 2500 #心跳超时(毫秒)
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
-          routes:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
             - id: toucan-shopping-product-proxy
               uri: lb://toucan-shopping-product
               predicates:
