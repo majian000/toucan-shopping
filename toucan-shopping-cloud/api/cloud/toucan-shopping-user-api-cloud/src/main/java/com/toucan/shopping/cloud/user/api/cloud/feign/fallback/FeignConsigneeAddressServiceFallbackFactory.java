@@ -31,7 +31,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.save 失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignConsigneeAddressService.save 失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -46,7 +46,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.queryListPage 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignConsigneeAddressService.queryListPage 失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -61,7 +61,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.update 失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignConsigneeAddressService.update 失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -76,7 +76,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.deleteByIdAndUserMainIdAndAppCode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignConsigneeAddressService.deleteByIdAndUserMainIdAndAppCode 失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -91,7 +91,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.setDefaultByIdAndUserMainId 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignConsigneeAddressService.setDefaultByIdAndUserMainId 失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -106,7 +106,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.findByIdAndUserMainIdAndAppcode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignConsigneeAddressService.findByIdAndUserMainIdAndAppcode 失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -121,7 +121,7 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignConsigneeAddressService.findDefaultByUserMainIdAndAppcode 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignConsigneeAddressService.findDefaultByUserMainIdAndAppcode 失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

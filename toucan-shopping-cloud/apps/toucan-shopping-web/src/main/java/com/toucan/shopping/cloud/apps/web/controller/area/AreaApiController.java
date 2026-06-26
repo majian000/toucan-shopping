@@ -54,7 +54,7 @@ public class AreaApiController extends BaseController {
             Area query = new Area();
             query.setPid(area.getPid());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),query);
-            resultObjectVO = feignAreaService.queryListByPid(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignAreaService.queryListByPid(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

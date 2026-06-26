@@ -438,7 +438,7 @@ public class BrandController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryService.queryTree(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {

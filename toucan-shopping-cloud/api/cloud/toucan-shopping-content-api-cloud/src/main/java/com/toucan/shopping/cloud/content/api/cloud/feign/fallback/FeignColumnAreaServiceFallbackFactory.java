@@ -20,22 +20,6 @@ public class FeignColumnAreaServiceFallbackFactory implements FallbackFactory<Fe
         return new FeignColumnAreaService(){
 
             @Override
-            public ResultObjectVO queryColumnAreaList(String signHeader, RequestJsonVO requestJsonVO) {
-
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignColumnAreaService.queryBannerAreaList faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-                return resultObjectVO;
-            }
-
-            @Override
             public ResultObjectVO queryColumnAreaList(RequestJsonVO requestJsonVO) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();

@@ -1,11 +1,11 @@
 package com.toucan.shopping.cloud.search.helper.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
 import com.toucan.shopping.cloud.search.helper.service.ProductSearchHelper;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -46,16 +46,16 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
     private ProductSearchService productSearchService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryServiceAPI;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandServiceAPI;
 
     @Autowired
-    private FeignAttributeKeyValueService feignAttributeKeyValueService;
+    private AttributeKeyValueServiceAPI attributeKeyValueServiceAPI;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryServiceAPI;
 
     public void refresh(ProductSkuVO productSkuVO) throws Exception{
         if (productSkuVO.getDeleteStatus() != null
@@ -98,7 +98,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
                 BrandVO queryBrand = new BrandVO();
                 queryBrand.setId(productSkuVO.getBrandId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryBrand);
-                ResultObjectVO resultObjectVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO resultObjectVO = brandServiceAPI.findById(requestJsonVO);
                 if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                     List<BrandVO> brands = resultObjectVO.formatDataList(BrandVO.class);
                     if (CollectionUtils.isNotEmpty(brands)) {
@@ -131,7 +131,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
                 CategoryVO queryCategoryVO = new CategoryVO();
                 queryCategoryVO.setId(productSkuVO.getCategoryId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                ResultObjectVO resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
                 if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                     CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
                     //反转ID
@@ -188,7 +188,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
         attributeKeyValueVO.setCategoryId(productSkuVO.getCategoryId());
         attributeKeyValueVO.setAttributeKeyList(queryAttributeKeys);
         attributeKeyValueVO.setAttributeValueList(queryAttributeValues);
-        ResultObjectVO resultObjectVO = feignAttributeKeyValueService.querySearchAttributeList(RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyValueVO));
+        ResultObjectVO resultObjectVO = attributeKeyValueServiceAPI.querySearchAttributeList(RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyValueVO));
         if(resultObjectVO.isSuccess())
         {
             List<AttributeKeyVO> attributeKeys = resultObjectVO.formatDataList(AttributeKeyVO.class);
@@ -229,7 +229,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
         if(productSkuVO.getShopCategoryId()!=null) {
             ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
             shopCategoryVO.setId(productSkuVO.getShopCategoryId());
-            ResultObjectVO resultObjectVO = feignShopCategoryService.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopCategoryVO));
+            ResultObjectVO resultObjectVO = shopCategoryServiceAPI.findById(RequestJsonVOGenerator.generator(toucan.getAppCode(), shopCategoryVO));
             if (resultObjectVO.isSuccess()) {
                 List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
                 if (CollectionUtils.isNotEmpty(shopCategoryVOS)) {
@@ -254,7 +254,7 @@ public class ProductSearchHelperImpl implements ProductSearchHelper {
         ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
         queryShopCateogry.setId(productSearchResultVO.getShopCategoryId());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopCateogry);
-        ResultObjectVO resultShopCategoryObjectVO = feignShopCategoryService.findIdPathById(requestJsonVO);
+        ResultObjectVO resultShopCategoryObjectVO = shopCategoryServiceAPI.findIdPathById(requestJsonVO);
         if (resultShopCategoryObjectVO.isSuccess() && resultShopCategoryObjectVO.getData() != null) {
             ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
             List<String> shopCategoryIdPath = new LinkedList<>();

@@ -6,7 +6,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,7 +31,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 查询树表格
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
@@ -46,7 +44,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 根据ID查询
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -57,7 +54,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 查询地区树
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
@@ -68,7 +64,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 批量删除
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -79,7 +74,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 根据ID删除
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -90,7 +84,6 @@ public interface FeignAreaService extends AreaServiceAPI {
 
     /**
      * 编辑
-     * @param signHeader
      * @param requestVo
      * @return
      */

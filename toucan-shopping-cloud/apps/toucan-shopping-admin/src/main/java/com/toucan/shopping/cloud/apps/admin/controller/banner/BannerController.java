@@ -22,7 +22,6 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.DateUtils;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -100,7 +99,7 @@ public class BannerController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignBannerService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignBannerService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -128,7 +127,7 @@ public class BannerController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -199,10 +198,10 @@ public class BannerController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
             //先查询出实体对象,后面删除文件服务器的资源
-            resultObjectVO = feignBannerService.findById(requestVo.sign(), requestVo);
+            resultObjectVO = feignBannerService.findById(requestVo);
             List<BannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BannerVO.class);
             if(resultObjectVO.isSuccess()) {
-                resultObjectVO = feignBannerService.deleteById(SignUtil.sign(requestVo),requestVo);
+                resultObjectVO = feignBannerService.deleteById(requestVo);
                 if(!CollectionUtils.isEmpty(bannerVOS))
                 {
                     banner = bannerVOS.get(0);
@@ -248,7 +247,7 @@ public class BannerController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignBannerService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignBannerService.deleteByIds(requestVo);
             if(resultObjectVO.isSuccess()) {
                 if(!CollectionUtils.isEmpty(bannerVOS))
                 {
@@ -294,7 +293,7 @@ public class BannerController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignBannerService.flushWebIndexCache(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignBannerService.flushWebIndexCache(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -318,7 +317,7 @@ public class BannerController extends UIController {
         try {
             BannerVO bannerVO = new BannerVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
-            resultObjectVO = feignBannerService.clearWebIndexCache(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignBannerService.clearWebIndexCache(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -386,7 +385,7 @@ public class BannerController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignBannerService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignBannerService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -429,7 +428,7 @@ public class BannerController extends UIController {
             BannerVO banner = new BannerVO();
             banner.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = feignBannerService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignBannerService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -510,7 +509,7 @@ public class BannerController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignBannerService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignBannerService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -540,7 +539,7 @@ public class BannerController extends UIController {
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
 
-            resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignAreaService.queryTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
@@ -553,7 +552,7 @@ public class BannerController extends UIController {
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
 
-                resultObjectVO = feignBannerAreaService.queryBannerAreaList(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = feignBannerAreaService.queryBannerAreaList(requestJsonVO);
                 List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {

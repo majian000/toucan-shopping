@@ -32,7 +32,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.save失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserBuyCarService.save失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -47,7 +47,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.removeBuyCar失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserBuyCarService.removeBuyCar失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -62,7 +62,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.listByUserMainId失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserBuyCarService.listByUserMainId失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -77,7 +77,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.clearByUserMainId失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserBuyCarService.clearByUserMainId失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -92,7 +92,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.updates失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserBuyCarService.updates失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
@@ -107,7 +107,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.update失败 signHeader{} params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("调用FeignUserBuyCarService.update失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;

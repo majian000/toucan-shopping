@@ -296,7 +296,7 @@ public class IndexRecommendColumnController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
@@ -376,7 +376,7 @@ public class IndexRecommendColumnController extends UIController {
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
 
-            resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignAreaService.queryTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
@@ -389,7 +389,7 @@ public class IndexRecommendColumnController extends UIController {
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
 
-                resultObjectVO = feignColumnAreaService.queryColumnAreaList(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = feignColumnAreaService.queryColumnAreaList(requestJsonVO);
                 List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {

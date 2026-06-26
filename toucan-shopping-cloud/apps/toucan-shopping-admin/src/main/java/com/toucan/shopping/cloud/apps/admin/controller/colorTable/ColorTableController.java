@@ -14,7 +14,7 @@ import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
+
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.content.entity.Banner;
@@ -82,7 +82,7 @@ public class ColorTableController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignColorTableService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignColorTableService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -174,7 +174,7 @@ public class ColorTableController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignColorTableService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = feignColorTableService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -208,7 +208,7 @@ public class ColorTableController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignColorTableService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignColorTableService.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -236,7 +236,7 @@ public class ColorTableController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignColorTableService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignColorTableService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -257,7 +257,7 @@ public class ColorTableController extends UIController {
             ColorTableVO colorTableVO = new ColorTableVO();
             colorTableVO.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, colorTableVO);
-            ResultObjectVO resultObjectVO = feignColorTableService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignColorTableService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -293,7 +293,7 @@ public class ColorTableController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignColorTableService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignColorTableService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

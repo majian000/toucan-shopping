@@ -20,7 +20,6 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -121,7 +120,7 @@ public class ProductSkuController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -318,7 +317,7 @@ public class ProductSkuController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -524,7 +523,7 @@ public class ProductSkuController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryService.queryTree(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -547,7 +546,7 @@ public class ProductSkuController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {

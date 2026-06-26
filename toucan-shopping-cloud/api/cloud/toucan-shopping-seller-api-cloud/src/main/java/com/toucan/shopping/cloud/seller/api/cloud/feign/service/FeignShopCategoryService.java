@@ -64,7 +64,6 @@ public interface FeignShopCategoryService extends ShopCategoryServiceAPI {
 
     /**
      * 根据ID列表查询
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */

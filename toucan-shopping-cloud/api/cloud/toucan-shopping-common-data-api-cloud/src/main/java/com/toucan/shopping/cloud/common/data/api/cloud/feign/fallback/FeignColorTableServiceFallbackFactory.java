@@ -22,7 +22,7 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
         logger.warn(throwable.getMessage(),throwable);
         return new FeignColorTableService(){
             @Override
-            public ResultObjectVO queryListPage(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -30,14 +30,14 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.queryList失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignColorTableService.queryList失败 params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryList(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -45,7 +45,7 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.queryList失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignColorTableService.queryList失败 params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -60,7 +60,7 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.queryListByNames失败 header:{} params:{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignColorTableService.queryListByNames失败 params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -68,7 +68,7 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
 
 
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO save(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -76,14 +76,14 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.save失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignColorTableService.save失败 params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -91,14 +91,14 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.update header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignColorTableService.update params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -106,14 +106,14 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.findById header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignColorTableService.findById params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -121,14 +121,14 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.deleteById 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignColorTableService.deleteById 失败 params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -136,7 +136,7 @@ public class FeignColorTableServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignColorTableService.deleteByIds 失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignColorTableService.deleteByIds 失败 params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

@@ -70,7 +70,7 @@ public class ProvinceCityAreaGeneratorServiceImpl implements ProvinceCityAreaGen
 
                 //查询省市区大对象
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());
-                ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     params.put("areaList", JSONArray.toJSONString(resultObjectVO.getData()));

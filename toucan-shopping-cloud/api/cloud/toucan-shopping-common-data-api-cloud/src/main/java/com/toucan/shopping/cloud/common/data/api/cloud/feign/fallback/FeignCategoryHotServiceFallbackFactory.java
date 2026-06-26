@@ -23,7 +23,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
         return new FeignCategoryHotService(){
 
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -31,14 +31,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.save faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryById(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -46,7 +46,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryById faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
@@ -61,14 +61,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryByIdList faild header:{} params:{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryByIdList faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO findByIdArray(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO findByIdArray(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -76,7 +76,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.findByIdArray faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.findByIdArray faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
@@ -84,7 +84,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
 
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -92,14 +92,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.findById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.findById faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -107,14 +107,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryTreeTable faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTreeTable faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -122,14 +122,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.update faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.update faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryTreeTableByPid(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -137,14 +137,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryTreeTableByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTreeTableByPid faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryTree(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -152,14 +152,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTree faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryWebIndexTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryWebIndexTree(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -167,14 +167,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryWebIndexTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryWebIndexTree faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO flushWebIndexCache(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -182,7 +182,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.flushWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.flushWebIndexCache faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
@@ -190,7 +190,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
 
 
             @Override
-            public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -198,14 +198,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.clearWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.clearWebIndexCache faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -213,14 +213,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.deleteByIds faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.deleteByIds faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -228,14 +228,14 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.deleteById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.deleteById faild params:{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByPid(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -243,7 +243,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryListByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryListByPid faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
@@ -258,7 +258,7 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryHotService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryChildListByPid faild params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;

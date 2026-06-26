@@ -17,7 +17,6 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -93,7 +92,7 @@ public class AreaController extends UIController {
             Area entity = new Area();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignAreaService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignAreaService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -110,7 +109,7 @@ public class AreaController extends UIController {
                             Area queryParentArea = new Area();
                             queryParentArea.setId(areaVO.getPid());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentArea);
-                            resultObjectVO = feignAreaService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
+                            resultObjectVO = feignAreaService.findById(requestJsonVO);
                             if (resultObjectVO.isSuccess()) {
                                 List<Area> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Area.class);
                                 if (!CollectionUtils.isEmpty(parentAreaList)) {
@@ -157,7 +156,7 @@ public class AreaController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAreaService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAreaService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -187,7 +186,7 @@ public class AreaController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignAreaService.update(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignAreaService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -211,7 +210,7 @@ public class AreaController extends UIController {
             //设置为商城的应用编码
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignAreaService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return feignAreaService.queryTree(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");
@@ -237,7 +236,7 @@ public class AreaController extends UIController {
         try {
             queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignAreaService.queryAreaTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAreaService.queryAreaTreeTable(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -264,7 +263,7 @@ public class AreaController extends UIController {
         try {
             queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignAreaService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAreaService.queryTreeTableByPid(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -340,7 +339,7 @@ public class AreaController extends UIController {
             areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
             areaVO.setPid(pid);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
-            resultObjectVO = feignAreaService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAreaService.queryListByPid(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -395,7 +394,7 @@ public class AreaController extends UIController {
             areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
             areaVO.setCode(parentCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
-            resultObjectVO = feignAreaService.queryListByParentCode(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAreaService.queryListByParentCode(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -432,7 +431,7 @@ public class AreaController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAreaService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = feignAreaService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -470,7 +469,7 @@ public class AreaController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAreaService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignAreaService.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -494,7 +493,7 @@ public class AreaController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),new AreaVO());
-            resultObjectVO = feignAreaService.flushAllCache(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = feignAreaService.flushAllCache(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

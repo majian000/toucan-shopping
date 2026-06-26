@@ -14,7 +14,6 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
 
     /**
      * 查询上架列表
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */

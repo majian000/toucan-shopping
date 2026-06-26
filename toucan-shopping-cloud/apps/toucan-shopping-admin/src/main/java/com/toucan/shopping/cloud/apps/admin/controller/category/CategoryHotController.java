@@ -10,7 +10,6 @@ import com.toucan.shopping.modules.category.vo.CategoryHotVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -82,7 +81,7 @@ public class CategoryHotController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignCategoryHotService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryHotService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -105,7 +104,7 @@ public class CategoryHotController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
-            resultObjectVO = feignCategoryHotService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryHotService.queryTreeTableByPid(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {

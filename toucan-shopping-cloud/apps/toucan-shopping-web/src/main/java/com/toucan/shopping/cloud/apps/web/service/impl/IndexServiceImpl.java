@@ -15,7 +15,6 @@ import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -75,7 +74,7 @@ public class IndexServiceImpl implements IndexService {
                 bannerVO.setStartShowDate(new Date());
                 bannerVO.setEndShowDate(new Date());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
-                ResultObjectVO resultObjectVO = feignBannerService.queryIndexList(SignUtil.sign(requestJsonVO), requestJsonVO);
+                ResultObjectVO resultObjectVO = feignBannerService.queryIndexList(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
                     //批量刷新轮播图到缓存
@@ -119,7 +118,7 @@ public class IndexServiceImpl implements IndexService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.flushWebIndexCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     List<CategoryVO> categoryVOList = categoryRedisService.queryWebIndexCache();
                     if(!CollectionUtils.isEmpty(categoryVOList))
