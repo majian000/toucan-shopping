@@ -12,12 +12,11 @@ public interface FeignFunctionService extends FunctionServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/save",method = RequestMethod.POST)
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO save(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -31,22 +30,20 @@ public interface FeignFunctionService extends FunctionServiceAPI {
 
     /**
      * 编辑
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/update",method = RequestMethod.POST)
-    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 查询树表格
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @RequestMapping(value="/query/app/function/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO queryAppFunctionTreeTable(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTreeTable(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -57,16 +54,15 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      */
     @RequestMapping(value="/query/app/function/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    ResultObjectVO queryAppFunctionTreeTableByPid(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
     
     /**
      * 根据ID删除
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -82,32 +78,29 @@ public interface FeignFunctionService extends FunctionServiceAPI {
 
     /**
      * 根据ID查询
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/find/id",method = RequestMethod.POST)
-    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 批量删除
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 
     /**
      * 查询应用以及下面所有功能树
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.POST)
-    ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTree(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -125,7 +118,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @return
      */
     @RequestMapping(value = "/query/function/tree",method = RequestMethod.POST)
-    ResultObjectVO queryFunctionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryFunctionTree(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -135,17 +128,16 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @return
      */
     @RequestMapping(value = "/query/admin/app/functions",method = RequestMethod.POST)
-    ResultObjectVO queryAdminAppFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAdminAppFunctions(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
      * 查询下一级子节点
-     * @param signHeader
      * @param requestJsonVO
      * @return
      */
     @RequestMapping(value = "/query/one/children",method = RequestMethod.POST)
-    ResultObjectVO queryChildren(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryChildren(@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -155,17 +147,16 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @return
      */
     @RequestMapping(value = "/query/admin/app/parent/url/one/child",method = RequestMethod.POST)
-    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
      * 列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
 }

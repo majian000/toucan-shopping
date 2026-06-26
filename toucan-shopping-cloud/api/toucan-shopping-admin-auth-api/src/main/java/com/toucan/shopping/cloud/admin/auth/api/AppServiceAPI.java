@@ -8,7 +8,7 @@ public interface AppServiceAPI {
 
     /**
      * 保存应用
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
@@ -17,7 +17,7 @@ public interface AppServiceAPI {
 
     /**
      * 编辑应用
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
@@ -26,7 +26,7 @@ public interface AppServiceAPI {
 
     /**
      * 查询应用列表
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
@@ -35,7 +35,7 @@ public interface AppServiceAPI {
 
     /**
      * 根据ID删除指定应用
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
@@ -46,7 +46,7 @@ public interface AppServiceAPI {
 
     /**
      * 根据ID查询
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
@@ -55,7 +55,7 @@ public interface AppServiceAPI {
 
     /**
      * 批量删除应用
-     * @param signHeader
+
      * @param requestVo
      * @return
      */

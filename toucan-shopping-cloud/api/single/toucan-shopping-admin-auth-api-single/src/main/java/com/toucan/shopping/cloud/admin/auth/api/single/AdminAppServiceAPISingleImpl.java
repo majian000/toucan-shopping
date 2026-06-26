@@ -15,22 +15,22 @@ public class AdminAppServiceAPISingleImpl implements AdminAppServiceAPI {
     private AdminAppBusinessService adminAppBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return adminAppBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryListByEntity(RequestJsonVO requestVo) {
         return adminAppBusinessService.queryListByEntity(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByAppCode(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByAppCode(RequestJsonVO requestVo) {
         return adminAppBusinessService.deleteByAppCode(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryAppListByAdminId(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryAppListByAdminId(RequestJsonVO requestVo) {
         return adminAppBusinessService.queryAppListByAdminId(requestVo);
     }
 

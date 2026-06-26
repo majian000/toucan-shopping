@@ -11,73 +11,73 @@ public interface OrgnazitionServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO save(RequestJsonVO requestVo);
 
 
     /**
      * 编辑
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO update(RequestJsonVO requestVo);
 
 
     /**
      * 查询树表格
-     * @param signHeader
+
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryAppOrgnazitionTreeTable( String signHeader,  RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppOrgnazitionTreeTable(RequestJsonVO requestJsonVO);
 
 
     /**
      * 根据ID删除指定角色
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteById(RequestJsonVO requestVo);
 
 
 
 
     /**
      * 根据ID查询
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO findById(RequestJsonVO requestVo);
 
 
     /**
      * 批量删除
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(RequestJsonVO requestVo);
 
 
     /**
      * 查询组织机构树
-     * @param signHeader
+
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryOrgnazationTree( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOrgnazationTree(RequestJsonVO requestJsonVO);
 
 
 
 
 
-    ResultObjectVO queryAdminOrgnazitionTree( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAdminOrgnazitionTree(RequestJsonVO requestJsonVO);
 
 
 }

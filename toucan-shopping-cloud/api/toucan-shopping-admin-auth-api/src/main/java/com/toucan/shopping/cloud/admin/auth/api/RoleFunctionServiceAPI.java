@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface RoleFunctionServiceAPI {
 
 
-    ResultObjectVO saveFunctions( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO);
 
-    ResultObjectVO queryRoleFunctionList( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO);
 
     /**
      * 列表分页
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO list( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO list(RequestJsonVO requestVo);
 
 
     /**

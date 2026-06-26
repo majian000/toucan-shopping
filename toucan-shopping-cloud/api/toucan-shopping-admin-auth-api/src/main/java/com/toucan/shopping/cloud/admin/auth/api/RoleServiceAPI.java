@@ -8,29 +8,29 @@ public interface RoleServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO save(RequestJsonVO requestVo);
 
 
     /**
      * 编辑
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO update(RequestJsonVO requestVo);
 
 
     /**
      * 查询列表
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO listPage( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO listPage(RequestJsonVO requestVo);
 
 
 
@@ -39,38 +39,38 @@ public interface RoleServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    public ResultObjectVO queryAdminRoleTree( String signHeader, RequestJsonVO requestJsonVO);
+    public ResultObjectVO queryAdminRoleTree(RequestJsonVO requestJsonVO);
 
 
 
 
     /**
      * 根据ID删除指定角色
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteById(RequestJsonVO requestVo);
 
 
 
 
     /**
      * 根据ID查询
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO findById(RequestJsonVO requestVo);
 
 
     /**
      * 批量删除
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(RequestJsonVO requestVo);
 
 
 

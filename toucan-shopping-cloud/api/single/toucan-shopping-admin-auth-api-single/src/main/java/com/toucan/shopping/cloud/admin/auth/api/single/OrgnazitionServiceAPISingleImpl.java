@@ -14,42 +14,42 @@ public class OrgnazitionServiceAPISingleImpl implements OrgnazitionServiceAPI {
     private OrgnazitionBusinessService orgnazitionBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return orgnazitionBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return orgnazitionBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryAppOrgnazitionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAppOrgnazitionTreeTable(RequestJsonVO requestJsonVO) {
         return orgnazitionBusinessService.queryAppOrgnazitionTreeTable(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return orgnazitionBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return orgnazitionBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return orgnazitionBusinessService.deleteByIds(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryOrgnazationTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryOrgnazationTree(RequestJsonVO requestJsonVO) {
         return orgnazitionBusinessService.queryOrgnazationTree(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryAdminOrgnazitionTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAdminOrgnazitionTree(RequestJsonVO requestJsonVO) {
         return orgnazitionBusinessService.queryAdminOrgnazitionTree(requestJsonVO);
     }
 }

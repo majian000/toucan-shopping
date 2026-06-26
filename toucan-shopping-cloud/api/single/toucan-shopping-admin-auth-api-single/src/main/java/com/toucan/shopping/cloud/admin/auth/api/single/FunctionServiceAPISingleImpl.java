@@ -14,7 +14,7 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
     private FunctionBusinessService functionBusinessService;
 
     @Override
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return functionBusinessService.save(requestVo);
     }
 
@@ -24,22 +24,22 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
     }
 
     @Override
-    public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return functionBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryAppFunctionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAppFunctionTreeTable(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryAppFunctionTreeTable(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryAppFunctionTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAppFunctionTreeTableByPid(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryAppFunctionTreeTableByPid(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return functionBusinessService.deleteById(requestVo);
     }
 
@@ -49,17 +49,17 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
     }
 
     @Override
-    public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return functionBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return functionBusinessService.deleteByIds(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryAppFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAppFunctionTree(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryAppFunctionTree(requestJsonVO);
     }
 
@@ -69,27 +69,27 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
     }
 
     @Override
-    public ResultObjectVO queryFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryFunctionTree(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryFunctionTree(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryAdminAppFunctions(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryAdminAppFunctions(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryAdminAppFunctions(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryChildren(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryChildren(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryChildren(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(RequestJsonVO requestJsonVO) {
         return functionBusinessService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         return functionBusinessService.list(requestVo);
     }
 }

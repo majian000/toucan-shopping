@@ -50,7 +50,7 @@ public class RoleFunctionToESCacheController {
     public PageInfo queryPage(RoleFunctionPageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = roleFunctionServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = roleFunctionServiceAPI.list(requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson=JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询角色功能项列表 {}",dataJson);

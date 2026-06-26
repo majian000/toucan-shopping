@@ -24,7 +24,7 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
         return new FeignAdminRoleService(){
 
             @Override
-            public ResultObjectVO saveRoles(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO saveRoles(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -32,14 +32,14 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminRoleService.saveRoles faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignAdminRoleService.saveRoles faild params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO queryListByEntity(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -47,14 +47,14 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminRoleService.queryListByEntity faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAdminRoleService.queryListByEntity faild params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO list(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -62,7 +62,7 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminRoleService.list faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAdminRoleService.list faild params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;

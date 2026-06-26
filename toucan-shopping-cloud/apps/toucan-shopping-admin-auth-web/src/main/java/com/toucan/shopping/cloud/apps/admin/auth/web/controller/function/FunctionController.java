@@ -117,7 +117,7 @@ public class FunctionController extends UIController {
             Function entity = new Function();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = functionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -132,7 +132,7 @@ public class FunctionController extends UIController {
                             App queryApp = new App();
                             queryApp.setCode(functionVO.getAppCode());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryApp);
-                            resultObjectVO = appServiceAPI.findByCode(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            resultObjectVO = appServiceAPI.findByCode(requestJsonVO);
                             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                                 App app = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
                                 if(app!=null) {
@@ -143,7 +143,7 @@ public class FunctionController extends UIController {
                             Function queryParentFunction = new Function();
                             queryParentFunction.setId(functionVO.getPid());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentFunction);
-                            resultObjectVO = functionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            resultObjectVO = functionServiceAPI.findById(requestJsonVO);
                             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                                 List<Function> parentFunctionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
                                 if(!CollectionUtils.isEmpty(parentFunctionList)) {
@@ -180,7 +180,7 @@ public class FunctionController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = functionServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -206,7 +206,7 @@ public class FunctionController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = functionServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -263,7 +263,7 @@ public class FunctionController extends UIController {
         try {
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTable(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -289,7 +289,7 @@ public class FunctionController extends UIController {
         try {
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryAppFunctionTreeTableByPid(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -327,7 +327,7 @@ public class FunctionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = functionServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = functionServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -399,7 +399,7 @@ public class FunctionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = functionServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = functionServiceAPI.deleteByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -423,7 +423,7 @@ public class FunctionController extends UIController {
             {
                 App query = new App();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-                resultObjectVO = appServiceAPI.list(appCode,requestJsonVO);
+                resultObjectVO = appServiceAPI.list(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<App> rootNodes = resultObjectVO.formatDataList(App.class);
@@ -519,7 +519,7 @@ public class FunctionController extends UIController {
             App query = new App();
             query.setCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = functionServiceAPI.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = functionServiceAPI.queryFunctionTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
@@ -529,7 +529,7 @@ public class FunctionController extends UIController {
                 RoleFunction queryRoleFunction = new RoleFunction();
                 queryRoleFunction.setRoleId(roleId);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
-                resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionList(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);

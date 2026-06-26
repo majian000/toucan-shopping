@@ -112,7 +112,7 @@ public class LoginController {
                 logger.warn(e.getMessage(),e);
             }
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,adminVo);
-            resultObjectVO = adminServiceAPI.login(requestVo.sign(),requestVo);
+            resultObjectVO = adminServiceAPI.login(requestVo);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

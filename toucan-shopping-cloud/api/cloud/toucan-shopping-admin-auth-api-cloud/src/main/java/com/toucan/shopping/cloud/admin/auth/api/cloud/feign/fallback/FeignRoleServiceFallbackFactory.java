@@ -24,7 +24,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
         return new FeignRoleService(){
 
             @Override
-            public ResultObjectVO save(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO save(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -39,7 +39,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO update(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -54,7 +54,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO listPage(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -69,7 +69,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO queryAdminRoleTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryAdminRoleTree(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -77,14 +77,14 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.queryRoleTree faild  sign {} params {} ",signHeader, JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignRoleService.queryRoleTree faild params {} ", JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -99,7 +99,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -114,7 +114,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {

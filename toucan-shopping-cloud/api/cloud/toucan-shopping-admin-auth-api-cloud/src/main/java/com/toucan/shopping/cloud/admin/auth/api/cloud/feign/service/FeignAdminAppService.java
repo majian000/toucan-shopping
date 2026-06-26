@@ -6,26 +6,25 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminApp",fallbackFactory = FeignAdminAppServiceFallbackFactory.class)
 public interface FeignAdminAppService extends AdminAppServiceAPI {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO save(@RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryListByEntity(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/deleteByAppCode",produces = "application/json;charset=UTF-8")
-    ResultObjectVO deleteByAppCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/queryAppListByAdminId",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryAppListByAdminId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryAppListByAdminId(@RequestBody RequestJsonVO requestVo);
 
 
     /**

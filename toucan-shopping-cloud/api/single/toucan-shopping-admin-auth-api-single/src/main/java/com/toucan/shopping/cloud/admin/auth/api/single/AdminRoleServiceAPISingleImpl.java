@@ -14,17 +14,17 @@ public class AdminRoleServiceAPISingleImpl implements AdminRoleServiceAPI {
     private AdminRoleBusinessService adminRoleBusinessService;
 
     @Override
-    public ResultObjectVO saveRoles(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO saveRoles(RequestJsonVO requestJsonVO) {
         return adminRoleBusinessService.saveRoles(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO queryListByEntity(RequestJsonVO requestVo) {
         return adminRoleBusinessService.queryListByEntity(requestVo);
     }
 
     @Override
-    public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         return adminRoleBusinessService.list(requestVo);
     }
 }

@@ -116,7 +116,7 @@ public class LoginController {
             requestVo.setAppCode(appCode);
             requestVo.setSign(SignUtil.sign(appCode, entityJson));
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = adminServiceAPI.login(requestVo.getSign(),requestVo);
+            resultObjectVO = adminServiceAPI.login(requestVo);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

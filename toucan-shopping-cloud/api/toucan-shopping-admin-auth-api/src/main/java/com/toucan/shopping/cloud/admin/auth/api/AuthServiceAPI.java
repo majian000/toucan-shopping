@@ -7,15 +7,15 @@ public interface AuthServiceAPI {
 
 
 
-    ResultObjectVO verify( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO verify(RequestJsonVO requestVo);
 
 
     /**
      * 校验权限 并验证是否登录
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO verifyLoginAndUrl( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO verifyLoginAndUrl(RequestJsonVO requestVo);
 
 }

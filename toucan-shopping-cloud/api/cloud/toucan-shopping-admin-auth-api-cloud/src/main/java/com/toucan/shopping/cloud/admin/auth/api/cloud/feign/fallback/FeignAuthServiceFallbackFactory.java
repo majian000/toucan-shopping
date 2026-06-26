@@ -23,7 +23,7 @@ public class FeignAuthServiceFallbackFactory implements FallbackFactory<FeignAut
         logger.warn(throwable.getMessage(),throwable);
         return new FeignAuthService(){
             @Override
-            public ResultObjectVO verify(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO verify(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -31,14 +31,14 @@ public class FeignAuthServiceFallbackFactory implements FallbackFactory<FeignAut
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAuthService.verify faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAuthService.verify faild params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO verifyLoginAndUrl(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO verifyLoginAndUrl(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -46,7 +46,7 @@ public class FeignAuthServiceFallbackFactory implements FallbackFactory<FeignAut
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAuthService.verifyLoginAndUrl faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignAuthService.verifyLoginAndUrl faild params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;

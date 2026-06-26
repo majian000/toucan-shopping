@@ -14,12 +14,12 @@ public class AuthServiceAPISingleImpl implements AuthServiceAPI {
     private AuthBusinessService authBusinessService;
 
     @Override
-    public ResultObjectVO verify(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO verify(RequestJsonVO requestVo) {
         return authBusinessService.verify(requestVo);
     }
 
     @Override
-    public ResultObjectVO verifyLoginAndUrl(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO verifyLoginAndUrl(RequestJsonVO requestVo) {
         return authBusinessService.verifyLoginAndUrl(requestVo);
     }
 }

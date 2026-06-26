@@ -5,16 +5,16 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 
 public interface AdminAppServiceAPI {
 
-    ResultObjectVO save( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO save(RequestJsonVO requestVo);
 
 
-    ResultObjectVO queryListByEntity( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(RequestJsonVO requestVo);
 
 
-    ResultObjectVO deleteByAppCode( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO deleteByAppCode(RequestJsonVO requestVo);
 
 
-    ResultObjectVO queryAppListByAdminId( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO queryAppListByAdminId(RequestJsonVO requestVo);
 
 
     /**

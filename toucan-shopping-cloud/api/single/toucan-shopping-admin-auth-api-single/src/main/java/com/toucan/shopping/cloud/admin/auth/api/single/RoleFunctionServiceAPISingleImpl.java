@@ -14,17 +14,17 @@ public class RoleFunctionServiceAPISingleImpl implements RoleFunctionServiceAPI 
     private RoleFunctionBusinessService roleFunctionBusinessService;
 
     @Override
-    public ResultObjectVO saveFunctions(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO) {
         return roleFunctionBusinessService.saveFunctions(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO queryRoleFunctionList(String signHeader, RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO) {
         return roleFunctionBusinessService.queryRoleFunctionList(requestJsonVO);
     }
 
     @Override
-    public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         return roleFunctionBusinessService.list(requestVo);
     }
 

@@ -79,7 +79,7 @@ public class LogoutController {
             adminVO.setAdminId(adminId);
             adminVO.setLoginToken(loginToken);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
-            return adminServiceAPI.logout(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return adminServiceAPI.logout(requestJsonVO);
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -12,7 +12,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 登录账号
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -32,7 +31,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -43,7 +41,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 编辑
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -54,7 +51,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 列表分页
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -73,7 +69,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 退出登录
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -83,7 +78,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 修改密码
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -96,7 +90,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 根据ID删除指定角色
-     * @param signHeader
      * @param requestVo
      * @return
      */
@@ -106,7 +99,6 @@ public interface FeignAdminService extends AdminServiceAPI {
 
     /**
      * 批量删除
-     * @param signHeader
      * @param requestVo
      * @return
      */

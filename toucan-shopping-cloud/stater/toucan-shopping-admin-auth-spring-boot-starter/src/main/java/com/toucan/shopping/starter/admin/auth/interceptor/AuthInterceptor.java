@@ -155,7 +155,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         //这里可以优化,初始化的时候 传入这个bean
         AuthServiceAPI authServiceAPI = springContextHolder.getBean(AuthServiceAPI.class);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),authVerifyVO);
-        ResultObjectVO resultObjectVO = authServiceAPI.verifyLoginAndUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+        ResultObjectVO resultObjectVO = authServiceAPI.verifyLoginAndUrl(requestJsonVO);
 
         //-1 登录超时 -2没有权限
         if(resultObjectVO.getData()!=null) {

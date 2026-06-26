@@ -51,7 +51,7 @@ public class FunctionToESCacheController {
     public PageInfo queryPage(FunctionTreeInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = functionServiceAPI.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+        ResultObjectVO resultObjectVO = functionServiceAPI.list(requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson=JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询功能项列表 {}",dataJson);

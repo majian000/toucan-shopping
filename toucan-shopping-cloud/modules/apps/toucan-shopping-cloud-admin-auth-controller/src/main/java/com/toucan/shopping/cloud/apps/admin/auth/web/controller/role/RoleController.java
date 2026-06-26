@@ -108,7 +108,7 @@ public class RoleController extends UIController {
             Role entity = new Role();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = roleServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -145,7 +145,7 @@ public class RoleController extends UIController {
             role.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             role.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
-            resultObjectVO = roleServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -192,7 +192,7 @@ public class RoleController extends UIController {
         try {
             //查询对应账户的应用
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
-            resultObjectVO = roleServiceAPI.queryAdminRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.queryAdminRoleTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到角色树
@@ -204,7 +204,7 @@ public class RoleController extends UIController {
                 AdminRole queryAdminRole = new AdminRole();
                 queryAdminRole.setAdminId(entity.getAdminId());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminRole);
-                resultObjectVO = adminRoleServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = adminRoleServiceAPI.queryListByEntity(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
@@ -247,7 +247,7 @@ public class RoleController extends UIController {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = roleServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -274,7 +274,7 @@ public class RoleController extends UIController {
             roleFunctionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             roleFunctionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, roleFunctionVO);
-            resultObjectVO = roleFunctionService.saveFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleFunctionService.saveFunctions(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -326,7 +326,7 @@ public class RoleController extends UIController {
         try {
             pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = roleServiceAPI.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceAPI.listPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -375,7 +375,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = roleServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = roleServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -409,7 +409,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = roleServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = roleServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

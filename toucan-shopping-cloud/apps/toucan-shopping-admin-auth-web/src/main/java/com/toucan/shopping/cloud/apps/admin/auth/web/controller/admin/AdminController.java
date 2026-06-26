@@ -84,7 +84,7 @@ public class AdminController extends UIController {
             AdminApp adminApp = new AdminApp();
             adminApp.setAdminId(adminId);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminApp);
-            ResultObjectVO resultObjectVO = adminAppServiceAPI.queryAppListByAdminId(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminAppServiceAPI.queryAppListByAdminId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);

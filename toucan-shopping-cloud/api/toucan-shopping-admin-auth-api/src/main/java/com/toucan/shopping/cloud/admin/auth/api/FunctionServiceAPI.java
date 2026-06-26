@@ -9,11 +9,11 @@ public interface FunctionServiceAPI {
 
     /**
      * 保存
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO save( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO save(RequestJsonVO requestVo);
 
 
 
@@ -26,20 +26,20 @@ public interface FunctionServiceAPI {
 
     /**
      * 编辑
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO update( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO update(RequestJsonVO requestVo);
 
 
     /**
      * 查询树表格
-     * @param signHeader
+
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryAppFunctionTreeTable( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTreeTable(RequestJsonVO requestJsonVO);
 
 
 
@@ -48,15 +48,15 @@ public interface FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryAppFunctionTreeTableByPid( String signHeader, RequestJsonVO requestJsonVO);
-    
+    ResultObjectVO queryAppFunctionTreeTableByPid(RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID删除
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteById(RequestJsonVO requestVo);
 
 
 
@@ -71,29 +71,29 @@ public interface FunctionServiceAPI {
 
     /**
      * 根据ID查询
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO findById(RequestJsonVO requestVo);
 
 
     /**
      * 批量删除
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds( String signHeader,  RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(RequestJsonVO requestVo);
 
 
     /**
      * 查询应用以及下面所有功能树
-     * @param signHeader
+
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryAppFunctionTree( String signHeader,  RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTree(RequestJsonVO requestJsonVO);
 
 
 
@@ -109,7 +109,7 @@ public interface FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryFunctionTree( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryFunctionTree(RequestJsonVO requestJsonVO);
 
 
 
@@ -118,16 +118,16 @@ public interface FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryAdminAppFunctions( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAdminAppFunctions(RequestJsonVO requestJsonVO);
 
 
     /**
      * 查询下一级子节点
-     * @param signHeader
+
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryChildren( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryChildren(RequestJsonVO requestJsonVO);
 
 
 
@@ -136,16 +136,16 @@ public interface FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl( String signHeader, RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(RequestJsonVO requestJsonVO);
 
 
     /**
      * 列表分页
-     * @param signHeader
+
      * @param requestVo
      * @return
      */
-    ResultObjectVO list( String signHeader, RequestJsonVO requestVo);
+    ResultObjectVO list(RequestJsonVO requestVo);
 
 
 }

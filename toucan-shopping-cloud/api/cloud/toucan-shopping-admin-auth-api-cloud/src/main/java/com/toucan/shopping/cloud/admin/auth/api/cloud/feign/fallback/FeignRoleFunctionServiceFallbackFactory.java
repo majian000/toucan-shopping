@@ -24,7 +24,7 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
         return new FeignRoleFunctionService(){
 
             @Override
-            public ResultObjectVO saveFunctions(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
@@ -34,14 +34,14 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
                     return resultObjectVO;
                 }
 
-                logger.warn("FeignRoleFunctionService.saveFunctions faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignRoleFunctionService.saveFunctions faild params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryRoleFunctionList(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
@@ -51,14 +51,14 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
                     return resultObjectVO;
                 }
 
-                logger.warn("FeignRoleFunctionService.queryRoleFunctionList faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignRoleFunctionService.queryRoleFunctionList faild params {}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO list(RequestJsonVO requestVo) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
@@ -68,7 +68,7 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
                     return resultObjectVO;
                 }
 
-                logger.warn("FeignRoleFunctionService.list faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignRoleFunctionService.list faild params {}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;

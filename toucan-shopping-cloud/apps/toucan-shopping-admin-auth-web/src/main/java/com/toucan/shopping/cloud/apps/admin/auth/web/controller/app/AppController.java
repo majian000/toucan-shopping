@@ -85,7 +85,7 @@ public class AppController extends UIController {
             App app = new App();
             app.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            ResultObjectVO resultObjectVO = appServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -119,7 +119,7 @@ public class AppController extends UIController {
         try {
             app.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            resultObjectVO = appServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = appServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -144,7 +144,7 @@ public class AppController extends UIController {
         try {
             app.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            resultObjectVO = appServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = appServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -169,7 +169,7 @@ public class AppController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = appServiceAPI.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.listPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -213,7 +213,7 @@ public class AppController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = appServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = appServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -246,7 +246,7 @@ public class AppController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = appServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = appServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

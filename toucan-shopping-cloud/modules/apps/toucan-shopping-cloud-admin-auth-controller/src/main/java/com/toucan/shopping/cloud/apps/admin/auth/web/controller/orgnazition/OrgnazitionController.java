@@ -106,7 +106,7 @@ public class OrgnazitionController extends UIController {
             Orgnazition entity = new Orgnazition();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = orgnazitionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = orgnazitionServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -119,7 +119,7 @@ public class OrgnazitionController extends UIController {
                         Orgnazition queryParentOrgnazition = new Orgnazition();
                         queryParentOrgnazition.setId(orgnazitionVO.getPid());
                         requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
-                        resultObjectVO = orgnazitionServiceAPI.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                        resultObjectVO = orgnazitionServiceAPI.findById(requestJsonVO);
                         if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                             List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
                             if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
@@ -178,7 +178,7 @@ public class OrgnazitionController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = orgnazitionServiceAPI.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -207,7 +207,7 @@ public class OrgnazitionController extends UIController {
             entity.setAppCodes(appCodes);
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = orgnazitionServiceAPI.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -234,7 +234,7 @@ public class OrgnazitionController extends UIController {
             queryPageInfo.setAppCode(toucan.getAppCode());
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = orgnazitionServiceAPI.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.queryAppOrgnazitionTreeTable(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -273,7 +273,7 @@ public class OrgnazitionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = orgnazitionServiceAPI.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = orgnazitionServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -295,7 +295,7 @@ public class OrgnazitionController extends UIController {
             App query = new App();
             query.setCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return orgnazitionServiceAPI.queryOrgnazationTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return orgnazitionServiceAPI.queryOrgnazationTree(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");
@@ -343,7 +343,7 @@ public class OrgnazitionController extends UIController {
         try {
             //查询对应账户的应用
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
-            resultObjectVO = orgnazitionServiceAPI.queryAdminOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = orgnazitionServiceAPI.queryAdminOrgnazitionTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到组织机构树
@@ -356,7 +356,7 @@ public class OrgnazitionController extends UIController {
                 queryAdminOrgnazition.setAdminId(entity.getAdminId());
                 queryAdminOrgnazition.setAppCode(appCode);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminOrgnazition);
-                resultObjectVO = adminOrgnazitionServiceAPI.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = adminOrgnazitionServiceAPI.queryListByEntity(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AdminOrgnazition> adminOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminOrgnazition.class);
@@ -412,7 +412,7 @@ public class OrgnazitionController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = orgnazitionServiceAPI.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = orgnazitionServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
