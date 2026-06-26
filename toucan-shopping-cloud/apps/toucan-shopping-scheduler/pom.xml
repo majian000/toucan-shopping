@@ -25,23 +25,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--对Open Feign方式调用支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos-server-version}</version>
-        </dependency>
-
-        <!--断路器支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-        </dependency>
 
         <!--使用配置中心 客户端-->
         <dependency>
@@ -88,10 +71,6 @@
             <artifactId>toucan-shopping-order-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-order-api-cloud</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
@@ -117,11 +96,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
-            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.toucan.shopping.modules.search</groupId>
             <artifactId>toucan-shopping-search-elasticsearch</artifactId>
         </dependency>
@@ -129,11 +103,6 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-kafka</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.product</groupId>
-            <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
 
         <dependency>
@@ -176,6 +145,127 @@
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>cloud</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <!--对Open Feign方式调用支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <version>${nacos-server-version}</version>
+                </dependency>
+
+                <!--断路器支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+                    <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-product-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-order-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-stock-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-content-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-common-data-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-user-api-cloud</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-seller-api-cloud</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+        <profile>
+            <id>single</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>single</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-product-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-order-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-stock-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-content-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-common-data-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-user-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-seller-api-single</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+    </profiles>
 
 
 

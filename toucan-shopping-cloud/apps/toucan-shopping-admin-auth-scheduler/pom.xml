@@ -17,30 +17,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
-
     <dependencies>
         <!-- 集成对web支持-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!--对Open Feign方式调用支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos-server-version}</version>
-        </dependency>
-
-        <!--断路器支持 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
 
         <!--使用配置中心 客户端-->
@@ -61,13 +42,11 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-
         <!--kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
-
 
         <!-- 我们的包-->
         <dependency>
@@ -102,30 +81,76 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
-            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
-        </dependency>
-
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>cloud</value>
+                </property>
+            </activation>
+            <dependencies>
 
+                <!--微服务调用 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <version>${nacos-server-version}</version>
+                </dependency>
+
+                <!--断路器支持 -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+                    <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+        <profile>
+            <id>single</id>
+            <activation>
+                <property>
+                    <name>deploy.mode</name>
+                    <value>single</value>
+                </property>
+            </activation>
+            <dependencies>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+                </dependency>
+
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

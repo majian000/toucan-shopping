@@ -191,11 +191,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-order-api-cloud</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.toucan.shopping.modules.order</groupId>
             <artifactId>toucan-shopping-order-entity-vo</artifactId>
         </dependency>
@@ -233,11 +228,6 @@
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-db-sharding</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-elasticsearch</artifactId>
         </dependency>
         <dependency>
@@ -259,24 +249,6 @@
             </activation>
             <dependencies>
 
-                <!--微服务调用 -->
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-openfeign</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                    <version>${nacos-server-version}</version>
-                </dependency>
-
-                <!--断路器支持 -->
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-                </dependency>
-
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.config</groupId>
                     <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
@@ -286,6 +258,7 @@
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-cloud-config</artifactId>
                 </dependency>
+
 
             </dependencies>
         </profile>
@@ -299,17 +272,16 @@
             </activation>
             <dependencies>
 
-                <!--单项目 -->
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-single-config</artifactId>
                 </dependency>
 
-
                 <dependency>
-                    <groupId>com.toucan.shopping.cloud.modules.search</groupId>
-                    <artifactId>toucan-shopping-cloud-search-helper</artifactId>
+                    <groupId>com.toucan.shopping.modules.common</groupId>
+                    <artifactId>toucan-shopping-db-sharding</artifactId>
                 </dependency>
+
 
             </dependencies>
         </profile>
