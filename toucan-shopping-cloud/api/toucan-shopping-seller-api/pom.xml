@@ -14,7 +14,7 @@
     <description>商户管理API</description>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.toucan.shopping.cloud.seller</groupId>
+    <groupId>com.toucan.shopping.cloud.api</groupId>
     <artifactId>toucan-shopping-seller-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>

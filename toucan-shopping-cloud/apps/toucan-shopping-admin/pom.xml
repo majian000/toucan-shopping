@@ -67,10 +67,6 @@
             <artifactId>toucan-shopping-skylark-lock</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence-event</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -166,7 +162,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.cloud.seller</groupId>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-seller-api</artifactId>
         </dependency>
 
@@ -254,10 +250,77 @@
                     <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
                 </dependency>
 
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-user-api-cloud</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-cloud</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-message-api-cloud</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-common-data-api-cloud</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-content-api-cloud</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-stock-api-cloud</artifactId>
+                </dependency>
+
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-product-api-cloud</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-seller-api-cloud</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-order-api-cloud</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-search-api-cloud</artifactId>
+                </dependency>
+
+
+
+
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-cloud-config</artifactId>
                 </dependency>
+
 
 
             </dependencies>
@@ -279,7 +342,78 @@
 
                 <dependency>
                     <groupId>com.toucan.shopping.modules.common</groupId>
+                    <artifactId>toucan-shopping-common-persistence-event</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.modules.common</groupId>
                     <artifactId>toucan-shopping-db-sharding</artifactId>
+                </dependency>
+
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-user-api-single</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-admin-auth-api-single</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-message-api-single</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-common-data-api-single</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-content-api-single</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-stock-api-single</artifactId>
+                </dependency>
+
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-product-api-single</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-seller-api-single</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-order-api-single</artifactId>
+                </dependency>
+
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-search-api-single</artifactId>
                 </dependency>
 
 
