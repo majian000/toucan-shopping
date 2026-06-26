@@ -8,7 +8,7 @@
     注:标准版需要使用-Ddeploy.mode=single进行编译
     
 #### 微服务版
-    微服务版本使用-Ddeploy.mode=cloud进行编译
+    注:微服务版本使用-Ddeploy.mode=cloud进行编译
     前端技术 jquery、jquery-layui、vue3
     
     后端技术
