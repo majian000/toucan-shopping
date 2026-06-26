@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler.article;
 
-import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
+import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserStatisticServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -28,7 +28,7 @@ public class ArticleImageScheduler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
 
     @Autowired
@@ -38,7 +38,7 @@ public class ArticleImageScheduler {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignArticleImageService feignArticleImageService;
+    private ArticleImageServiceAPI articleImageService;
 
     /**
      * 每天0:20执行
@@ -53,7 +53,7 @@ public class ArticleImageScheduler {
             String endDateStr = DateUtils.FORMATTER_DD.get().format(DateUtils.advanceDay(new Date(),3));
             endDateStr+=" 23:59:59";
             deleteArticleImagePageInfo.setEndDate(DateUtils.FORMATTER_SS.get().parse(endDateStr));
-            feignArticleImageService.deleteInvalidData(RequestJsonVOGenerator.generator(toucan.getAppCode(),deleteArticleImagePageInfo));
+            articleImageService.deleteInvalidData(RequestJsonVOGenerator.generator(toucan.getAppCode(),deleteArticleImagePageInfo));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

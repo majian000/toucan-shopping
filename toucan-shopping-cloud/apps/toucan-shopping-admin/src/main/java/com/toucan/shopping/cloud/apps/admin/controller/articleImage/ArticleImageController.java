@@ -6,8 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignArticleImageService;
+import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -53,10 +52,8 @@ public class ArticleImageController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private FeignArticleImageService feignArticleImageService;
+    private ArticleImageServiceAPI articleImageServiceAPI;
 
-    @Autowired
-    private FeignAreaService feignAreaService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -88,7 +85,7 @@ public class ArticleImageController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignArticleImageService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = articleImageServiceAPI.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -184,7 +181,7 @@ public class ArticleImageController extends UIController {
             articleImage.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             //先查询出实体对象,后面删除文件服务器的资源
-            resultObjectVO = feignArticleImageService.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImage));
+            resultObjectVO = articleImageServiceAPI.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImage));
         }catch(Exception e)
         {
             resultObjectVO.setMsg("删除失败,请稍后重试");
@@ -218,7 +215,7 @@ public class ArticleImageController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignArticleImageService.deleteByIds(requestVo);
+            resultObjectVO = articleImageServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userTrueNameApprove;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserTrueNameApproveServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -37,10 +37,10 @@ public class UserTrueNameApprovePageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
+    private UserTrueNameApproveServiceAPI userTrueNameApproveService;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
     @Autowired
     private LoginUserService loginUserService;
 
@@ -65,7 +65,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
@@ -78,7 +78,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
             //查询当前人的实名审核记录
-            resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.queryByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataList(UserTrueNameApprove.class);
@@ -97,7 +97,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                         UserVO queryUserVO = new UserVO();
                         queryUserVO.setUserMainId(Long.parseLong(userMainId));
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-                        resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = userService.queryLoginInfo(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
@@ -142,7 +142,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.verifyRealName(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
@@ -155,7 +155,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
             //查询当前人的实名审核记录
-            resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.queryByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserTrueNameApprove> userTrueNameApproves = resultObjectVO.formatDataList(UserTrueNameApprove.class);
@@ -173,7 +173,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                         UserVO queryUserVO = new UserVO();
                         queryUserVO.setUserMainId(Long.parseLong(userMainId));
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-                        resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = userService.queryLoginInfo(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)

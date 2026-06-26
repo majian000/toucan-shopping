@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.apps.web.controller.shop;
 
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.cloud.apps.web.vo.index.LikeProductVo;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopBannerService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -42,10 +42,10 @@ public class ShopApiController {
     private Toucan toucan;
 
     @Autowired
-    private FeignShopBannerService feignShopBannerService;
+    private ShopBannerServiceAPI shopBannerService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
 
     @Autowired
@@ -65,7 +65,7 @@ public class ShopApiController {
         queryShopBanner.setShopId(shopBannerVO.getShopId());
         queryShopBanner.setPosition("PC_INDEX");
         try {
-            resultObjectVO = feignShopBannerService.queryIndexList(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopBanner));
+            resultObjectVO = shopBannerService.queryIndexList(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopBanner));
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -101,7 +101,7 @@ public class ShopApiController {
         ShopCategoryVO queryShopCategory=new ShopCategoryVO();
         queryShopCategory.setShopId(shopCategoryVO.getShopId());
         try {
-            resultObjectVO = feignShopCategoryService.queryWebIndexTree(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopCategory));
+            resultObjectVO = shopCategoryService.queryWebIndexTree(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryShopCategory));
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);

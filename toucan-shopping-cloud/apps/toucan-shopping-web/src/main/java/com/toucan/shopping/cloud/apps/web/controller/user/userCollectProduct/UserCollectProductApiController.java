@@ -4,8 +4,8 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userCollectProduct;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.VerifyCodeService;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserCollectProductService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -49,11 +49,11 @@ public class UserCollectProductApiController extends BaseController {
 
 
     @Autowired
-    private FeignUserCollectProductService feignUserCollectProductService;
+    private UserCollectProductServiceAPI userCollectProductService;
 
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -96,9 +96,9 @@ public class UserCollectProductApiController extends BaseController {
 
             userCollectProductVO.setAppCode(toucan.getAppCode());
             if(userCollectProductVO.getType()==1) {
-                resultObjectVO = feignUserCollectProductService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(), userCollectProductVO));
+                resultObjectVO = userCollectProductService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(), userCollectProductVO));
             }else{
-                resultObjectVO = feignUserCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode(RequestJsonVOGenerator.generator(toucan.getAppCode(), userCollectProductVO));
+                resultObjectVO = userCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode(RequestJsonVOGenerator.generator(toucan.getAppCode(), userCollectProductVO));
             }
             resultObjectVO.setData(null);
 
@@ -143,7 +143,7 @@ public class UserCollectProductApiController extends BaseController {
                 resultObjectVO.setMsg("查询失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignUserCollectProductService.queryCollectProducts(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = userCollectProductService.queryCollectProducts(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {
@@ -168,7 +168,7 @@ public class UserCollectProductApiController extends BaseController {
             pageInfo.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignUserCollectProductService.queryListPage(requestJsonVO);
+            resultObjectVO = userCollectProductService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 pageInfo = resultObjectVO.formatData(UserCollectProductPageInfo.class);
@@ -182,7 +182,7 @@ public class UserCollectProductApiController extends BaseController {
                         productSkus.add(productSkuVO);
                     }
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
-                    ResultObjectVO productResultObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                    ResultObjectVO productResultObjectVO = productSkuService.queryByIdList(requestJsonVO);
                     if(productResultObjectVO.isSuccess())
                     {
                         List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);

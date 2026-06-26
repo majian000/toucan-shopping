@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;
 import com.toucan.shopping.cloud.apps.scheduler.service.OrderPayTimeOutService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserStatisticService;
+import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserStatisticServiceAPI;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -43,7 +43,7 @@ public class UserStatisticScheduler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
 
     @Autowired
@@ -53,7 +53,7 @@ public class UserStatisticScheduler {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignUserStatisticService feignUserStatisticService;
+    private UserStatisticServiceAPI userStatisticService;
 
     /**
      * 每天0:10触发一次
@@ -63,7 +63,7 @@ public class UserStatisticScheduler {
     {
         logger.info("处理刷新用户总数 开始=====================");
         try {
-            feignUserStatisticService.refershTotal(RequestJsonVOGenerator.generator(toucan.getAppCode(),null));
+            userStatisticService.refershTotal(RequestJsonVOGenerator.generator(toucan.getAppCode(),null));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

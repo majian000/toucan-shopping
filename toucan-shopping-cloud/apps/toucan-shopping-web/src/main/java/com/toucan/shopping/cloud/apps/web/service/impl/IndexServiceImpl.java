@@ -3,11 +3,11 @@ package com.toucan.shopping.cloud.apps.web.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignIndexRecommendColumnService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
+import com.toucan.shopping.cloud.content.api.HotProductServiceAPI;
+import com.toucan.shopping.cloud.content.api.IndexRecommendColumnServiceAPI;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.vo.BannerVO;
@@ -35,16 +35,16 @@ public class IndexServiceImpl implements IndexService {
 
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
     private Toucan toucan;
 
     @Autowired
-    private FeignBannerService feignBannerService;
+    private BannerServiceAPI bannerService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
     private BannerRedisService bannerRedisService;
@@ -53,10 +53,10 @@ public class IndexServiceImpl implements IndexService {
     private CategoryRedisService categoryRedisService;
 
     @Autowired
-    private FeignIndexRecommendColumnService feignIndexRecommendColumnService;
+    private IndexRecommendColumnServiceAPI indexRecommendColumnService;
 
     @Autowired
-    private FeignHotProductService feignHotProductService;
+    private HotProductServiceAPI hotProductService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -74,7 +74,7 @@ public class IndexServiceImpl implements IndexService {
                 bannerVO.setStartShowDate(new Date());
                 bannerVO.setEndShowDate(new Date());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
-                ResultObjectVO resultObjectVO = feignBannerService.queryIndexList(requestJsonVO);
+                ResultObjectVO resultObjectVO = bannerService.queryIndexList(requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
                     //批量刷新轮播图到缓存
@@ -118,7 +118,7 @@ public class IndexServiceImpl implements IndexService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWebIndexCache(requestJsonVO);
+                resultObjectVO = categoryService.flushWebIndexCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     List<CategoryVO> categoryVOList = categoryRedisService.queryWebIndexCache();
                     if(!CollectionUtils.isEmpty(categoryVOList))
@@ -165,7 +165,7 @@ public class IndexServiceImpl implements IndexService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushNavigationMiniTreeCache(requestJsonVO);
+                resultObjectVO = categoryService.flushNavigationMiniTreeCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     List<CategoryVO> categoryVOList = categoryRedisService.queryWebNavigationCache();
                     if(!CollectionUtils.isEmpty(categoryVOList))
@@ -199,7 +199,7 @@ public class IndexServiceImpl implements IndexService {
             query.setPosition("1");
             query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignIndexRecommendColumnService.queryPcIndexColumns(requestJsonVO);
+            ResultObjectVO resultObjectVO = indexRecommendColumnService.queryPcIndexColumns(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<PcIndexColumnVO> pcIndexColumnVOS = resultObjectVO.formatDataList(PcIndexColumnVO.class);
                 if(!CollectionUtils.isEmpty(pcIndexColumnVOS)) {
@@ -269,7 +269,7 @@ public class IndexServiceImpl implements IndexService {
             query.setType(1);
             query.setPosition(1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignHotProductService.queryPcIndexHotProducts(requestJsonVO);
+            ResultObjectVO resultObjectVO = hotProductService.queryPcIndexHotProducts(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<HotProductVO> hotProductVOS = resultObjectVO.formatDataList(HotProductVO.class);

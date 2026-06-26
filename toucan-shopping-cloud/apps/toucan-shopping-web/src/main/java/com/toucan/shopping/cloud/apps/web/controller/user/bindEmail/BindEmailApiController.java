@@ -6,8 +6,8 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.SmsServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -60,11 +60,11 @@ public class BindEmailApiController extends BaseController {
 
 
     @Autowired
-    private FeignSmsService feignSmsService;
+    private SmsServiceAPI smsService;
 
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -157,7 +157,7 @@ public class BindEmailApiController extends BaseController {
             UserVO querUserVO = new UserVO();
             querUserVO.setUsername(userBindEmailVO.getEmail());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),querUserVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            resultObjectVO = userService.findByUsername(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -171,7 +171,7 @@ public class BindEmailApiController extends BaseController {
                 return resultObjectVO;
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBindEmailVO);
-            resultObjectVO = feignUserService.updateConnectEmail(requestJsonVO);
+            resultObjectVO = userService.updateConnectEmail(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 toucanStringRedisService.delete(UserBindEmailRedisKey.getEmailVerifyCodeKey(userMainId));
             }

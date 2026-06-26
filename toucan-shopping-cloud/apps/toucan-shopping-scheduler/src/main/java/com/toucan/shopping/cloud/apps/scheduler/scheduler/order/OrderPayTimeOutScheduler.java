@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;
 import com.toucan.shopping.cloud.apps.scheduler.service.OrderPayTimeOutService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -13,10 +13,10 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
 import com.toucan.shopping.modules.order.page.MainOrderPageInfo;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +43,10 @@ public class OrderPayTimeOutScheduler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
     @Autowired
-    private FeignMainOrderService feignMainOrderService;
+    private MainOrderServiceAPI mainOrderService;
 
     @Autowired
     private Toucan toucan;
@@ -56,10 +56,10 @@ public class OrderPayTimeOutScheduler {
 
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -88,7 +88,7 @@ public class OrderPayTimeOutScheduler {
             do {
                 logger.info(" 查询超时订单列表 页码:{} 每页显示 {} ", page, limit);
                 query.setPage(page);
-                resultObjectVO =  feignMainOrderService.batchCancelPayTimeout(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+                resultObjectVO =  mainOrderService.batchCancelPayTimeout(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
                 page++;
                 if(!resultObjectVO.isSuccess())
                 {
@@ -108,7 +108,7 @@ public class OrderPayTimeOutScheduler {
                     ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
                     productSkuStockLockVO.setMainOrderNoList(mainOrderNoList);
                     productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-                    resultObjectVO = feignProductSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+                    resultObjectVO = productSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
                     if(!resultObjectVO.isSuccess())
                     {
                         continue;

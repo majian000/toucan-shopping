@@ -2,9 +2,9 @@ package com.toucan.shopping.cloud.apps.web.controller.user.buyCar;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserBuyCarServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -44,16 +44,16 @@ public class UserBuyCarApiController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserBuyCarService feignUserBuyCarService;
+    private UserBuyCarServiceAPI userBuyCarService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignFreightTemplateService feignFreightTemplateService;
+    private FreightTemplateServiceAPI freightTemplateService;
 
     @Autowired
     private Toucan toucan;
@@ -71,7 +71,7 @@ public class UserBuyCarApiController {
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
-            ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
+            ResultObjectVO userBuyCarResultObjectVO  = userBuyCarService.listByUserMainId(requestJsonVO);
             if(userBuyCarResultObjectVO.isSuccess())
             {
                 List<UserBuyCarItemVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarItemVO.class);
@@ -86,7 +86,7 @@ public class UserBuyCarApiController {
                 if(CollectionUtils.isNotEmpty(productSkus)) {
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
 
-                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    ResultObjectVO ResultProductSkuObjectVO = productSkuService.queryByIdList( requestJsonVO);
                     if(!ResultProductSkuObjectVO.isSuccess())
                     {
                         for(UserBuyCarItemVO ubc:userBuyCarVOList) {
@@ -192,7 +192,7 @@ public class UserBuyCarApiController {
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
-            ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
+            ResultObjectVO userBuyCarResultObjectVO  = userBuyCarService.listByUserMainId(requestJsonVO);
             if(userBuyCarResultObjectVO.isSuccess())
             {
                 List<UserBuyCarItemVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarItemVO.class);
@@ -207,7 +207,7 @@ public class UserBuyCarApiController {
                 if(CollectionUtils.isNotEmpty(productSkus)) {
                     //查询商品信息
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
-                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    ResultObjectVO ResultProductSkuObjectVO = productSkuService.queryByIdList( requestJsonVO);
                     if(ResultProductSkuObjectVO.isSuccess())
                     {
                         List<Long> freightTemplateIdList = new LinkedList<>();
@@ -288,7 +288,7 @@ public class UserBuyCarApiController {
                                 FreightTemplateVO queryFreightTemplateVO = new FreightTemplateVO();
                                 queryFreightTemplateVO.setIdList(freightTemplateIdList);
                                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryFreightTemplateVO);
-                                resultObjectVO = feignFreightTemplateService.findByIdList(requestJsonVO);
+                                resultObjectVO = freightTemplateService.findByIdList(requestJsonVO);
                                 if(!resultObjectVO.isSuccess())
                                 {
                                     return resultObjectVO;
@@ -342,7 +342,7 @@ public class UserBuyCarApiController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
-            resultObjectVO  = feignUserBuyCarService.save(requestJsonVO);
+            resultObjectVO  = userBuyCarService.save(requestJsonVO);
 
             //已存在该商品或者保存成功
             if(resultObjectVO.isSuccess()||resultObjectVO.getCode().intValue()==201)
@@ -359,7 +359,7 @@ public class UserBuyCarApiController {
                 if(CollectionUtils.isNotEmpty(productSkus)) {
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
 
-                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    ResultObjectVO ResultProductSkuObjectVO = productSkuService.queryByIdList(requestJsonVO);
                     if(ResultProductSkuObjectVO.isSuccess())
                     {
                         List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
@@ -413,7 +413,7 @@ public class UserBuyCarApiController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
-            resultObjectVO = feignUserBuyCarService.removeBuyCar(requestJsonVO);
+            resultObjectVO = userBuyCarService.removeBuyCar(requestJsonVO);
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
@@ -436,7 +436,7 @@ public class UserBuyCarApiController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
-            resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
+            resultObjectVO = userBuyCarService.clearByUserMainId(requestJsonVO);
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
@@ -461,7 +461,7 @@ public class UserBuyCarApiController {
                     userBuyCarItemVO.setUserMainId(Long.parseLong(userMainId));
                 }
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVos);
-                resultObjectVO = feignUserBuyCarService.updates(requestJsonVO);
+                resultObjectVO = userBuyCarService.updates(requestJsonVO);
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
@@ -483,7 +483,7 @@ public class UserBuyCarApiController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userBuyCarItemVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarItemVO);
-            resultObjectVO = feignUserBuyCarService.update(requestJsonVO);
+            resultObjectVO = userBuyCarService.update(requestJsonVO);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }

@@ -6,8 +6,8 @@ import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.EmailForgetPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.SmsServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.email.Email;
@@ -65,11 +65,11 @@ public class UserApiController extends BaseController {
 
 
     @Autowired
-    private FeignSmsService feignSmsService;
+    private SmsServiceAPI smsService;
 
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -105,7 +105,7 @@ public class UserApiController extends BaseController {
             UserRegistVO userRegistVO = new UserRegistVO();
             userRegistVO.setMobilePhone(mobilePhone);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userRegistVO);
-            resultObjectVO = feignUserService.findByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.findByMobilePhone(requestJsonVO);
             if(resultObjectVO.SUCCESS.intValue()==ResultObjectVO.FAILD.intValue())
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -147,7 +147,7 @@ public class UserApiController extends BaseController {
             userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了手机号码注册,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
-            resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = smsService.send(requestJsonVO);
             if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
             {
                 //将验证码保存到缓存
@@ -261,7 +261,7 @@ public class UserApiController extends BaseController {
 
             logger.info(" 用户注册 {} ", user.getMobilePhone());
 
-            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.registByMobilePhone(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 //删除验证码
@@ -345,7 +345,7 @@ public class UserApiController extends BaseController {
 
             logger.info(" 用户修改信息 {} ", requestJsonVO.getEntityJson());
 
-            resultObjectVO = feignUserService.editInfo(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.editInfo(requestJsonVO);
 
         }catch(Exception e)
         {
@@ -367,7 +367,7 @@ public class UserApiController extends BaseController {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.queryLoginInfo(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);
@@ -402,7 +402,7 @@ public class UserApiController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObectVO = userService.findByUserMainIdForCacheOrDB(requestJsonVO);
             if(!resultObectVO.isSuccess())
             {
                 resultObjectVO.setData(new UserVO());
@@ -430,7 +430,7 @@ public class UserApiController extends BaseController {
             queryUserLogin.setUserMainId(Long.parseLong(uid));
             queryUserLogin.setLoginToken(lt);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-            resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.isOnline(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -542,7 +542,7 @@ public class UserApiController extends BaseController {
             }
             userLoginVO.setSrcType(1); //PC端登录
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
-            resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.loginByPassword(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userLoginVO = resultObjectVO.formatData(UserLoginVO.class);
@@ -862,7 +862,7 @@ public class UserApiController extends BaseController {
             }
             userModifyPasswordVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userModifyPasswordVO);
-            resultObjectVO = feignUserService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.resetPassword(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 toucanStringRedisService.delete(UserModifyPwdRedisKey.getMobileVerifyCodeKey(userMainId));
                 toucanStringRedisService.delete(UserModifyPwdRedisKey.getEmailVerifyCodeKey(userMainId));

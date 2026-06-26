@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.upload;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -33,7 +33,7 @@ public class ImageUploadApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
 
     @Autowired
@@ -81,7 +81,7 @@ public class ImageUploadApiController extends BaseController {
                 userVO.setUserMainId(Long.parseLong(userMainId));
 
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-                resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = userService.queryLoginInfo(requestJsonVO);
                 //查询这个用户的旧头像
                 if(resultObjectVO.isSuccess())
                 {
@@ -102,7 +102,7 @@ public class ImageUploadApiController extends BaseController {
 
                     //修改头像
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-                    resultObjectVO = feignUserService.updateHeadsculpture(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = userService.updateHeadsculpture(requestJsonVO);
                     if(resultObjectVO.isSuccess()) {
 
                         userVO = resultObjectVO.formatData(UserVO.class);

@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.constant.CategoryDictConstant;
@@ -52,7 +52,7 @@ public class CategoryController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryServiceAPI;
 
     @Autowired
     private FunctionServiceAPI functionServiceAPI;
@@ -119,7 +119,7 @@ public class CategoryController extends UIController {
             Category entity = new Category();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = feignCategoryService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -136,7 +136,7 @@ public class CategoryController extends UIController {
                             Category queryParent = new Category();
                             queryParent.setId(categoryVO.getParentId());
                             requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParent);
-                            resultObjectVO = feignCategoryService.findById(requestJsonVO);
+                            resultObjectVO = categoryServiceAPI.findById(requestJsonVO);
                             if (resultObjectVO.isSuccess()) {
                                 List<Category> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Category.class);
                                 if (!CollectionUtils.isEmpty(parentAreaList)) {
@@ -182,7 +182,7 @@ public class CategoryController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignCategoryService.save(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -206,7 +206,7 @@ public class CategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo =  RequestJsonVOGenerator.generator(appCode, new CategoryVO());
-            resultObjectVO = feignCategoryService.flushAllCache(requestVo);
+            resultObjectVO = categoryServiceAPI.flushAllCache(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -231,7 +231,7 @@ public class CategoryController extends UIController {
         try {
             CategoryVO bannerVO = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
-            resultObjectVO = feignCategoryService.clearWebIndexCache(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.clearWebIndexCache(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -256,7 +256,7 @@ public class CategoryController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignCategoryService.update(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -278,7 +278,7 @@ public class CategoryController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignCategoryService.queryTree(requestJsonVO);
+            return categoryServiceAPI.queryTree(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");
@@ -303,7 +303,7 @@ public class CategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignCategoryService.queryTreeTable(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryTreeTable(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -328,7 +328,7 @@ public class CategoryController extends UIController {
             this.setCategoryDictList(request);
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
-            resultObjectVO = feignCategoryService.queryTreeTableByPid(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryTreeTableByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
@@ -383,7 +383,7 @@ public class CategoryController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -434,7 +434,7 @@ public class CategoryController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignCategoryService.deleteById(requestVo);
+            resultObjectVO = categoryServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -468,7 +468,7 @@ public class CategoryController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignCategoryService.deleteByIds(requestVo);
+            resultObjectVO = categoryServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -495,7 +495,7 @@ public class CategoryController extends UIController {
             CategoryTreeVO areaVO = new CategoryTreeVO();
             areaVO.setParentId(areaTreeVO.getId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
-            resultObjectVO = feignCategoryService.queryTreeChildByPid(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryTreeChildByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);

@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.user.order;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -38,15 +38,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.seller.api.cloud.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.user.api.cloud.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
+import com.toucan.shopping.cloud.user.api.ConsigneeAddressServiceAPI;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.vo.*;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
-import com.toucan.shopping.cloud.user.api.cloud.feign.service.FeignUserBuyCarService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserBuyCarServiceAPI;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
@@ -69,7 +69,7 @@ public class UserOrderTest {
 
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -80,29 +80,29 @@ public class UserOrderTest {
 
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
-    private FeignUserBuyCarService feignUserBuyCarService;
+    private UserBuyCarServiceAPI userBuyCarService;
 
 
     @Autowired
     private IdGenerator idGenerator;
 
     @Autowired
-    private FeignFreightTemplateService feignFreightTemplateService;
+    private FreightTemplateServiceAPI freightTemplateService;
 
     @Autowired
-    private FeignConsigneeAddressService feignConsigneeAddressService;
+    private ConsigneeAddressServiceAPI consigneeAddressService;
 
     @Autowired
-    private FeignMainOrderService feignMainOrderService;
+    private MainOrderServiceAPI mainOrderService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private ShopProductServiceAPI shopProductService;
 
     /**
      * 批量插入订单
@@ -202,7 +202,7 @@ public class UserOrderTest {
         consigneeAddressPageInfo.setPage(1);
         consigneeAddressPageInfo.setLimit(100);
 
-        ResultObjectVO resultObjectVO = feignConsigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
+        ResultObjectVO resultObjectVO = consigneeAddressService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressPageInfo));
         List<ConsigneeAddress> consigneeAddressVOS =  resultObjectVO.formatData(ConsigneeAddressPageInfo.class).getList();
         int spage=0;
         while(true) {
@@ -216,7 +216,7 @@ public class UserOrderTest {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(shopPageInfo.getCategoryId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryService.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -233,7 +233,7 @@ public class UserOrderTest {
                 }
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopPageInfo);
-            resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            resultObjectVO = shopProductService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 ShopProductPageInfo shopProductPageInfo = resultObjectVO.formatData(ShopProductPageInfo.class);
                 if (shopProductPageInfo == null || CollectionUtils.isEmpty(shopProductPageInfo.getList())) {
@@ -245,7 +245,7 @@ public class UserOrderTest {
                     pageInfo.setPage(1);
                     pageInfo.setShopProductId(shopProductVO.getId());
                     pageInfo.setLimit(10);
-                    ResultObjectVO skuResult = feignProductSkuService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
+                    ResultObjectVO skuResult = productSkuService.queryListPage(RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo));
                     pageInfo = skuResult.formatData(ProductSkuPageInfo.class);
                     if (pageInfo == null || CollectionUtils.isEmpty(pageInfo.getList())) {
                         break;
@@ -394,7 +394,7 @@ public class UserOrderTest {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuVOS);
-            resultObjectVO = feignProductSkuService.queryByIdList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+            resultObjectVO = productSkuService.queryByIdList(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -459,7 +459,7 @@ public class UserOrderTest {
             ProductSkuStockLockVO queryProductSkuStockLockVO = new ProductSkuStockLockVO();
             queryProductSkuStockLockVO.setProductSkuIdList(createOrderVO.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuStockLockVO);
-            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
+            resultObjectVO = productSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -562,7 +562,7 @@ public class UserOrderTest {
             FreightTemplateVO queryFreightTemplateVO = new FreightTemplateVO();
             queryFreightTemplateVO.setIdList(freightTemplateIdList);
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryFreightTemplateVO);
-            resultObjectVO = feignFreightTemplateService.findByIdList(requestJsonVO);
+            resultObjectVO = freightTemplateService.findByIdList(requestJsonVO);
 
             if(!resultObjectVO.isSuccess())
             {
@@ -601,7 +601,7 @@ public class UserOrderTest {
             queryConsingeeAddress.setAppCode(toucan.getAppCode());
             queryConsingeeAddress.setUserMainId(Long.parseLong(userId));
             queryConsingeeAddress.setId(createOrderVO.getConsigneeAddress().getId());
-            resultObjectVO = feignConsigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryConsingeeAddress));
+            resultObjectVO = consigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryConsingeeAddress));
             if(!resultObjectVO.isSuccess())
             {
                 throw new CreateOrderException("没有找到收货人信息");
@@ -641,7 +641,7 @@ public class UserOrderTest {
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
             logger.info("开始锁定库存 {}",requestJsonVO.getEntityJson());
-            resultObjectVO = feignProductSkuStockLockService.lockStock(requestJsonVO);
+            resultObjectVO = productSkuStockLockService.lockStock(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 throw new CreateOrderException("锁定库存失败");
@@ -655,13 +655,13 @@ public class UserOrderTest {
                 //将拍下扣库存的那些商品 进行扣库存
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
                 logger.info("开始扣库存 {} ",requestJsonVO.getEntityJson());
-                resultObjectVO = feignProductSkuService.inventoryReduction(requestJsonVO);
+                resultObjectVO = productSkuService.inventoryReduction(requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     logger.warn("扣库存失败 {} ",requestJsonVO.getEntityJson());
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
                     logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
-                    resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                    resultObjectVO = productSkuStockLockService.deleteLockStock(requestJsonVO);
                     if(!resultObjectVO.isSuccess())
                     {
                         resultObjectVO.setMsg("创建订单失败,请稍后重试");
@@ -674,18 +674,18 @@ public class UserOrderTest {
             //扣库存成功后创建订单
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVO);
             logger.info("生成订单.... {} ",requestJsonVO.getEntityJson());
-            resultObjectVO = feignMainOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+            resultObjectVO = mainOrderService.create(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 //删除锁定的库存
                 logger.info("创建订单失败.....");
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
                 logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
-                resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                resultObjectVO = productSkuStockLockService.deleteLockStock(requestJsonVO);
                 //恢复商品库存数量
                 logger.info("开始恢复库存 {} ",requestJsonVO.getEntityJson());
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
-                resultObjectVO = feignProductSkuService.restoreStock(requestJsonVO);
+                resultObjectVO = productSkuService.restoreStock(requestJsonVO);
 
                 throw new CreateOrderException("订单创建失败,请稍后重试");
             }
@@ -694,7 +694,7 @@ public class UserOrderTest {
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userId));
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
-            resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
+            resultObjectVO = userBuyCarService.clearByUserMainId(requestJsonVO);
 
             resultObjectVO.setData(createOrderVO);
 
@@ -1055,7 +1055,7 @@ public class UserOrderTest {
         try{
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(userId);
-            resultObjectVO = feignUserBuyCarService.listByUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO));
+            resultObjectVO = userBuyCarService.listByUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO));
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

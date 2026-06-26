@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.product.approve;
 
-import com.toucan.shopping.cloud.product.api.feign.service.*;
+import com.toucan.shopping.cloud.product.api.ShopProductApproveSkuServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSpuServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -26,13 +27,13 @@ public class ProductApproveApiController {
 
 
     @Autowired
-    private FeignShopProductApproveSkuService feignShopProductApproveSkuService;
+    private ShopProductApproveSkuServiceAPI shopProductApproveSkuService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSpuService feignProductSpuService;
+    private ProductSpuServiceAPI productSpuService;
 
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
     public ResultObjectVO detail(@RequestBody ShopProductApproveSkuVO shopProductApproveSkuVO)
@@ -42,7 +43,7 @@ public class ProductApproveApiController {
             ShopProductApproveSkuVO queryShopProductApproveSku = new ShopProductApproveSkuVO();
             queryShopProductApproveSku.setId(shopProductApproveSkuVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductApproveSku);
-            ResultObjectVO resultObjectVO = feignShopProductApproveSkuService.queryByIdForFront(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopProductApproveSkuService.queryByIdForFront(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -99,7 +100,7 @@ public class ProductApproveApiController {
             ShopProductApproveVO queryShopProductApprove = new ShopProductApproveVO();
             queryShopProductApprove.setId(shopProductApproveVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductApprove);
-            ResultObjectVO resultObjectVO = feignShopProductApproveSkuService.queryOneByProductApproveIdForFront(requestJsonVO);
+            ResultObjectVO resultObjectVO = shopProductApproveSkuService.queryOneByProductApproveIdForFront(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -164,7 +165,7 @@ public class ProductApproveApiController {
             ProductSpuVO queryProductSpu = new ProductSpuVO();
             queryProductSpu.setId(shopProductApproveVO.getProductId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSpu);
-            retObject = feignProductSpuService.findById(requestJsonVO);
+            retObject = productSpuService.findById(requestJsonVO);
 
         }catch(Exception e)
         {

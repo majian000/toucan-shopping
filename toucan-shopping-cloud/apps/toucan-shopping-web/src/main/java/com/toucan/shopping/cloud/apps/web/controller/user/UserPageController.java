@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -50,7 +50,7 @@ public class UserPageController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -216,7 +216,7 @@ public class UserPageController extends BaseController {
             userLoginVO.setUserMainId(Long.parseLong(uid));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userLoginVO);
             //删除缓存中的token 以及用户信息
-            ResultObjectVO resultObjectVO  = feignUserService.logout(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO  = userService.logout(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

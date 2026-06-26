@@ -44,7 +44,7 @@ public class CategoryHotBusinessService {
      * @param requestJsonVO
      * @return
      */
-    public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO)
+    public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)

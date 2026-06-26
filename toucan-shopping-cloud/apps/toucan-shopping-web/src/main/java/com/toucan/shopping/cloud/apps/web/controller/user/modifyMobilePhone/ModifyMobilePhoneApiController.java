@@ -6,8 +6,8 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserBindMobilePhoneRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserModifyMobilePhoneRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.SmsServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
@@ -57,11 +57,11 @@ public class ModifyMobilePhoneApiController extends BaseController {
 
 
     @Autowired
-    private FeignSmsService feignSmsService;
+    private SmsServiceAPI smsService;
 
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -227,7 +227,7 @@ public class ModifyMobilePhoneApiController extends BaseController {
             UserVO querUserVO = new UserVO();
             querUserVO.setUsername(userModifyMobilePhoneVO.getMobilePhone());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),querUserVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            resultObjectVO = userService.findByUsername(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -241,7 +241,7 @@ public class ModifyMobilePhoneApiController extends BaseController {
                 return resultObjectVO;
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userModifyMobilePhoneVO);
-            resultObjectVO = feignUserService.updateConnectMobilePhone(requestJsonVO);
+            resultObjectVO = userService.updateConnectMobilePhone(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 toucanStringRedisService.delete(UserModifyMobilePhoneRedisKey.getSecurityCodeKey(userMainId));
                 toucanStringRedisService.delete(UserBindMobilePhoneRedisKey.getMobilePhoneVerifyCodeKey(userMainId));

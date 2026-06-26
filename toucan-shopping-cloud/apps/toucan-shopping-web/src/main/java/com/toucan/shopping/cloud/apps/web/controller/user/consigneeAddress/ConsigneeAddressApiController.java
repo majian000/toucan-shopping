@@ -5,8 +5,7 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.service.VerifyCodeService;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
+import com.toucan.shopping.cloud.user.api.ConsigneeAddressServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -55,7 +54,7 @@ public class ConsigneeAddressApiController extends BaseController {
     private VerifyCodeService verifyCodeService;
 
     @Autowired
-    private FeignConsigneeAddressService feignConsigneeAddressService;
+    private ConsigneeAddressServiceAPI consigneeAddressService;
 
 
     @Autowired
@@ -121,7 +120,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 toucanStringRedisService.delete(vcodeRedisKey);
 
                 consigneeAddressVO.setAppCode(toucan.getAppCode());
-                resultObjectVO = feignConsigneeAddressService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+                resultObjectVO = consigneeAddressService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
             }
 
         }catch(Exception e)
@@ -152,7 +151,7 @@ public class ConsigneeAddressApiController extends BaseController {
             queryPageInfo.setAppCode(toucan.getAppCode());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
-            resultObjectVO = feignConsigneeAddressService.queryListPage(requestJsonVO);
+            resultObjectVO = consigneeAddressService.queryListPage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -196,7 +195,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 resultObjectVO.setMsg("删除失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignConsigneeAddressService.deleteByIdAndUserMainIdAndAppCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = consigneeAddressService.deleteByIdAndUserMainIdAndAppCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {
@@ -238,7 +237,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 resultObjectVO.setMsg("设置失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignConsigneeAddressService.setDefaultByIdAndUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = consigneeAddressService.setDefaultByIdAndUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {
@@ -279,7 +278,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 resultObjectVO.setMsg("设置失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignConsigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = consigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {
@@ -343,7 +342,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 resultObjectVO.setMsg("设置失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignConsigneeAddressService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = consigneeAddressService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {
@@ -406,10 +405,10 @@ public class ConsigneeAddressApiController extends BaseController {
             }
 
             if(consigneeAddressVO.getId()!=null) {
-                resultObjectVO = feignConsigneeAddressService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), consigneeAddressVO));
+                resultObjectVO = consigneeAddressService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(), consigneeAddressVO));
             }else{
                 consigneeAddressVO.setDeleteStatus((short)0);
-                resultObjectVO = feignConsigneeAddressService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(), consigneeAddressVO));
+                resultObjectVO = consigneeAddressService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(), consigneeAddressVO));
             }
 
         }catch(Exception e)
@@ -445,7 +444,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 resultObjectVO.setMsg("设置失败,用户ID不能为空");
                 return resultObjectVO;
             }
-            resultObjectVO = feignConsigneeAddressService.findDefaultByUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+            resultObjectVO = consigneeAddressService.findDefaultByUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
 
         }catch(Exception e)
         {

@@ -2,24 +2,18 @@ package com.toucan.shopping.cloud.apps.web.controller.area;
 
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
-import com.toucan.shopping.cloud.apps.web.service.IndexService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.auth.user.UserAuth;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 地区控制器
@@ -32,7 +26,7 @@ public class AreaApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaServiceAPI;
 
 
     /**
@@ -54,7 +48,7 @@ public class AreaApiController extends BaseController {
             Area query = new Area();
             query.setPid(area.getPid());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),query);
-            resultObjectVO = feignAreaService.queryListByPid(requestJsonVO);
+            resultObjectVO = areaServiceAPI.queryListByPid(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

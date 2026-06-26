@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.generate;
 
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.web.service.ProvinceCityAreaGeneratorService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -43,7 +43,7 @@ public class ProvinceCityAreaGeneratorController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
 
     @Value("${spring.profiles.active}")

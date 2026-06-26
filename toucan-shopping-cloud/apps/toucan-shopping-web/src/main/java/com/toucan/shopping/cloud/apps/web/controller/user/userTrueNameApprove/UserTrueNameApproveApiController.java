@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userTrueNameApprove;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
+import com.toucan.shopping.cloud.user.api.UserTrueNameApproveServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -57,7 +57,7 @@ public class UserTrueNameApproveApiController extends BaseController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
+    private UserTrueNameApproveServiceAPI userTrueNameApproveService;
 
 
 
@@ -178,7 +178,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
-            resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.queryByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //身份证 正面上传
@@ -210,7 +210,7 @@ public class UserTrueNameApproveApiController extends BaseController {
 
                     logger.info(" 用户实名重新发起 {} ", requestJsonVO.getEntityJson());
 
-                    resultObjectVO = feignUserTrueNameApproveService.update(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userTrueNameApproveService.update(requestJsonVO);
 
                     return resultObjectVO;
                 }else{
@@ -223,7 +223,7 @@ public class UserTrueNameApproveApiController extends BaseController {
 
                     logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
 
-                    resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userTrueNameApproveService.save(requestJsonVO);
                     if (!resultObjectVO.isSuccess()) {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("提交失败,请稍后重试!");

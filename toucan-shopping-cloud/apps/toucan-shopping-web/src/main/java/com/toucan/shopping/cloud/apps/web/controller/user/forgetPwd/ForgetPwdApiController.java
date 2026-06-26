@@ -7,8 +7,7 @@ import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.EmailForgetPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -67,7 +66,7 @@ public class ForgetPwdApiController extends BaseController {
 
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private Toucan toucan;
@@ -132,7 +131,7 @@ public class ForgetPwdApiController extends BaseController {
 
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            resultObjectVO = userService.findByUsername(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     UserVO userVO = resultObjectVO.formatData(UserVO.class);
@@ -192,7 +191,7 @@ public class ForgetPwdApiController extends BaseController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            resultObjectVO = userService.findByUsername(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);
                 if(userVO==null||userVO.getUserMainId()==null)
@@ -345,7 +344,7 @@ public class ForgetPwdApiController extends BaseController {
 
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
-            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            resultObjectVO = userService.findByUsername(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);
                 if(userVO==null||userVO.getUserMainId()==null)
@@ -381,7 +380,7 @@ public class ForgetPwdApiController extends BaseController {
                     modifyPwdUser.setUserMainId(userVO.getUserMainId());
                     modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
-                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = userService.resetPassword(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         toucanStringRedisService.delete(UserForgetPwdRedisKey.getMobileVerifyCodeKey(userMainId));
@@ -406,7 +405,7 @@ public class ForgetPwdApiController extends BaseController {
                     modifyPwdUser.setUserMainId(userVO.getUserMainId());
                     modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
-                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = userService.resetPassword(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         toucanStringRedisService.delete(UserForgetPwdRedisKey.getEmailVerifyCodeKey(userMainId));
@@ -435,7 +434,7 @@ public class ForgetPwdApiController extends BaseController {
                     modifyPwdUser.setUserMainId(userVO.getUserMainId());
                     modifyPwdUser.setPassword(userForgetPasswordVO.getPassword());
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),modifyPwdUser);
-                    resultObjectVO = feignUserService.resetPassword(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = userService.resetPassword(requestJsonVO);
                 }
             }else{
                 resultObjectVO.setCode(ResultObjectVO.FAILD);

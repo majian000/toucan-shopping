@@ -5,11 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyValueService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSpuService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSpuServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
@@ -60,23 +59,21 @@ public class ProductSpuController extends UIController {
     @Autowired
     private FunctionServiceAPI functionServiceAPI;
 
-    @Autowired
-    private FeignShopProductService feignShopProductService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryServiceAPI;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSpuService feignProductSpuService;
+    private ProductSpuServiceAPI productSpuServiceAPI;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandServiceAPI;
 
     @Autowired
-    private FeignAttributeKeyValueService feignAttributeKeyValueService;
+    private AttributeKeyValueServiceAPI attributeKeyValueServiceAPI;
 
 
 
@@ -104,7 +101,7 @@ public class ProductSpuController extends UIController {
                 CategoryVO queryCategoryVO = new CategoryVO();
                 queryCategoryVO.setId(categoryId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                ResultObjectVO resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
@@ -149,7 +146,7 @@ public class ProductSpuController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignProductSpuService.save(requestJsonVO);
+            resultObjectVO = productSpuServiceAPI.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("保存失败");
@@ -173,7 +170,7 @@ public class ProductSpuController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignProductSpuService.update(requestJsonVO);
+            resultObjectVO = productSpuServiceAPI.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("修改失败");
@@ -195,7 +192,7 @@ public class ProductSpuController extends UIController {
             BrandVO queryBrandVO = new BrandVO();
             queryBrandVO.setIdList(brandIdList);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
-            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            ResultObjectVO resultObjectVO = brandServiceAPI.findByIdList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
@@ -239,7 +236,7 @@ public class ProductSpuController extends UIController {
             CategoryVO queryCategoryVO = new CategoryVO();
             queryCategoryVO.setIdArray(categoryIds);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO);
+            ResultObjectVO resultObjectVO = categoryServiceAPI.findByIdArray(requestJsonVO);
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
@@ -280,7 +277,7 @@ public class ProductSpuController extends UIController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setId(pageInfo.getCategoryId());
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                resultObjectVO = categoryServiceAPI.queryChildListByPid(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     if (resultObjectVO.getData() != null) {
                         List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
@@ -297,7 +294,7 @@ public class ProductSpuController extends UIController {
                 }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
+            resultObjectVO = productSpuServiceAPI.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -384,7 +381,7 @@ public class ProductSpuController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryTree(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryTree(requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -407,7 +404,7 @@ public class ProductSpuController extends UIController {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            resultObjectVO = feignCategoryService.queryListByPid(requestJsonVO);
+            resultObjectVO = categoryServiceAPI.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -448,7 +445,7 @@ public class ProductSpuController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = brandServiceAPI.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -479,7 +476,7 @@ public class ProductSpuController extends UIController {
 
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
-                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
+                        resultObjectVO = categoryServiceAPI.queryByIdList(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             List<CategoryVO> categoryList = resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryList))
@@ -535,7 +532,7 @@ public class ProductSpuController extends UIController {
             attributeKeyPageInfo.setAttributeType((short)1); //查询全局属性
             attributeKeyPageInfo.setParentId(-1L); //从根节点开始查询
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), attributeKeyPageInfo);
-            resultObjectVO = feignAttributeKeyValueService.queryAttributeTreePage(requestJsonVO);
+            resultObjectVO = attributeKeyValueServiceAPI.queryAttributeTreePage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -571,7 +568,7 @@ public class ProductSpuController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignProductSpuService.deleteById(requestVo);
+            resultObjectVO = productSpuServiceAPI.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -604,7 +601,7 @@ public class ProductSpuController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignProductSpuService.deleteByIds(requestVo);
+            resultObjectVO = productSpuServiceAPI.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -625,7 +622,7 @@ public class ProductSpuController extends UIController {
             ProductSpuVO queryProductSpu = new ProductSpuVO();
             queryProductSpu.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
-            ResultObjectVO resultObjectVO = feignProductSpuService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSpuServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -635,7 +632,7 @@ public class ProductSpuController extends UIController {
                     CategoryVO queryCategory = new CategoryVO();
                     queryCategory.setId(productSpuVO.getCategoryId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
-                    resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                    resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
                     if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
                         CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
@@ -648,7 +645,7 @@ public class ProductSpuController extends UIController {
                     BrandVO queryBrand = new BrandVO();
                     queryBrand.setId(productSpuVO.getBrandId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
-                    resultObjectVO = feignBrandService.findById(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = brandServiceAPI.findById(requestJsonVO);
                     if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
                         List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
@@ -688,7 +685,7 @@ public class ProductSpuController extends UIController {
             ProductSpuVO queryProductSpu = new ProductSpuVO();
             queryProductSpu.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
-            ResultObjectVO resultObjectVO = feignProductSpuService.findById(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSpuServiceAPI.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -698,7 +695,7 @@ public class ProductSpuController extends UIController {
                     CategoryVO queryCategory = new CategoryVO();
                     queryCategory.setId(productSpuVO.getCategoryId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
-                    resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                    resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
                     if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
                         CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
@@ -712,7 +709,7 @@ public class ProductSpuController extends UIController {
                     BrandVO queryBrand = new BrandVO();
                     queryBrand.setId(productSpuVO.getBrandId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
-                    resultObjectVO = feignBrandService.findById(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = brandServiceAPI.findById(requestJsonVO);
                     if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
                         List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);

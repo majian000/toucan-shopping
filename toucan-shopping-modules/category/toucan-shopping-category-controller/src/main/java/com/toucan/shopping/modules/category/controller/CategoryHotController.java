@@ -25,9 +25,9 @@ public class CategoryHotController {
      */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
     {
-        return categoryHotBusinessService.save(signHeader, requestJsonVO);
+        return categoryHotBusinessService.save(requestJsonVO);
     }
 
 

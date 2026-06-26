@@ -1,10 +1,10 @@
 package com.toucan.shopping.cloud.apps.web.controller.search;
 
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAttributeKeyService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.product.api.AttributeKeyServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
+import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -47,22 +47,22 @@ public class ShopProductSearchController {
     private Toucan toucan;
 
     @Autowired
-    private FeignProductSearchService feignProductSearchService;
+    private ProductSearchServiceAPI productSearchService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignAttributeKeyService feignAttributeKeyService;
+    private AttributeKeyServiceAPI attributeKeyService;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
     private String doSearch(ProductSearchVO productSearchVO, HttpServletRequest httpServletRequest)
     {
@@ -87,7 +87,7 @@ public class ShopProductSearchController {
                 productSearchVO.setBn(null);
                 productSearchVO.setKeyword(keyword);
 
-                resultObjectVO = feignProductSearchService.search(requestJsonVO);
+                resultObjectVO = productSearchService.search(requestJsonVO);
                 if(resultObjectVO.isSuccess()) {
                     pageInfo = resultObjectVO.formatData(PageInfo.class);
                     List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);
@@ -237,7 +237,7 @@ public class ShopProductSearchController {
             //上面的品牌查询没有任何匹配
             if(pageInfo==null||CollectionUtils.isEmpty(pageInfo.getList())) {
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchVO);
-                resultObjectVO = feignProductSearchService.search(requestJsonVO);
+                resultObjectVO = productSearchService.search(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     pageInfo = resultObjectVO.formatData(PageInfo.class);
                 }
@@ -277,7 +277,7 @@ public class ShopProductSearchController {
                     }
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),attributeKeyVO);
-                resultObjectVO = feignAttributeKeyService.querySearchList(requestJsonVO);
+                resultObjectVO = attributeKeyService.querySearchList(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AttributeKeyVO> attributes= resultObjectVO .formatDataList(AttributeKeyVO.class);
@@ -323,7 +323,7 @@ public class ShopProductSearchController {
                     }
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
-                resultObjectVO = feignBrandService.queryListByCategoryId(requestJsonVO);
+                resultObjectVO = brandService.queryListByCategoryId(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<BrandVO> brandVOS= resultObjectVO .formatDataList(BrandVO.class);
@@ -359,7 +359,7 @@ public class ShopProductSearchController {
             SellerShop entity = new SellerShop();
             entity.setId(Long.parseLong(productSearchVO.getSid()));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
-            ResultObjectVO resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<SellerShopVO> sellerShops = resultObjectVO.formatDataList(SellerShopVO.class);

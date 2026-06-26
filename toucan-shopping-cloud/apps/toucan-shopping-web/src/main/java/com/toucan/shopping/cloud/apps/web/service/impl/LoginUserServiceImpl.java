@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.service.impl;
 
 import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
@@ -30,7 +30,7 @@ public class LoginUserServiceImpl implements LoginUserService {
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -42,7 +42,7 @@ public class LoginUserServiceImpl implements LoginUserService {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            ResultObjectVO resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.queryLoginInfo(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 UserVO userVO = resultObjectVO.formatData(UserVO.class);

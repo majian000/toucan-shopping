@@ -7,7 +7,7 @@ import com.toucan.shopping.cloud.apps.web.util.BindEmailUtil;
 import com.toucan.shopping.cloud.apps.web.util.EmailModifyMobilePhoneUtil;
 import com.toucan.shopping.cloud.apps.web.util.EmailModifyPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -52,7 +52,7 @@ public class TextVerifyCodeController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
-    private FeignUserService feignUserService;
+    private UserServiceAPI userService;
 
     @Autowired
     private Toucan toucan;
@@ -110,7 +110,7 @@ public class TextVerifyCodeController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObectVO = userService.findByUserMainIdForCacheOrDB(requestJsonVO);
             if(resultObectVO.isSuccess()) {
                 userVO = resultObectVO.formatData(UserVO.class);
                 String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
@@ -177,7 +177,7 @@ public class TextVerifyCodeController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObectVO = userService.findByUserMainIdForCacheOrDB(requestJsonVO);
             if(resultObectVO.isSuccess()) {
                 userVO = resultObectVO.formatData(UserVO.class);
                 if(userVoParam.getEmail().equals(userVO.getEmail()))
@@ -254,7 +254,7 @@ public class TextVerifyCodeController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObectVO = userService.findByUserMainIdForCacheOrDB(requestJsonVO);
             if(resultObectVO.isSuccess()) {
                 userVO = resultObectVO.formatData(UserVO.class);
                 if(userVoParam.getEmail().equals(userVO.getEmail()))
@@ -396,7 +396,7 @@ public class TextVerifyCodeController extends BaseController {
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObectVO = userService.findByUserMainIdForCacheOrDB(requestJsonVO);
             if(resultObectVO.isSuccess()) {
                 userVO = resultObectVO.formatData(UserVO.class);
                 String vcode = VerifyCodeUtil.generateVerifyCode(6, "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");

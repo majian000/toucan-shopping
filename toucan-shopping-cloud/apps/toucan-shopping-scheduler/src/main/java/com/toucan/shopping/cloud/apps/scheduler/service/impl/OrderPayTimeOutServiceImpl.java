@@ -3,8 +3,8 @@ package com.toucan.shopping.cloud.apps.scheduler.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;
 import com.toucan.shopping.cloud.apps.scheduler.service.OrderPayTimeOutService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
@@ -28,10 +28,10 @@ public class OrderPayTimeOutServiceImpl implements OrderPayTimeOutService {
 
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -89,7 +89,7 @@ public class OrderPayTimeOutServiceImpl implements OrderPayTimeOutService {
                 params.put("inventoryReductions",inventoryReductions);
                 params.put("productSkuStockLock",productSkuStockLockVO);
                 eventProcess = this.saveEvent(globalTransactionId,params,"还原库存", PublishEventConstant.restart_product_lock_stock_num.name());
-                return  feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                return  productSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
             }
         }
         return new ResultObjectVO(ResultObjectVO.FAILD,"");
@@ -99,7 +99,7 @@ public class OrderPayTimeOutServiceImpl implements OrderPayTimeOutService {
     public ResultObjectVO deleteLockStockByMainOrderNos(String globalTransactionId, EventPublish eventProcess, ProductSkuStockLockVO productSkuStockLockVO) throws Exception {
         //保存删除锁定库存事件
         eventProcess = this.saveEvent(globalTransactionId,productSkuStockLockVO,"删除锁定库存",PublishEventConstant.delete_lock_stock_num.name());
-        return feignProductSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+        return productSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
     }
 
 }

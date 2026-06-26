@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.consigneeAddress;
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -30,7 +30,7 @@ public class ConsigneeAddressPageController extends BaseController {
 
 
     @Autowired
-    private FeignAreaService feignAreaService;
+    private AreaServiceAPI areaService;
 
     @Autowired
     private LoginUserService loginUserService;

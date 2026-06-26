@@ -4,8 +4,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userHeadSculptureAppr
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
+import com.toucan.shopping.cloud.user.api.UserHeadSculptureApproveServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -62,7 +61,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignUserHeadSculptureApproveService feignUserHeadSculptureApproveService;
+    private UserHeadSculptureApproveServiceAPI userHeadSculptureApproveService;
 
 
 
@@ -111,7 +110,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             UserHeadSculptureApproveVO queryUserHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
             queryUserHeadSculptureApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserHeadSculptureApproveVO);
-            resultObjectVO = feignUserHeadSculptureApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userHeadSculptureApproveService.queryByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(headSculptureFile!=null) {
@@ -133,7 +132,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
 
                 logger.info(" 用户头像审核 {} ", requestJsonVO.getEntityJson());
 
-                resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
+                resultObjectVO = userHeadSculptureApproveService.save(requestJsonVO);
                 if (!resultObjectVO.isSuccess()) {
                     return resultObjectVO;
                 }

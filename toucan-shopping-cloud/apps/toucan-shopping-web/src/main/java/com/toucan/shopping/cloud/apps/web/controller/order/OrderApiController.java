@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignMainOrderService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignConsigneeAddressService;
+import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
+import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
+import com.toucan.shopping.cloud.user.api.ConsigneeAddressServiceAPI;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
@@ -14,10 +14,10 @@ import com.toucan.shopping.modules.order.entity.MainOrder;
 import com.toucan.shopping.modules.order.exception.CreateOrderException;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
 import com.toucan.shopping.modules.order.vo.*;
-import com.toucan.shopping.cloud.order.api.cloud.feign.service.FeignOrderService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
+import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
+import com.toucan.shopping.cloud.user.api.UserBuyCarServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -75,10 +75,10 @@ public class OrderApiController {
     private Toucan toucan;
 
     @Autowired
-    private FeignOrderService feignOrderService;
+    private OrderServiceAPI orderService;
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -93,10 +93,10 @@ public class OrderApiController {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
-    private FeignUserBuyCarService feignUserBuyCarService;
+    private UserBuyCarServiceAPI userBuyCarService;
 
     @Autowired
     private PayService payService;
@@ -105,13 +105,13 @@ public class OrderApiController {
     private IdGenerator idGenerator;
 
     @Autowired
-    private FeignFreightTemplateService feignFreightTemplateService;
+    private FreightTemplateServiceAPI freightTemplateService;
 
     @Autowired
-    private FeignConsigneeAddressService feignConsigneeAddressService;
+    private ConsigneeAddressServiceAPI consigneeAddressService;
 
     @Autowired
-    private FeignMainOrderService feignMainOrderService;
+    private MainOrderServiceAPI mainOrderService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -234,7 +234,7 @@ public class OrderApiController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuVOS);
-            resultObjectVO = feignProductSkuService.queryByIdList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+            resultObjectVO = productSkuService.queryByIdList(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -299,7 +299,7 @@ public class OrderApiController {
             ProductSkuStockLockVO queryProductSkuStockLockVO = new ProductSkuStockLockVO();
             queryProductSkuStockLockVO.setProductSkuIdList(createOrderVO.getBuyCarItems().stream().map(UserBuyCarItemVO::getShopProductSkuId).collect(Collectors.toList()));
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuStockLockVO);
-            resultObjectVO = feignProductSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
+            resultObjectVO = productSkuStockLockService.findLockStockNumByProductSkuIds(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -402,7 +402,7 @@ public class OrderApiController {
             FreightTemplateVO queryFreightTemplateVO = new FreightTemplateVO();
             queryFreightTemplateVO.setIdList(freightTemplateIdList);
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryFreightTemplateVO);
-            resultObjectVO = feignFreightTemplateService.findByIdList(requestJsonVO);
+            resultObjectVO = freightTemplateService.findByIdList(requestJsonVO);
 
             if(!resultObjectVO.isSuccess())
             {
@@ -441,7 +441,7 @@ public class OrderApiController {
             queryConsingeeAddress.setAppCode(toucan.getAppCode());
             queryConsingeeAddress.setUserMainId(Long.parseLong(userId));
             queryConsingeeAddress.setId(createOrderVO.getConsigneeAddress().getId());
-            resultObjectVO = feignConsigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryConsingeeAddress));
+            resultObjectVO = consigneeAddressService.findByIdAndUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryConsingeeAddress));
             if(!resultObjectVO.isSuccess())
             {
                 throw new CreateOrderException("没有找到收货人信息");
@@ -481,7 +481,7 @@ public class OrderApiController {
             //预扣库存
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
             logger.info("开始锁定库存 {}",requestJsonVO.getEntityJson());
-            resultObjectVO = feignProductSkuStockLockService.lockStock(requestJsonVO);
+            resultObjectVO = productSkuStockLockService.lockStock(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 throw new CreateOrderException("锁定库存失败");
@@ -495,13 +495,13 @@ public class OrderApiController {
                 //将拍下扣库存的那些商品 进行扣库存
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
                 logger.info("开始扣库存 {} ",requestJsonVO.getEntityJson());
-                resultObjectVO = feignProductSkuService.inventoryReduction(requestJsonVO);
+                resultObjectVO = productSkuService.inventoryReduction(requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     logger.warn("扣库存失败 {} ",requestJsonVO.getEntityJson());
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
                     logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
-                    resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                    resultObjectVO = productSkuStockLockService.deleteLockStock(requestJsonVO);
                     if(!resultObjectVO.isSuccess())
                     {
                         resultObjectVO.setMsg("创建订单失败,请稍后重试");
@@ -514,18 +514,18 @@ public class OrderApiController {
             //扣库存成功后创建订单
             requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, createOrderVO);
             logger.info("生成订单.... {} ",requestJsonVO.getEntityJson());
-            resultObjectVO = feignMainOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+            resultObjectVO = mainOrderService.create(requestJsonVO);
             if(!resultObjectVO.isSuccess())
             {
                 //删除锁定的库存
                 logger.info("创建订单失败.....");
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
                 logger.warn("开始删除锁定库存数据... {} ",requestJsonVO.getEntityJson());
-                resultObjectVO = feignProductSkuStockLockService.deleteLockStock(requestJsonVO);
+                resultObjectVO = productSkuStockLockService.deleteLockStock(requestJsonVO);
                 //恢复商品库存数量
                 logger.info("开始恢复库存 {} ",requestJsonVO.getEntityJson());
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
-                resultObjectVO = feignProductSkuService.restoreStock(requestJsonVO);
+                resultObjectVO = productSkuService.restoreStock(requestJsonVO);
 
                 throw new CreateOrderException("订单创建失败,请稍后重试");
             }
@@ -534,7 +534,7 @@ public class OrderApiController {
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userId));
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
-            resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
+            resultObjectVO = userBuyCarService.clearByUserMainId(requestJsonVO);
 
             resultObjectVO.setData(createOrderVO);
 
@@ -565,7 +565,7 @@ public class OrderApiController {
         try{
             UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(userId);
-            resultObjectVO = feignUserBuyCarService.listByUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO));
+            resultObjectVO = userBuyCarService.listByUserMainId(RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO));
             if(!resultObjectVO.isSuccess())
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -947,7 +947,7 @@ public class OrderApiController {
             PayCallbackVO payCallbackVO = JSONObject.parseObject(paramsJson,PayCallbackVO.class);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),payCallbackVO);
             //完成订单
-            resultObjectVO = feignOrderService.finish(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
+            resultObjectVO = orderService.finish(requestJsonVO);
 
             if(resultObjectVO.getCode().intValue()== ResultVO.SUCCESS.intValue()) {
                 String appCode = toucan.getAppCode();
@@ -956,7 +956,7 @@ public class OrderApiController {
                 queryOrderVo.setOrderNo(payCallbackVO.getOrderNo());
 
                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), payCallbackVO.getUserId(), queryOrderVo);
-                resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
+                resultObjectVO = orderService.querySkuUuidsByOrderNo(requestJsonVO);
 
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                     //实扣库存对象
@@ -967,7 +967,7 @@ public class OrderApiController {
 //                    inventoryReductionVo.setProductSkuList(productSkus);
 
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payCallbackVO.getUserId(), inventoryReductionVo);
-//                    resultObjectVO = feignProductSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+//                    resultObjectVO = productSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 
                     resultObjectVO.setMsg("支付完成!");
                 }
@@ -1006,7 +1006,7 @@ public class OrderApiController {
         try{
             mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-            resultObjectVO = feignMainOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
+            resultObjectVO = mainOrderService.queryMainOrderByOrderNoAndUserId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 mainOrderVO = resultObjectVO.formatData(MainOrderVO.class);
@@ -1047,7 +1047,7 @@ public class OrderApiController {
             productSkuStockLockVO.setMainOrderNoList(new LinkedList<>());
             productSkuStockLockVO.getMainOrderNoList().add(mainOrderVO.getOrderNo());
             productSkuStockLockVO.setType((short)1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-            resultObjectVO = feignProductSkuStockLockService.findLockStockListByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
+            resultObjectVO = productSkuStockLockService.findLockStockListByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkuStockLockVO));
             if(resultObjectVO.isSuccess())
             {
                 List<ProductSkuStockLockVO> productSkuStockLocks = resultObjectVO.formatDataList(ProductSkuStockLockVO.class);
@@ -1063,15 +1063,15 @@ public class OrderApiController {
                     }
                     if(!CollectionUtils.isEmpty(inventoryReductions)) {
                         //保存还原锁定库存事件
-                        resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                        resultObjectVO = productSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                     }
                 }
-                resultObjectVO = feignProductSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                resultObjectVO = productSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                 if(resultObjectVO.isSuccess())
                 {
                     mainOrderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
                     RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),mainOrderVO);
-                    resultObjectVO = feignMainOrderService.cancel(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = mainOrderService.cancel(requestJsonVO);
                 }
             }
         }catch (Exception e)
@@ -1099,7 +1099,7 @@ public class OrderApiController {
         try{
             orderVO.setUserId( UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderVO);
-            resultObjectVO = feignOrderService.queryByOrderNoAndUserId(requestJsonVO);
+            resultObjectVO = orderService.queryByOrderNoAndUserId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 orderVO = resultObjectVO.formatData(OrderVO.class);
@@ -1144,7 +1144,7 @@ public class OrderApiController {
             orderPageInfo.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT);
             orderPageInfo.setTradeStatus(OrderConstant.TRADE_STATUS_NON_PAYMENT);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
-            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            resultObjectVO = orderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 orderPageInfo = resultObjectVO.formatData(OrderPageInfo.class);
@@ -1193,7 +1193,7 @@ public class OrderApiController {
                 orderPageInfo.setKeyword(orderPageInfo.getKeyword().trim());
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),orderPageInfo);
-            resultObjectVO = feignOrderService.queryListPage(requestJsonVO);
+            resultObjectVO = orderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 orderPageInfo = resultObjectVO.formatData(OrderPageInfo.class);

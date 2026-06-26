@@ -3,15 +3,15 @@ package com.toucan.shopping.cloud.apps.web.controller.product;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ql.util.express.DefaultContext;
-import com.toucan.shopping.cloud.common.data.api.cloud.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSpuService;
+import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
+import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
+import com.toucan.shopping.cloud.product.api.ProductSpuServiceAPI;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.qlexpress.service.QLExpressService;
@@ -35,19 +35,19 @@ public class ProductApiController {
     private Toucan toucan;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignProductSpuService feignProductSpuService;
+    private ProductSpuServiceAPI productSpuService;
 
     @Autowired
-    private FeignCategoryService feignCategoryService;
+    private CategoryServiceAPI categoryService;
 
     @Autowired
-    private FeignBrandService feignBrandService;
+    private BrandServiceAPI brandService;
 
     @Autowired
     private QLExpressService qlExpressService;
@@ -61,7 +61,7 @@ public class ProductApiController {
             ProductSkuVO queryShopProductSku = new ProductSkuVO();
             queryShopProductSku.setId(productSkuVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductSku);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFront(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuService.queryByIdForFront(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -138,7 +138,7 @@ public class ProductApiController {
         queryCateogry.setId(productSkuVO.getCategoryId());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCateogry);
         //查询分类
-        ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
+        ResultObjectVO resultCategoryObjectVO = categoryService.findIdPathById(requestJsonVO);
         List<ProductSkuCategoryBrandVO> productSkuCategoryBrands= new LinkedList<>();
         if(resultCategoryObjectVO.isSuccess())
         {
@@ -158,7 +158,7 @@ public class ProductApiController {
         BrandVO brandVO = new BrandVO();
         brandVO.setId(productSkuVO.getBrandId());
         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), brandVO);
-        ResultObjectVO brandResultVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+        ResultObjectVO brandResultVO = brandService.findById(requestJsonVO);
         if (brandResultVO.isSuccess()) {
             List<BrandVO> brandVOS = brandResultVO.formatDataList(BrandVO.class);
             if(CollectionUtils.isNotEmpty(brandVOS)) {
@@ -389,7 +389,7 @@ public class ProductApiController {
             ProductSkuVO queryShopProductSku = new ProductSkuVO();
             queryShopProductSku.setId(shopProductSkuVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductSku);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryByIdForFrontPreview(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuService.queryByIdForFrontPreview(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -449,7 +449,7 @@ public class ProductApiController {
                 queryShopProduct.setAttrPath(shopProductVO.getAttrPath());
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFront(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuService.queryOneByShopProductIdForFront(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -513,7 +513,7 @@ public class ProductApiController {
             ShopProductVO queryShopProduct = new ShopProductVO();
             queryShopProduct.setId(shopProductVO.getId());;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProduct);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryOneByShopProductIdForFrontPreview(requestJsonVO);
+            ResultObjectVO resultObjectVO = productSkuService.queryOneByShopProductIdForFrontPreview(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -576,7 +576,7 @@ public class ProductApiController {
             ProductSpuVO queryProductSpu = new ProductSpuVO();
             queryProductSpu.setId(shopProductVO.getProductId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSpu);
-            retObject = feignProductSpuService.findById(requestJsonVO);
+            retObject = productSpuService.findById(requestJsonVO);
 
         }catch(Exception e)
         {

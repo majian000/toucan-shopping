@@ -2,7 +2,6 @@ package com.toucan.shopping.cloud.apps.web.controller.user.userCollectProduct;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;

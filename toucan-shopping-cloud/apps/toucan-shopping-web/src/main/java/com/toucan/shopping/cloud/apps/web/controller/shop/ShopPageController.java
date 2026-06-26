@@ -2,10 +2,10 @@ package com.toucan.shopping.cloud.apps.web.controller.shop;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
-import com.toucan.shopping.cloud.search.api.feign.service.FeignProductSearchService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerDesignerPageModelService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
+import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -55,28 +55,28 @@ public class ShopPageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignSellerDesignerPageModelService feignSellerDesignerPageModelService;
+    private SellerDesignerPageModelServiceAPI sellerDesignerPageModelService;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
+    private ShopCategoryServiceAPI shopCategoryService;
 
     @Autowired
     private IPageParser pageParser;
 
     @Autowired
-    private FeignProductSearchService feignProductSearchService;
+    private ProductSearchServiceAPI productSearchService;
 
     private void setShopAttribute(HttpServletRequest request, String shopId) throws Exception{
         SellerShopVO querySellerShopVO = new SellerShopVO();
         querySellerShopVO.setId(Long.parseLong(shopId));
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShopVO);
-        ResultObjectVO resultObjectVO = feignSellerShopService.findById(requestJsonVO.sign(), requestJsonVO);
+        ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
         if (resultObjectVO.isSuccess()) {
             List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
             if (CollectionUtils.isNotEmpty(sellerShopVOS)) {
@@ -99,7 +99,7 @@ public class ShopPageController extends BaseController {
                 query.setShopId(Long.parseLong(shopId));
                 query.setType(1);
                 query.setPosition(1);
-                ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+                ResultObjectVO resultObjectVO = sellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
                 if(resultObjectVO.isSuccess())
                 {
                     SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
@@ -132,7 +132,7 @@ public class ShopPageController extends BaseController {
             query.setShopId(Long.parseLong(shopId));
             query.setType(2);
             query.setPosition(1);
-            ResultObjectVO resultObjectVO = feignSellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
+            ResultObjectVO resultObjectVO = sellerDesignerPageModelService.queryLastOne(RequestJsonVOGenerator.generator(toucan.getAppCode(),query));
             if(resultObjectVO.isSuccess())
             {
                 SellerDesignerPageModel shopPageContainer = resultObjectVO.formatData(SellerDesignerPageModel.class);
@@ -166,7 +166,7 @@ public class ShopPageController extends BaseController {
                 this.setShopAttribute(request, sid);
                 ShopCategoryVO queryShopCategoryVO=new ShopCategoryVO();
                 queryShopCategoryVO.setShopId(Long.parseLong(sid));
-                ResultObjectVO resultObjectVO = feignShopCategoryService.queryTree(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO));
+                ResultObjectVO resultObjectVO = shopCategoryService.queryTree(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategoryVO));
                 if(resultObjectVO.isSuccess())
                 {
                     List<ShopCategoryVO> rootShopCategoryTree = resultObjectVO.formatDataList(ShopCategoryVO.class);
@@ -181,7 +181,7 @@ public class ShopPageController extends BaseController {
                 productSearchVO.setScid(scid);
                 PageInfo pageInfo = null;
 
-                resultObjectVO = feignProductSearchService.search(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchVO));
+                resultObjectVO = productSearchService.search(RequestJsonVOGenerator.generator(toucan.getAppCode(),productSearchVO));
                 if(resultObjectVO.isSuccess()) {
                     pageInfo = resultObjectVO.formatData(PageInfo.class);
                     List<ProductSearchResultVO> productResult = pageInfo.formatDataList(ProductSearchResultVO.class);

@@ -12,8 +12,8 @@ import com.toucan.shopping.modules.common.persistence.event.service.EventPublish
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.stock.api.cloud.feign.service.FeignProductSkuStockLockService;
+import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
+import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
@@ -50,13 +50,13 @@ public class EventPublishScheduler {
     private KafkaTemplate kafkaTemplate;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private ProductSkuServiceAPI productSkuService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignProductSkuStockLockService feignProductSkuStockLockService;
+    private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
     private Toucan toucan;
@@ -85,7 +85,7 @@ public class EventPublishScheduler {
                         ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
                         productSkuStockLockVO.setMainOrderNoList(mainOrderNoList);
                         productSkuStockLockVO.setType((short) 1); //下单扣库存,付款扣库存不需要处理(因为付款扣库存是在完成订单的时候扣库存)
-                        ResultObjectVO resultObjectVO = feignProductSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                        ResultObjectVO resultObjectVO = productSkuStockLockService.findLockStockNumByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                         if (!resultObjectVO.isSuccess()) {
                             continue;
                         }
@@ -111,7 +111,7 @@ public class EventPublishScheduler {
                         Map params = JSONObject.parseObject(eventProcess.getPayload(), HashMap.class);
                         List<InventoryReductionVO> inventoryReductions = JSONArray.parseArray(JSONObject.toJSONString(params.get("inventoryReductions")), InventoryReductionVO.class);
                         ProductSkuStockLockVO productSkuStockLockVO = JSONObject.parseObject(JSONObject.toJSONString(params.get("productSkuStockLock")), ProductSkuStockLockVO.class);
-                        ResultObjectVO resultObjectVO = feignProductSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
+                        ResultObjectVO resultObjectVO = productSkuService.restoreStock(RequestJsonVOGenerator.generator(toucan.getAppCode(), inventoryReductions));
                         if(resultObjectVO.isSuccess()) {
                             //完成还原锁定库存事件
                             orderPayTimeOutService.finishEvent(eventProcess);
@@ -124,7 +124,7 @@ public class EventPublishScheduler {
                     }else if(eventProcess.getType().equals(PublishEventConstant.delete_lock_stock_num.name()))
                     {
                         ProductSkuStockLockVO productSkuStockLockVO = JSONObject.parseObject(eventProcess.getPayload(), ProductSkuStockLockVO.class);
-                        ResultObjectVO resultObjectVO = feignProductSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
+                        ResultObjectVO resultObjectVO = productSkuStockLockService.deleteLockStockByMainOrderNos(RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuStockLockVO));
                         if (resultObjectVO.isSuccess()) {
                             //删除锁定库存事件
                             orderPayTimeOutService.finishEvent(eventProcess);
