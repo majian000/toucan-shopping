@@ -146,20 +146,12 @@
             <artifactId>toucan-shopping-stock-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-fastdfs</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-product-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-image-upload</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
@@ -234,6 +226,16 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence-event</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-fastdfs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-image-upload</artifactId>
         </dependency>
 
     </dependencies>
