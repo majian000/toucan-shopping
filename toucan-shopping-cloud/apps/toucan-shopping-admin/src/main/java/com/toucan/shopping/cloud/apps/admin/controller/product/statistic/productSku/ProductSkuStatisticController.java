@@ -301,7 +301,7 @@ public class ProductSkuStatisticController extends UIController {
                             productSkus.add(productSkuVO);
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),productSkus);
-                        ResultObjectVO productResultObjectVO = productSkuService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                        ResultObjectVO productResultObjectVO = productSkuService.queryByIdList(requestJsonVO);
                         if(productResultObjectVO.isSuccess()) {
                             List<ProductSku> productSkuList = productResultObjectVO.formatDataList(ProductSku.class);
 

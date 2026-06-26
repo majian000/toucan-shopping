@@ -110,7 +110,7 @@ public class ColorTableController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

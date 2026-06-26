@@ -7,7 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ArticleServiceAPI;
-import com.toucan.shopping.cloud.column.api.ColumnServiceAPI;
+import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.vo.ColumnTreeVO;
@@ -208,7 +208,7 @@ public class ArticleController extends UIController {
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);

@@ -100,7 +100,7 @@ public class UserHeadSculptureApproveController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -157,7 +157,7 @@ public class UserHeadSculptureApproveController extends UIController {
             //设置审核人
             userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
-            resultObjectVO = userHeadSculptureApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userHeadSculptureApproveService.passById( requestJsonVO);
 
         }catch(Exception e)
         {
@@ -181,7 +181,7 @@ public class UserHeadSculptureApproveController extends UIController {
         try {
             userHeadSculptureApproveVO.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userHeadSculptureApproveVO);
-            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserHeadSculptureApproveVO> userHeadSculptureApproveVOS = resultObjectVO.formatDataList(UserHeadSculptureApproveVO.class);
@@ -246,7 +246,7 @@ public class UserHeadSculptureApproveController extends UIController {
             //设置审核人
             userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
-            resultObjectVO = userHeadSculptureApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userHeadSculptureApproveService.rejectById( requestJsonVO);
 
             if(resultObjectVO.isSuccess())
             {

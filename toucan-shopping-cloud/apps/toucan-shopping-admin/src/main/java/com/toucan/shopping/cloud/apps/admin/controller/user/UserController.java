@@ -163,7 +163,7 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO =   resultObjectVO.formatData(UserVO.class);
@@ -202,7 +202,7 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO =  resultObjectVO.formatData(UserVO.class);
@@ -269,7 +269,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = userService.list(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.list(requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -320,7 +320,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = userService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.mobilePhoneList(requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -358,7 +358,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = userService.emailList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.emailList(requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -395,7 +395,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = userService.usernameList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = userService.usernameList(requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -486,7 +486,7 @@ public class UserController extends UIController {
             //查询是否已注册用户名
             if(StringUtils.isNotEmpty(user.getUsername()))
             {
-                resultObjectVO = userService.findUsernameListByUsername(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = userService.findUsernameListByUsername(requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     return resultObjectVO;
@@ -503,7 +503,7 @@ public class UserController extends UIController {
             //查询是否已注册邮箱
             if(StringUtils.isNotEmpty(user.getEmail()))
             {
-                resultObjectVO = userService.findEmailListByEmail(requestJsonVO.sign(),requestJsonVO);
+                resultObjectVO = userService.findEmailListByEmail(requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {
                     return resultObjectVO;
@@ -520,7 +520,7 @@ public class UserController extends UIController {
 
             logger.info(" 用户注册 {} ", user.getMobilePhone());
 
-            resultObjectVO = userService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.registByMobilePhone(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 //拿到用户主ID
                 UserRegistVO userRegistResult = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
@@ -529,18 +529,18 @@ public class UserController extends UIController {
                 //如果输入了用户名,进行用户名的关联
                 if(StringUtils.isNotEmpty(user.getUsername())) {
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = userService.connectUsername(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userService.connectUsername( requestJsonVO);
                 }
 
                 //如果输入了邮箱,进行邮箱关联
                 if (StringUtils.isNotEmpty(user.getEmail())) {
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = userService.connectEmail(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = userService.connectEmail( requestJsonVO);
                 }
 
                 //修改用户详情
                 requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                resultObjectVO = userService.updateDetail(requestJsonVO.sign(), requestJsonVO);
+                resultObjectVO = userService.updateDetail( requestJsonVO);
             }
 
             resultObjectVO.setData(null);
@@ -600,13 +600,13 @@ public class UserController extends UIController {
             logger.info(" 修改详情 {} ", user.getUserMainId());
             UserVO userVO=null;
             //保存旧的详情数据,用于删除旧的图片资源
-            resultObjectVO = userService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.findByUserMainId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 userVO = resultObjectVO.formatData(UserVO.class);
             }
             //修改详情
-            resultObjectVO = userService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.updateDetail(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(userVO!=null)
@@ -684,7 +684,7 @@ public class UserController extends UIController {
             UserRegistVO user = new UserRegistVO();
             user.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
-            resultObjectVO = userService.flushCache(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = userService.flushCache(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -760,7 +760,7 @@ public class UserController extends UIController {
 
             logger.info(" 重置密码 {} ", user.getUserMainId());
 
-            resultObjectVO = userService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.resetPassword(requestJsonVO);
             resultObjectVO.setData(null);
         }catch(Exception e)
         {
@@ -823,7 +823,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联手机号 {} ", user.getMobilePhone());
 
-            resultObjectVO = userService.connectMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectMobilePhone(requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -885,7 +885,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联邮箱 {} ", user.getEmail());
 
-            resultObjectVO = userService.connectEmail(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectEmail(requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -947,7 +947,7 @@ public class UserController extends UIController {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 关联用户名 {} ", user.getUsername());
 
-            resultObjectVO = userService.connectUsername(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = userService.connectUsername(requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)
@@ -990,7 +990,7 @@ public class UserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(shoppingAppCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = userService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1020,7 +1020,7 @@ public class UserController extends UIController {
             userMobilePhoneVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userMobilePhoneVO);
-            resultObjectVO = userService.disabledEnabledMobilePhone(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledMobilePhone(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1051,7 +1051,7 @@ public class UserController extends UIController {
             }
             userEmailVO.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userEmailVO);
-            resultObjectVO = userService.disabledEnabledEmail(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledEmail(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1084,7 +1084,7 @@ public class UserController extends UIController {
             userUserNameVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userUserNameVO);
-            resultObjectVO = userService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = userService.disabledEnabledUsernameByUserMainIdAndUsername(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1123,7 +1123,7 @@ public class UserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = userService.disabledByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = userService.disabledByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -1164,7 +1164,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId( requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setHeadSculpture(groupPath);
@@ -1221,7 +1221,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) {
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId( requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setIdcardImg1(groupPath);
@@ -1279,7 +1279,7 @@ public class UserController extends UIController {
             if(userMainId!=null&&userMainId.longValue()!=-1) {
                 userVO.setUserMainId(userMainId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-                ResultObjectVO userResultObjectVO = userService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                ResultObjectVO userResultObjectVO = userService.findByUserMainId( requestJsonVO);
                 if (userResultObjectVO.isSuccess()) {
                     userVO = userResultObjectVO.formatData(UserVO.class);
                     userVO.setIdcardImg2(groupPath);

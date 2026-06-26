@@ -99,7 +99,7 @@ public class UserTrueNameApproveController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -176,7 +176,7 @@ public class UserTrueNameApproveController extends UIController {
             //设置审核人
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
-            resultObjectVO = userTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.passById( requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //发送消息
@@ -221,7 +221,7 @@ public class UserTrueNameApproveController extends UIController {
         try {
             userTrueNameApproveVO.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userTrueNameApproveVO);
-            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataList(UserTrueNameApproveVO.class);
@@ -268,7 +268,7 @@ public class UserTrueNameApproveController extends UIController {
             //设置审核人
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
-            resultObjectVO = userTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = userTrueNameApproveService.rejectById( requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
 

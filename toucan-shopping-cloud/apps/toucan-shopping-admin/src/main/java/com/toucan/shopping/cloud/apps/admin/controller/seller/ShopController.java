@@ -85,7 +85,7 @@ public class ShopController extends UIController {
             SellerShop entity = new SellerShop();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = sellerShopService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -124,7 +124,7 @@ public class ShopController extends UIController {
             SellerShop entity = new SellerShop();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = sellerShopService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -162,7 +162,7 @@ public class ShopController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = sellerShopService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerShopService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -243,7 +243,7 @@ public class ShopController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = sellerShopService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = sellerShopService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -279,7 +279,7 @@ public class ShopController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = sellerShopService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = sellerShopService.deleteByIds( requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -312,7 +312,7 @@ public class ShopController extends UIController {
             sellerShopVO.setPublicShopId(publicShopId);
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,sellerShopVO);
-            resultObjectVO = sellerShopService.disabledEnabled(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = sellerShopService.disabledEnabled(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -383,7 +383,7 @@ public class ShopController extends UIController {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = sellerShopService.update(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = sellerShopService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

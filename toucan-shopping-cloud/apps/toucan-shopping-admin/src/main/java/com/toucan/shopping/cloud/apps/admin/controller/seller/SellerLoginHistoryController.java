@@ -75,7 +75,7 @@ public class SellerLoginHistoryController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = sellerLoginHistoryService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = sellerLoginHistoryService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

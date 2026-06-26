@@ -61,7 +61,7 @@ public class AreaGeneratorController extends UIController {
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
-            ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
