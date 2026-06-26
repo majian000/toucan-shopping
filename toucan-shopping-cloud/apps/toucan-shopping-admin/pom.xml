@@ -231,6 +231,11 @@
             <artifactId>toucan-shopping-cloud-search-helper</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-persistence-event</artifactId>
+        </dependency>
+
     </dependencies>
 
 
@@ -338,11 +343,6 @@
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-single-config</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.toucan.shopping.modules.common</groupId>
-                    <artifactId>toucan-shopping-common-persistence-event</artifactId>
                 </dependency>
 
 

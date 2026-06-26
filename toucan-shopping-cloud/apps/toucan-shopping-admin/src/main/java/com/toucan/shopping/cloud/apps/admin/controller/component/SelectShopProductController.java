@@ -15,7 +15,6 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -67,9 +66,6 @@ public class SelectShopProductController extends UIController {
 
     @Autowired
     private ShopProductServiceAPI shopProductService;
-
-    @Autowired
-    private EventPublishService eventPublishService;
 
 
     @Autowired
