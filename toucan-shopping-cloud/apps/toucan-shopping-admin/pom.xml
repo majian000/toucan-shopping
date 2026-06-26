@@ -221,19 +221,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.services</groupId>
-            <artifactId>toucan-shopping-search</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-search-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.modules.search</groupId>
-            <artifactId>toucan-shopping-cloud-search-helper</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -302,6 +293,12 @@
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                     <artifactId>toucan-shopping-admin-single-config</artifactId>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.modules.search</groupId>
+                    <artifactId>toucan-shopping-cloud-search-helper</artifactId>
                 </dependency>
 
             </dependencies>
