@@ -5,38 +5,14 @@ server:
 spring:
   application:
     name: toucan-shopping-seller-web #应用名称
-  cloud:
-    loadbalancer:
-      retry:
-        enabled: true
-        retry-on-all-operations: true
-        max-retries-on-next-service-instance: 2
-        max-retries-on-same-service-instance: 0
-      cache:
-        ttl: 3s #开启重试机制
-      eager-load:
-        clients:
-          - toucan-shopping-category
-          - toucan-shopping-order
-          - toucan-shopping-product
-          - toucan-shopping-user
-          - toucan-shopping-area
-          - toucan-shopping-gateway
-          - toucan-shopping-stock
-    nacos:
-      discovery:
-        ip: ${toucan.ip}    #使用IP地址注册
-        port: ${server.port}
-        register-enabled: false
-    openfeign:
-      circuitbreaker:
-        enabled: true
-        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
-        username: ${toucan.nacos.username}
-        password: ${toucan.nacos.password}
-        metadata:
-          preserved.heart.beat.interval: 4000 #心跳间隔(毫秒)
-          preserved.heart.beat.timeout: 4500 #心跳超时(毫秒)
+  task:
+    execution:
+      pool:
+        core-threads: 5 #核心线程
+        max-threads: 10 #最大线程
+        queue-capacity: 150 #缓冲队列
+        keep-alive: 20 #允许空闲时间(秒)
+        name-prefix: async-thread-pool
   zipkin: #链路追踪
     enabled: false
     base-url: http://localhost:9411
@@ -75,29 +51,6 @@ spring:
 #    serviceUrl:
 #      defaultZone: http://localhost:8081/eureka
 
-feign:
-
-  client:
-    config:
-      default:
-        connectTimeout: 20000
-        readTimeout: 20000
-resilience4j:
-  timelimiter:
-    configs:
-      default:
-        timeoutDuration: 20s
-        cancelRunningFuture: true
-  circuitbreaker:
-    configs:
-      default:
-        slidingWindowType: COUNT_BASED
-        slidingWindowSize: 10
-        minimumNumberOfCalls: 8
-        failureRateThreshold: 50
-        waitDurationInOpenState: 10s
-        permittedNumberOfCallsInHalfOpenState: 3
-        automaticTransitionFromOpenToHalfOpenEnabled: true
 
 
 

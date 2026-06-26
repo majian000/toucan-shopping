@@ -1,0 +1,220 @@
+#========================后台管理界面 生产环境(云部署)====================================
+
+server:
+  port: 8088
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: toucan-shopping-admin #应用名称
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+  data:
+    redis:
+      host: 8.140.187.184
+      port: 6379
+      password: mj_tocan_redis_7612
+      timeout: 3000
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  compression: #开启gzip压缩
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024 #只压缩1MB以上的内容
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+        retry-on-all-operations: true
+        max-retries-on-next-service-instance: 2
+        max-retries-on-same-service-instance: 0
+      cache:
+        ttl: 3s
+      eager-load:
+        clients:
+          - toucan-shopping-order
+          - toucan-shopping-product
+          - toucan-shopping-admin-auth
+          - toucan-shopping-gateway
+          - toucan-shopping-common-data
+          - toucan-shopping-content
+          - toucan-shopping-column
+          - toucan-shopping-user
+          - toucan-shopping-stock
+    nacos:
+      discovery:
+        ip: ${toucan.ip}    #使用IP地址注册
+        port: ${toucan.port}
+        register-enabled: false
+    openfeign:
+      circuitbreaker:
+        enabled: true
+        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
+        username: ${toucan.nacos.username}
+        password: ${toucan.nacos.password}
+        metadata:
+          preserved.heart.beat.interval: 4000 #心跳间隔(毫秒)
+          preserved.heart.beat.timeout: 4500 #心跳超时(毫秒)
+
+#eureka:
+#  client:
+#    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+#    registerWithEureka: false
+#    serviceUrl:
+#      defaultZone: http://${toucan.eureka.ip}:${toucan.eureka.port}/eureka
+
+
+
+
+feign:
+
+  client:
+    config:
+      default:
+        connectTimeout: 240000
+        readTimeout: 240000
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 240s
+        cancelRunningFuture: true
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 8
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+
+
+
+
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false
+
+
+
+
+
+
+toucan:
+  user:
+    default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
+  app-name: 犀鸟商城
+  app-code: 10001002 #自定义应用编码
+  #雪花算法ID相关
+  # workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  # datacenterId: 0 #数据中心ID (0~31)
+  shopping-pc: #商城PC端
+    app-code: 10001001
+    base-path: http://8.140.187.184:8083
+    ip-list: 8.140.187.184:8083,8.140.187.184:8083 #多个用,分割
+    pc-index-column-type-code: INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
+    product-approve-preview-page: /page/product/approve/preview/paid/ #商品审核预览
+    product-detail-page: /page/product/detail/pid/ #商品详情
+    product-preview-page: /page/product/preview/pid/ #商品预览
+    product-sku-preview-page: /page/product/preview/ #SKU商品预览
+    product-sku-detail-page: /page/product/detail/ #SKU商品预览
+    shop-pc-index-release-page: /page/shop/pc/index/release #店铺首页正式
+  shopping-seller-web-pc: #PC端页面静态化
+    ip-list: 8.140.187.184:8101,8.140.187.184:8101 #多个用,分割
+  admin-auth:
+    enabled: true
+    operate-log: #操作日志
+      enabled: true
+      #记录指定路径
+      path-patterns: /**
+      #忽略记录
+      exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+    name: toucan-shopping-admin-auth
+    #HTTP权限请求头
+    # 例如 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
+    http-toucan-auth-header: Cookie
+    #当前项目登录页
+    login-page: login/page
+    #没有权限时跳转页面
+    page-403: /403
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/403,/login/page,/login/vcode
+  plugins:
+    xss-filter:
+      enabled: true
+      #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+      exclude-paths[0]: /function/update
+      exclude-paths[1]: /function/save
+      exclude-paths[2]: /article/save
+      exclude-paths[3]: /article/update
+  modules:
+    log: #日志模块
+      param:
+        #只配置请求即可,忽略以上请求日志
+        ignore-url-patterns[0]: .*\.js
+        ignore-url-patterns[1]: .*\.css
+        ignore-url-patterns[2]: .*\.jpg
+        ignore-url-patterns[3]: .*\.png
+        ignore-url-patterns[4]: .*\.gif
+        ignore-url-patterns[5]: .*\.json
+        request:
+          enabled: true
+          content-type-list[0]: application/x-www-form-urlencoded
+          content-type-list[1]: application/json
+          ignore-urls[0]: /login/submit
+        response:
+          enabled: true
+          content-type-list[0]: application/json
+          ignore-urls[0]: /login/submit
+      email:
+        enabled: true
+        title: ——商城后台——异常邮件
+        ignore-exception-list[0]: javax.mail.MessagingException
+        ignore-exception-list[1]: com.toucan.shopping.modules.common.exception.InvalidAdminHeaderException
+        protocol: smtp
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
+          port: 465
+          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-fallback: false
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian
+    skylarkLock: #云雀分布式锁
+      type: redis #中间件类型
+      redis:
+        select: single # 可选值 single:单实例 cluster:集群
+        timeout: 10000
+        password: mj_tocan_redis_7612 #多个集群要求每个密码统一
+        #单实例
+        host: 8.140.187.184
+        port: 6379
+        database: 0
+        #集群配置
+        hosts: 192.168.80.129:6380,192.168.80.129:6381,192.168.80.129:6382 #多个用,分割
+        maxRedirects: 3 #最大连接转移数
+        #jedis pool配置
+        maxActive: 50 #最大活跃数
+        maxWaitMillis: 15 #最大等待数
+        maxIdle: 50 #最大核心线程数
+        minIdle: 0 #最小核心线程数
