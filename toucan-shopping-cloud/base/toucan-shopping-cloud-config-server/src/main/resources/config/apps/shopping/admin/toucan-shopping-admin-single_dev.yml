@@ -52,6 +52,7 @@ management:
 
 
 toucan:
+  machine-id: 2201 #机器编码
   user:
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
   app-name: 犀鸟商城
