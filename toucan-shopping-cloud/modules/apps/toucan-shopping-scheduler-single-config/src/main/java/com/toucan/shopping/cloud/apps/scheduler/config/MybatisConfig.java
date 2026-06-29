@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
             "com.toucan.shopping.modules.user.mapper",
             "com.toucan.shopping.modules.area.mapper",
             "com.toucan.shopping.modules.content.mapper",
+            "com.toucan.shopping.modules.column.mapper",
+            "com.toucan.shopping.modules.color.table.mapper",
             "com.toucan.shopping.modules.seller.mapper"})
 @Configuration
 public class MybatisConfig {
