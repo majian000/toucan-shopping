@@ -164,6 +164,14 @@
         <module>modules/apps/toucan-shopping-message-web-cloud-config</module>
         <!--消息Web端单服务配置 -->
         <module>modules/apps/toucan-shopping-message-web-single-config</module>
+        <!--权限中台任务调度端微服务配置 -->
+        <module>modules/apps/toucan-shopping-admin-auth-scheduler-cloud-config</module>
+        <!--权限中台任务调度单服务配置 -->
+        <module>modules/apps/toucan-shopping-admin-auth-scheduler-single-config</module>
+        <!--商城定时任务调度端微服务配置 -->
+        <module>modules/apps/toucan-shopping-scheduler-cloud-config</module>
+        <!--商城定时任务调度单服务配置 -->
+        <module>modules/apps/toucan-shopping-scheduler-single-config</module>
 
         <!-- 启动配置公共模块-->
         <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>
@@ -642,6 +650,34 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                 <artifactId>toucan-shopping-message-web-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-admin-auth-scheduler-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-admin-auth-scheduler-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-scheduler-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-scheduler-single-config</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

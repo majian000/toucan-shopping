@@ -1,5 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.auth.scheduler.config;
-
+package com.toucan.shopping.cloud.apps.scheduler.config;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
