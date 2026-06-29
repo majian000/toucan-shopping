@@ -31,6 +31,13 @@ spring:
     enabled: true
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     min-response-size: 1024 #只压缩1MB以上的内容
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    nacos:
+      discovery:
+        enabled: false
 #eureka:
 #  client:
 #    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表

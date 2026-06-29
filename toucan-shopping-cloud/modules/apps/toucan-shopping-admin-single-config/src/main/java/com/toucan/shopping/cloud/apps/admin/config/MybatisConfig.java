@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @MapperScan({"com.toucan.shopping.modules.common.persistence.mapper",
         "com.toucan.shopping.modules.common.persistence.event.mapper",
+        "com.toucan.shopping.modules.admin.auth.log.mapper",   //权限管理独有
         "com.toucan.shopping.modules.category.mapper",
         "com.toucan.shopping.modules.order.mapper",
         "com.toucan.shopping.modules.product.mapper",

@@ -20,6 +20,13 @@ spring:
       sampler:
         #采样率 1全部采集
         probability: 1
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    nacos:
+      discovery:
+        enabled: false
 #eureka:
 #  client:
 #    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表

@@ -44,6 +44,13 @@ spring:
 
 
 
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    nacos:
+      discovery:
+        enabled: false
 management:
   health:
     elasticsearch:
@@ -192,7 +199,9 @@ toucan:
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数
     userLoginCache:
-      redis:
+      cache-type: redis
+      redis-type: default #实现方式类型 default 默认采用官方配置 customSharding 自定义分片
+      default-redis:
         select: single # 可选值 single:单实例 cluster:集群
         timeout: 10000
         password: mj_tocan_redis_7612 #多个集群要求每个密码统一
