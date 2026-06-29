@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.scheduler.app.config;
+package com.toucan.shopping.cloud.apps.scheduler.config;
 
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;

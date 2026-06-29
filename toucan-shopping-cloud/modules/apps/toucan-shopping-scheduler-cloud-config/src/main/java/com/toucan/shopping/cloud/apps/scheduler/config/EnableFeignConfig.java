@@ -16,4 +16,5 @@ public class EnableFeignConfig {
     public RestTemplate restTemplate(){
         return  new RestTemplate();
     }
+
 }

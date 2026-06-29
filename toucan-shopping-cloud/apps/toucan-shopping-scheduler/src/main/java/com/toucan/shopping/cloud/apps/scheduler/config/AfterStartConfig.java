@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.scheduler.app.config;
+package com.toucan.shopping.cloud.apps.scheduler.config;
 
 
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;

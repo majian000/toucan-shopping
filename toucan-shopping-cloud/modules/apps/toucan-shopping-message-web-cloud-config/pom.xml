@@ -37,6 +37,13 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <version>${nacos-server-version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-persistence</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
