@@ -8,10 +8,10 @@ spring:
   task:
     execution:
       pool:
-        core-threads: 5 #核心线程
-        max-threads: 10 #最大线程
+        core-size: 5 #核心线程
+        max-size: 10 #最大线程
         queue-capacity: 150 #缓冲队列
-        keep-alive: 20 #允许空闲时间(秒)
+        keep-alive: 20s #允许空闲时间(秒)
         name-prefix: async-thread-pool
   zipkin: #链路追踪
     enabled: false
