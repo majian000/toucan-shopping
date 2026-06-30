@@ -145,33 +145,33 @@
         <!-- 权限管理公共控制器-->
         <module>modules/apps/toucan-shopping-cloud-admin-auth-controller</module>
         <!--权限中心微服务配置 -->
-        <module>modules/apps/toucan-shopping-admin-auth-web-cloud-config</module>
+        <module>modules/config/adminAuthWeb/toucan-shopping-admin-auth-web-cloud-config</module>
         <!--单服务 -->
-        <module>modules/apps/toucan-shopping-admin-auth-web-single-config</module>
+        <module>modules/config/adminAuthWeb/toucan-shopping-admin-auth-web-single-config</module>
         <!--商城后台管理微服务配置 -->
-        <module>modules/apps/toucan-shopping-admin-cloud-config</module>
+        <module>modules/config/admin/toucan-shopping-admin-cloud-config</module>
         <!--商城后台管理单服务配置 -->
-        <module>modules/apps/toucan-shopping-admin-single-config</module>
+        <module>modules/config/admin/toucan-shopping-admin-single-config</module>
         <!--卖家Web端微服务配置 -->
-        <module>modules/apps/toucan-shopping-seller-web-cloud-config</module>
+        <module>modules/config/sellerWeb/toucan-shopping-seller-web-cloud-config</module>
         <!--卖家Web端单服务配置 -->
-        <module>modules/apps/toucan-shopping-seller-web-single-config</module>
+        <module>modules/config/sellerWeb/toucan-shopping-seller-web-single-config</module>
         <!--商城Web端微服务配置 -->
-        <module>modules/apps/toucan-shopping-web-cloud-config</module>
+        <module>modules/config/web/toucan-shopping-web-cloud-config</module>
         <!--商城Web端单服务配置 -->
-        <module>modules/apps/toucan-shopping-web-single-config</module>
+        <module>modules/config/web/toucan-shopping-web-single-config</module>
         <!--消息Web端微服务配置 -->
-        <module>modules/apps/toucan-shopping-message-web-cloud-config</module>
+        <module>modules/config/messageWeb/toucan-shopping-message-web-cloud-config</module>
         <!--消息Web端单服务配置 -->
-        <module>modules/apps/toucan-shopping-message-web-single-config</module>
+        <module>modules/config/messageWeb/toucan-shopping-message-web-single-config</module>
         <!--权限中台任务调度端微服务配置 -->
-        <module>modules/apps/toucan-shopping-admin-auth-scheduler-cloud-config</module>
+        <module>modules/config/adminauthScheduler/toucan-shopping-admin-auth-scheduler-cloud-config</module>
         <!--权限中台任务调度单服务配置 -->
-        <module>modules/apps/toucan-shopping-admin-auth-scheduler-single-config</module>
+        <module>modules/config/adminauthScheduler/toucan-shopping-admin-auth-scheduler-single-config</module>
         <!--商城定时任务调度端微服务配置 -->
-        <module>modules/apps/toucan-shopping-scheduler-cloud-config</module>
+        <module>modules/config/scheduler/toucan-shopping-scheduler-cloud-config</module>
         <!--商城定时任务调度单服务配置 -->
-        <module>modules/apps/toucan-shopping-scheduler-single-config</module>
+        <module>modules/config/scheduler/toucan-shopping-scheduler-single-config</module>
 
         <!-- 启动配置公共模块-->
         <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>

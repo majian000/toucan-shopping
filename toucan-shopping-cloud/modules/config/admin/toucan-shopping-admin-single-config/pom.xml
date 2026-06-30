@@ -7,13 +7,13 @@
         <artifactId>toucan-shopping-cloud</artifactId>
         <groupId>com.toucan.shopping</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../../pom.xml</relativePath>
     </parent>
 
-    <description>权限中台任务调度端单服务配置启动类</description>
+    <description>商城后台管理单服务配置启动类</description>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-    <artifactId>toucan-shopping-admin-auth-scheduler-single-config</artifactId>
+    <artifactId>toucan-shopping-admin-single-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -48,6 +48,19 @@
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
         </dependency>
 
     </dependencies>

@@ -2,29 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>toucan-shopping-cloud</artifactId>
         <groupId>com.toucan.shopping</groupId>
+        <artifactId>toucan-shopping-cloud</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../../pom.xml</relativePath>
     </parent>
 
-    <description>商城web端单服务配置启动类</description>
-    <modelVersion>4.0.0</modelVersion>
     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-    <artifactId>toucan-shopping-web-single-config</artifactId>
+    <artifactId>toucan-shopping-message-web-single-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
+    <description>消息中心web端单服务配置启动类</description>
 
     <dependencies>
-
-
-
-        <!--集成redis -->
+        <!-- Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -34,44 +29,28 @@
             <artifactId>lettuce-core</artifactId>
         </dependency>
 
-
-        <!-- 健康监控 -->
+        <!-- Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-
-        <!--kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-
+        <!-- Common modules -->
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
 
+        <!-- XSS Starter -->
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-redis</artifactId>
-        </dependency>
-
-
     </dependencies>
-
 
     <build>
         <plugins>
@@ -80,7 +59,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

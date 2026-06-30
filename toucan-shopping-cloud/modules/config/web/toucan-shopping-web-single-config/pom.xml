@@ -3,47 +3,75 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
     <parent>
         <artifactId>toucan-shopping-cloud</artifactId>
         <groupId>com.toucan.shopping</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../../pom.xml</relativePath>
     </parent>
 
-    <description>权限中台任务调度端微服务配置启动类</description>
+    <description>商城web端单服务配置启动类</description>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-    <artifactId>toucan-shopping-admin-auth-scheduler-cloud-config</artifactId>
+    <artifactId>toucan-shopping-web-single-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+
+
     <dependencies>
 
-        <!--对Open Feign方式调用支持 -->
+
+
+        <!--集成redis -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
         </dependency>
 
-        <!--断路器支持 -->
+
+        <!-- 健康监控 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+
+        <!--kafka -->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos-server-version}</version>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-redis</artifactId>
+        </dependency>
+
+
     </dependencies>
+
 
     <build>
         <plugins>

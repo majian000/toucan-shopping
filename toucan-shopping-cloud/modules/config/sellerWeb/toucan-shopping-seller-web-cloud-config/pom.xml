@@ -2,39 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-
     <parent>
         <artifactId>toucan-shopping-cloud</artifactId>
         <groupId>com.toucan.shopping</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../../pom.xml</relativePath>
     </parent>
-
-    <description>商城web端微服务配置启动类</description>
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
-    <artifactId>toucan-shopping-web-cloud-config</artifactId>
+    <artifactId>toucan-shopping-seller-web-cloud-config</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
-
+    <description>卖家web端微服务配置启动类</description>
 
     <dependencies>
-
-
-        <!--对Open Feign方式调用支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
-        <!--断路器支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
@@ -45,9 +35,7 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence-event</artifactId>
         </dependency>
-
     </dependencies>
-
 
     <build>
         <plugins>
@@ -56,7 +44,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
