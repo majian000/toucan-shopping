@@ -3,9 +3,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;
-import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
+import com.toucan.shopping.cloud.apps.seller.web.service.SellerCategoryService;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -14,9 +12,6 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
-import com.toucan.shopping.modules.seller.entity.SellerShop;
-import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +37,7 @@ public class ShopProductApprovePageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private CategoryService categoryService;
+    private SellerCategoryService sellerCategoryService;
 
     @Autowired
     private ShopCategoryServiceAPI shopCategoryService;
@@ -69,7 +64,7 @@ public class ShopProductApprovePageController extends BaseController {
     public String republish (HttpServletRequest request, @PathVariable Long approveId){
         request.setAttribute("approveId",String.valueOf(approveId));
         try {
-            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryMiniCategorys(),simplePropertyPreFilter));
+            request.setAttribute("categoryList", JSONArray.toJSONString(sellerCategoryService.queryMiniCategorys(),simplePropertyPreFilter));
         }catch(Exception e)
         {
             request.setAttribute("categoryList", "[]");

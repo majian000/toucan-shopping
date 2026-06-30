@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 类别服务类
  */
-public interface CategoryService {
+public interface SellerCategoryService {
 
 
     /**

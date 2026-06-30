@@ -2,12 +2,11 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.freightTemplate;
 
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
+import com.toucan.shopping.cloud.apps.seller.web.service.SellerCategoryService;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class FreightTemplatePageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private CategoryService categoryService;
+    private SellerCategoryService sellerCategoryService;
 
     @Autowired
     private ShopCategoryServiceAPI shopCategoryService;

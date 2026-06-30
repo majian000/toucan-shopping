@@ -1,22 +1,13 @@
 package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 
-import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.apps.seller.web.service.PageParamService;
-import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
-import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
