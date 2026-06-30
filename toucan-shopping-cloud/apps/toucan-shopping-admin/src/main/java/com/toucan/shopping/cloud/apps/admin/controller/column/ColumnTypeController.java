@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
@@ -208,7 +209,7 @@ public class ColumnTypeController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ColumnTypeVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ColumnTypeVO.class);
 

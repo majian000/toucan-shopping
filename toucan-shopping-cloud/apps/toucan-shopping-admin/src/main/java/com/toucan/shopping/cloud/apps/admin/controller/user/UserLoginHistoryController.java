@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -80,7 +81,7 @@ public class UserLoginHistoryController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<SellerLoginHistory> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerLoginHistory.class);
                     if(tableVO.getCount()>0) {

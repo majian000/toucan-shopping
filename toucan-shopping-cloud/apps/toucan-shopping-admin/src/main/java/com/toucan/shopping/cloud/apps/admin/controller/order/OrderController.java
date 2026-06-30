@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
@@ -103,7 +104,7 @@ public class OrderController extends UIController {
             ResultObjectVO resultObjectVO = orderService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    Map<String, Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
                     List<OrderVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), OrderVO.class);
                     tableVO.setData((List)list);

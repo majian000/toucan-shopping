@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.product.shopProductApprove;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -580,7 +581,7 @@ public class ShopProductApproveController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
@@ -750,7 +751,7 @@ public class ShopProductApproveController extends UIController {
             resultObjectVO = shopProductApproveService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    Map<String, Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
                     List<ShopProductApproveVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductApproveVO.class);
                     if (CollectionUtils.isNotEmpty(list)) {
@@ -881,7 +882,7 @@ public class ShopProductApproveController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ShopProductApproveSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductApproveSkuVO.class);
                     if(CollectionUtils.isNotEmpty(list))

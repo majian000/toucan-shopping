@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.product.productSpu;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -299,7 +300,7 @@ public class ProductSpuController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
@@ -450,7 +451,7 @@ public class ProductSpuController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<BrandVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BrandVO.class);
                     if(tableVO.getCount()>0) {

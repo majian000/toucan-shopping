@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -274,7 +275,7 @@ public class UserController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
                     List<UserVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),UserVO.class);
                     if(list!=null) {
@@ -325,7 +326,7 @@ public class UserController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
@@ -363,7 +364,7 @@ public class UserController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
@@ -400,7 +401,7 @@ public class UserController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List<Object>) resultObjectDataMap.get("list"));

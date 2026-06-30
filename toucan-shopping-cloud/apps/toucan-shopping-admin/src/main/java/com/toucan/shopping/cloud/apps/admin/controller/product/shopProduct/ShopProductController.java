@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.product.shopProduct;
 
 
+import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -397,7 +398,7 @@ public class ShopProductController extends UIController {
             resultObjectVO = shopProductService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
-                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    Map<String, Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
                     List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
                     if (CollectionUtils.isNotEmpty(list)) {
@@ -746,7 +747,7 @@ public class ShopProductController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ProductSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ProductSkuVO.class);
                     if(CollectionUtils.isNotEmpty(list))
