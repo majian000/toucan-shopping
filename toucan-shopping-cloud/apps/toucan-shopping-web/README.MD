@@ -23,6 +23,9 @@
     访问:localhost:8088
     后台管理端》首页静态生成
 
+    2.不生成缓存
+    访问:localhost:8083/dynamic/index
+
 ### 访问界面
 
     1.访问首页
