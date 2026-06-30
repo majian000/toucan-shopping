@@ -12,24 +12,26 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.time.Duration;
 import java.util.concurrent.ThreadPoolExecutor;
+
 
 @Configuration
 @EnableAsync
 public class ThreadPoolTaskConfig {
 
 
-    @Value("${spring.task.execution.pool.core-threads}")
+    @Value("${spring.task.execution.pool.core-size}")
     private int corePoolSize;
 
-    @Value("${spring.task.execution.pool.max-threads}")
+    @Value("${spring.task.execution.pool.max-size}")
     private int maxPoolSize;
 
     @Value("${spring.task.execution.pool.queue-capacity}")
     private int queueCapacity;
 
     @Value("${spring.task.execution.pool.keep-alive}")
-    private int keepAliveSeconds;
+    private Duration keepAlive;
 
     @Value("${spring.task.execution.pool.name-prefix}")
     private String threadNamePrefix;
@@ -41,7 +43,7 @@ public class ThreadPoolTaskConfig {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
-        executor.setKeepAliveSeconds(keepAliveSeconds);
+        executor.setKeepAliveSeconds((int) keepAlive.getSeconds());
         executor.setThreadNamePrefix(threadNamePrefix);
 
         executor.setTaskDecorator(new ThreadContextDecorator());
