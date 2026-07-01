@@ -4,11 +4,11 @@
     开源协议采用MIT协议,任何人都可以用这个项目进行商用以及二次开发
 
 #### 标准版
+    注:标准版需要使用-Ddeploy.mode=single进行编译 运行时 --spring.profiles.active=single_dev
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
-    注:标准版需要使用-Ddeploy.mode=single进行编译
     
 #### 微服务版
-    注:微服务版本使用-Ddeploy.mode=cloud进行编译
+    注:微服务版本使用-Ddeploy.mode=cloud进行编译 运行时 --spring.profiles.active=single_dev
     前端技术 jquery、jquery-layui、vue3
     
     后端技术
