@@ -20,6 +20,7 @@ spring:
           - toucan-shopping-message
     nacos:
       discovery:
+        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
         ip: ${toucan.ip}    #使用IP地址注册
         port: ${toucan.port}
         register-enabled: false
