@@ -8,7 +8,7 @@
     采用技术spring boot、spring config、mybatis、lombok、elasticsearch、kafka、shardingsphere、redis、mysql
     
 #### 微服务版
-    注:微服务版本使用-Ddeploy.mode=cloud进行编译 运行时 --spring.profiles.active=single_dev
+    注:微服务版本使用-Ddeploy.mode=cloud进行编译 运行时 --spring.profiles.active=cloud_dev
     前端技术 jquery、jquery-layui、vue3
     
     后端技术
