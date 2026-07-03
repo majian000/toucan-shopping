@@ -355,7 +355,9 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            String adminId= AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
+            entity.setAdminId(adminId);
+            entity.setUpdateAdminId(adminId);
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = adminServiceAPI.updatePassword(requestJsonVO);
