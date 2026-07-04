@@ -79,69 +79,64 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-            - id: toucan-shopping-product-proxy
-              uri: lb://toucan-shopping-product
-              predicates:
-                - Path=/toucan-shopping-product-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-order-proxy
-              uri: lb://toucan-shopping-order
-              predicates:
-                - Path=/toucan-shopping-order-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-user-proxy
-              uri: lb://toucan-shopping-user
-              predicates:
-                - Path=/toucan-shopping-user-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-common-data-proxy
-              uri: lb://toucan-shopping-common-data
-              predicates:
-                - Path=/toucan-shopping-common-data-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-stock-proxy
-              uri: lb://toucan-shopping-stock
-              predicates:
-                - Path=/toucan-shopping-stock-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-content-proxy
-              uri: lb://toucan-shopping-content
-              predicates:
-                - Path=/toucan-shopping-content-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-message-proxy
-              uri: lb://toucan-shopping-message
-              predicates:
-                - Path=/toucan-shopping-message-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-admin-auth-proxy
-              uri: lb://toucan-shopping-admin-auth
-              predicates:
-                - Path=/toucan-shopping-admin-auth-proxy/**
-              filters:
-                - StripPrefix=1
-                - name: RequestRateLimiter
-                  args:
-                    key-resolver: '#{@pathKeyResolver}'
-                    redis-rate-limiter.replenishRate: 900
-                    redis-rate-limiter.burstCapacity: 1000
-            - id: toucan-shopping-seller-proxy
-              uri: lb://toucan-shopping-seller
-              predicates:
-                - Path=/toucan-shopping-seller-proxy/**
-              filters:
-                - StripPrefix=1
-            - id: toucan-shopping-search-proxy
-              uri: lb://toucan-shopping-search
-              predicates:
-                - Path=/toucan-shopping-search-proxy/**
-              filters:
-                - StripPrefix=1
+        - id: toucan-shopping-product-proxy
+          uri: lb://toucan-shopping-product
+          predicates:
+            - Path=/toucan-shopping-product-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-order-proxy
+          uri: lb://toucan-shopping-order
+          predicates:
+            - Path=/toucan-shopping-order-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-user-proxy
+          uri: lb://toucan-shopping-user
+          predicates:
+            - Path=/toucan-shopping-user-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-common-data-proxy
+          uri: lb://toucan-shopping-common-data
+          predicates:
+            - Path=/toucan-shopping-common-data-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-stock-proxy
+          uri: lb://toucan-shopping-stock
+          predicates:
+            - Path=/toucan-shopping-stock-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-content-proxy
+          uri: lb://toucan-shopping-content
+          predicates:
+            - Path=/toucan-shopping-content-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-message-proxy
+          uri: lb://toucan-shopping-message
+          predicates:
+            - Path=/toucan-shopping-message-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-admin-auth-proxy
+          uri: lb://toucan-shopping-admin-auth
+          predicates:
+            - Path=/toucan-shopping-admin-auth-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-seller-proxy
+          uri: lb://toucan-shopping-seller
+          predicates:
+            - Path=/toucan-shopping-seller-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-search-proxy
+          uri: lb://toucan-shopping-search
+          predicates:
+            - Path=/toucan-shopping-search-proxy/**
+          filters:
+            - StripPrefix=1
 
