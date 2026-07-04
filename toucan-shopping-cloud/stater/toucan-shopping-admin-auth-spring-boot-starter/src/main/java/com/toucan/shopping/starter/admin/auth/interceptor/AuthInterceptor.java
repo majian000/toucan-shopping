@@ -3,6 +3,7 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AuthServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -329,4 +330,14 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         return true;
     }
+
+
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+//        AdminLoginHolder.clear();
+    }
+
+
+
 }
