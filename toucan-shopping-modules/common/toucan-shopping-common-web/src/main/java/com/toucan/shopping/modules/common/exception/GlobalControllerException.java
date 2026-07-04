@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class GlobalControllerException {
@@ -25,7 +24,7 @@ public class GlobalControllerException {
     @ResponseBody
     public ResultObjectVO handleException(Exception ex)
     {
-        if(ex instanceof NoResourceFoundException) {
+        if("org.springframework.web.servlet.resource.NoResourceFoundException".equals(ex.getClass().getName())) {
             // 浏览器探测请求（如 Chrome DevTools .well-known、favicon.ico 等），
             // 不存在是正常情况，不需要记录日志
             return new ResultObjectVO(ResultVO.HTTPCODE_404,"Not Found");
