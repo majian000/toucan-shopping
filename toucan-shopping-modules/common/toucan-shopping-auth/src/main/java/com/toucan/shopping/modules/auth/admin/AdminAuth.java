@@ -36,6 +36,12 @@ public @interface AdminAuth {
 
 
 	/**
+	 * 权限类型 0:地址校验 1:权限标识校验
+	 */
+	int VERIFY_TYPE_URL=0;
+	int VERIFY_TYPE_PERMISSION=1;
+
+	/**
 	 * 用户类型
 	 */
 	 static int USERTYPE_ADMIN =0;
@@ -47,7 +53,17 @@ public @interface AdminAuth {
 	 */
 	 int verifyMethod() default VERIFYMETHOD_LOCAL;
 
+	/**
+	 * 权限标识
+	 * @return
+	 */
+	String[] permissions() default {};
 
+	/**
+	 * 校验类型
+	 * @return
+	 */
+	int verifyType() default VERIFY_TYPE_URL;
 
 	/**
 	 * 登录校验
