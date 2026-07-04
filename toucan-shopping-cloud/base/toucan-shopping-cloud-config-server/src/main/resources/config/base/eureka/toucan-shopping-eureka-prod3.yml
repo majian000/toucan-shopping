@@ -11,7 +11,7 @@ eureka:
     registerWithEureka: true  #注册自己
     fetchRegistry: false #要不要去注册中心获取其他服务的地址
     serviceUrl:
-      defaultZone: http://localhost8761:8761/eureka,http://localhost8762:8762/eureka
+      defaultZone: http://localhost:8761/eureka,http://localhost:8762/eureka
   server:
     enableSelfPreservation: false #开启保护机制
     evictionIntervalTimerInMs: 2000 #心跳发送

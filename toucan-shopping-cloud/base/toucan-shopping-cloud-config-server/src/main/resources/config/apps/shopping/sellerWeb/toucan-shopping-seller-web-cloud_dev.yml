@@ -35,12 +35,6 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
-        username: ${toucan.nacos.username}
-        password: ${toucan.nacos.password}
-        metadata:
-          preserved.heart.beat.interval: 4000 #心跳间隔(毫秒)
-          preserved.heart.beat.timeout: 4500 #心跳超时(毫秒)
   zipkin: #链路追踪
     enabled: false
     base-url: http://localhost:9411
