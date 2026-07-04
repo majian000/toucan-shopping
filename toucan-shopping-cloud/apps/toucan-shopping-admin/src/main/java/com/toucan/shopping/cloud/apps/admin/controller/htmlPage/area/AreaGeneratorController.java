@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -59,7 +60,7 @@ public class AreaGeneratorController extends UIController {
             FunctionVO function = new FunctionVO();
             function.setUrl(url);
             function.setAppCode(toucan.getAppCode());
-            function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            function.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
             ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
             if(resultObjectVO.isSuccess())

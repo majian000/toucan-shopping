@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserHeadSculptureApproveServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -156,7 +157,7 @@ public class UserHeadSculptureApproveController extends UIController {
             UserHeadSculptureApproveVO userHeadSculptureApproveVO =new UserHeadSculptureApproveVO();
             userHeadSculptureApproveVO.setId(Long.parseLong(id));
             //设置审核人
-            userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            userHeadSculptureApproveVO.setApproveAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
             resultObjectVO = userHeadSculptureApproveService.passById( requestJsonVO);
 
@@ -245,7 +246,7 @@ public class UserHeadSculptureApproveController extends UIController {
                 return resultObjectVO;
             }
             //设置审核人
-            userHeadSculptureApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            userHeadSculptureApproveVO.setApproveAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userHeadSculptureApproveVO);
             resultObjectVO = userHeadSculptureApproveService.rejectById( requestJsonVO);
 

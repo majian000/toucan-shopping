@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.HotProductServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.page.HotProductPageInfo;
@@ -155,7 +156,7 @@ public class HotProductController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             hotProductVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            hotProductVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            hotProductVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
             resultObjectVO = hotProductService.save(requestJsonVO);
         }catch(Exception e)
@@ -180,7 +181,7 @@ public class HotProductController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = hotProductService.update(requestJsonVO);
         }catch(Exception e)

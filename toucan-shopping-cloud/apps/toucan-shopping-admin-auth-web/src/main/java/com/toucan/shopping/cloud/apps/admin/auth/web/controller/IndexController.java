@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -94,7 +95,7 @@ public class IndexController {
     {
         try {
             AdminVO adminVO = new AdminVO();
-            adminVO.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminVO.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
             ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
@@ -124,7 +125,7 @@ public class IndexController {
             FunctionVO function = new FunctionVO();
             function.setUrl("/index/welcome");
             function.setAppCode(toucan.getAppCode());
-            function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            function.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
             ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -211,7 +212,7 @@ public class IndexController {
 
         try {
             AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            query.setAdminId(AdminLoginHolder.getCurrentAdminId());
             query.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             ResultObjectVO resultObjectVO = functionServiceAPI.queryAdminAppFunctions(requestJsonVO);

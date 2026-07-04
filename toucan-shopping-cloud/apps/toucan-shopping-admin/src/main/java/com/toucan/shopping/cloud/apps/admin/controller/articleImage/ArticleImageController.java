@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -179,7 +180,7 @@ public class ArticleImageController extends UIController {
             }
             ArticleImage articleImage =new ArticleImage();
             articleImage.setId(Long.parseLong(id));
-            articleImage.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            articleImage.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             //先查询出实体对象,后面删除文件服务器的资源
             resultObjectVO = articleImageServiceAPI.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),articleImage));

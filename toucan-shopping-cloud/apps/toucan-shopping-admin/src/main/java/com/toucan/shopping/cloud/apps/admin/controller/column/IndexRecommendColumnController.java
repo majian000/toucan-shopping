@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.ColumnAreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.IndexRecommendColumnServiceAPI;
 import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -144,7 +145,7 @@ public class IndexRecommendColumnController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             indexRecommendColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            indexRecommendColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            indexRecommendColumnVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             indexRecommendColumnVO.setPosition("1");
             indexRecommendColumnVO.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, indexRecommendColumnVO);
@@ -173,7 +174,7 @@ public class IndexRecommendColumnController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             entity.setPosition("1");
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = indexRecommendColumnService.update(requestJsonVO);
         }catch(Exception e)

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -186,7 +187,7 @@ public class AdminController extends UIController {
     {
         try {
             Admin admin = new Admin();
-            admin.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            admin.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
             ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -239,7 +240,7 @@ public class AdminController extends UIController {
             List<String> appCodes= new ArrayList<String>();
             appCodes.add(toucan.getAppCode());
             entity.setAppCodes(appCodes);
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {
                 entity.setAdminApps(new ArrayList<AdminApp>());
@@ -278,7 +279,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminRoleVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             adminRoleVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminRoleVO);
             resultObjectVO = adminRoleServiceAPI.saveRoles(requestJsonVO);
@@ -304,7 +305,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            adminOrgnazitionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminOrgnazitionVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             adminOrgnazitionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminOrgnazitionVO);
             resultObjectVO = adminOrgnazitionServiceAPI.saveOrgnazitions(requestJsonVO);
@@ -329,7 +330,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = adminServiceAPI.updatePassword(requestJsonVO);
@@ -355,7 +356,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            String adminId= AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
+            String adminId= AdminLoginHolder.getCurrentAdminId();
             entity.setAdminId(adminId);
             entity.setUpdateAdminId(adminId);
             entity.setUpdateDate(new Date());
@@ -388,7 +389,7 @@ public class AdminController extends UIController {
             List<String> appCodes= new ArrayList<String>();
             appCodes.add(toucan.getAppCode());
             entity.setAppCodes(appCodes);
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {
@@ -467,7 +468,7 @@ public class AdminController extends UIController {
             }
             Admin admin =new Admin();
             admin.setId(Long.parseLong(id));
-            admin.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            admin.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(admin);
             RequestJsonVO requestVo = new RequestJsonVO();

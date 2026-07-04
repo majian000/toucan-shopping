@@ -12,6 +12,7 @@ import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.product.api.*;
 import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -1022,7 +1023,7 @@ public class ShopProductApproveController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            shopProductApproveRecordVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            shopProductApproveRecordVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductApproveRecordVO);
             resultObjectVO = shopProductApproveService.reject(requestJsonVO);
             if(resultObjectVO.isSuccess())

@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryHotServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryHotVO;
@@ -79,7 +80,7 @@ public class CategoryHotController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = categoryHotServiceAPI.save(requestJsonVO);
         }catch(Exception e)

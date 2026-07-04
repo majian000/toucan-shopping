@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -61,7 +62,7 @@ public class LogoutController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            String adminId = AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
+            String adminId = AdminLoginHolder.getCurrentAdminId();
             String loginToken = AuthHeaderUtil.getToken(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(adminId))
             {

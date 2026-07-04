@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 import com.toucan.shopping.cloud.admin.auth.api.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -202,7 +203,7 @@ public class DictController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.update(requestJsonVO);
@@ -381,7 +382,7 @@ public class DictController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.save(requestJsonVO);
         }catch(Exception e)
@@ -416,7 +417,7 @@ public class DictController extends UIController {
             }
             Dict entity =new Dict();
             entity.setId(Long.parseLong(id));
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,entity);

@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerAreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.content.entity.Banner;
@@ -192,7 +193,7 @@ public class BannerController extends UIController {
             }
             Banner banner =new Banner();
             banner.setId(Long.parseLong(id));
-            banner.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            banner.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(banner);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -384,7 +385,7 @@ public class BannerController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = bannerService.save(requestJsonVO);
         }catch(Exception e)
@@ -507,7 +508,7 @@ public class BannerController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = bannerService.update(requestJsonVO);

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.DictCategoryServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
@@ -217,7 +218,7 @@ public class DictCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getAppCode());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictCategoryServiceAPI.save(requestJsonVO);
         }catch(Exception e)
@@ -278,7 +279,7 @@ public class DictCategoryController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getAppCode());
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictCategoryServiceAPI.update(requestJsonVO);
@@ -314,7 +315,7 @@ public class DictCategoryController extends UIController {
             }
             DictCategory dictCategory =new DictCategory();
             dictCategory.setId(Integer.parseInt(id));
-            dictCategory.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            dictCategory.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,dictCategory);
             resultObjectVO = dictCategoryServiceAPI.deleteById(requestVo);

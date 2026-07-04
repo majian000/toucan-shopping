@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ArticleServiceAPI;
 import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.vo.ColumnTreeVO;
@@ -112,7 +113,7 @@ public class ArticleController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -267,7 +268,7 @@ public class ArticleController extends UIController {
             }
             ArticleVO article =new ArticleVO();
             article.setId(Long.parseLong(id));
-            article.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            article.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             resultObjectVO = articleService.deleteById(RequestJsonVOGenerator.generator(toucan.getAppCode(),article));
         }catch(Exception e)
@@ -334,7 +335,7 @@ public class ArticleController extends UIController {
             }
 
             articleVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            articleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            articleVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             articleVO.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
             resultObjectVO = articleService.save(requestJsonVO);

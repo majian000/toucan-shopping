@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
@@ -135,7 +136,7 @@ public class ColumnTypeController extends UIController {
             }
 
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = columnTypeService.save(requestJsonVO);
         }catch(Exception e)
@@ -174,7 +175,7 @@ public class ColumnTypeController extends UIController {
             }
 
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);

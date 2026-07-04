@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.article.ueditor;
 
 import com.toucan.shopping.cloud.content.api.ArticleImageServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -49,7 +50,7 @@ public class UEditorController {
             uEditorConfig.setImageUrlPrefix(imageUploadService.getImageHttpPrefix());
             return uEditorConfig;
         }else if("/ueditor/uploadImg".equals(action)) {// 图片上传
-            return this.uploadImg(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())),
+            return this.uploadImg(AdminLoginHolder.getCurrentAdminId(),
                     ((MultipartHttpServletRequest)request).getFile("file"));
         }
         return action;

@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminOrgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -171,7 +172,7 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = orgnazitionServiceAPI.update(requestJsonVO);
@@ -198,7 +199,7 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = orgnazitionServiceAPI.save(requestJsonVO);
         }catch(Exception e)
@@ -224,7 +225,7 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            queryPageInfo.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = orgnazitionServiceAPI.queryAppOrgnazitionTreeTable(requestJsonVO);
             return resultObjectVO;
@@ -259,7 +260,7 @@ public class OrgnazitionController extends UIController {
             }
             Orgnazition entity =new Orgnazition();
             entity.setId(Long.parseLong(id));
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();

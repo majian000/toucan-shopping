@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.order.api.OrderExpressDeliveryServiceAPI;
 import com.toucan.shopping.cloud.order.api.OrderServiceAPI;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -337,7 +338,7 @@ public class OrderController extends UIController {
                     }
                 }
             }
-            entity.setOperateUserId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setOperateUserId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = orderService.update(requestJsonVO);
         }catch(Exception e)

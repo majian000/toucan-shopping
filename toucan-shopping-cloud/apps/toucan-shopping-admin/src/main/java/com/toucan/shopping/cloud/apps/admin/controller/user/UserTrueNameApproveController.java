@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserTrueNameApproveServiceAPI;
+import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -175,7 +176,7 @@ public class UserTrueNameApproveController extends UIController {
             UserTrueNameApproveVO userTrueNameApproveVO =new UserTrueNameApproveVO();
             userTrueNameApproveVO.setId(Long.parseLong(id));
             //设置审核人
-            userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            userTrueNameApproveVO.setApproveAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
             resultObjectVO = userTrueNameApproveService.passById( requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -267,7 +268,7 @@ public class UserTrueNameApproveController extends UIController {
                 return resultObjectVO;
             }
             //设置审核人
-            userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            userTrueNameApproveVO.setApproveAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
             resultObjectVO = userTrueNameApproveService.rejectById( requestJsonVO);
             if(resultObjectVO.isSuccess())

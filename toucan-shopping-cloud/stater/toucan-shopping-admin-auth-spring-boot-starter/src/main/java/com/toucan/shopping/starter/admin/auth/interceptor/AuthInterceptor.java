@@ -165,10 +165,32 @@ public class AuthInterceptor implements HandlerInterceptor {
         return -1;
     }
 
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         ResultObjectVO resultVO = new ResultObjectVO();
         resultVO.setCode(ResultVO.SUCCESS);
+
+        String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
+
+        String aidKey = toucan.getAppCode()+"_aid=";
+        String ltKey = toucan.getAppCode()+"_lt=";
+        String aid = "-1";
+        String lt = "-1";
+
+        if(StringUtils.isNotEmpty(authHeader)){
+            String[] authHeaderArray = authHeader.split(";");
+            for (int i = 0; i < authHeaderArray.length; i++) {
+                if (authHeaderArray[i].indexOf(aidKey) != -1) {
+                    aid = authHeaderArray[i].split("=")[1];
+                }
+                if (authHeaderArray[i].indexOf(ltKey) != -1) {
+                    lt = authHeaderArray[i].split("=")[1];
+                }
+            }
+            AdminLoginHolder.setAdminLoginContext(aid,lt);
+        }
+
         if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
@@ -181,11 +203,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                     if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
                         //拿到权限中台账号服务
                         if (authAnnotation.login()) {
-                            String aidKey = toucan.getAppCode()+"_aid=";
-                            String ltKey = toucan.getAppCode()+"_lt=";
 
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
-                            String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
+
                             //ajax请求
                             if (authAnnotation.responseType() == AdminAuth.RESPONSE_JSON) {
                                 logger.info("request uri {} " , request.getRequestURI());
@@ -218,17 +238,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
-                                }
-                                String[] authHeaderArray = authHeader.split(";");
-                                String aid = "-1";
-                                String lt = "-1";
-                                for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf(aidKey) != -1) {
-                                        aid = authHeaderArray[i].split("=")[1];
-                                    }
-                                    if (authHeaderArray[i].indexOf(ltKey) != -1) {
-                                        lt = authHeaderArray[i].split("=")[1];
-                                    }
                                 }
                                 if (StringUtils.equals(aid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
@@ -270,17 +279,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
-                                String[] authHeaderArray = authHeader.split(";");
-                                String aid = "-1";
-                                String lt = "-1";
-                                for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf(aidKey) != -1) {
-                                        aid = authHeaderArray[i].split("=")[1];
-                                    }
-                                    if (authHeaderArray[i].indexOf(ltKey) != -1) {
-                                        lt = authHeaderArray[i].split("=")[1];
-                                    }
-                                }
+
                                 if (StringUtils.equals(aid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -335,7 +334,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-//        AdminLoginHolder.clear();
+        AdminLoginHolder.clear();
     }
 
 
