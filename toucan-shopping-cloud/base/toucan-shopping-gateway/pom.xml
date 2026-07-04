@@ -26,6 +26,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
                 <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
@@ -80,10 +84,6 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-        <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.cloud.modules.config</groupId>
