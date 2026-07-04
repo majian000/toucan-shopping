@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/productSkuStockLock")
@@ -22,7 +23,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/lock/stock",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/lock/stock", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO lockStock(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -36,7 +37,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -51,7 +52,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/by/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -63,7 +64,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/lock/stock",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/lock/stock", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteLockStock(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -75,7 +76,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/lock/stock/num",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/lock/stock/num", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findLockStockNumByProductSkuIds(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -88,7 +89,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/lock/stock/num/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/lock/stock/num/by/mainOrderNos", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findLockStockNumByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -100,7 +101,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/lock/stock/list/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/lock/stock/list/by/mainOrderNos", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findLockStockListByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -112,7 +113,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/lock/stock/num/by/orderNo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/lock/stock/num/by/orderNo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findLockStockNumByOrderNo(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -124,7 +125,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/lock/stock/by/orderNo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/lock/stock/by/orderNo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteLockStockByOrderNo(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -137,7 +138,7 @@ public class ProductSkuStockLockController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/lock/stock/by/mainOrderNos",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/lock/stock/by/mainOrderNos", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteLockStockByMainOrderNos(@RequestBody RequestJsonVO requestJsonVO)
     {

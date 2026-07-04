@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/admin",fallbackFactory = FeignAdminServiceFallbackFactory.class)
 public interface FeignAdminService extends AdminServiceAPI {
@@ -26,7 +27,7 @@ public interface FeignAdminService extends AdminServiceAPI {
 
 
 
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/queryListByEntity", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -54,7 +55,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
@@ -63,7 +64,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -72,7 +73,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
 
 
@@ -81,7 +82,7 @@ public interface FeignAdminService extends AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updatePassword(@RequestBody RequestJsonVO requestVo);
 
 

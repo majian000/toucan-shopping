@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.business.service.UserBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户注册、用户登录
@@ -17,14 +18,14 @@ public class UserController {
     @Autowired
     private UserBusinessService userBusinessService;
 
-    @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.findByMobilePhone(requestJsonVO);
     }
 
 
-    @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/regist/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO registByMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.registByMobilePhone(requestJsonVO);
@@ -36,7 +37,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/headsculpture", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateHeadsculpture(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -44,7 +45,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/reset/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO resetPassword(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.resetPassword(requestJsonVO);
@@ -55,7 +56,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/connect/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO connectUsername(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.connectUsername(requestJsonVO);
@@ -67,7 +68,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/username/list/by/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findUsernameListByUsername(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.findUsernameListByUsername(requestJsonVO);
@@ -79,7 +80,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/connect/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/email", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO connectEmail(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.connectEmail(requestJsonVO);
@@ -91,7 +92,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/connect/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/connect/email", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateConnectEmail(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.updateConnectEmail(requestJsonVO);
@@ -103,7 +104,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/connect/mobilePhone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/connect/mobilePhone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateConnectMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.updateConnectMobilePhone(requestJsonVO);
@@ -115,7 +116,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/email/list/by/email", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findEmailListByEmail(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.findEmailListByEmail(requestJsonVO);
@@ -127,7 +128,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/detail",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateDetail(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.updateDetail(requestJsonVO);
@@ -139,7 +140,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/edit/info",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/edit/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO editInfo(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.editInfo(requestJsonVO);
@@ -151,7 +152,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/is/shop",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/is/shop", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateIsShop(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.updateIsShop(requestJsonVO);
@@ -163,7 +164,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO loginByPassword(@RequestBody RequestJsonVO requestJsonVO) {
         return userBusinessService.loginByPassword(requestJsonVO);
@@ -175,7 +176,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/by/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByUsername(@RequestBody RequestJsonVO requestJsonVO) {
         return userBusinessService.findByUsername(requestJsonVO);
@@ -187,7 +188,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/login/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryLoginInfo(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.queryLoginInfo(requestVo);
@@ -198,7 +199,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO logout(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.logout(requestVo);
@@ -210,7 +211,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/is/online",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/is/online", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.isOnline(requestVo);
@@ -222,7 +223,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/verify/login/token",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify/login/token", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO verifyLoginToken(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.verifyLoginToken(requestVo);
@@ -234,7 +235,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/verify/login/token/is/online",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify/login/token/is/online", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO verifyLoginTokenAndIsOnline(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.verifyLoginTokenAndIsOnline(requestVo);
@@ -246,7 +247,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify/real/name", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO verifyRealName(@RequestBody RequestJsonVO requestVo) {
         return userBusinessService.verifyRealName(requestVo);
@@ -258,7 +259,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.list(requestVo);
@@ -270,7 +271,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/mobile/phone/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO mobilePhoneList(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.mobilePhoneList(requestVo);
@@ -282,7 +283,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/email/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/email/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO emailList(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.emailList(requestVo);
@@ -294,7 +295,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/username/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/username/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO usernameList(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.usernameList(requestVo);
@@ -305,7 +306,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/disabled/enabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/disabled/enabled/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledEnabledById(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.disabledEnabledById(requestVo);
@@ -317,7 +318,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/mobile/phone/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledEnabledMobilePhone(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.disabledEnabledMobilePhone(requestVo);
@@ -329,7 +330,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/email/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledEnabledEmail(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.disabledEnabledEmail(requestVo);
@@ -341,7 +342,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/username/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/username/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.disabledEnabledUsernameByUserMainIdAndUsername(requestVo);
@@ -352,7 +353,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/disabled/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/disabled/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledByIds(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.disabledByIds(requestVo);
@@ -364,7 +365,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/by/user/main/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/user/main/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByUserMainId(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.findByUserMainId(requestVo);
@@ -376,7 +377,7 @@ public class UserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/user/main/id/for/cache/db", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByUserMainIdForCacheOrDB(@RequestBody RequestJsonVO requestVo){
         return userBusinessService.findByUserMainIdForCacheOrDB(requestVo);
@@ -387,7 +388,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/connect/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO connectMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.connectMobilePhone(requestJsonVO);
@@ -399,7 +400,7 @@ public class UserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/flush/cache", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
         return userBusinessService.flushCache(requestJsonVO);

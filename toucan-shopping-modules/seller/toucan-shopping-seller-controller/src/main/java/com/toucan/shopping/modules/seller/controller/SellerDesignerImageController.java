@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.SellerDesignerImageBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -23,7 +24,7 @@ public class SellerDesignerImageController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo) {
         return sellerDesignerImageBusinessService.findById(requestVo);
@@ -35,7 +36,7 @@ public class SellerDesignerImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO) {
         return sellerDesignerImageBusinessService.queryListPage(requestJsonVO);
@@ -47,7 +48,7 @@ public class SellerDesignerImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO) {
         return sellerDesignerImageBusinessService.save(requestJsonVO);
@@ -59,7 +60,7 @@ public class SellerDesignerImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO) {
         return sellerDesignerImageBusinessService.deleteById(requestJsonVO);
@@ -71,7 +72,7 @@ public class SellerDesignerImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO) {
         return sellerDesignerImageBusinessService.update(requestJsonVO);
@@ -83,7 +84,7 @@ public class SellerDesignerImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/admin/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO) {
         return sellerDesignerImageBusinessService.deleteByIdForAdmin(requestJsonVO);

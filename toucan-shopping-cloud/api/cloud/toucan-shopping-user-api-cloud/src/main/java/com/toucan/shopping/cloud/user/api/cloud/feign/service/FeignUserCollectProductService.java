@@ -18,7 +18,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
 
 
     @Override
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -29,7 +29,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/delete/productSkuId/userMainId/appCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -40,7 +40,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -49,7 +49,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
      * @return
      */
     @Override
-    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/queryCollectProducts", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo);
 
 
@@ -58,7 +58,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
      * 查询列表页
      */
     @Override
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -69,7 +69,7 @@ public interface FeignUserCollectProductService extends UserCollectProductServic
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 

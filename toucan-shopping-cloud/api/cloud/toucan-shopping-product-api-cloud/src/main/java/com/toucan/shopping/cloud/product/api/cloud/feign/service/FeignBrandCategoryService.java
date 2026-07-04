@@ -23,7 +23,7 @@ public interface FeignBrandCategoryService extends BrandCategoryServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/brand/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/brand/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByBrandId(@RequestBody RequestJsonVO requestVo);
 
 

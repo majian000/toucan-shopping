@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 热门商品
@@ -51,7 +52,7 @@ public class HotProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -86,7 +87,7 @@ public class HotProductController {
 
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -166,7 +167,7 @@ public class HotProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -214,7 +215,7 @@ public class HotProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -266,7 +267,7 @@ public class HotProductController {
     }
 
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     @Transactional
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
@@ -352,7 +353,7 @@ public class HotProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/pc/index/hot/products",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/pc/index/hot/products", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryPcIndexHotProducts(@RequestBody RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

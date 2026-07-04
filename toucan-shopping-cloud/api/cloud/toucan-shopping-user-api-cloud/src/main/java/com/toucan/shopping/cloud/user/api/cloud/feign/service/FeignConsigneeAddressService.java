@@ -18,7 +18,7 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
 
 
     @Override
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -29,13 +29,13 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
      * @return
      */
     @Override
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
 
 
 
     @Override
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -46,7 +46,7 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id/userMainId/appCode", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -57,7 +57,7 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
      * @return
      */
     @Override
-    @RequestMapping(value="/set/default/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/set/default/id/userMainId", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO setDefaultByIdAndUserMainId(@RequestBody RequestJsonVO requestVo);
 
 
@@ -68,7 +68,7 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
      * @return
      */
     @Override
-    @RequestMapping(value="/find/id/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/id/userMainId/appCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findByIdAndUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -79,7 +79,7 @@ public interface FeignConsigneeAddressService extends ConsigneeAddressServiceAPI
      * @return
      */
     @Override
-    @RequestMapping(value="/find/default/by/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/default/by/userMainId/appCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findDefaultByUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo);
 
 }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户详情
@@ -51,7 +52,7 @@ public class UserDetailController {
 
 
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateDetail(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

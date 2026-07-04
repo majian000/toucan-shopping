@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/productSku")
@@ -63,7 +64,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -205,7 +206,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -252,7 +253,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front/preview", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -297,7 +298,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/shop/product/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOneByShopProductIdForFront(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -377,7 +378,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOneByShopProductIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -425,7 +426,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -488,7 +489,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -545,7 +546,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -613,7 +614,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdList(@RequestHeader( value = "toucan-sign-header",defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -973,7 +974,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1065,7 +1066,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/preview/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/preview/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updatePreviewPhoto(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1110,7 +1111,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/description/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/description/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1168,7 +1169,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/remove/description/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/remove/description/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO removeDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1214,7 +1215,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/shopProductIdList",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/shopProductIdList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByShopProductIdList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1261,7 +1262,7 @@ public class ProductSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves/count/by/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves/count/by/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultTypeObjectVO<Long> queryShelvesCountByShopId(@RequestBody RequestJsonVO requestJsonVO)
     {

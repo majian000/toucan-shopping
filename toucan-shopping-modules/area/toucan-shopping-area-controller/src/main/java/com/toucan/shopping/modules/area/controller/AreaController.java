@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -27,7 +28,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
     {
@@ -39,7 +40,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -51,7 +52,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -63,7 +64,7 @@ public class AreaController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return areaBusinessService.deleteByIds(requestVo);
@@ -74,7 +75,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -86,7 +87,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/all",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/all", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAll(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -98,7 +99,7 @@ public class AreaController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return areaBusinessService.findById(requestVo);
@@ -109,7 +110,7 @@ public class AreaController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/codes",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/codes", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByCodes(@RequestBody RequestJsonVO requestVo){
         return areaBusinessService.findByCodes(requestVo);
@@ -120,7 +121,7 @@ public class AreaController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return areaBusinessService.update(requestVo);
@@ -131,7 +132,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryTreeTable(requestJsonVO);
@@ -142,7 +143,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryTreeTableByPid(requestJsonVO);
@@ -153,7 +154,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryListByPid(requestJsonVO);
@@ -164,7 +165,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryTreeChildByPid(requestJsonVO);
@@ -175,7 +176,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/parentCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/parentCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByParentCode(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryListByParentCode(requestJsonVO);
@@ -186,7 +187,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/full/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/full/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryFullCache(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryFullCache(requestJsonVO);
@@ -197,7 +198,7 @@ public class AreaController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/all/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo){
         return areaBusinessService.flushAllCache(requestVo);
@@ -220,7 +221,7 @@ public class AreaController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/city/list/by/names",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/city/list/by/names", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryCityListByNames(@RequestBody RequestJsonVO requestJsonVO){
         return areaBusinessService.queryCityListByNames(requestJsonVO);

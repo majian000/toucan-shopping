@@ -29,7 +29,7 @@ public interface FeignShopProductApproveSkuService extends ShopProductApproveSku
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -38,7 +38,7 @@ public interface FeignShopProductApproveSkuService extends ShopProductApproveSku
      * @return
      */
     @Override
-    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -48,7 +48,7 @@ public interface FeignShopProductApproveSkuService extends ShopProductApproveSku
      * @return
      */
     @Override
-    @RequestMapping(value="/query/one/by/productApproveId/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/productApproveId/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByProductApproveIdForFront(@RequestBody RequestJsonVO requestJsonVO);
 
 

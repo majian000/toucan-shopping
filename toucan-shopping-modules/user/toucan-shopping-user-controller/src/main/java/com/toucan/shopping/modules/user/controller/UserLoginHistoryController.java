@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户登录历史 查询
@@ -47,7 +48,7 @@ public class UserLoginHistoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -91,7 +92,7 @@ public class UserLoginHistoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/list/latest/10",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/latest/10", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByLatest10(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

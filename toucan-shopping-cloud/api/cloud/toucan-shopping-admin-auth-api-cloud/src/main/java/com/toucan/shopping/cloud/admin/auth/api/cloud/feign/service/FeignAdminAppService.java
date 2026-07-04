@@ -7,23 +7,24 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminApp",fallbackFactory = FeignAdminAppServiceFallbackFactory.class)
 public interface FeignAdminAppService extends AdminAppServiceAPI {
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/deleteByAppCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/deleteByAppCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/queryAppListByAdminId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAppListByAdminId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAppListByAdminId(@RequestBody RequestJsonVO requestVo);
 
 
@@ -32,7 +33,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
@@ -42,7 +43,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/online/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/online/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO onlineList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -51,7 +52,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/login/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO loginList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -61,7 +62,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/batchUpdateLoginStatus",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/batchUpdateLoginStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO batchUpdateLoginStatus(@RequestBody RequestJsonVO requestVo);
 
 
@@ -71,7 +72,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
 
 
@@ -80,7 +81,7 @@ public interface FeignAdminAppService extends AdminAppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryAppLoginUserCountList",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAppLoginUserCountList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAppLoginUserCountList(@RequestBody RequestJsonVO requestVo);
 
 

@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.content.business.service.ArticleImageBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -17,13 +18,13 @@ public class ArticleImageController {
     @Autowired
     private ArticleImageBusinessService articleImageBusinessService;
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return articleImageBusinessService.save(requestJsonVO);
     }
 
-    @RequestMapping(value="/deleteInvalidData",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/deleteInvalidData", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteInvalidData(@RequestBody RequestJsonVO requestJsonVO){
         return articleImageBusinessService.deleteInvalidData(requestJsonVO);
@@ -34,7 +35,7 @@ public class ArticleImageController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return articleImageBusinessService.deleteById(requestVo);
@@ -45,7 +46,7 @@ public class ArticleImageController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return articleImageBusinessService.deleteByIds(requestVo);
@@ -56,7 +57,7 @@ public class ArticleImageController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {

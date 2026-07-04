@@ -32,7 +32,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -40,7 +40,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/path/by/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -57,7 +57,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTable( @RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -78,7 +78,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid( @RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -116,7 +116,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -125,7 +125,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/all/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -134,7 +134,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/wmini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/wmini/tree", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushWMiniTreeCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -143,7 +143,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/navigation/mini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/navigation/mini/tree", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushNavigationMiniTreeCache(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -151,7 +151,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/clear/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -182,7 +182,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByPid( @RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -193,7 +193,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/child/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -202,7 +202,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/next/one/level/child/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -212,7 +212,7 @@ public interface FeignCategoryService extends CategoryServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/all/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/all/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO);
 
 }

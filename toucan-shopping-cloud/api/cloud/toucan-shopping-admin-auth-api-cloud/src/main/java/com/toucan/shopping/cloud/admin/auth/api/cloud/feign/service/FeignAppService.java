@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/app",fallbackFactory = FeignAppServiceFallbackFactory.class)
 public interface FeignAppService extends AppServiceAPI {
@@ -71,7 +72,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
@@ -80,7 +81,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -89,7 +90,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @param requestVo
      * @return true:启用 false:停用
      */
-    @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/enable/status/by/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -99,7 +100,7 @@ public interface FeignAppService extends AppServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryListByCodes",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByCodes", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByCodes(@RequestBody RequestJsonVO requestVo);
 
 }

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -64,7 +65,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
     {
@@ -231,7 +232,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/admin/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO saveForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -398,7 +399,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -474,7 +475,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/admin/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -570,7 +571,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/move/top", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveTop(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -654,7 +655,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/admin/move/top", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveTopForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -739,7 +740,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/move/bottom", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveBottom(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -823,7 +824,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/admin/move/bottom", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveBottomForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -908,7 +909,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/move/up", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveUp(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1008,7 +1009,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/admin/move/up", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveUpForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1107,7 +1108,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/move/down", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveDown(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1207,7 +1208,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/admin/move/down", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO moveDownForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1306,7 +1307,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1367,7 +1368,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -1408,7 +1409,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1494,7 +1495,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/clear/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/clear/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO clearCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1524,7 +1525,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1574,7 +1575,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/path/by/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo)
     {
@@ -1632,7 +1633,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/idArray",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/idArray", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByIdArray(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1797,7 +1798,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1858,7 +1859,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1888,7 +1889,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/all/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/all/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1963,7 +1964,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/shopId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/shopId", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByShopId(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -2010,7 +2011,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -2088,7 +2089,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -2201,7 +2202,7 @@ public class ShopCategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/admin/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -2303,7 +2304,7 @@ public class ShopCategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

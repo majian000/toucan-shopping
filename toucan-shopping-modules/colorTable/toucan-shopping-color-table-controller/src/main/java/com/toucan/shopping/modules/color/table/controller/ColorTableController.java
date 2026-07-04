@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -23,7 +24,7 @@ public class ColorTableController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -39,7 +40,7 @@ public class ColorTableController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return colorTableBusinessService.findById(requestVo);
@@ -52,7 +53,7 @@ public class ColorTableController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return colorTableBusinessService.update(requestVo);
@@ -65,7 +66,7 @@ public class ColorTableController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -79,7 +80,7 @@ public class ColorTableController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/names",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/names", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByNames(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -94,7 +95,7 @@ public class ColorTableController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -108,7 +109,7 @@ public class ColorTableController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return colorTableBusinessService.deleteById(requestVo);
@@ -120,7 +121,7 @@ public class ColorTableController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return colorTableBusinessService.deleteByIds(requestVo);

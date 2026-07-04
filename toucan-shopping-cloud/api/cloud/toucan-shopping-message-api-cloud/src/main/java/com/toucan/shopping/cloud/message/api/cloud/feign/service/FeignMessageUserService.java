@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-message-proxy/message/user",fallbackFactory = FeignMessageUserServiceFallbackFactory.class)
 public interface FeignMessageUserService extends MessageUserServiceAPI {
 
-    @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/send", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -25,7 +25,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -36,7 +36,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPageByUserMianId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -46,7 +46,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -54,7 +54,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -63,7 +63,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -73,7 +73,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/query/unread/count",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/query/unread/count", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryUnreadCountByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -82,7 +82,7 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/update/read/status",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/update/read/status", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateReadStatus(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -91,6 +91,6 @@ public interface FeignMessageUserService extends MessageUserServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/update/all/read/status",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/update/all/read/status", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateAllReadStatus(@RequestBody RequestJsonVO requestJsonVO);
 }

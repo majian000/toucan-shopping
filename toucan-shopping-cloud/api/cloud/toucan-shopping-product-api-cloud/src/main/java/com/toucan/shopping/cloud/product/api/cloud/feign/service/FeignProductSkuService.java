@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/productSku",fallbackFactory = FeignProductSkuServiceFallbackFactory.class)
 public interface FeignProductSkuService extends ProductSkuServiceAPI {
@@ -35,7 +36,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdList(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -43,7 +44,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -52,7 +53,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -61,7 +62,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -87,7 +88,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front/preview", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByShopProductIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -96,7 +97,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/for/front/preview",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front/preview", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdForFrontPreview(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -104,7 +105,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/shop/product/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/shop/product/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByShopProductIdForFront(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -113,7 +114,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -140,7 +141,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/preview/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/preview/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updatePreviewPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -150,7 +151,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/description/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/description/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -160,7 +161,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/remove/description/photo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/remove/description/photo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO removeDescriptionPhoto(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -169,7 +170,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/shopProductIdList",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/shopProductIdList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByShopProductIdList(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -178,7 +179,7 @@ public interface FeignProductSkuService extends ProductSkuServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves/count/by/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves/count/by/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<Long> queryShelvesCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

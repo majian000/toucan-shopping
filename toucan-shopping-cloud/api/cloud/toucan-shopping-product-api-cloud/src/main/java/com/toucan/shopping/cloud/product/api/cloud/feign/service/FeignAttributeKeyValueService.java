@@ -19,7 +19,7 @@ public interface FeignAttributeKeyValueService extends AttributeKeyValueServiceA
      * @return
      */
     @Override
-    @RequestMapping(value="/find/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/category/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByCategoryId(@RequestBody RequestJsonVO requestVo);
 
 
@@ -29,7 +29,7 @@ public interface FeignAttributeKeyValueService extends AttributeKeyValueServiceA
      * @return
      */
     @Override
-    @RequestMapping(value="/query/attribute/tree/page",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/attribute/tree/page", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryAttributeTreePage(@RequestBody RequestJsonVO requestVo);
 
 
@@ -45,7 +45,7 @@ public interface FeignAttributeKeyValueService extends AttributeKeyValueServiceA
      * @return
      */
     @Override
-    @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO querySearchAttributeList(@RequestBody RequestJsonVO requestVo);
 
 }

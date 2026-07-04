@@ -13,30 +13,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-order-proxy/order",fallbackFactory = FeignOrderServiceFallbackFactory.class)
 public interface FeignOrderService extends OrderServiceAPI {
 
-    @RequestMapping(value="/querySkuUuids/orderNo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/querySkuUuids/orderNo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO querySkuUuidsByOrderNo(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/finish", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO finish(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/pay/timeout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOrderByPayTimeOut(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/queryByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryByOrderNoAndUserId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/findById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/cancel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/queryFinishCountByShopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryFinishCountByShopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<Long> queryFinishCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
 }

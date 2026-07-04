@@ -15,6 +15,6 @@ public interface FeignOrderStatisticService extends OrderStatisticServiceAPI {
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo);
 
-    @RequestMapping(value="/query/hot/sell/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/hot/sell/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryHotSellListPage(@RequestBody RequestJsonVO requestJsonVO);
 }

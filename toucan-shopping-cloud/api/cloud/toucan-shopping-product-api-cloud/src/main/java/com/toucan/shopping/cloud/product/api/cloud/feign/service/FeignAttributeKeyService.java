@@ -14,7 +14,7 @@ public interface FeignAttributeKeyService extends AttributeKeyServiceAPI {
 
 
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -43,7 +43,7 @@ public interface FeignAttributeKeyService extends AttributeKeyServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -53,7 +53,7 @@ public interface FeignAttributeKeyService extends AttributeKeyServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -93,7 +93,7 @@ public interface FeignAttributeKeyService extends AttributeKeyServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/search/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/search/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO querySearchList(@RequestBody RequestJsonVO requestJsonVO);
 
 }

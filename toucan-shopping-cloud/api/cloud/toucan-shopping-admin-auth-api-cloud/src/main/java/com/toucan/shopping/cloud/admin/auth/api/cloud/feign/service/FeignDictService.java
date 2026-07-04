@@ -21,7 +21,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestVo);
 
 
@@ -31,7 +31,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
 
 
@@ -41,7 +41,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo);
 
 
@@ -51,7 +51,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -62,7 +62,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -74,7 +74,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 
@@ -84,7 +84,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -95,7 +95,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -105,7 +105,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="query/dict/by/code/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="query/dict/by/code/category/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryDictByCodeAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -115,7 +115,7 @@ public interface FeignDictService extends DictServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="query/dict/by/codes/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="query/dict/by/codes/category/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
 
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-message-proxy/messageType",fallbackFactory = FeignMessageTypeServiceFallbackFactory.class)
 public interface FeignMessageTypeService extends MessageTypeServiceAPI {
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -25,7 +25,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -34,7 +34,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 
@@ -43,7 +43,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -51,7 +51,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -61,7 +61,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -70,7 +70,7 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -79,13 +79,13 @@ public interface FeignMessageTypeService extends MessageTypeServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/cache/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/cache/find/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findCacheByCode(@RequestBody RequestJsonVO requestVo);
 
 
 
 
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/flush/cache", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO);
 
 }

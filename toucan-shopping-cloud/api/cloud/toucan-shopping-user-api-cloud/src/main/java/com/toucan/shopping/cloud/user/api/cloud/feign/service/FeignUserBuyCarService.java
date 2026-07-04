@@ -18,7 +18,7 @@ public interface FeignUserBuyCarService extends UserBuyCarServiceAPI {
 
 
     @Override
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -28,12 +28,12 @@ public interface FeignUserBuyCarService extends UserBuyCarServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/remove/buy/car",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/remove/buy/car", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO removeBuyCar(@RequestBody RequestJsonVO requestVo);
 
 
     @Override
-    @RequestMapping(value="/list/userMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/userMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO listByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -44,18 +44,18 @@ public interface FeignUserBuyCarService extends UserBuyCarServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/clear/buy/car/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/clear/buy/car/userMainId", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO clearByUserMainId(@RequestBody RequestJsonVO requestVo);
 
 
 
     @Override
-    @RequestMapping(value="/updates",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/updates", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updates(@RequestBody RequestJsonVO requestJsonVO);
 
 
     @Override
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
 }

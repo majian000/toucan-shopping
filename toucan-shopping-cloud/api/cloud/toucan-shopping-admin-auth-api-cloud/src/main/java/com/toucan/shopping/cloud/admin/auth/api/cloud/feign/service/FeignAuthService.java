@@ -7,13 +7,14 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/auth",fallbackFactory = FeignAuthServiceFallbackFactory.class)
 public interface FeignAuthService extends AuthServiceAPI {
 
 
 
-    @RequestMapping(value="/verify",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO verify(@RequestBody RequestJsonVO requestVo);
 
 
@@ -22,7 +23,7 @@ public interface FeignAuthService extends AuthServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/verifyLoginAndUrl",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verifyLoginAndUrl", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO verifyLoginAndUrl(@RequestBody RequestJsonVO requestVo);
 
 }

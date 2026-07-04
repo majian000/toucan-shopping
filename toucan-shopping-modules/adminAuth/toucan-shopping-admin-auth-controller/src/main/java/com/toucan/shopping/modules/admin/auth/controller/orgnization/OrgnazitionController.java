@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 组织机构管理
@@ -43,7 +44,7 @@ public class OrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         return orgnazitionBusinessService.save(requestVo);
@@ -57,7 +58,7 @@ public class OrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return orgnazitionBusinessService.update(requestVo);
@@ -70,7 +71,7 @@ public class OrgnazitionController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAppOrgnazitionTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         return orgnazitionBusinessService.queryAppOrgnazitionTreeTable(requestJsonVO);
@@ -81,7 +82,7 @@ public class OrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return orgnazitionBusinessService.findById(requestVo);
@@ -115,7 +116,7 @@ public class OrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return orgnazitionBusinessService.deleteById(requestVo);
@@ -127,7 +128,7 @@ public class OrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return orgnazitionBusinessService.deleteByIds(requestVo);

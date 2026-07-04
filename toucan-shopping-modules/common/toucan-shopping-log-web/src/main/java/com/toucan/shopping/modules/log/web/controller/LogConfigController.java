@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,7 +20,7 @@ public class LogConfigController {
 
 
 
-    @RequestMapping(value="/email/flush",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/email/flush", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO findByMobilePhone(@RequestBody Log log){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{

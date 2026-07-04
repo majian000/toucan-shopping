@@ -22,7 +22,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -32,7 +32,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -41,7 +41,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryByUserMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -51,7 +51,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/queryAliveByUserMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAliveByUserMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAliveByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -61,7 +61,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -70,7 +70,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
 
 
@@ -80,7 +80,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/pass/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/pass/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO passById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -91,7 +91,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 
@@ -101,7 +101,7 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/queryById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -111,6 +111,6 @@ public interface FeignUserHeadSculptureApproveService extends UserHeadSculptureA
      * @return
      */
     @Override
-    @RequestMapping(value="/reject/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/reject/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public ResultObjectVO rejectById(@RequestBody RequestJsonVO requestVo);
 }

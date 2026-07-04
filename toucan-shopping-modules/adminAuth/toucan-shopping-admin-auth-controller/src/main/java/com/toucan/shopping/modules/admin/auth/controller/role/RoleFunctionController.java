@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 角色功能项管理
@@ -95,7 +96,7 @@ public class RoleFunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
         return roleFunctionBusinessService.list(requestVo);
@@ -103,7 +104,7 @@ public class RoleFunctionController {
 
 
 
-    @RequestMapping(value="/query/function/tree/by/roleId/parentId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/function/tree/by/roleId/parentId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(@RequestBody RequestJsonVO requestVo){
         return roleFunctionBusinessService.queryFunctionTreeByRoleIdAndParentId(requestVo);

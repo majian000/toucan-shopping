@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 收货地址
@@ -43,7 +44,7 @@ public class ConsigneeAddressController {
     private ConsigneeAddressService consigneeAddressService;
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -142,7 +143,7 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id/userMainId/appCode", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -200,7 +201,7 @@ public class ConsigneeAddressController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/list/userMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/userMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO listByUserMainId(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -262,7 +263,7 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -305,7 +306,7 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/set/default/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/set/default/id/userMainId", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO setDefaultByIdAndUserMainId(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -368,7 +369,7 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/id/userMainId/appCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByIdAndUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -419,7 +420,7 @@ public class ConsigneeAddressController {
 
 
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -503,7 +504,7 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/default/by/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/default/by/userMainId/appCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findDefaultByUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

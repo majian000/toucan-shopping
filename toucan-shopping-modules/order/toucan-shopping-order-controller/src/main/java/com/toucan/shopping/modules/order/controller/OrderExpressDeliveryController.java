@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 订单快递信息表
@@ -24,7 +25,7 @@ public class OrderExpressDeliveryController {
     /**
      * 保存或修改
      */
-    @RequestMapping(value="/saveOrUpdate",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saveOrUpdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO saveOrUpdate(@RequestBody RequestJsonVO requestJsonVO) {
         return orderExpressDeliveryBusinessService.saveOrUpdate(requestJsonVO);
@@ -33,7 +34,7 @@ public class OrderExpressDeliveryController {
     /**
      * 根据订单ID删除
      */
-    @RequestMapping(value="/removeByOrderId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/removeByOrderId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO removeByOrderId(@RequestBody RequestJsonVO requestJsonVO) {
         return orderExpressDeliveryBusinessService.removeByOrderId(requestJsonVO);
@@ -42,7 +43,7 @@ public class OrderExpressDeliveryController {
     /**
      * 根据订单ID和店铺ID查询
      */
-    @RequestMapping(value="/findOneByOrderIdAndShopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/findOneByOrderIdAndShopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(@RequestBody RequestJsonVO requestJsonVO) {
         return orderExpressDeliveryBusinessService.findOneByOrderIdAndShopId(requestJsonVO);

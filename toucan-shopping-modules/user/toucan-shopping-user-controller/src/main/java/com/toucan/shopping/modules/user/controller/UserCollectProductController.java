@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.business.service.UserCollectProductBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户收藏商品
@@ -19,7 +20,7 @@ public class UserCollectProductController {
     private UserCollectProductBusinessService userCollectProductBusinessService;
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return userCollectProductBusinessService.save(requestJsonVO);
@@ -31,7 +32,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/productSkuId/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/delete/productSkuId/userMainId/appCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
         return userCollectProductBusinessService.deleteBySkuIdAndUserMainIdAndAppCode(requestVo);
@@ -43,7 +44,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryCollectProducts",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/queryCollectProducts", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryCollectProducts(@RequestBody RequestJsonVO requestVo){
         return userCollectProductBusinessService.queryCollectProducts(requestVo);
@@ -53,7 +54,7 @@ public class UserCollectProductController {
     /**
      * 查询列表页
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO){
         return userCollectProductBusinessService.queryListPage(requestJsonVO);
@@ -65,7 +66,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return userCollectProductBusinessService.deleteById(requestVo);
@@ -77,7 +78,7 @@ public class UserCollectProductController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return userCollectProductBusinessService.deleteByIds(requestVo);

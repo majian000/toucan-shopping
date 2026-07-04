@@ -16,7 +16,7 @@ public interface FeignAreaService extends AreaServiceAPI {
     @RequestMapping(value="/save",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO save( @RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/query/all",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/all", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAll(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -26,7 +26,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/codes",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/codes", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByCodes(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -34,12 +34,12 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryAreaTreeTable( @RequestBody RequestJsonVO requestJsonVO);
 
 
 
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -96,7 +96,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByPid( @RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -107,7 +107,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/parentCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/parentCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByParentCode(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -116,7 +116,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/all/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -126,7 +126,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/full/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/full/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryFullCache(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -136,7 +136,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -145,7 +145,7 @@ public interface FeignAreaService extends AreaServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/city/list/by/names",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/city/list/by/names", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryCityListByNames(@RequestBody RequestJsonVO requestJsonVO);
 
 }

@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.business.service.ShopProductApproveBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 店铺商品审核
@@ -24,7 +25,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/publish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/publish", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO publish(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -38,7 +39,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/republish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/republish", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO republish(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -53,7 +54,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/approve/list/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/approve/list/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryApproveListByShopId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -66,7 +67,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -80,7 +81,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByProductApproveId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -94,7 +95,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -110,7 +111,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/newest/list/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/newest/list/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryNewestListByShopId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -126,7 +127,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/id/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -138,7 +139,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/reject", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -154,7 +155,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/pass", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -167,7 +168,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/one/underReview/by/freightTemplateId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/one/underReview/by/freightTemplateId", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findOneUnderReviewByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
         return shopProductApproveBusinessService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
@@ -178,7 +179,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -193,7 +194,7 @@ public class ShopProductApproveController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/approve/count/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/approve/count/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultTypeObjectVO<Long> queryApproveCountByShopId(@RequestBody RequestJsonVO requestJsonVO)
     {

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 短信验证码
@@ -57,7 +58,7 @@ public class SmsController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/send", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

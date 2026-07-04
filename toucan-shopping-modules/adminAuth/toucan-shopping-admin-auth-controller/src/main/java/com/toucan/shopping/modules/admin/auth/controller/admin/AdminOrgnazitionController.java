@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 账号组织机构 增删改查
@@ -60,7 +61,7 @@ public class AdminOrgnazitionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
         return adminOrgnazitionBusinessService.queryListByEntity(requestVo);

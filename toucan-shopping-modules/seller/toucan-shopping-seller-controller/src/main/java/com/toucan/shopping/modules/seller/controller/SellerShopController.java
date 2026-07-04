@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.SellerShopBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 店铺管理 增删改查
@@ -18,7 +19,7 @@ public class SellerShopController {
     private SellerShopBusinessService sellerShopBusinessService;
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return sellerShopBusinessService.save(requestJsonVO);
@@ -30,7 +31,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/by/user",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/user", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO findByUser(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.findByUser(requestVo);
@@ -44,7 +45,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.findById(requestVo);
@@ -57,7 +58,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/idList", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.findByIdList(requestVo);
@@ -69,7 +70,7 @@ public class SellerShopController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/flushCache",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/flushCache", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
         return sellerShopBusinessService.flushCache(requestJsonVO);
@@ -81,7 +82,7 @@ public class SellerShopController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -97,7 +98,7 @@ public class SellerShopController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/logo",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/logo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateLogo(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -113,7 +114,7 @@ public class SellerShopController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/info",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateInfo(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -125,7 +126,7 @@ public class SellerShopController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -141,7 +142,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.deleteByIds(requestVo);
@@ -154,7 +155,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.queryListPage(requestVo);
@@ -169,7 +170,7 @@ public class SellerShopController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO disabledEnabled(@RequestBody RequestJsonVO requestVo){
         return sellerShopBusinessService.disabledEnabled(requestVo);

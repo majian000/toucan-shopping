@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -23,7 +24,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
     {
@@ -37,7 +38,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -64,7 +65,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -77,7 +78,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -90,7 +91,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/all/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.flushAllCache(requestVo);
@@ -102,7 +103,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.flushWebIndexCache(requestVo);
@@ -115,7 +116,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/wmini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/wmini/tree", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushWMiniTreeCache(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.flushWMiniTreeCache(requestVo);
@@ -127,7 +128,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/navigation/mini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/navigation/mini/tree", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushNavigationMiniTreeCache(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.flushNavigationMiniTreeCache(requestVo);
@@ -138,7 +139,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/clear/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.clearWebIndexCache(requestVo);
@@ -153,7 +154,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.findById(requestVo);
@@ -168,7 +169,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/path/by/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.findIdPathById(requestVo);
@@ -180,7 +181,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/idArray",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/idArray", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByIdArray(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.findByIdArray(requestVo);
@@ -233,7 +234,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryTreeTable(requestJsonVO);
@@ -246,7 +247,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryListByPid(requestJsonVO);
@@ -261,7 +262,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/child/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryChildListByPid(requestJsonVO);
@@ -272,7 +273,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/next/one/level/child/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryNextOneLevelChildListByPid(requestJsonVO);
@@ -283,7 +284,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryTreeTableByPid(requestJsonVO);
@@ -298,7 +299,7 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return categoryBusinessService.deleteByIds(requestVo);
@@ -329,7 +330,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
         return categoryBusinessService.queryTreeChildByPid(requestJsonVO);
@@ -342,7 +343,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/all/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/all/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO)
     {

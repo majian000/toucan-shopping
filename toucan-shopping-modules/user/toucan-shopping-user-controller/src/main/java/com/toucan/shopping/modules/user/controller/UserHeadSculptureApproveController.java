@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户头像制审核
@@ -62,7 +63,7 @@ public class UserHeadSculptureApproveController {
     @Autowired
     private SkylarkLock skylarkLock;
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -133,7 +134,7 @@ public class UserHeadSculptureApproveController {
     }
 
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -203,7 +204,7 @@ public class UserHeadSculptureApproveController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -239,7 +240,7 @@ public class UserHeadSculptureApproveController {
 
 
 
-    @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryByUserMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByUserMainId(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -277,7 +278,7 @@ public class UserHeadSculptureApproveController {
 
 
 
-    @RequestMapping(value="/queryAliveByUserMainId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAliveByUserMainId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAliveByUserMainId(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -314,7 +315,7 @@ public class UserHeadSculptureApproveController {
     }
 
 
-    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -350,7 +351,7 @@ public class UserHeadSculptureApproveController {
 
 
 
-    @RequestMapping(value="/queryById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -387,7 +388,7 @@ public class UserHeadSculptureApproveController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/pass/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/pass/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO passById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -498,7 +499,7 @@ public class UserHeadSculptureApproveController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/reject/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/reject/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO rejectById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -576,7 +577,7 @@ public class UserHeadSculptureApproveController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

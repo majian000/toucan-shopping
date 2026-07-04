@@ -24,7 +24,7 @@ public interface FeignRoleFunctionService extends RoleFunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
@@ -33,7 +33,7 @@ public interface FeignRoleFunctionService extends RoleFunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/function/tree/by/roleId/parentId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/function/tree/by/roleId/parentId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryFunctionTreeByRoleIdAndParentId(@RequestBody RequestJsonVO requestVo);
 
 

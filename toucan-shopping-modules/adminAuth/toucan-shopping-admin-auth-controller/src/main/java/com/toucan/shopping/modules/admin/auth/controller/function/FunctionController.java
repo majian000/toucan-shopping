@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 功能项管理
@@ -47,7 +48,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.save(requestVo);
@@ -60,7 +61,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO saves(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.saves(requestVo);
@@ -114,7 +115,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.update(requestVo);
@@ -127,7 +128,7 @@ public class FunctionController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/app/function/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/app/function/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAppFunctionTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         return functionBusinessService.queryAppFunctionTreeTable(requestJsonVO);
@@ -139,7 +140,7 @@ public class FunctionController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/app/function/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/app/function/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAppFunctionTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         return functionBusinessService.queryAppFunctionTreeTableByPid(requestJsonVO);
@@ -151,7 +152,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.findById(requestVo);
@@ -165,7 +166,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteById(requestVo);
@@ -179,7 +180,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/by/app/code",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteByAppCode(requestVo);
@@ -191,7 +192,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteByIds(requestVo);
@@ -252,7 +253,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.list(requestVo);

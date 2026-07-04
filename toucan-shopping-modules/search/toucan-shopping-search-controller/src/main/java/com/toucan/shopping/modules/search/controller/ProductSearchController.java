@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/productSearch")
@@ -21,7 +22,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/search",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/search", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO search(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -34,7 +35,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/count",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/count", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO count(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -47,7 +48,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -63,7 +64,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/queryBySkuId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryBySkuId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryBySkuId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -79,7 +80,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -92,7 +93,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/removeById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/removeById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO removeById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -106,7 +107,7 @@ public class ProductSearchController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/clear",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/clear", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO clear(@RequestBody RequestJsonVO requestJsonVO)
     {

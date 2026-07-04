@@ -17,7 +17,7 @@ public interface FeignAdminRoleService extends AdminRoleServiceAPI {
 
 
 
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
 
@@ -26,7 +26,7 @@ public interface FeignAdminRoleService extends AdminRoleServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 

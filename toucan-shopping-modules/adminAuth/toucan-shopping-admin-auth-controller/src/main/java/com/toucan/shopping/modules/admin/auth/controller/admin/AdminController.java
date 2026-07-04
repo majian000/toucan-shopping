@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 管理员 增删改查
@@ -48,7 +49,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.save(requestVo);
@@ -62,7 +63,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/queryListByEntity", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.queryListByEntity(requestVo);
@@ -77,7 +78,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updatePassword(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.updatePassword(requestVo);
@@ -90,7 +91,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/login",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO login(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.login(requestVo);
@@ -102,7 +103,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO logout(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.logout(requestVo);
@@ -113,7 +114,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.findById(requestVo);
@@ -125,7 +126,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/login/token",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/login/token", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryLoginToken(@RequestBody RequestJsonVO requestVo) {
         return adminBusinessService.queryLoginToken(requestVo);
@@ -140,7 +141,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/is/online",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/is/online", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo) {
         return adminBusinessService.isOnline(requestVo);
@@ -152,7 +153,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.update(requestVo);
@@ -167,7 +168,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.list(requestVo);
@@ -183,7 +184,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.deleteById(requestVo);
@@ -195,7 +196,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return adminBusinessService.deleteByIds(requestVo);

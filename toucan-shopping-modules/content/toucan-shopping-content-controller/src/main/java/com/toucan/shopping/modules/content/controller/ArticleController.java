@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.content.business.service.ArticleBusinessServi
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -24,38 +25,38 @@ public class ArticleController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
         return articleBusinessService.queryListPage(requestJsonVO);
     }
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return articleBusinessService.save(requestJsonVO);
     }
 
-    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/findById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultTypeObjectVO<ArticleVO> findById(@RequestBody RequestJsonVO requestJsonVO){
         return articleBusinessService.findById(requestJsonVO);
     }
 
-    @RequestMapping(value="/queryMaxSort",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryMaxSort", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultTypeObjectVO<Long> queryMaxSort(@RequestBody RequestJsonVO requestJsonVO) {
         return articleBusinessService.queryMaxSort(requestJsonVO);
     }
 
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
         return articleBusinessService.update(requestJsonVO);
     }
 
-    @RequestMapping(value="/deleteById",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/deleteById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO){
         return articleBusinessService.deleteById(requestJsonVO);
@@ -66,7 +67,7 @@ public class ArticleController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestJsonVO){
         return articleBusinessService.deleteByIds(requestJsonVO);

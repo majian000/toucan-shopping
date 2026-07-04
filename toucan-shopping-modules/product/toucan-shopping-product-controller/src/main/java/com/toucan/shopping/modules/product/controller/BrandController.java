@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -55,7 +56,7 @@ public class BrandController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -167,7 +168,7 @@ public class BrandController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/categoryId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/categoryId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByCategoryId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -209,7 +210,7 @@ public class BrandController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -264,7 +265,7 @@ public class BrandController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -383,7 +384,7 @@ public class BrandController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -445,7 +446,7 @@ public class BrandController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/idList", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -497,7 +498,7 @@ public class BrandController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/name/categoryId/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/name/categoryId/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findListByNameAndCategoryIdAndEnabled(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -544,7 +545,7 @@ public class BrandController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -618,7 +619,7 @@ public class BrandController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -679,7 +680,7 @@ public class BrandController {
 //     * @param requestJsonVO
 //     * @return
 //     */
-//    @RequestMapping(value="/flush/category/id/list",produces = "application/json;charset=UTF-8")
+//    @RequestMapping(value="/flush/category/id/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 //    @ResponseBody
 //    public ResultObjectVO flushCategoryIdList(@RequestBody RequestJsonVO requestJsonVO)
 //    {
@@ -737,7 +738,7 @@ public class BrandController {
      * 保存类别
      * @return
      */
-    @RequestMapping(value="/saveByDisk",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saveByDisk", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO saveByDisk()
     {

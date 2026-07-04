@@ -41,7 +41,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTable(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -62,7 +62,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -91,7 +91,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -102,7 +102,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/clear/index/cache", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo);
 
 
@@ -133,7 +133,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -144,7 +144,7 @@ public interface FeignCategoryHotService extends CategoryHotServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/child/list/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 }

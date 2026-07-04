@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-search-proxy/productSearch", fallbackFactory = FeignProductSearchServiceFallbackFactory.class)
 public interface FeignProductSearchService extends ProductSearchServiceAPI {
@@ -17,7 +18,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/search", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO search(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -26,7 +27,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -35,7 +36,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/queryBySkuId", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryBySkuId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryBySkuId(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -44,7 +45,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/update", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -53,7 +54,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/removeById", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/removeById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO removeById(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -62,7 +63,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/clear", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/clear", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO clear(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -71,7 +72,7 @@ public interface FeignProductSearchService extends ProductSearchServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/count", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/count", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO count(@RequestBody RequestJsonVO requestJsonVO);
 
 }

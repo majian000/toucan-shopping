@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 校验权限
@@ -49,7 +50,7 @@ public class AuthController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/verify",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO verify(@RequestBody RequestJsonVO requestVo){
         return authBusinessService.verify(requestVo);
@@ -69,7 +70,7 @@ public class AuthController {
      * @param requestVo
      * @return -1 登录超时 -2 权限校验失败 1成功
      */
-    @RequestMapping(value="/verifyLoginAndUrl",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verifyLoginAndUrl", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO verifyLoginAndUrl(@RequestBody RequestJsonVO requestVo){
         return authBusinessService.verifyLoginAndUrl(requestVo);

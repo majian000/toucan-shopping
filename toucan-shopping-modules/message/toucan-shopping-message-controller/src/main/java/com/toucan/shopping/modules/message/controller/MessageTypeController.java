@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.message.business.service.MessageTypeBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 消息类型
@@ -19,7 +20,7 @@ public class MessageTypeController {
     private MessageTypeBusinessService messageTypeBusinessService;
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return messageTypeBusinessService.save(requestJsonVO);
@@ -27,7 +28,7 @@ public class MessageTypeController {
 
 
 
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/flush/cache", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
         return messageTypeBusinessService.flushCache(requestJsonVO);
@@ -40,7 +41,7 @@ public class MessageTypeController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return messageTypeBusinessService.deleteByIds(requestVo);
@@ -54,7 +55,7 @@ public class MessageTypeController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -68,7 +69,7 @@ public class MessageTypeController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return messageTypeBusinessService.update(requestVo);
@@ -80,7 +81,7 @@ public class MessageTypeController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/cache/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/cache/find/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findCacheByCode(@RequestBody RequestJsonVO requestVo){
         return messageTypeBusinessService.findCacheByCode(requestVo);
@@ -93,7 +94,7 @@ public class MessageTypeController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return messageTypeBusinessService.findById(requestVo);
@@ -108,7 +109,7 @@ public class MessageTypeController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -120,7 +121,7 @@ public class MessageTypeController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {

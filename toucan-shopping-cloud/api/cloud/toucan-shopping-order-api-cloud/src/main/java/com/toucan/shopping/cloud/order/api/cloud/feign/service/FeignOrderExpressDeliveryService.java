@@ -9,16 +9,17 @@ import com.toucan.shopping.modules.order.vo.OrderExpressDeliveryVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-order-proxy/orderExpressDelivery",fallbackFactory = FeignOrderExpressDeliveryServiceFallbackFactory.class)
 public interface FeignOrderExpressDeliveryService extends OrderExpressDeliveryServiceAPI {
 
-    @RequestMapping(value="/saveOrUpdate",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saveOrUpdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO saveOrUpdate(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/removeByOrderId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/removeByOrderId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO removeByOrderId(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/findOneByOrderIdAndShopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/findOneByOrderIdAndShopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
 }

@@ -23,7 +23,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/regist/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO registByMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -32,7 +32,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/reset/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO resetPassword(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -43,7 +43,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/connect/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO connectUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -53,7 +53,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/connect/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/email", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO connectEmail(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -64,7 +64,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/connect/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/connect/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO connectMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -74,7 +74,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/detail",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateDetail(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -84,7 +84,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/regist/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/regist/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO registByUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -94,7 +94,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login/password", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO loginByPassword(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -105,7 +105,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -114,7 +114,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/login/vcode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login/vcode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO loginByVCode(@RequestBody User user);
 
 
@@ -124,7 +124,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value = "/is/online", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo);
 
 
@@ -134,7 +134,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/verify/login/token",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value = "/verify/login/token", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO verifyLoginToken(@RequestBody RequestJsonVO requestVo);
 
 
@@ -144,7 +144,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value = "/verify/login/token/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value = "/verify/login/token/is/online", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO verifyLoginTokenAndIsOnline(@RequestBody RequestJsonVO requestVo);
 
 
@@ -154,7 +154,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/login/info", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryLoginInfo(@RequestBody RequestJsonVO requestVo);
 
 
@@ -164,7 +164,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/by/user/main/id/for/cache/db", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByUserMainIdForCacheOrDB(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -173,7 +173,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/verify/real/name", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO verifyRealName(@RequestBody RequestJsonVO requestVo);
 
 
@@ -183,7 +183,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/mobile/phone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findByMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -193,7 +193,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
@@ -204,7 +204,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/mobile/phone/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO mobilePhoneList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -214,7 +214,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/email/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/email/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO emailList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -224,7 +224,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/username/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/username/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO usernameList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -234,7 +234,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/username/list/by/username", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findUsernameListByUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -246,7 +246,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/email/list/by/email", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findEmailListByEmail(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -256,7 +256,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/disabled/enabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/disabled/enabled/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO disabledEnabledById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -266,7 +266,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/mobile/phone/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO disabledEnabledMobilePhone(@RequestBody RequestJsonVO requestVo);
 
 
@@ -277,7 +277,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/connect/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/connect/email", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateConnectEmail(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -287,7 +287,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/connect/mobilePhone",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/connect/mobilePhone", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateConnectMobilePhone(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -296,7 +296,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/email/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO disabledEnabledEmail(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -305,7 +305,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/username/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/username/disabled/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody RequestJsonVO requestVo);
 
 
@@ -325,7 +325,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/by/user/main/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/user/main/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findByUserMainId(@RequestBody RequestJsonVO requestVo);
 
 
@@ -335,7 +335,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/flush/cache", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -345,7 +345,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/edit/info",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/edit/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO editInfo(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -356,7 +356,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/is/shop",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/is/shop", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateIsShop(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -366,7 +366,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/headsculpture", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO updateHeadsculpture(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -377,7 +377,7 @@ public interface FeignUserService extends UserServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/by/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/username", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO findByUsername(@RequestBody RequestJsonVO requestJsonVO);
 
 

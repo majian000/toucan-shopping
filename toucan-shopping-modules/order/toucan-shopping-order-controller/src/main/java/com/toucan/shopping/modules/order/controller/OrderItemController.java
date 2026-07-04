@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/order/orderItem")
@@ -19,7 +20,7 @@ public class OrderItemController {
     /**
      * 查询列表页
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO) {
         return orderItemBusinessService.queryListPage(requestJsonVO);
@@ -28,7 +29,7 @@ public class OrderItemController {
     /**
      * 查询列表页
      */
-    @RequestMapping(value="/queryAllListByOrderId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAllListByOrderId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAllListByOrderId(@RequestBody RequestJsonVO requestJsonVO) {
         return orderItemBusinessService.queryAllListByOrderId(requestJsonVO);
@@ -37,7 +38,7 @@ public class OrderItemController {
     /**
      * 修改订单项(从订单列表)
      */
-    @RequestMapping(value="/updatesFromOrderList",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/updatesFromOrderList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updatesFromOrderList(@RequestBody RequestJsonVO requestJsonVO) {
         return orderItemBusinessService.updatesFromOrderList(requestJsonVO);

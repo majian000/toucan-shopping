@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignBannerService extends BannerServiceAPI {
 
     @Override
-    @RequestMapping(value = "/query/list/page", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
     @Override
-    @RequestMapping(value = "/query/list", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -28,7 +28,7 @@ public interface FeignBannerService extends BannerServiceAPI {
 
 
     @Override
-    @RequestMapping(value = "/query/index/list", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/index/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryIndexList(@RequestBody RequestJsonVO requestJsonVO);
 
 

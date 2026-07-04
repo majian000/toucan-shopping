@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignArticleImageService extends ArticleImageServiceAPI {
 
     @Override
-    @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/deleteInvalidData", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/deleteInvalidData", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteInvalidData(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/query/list/page", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override

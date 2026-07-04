@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 管理员应用 增删改查
@@ -46,7 +47,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.save(requestVo);
@@ -61,7 +62,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.queryListByEntity(requestVo);
@@ -75,7 +76,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.list(requestVo);
@@ -89,7 +90,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/online/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/online/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO onlineList(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.onlineList(requestVo);
@@ -103,7 +104,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/logout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO logout(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.logout(requestVo);
@@ -114,7 +115,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/login/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/login/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO loginList(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.loginList(requestVo);
@@ -129,7 +130,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryAppListByAdminId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAppListByAdminId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAppListByAdminId(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.queryAppListByAdminId(requestVo);
@@ -140,7 +141,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/deleteByAppCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/deleteByAppCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.deleteByAppCode(requestVo);
@@ -153,7 +154,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/batchUpdateLoginStatus",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/batchUpdateLoginStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO batchUpdateLoginStatus(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.batchUpdateLoginStatus(requestVo);
@@ -165,7 +166,7 @@ public class AdminAppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryAppLoginUserCountList",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAppLoginUserCountList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryAppLoginUserCountList(@RequestBody RequestJsonVO requestVo){
         return adminAppBusinessService.queryAppLoginUserCountList(requestVo);

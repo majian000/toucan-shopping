@@ -19,11 +19,11 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/shop/product/uuid", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -32,7 +32,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -42,7 +42,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -53,7 +53,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -62,7 +62,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -72,7 +72,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/freightTemplateId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -83,7 +83,7 @@ public interface FeignShopProductService extends ShopProductServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update/freightTemplate",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/update/freightTemplate", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO updateFreightTemplate(@RequestBody RequestJsonVO requestJsonVO);
 
 }

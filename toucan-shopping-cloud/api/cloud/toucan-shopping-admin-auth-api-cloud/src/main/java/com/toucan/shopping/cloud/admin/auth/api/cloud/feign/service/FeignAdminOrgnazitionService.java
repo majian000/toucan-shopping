@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminOrgnazition",fallbackFactory = FeignAdminOrgnazitionServiceFallbackFactory.class)
 public interface FeignAdminOrgnazitionService extends AdminOrgnazitionServiceAPI {
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save( @RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByEntity( @RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/deleteByAppCode",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/deleteByAppCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteByAppCode( @RequestBody RequestJsonVO requestVo);
 
 
-    @RequestMapping(value="/queryAppListByAdminId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryAppListByAdminId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAppListByAdminId( @RequestBody RequestJsonVO requestVo);
 
 

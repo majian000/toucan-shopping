@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.business.service.SellerDesignerPageModelBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -22,7 +23,7 @@ public class SellerDesignerPageModelController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/onlySaveOne",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/onlySaveOne", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO onlySaveOne(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -34,7 +35,7 @@ public class SellerDesignerPageModelController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         return sellerDesignerPageModelBusinessService.queryListPage(requestVo);
@@ -45,7 +46,7 @@ public class SellerDesignerPageModelController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/queryLastOne",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryLastOne", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryLastOne(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -57,7 +58,7 @@ public class SellerDesignerPageModelController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/admin/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO)
     {

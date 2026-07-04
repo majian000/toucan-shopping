@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 字典
@@ -45,7 +46,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.save(requestVo);
@@ -59,7 +60,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.update(requestVo);
@@ -72,7 +73,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.listPage(requestVo);
@@ -84,7 +85,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.findById(requestVo);
@@ -101,7 +102,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.deleteById(requestVo);
@@ -113,7 +114,7 @@ public class DictController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return dictBusinessService.deleteByIds(requestVo);
@@ -127,7 +128,7 @@ public class DictController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         return dictBusinessService.queryTreeTableByPid(requestJsonVO);
@@ -140,7 +141,7 @@ public class DictController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/tree/child", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
         return dictBusinessService.queryTreeChildByPid(requestJsonVO);
@@ -152,7 +153,7 @@ public class DictController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="query/dict/by/code/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="query/dict/by/code/category/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryDictByCodeAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO){
         return dictBusinessService.queryDictByCodeAndCategoryCode(requestJsonVO);
@@ -165,7 +166,7 @@ public class DictController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="query/dict/by/codes/category/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="query/dict/by/codes/category/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO){
         return dictBusinessService.queryDictByCodesAndCategoryCode(requestJsonVO);

@@ -15,18 +15,18 @@ public interface FeignMainOrderService extends MainOrderServiceAPI {
     @RequestMapping(value = "/create",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO create(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/cancel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO cancel(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/pay/timeout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOrderByPayTimeOut(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/queryMainOrderByOrderNoAndUserId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryMainOrderByOrderNoAndUserId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryMainOrderByOrderNoAndUserId(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/query/pay/timeout/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/pay/timeout/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOrderByPayTimeOutPage(@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value="/batch/cancel/pay/timeout",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/batch/cancel/pay/timeout", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO batchCancelPayTimeout(@RequestBody RequestJsonVO requestJsonVO);
 }

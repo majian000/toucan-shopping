@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.message.business.service.MessageUserBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 消息内容
@@ -24,7 +25,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -32,7 +33,7 @@ public class MessageUserController {
     }
 
 
-    @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/send", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO){
         return messageUserBusinessService.send(requestJsonVO);
@@ -44,7 +45,7 @@ public class MessageUserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         return messageUserBusinessService.update(requestVo);
@@ -59,7 +60,7 @@ public class MessageUserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
         return messageUserBusinessService.findById(requestVo);
@@ -71,7 +72,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -84,7 +85,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPageByUserMianId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -99,7 +100,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/query/unread/count",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/query/unread/count", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryUnreadCountByUserMainId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -114,7 +115,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/update/read/status",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/update/read/status", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateReadStatus(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -128,7 +129,7 @@ public class MessageUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/user/update/all/read/status",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/user/update/all/read/status", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO updateAllReadStatus(@RequestBody RequestJsonVO requestJsonVO)
     {

@@ -18,7 +18,7 @@ public interface FeignOperateLogService extends OperateLogServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO saves(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -27,7 +27,7 @@ public interface FeignOperateLogService extends OperateLogServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/queryOperateChart",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryOperateChart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryOperateChart(@RequestBody RequestJsonVO requestJsonVO);
 
 

@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignArticleService extends ArticleServiceAPI {
 
     @Override
-    @RequestMapping(value = "/query/list/page", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/queryMaxSort", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/queryMaxSort", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<Long> queryMaxSort(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/findById", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/findById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<ArticleVO> findById(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/update", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/deleteById", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/deleteById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override

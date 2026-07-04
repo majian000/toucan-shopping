@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignColorTableService extends ColorTableServiceAPI {
 
 
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -25,7 +25,7 @@ public interface FeignColorTableService extends ColorTableServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/names",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/names", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByNames(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -51,7 +51,7 @@ public interface FeignColorTableService extends ColorTableServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 

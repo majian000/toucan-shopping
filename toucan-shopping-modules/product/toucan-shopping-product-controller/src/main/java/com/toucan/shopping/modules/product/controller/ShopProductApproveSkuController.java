@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/shopProductApproveSku")
@@ -63,7 +64,7 @@ public class ShopProductApproveSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -126,7 +127,7 @@ public class ShopProductApproveSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -279,7 +280,7 @@ public class ShopProductApproveSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -326,7 +327,7 @@ public class ShopProductApproveSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/productApproveId/for/front",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/productApproveId/for/front", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOneByProductApproveIdForFront(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -373,7 +374,7 @@ public class ShopProductApproveSkuController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/ids", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {

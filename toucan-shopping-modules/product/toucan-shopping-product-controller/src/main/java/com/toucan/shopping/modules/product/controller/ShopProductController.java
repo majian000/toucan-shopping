@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 店铺商品
@@ -69,7 +70,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -144,7 +145,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -216,7 +217,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -313,7 +314,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/shelves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -398,7 +399,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/freightTemplateId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -441,7 +442,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/shop/product/uuid", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -479,7 +480,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -570,7 +571,7 @@ public class ShopProductController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/freightTemplate",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/update/freightTemplate", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO updateFreightTemplate(@RequestBody RequestJsonVO requestJsonVO)
     {

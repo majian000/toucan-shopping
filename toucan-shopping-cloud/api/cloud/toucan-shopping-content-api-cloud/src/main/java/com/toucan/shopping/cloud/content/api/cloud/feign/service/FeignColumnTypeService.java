@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignColumnTypeService extends ColumnTypeServiceAPI {
 
     @Override
-    @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
@@ -27,11 +27,11 @@ public interface FeignColumnTypeService extends ColumnTypeServiceAPI {
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
     @Override
-    @RequestMapping(value = "/update", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
 
     @Override
-    @RequestMapping(value = "/query/list/page", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
@@ -39,7 +39,7 @@ public interface FeignColumnTypeService extends ColumnTypeServiceAPI {
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
-    @RequestMapping(value = "/query/list", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override

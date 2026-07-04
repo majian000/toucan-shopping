@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 短信服务
@@ -19,7 +20,7 @@ public interface FeignSmsService extends SmsServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/send", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO);
 
 }

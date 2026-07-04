@@ -14,7 +14,7 @@ public interface FeignBrandService extends BrandServiceAPI {
 
 
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -43,7 +43,7 @@ public interface FeignBrandService extends BrandServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -54,7 +54,7 @@ public interface FeignBrandService extends BrandServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/idList", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo);
 
 
@@ -86,7 +86,7 @@ public interface FeignBrandService extends BrandServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/name/categoryId/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/name/categoryId/enabled", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findListByNameAndCategoryIdAndEnabled(@RequestBody RequestJsonVO requestVo);
 
 
@@ -97,6 +97,6 @@ public interface FeignBrandService extends BrandServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list/by/categoryId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/by/categoryId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByCategoryId(@RequestBody RequestJsonVO requestJsonVO);
 }

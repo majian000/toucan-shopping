@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.business.service.AttributeKeyValueBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
@@ -24,7 +25,7 @@ public class AttributeKeyValueController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/category/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO findByCategoryId(@RequestBody RequestJsonVO requestVo){
         return attributeKeyValueBusinessService.findByCategoryId(requestVo);
@@ -38,7 +39,7 @@ public class AttributeKeyValueController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/attribute/tree/page",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/attribute/tree/page", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAttributeTreePage(@RequestBody RequestJsonVO requestVo){
         return attributeKeyValueBusinessService.queryAttributeTreePage(requestVo);
@@ -57,7 +58,7 @@ public class AttributeKeyValueController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/search/attribute/list/spuId/categoryId/attributeName/AttributeValue", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO querySearchAttributeList(@RequestBody RequestJsonVO requestVo){
         return attributeKeyValueBusinessService.querySearchAttributeList(requestVo);

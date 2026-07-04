@@ -19,7 +19,7 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -29,7 +29,7 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -39,7 +39,7 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -49,7 +49,7 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -59,7 +59,7 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 
@@ -69,6 +69,6 @@ public interface FeignProductSpuService extends ProductSpuServiceAPI {
      * @return
      */
     @Override
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 }

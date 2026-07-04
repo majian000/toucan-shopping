@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/function",fallbackFactory = FeignFunctionServiceFallbackFactory.class)
 public interface FeignFunctionService extends FunctionServiceAPI {
@@ -25,7 +26,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/saves", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO saves(@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -42,7 +43,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/app/function/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/app/function/tree/table", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryAppFunctionTreeTable(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -52,7 +53,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/app/function/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/app/function/tree/table/by/pid", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     ResultObjectVO queryAppFunctionTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
     
@@ -72,7 +73,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/by/app/code",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -155,7 +156,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/list", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 

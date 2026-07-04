@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 卖家登录历史 增删改查
@@ -22,7 +23,7 @@ public class SellerLoginHistoryController {
 
 
 
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         return sellerLoginHistoryBusinessService.save(requestJsonVO);
@@ -34,7 +35,7 @@ public class SellerLoginHistoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
         return sellerLoginHistoryBusinessService.queryListPage(requestVo);
@@ -49,7 +50,7 @@ public class SellerLoginHistoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/list/latest/10",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/latest/10", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByLatest10(@RequestBody RequestJsonVO requestVo){
         return sellerLoginHistoryBusinessService.queryListByLatest10(requestVo);

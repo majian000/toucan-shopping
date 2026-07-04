@@ -20,7 +20,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/publish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/publish", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO publish(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -30,7 +30,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/republish",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/republish", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO republish(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -40,7 +40,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -51,7 +51,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByProductApproveId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -61,7 +61,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/id/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/id/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
@@ -70,7 +70,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/reject", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -81,7 +81,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/pass", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -92,7 +92,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -102,7 +102,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/delete/id/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/id/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -113,7 +113,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/newest/list/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/newest/list/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryNewestListByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -124,7 +124,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/find/one/underReview/by/freightTemplateId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/one/underReview/by/freightTemplateId", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO findOneUnderReviewByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -134,7 +134,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/approve/list/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/approve/list/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryApproveListByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -144,7 +144,7 @@ public interface FeignShopProductApproveService extends ShopProductApproveServic
      * @return
      */
     @Override
-    @RequestMapping(value="/query/approve/count/shopId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/approve/count/shopId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultTypeObjectVO<Long> queryApproveCountByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
 }
