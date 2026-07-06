@@ -48,7 +48,7 @@ public class IndexGeneratorController {
     {
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-            if("dev".equals(profile)) {
+            if("dev".equals(profile)||"cloud_dev".equals(profile)) {
                 URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
                 configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
             }else{
