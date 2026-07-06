@@ -36,10 +36,10 @@ public @interface AdminAuth {
 
 
 	/**
-	 * 权限类型 0:地址校验 1:权限标识校验
+	 * 权限类型 1:地址校验 2:权限标识校验
 	 */
-	int VERIFY_TYPE_URL=0;
-	int VERIFY_TYPE_PERMISSION=1;
+	int VERIFY_TYPE_URL=1;
+	int VERIFY_TYPE_PERMISSION=2;
 
 	/**
 	 * 用户类型
