@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class GlobalControllerException {
@@ -22,20 +23,21 @@ public class GlobalControllerException {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResultObjectVO handleException(Exception ex)
-    {
-        logger.warn(ex.getMessage(),ex);
-        if(ex instanceof NoResourceFoundException) {
-            // 浏览器探测请求（如 Chrome DevTools .well-known、favicon.ico 等）， 不存在是正常情况
-            return new ResultObjectVO(ResultVO.HTTPCODE_404,"Not Found");
+    public ResultObjectVO handleException(Exception ex, HttpServletResponse response) {
+        // 浏览器探测请求（.well-known、favicon.ico 等），返回 404 即可，不需要记日志
+        String className = ex.getClass().getName();
+        if ("org.springframework.web.servlet.resource.NoResourceFoundException".equals(className)
+                || "org.springframework.web.servlet.NoHandlerFoundException".equals(className)) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return new ResultObjectVO(ResultVO.HTTPCODE_404, "Not Found");
         }
-        if(ex instanceof MaxUploadSizeExceededException)
-        {
-            if(StringUtils.isNotEmpty(ToucanApplicationContext.getMaxFileSize())) {
+        logger.warn(ex.getMessage(), ex);
+        if (ex instanceof MaxUploadSizeExceededException) {
+            if (StringUtils.isNotEmpty(ToucanApplicationContext.getMaxFileSize())) {
                 return new ResultObjectVO(ResultVO.FAILD, "文件大小超过限制,最大" + ToucanApplicationContext.getMaxFileSize());
             }
             return new ResultObjectVO(ResultVO.FAILD, "文件大小超过限制");
         }
-        return new ResultObjectVO(ResultVO.FAILD,"操作异常");
+        return new ResultObjectVO(ResultVO.FAILD, "操作异常");
     }
 }
