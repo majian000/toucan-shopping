@@ -51,10 +51,8 @@ public class FreeShopGeneratorController {
             if("dev".equals(profile)) {
                 URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingSellerWebPC().getFreemarker().getFtlLocation());
                 configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
-            }else if("prod".equals(profile))
-            {
+            }else{
                 configuration.setClassForTemplateLoading(this.getClass(),"/"+toucan.getShoppingSellerWebPC().getFreemarker().getFtlLocation());
-                configuration.setTemplateLoader(new ClassTemplateLoader(this.getClass(),"/"+toucan.getShoppingSellerWebPC().getFreemarker().getFtlLocation()));
             }
             //拿到首页模板
             String templateAndStatisFileName = "freeShop.html";

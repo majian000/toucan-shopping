@@ -51,10 +51,8 @@ public class IndexGeneratorController {
             if("dev".equals(profile)) {
                 URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
                 configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
-            }else if("prod".equals(profile))
-            {
+            }else{
                 configuration.setClassForTemplateLoading(this.getClass(),"/"+toucan.getShoppingPC().getFreemarker().getFtlLocation());
-                configuration.setTemplateLoader(new ClassTemplateLoader(this.getClass(),"/"+toucan.getShoppingPC().getFreemarker().getFtlLocation()));
             }
             //拿到首页模板
             String templateAndStatisFileName = "index.html";
