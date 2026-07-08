@@ -557,12 +557,17 @@ public class AdminBusinessService {
                 admin.setAdminId(adminList.get(0).getAdminId());
             }
 
-            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(),requestVo.getAppCode());
-            if (loginTokenObject != null) {
-                if(StringUtils.equals(admin.getLoginToken(),String.valueOf(loginTokenObject)))
-                {
-                    resultObjectVO.setData(true);
+            try {
+                Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(), requestVo.getAppCode());
+                if (loginTokenObject != null) {
+                    if (StringUtils.equals(admin.getLoginToken(), String.valueOf(loginTokenObject))) {
+                        resultObjectVO.setData(true);
+                    }
                 }
+            } catch (Exception redisEx) {
+                logger.warn("Redis 查询登录会话异常，临时放行 adminId={}: {}", admin.getAdminId(), redisEx.getMessage());
+                resultObjectVO.setData(true);
+                return resultObjectVO;
             }
 
         }catch(Exception e)
