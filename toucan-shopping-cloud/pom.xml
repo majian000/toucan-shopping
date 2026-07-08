@@ -193,6 +193,8 @@
         <module>stater/toucan-shopping-user-sso-spring-boot-starter</module>
         <!--XSS代码替换 -->
         <module>stater/toucan-shopping-xss-spring-boot-starter</module>
+        <!--黑名单-->
+        <module>stater/toucan-shopping-blacklist-spring-boot-starter</module>
         <!-- ===============================================-->
 
 
