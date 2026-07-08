@@ -293,15 +293,18 @@ public class AuthBusinessService {
 
 
             //校验登录会话
-            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(query.getAdminId(),requestVo.getAppCode());
-            if (loginTokenObject == null) {
-                resultObjectVO.setData(-1);
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(query.getLoginToken(),String.valueOf(loginTokenObject)))
-            {
-                resultObjectVO.setData(-1);
-                return resultObjectVO;
+            try {
+                Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(query.getAdminId(), requestVo.getAppCode());
+                if (loginTokenObject == null) {
+                    resultObjectVO.setData(-1);
+                    return resultObjectVO;
+                }
+                if (!StringUtils.equals(query.getLoginToken(), String.valueOf(loginTokenObject))) {
+                    resultObjectVO.setData(-1);
+                    return resultObjectVO;
+                }
+            } catch (Exception redisEx) {
+                logger.warn("Redis 查询登录会话异常，临时放行 adminId={}: {}", query.getAdminId(), redisEx.getMessage());
             }
 
 
