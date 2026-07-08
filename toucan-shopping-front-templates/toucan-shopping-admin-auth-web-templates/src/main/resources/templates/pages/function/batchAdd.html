@@ -25,12 +25,17 @@
         }
 
         /* 固定操作列 */
-        .layui-table td:last-child,
-        .layui-table th:last-child {
+        .layui-table td:last-child {
             position: sticky;
             right: 0;
             background: #fff;
             z-index: 2;
+            box-shadow: -2px 0 5px rgba(0,0,0,.1);
+        }
+        .layui-table th:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 3;
             box-shadow: -2px 0 5px rgba(0,0,0,.1);
         }
 
