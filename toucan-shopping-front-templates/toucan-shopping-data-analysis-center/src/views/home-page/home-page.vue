@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <div class="home-page">
     <header class="header-box">
-      <h1 class="title">可视化展板</h1>
-      <div class="date-time">当前时间: 2024年7月8日 20时50分49秒</div>
+      <h1 class="title">电商数据可视化大屏</h1>
+      <div class="date-time">当前时间: {{ currentTime }}</div>
     </header>
     <main class="main-box">
       <aside class="left-box">
@@ -19,12 +19,28 @@
       <section class="middle-box">
         <div class="top">
           <div class="num-box">
-            <div class="left-num">125811</div>
-            <div class="right-num">100000</div>
+            <div class="num-item">
+              <div class="num-value">¥2,358</div>
+              <div class="num-unit">万元</div>
+            </div>
+            <div class="num-item">
+              <div class="num-value">186,520</div>
+              <div class="num-unit">单</div>
+            </div>
+            <div class="num-item">
+              <div class="num-value">98.6</div>
+              <div class="num-unit">%</div>
+            </div>
+            <div class="num-item last">
+              <div class="num-value">32,861</div>
+              <div class="num-unit">人</div>
+            </div>
           </div>
           <div class="text-box">
-            <div class="left-text">前端需求人数</div>
-            <div class="right-text">市场供应人数</div>
+            <div class="text-item">成交总额(GMV)</div>
+            <div class="text-item">订单总数</div>
+            <div class="text-item">好评率</div>
+            <div class="text-item last">新增用户</div>
           </div>
         </div>
         <div class="map-box">
@@ -52,7 +68,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import CommonBoxVue from "../../components/common-box.vue";
 import EchartsBoxVue from "../../components/echarts-box.vue";
 import {
@@ -68,8 +84,24 @@ import HomePage from "./use-home-page.js";
 
 const { state, init } = new HomePage().use();
 
+const currentTime = ref("");
+
+function updateTime() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const second = now.getSeconds();
+  currentTime.value = year + '年' + month + '月' + day + '日 ' + String(hour).padStart(2, '0') + ':' + String(minute).padStart(2, '0') + ':' + String(second).padStart(2, '0');
+}
+
+let timer = null;
 onMounted(() => {
   init();
+  updateTime();
+  timer = setInterval(updateTime, 1000);
   // 初始化自适应  ----在刚显示的时候就开始适配一次
   handleScreenAuto();
   // 绑定自适应函数   ---防止浏览器栏变化后不再适配
@@ -79,17 +111,13 @@ onMounted(() => {
 onUnmounted(() => {
   // 移除自适应函数
   window.onresize = null;
+  if (timer) clearInterval(timer);
 });
 
 // 适配方案先不处理，先把功能实现了先
 function handleScreenAuto() {
   const designDraftWidth = 1920; //设计稿的宽度
   const designDraftHeight = 1080; //设计稿的高度
-
-  // 根据屏幕的变化适配的比例,这么处理，可能会出现留白问题,可以通过控制背景色与主题色相匹配，来降低留白的影响
-  // 当 设备宽高比 > 16/9时，两边出现留白
-  // 当 设备宽高比 < 16/9时，上下出现留白
-  // 接下来写样式就直接通过px来写即可
 
   const screenWidth =
     window.innerWidth ||
@@ -100,19 +128,18 @@ function handleScreenAuto() {
     document.documentElement.clientHeight ||
     document.body.clientHeight;
 
-  // x y轴自适应缩放
   const scaleX = screenWidth / designDraftWidth;
   const scaleY = screenHeight / designDraftHeight;
 
-  // 设置缩放中心点 很重要否则，当是2560 * 1440 、  3840 * 2160等分辨率时，会出现向上偏移
   document.querySelector(".home-page").style.transformOrigin = "0 0";
-  // 缩放比例
   document.querySelector(
     ".home-page"
-  ).style.transform = `scale(${scaleX}, ${scaleY})`;
+  ).style.transform = 'scale(' + scaleX + ', ' + scaleY + ')';
 }
 </script>
 
 <style lang="less" scoped>
 @import "./home-page.less";
 </style>
+
+

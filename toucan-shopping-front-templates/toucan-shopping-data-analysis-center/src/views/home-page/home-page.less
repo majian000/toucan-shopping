@@ -1,4 +1,4 @@
-/* 声明字体*/
+﻿/* 声明字体*/
 @font-face {
   font-family: electronicFont;
   src: url(/font/DS-DIGIT.TTF);
@@ -6,7 +6,7 @@
 
 // 定义动画
 @keyframes rotate1 {
-  form {
+  from {
     transform: translate(-50%, -50%) rotate(0deg);
   }
   to {
@@ -14,7 +14,7 @@
   }
 }
 @keyframes rotate2 {
-  form {
+  from {
     transform: translate(-50%, -50%) rotate(0deg);
   }
   to {
@@ -34,15 +34,25 @@
     color: #fff;
     display: flex;
     justify-content: center;
+    align-items: center;
     position: relative;
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      letter-spacing: 8px;
+      background: linear-gradient(180deg, #fff 0%, #a5e0ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     .date-time{
       position: absolute;
       right: 0;
-      height: 70px;
-      line-height: 70px;
-      padding-right: 20px;
-      color: rgba(255, 255, 255, 0.7);
+      top: 50%;
+      transform: translateY(-50%);
+      padding-right: 30px;
+      color: rgba(255, 255, 255, 0.85);
       font-size: 20px;
+      font-family: "electronicFont";
     }
   }
   .main-box {
@@ -60,36 +70,47 @@
         height: 150px;
         background: rgba(101, 132, 226, 0.1);
         margin-bottom: 10px;
-        padding: 15px;
+        padding: 12px 15px;
         box-sizing: border-box;
         .num-box {
           border: 1px solid rgba(25, 186, 139, 0.17);
-          height: 75px;
+          height: 80px;
           position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
-          font-size: 60px;
-          color: #ffeb7b;
           text-align: center;
           font-family: "electronicFont";
-          margin-bottom: 10px;
-          .left-num, .right-num {
-            text-align: center;
-            width: 50%;
-            height: 75px;
-            line-height: 75px;
+          margin-bottom: 8px;
+          .num-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
             position: relative;
-          }
-          .left-num {
             &::after {
               content: "";
               position: absolute;
-              top: 25%;
+              top: 20%;
               right: 0;
-              height: 50%;
+              height: 60%;
               width: 1px;
-              background: rgba(255, 255, 255, 0.2);
+              background: rgba(255, 255, 255, 0.15);
+            }
+            &.last::after {
+              display: none;
+            }
+            .num-value {
+              font-size: 36px;
+              color: #ffeb7b;
+              line-height: 1.2;
+            }
+            .num-unit {
+              font-size: 14px;
+              color: rgba(255, 255, 255, 0.6);
+              font-family: "Microsoft YaHei", sans-serif;
             }
           }
           &:before, &:after {
@@ -117,13 +138,13 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 40px;
+          height: 35px;
           color: rgba(255, 255, 255, 0.7);
-          font-size: 18px;
-          .left-text, .right-text {
-            width: 50%;
+          font-size: 16px;
+          .text-item {
+            flex: 1;
             text-align: center;
-            line-height: 40px;
+            line-height: 35px;
           }
         }
       }
@@ -147,7 +168,6 @@
           background: url(/images/map.png) no-repeat;
           opacity: 0.3;
           animation: rotate1 10s linear infinite;
-          opacity: 0.3;
         }
         .bg2 {
           animation: rotate1 15s linear infinite;
@@ -159,7 +179,7 @@
         .bg3 {
           width:600px;
           height: 600px;
-          background: url(../images/jt.png);
+          background: url(/images/jt.png);
           animation: rotate2 10s linear infinite;
           opacity: 0.6;
         }
@@ -167,3 +187,4 @@
     }
   }
 }
+
