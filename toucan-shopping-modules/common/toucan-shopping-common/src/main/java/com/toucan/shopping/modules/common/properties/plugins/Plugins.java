@@ -14,9 +14,5 @@ public class Plugins {
     private XssFilter xssFilter;
 
 
-    /**
-     * 黑名单过滤器
-     */
-    private BlacklistFilter blacklistFilter;
 
 }
