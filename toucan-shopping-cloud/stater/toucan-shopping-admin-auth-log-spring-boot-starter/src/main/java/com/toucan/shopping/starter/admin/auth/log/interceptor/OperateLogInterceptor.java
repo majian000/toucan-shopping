@@ -16,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -37,6 +40,43 @@ public class OperateLogInterceptor implements HandlerInterceptor {
     @Autowired
     private OperateLogQueue operateLogQueue;
 
+    /**
+     * 遍历包装链获取缓存的请求体
+     */
+    private String getCachedRequestBody(HttpServletRequest request) {
+        // 直接判断当前request
+        if (request instanceof RequestWrapper) {
+            return new String(((RequestWrapper) request).body);
+        }
+        if (request instanceof RequestXssWrapper && ((RequestXssWrapper) request).body != null) {
+            return new String(((RequestXssWrapper) request).body);
+        }
+        if (request instanceof ContentCachingRequestWrapper) {
+            byte[] buf = ((ContentCachingRequestWrapper) request).getContentAsByteArray();
+            if (buf.length > 0) {
+                return new String(buf, Charset.defaultCharset());
+            }
+        }
+        // 遍历包装链
+        HttpServletRequest current = request;
+        while (current instanceof ServletRequestWrapper) {
+            current = (HttpServletRequest) ((ServletRequestWrapper) current).getRequest();
+            if (current instanceof RequestWrapper) {
+                return new String(((RequestWrapper) current).body);
+            }
+            if (current instanceof RequestXssWrapper && ((RequestXssWrapper) current).body != null) {
+                return new String(((RequestXssWrapper) current).body);
+            }
+            if (current instanceof ContentCachingRequestWrapper) {
+                byte[] buf = ((ContentCachingRequestWrapper) current).getContentAsByteArray();
+                if (buf.length > 0) {
+                    return new String(buf, Charset.defaultCharset());
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -51,28 +91,13 @@ public class OperateLogInterceptor implements HandlerInterceptor {
                 operateLogVO.setMethod(request.getMethod());
                 operateLogVO.setCreateAdminId(AuthHeaderUtil.getAdminIdDefaultNull(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
                 JSONObject jsonObject = null;
-                //json请求
-                if (request instanceof RequestWrapper ) {
-                    RequestWrapper requestWrapper = (RequestWrapper)request;
-                    if(requestWrapper.body!=null&&requestWrapper.body.length>0) {
-                        String bodyString = new String(requestWrapper.body);
-                        if(StringUtils.isNotEmpty(bodyString)&&bodyString.startsWith("{")) {
-                            jsonObject = JSONObject.parseObject(bodyString);
-                        }
-                    }else{
-                        jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
-                    }
-                }else if (request instanceof RequestXssWrapper){
-                    RequestXssWrapper requestXssWrapper = (RequestXssWrapper)request;
-                    if(requestXssWrapper.body!=null&&requestXssWrapper.body.length>0) {
-                        String bodyString = new String(requestXssWrapper.body);
-                        if(StringUtils.isNotEmpty(bodyString)&&bodyString.startsWith("{")) {
-                            jsonObject = JSONObject.parseObject(new String(requestXssWrapper.body));
-                        }
-                    }else{
-                        jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
-                    }
+
+                // 优先从缓存的请求体中获取参数
+                String cachedBody = getCachedRequestBody(request);
+                if (StringUtils.isNotEmpty(cachedBody) && cachedBody.startsWith("{")) {
+                    jsonObject = JSONObject.parseObject(cachedBody);
                 } else {
+                    // 回退到getParameterMap
                     jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
                 }
 
