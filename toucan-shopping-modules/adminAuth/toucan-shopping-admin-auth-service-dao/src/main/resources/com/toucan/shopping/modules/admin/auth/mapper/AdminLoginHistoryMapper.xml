@@ -32,14 +32,23 @@
         <if test="adminId != null and adminId != ''">
             and h.admin_id = #{adminId}
         </if>
+        <if test="adminName != null and adminName != ''">
+            and a.username like concat(#{adminName},'%')
+        </if>
         <if test="appCode != null and appCode != ''">
             and h.app_code = #{appCode}
         </if>
         <if test="ip != null and ip != ''">
-            and h.ip like concat('%',#{ip},'%')
+            and h.ip like concat(#{ip},'%')
         </if>
         <if test="loginSrcType != null">
             and h.login_src_type = #{loginSrcType}
+        </if>
+        <if test="startDate != null">
+            and h.create_date &gt;= #{startDate}
+        </if>
+        <if test="endDate != null">
+            and h.create_date &lt;= #{endDate}
         </if>
         order by h.create_date desc
         limit #{start},#{limit}
@@ -48,18 +57,28 @@
     <select id="queryListPageCount" resultType="java.lang.Long">
         select count(1)
         from t_sa_admin_login_history h
+        left join t_sa_admin a on h.admin_id = a.admin_id and a.delete_status = 0
         where h.delete_status = 0
         <if test="adminId != null and adminId != ''">
             and h.admin_id = #{adminId}
+        </if>
+        <if test="adminName != null and adminName != ''">
+            and a.username like concat(#{adminName},'%')
         </if>
         <if test="appCode != null and appCode != ''">
             and h.app_code = #{appCode}
         </if>
         <if test="ip != null and ip != ''">
-            and h.ip like concat('%',#{ip},'%')
+            and h.ip like concat(#{ip},'%')
         </if>
         <if test="loginSrcType != null">
             and h.login_src_type = #{loginSrcType}
+        </if>
+        <if test="startDate != null">
+            and h.create_date &gt;= #{startDate}
+        </if>
+        <if test="endDate != null">
+            and h.create_date &lt;= #{endDate}
         </if>
     </select>
 

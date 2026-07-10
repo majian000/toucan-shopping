@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * 登录历史列表查询页
@@ -22,6 +25,11 @@ public class AdminLoginHistoryPageInfo extends PageInfo<AdminLoginHistoryVO> {
     private String adminId;
 
     /**
+     * 账号名称（模糊搜索）
+     */
+    private String adminName;
+
+    /**
      * 应用编码
      */
     private String appCode;
@@ -35,6 +43,18 @@ public class AdminLoginHistoryPageInfo extends PageInfo<AdminLoginHistoryVO> {
      * 登录源头 1:PC
      */
     private Integer loginSrcType;
+
+    /**
+     * 登录开始时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date startDate;
+
+    /**
+     * 登录结束时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date endDate;
 
     /**
      * 删除状态 0未删除 1已删除

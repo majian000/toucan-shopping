@@ -31,15 +31,36 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">账号ID</label>
+                            <label class="layui-form-label">账号</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="adminId" autocomplete="off" class="layui-input">
+                                <input type="text" name="adminName" placeholder="账号名称模糊搜索" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">登录IP</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="ip" autocomplete="off" class="layui-input">
+                                <input type="text" name="ip" placeholder="IP模糊搜索" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">登录源头</label>
+                            <div class="layui-input-inline">
+                                <select name="loginSrcType">
+                                    <option value="">全部</option>
+                                    <option value="1">PC</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">登录时间</label>
+                            <div class="layui-input-inline" style="width: 180px;">
+                                <input type="text" name="startDate" id="startDate" placeholder="开始日期" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">至</div>
+                            <div class="layui-input-inline" style="width: 180px;">
+                                <input type="text" name="endDate" id="endDate" placeholder="结束日期" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -75,10 +96,23 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table', 'laydate'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            laydate = layui.laydate;
+
+        //日期范围
+        laydate.render({
+            elem: '#startDate',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        laydate.render({
+            elem: '#endDate',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
 
         $.fn.serializeJson=function(){
             var serializeObj={};

@@ -53,6 +53,11 @@
             <input type="text" readonly class="layui-input" th:value="${#dates.format(model.createDate,'yyyy-MM-dd HH:mm:ss')}">
         </div>
     </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-primary" id="closeBtn">关闭</button>
+        </div>
+    </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
@@ -64,6 +69,12 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             return false;
+        });
+
+        //关闭按钮
+        $('#closeBtn').on('click', function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
         });
 
     });
