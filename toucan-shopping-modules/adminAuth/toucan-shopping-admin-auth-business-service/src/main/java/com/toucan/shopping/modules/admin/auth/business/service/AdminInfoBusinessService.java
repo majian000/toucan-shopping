@@ -1,0 +1,119 @@
+package com.toucan.shopping.modules.admin.auth.business.service;
+
+import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.entity.AdminInfo;
+import com.toucan.shopping.modules.admin.auth.service.AdminInfoService;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+
+/**
+ * 管理员信息管理
+ */
+@Service
+public class AdminInfoBusinessService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private AdminInfoService adminInfoService;
+
+    @Autowired
+    private IdGenerator idGenerator;
+
+    /**
+     * 保存/更新管理员信息
+     * @param requestVo
+     * @return
+     */
+    public ResultObjectVO saveOrUpdate(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo == null || requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminInfo adminInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminInfo.class);
+            if (StringUtils.isEmpty(adminInfo.getAdminId())) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("adminId不能为空");
+                return resultObjectVO;
+            }
+            if (StringUtils.isEmpty(adminInfo.getRealName())) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请输入真实姓名");
+                return resultObjectVO;
+            }
+
+            AdminInfo existInfo = adminInfoService.findByAdminId(adminInfo.getAdminId());
+            if (existInfo != null) {
+                // 更新
+                existInfo.setRealName(adminInfo.getRealName());
+                existInfo.setPhone(adminInfo.getPhone());
+                existInfo.setEmail(adminInfo.getEmail());
+                existInfo.setGender(adminInfo.getGender());
+                existInfo.setAvatar(adminInfo.getAvatar());
+                existInfo.setIdCard(adminInfo.getIdCard());
+                existInfo.setBirthday(adminInfo.getBirthday());
+                existInfo.setAddress(adminInfo.getAddress());
+                existInfo.setUpdateAdminId(adminInfo.getUpdateAdminId());
+                existInfo.setUpdateDate(new Date());
+                adminInfoService.update(existInfo);
+            } else {
+                // 新增
+                adminInfo.setId(idGenerator.id());
+                adminInfo.setDeleteStatus((short) 0);
+                adminInfo.setCreateDate(new Date());
+                adminInfoService.save(adminInfo);
+            }
+
+            resultObjectVO.setData(adminInfo);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    /**
+     * 根据adminId查询
+     * @param requestVo
+     * @return
+     */
+    public ResultObjectVO findByAdminId(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo == null || requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminInfo query = JSONObject.parseObject(requestVo.getEntityJson(), AdminInfo.class);
+            if (StringUtils.isEmpty(query.getAdminId())) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("adminId不能为空");
+                return resultObjectVO;
+            }
+
+            AdminInfo adminInfo = adminInfoService.findByAdminId(query.getAdminId());
+            resultObjectVO.setData(adminInfo);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+}

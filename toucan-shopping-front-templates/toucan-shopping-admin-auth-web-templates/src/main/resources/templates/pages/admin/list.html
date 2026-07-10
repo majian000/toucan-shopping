@@ -75,6 +75,7 @@
 
         <script type="text/html" id="adminTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+
         </script>
 
     </div>
@@ -153,7 +154,7 @@
                     {field: 'createAdminUsername',  title: '创建人'},
                     {field: 'updateDate',  title: '修改时间',width: 220},
                     {field: 'updateAdminUsername',  title: '修改人'},
-                    {title: '操作', minWidth: 360, toolbar: '#adminTableBar', align: "center"}
+                    {title: '操作', minWidth: 400, toolbar: '#adminTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -467,6 +468,21 @@
 
                     area: ['100%', '100%'],
                     content: '[[@{/}]]admin/passwordPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }else if (obj.event == 'info') {
+
+                var index = layer.open({
+                    title: '完善信息',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]adminInfo/editPage/'+data.adminId
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

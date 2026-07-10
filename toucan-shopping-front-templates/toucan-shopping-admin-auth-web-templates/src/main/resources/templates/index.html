@@ -71,6 +71,9 @@
                             <a href="javascript:;" id="updatePassword" layuimini-content-href="page/user-setting.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
                         </dd>
                         <dd>
+                            <a href="javascript:;" id="updateMyInfo" data-title="完善我的信息" data-icon="fa fa-user">完善信息</a>
+                        </dd>
+                        <dd>
                             <hr>
                         </dd>
                         <dd>
@@ -154,6 +157,8 @@
         miniAdmin.render(options);
 
         $("#updatePassword").attr("layuimini-content-href",'[[@{/}]]admin/myPasswordPage');
+
+        $("#updateMyInfo").attr("layuimini-content-href",'[[@{/}]]adminInfo/myInfoPage');
 
         $('.login-out').on("click", function () {
             $.ajax({
