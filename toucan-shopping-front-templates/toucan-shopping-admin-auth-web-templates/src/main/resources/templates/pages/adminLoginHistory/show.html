@@ -18,39 +18,39 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">主键</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${model.id}">
+        <label class="layui-form-label">主键:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${model.id}"></span>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">账号ID</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${model.adminId}">
+        <label class="layui-form-label">账号ID:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${model.adminId}"></span>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">所属应用</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${model.appCode}">
+        <label class="layui-form-label">所属应用:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${model.appCode}"></span>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">登录IP</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${model.ip}">
+        <label class="layui-form-label">登录IP:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${model.ip}"></span>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">登录源头</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${model.loginSrcType == 1 ? 'PC' : '其他'}">
+        <label class="layui-form-label">登录源头:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${model.loginSrcType == 1 ? 'PC' : '其他'}"></span>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">登录时间</label>
-        <div class="layui-input-block">
-            <input type="text" readonly class="layui-input" th:value="${#dates.format(model.createDate,'yyyy-MM-dd HH:mm:ss')}">
+        <label class="layui-form-label">登录时间:</label>
+        <div class="layui-input-block" style="line-height: 38px;">
+            <span th:text="${#dates.format(model.createDate,'yyyy-MM-dd HH:mm:ss')}"></span>
         </div>
     </div>
     <div class="layui-form-item">
