@@ -66,19 +66,19 @@
             and tu.enable_status = #{enableStatus}
         </if>
         <if test="realName!=null and realName!='' ">
-            and tu.real_name like concat('%',#{realName},'%')
+            and tu.real_name like concat(#{realName},'%')
         </if>
         <if test="phone!=null and phone!='' ">
-            and tu.phone like concat('%',#{phone},'%')
+            and tu.phone like concat(#{phone},'%')
         </if>
         <if test="email!=null and email!='' ">
-            and tu.email like concat('%',#{email},'%')
+            and tu.email like concat(#{email},'%')
         </if>
         <if test="gender!=null">
             and tu.gender = #{gender}
         </if>
         <if test="idCard!=null and idCard!='' ">
-            and tu.id_card like concat('%',#{idCard},'%')
+            and tu.id_card like concat(#{idCard},'%')
         </if>
     </sql>
 
