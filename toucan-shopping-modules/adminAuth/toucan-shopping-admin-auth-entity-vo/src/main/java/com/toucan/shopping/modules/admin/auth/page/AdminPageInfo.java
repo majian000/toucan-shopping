@@ -87,6 +87,31 @@ public class AdminPageInfo extends PageInfo<Admin> {
 
     private Long[] idArray; //ID数组
 
+    /**
+     * 真实姓名
+     */
+    private String realName;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 性别 -1:未知 1:男 0:女
+     */
+    private Integer gender;
+
+    /**
+     * 身份证号
+     */
+    private String idCard;
+
     //==============================================
 
 }

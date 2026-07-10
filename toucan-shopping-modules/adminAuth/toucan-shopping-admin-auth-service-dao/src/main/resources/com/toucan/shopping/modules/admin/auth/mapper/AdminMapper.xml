@@ -21,6 +21,13 @@
         <result column="appNames" jdbcType="VARCHAR" property="appNames" />
         <result column="create_admin_user_name" jdbcType="VARCHAR" property="createAdminUsername" />
         <result column="update_admin_user_name" jdbcType="VARCHAR" property="updateAdminUsername" />
+        <result column="real_name" jdbcType="VARCHAR" property="realName" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="gender" jdbcType="INTEGER" property="gender" />
+        <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
     </resultMap>
 
 
@@ -57,6 +64,21 @@
         </if>
         <if test="enableStatus!=null and enableStatus!=-1">
             and tu.enable_status = #{enableStatus}
+        </if>
+        <if test="realName!=null and realName!='' ">
+            and tu.real_name like concat('%',#{realName},'%')
+        </if>
+        <if test="phone!=null and phone!='' ">
+            and tu.phone like concat('%',#{phone},'%')
+        </if>
+        <if test="email!=null and email!='' ">
+            and tu.email like concat('%',#{email},'%')
+        </if>
+        <if test="gender!=null">
+            and tu.gender = #{gender}
+        </if>
+        <if test="idCard!=null and idCard!='' ">
+            and tu.id_card like concat('%',#{idCard},'%')
         </if>
     </sql>
 
@@ -101,22 +123,44 @@
             select  <include refid="queryColumns" />,
             ds2.appNames,
             ds2.create_admin_user_name,
-            ds2.update_admin_user_name
+            ds2.update_admin_user_name,
+            ds2.real_name,
+            ds2.phone,
+            ds2.email,
+            ds2.gender,
+            ds2.id_card,
+            ds2.birthday,
+            ds2.address
              from t_sa_admin saa left join (
                 select ds.admin_id,
                     group_concat(ds.appName) as appNames,
                     max(ds.create_admin_user_name) as create_admin_user_name,
-                    max(ds.update_admin_user_name) as update_admin_user_name
+                    max(ds.update_admin_user_name) as update_admin_user_name,
+                    max(ds.real_name) as real_name,
+                    max(ds.phone) as phone,
+                    max(ds.email) as email,
+                    max(ds.gender) as gender,
+                    max(ds.id_card) as id_card,
+                    max(ds.birthday) as birthday,
+                    max(ds.address) as address
                     from (
                         select
                         tu.*,ta.name as appName,
                         tsa.username AS create_admin_user_name,
-                        tsu.username AS update_admin_user_name
+                        tsu.username AS update_admin_user_name,
+                        tsai.real_name,
+                        tsai.phone,
+                        tsai.email,
+                        tsai.gender,
+                        tsai.id_card,
+                        tsai.birthday,
+                        tsai.address
                         from t_sa_admin tu
                         left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
                         left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
                         left join t_sa_admin tsa ON tu.admin_id = tsa.admin_id AND tsa.delete_status=0
                         left join t_sa_admin tsu ON tu.admin_id = tsu.admin_id AND tsu.delete_status=0
+                        left join t_sa_admin_info tsai ON tu.admin_id = tsai.admin_id AND tsai.delete_status = 0
                         where tu.delete_status = 0
 
                         <if test="appCode!=null and appCode!='' ">
@@ -142,22 +186,44 @@
             select  <include refid="queryColumns" />,
                 ds2.appNames,
                 ds2.create_admin_user_name,
-                ds2.update_admin_user_name
+                ds2.update_admin_user_name,
+                ds2.real_name,
+                ds2.phone,
+                ds2.email,
+                ds2.gender,
+                ds2.id_card,
+                ds2.birthday,
+                ds2.address
                 from t_sa_admin saa left join (
                     select ds.admin_id,
                     group_concat(ds.appName) as appNames,
                     max(ds.create_admin_user_name) as create_admin_user_name,
-                    max(ds.update_admin_user_name) as update_admin_user_name
+                    max(ds.update_admin_user_name) as update_admin_user_name,
+                    max(ds.real_name) as real_name,
+                    max(ds.phone) as phone,
+                    max(ds.email) as email,
+                    max(ds.gender) as gender,
+                    max(ds.id_card) as id_card,
+                    max(ds.birthday) as birthday,
+                    max(ds.address) as address
                     from (
                         select
                         tu.*,ta.name as appName,
                         tsa.username AS create_admin_user_name,
-                        tsu.username AS update_admin_user_name
+                        tsu.username AS update_admin_user_name,
+                        tsai.real_name,
+                        tsai.phone,
+                        tsai.email,
+                        tsai.gender,
+                        tsai.id_card,
+                        tsai.birthday,
+                        tsai.address
                         from t_sa_admin tu
                         left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
                         left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
                         left join t_sa_admin tsa ON tu.admin_id = tsa.admin_id AND tsa.delete_status=0
                         left join t_sa_admin tsu ON tu.admin_id = tsu.admin_id AND tsu.delete_status=0
+                        left join t_sa_admin_info tsai ON tu.admin_id = tsai.admin_id AND tsai.delete_status = 0
                         where tu.delete_status = 0
 
                         <if test="appCode!=null and appCode!='' ">
