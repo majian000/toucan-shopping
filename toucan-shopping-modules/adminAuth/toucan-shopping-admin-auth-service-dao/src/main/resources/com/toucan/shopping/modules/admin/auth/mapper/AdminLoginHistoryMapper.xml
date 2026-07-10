@@ -14,7 +14,7 @@
     </resultMap>
 
     <resultMap id="adminLoginHistoryVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminLoginHistoryVO" extends="adminLoginHistoryMap" >
-
+        <result column="admin_name" jdbcType="VARCHAR" property="adminName" />
     </resultMap>
 
 
@@ -24,5 +24,65 @@
         values(#{id},#{adminId},#{appCode},#{ip},#{createDate},#{deleteStatus},#{loginSrcType})
     </insert>
 
+    <select id="queryListPage" resultMap="adminLoginHistoryVOMap">
+        select h.*, a.username as admin_name
+        from t_sa_admin_login_history h
+        left join t_sa_admin a on h.admin_id = a.admin_id and a.delete_status = 0
+        where h.delete_status = 0
+        <if test="adminId != null and adminId != ''">
+            and h.admin_id = #{adminId}
+        </if>
+        <if test="appCode != null and appCode != ''">
+            and h.app_code = #{appCode}
+        </if>
+        <if test="ip != null and ip != ''">
+            and h.ip like concat('%',#{ip},'%')
+        </if>
+        <if test="loginSrcType != null">
+            and h.login_src_type = #{loginSrcType}
+        </if>
+        order by h.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+    <select id="queryListPageCount" resultType="java.lang.Long">
+        select count(1)
+        from t_sa_admin_login_history h
+        where h.delete_status = 0
+        <if test="adminId != null and adminId != ''">
+            and h.admin_id = #{adminId}
+        </if>
+        <if test="appCode != null and appCode != ''">
+            and h.app_code = #{appCode}
+        </if>
+        <if test="ip != null and ip != ''">
+            and h.ip like concat('%',#{ip},'%')
+        </if>
+        <if test="loginSrcType != null">
+            and h.login_src_type = #{loginSrcType}
+        </if>
+    </select>
+
+    <select id="findListByEntity" resultMap="adminLoginHistoryMap">
+        select *
+        from t_sa_admin_login_history
+        where delete_status = 0
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="adminId != null and adminId != ''">
+            and admin_id = #{adminId}
+        </if>
+        <if test="appCode != null and appCode != ''">
+            and app_code = #{appCode}
+        </if>
+        <if test="ip != null and ip != ''">
+            and ip = #{ip}
+        </if>
+        <if test="loginSrcType != null">
+            and login_src_type = #{loginSrcType}
+        </if>
+        order by create_date desc
+    </select>
 
 </mapper>

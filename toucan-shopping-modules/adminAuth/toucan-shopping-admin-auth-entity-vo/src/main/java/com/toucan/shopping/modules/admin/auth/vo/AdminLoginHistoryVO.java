@@ -6,4 +6,8 @@ import lombok.Data;
 @Data
 public class AdminLoginHistoryVO extends AdminLoginHistory {
 
+    /**
+     * 账号名称
+     */
+    private String adminName;
 }
