@@ -82,8 +82,8 @@ public class OperateLogInterceptor implements HandlerInterceptor {
 
         try {
             if (handler instanceof HandlerMethod && toucan.getAdminAuth().getOperateLog().isEnabled()) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
-            Method method = handlerMethod.getMethod();
+                HandlerMethod handlerMethod = (HandlerMethod) handler;
+                Method method = handlerMethod.getMethod();
                 OperateLogVO operateLogVO = new OperateLogVO();
                 operateLogVO.setIp(IPUtil.getRemoteAddr(request));
                 operateLogVO.setAppCode(toucan.getAppCode());
