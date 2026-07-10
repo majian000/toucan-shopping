@@ -38,7 +38,6 @@
         <label class="layui-form-label">性别</label>
         <div class="layui-input-inline">
             <select name="gender">
-                <option value="-1" th:attr="selected=${model.gender == null || model.gender == -1}">未知</option>
                 <option value="1" th:attr="selected=${model.gender == 1}">男</option>
                 <option value="0" th:attr="selected=${model.gender == 0}">女</option>
             </select>

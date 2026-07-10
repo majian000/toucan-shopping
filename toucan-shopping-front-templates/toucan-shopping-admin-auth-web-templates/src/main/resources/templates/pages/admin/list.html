@@ -78,7 +78,6 @@
                             <div class="layui-input-inline">
                                 <select name="gender">
                                     <option value="">全部</option>
-                                    <option value="-1">未知</option>
                                     <option value="1">男</option>
                                     <option value="0">女</option>
                                 </select>
@@ -114,7 +113,7 @@
         </script>
 
         <script type="text/html" id="genderTpl">
-            {{# if(d.gender == 1){ }}男{{# } else if(d.gender == 0){ }}女{{# } else { }}未知{{# } }}
+            {{# if(d.gender == 1){ }}男{{# } else { }}女{{# } }}
         </script>
 
     </div>
