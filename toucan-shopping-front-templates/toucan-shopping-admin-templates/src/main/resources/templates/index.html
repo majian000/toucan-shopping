@@ -65,7 +65,7 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;" th:text="${model.username}"></a>
+                    <a href="javascript:;" th:text="${model.nickName} ?: ${model.username}"></a>
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;" id="updatePassword" layuimini-content-href="page/user-setting.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
