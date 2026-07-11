@@ -24,6 +24,11 @@ public class AdminInfo {
     private String adminId;
 
     /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
      * 真实姓名
      */
     private String realName;

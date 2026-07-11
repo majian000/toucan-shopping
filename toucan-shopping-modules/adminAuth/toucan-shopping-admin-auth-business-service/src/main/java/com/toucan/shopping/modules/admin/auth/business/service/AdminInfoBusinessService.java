@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,14 +59,7 @@ public class AdminInfoBusinessService {
             AdminInfo existInfo = adminInfoService.findByAdminId(adminInfo.getAdminId());
             if (existInfo != null) {
                 // 更新
-                existInfo.setRealName(adminInfo.getRealName());
-                existInfo.setPhone(adminInfo.getPhone());
-                existInfo.setEmail(adminInfo.getEmail());
-                existInfo.setGender(adminInfo.getGender());
-                existInfo.setAvatar(adminInfo.getAvatar());
-                existInfo.setIdCard(adminInfo.getIdCard());
-                existInfo.setBirthday(adminInfo.getBirthday());
-                existInfo.setAddress(adminInfo.getAddress());
+                BeanUtils.copyProperties(existInfo,adminInfo);
                 existInfo.setUpdateAdminId(adminInfo.getUpdateAdminId());
                 existInfo.setUpdateDate(new Date());
                 adminInfoService.update(existInfo);

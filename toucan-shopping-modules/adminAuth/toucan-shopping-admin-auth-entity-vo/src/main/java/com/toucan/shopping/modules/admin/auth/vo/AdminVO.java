@@ -53,14 +53,44 @@ public class AdminVO extends Admin {
      */
     private String updateAdminUsername;
 
-    // =========== 管理员信息扩展字段 ===========
+    /**
+     * 昵称
+     */
+    private String nickName;
 
+    /**
+     * 真实姓名
+     */
     private String realName;
+
+    /**
+     * 手机号
+     */
     private String phone;
+
+    /**
+     * 邮箱
+     */
     private String email;
+
+    /**
+     * 行呗
+     */
     private Integer gender;
+
+    /**
+     * 身份证号
+     */
     private String idCard;
+
+    /**
+     * 生日
+     */
     private Date birthday;
+
+    /**
+     * 地址
+     */
     private String address;
 
 }

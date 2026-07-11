@@ -21,6 +21,7 @@
         <result column="appNames" jdbcType="VARCHAR" property="appNames" />
         <result column="create_admin_user_name" jdbcType="VARCHAR" property="createAdminUsername" />
         <result column="update_admin_user_name" jdbcType="VARCHAR" property="updateAdminUsername" />
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
         <result column="real_name" jdbcType="VARCHAR" property="realName" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
         <result column="email" jdbcType="VARCHAR" property="email" />
@@ -124,6 +125,7 @@
             ds2.appNames,
             ds2.create_admin_user_name,
             ds2.update_admin_user_name,
+            ds2.nick_name,
             ds2.real_name,
             ds2.phone,
             ds2.email,
@@ -136,6 +138,7 @@
                     group_concat(ds.appName) as appNames,
                     max(ds.create_admin_user_name) as create_admin_user_name,
                     max(ds.update_admin_user_name) as update_admin_user_name,
+                    max(ds.nick_name) as nick_name,
                     max(ds.real_name) as real_name,
                     max(ds.phone) as phone,
                     max(ds.email) as email,
@@ -148,6 +151,7 @@
                         tu.*,ta.name as appName,
                         tsa.username AS create_admin_user_name,
                         tsu.username AS update_admin_user_name,
+                        tsai.nick_name,
                         tsai.real_name,
                         tsai.phone,
                         tsai.email,
@@ -187,6 +191,7 @@
                 ds2.appNames,
                 ds2.create_admin_user_name,
                 ds2.update_admin_user_name,
+                ds2.nick_name,
                 ds2.real_name,
                 ds2.phone,
                 ds2.email,
@@ -199,6 +204,7 @@
                     group_concat(ds.appName) as appNames,
                     max(ds.create_admin_user_name) as create_admin_user_name,
                     max(ds.update_admin_user_name) as update_admin_user_name,
+                    max(ds.nick_name) as nick_name,
                     max(ds.real_name) as real_name,
                     max(ds.phone) as phone,
                     max(ds.email) as email,
@@ -211,6 +217,7 @@
                         tu.*,ta.name as appName,
                         tsa.username AS create_admin_user_name,
                         tsu.username AS update_admin_user_name,
+                        tsai.nick_name,
                         tsai.real_name,
                         tsai.phone,
                         tsai.email,

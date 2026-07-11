@@ -16,6 +16,12 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-block">
+            <input type="text" name="nickName" maxlength="50" placeholder="请输入昵称" class="layui-input" th:value="${model.nickName}">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">真实姓名</label>
         <div class="layui-input-block">
             <input type="text" name="realName" lay-verify="required" maxlength="50" lay-reqtext="真实姓名不能为空" placeholder="请输入真实姓名" class="layui-input" th:value="${model.realName}">

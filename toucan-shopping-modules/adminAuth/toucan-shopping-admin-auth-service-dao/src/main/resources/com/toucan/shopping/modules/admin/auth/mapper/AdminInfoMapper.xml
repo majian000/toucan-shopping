@@ -5,6 +5,7 @@
     <resultMap id="adminInfoMap" type="com.toucan.shopping.modules.admin.auth.entity.AdminInfo" >
         <id column="id" jdbcType="BIGINT" property="id" />
         <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
         <result column="real_name" jdbcType="VARCHAR" property="realName" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
         <result column="email" jdbcType="VARCHAR" property="email" />
@@ -21,13 +22,14 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminInfo" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_admin_info(id,admin_id,real_name,phone,email,gender,avatar,id_card,birthday,address,delete_status,create_admin_id,create_date,update_admin_id,update_date)
-        values(#{id},#{adminId},#{realName},#{phone},#{email},#{gender},#{avatar},#{idCard},#{birthday},#{address},#{deleteStatus},#{createAdminId},#{createDate},#{updateAdminId},#{updateDate})
+        insert into t_sa_admin_info(id,admin_id,nick_name,real_name,phone,email,gender,avatar,id_card,birthday,address,delete_status,create_admin_id,create_date,update_admin_id,update_date)
+        values(#{id},#{adminId},#{nickName},#{realName},#{phone},#{email},#{gender},#{avatar},#{idCard},#{birthday},#{address},#{deleteStatus},#{createAdminId},#{createDate},#{updateAdminId},#{updateDate})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminInfo">
         update t_sa_admin_info
-        set real_name = #{realName},
+        set nick_name = #{nickName},
+            real_name = #{realName},
             phone = #{phone},
             email = #{email},
             gender = #{gender},
