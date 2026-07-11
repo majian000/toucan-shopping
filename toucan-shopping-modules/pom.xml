@@ -78,6 +78,8 @@
         <module>common/toucan-shopping-jsoup</module>
         <!--设计器公共模块 -->
         <module>common/toucan-shopping-designer-core</module>
+        <!--caffeine公共模块-->
+        <module>common/toucan-shopping-caffeine</module>
 
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
@@ -336,6 +338,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-sms</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-caffeine</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
