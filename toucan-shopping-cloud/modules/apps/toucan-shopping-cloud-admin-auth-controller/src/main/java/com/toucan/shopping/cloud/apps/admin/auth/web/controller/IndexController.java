@@ -94,11 +94,11 @@ public class IndexController {
             AdminVO adminVO = new AdminVO();
             adminVO.setAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
-            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryVOByEntity(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
-                List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
-                if (!CollectionUtils.isEmpty(admins)) {
-                    request.setAttribute("model",admins.get(0));
+                adminVO = resultObjectVO.formatData(AdminVO.class);
+                if(adminVO!=null) {
+                    request.setAttribute("model", adminVO);
                 }
             }
         }catch(Exception e)

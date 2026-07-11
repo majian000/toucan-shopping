@@ -26,6 +26,13 @@ public interface AdminMapper {
     List<Admin> findListByEntity(Admin admin);
 
     /**
+     * 根据实体查询VO
+     * @param admin
+     * @return
+     */
+    AdminVO findVOByEntity(Admin admin);
+
+    /**
      * 查询列表页
      * @param adminPageInfo
      * @return

@@ -12,15 +12,19 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO login(  RequestJsonVO requestVo);
+    ResultObjectVO login(RequestJsonVO requestVo);
 
-    ResultObjectVO queryLoginToken(  RequestJsonVO requestVo);
+    ResultObjectVO queryLoginToken(RequestJsonVO requestVo);
 
-    ResultObjectVO isOnline(  RequestJsonVO requestVo);
+    ResultObjectVO isOnline(RequestJsonVO requestVo);
 
 
 
-    ResultObjectVO queryListByEntity(  RequestJsonVO requestVo);
+    ResultObjectVO queryListByEntity(RequestJsonVO requestVo);
+
+    ResultObjectVO queryVOByEntity(RequestJsonVO requestVo);
+    
+    
 
     /**
      * 保存
@@ -28,7 +32,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO save(   RequestJsonVO requestVo);
+    ResultObjectVO save(RequestJsonVO requestVo);
 
 
 
@@ -38,7 +42,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO update(   RequestJsonVO requestVo);
+    ResultObjectVO update(RequestJsonVO requestVo);
 
 
 
@@ -48,7 +52,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO list(  RequestJsonVO requestVo);
+    ResultObjectVO list(RequestJsonVO requestVo);
 
 
     /**
@@ -56,7 +60,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO findById(  RequestJsonVO requestVo);
+    ResultObjectVO findById(RequestJsonVO requestVo);
 
 
     /**
@@ -65,7 +69,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO logout(  RequestJsonVO requestVo);
+    ResultObjectVO logout(RequestJsonVO requestVo);
 
 
     /**
@@ -74,7 +78,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO updatePassword(  RequestJsonVO requestVo);
+    ResultObjectVO updatePassword(RequestJsonVO requestVo);
 
 
 
@@ -86,7 +90,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteById(   RequestJsonVO requestVo);
+    ResultObjectVO deleteById(RequestJsonVO requestVo);
 
 
     /**
@@ -95,7 +99,7 @@ public interface AdminServiceAPI {
      * @param requestVo
      * @return
      */
-    ResultObjectVO deleteByIds(   RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(RequestJsonVO requestVo);
 
 
 

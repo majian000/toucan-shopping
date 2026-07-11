@@ -34,6 +34,11 @@ public class AdminServiceAPISingleImpl implements AdminServiceAPI {
     }
 
     @Override
+    public ResultObjectVO queryVOByEntity(RequestJsonVO requestVo) {
+        return adminBusinessService.queryVOByEntity(requestVo);
+    }
+
+    @Override
     public ResultObjectVO save( RequestJsonVO requestVo) {
         return adminBusinessService.save(requestVo);
     }

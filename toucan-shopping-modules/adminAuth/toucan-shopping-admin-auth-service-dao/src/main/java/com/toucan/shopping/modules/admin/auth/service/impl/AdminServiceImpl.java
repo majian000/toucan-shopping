@@ -26,6 +26,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public AdminVO findVOByEntity(Admin admin) {
+        return adminMapper.findVOByEntity(admin);
+    }
+
+    @Override
     public int save(Admin admin)  throws Exception {
         int row = adminMapper.insert(admin);
 //        throw new IllegalArgumentException("手动测试异常,测试事务回滚");

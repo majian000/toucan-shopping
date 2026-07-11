@@ -30,6 +30,12 @@ public interface FeignAdminService extends AdminServiceAPI {
     @RequestMapping(value="/queryListByEntity", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo);
 
+
+    @RequestMapping(value="/queryVOByEntity", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    ResultObjectVO queryVOByEntity(@RequestBody RequestJsonVO requestVo);
+
+
+
     /**
      * 保存
      * @param requestVo

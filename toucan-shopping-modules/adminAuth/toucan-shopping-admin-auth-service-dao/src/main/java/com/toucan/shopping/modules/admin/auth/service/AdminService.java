@@ -11,6 +11,8 @@ public interface AdminService {
 
     List<Admin> findListByEntity(Admin admin);
 
+    AdminVO findVOByEntity(Admin admin);
+
     /**
      * 保存账号
      * @param admin

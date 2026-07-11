@@ -184,6 +184,36 @@ public class AdminBusinessService {
     }
 
 
+    /**
+     * 根据实体查询对象
+     * @param requestVo
+     * @return
+     */
+    public ResultObjectVO queryVOByEntity(RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("没有找到参数");
+            return resultObjectVO;
+        }
+
+        try {
+            Admin adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
+            AdminVO adminVO = adminService.findVOByEntity(adminQuery);
+            resultObjectVO.setData(adminVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 

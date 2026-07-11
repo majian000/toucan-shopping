@@ -72,6 +72,18 @@ public class AdminController {
 
 
 
+    /**
+     * 根据实体查询对象
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryVOByEntity", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryVOByEntity(@RequestBody RequestJsonVO requestVo){
+        return adminBusinessService.queryVOByEntity(requestVo);
+    }
+
+
 
     /**
      * 修改密码
