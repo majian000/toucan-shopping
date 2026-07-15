@@ -44,7 +44,7 @@
                 and t.app_code = #{appCode}
             </if>
 
-              and t.delete_status = 0
+            and t.delete_status = 0
 
         </where>
     </select>
@@ -53,9 +53,9 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.SecondKillColumnBanner"  keyProperty="id" >
-         insert into t_banner_area(id,second_kill_column_id,banner_id,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        insert into t_banner_area(id,second_kill_column_id,banner_id,create_date,update_date,app_code,create_admin_id,update_admin_id)
         values(#{id},#{secondKillColumnId},#{bannerId},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
-     </insert>
+    </insert>
 
 
 

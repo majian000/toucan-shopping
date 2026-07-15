@@ -95,8 +95,8 @@
 
 
     <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
-          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,restore_status,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no,order_no)
-          values(#{id},#{productSkuId},#{userMainId},#{restoreStatus},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo},#{orderNo})
+        insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,restore_status,stock_num,app_code,delete_status,create_date,type,remark,pay_status,order_create_date,main_order_no,order_no)
+        values(#{id},#{productSkuId},#{userMainId},#{restoreStatus},#{stockNum},#{appCode},0,#{createDate},#{type},#{remark},#{payStatus},#{orderCreateDate},#{mainOrderNo},#{orderNo})
     </insert>
 
     <select id="queryStockNumByVO" resultMap="productSkuStockLockVOMap">
