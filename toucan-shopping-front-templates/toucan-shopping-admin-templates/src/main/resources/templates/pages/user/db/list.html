@@ -338,25 +338,18 @@
                         ,show: true //外部事件触发即显示
                         ,data: menus
                         ,click: function(menu){
-                            //在这里需要把上面的时间再判断下
                             if (menu.id === 'mobilePhoneBtn') {
                                 mobilePhoneBtnRow(data);
-                                return false;
                             }else if (menu.id === 'emailBtn') {
                                 emailBtnRow(data);
-                                return false;
                             }else if (menu.id === 'usernameBtn') {
                                 usernameBtnRow(data);
-                                return false;
                             } else if (menu.id === 'resetPwd') {
                                 resetPwdRow(data);
-                                return false;
                             } else if (menu.id === 'detailPage') {
                                 detailPageRow(data);
-                                return false;
                             }else if (menu.id === 'updateDetailPage') {
                                 updateDetailPageRow(data);
-                                return false;
                             } else if (menu.id === 'flushCache') {
                                 flushCacheRow(data);
                             }else if (menu.id === 'disabledEnabledBtn') {
