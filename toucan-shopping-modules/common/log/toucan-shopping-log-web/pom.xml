@@ -3,35 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-
-
     <parent>
         <groupId>com.toucan.shopping.modules</groupId>
         <artifactId>toucan-shopping-modules</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../../pom.xml</relativePath>
     </parent>
-
-    <description>FASTDFS模块</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.common</groupId>
-    <artifactId>toucan-shopping-fastdfs</artifactId>
+    <artifactId>toucan-shopping-log-web</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
 
     <dependencies>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-log</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>cn.bestwu</groupId>
-            <artifactId>fastdfs-client-java</artifactId>
-            <version>1.27</version>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
+
     </dependencies>
 
 
