@@ -54,6 +54,8 @@
         <module>common/toucan-shopping-db-sharding</module>
         <!--fastdfs模块 -->
         <module>common/fileUpload/toucan-shopping-fastdfs</module>
+        <!--MinIO模块 -->
+        <module>common/fileUpload/toucan-shopping-minio</module>
         <!--图片上传模块 -->
         <module>common/fileUpload/toucan-shopping-image-upload</module>
         <!--redis封装 -->
