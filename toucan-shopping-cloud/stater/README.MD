@@ -20,6 +20,3 @@
     
     6.toucan-shopping-admin-auth-log-spring-boot-starter
     权限中台操作日志插件(用户记录管理员的所有操作)
-
-    7.toucan-shopping-blacklist-spring-boot-starter
-    权限中台黑名单
