@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.apiMonitor;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorServiceAPI;
+import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorDashboardServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -28,9 +28,11 @@ public class ApiMonitorController extends UIController {
     private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
-    private ApiMonitorServiceAPI apiMonitorServiceAPI;
+    private ApiMonitorDashboardServiceAPI apiMonitorDashboardServiceAPI;
 
-    /** 实时大盘页面 */
+    /**
+     * 实时大盘页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/dashboardPage", method = RequestMethod.GET)
     public String dashboardPage(HttpServletRequest request) {
@@ -38,7 +40,9 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/dashboard.html";
     }
 
-    /** 耗时趋势页面 */
+    /**
+     * 耗时趋势页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/trendPage", method = RequestMethod.GET)
     public String trendPage(HttpServletRequest request) {
@@ -46,7 +50,9 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/trend.html";
     }
 
-    /** 慢请求列表页面 */
+    /**
+     * 慢请求列表页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/slowListPage", method = RequestMethod.GET)
     public String slowListPage(HttpServletRequest request) {
@@ -54,31 +60,37 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/slowList.html";
     }
 
-    /** 概要统计 API */
+    /**
+     * 概要统计 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO summary(@RequestParam(defaultValue = "5") int minutes) {
-        return apiMonitorServiceAPI.getSummary(minutes);
+        return apiMonitorDashboardServiceAPI.getSummary(minutes);
     }
 
-    /** 趋势 API */
+    /**
+     * 趋势 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/trend", method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO trend(@RequestParam String apiUrl,
                                 @RequestParam(required = false) String appName,
                                 @RequestParam(defaultValue = "60") int range) {
-        return apiMonitorServiceAPI.getTrend(apiUrl, appName, range);
+        return apiMonitorDashboardServiceAPI.getTrend(apiUrl, appName, range);
     }
 
-    /** 慢请求列表 API */
+    /**
+     * 慢请求列表 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/slowList", method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO slowList(@RequestParam(defaultValue = "3000") int minElapsed,
                                    @RequestParam(defaultValue = "1") int page,
                                    @RequestParam(defaultValue = "20") int size) {
-        return apiMonitorServiceAPI.getSlowList(minElapsed, page, size);
+        return apiMonitorDashboardServiceAPI.getSlowList(minElapsed, page, size);
     }
 }

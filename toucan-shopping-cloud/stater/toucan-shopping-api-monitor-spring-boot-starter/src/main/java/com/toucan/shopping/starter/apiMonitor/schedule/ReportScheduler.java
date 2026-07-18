@@ -1,6 +1,6 @@
 package com.toucan.shopping.starter.apiMonitor.schedule;
 
-import com.toucan.shopping.cloud.apiMonitor.api.cloud.feign.service.FeignApiMonitorService;
+import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorReportServiceAPI;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
@@ -23,7 +23,7 @@ public class ReportScheduler {
     private RecordCollector collector;
 
     @Autowired
-    private FeignApiMonitorService feignClient;
+    private ApiMonitorReportServiceAPI apiMonitorReportServiceAPI;
 
     @Autowired
     private Toucan toucan;
@@ -36,7 +36,7 @@ public class ReportScheduler {
             collector.drainTo(batch, batchSize);
 
             if (!batch.isEmpty()) {
-                feignClient.sendBatch(batch);
+                apiMonitorReportServiceAPI.sendBatch(batch);
             }
 
             // 每分钟打印丢弃计数

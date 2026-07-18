@@ -1,19 +1,11 @@
 package com.toucan.shopping.cloud.apiMonitor.api;
 
-import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 
-import java.util.List;
-
 /**
- * 接口监控服务 API
+ * 接口监控看板查询服务 API
  */
-public interface ApiMonitorServiceAPI {
-
-    /**
-     * 批量上报监控记录
-     */
-    ResultObjectVO sendBatch(List<ApiMonitorRecordVO> records);
+public interface ApiMonitorDashboardServiceAPI {
 
     /**
      * 获取概要统计

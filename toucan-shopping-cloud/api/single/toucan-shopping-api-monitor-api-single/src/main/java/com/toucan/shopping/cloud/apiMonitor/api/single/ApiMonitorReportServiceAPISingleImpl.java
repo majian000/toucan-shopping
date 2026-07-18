@@ -1,28 +1,25 @@
-package com.toucan.shopping.modules.apiMonitor.controller;
+package com.toucan.shopping.cloud.apiMonitor.api.single;
 
+import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorReportServiceAPI;
 import com.toucan.shopping.modules.apiMonitor.service.PersistService;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * 上报接口控制器
+ * 单服务版接口监控上报实现
  */
-@RestController
-@RequestMapping("/report")
-public class ReportController {
+@Service
+public class ApiMonitorReportServiceAPISingleImpl implements ApiMonitorReportServiceAPI {
 
     @Autowired
     private PersistService persistService;
 
-    @RequestMapping(value = "/batch", method = RequestMethod.POST)
-    public ResultObjectVO sendBatch(@RequestBody List<ApiMonitorRecordVO> records) {
+    @Override
+    public ResultObjectVO sendBatch(List<ApiMonitorRecordVO> records) {
         ResultObjectVO result = new ResultObjectVO();
         try {
             persistService.batchInsert(records);

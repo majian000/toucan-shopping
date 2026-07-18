@@ -63,6 +63,7 @@ spring:
           - toucan-shopping-message
           - toucan-shopping-search
           - toucan-shopping-stock
+          - toucan-shopping-api-monitor
     nacos:
       discovery:
         ip: ${toucan.ip}    #使用IP地址注册
@@ -137,6 +138,12 @@ spring:
           uri: lb://toucan-shopping-search
           predicates:
             - Path=/toucan-shopping-search-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-api-monitor-proxy
+          uri: lb://toucan-shopping-api-monitor
+          predicates:
+            - Path=/toucan-shopping-api-monitor-proxy/**
           filters:
             - StripPrefix=1
 

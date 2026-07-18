@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
  * Dashboard 查询控制器
  */
 @RestController
-@RequestMapping("/api-monitor")
+@RequestMapping("/dashboard")
 public class DashboardController {
 
     @Autowired
     private DashboardService dashboardService;
 
     /** 实时概要统计 */
-    @RequestMapping(value = "/dashboard/summary", method = RequestMethod.GET)
+    @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public ResultObjectVO summary(
             @RequestParam(defaultValue = "5") int minutes,
             @RequestParam(required = false) String apiUrl,
@@ -36,7 +36,7 @@ public class DashboardController {
     }
 
     /** 趋势查询 */
-    @RequestMapping(value = "/dashboard/trend", method = RequestMethod.GET)
+    @RequestMapping(value = "/trend", method = RequestMethod.GET)
     public ResultObjectVO trend(
             @RequestParam String apiUrl,
             @RequestParam(required = false) String appName,
@@ -53,7 +53,7 @@ public class DashboardController {
     }
 
     /** 慢请求列表 */
-    @RequestMapping(value = "/dashboard/slow-list", method = RequestMethod.GET)
+    @RequestMapping(value = "/slow-list", method = RequestMethod.GET)
     public ResultObjectVO slowList(
             @RequestParam(defaultValue = "3000") int minElapsed,
             @RequestParam(required = false) String apiUrl,

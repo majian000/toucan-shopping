@@ -37,7 +37,6 @@
                         </div>
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe669;</i> 刷新</button>
-                            <button type="button" class="layui-btn layui-btn-primary" id="autoRefreshBtn">自动刷新: 关闭</button>
                         </div>
                     </div>
                 </form>
@@ -137,20 +136,6 @@
 
         // 自动刷新
         var autoRefresh = false;
-        $('#autoRefreshBtn').click(function() {
-            autoRefresh = !autoRefresh;
-            $(this).html('自动刷新: ' + (autoRefresh ? '开启(10s)' : '关闭'));
-            if (autoRefresh) {
-                autoRefreshTimer = setInterval(function() {
-                    table.reload('dashboardTable', {
-                        page: { curr: 1 },
-                        where: $('#searchForm').serializeJson()
-                    }, 'data');
-                }, 10000);
-            } else {
-                clearInterval(autoRefreshTimer);
-            }
-        });
 
         // 监听表格toolbar事件
         table.on('toolbar(dashboardTable)', function (obj) {
