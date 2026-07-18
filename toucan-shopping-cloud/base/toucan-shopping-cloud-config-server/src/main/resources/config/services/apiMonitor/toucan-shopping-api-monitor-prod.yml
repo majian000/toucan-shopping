@@ -30,16 +30,6 @@ spring:
       circuitbreaker:
         enabled: true
 
-  datasource:
-    url: jdbc:mysql://${toucan.mysql.ip}:3306/api_monitor_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: ${toucan.mysql.username}
-    password: ${toucan.mysql.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-mybatis:
-  mapper-locations: classpath*:com/toucan/shopping/modules/apiMonitor/mapper/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
 
 feign:
   client:
@@ -80,7 +70,7 @@ toucan:
           content-type-list[0]: application/json
       email:
         enabled: true
-        title: ——权限中台服务——异常邮件
+        title: ——监控服务——异常邮件
         ignore-exception-list[0]: javax.mail.MessagingException
         protocol: smtp
         smtp: #smtp服务器配置
