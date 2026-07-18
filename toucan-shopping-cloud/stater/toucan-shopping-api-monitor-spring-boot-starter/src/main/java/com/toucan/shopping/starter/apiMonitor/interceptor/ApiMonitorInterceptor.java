@@ -5,7 +5,7 @@ import com.toucan.shopping.modules.common.constant.TraceConstants;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
-import com.toucan.shopping.starter.traceId.TraceContext;
+import com.toucan.shopping.starter.traceId.context.TraceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.toucan.shopping.starter.traceId;
+package com.toucan.shopping.starter.traceId.context;
 
 /**
  * TraceId 上下文（ThreadLocal）

@@ -1,7 +1,7 @@
 package com.toucan.shopping.starter.traceId.filter;
 
 import com.toucan.shopping.modules.common.constant.TraceConstants;
-import com.toucan.shopping.starter.traceId.TraceContext;
+import com.toucan.shopping.starter.traceId.context.TraceContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
