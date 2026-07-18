@@ -3,15 +3,15 @@
 
     <contextName>logback</contextName>
 
-    <springProfile name="cloud_dev,single_dev">
+    <springProfile name="dev">
         <property name="log.path" value="C:/log/dev/toucan_shopping/toucan_shopping_api_monitor" />
     </springProfile>
 
-    <springProfile name="cloud_test,single_test">
+    <springProfile name="test">
         <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_api_monitor" />
     </springProfile>
 
-    <springProfile name="cloud_prod,single_prod">
+    <springProfile name="prod">
         <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_api_monitor" />
     </springProfile>
 
@@ -115,7 +115,7 @@
         </filter>
     </appender>
 
-    <springProfile name="cloud_dev,single_dev">
+    <springProfile name="dev">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
@@ -124,14 +124,14 @@
         </root>
     </springProfile>
 
-    <springProfile name="cloud_test,single_test">
+    <springProfile name="test">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
-    <springProfile name="cloud_prod,single_prod">
+    <springProfile name="prod">
         <logger name="com.toucan.shopping" level="info"/>
         <root level="info">
             <appender-ref ref="CONSOLE_FILE" />
