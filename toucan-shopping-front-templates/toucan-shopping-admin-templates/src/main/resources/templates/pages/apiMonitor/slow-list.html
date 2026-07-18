@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
-    <title>接口监控-慢请求列表</title>
+    <title>商城后台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -11,90 +12,159 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
 </head>
 <body>
+
+<span th:replace="~{common_page::common}"></span>
+
 <div class="layuimini-container">
     <div class="layuimini-main">
+
         <fieldset class="table-search-fieldset">
-            <legend>慢请求列表</legend>
-            <div style="margin: 10px">
-                <div class="layui-inline">
-                    <label class="layui-form-label">最低耗时(ms)</label>
-                    <div class="layui-input-inline">
-                        <select id="minElapsed">
-                            <option value="3000" selected>3000ms</option>
-                            <option value="5000">5000ms</option>
-                            <option value="10000">10000ms</option>
-                        </select>
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="searchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">最低耗时(ms)</label>
+                            <div class="layui-input-inline">
+                                <select id="minElapsed" name="minElapsed" lay-search="">
+                                    <option value="3000" selected>3000ms</option>
+                                    <option value="5000">5000ms</option>
+                                    <option value="10000">10000ms</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            <button type="button" class="layui-btn layui-btn-primary" id="autoRefreshBtn">自动刷新: 关闭</button>
+                        </div>
                     </div>
-                </div>
-                <div class="layui-inline">
-                    <button class="layui-btn layui-btn-primary" id="queryBtn"><i class="layui-icon">&#xe615;</i> 查询</button>
-                    <button class="layui-btn layui-btn-primary" id="autoRefreshBtn">自动刷新: 关闭</button>
-                </div>
+                </form>
             </div>
         </fieldset>
 
-        <table id="slowTable" lay-filter="slowTable"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="slowTable" lay-filter="slowTable"></table>
+
+        <script type="text/html" id="slowTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
     </div>
 </div>
-
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
-<script th:inline="javascript">
-    var ctx = /*[[@{/}]]*/'';
-</script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form;
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
         var autoRefreshTimer = null;
 
-        form.render('select');
-
-        function loadData() {
-            var minElapsed = document.getElementById('minElapsed').value;
-            table.render({
-                elem: '#slowTable',
-                url: ctx + 'apiMonitor/slowList?minElapsed=' + minElapsed + '&page=1&size=50',
-                method: 'GET',
-                parseData: function(res) {
-                    if ((res.code === 0 || res.code === 1) && res.data) {
-                        return { code: 0, data: res.data };
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
                     }
-                    return { code: res.code, data: [] };
-                },
-                cols: [[
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        table.render({
+            elem: '#slowTable',
+            url: "[[@{/}]]apiMonitor/slowList",
+            method: 'GET',
+            where: { minElapsed: '3000' },
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            parseData: function(res) {
+                if (res.code === 1 && res.data) {
+                    var list = res.data;
+                    return { code: 0, data: list, count: list.length };
+                }
+                return { code: res.code || 1, data: [], count: 0, msg: res.msg || '请求失败' };
+            },
+            cols: [
+                [
                     {field: 'apiUrl', title: '接口URL', width: 280},
-                    {field: 'httpMethod', title: '方法', width: 80},
+                    {field: 'httpMethod', title: '请求方法', width: 90},
                     {field: 'appName', title: '应用', width: 150},
                     {field: 'elapsedMs', title: '耗时(ms)', width: 120, sort: true,
                         templet: function(d) {
                             return '<span style="color:red;font-weight:bold">' + d.elapsedMs + '</span>';
                         }},
                     {field: 'statusCode', title: '状态码', width: 80},
-                    {field: 'traceId', title: 'TraceId', width: 120,
+                    {field: 'traceId', title: 'TraceId', width: 150,
                         templet: function(d) {
-                            return d.traceId ? '<code style="background:#f0f0f0;padding:2px 6px">' + d.traceId + '</code>' : '-';
+                            return d.traceId ? '<code style="background:#f0f0f0;padding:2px 6px;border-radius:2px">' + d.traceId + '</code>' : '-';
                         }},
-                    {field: 'serverIp', title: '服务器IP', width: 130},
+                    {field: 'serverIp', title: '服务器IP', width: 140},
                     {field: 'requestTime', title: '请求时间', width: 180}
-                ]],
-                page: true,
-                limit: 50,
-                skin: 'line'
-            });
-        }
-        document.getElementById('queryBtn').onclick = loadData;
-        loadData();
+                ]
+            ],
+            limits: [20, 50, 100],
+            limit: 50,
+            page: true,
+            skin: 'line'
+        });
 
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            table.reload('slowTable', {
+                page: { curr: 1 },
+                where: data.field
+            }, 'data');
+            return false;
+        });
+
+        // 自动刷新
         var autoRefresh = false;
-        document.getElementById('autoRefreshBtn').onclick = function() {
+        $('#autoRefreshBtn').click(function() {
             autoRefresh = !autoRefresh;
-            this.innerHTML = '自动刷新: ' + (autoRefresh ? '开启(15s)' : '关闭');
+            $(this).html('自动刷新: ' + (autoRefresh ? '开启(15s)' : '关闭'));
             if (autoRefresh) {
-                autoRefreshTimer = setInterval(loadData, 15000);
+                autoRefreshTimer = setInterval(function() {
+                    table.reload('slowTable', {
+                        page: { curr: 1 },
+                        where: $('#searchForm').serializeJson()
+                    }, 'data');
+                }, 15000);
             } else {
                 clearInterval(autoRefreshTimer);
             }
-        };
+        });
+
+        // 监听表格toolbar事件
+        table.on('toolbar(slowTable)', function (obj) {
+            if (obj.event === 'add') {
+                // 预留
+            } else if (obj.event === 'deleteToolbar') {
+                // 预留
+            }
+        });
+
+        // 监听行工具事件
+        table.on('tool(slowTable)', function (obj) {
+            // 预留
+        });
     });
 </script>
+
 </body>
 </html>

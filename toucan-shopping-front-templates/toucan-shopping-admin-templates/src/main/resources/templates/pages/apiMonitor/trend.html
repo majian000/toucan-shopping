@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
-    <title>接口监控-耗时趋势</title>
+    <title>商城后台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -11,91 +12,166 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
 </head>
 <body>
+
+<span th:replace="~{common_page::common}"></span>
+
 <div class="layuimini-container">
     <div class="layuimini-main">
+
         <fieldset class="table-search-fieldset">
-            <legend>耗时趋势</legend>
-            <div style="margin: 10px">
-                <div class="layui-inline">
-                    <label class="layui-form-label">接口URL</label>
-                    <div class="layui-input-inline" style="width: 300px;">
-                        <input type="text" id="apiUrl" class="layui-input" th:value="${param.apiUrl}">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="searchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">接口URL</label>
+                            <div class="layui-input-inline" style="width: 300px;">
+                                <input type="text" id="apiUrl" name="apiUrl" autocomplete="off" class="layui-input" th:value="${param.apiUrl}">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">应用</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="appName" name="appName" autocomplete="off" class="layui-input" th:value="${param.appName}">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">时间范围</label>
+                            <div class="layui-input-inline">
+                                <select id="rangeSelect" name="range" lay-search="">
+                                    <option value="15">15分钟</option>
+                                    <option value="30">30分钟</option>
+                                    <option value="60" selected>60分钟</option>
+                                    <option value="180">3小时</option>
+                                    <option value="360">6小时</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn">重置</button>
+                        </div>
                     </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">应用</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="appName" class="layui-input" th:value="${param.appName}">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">时间范围</label>
-                    <div class="layui-input-inline">
-                        <select id="rangeSelect">
-                            <option value="15">15分钟</option>
-                            <option value="30">30分钟</option>
-                            <option value="60" selected>60分钟</option>
-                            <option value="180">3小时</option>
-                            <option value="360">6小时</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button class="layui-btn layui-btn-primary" id="queryBtn"><i class="layui-icon">&#xe615;</i> 查询</button>
-                </div>
+                </form>
             </div>
         </fieldset>
 
-        <table id="trendTable" lay-filter="trendTable"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="trendTable" lay-filter="trendTable"></table>
+
+        <script type="text/html" id="trendTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
     </div>
 </div>
-
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
-<script th:inline="javascript">
-    var ctx = /*[[@{/}]]*/'';
-</script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form;
-        form.render('select');
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
 
-        function loadTrend() {
-            var apiUrl = document.getElementById('apiUrl').value;
-            var appName = document.getElementById('appName').value;
-            var range = document.getElementById('rangeSelect').value;
-            table.render({
-                elem: '#trendTable',
-                url: ctx + 'apiMonitor/trend?apiUrl=' + encodeURIComponent(apiUrl)
-                    + '&appName=' + encodeURIComponent(appName)
-                    + '&range=' + range,
-                method: 'GET',
-                parseData: function(res) {
-                    if ((res.code === 0 || res.code === 1) && res.data) {
-                        return { code: 0, data: res.data };
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
                     }
-                    return { code: res.code, data: [] };
-                },
-                cols: [[
-                    {field: 'timeWindow', title: '时间窗口', width: 200},
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        table.render({
+            elem: '#trendTable',
+            url: "[[@{/}]]apiMonitor/trend",
+            method: 'GET',
+            where: {
+                apiUrl: $('#apiUrl').val() || '',
+                appName: $('#appName').val() || '',
+                range: '60'
+            },
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            parseData: function(res) {
+                if (res.code === 1 && res.data) {
+                    var list = res.data;
+                    return { code: 0, data: list, count: list.length };
+                }
+                return { code: res.code || 1, data: [], count: 0, msg: res.msg || '请求失败' };
+            },
+            cols: [
+                [
+                    {field: 'timeWindow', title: '时间窗口', width: 180},
                     {field: 'requestCount', title: '请求数', width: 120, sort: true},
                     {field: 'avgMs', title: '平均耗时(ms)', width: 150, sort: true},
-                    {field: 'maxMs', title: '最大耗时(ms)', width: 150,
+                    {field: 'maxMs', title: '最大耗时(ms)', width: 150, sort: true,
                         templet: function(d) {
-                            return '<span style="color:' + (d.maxMs > 3000 ? 'red' : '') + '">' + d.maxMs + '</span>';
+                            if (d.maxMs > 3000) {
+                                return '<span style="color:red;font-weight:bold">' + d.maxMs + '</span>';
+                            }
+                            return d.maxMs;
                         }},
                     {field: 'minMs', title: '最小耗时(ms)', width: 150}
-                ]],
-                page: false,
-                skin: 'line'
-            });
-        }
-        document.getElementById('queryBtn').onclick = loadTrend;
+                ]
+            ],
+            page: false,
+            skin: 'line'
+        });
 
-        var apiUrlEl = document.getElementById('apiUrl');
-        if (apiUrlEl.value) {
-            loadTrend();
-        }
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var apiUrl = data.field.apiUrl;
+            var appName = data.field.appName;
+            if (!apiUrl) {
+                layer.msg('请输入接口URL');
+                return false;
+            }
+            table.reload('trendTable', {
+                page: { curr: 1 },
+                where: data.field
+            }, 'data');
+            return false;
+        });
+
+        // 监听重置操作
+        $('#data-reset-btn').click(function() {
+            $('#searchForm')[0].reset();
+            form.render();
+        });
+
+        // 监听表格toolbar事件
+        table.on('toolbar(trendTable)', function (obj) {
+            if (obj.event === 'add') {
+                // 预留
+            } else if (obj.event === 'deleteToolbar') {
+                // 预留
+            }
+        });
+
+        // 监听行工具事件
+        table.on('tool(trendTable)', function (obj) {
+            // 预留
+        });
     });
 </script>
+
 </body>
 </html>
