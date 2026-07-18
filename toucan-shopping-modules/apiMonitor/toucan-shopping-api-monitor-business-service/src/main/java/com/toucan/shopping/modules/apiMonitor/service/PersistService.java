@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.apiMonitor.service;
 
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
-import com.toucan.shopping.modules.apiMonitor.mapper.ApiMonitorRecordMapper;
+import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 持久化服务
+ * 持久化服务（VO→PO转换 + 调用 service-dao 层）
  */
 @Service
 public class PersistService {
 
     @Autowired
-    private ApiMonitorRecordMapper apiMonitorRecordMapper;
+    private ApiMonitorRecordService apiMonitorRecordService;
 
     /**
      * 批量保存上报记录
@@ -51,6 +51,6 @@ public class PersistService {
             }
             poList.add(po);
         }
-        apiMonitorRecordMapper.batchInsert(poList);
+        apiMonitorRecordService.batchInsert(poList);
     }
 }
