@@ -30,7 +30,6 @@ public class TraceIdFilter extends OncePerRequestFilter {
                 .substring(0, TraceConstants.TRACE_ID_LENGTH);
         MDC.put(TraceConstants.TRACE_ID_KEY, traceId);
         TraceContext.set(traceId);
-        request.setAttribute(TraceConstants.TRACE_ID_ATTR, traceId);
         try {
             filterChain.doFilter(request, response);
         } finally {
