@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.apiMonitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -35,11 +36,14 @@ public class ApiMonitorRecordPO {
     private String serverIp;
 
     /** 请求时间(毫秒精度) */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date requestTime;
 
     /** 分片日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date shardingDate;
 
     /** 记录创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
 }

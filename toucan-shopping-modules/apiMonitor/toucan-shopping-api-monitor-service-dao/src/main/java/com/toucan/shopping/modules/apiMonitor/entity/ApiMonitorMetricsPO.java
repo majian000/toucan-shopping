@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.apiMonitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class ApiMonitorMetricsPO {
     private String appName;
 
     /** 时间窗口(精确到分钟，如 16:32:00) */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date timeWindow;
 
     /** 该分钟内请求总数 */
@@ -36,8 +38,10 @@ public class ApiMonitorMetricsPO {
     private Integer minMs;
 
     /** 分片日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date shardingDate;
 
     /** 记录创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
 }
