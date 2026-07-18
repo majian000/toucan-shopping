@@ -115,10 +115,7 @@
                             return d.maxMs;
                         }},
                     {field: 'minMs', title: '最小耗时(ms)', width: 140},
-                    {title: '操作', width: 100, align: 'center', templet: function(d) {
-                        return '<a class="layui-btn layui-btn-xs" href="[[@{/}]]apiMonitor/trendPage?apiUrl='
-                            + encodeURIComponent(d.apiUrl) + '&appName=' + (d.appName || '') + '">趋势</a>';
-                    }}
+                    {title: '操作', width: 100, align: 'center'}
                 ]
             ],
             page: false,
@@ -148,7 +145,21 @@
 
         // 监听行工具事件
         table.on('tool(dashboardTable)', function (obj) {
-            // 预留
+            var data = obj.data;
+            if (obj.event === 'trend') {
+                var index = layer.open({
+                    title: '接口趋势 - ' + data.apiUrl,
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]apiMonitor/trendPage?apiUrl='
+                        + encodeURIComponent(data.apiUrl) + '&appName=' + (data.appName || '')
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
         });
     });
 </script>
