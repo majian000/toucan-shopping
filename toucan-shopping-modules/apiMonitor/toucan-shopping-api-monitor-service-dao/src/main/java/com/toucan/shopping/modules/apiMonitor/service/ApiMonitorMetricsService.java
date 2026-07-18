@@ -17,6 +17,9 @@ public interface ApiMonitorMetricsService {
     /** 趋势查询 */
     List<ApiMonitorMetricsPO> selectTrend(String apiUrl, String appName, Date startTime, Date endTime);
 
+    /** 查询已聚合的最新时间窗口（用于故障恢复追赶） */
+    Date selectMaxTimeWindow();
+
     /** 删除过期数据 */
     int deleteByCreateDate(Date beforeDate);
 }

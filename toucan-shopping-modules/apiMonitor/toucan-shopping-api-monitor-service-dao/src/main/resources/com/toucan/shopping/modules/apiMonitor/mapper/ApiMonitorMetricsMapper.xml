@@ -51,6 +51,11 @@
         ORDER BY time_window ASC
     </select>
 
+    <!-- 查询已聚合的最新时间窗口（用于故障恢复追赶） -->
+    <select id="selectMaxTimeWindow" resultType="java.util.Date">
+        SELECT COALESCE(MAX(time_window), '1970-01-01 00:00:00') FROM api_monitor_metrics
+    </select>
+
     <!-- 删除过期数据 -->
     <delete id="deleteByCreateDate">
         DELETE FROM api_monitor_metrics WHERE create_date &lt; #{beforeDate}

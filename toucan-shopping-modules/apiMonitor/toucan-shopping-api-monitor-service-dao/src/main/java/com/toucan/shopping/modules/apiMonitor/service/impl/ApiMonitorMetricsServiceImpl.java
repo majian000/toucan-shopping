@@ -26,6 +26,11 @@ public class ApiMonitorMetricsServiceImpl implements ApiMonitorMetricsService {
     }
 
     @Override
+    public Date selectMaxTimeWindow() {
+        return apiMonitorMetricsMapper.selectMaxTimeWindow();
+    }
+
+    @Override
     public int deleteByCreateDate(Date beforeDate) {
         return apiMonitorMetricsMapper.deleteByCreateDate(beforeDate);
     }
