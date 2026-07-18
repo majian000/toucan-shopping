@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>接口监控-耗时趋势</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.9.13/src/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>耗时趋势</legend>
+            <div style="margin: 10px">
+                <div class="layui-inline">
+                    <label class="layui-form-label">接口URL</label>
+                    <div class="layui-input-inline" style="width: 300px;">
+                        <input type="text" id="apiUrl" class="layui-input" th:value="${param.apiUrl}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">应用</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="appName" class="layui-input" th:value="${param.appName}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间范围</label>
+                    <div class="layui-input-inline">
+                        <select id="rangeSelect">
+                            <option value="15">15分钟</option>
+                            <option value="30">30分钟</option>
+                            <option value="60" selected>60分钟</option>
+                            <option value="180">3小时</option>
+                            <option value="360">6小时</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary" id="queryBtn"><i class="layui-icon">&#xe615;</i> 查询</button>
+                </div>
+            </div>
+        </fieldset>
+
+        <table id="trendTable" lay-filter="trendTable"></table>
+    </div>
+</div>
+
+<script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['table'], function() {
+        var table = layui.table;
+
+        function loadTrend() {
+            var apiUrl = document.getElementById('apiUrl').value;
+            var appName = document.getElementById('appName').value;
+            var range = document.getElementById('rangeSelect').value;
+            table.render({
+                elem: '#trendTable',
+                url: '[[@{/}]]apiMonitor/trend?apiUrl=' + encodeURIComponent(apiUrl)
+                    + '&appName=' + encodeURIComponent(appName)
+                    + '&range=' + range,
+                method: 'GET',
+                parseData: function(res) {
+                    if (res.code === 0 && res.data) {
+                        return { code: 0, data: res.data };
+                    }
+                    return { code: res.code, data: [] };
+                },
+                cols: [[
+                    {field: 'timeWindow', title: '时间窗口', width: 200},
+                    {field: 'requestCount', title: '请求数', width: 120, sort: true},
+                    {field: 'avgMs', title: '平均耗时(ms)', width: 150, sort: true},
+                    {field: 'maxMs', title: '最大耗时(ms)', width: 150,
+                        templet: function(d) {
+                            return '<span style="color:' + (d.maxMs > 3000 ? 'red' : '') + '">' + d.maxMs + '</span>';
+                        }},
+                    {field: 'minMs', title: '最小耗时(ms)', width: 150}
+                ]],
+                page: false,
+                skin: 'line'
+            });
+        }
+        document.getElementById('queryBtn').onclick = loadTrend;
+
+        // 如果 URL 参数带了 apiUrl，自动查询
+        var apiUrlEl = document.getElementById('apiUrl');
+        if (apiUrlEl.value) {
+            loadTrend();
+        }
+    });
+</script>
+</body>
+</html>

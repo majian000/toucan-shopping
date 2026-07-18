@@ -305,6 +305,11 @@
                     <artifactId>toucan-shopping-search-api-cloud</artifactId>
                 </dependency>
 
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-api-monitor-api-cloud</artifactId>
+                </dependency>
+
 
 
 
@@ -396,6 +401,11 @@
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.api</groupId>
                     <artifactId>toucan-shopping-search-api-single</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.toucan.shopping.cloud.api</groupId>
+                    <artifactId>toucan-shopping-api-monitor-api-single</artifactId>
                 </dependency>
 
 

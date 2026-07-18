@@ -13,6 +13,15 @@ public class Plugins {
      */
     private XssFilter xssFilter;
 
+    /**
+     * 链路追踪
+     */
+    private TraceId traceId;
+
+    /**
+     * 接口监控
+     */
+    private ApiMonitor apiMonitor;
 
 
 }

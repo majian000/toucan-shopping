@@ -68,6 +68,10 @@
         <module>api/toucan-shopping-common-data-api</module>
         <!--搜索服务API -->
         <module>api/toucan-shopping-search-api</module>
+        <!--接口监控 API -->
+        <module>api/toucan-shopping-api-monitor-api</module>
+        <module>api/cloud/toucan-shopping-api-monitor-api-cloud</module>
+        <module>api/single/toucan-shopping-api-monitor-api-single</module>
         <module>api/cloud/toucan-shopping-stock-api-cloud</module>
         <module>api/single/toucan-shopping-stock-api-single</module>
         <module>api/cloud/toucan-shopping-content-api-cloud</module>
@@ -109,6 +113,8 @@
         <module>services/toucan-shopping-message</module>
         <!--搜索服务-->
         <module>services/toucan-shopping-search</module>
+        <!--接口监控服务-->
+        <module>services/toucan-shopping-api-monitor</module>
 
         <!-- ===============================================-->
 
@@ -193,6 +199,10 @@
         <module>stater/toucan-shopping-user-sso-spring-boot-starter</module>
         <!--XSS代码替换 -->
         <module>stater/toucan-shopping-xss-spring-boot-starter</module>
+        <!--链路追踪 -->
+        <module>stater/toucan-shopping-trace-id-spring-boot-starter</module>
+        <!--接口监控 -->
+        <module>stater/toucan-shopping-api-monitor-spring-boot-starter</module>
         <!-- ===============================================-->
 
 
@@ -681,6 +691,36 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-api-monitor-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-api-monitor-api-cloud</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-api-monitor-api-single</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.starter</groupId>
+                <artifactId>toucan-shopping-trace-id-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

@@ -1,0 +1,92 @@
+#======================== 监控服务 开发环境 ====================================
+
+server:
+  port: 8107
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    name: toucan-shopping-api-monitor
+  zipkin:
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        probability: 1
+  mvc:
+    servlet:
+      load-on-startup: 100
+  cloud:
+    nacos:
+      discovery:
+        ip: ${toucan.ip}
+        port: ${server.port}
+        server-addr: ${toucan.nacos.ip}:${toucan.nacos.port}
+        username: ${toucan.nacos.username}
+        password: ${toucan.nacos.password}
+        metadata:
+          preserved.heart.beat.interval: 4000
+          preserved.heart.beat.timeout: 4500
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+  datasource:
+    url: jdbc:mysql://${toucan.mysql.ip}:3306/api_monitor_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${toucan.mysql.username}
+    password: ${toucan.mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath*:com/toucan/shopping/modules/apiMonitor/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 5s
+        cancelRunningFuture: true
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 8
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+toucan:
+  machine-id: 2201
+  app-code: 10001008
+  modules:
+    log:
+      param:
+        request:
+          enabled: false
+          content-type-list[0]: application/x-www-form-urlencoded
+          content-type-list[1]: application/json
+        response:
+          enabled: false
+          content-type-list[0]: application/json
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+    redis:
+      enabled: false

@@ -157,7 +157,15 @@ toucan:
       enabled: true
       exclude-paths[0]: /article/save
       exclude-paths[1]: /article/update
-
+    traceId:
+      enabled: true
+    apiMonitor:
+      enabled: true
+      scanPackages:
+        - com.toucan.shopping.modules.content.controller
+      excludePatterns:
+        - /actuator/**
+        - /error
 
 
 

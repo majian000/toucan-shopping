@@ -156,6 +156,15 @@ toucan:
       exclude-paths[1]: /function/save
       exclude-paths[2]: /article/save
       exclude-paths[3]: /article/update
+    traceId:
+      enabled: true
+    apiMonitor:
+      enabled: true
+      scanPackages:
+        - com.toucan.shopping.cloud.apps.admin.controller
+      excludePatterns:
+        - /actuator/**
+        - /error
   modules:
     log: #日志模块
       param:

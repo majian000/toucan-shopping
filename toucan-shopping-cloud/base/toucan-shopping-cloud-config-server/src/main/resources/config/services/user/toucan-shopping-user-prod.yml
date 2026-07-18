@@ -60,6 +60,15 @@ toucan:
     xss-filter:
       enabled: true
       exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+    traceId:
+      enabled: true
+    apiMonitor:
+      enabled: true
+      scanPackages:
+        - com.toucan.shopping.modules.user.controller
+      excludePatterns:
+        - /actuator/**
+        - /error
   modules:
     userLoginCache:
       cache-type: redis

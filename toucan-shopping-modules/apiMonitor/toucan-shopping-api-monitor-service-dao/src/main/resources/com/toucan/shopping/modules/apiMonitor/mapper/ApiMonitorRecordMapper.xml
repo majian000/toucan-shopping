@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.apiMonitor.mapper.ApiMonitorRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO">
+        <id column="id" property="id"/>
+        <result column="api_url" property="apiUrl"/>
+        <result column="http_method" property="httpMethod"/>
+        <result column="elapsed_ms" property="elapsedMs"/>
+        <result column="status_code" property="statusCode"/>
+        <result column="trace_id" property="traceId"/>
+        <result column="app_name" property="appName"/>
+        <result column="server_ip" property="serverIp"/>
+        <result column="request_time" property="requestTime"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO api_monitor_record
+        (api_url, http_method, elapsed_ms, status_code, trace_id, app_name, server_ip, request_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.apiUrl}, #{item.httpMethod}, #{item.elapsedMs}, #{item.statusCode},
+             #{item.traceId}, #{item.appName}, #{item.serverIp}, #{item.requestTime})
+        </foreach>
+    </insert>
+
+    <!-- 慢请求列表 -->
+    <select id="selectSlowList" resultMap="BaseResultMap">
+        SELECT * FROM api_monitor_record
+        WHERE elapsed_ms >= #{minElapsedMs}
+        <if test="apiUrl != null and apiUrl != ''">
+            AND api_url = #{apiUrl}
+        </if>
+        <if test="appName != null and appName != ''">
+            AND app_name = #{appName}
+        </if>
+        <if test="startTime != null">
+            AND request_time >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND request_time &lt; #{endTime}
+        </if>
+        ORDER BY elapsed_ms DESC
+    </select>
+
+    <!-- 聚合到分钟表 -->
+    <insert id="aggregateToMetrics">
+        INSERT INTO api_monitor_metrics
+        (api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms)
+        SELECT
+            api_url,
+            app_name,
+            DATE_FORMAT(request_time, '%Y-%m-%d %H:%i:00') AS time_window,
+            COUNT(*) AS request_count,
+            ROUND(AVG(elapsed_ms), 2) AS avg_ms,
+            MAX(elapsed_ms) AS max_ms,
+            MIN(elapsed_ms) AS min_ms
+        FROM api_monitor_record
+        WHERE request_time >= #{startTime}
+          AND request_time &lt; #{endTime}
+        GROUP BY api_url, app_name, time_window
+    </insert>
+
+    <!-- 删除过期数据 -->
+    <delete id="deleteByCreateDate">
+        DELETE FROM api_monitor_record WHERE create_date &lt; #{beforeDate}
+    </delete>
+
+</mapper>

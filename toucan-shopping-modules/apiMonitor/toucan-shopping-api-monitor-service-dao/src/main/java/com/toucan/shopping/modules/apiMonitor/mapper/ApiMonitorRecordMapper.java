@@ -1,0 +1,26 @@
+package com.toucan.shopping.modules.apiMonitor.mapper;
+
+import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 接口监控原始记录 Mapper
+ */
+@Mapper
+public interface ApiMonitorRecordMapper {
+
+    /** 批量插入 */
+    int batchInsert(List<ApiMonitorRecordPO> records);
+
+    /** 查询慢请求列表 */
+    List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime);
+
+    /** 聚合到分钟表 */
+    int aggregateToMetrics(Date startTime, Date endTime);
+
+    /** 删除过期数据 */
+    int deleteByCreateDate(Date beforeDate);
+}

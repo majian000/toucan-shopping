@@ -119,19 +119,20 @@
     
 ##### 业务服务层
     
- | 服务名                                        | 端口号                 | 说明                                             |
- | --------------------------------------------- | -------------------- | ---------------------------------------------------|
- | services/toucan-shopping-product             | 8082                   | 商品服务                                          |
- | services/toucan-shopping-order               | 8084                   | 订单服务、支付服务                                |
- | services/toucan-shopping-second-kill         | 8085                   | 秒杀服务                                          |
- | services/toucan-shopping-stock               | 8093                   | 库存服务                                          |
- | services/toucan-shopping-user                | 8087                   | 用户中心服务                                      |
- | services/toucan-shopping-admin-auth          | 8099                   | 权限中台服务                                      |
- | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
- | services/toucan-shopping-message             | 8103                  | 消息服务                                           |
- | services/toucan-shopping-common-data         | 8104                  | 公共数据服务                                       |
- | services/toucan-shopping-content             | 8105                  | 内容服务                                           |
- | services/toucan-shopping-search             | 8106                  | 搜索服务                                           |
+ | 服务名                                        | 端口号  | 说明        |
+ |------|-----------| ---------------------------------------------------|
+ | services/toucan-shopping-product             | 8082 | 商品服务      |
+ | services/toucan-shopping-order               | 8084 | 订单服务、支付服务 |
+ | services/toucan-shopping-second-kill         | 8085 | 秒杀服务      |
+ | services/toucan-shopping-stock               | 8093 | 库存服务      |
+ | services/toucan-shopping-user                | 8087 | 用户中心服务    |
+ | services/toucan-shopping-admin-auth          | 8099 | 权限中台服务    |
+ | services/toucan-shopping-seller              | 8100 | 卖家服务      |
+ | services/toucan-shopping-message             | 8103 | 消息服务      |
+ | services/toucan-shopping-common-data         | 8104 | 公共数据服务    |
+ | services/toucan-shopping-content             | 8105 | 内容服务      |
+ | services/toucan-shopping-search             | 8106 | 搜索服务      |
+ | services/toucan-shopping-api-monitor             | 8107 | 监控服务      |
 
     
 

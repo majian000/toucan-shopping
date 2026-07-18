@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>接口监控-实时大盘</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.9.13/src/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>实时大盘</legend>
+            <div style="margin: 10px">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间范围</label>
+                    <div class="layui-input-inline">
+                        <select name="minutes" id="minutesSelect">
+                            <option value="1">最近1分钟</option>
+                            <option value="5" selected>最近5分钟</option>
+                            <option value="15">最近15分钟</option>
+                            <option value="30">最近30分钟</option>
+                            <option value="60">最近60分钟</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary" id="refreshBtn"><i class="layui-icon">&#xe669;</i> 刷新</button>
+                    <button class="layui-btn layui-btn-primary" id="autoRefreshBtn">自动刷新: 关闭</button>
+                </div>
+            </div>
+        </fieldset>
+
+        <table id="dashboardTable" lay-filter="dashboardTable"></table>
+    </div>
+</div>
+
+<script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['table', 'util'], function () {
+        var table = layui.table, util = layui.util;
+        var autoRefreshTimer = null;
+
+        function loadData() {
+            var minutes = document.getElementById('minutesSelect').value;
+            table.render({
+                elem: '#dashboardTable',
+                url: '[[@{/}]]apiMonitor/summary?minutes=' + minutes,
+                method: 'GET',
+                parseData: function(res) {
+                    return { code: res.code, data: res.data ? res.data.items : [] };
+                },
+                cols: [[
+                    {field: 'apiUrl', title: '接口URL', width: 350},
+                    {field: 'appName', title: '应用', width: 180},
+                    {field: 'requestCount', title: '请求数(QPS)', width: 150, sort: true,
+                        templet: function(d) { return d.requestCount; }},
+                    {field: 'avgMs', title: '平均耗时(ms)', width: 150, sort: true},
+                    {field: 'maxMs', title: '最大耗时(ms)', width: 150,
+                        templet: function(d) {
+                            return '<span style="color:' + (d.maxMs > 3000 ? 'red' : '') + '">' + d.maxMs + '</span>';
+                        }},
+                    {field: 'minMs', title: '最小耗时(ms)', width: 150},
+                    {title: '操作', width: 120, templet: function(d) {
+                        return '<a class="layui-btn layui-btn-xs" lay-event="trend" href="[[@{/}]]apiMonitor/trendPage?apiUrl=' + encodeURIComponent(d.apiUrl) + '&appName=' + (d.appName || '') + '">趋势</a>';
+                    }}
+                ]],
+                page: false,
+                skin: 'line'
+            });
+        }
+
+        loadData();
+
+        document.getElementById('refreshBtn').onclick = function() { loadData(); };
+
+        var autoRefresh = false;
+        document.getElementById('autoRefreshBtn').onclick = function() {
+            autoRefresh = !autoRefresh;
+            this.innerHTML = '自动刷新: ' + (autoRefresh ? '开启(10s)' : '关闭');
+            if (autoRefresh) {
+                autoRefreshTimer = setInterval(loadData, 10000);
+            } else {
+                clearInterval(autoRefreshTimer);
+            }
+        };
+
+        table.on('tool(dashboardTable)', function(obj) {
+            if (obj.event === 'trend') {
+                var url = '[[@{/}]]apiMonitor/trendPage?apiUrl='
+                    + encodeURIComponent(obj.data.apiUrl)
+                    + '&appName=' + (obj.data.appName || '');
+                window.location.href = url;
+            }
+        });
+    });
+</script>
+</body>
+</html>

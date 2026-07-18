@@ -58,6 +58,15 @@
         <module>common/fileUpload/toucan-shopping-minio</module>
         <!--图片上传模块 -->
         <module>common/fileUpload/toucan-shopping-image-upload</module>
+
+        <!--接口监控实体VO -->
+        <module>apiMonitor/toucan-shopping-api-monitor-entity-vo</module>
+        <!--接口监控 Service 和 DAO -->
+        <module>apiMonitor/toucan-shopping-api-monitor-service-dao</module>
+        <!--接口监控业务服务层 -->
+        <module>apiMonitor/toucan-shopping-api-monitor-business-service</module>
+        <!--接口监控控制层 -->
+        <module>apiMonitor/toucan-shopping-api-monitor-controller</module>
         <!--redis封装 -->
         <module>common/cache/toucan-shopping-redis</module>
         <!--freemarker封装 -->
@@ -931,6 +940,34 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-jsoup</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+                <artifactId>toucan-shopping-api-monitor-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+                <artifactId>toucan-shopping-api-monitor-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+                <artifactId>toucan-shopping-api-monitor-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+                <artifactId>toucan-shopping-api-monitor-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
