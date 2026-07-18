@@ -1,1 +1,2 @@
 com.toucan.shopping.starter.apiMonitor.config.ApiMonitorAutoConfiguration
+com.toucan.shopping.starter.apiMonitor.config.ApiMonitorWebConfig

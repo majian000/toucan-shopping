@@ -1,19 +1,17 @@
 package com.toucan.shopping.starter.apiMonitor.config;
 
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.starter.apiMonitor.interceptor.ApiMonitorInterceptor;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
 import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * 接口监控自动配置
@@ -21,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @AutoConfiguration
 @EnableScheduling
 @ConditionalOnProperty(prefix = "toucan.plugins.apiMonitor", name = "enabled", havingValue = "true")
-public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
+public class ApiMonitorAutoConfiguration {
 
     @Value("${spring.application.name:unknown}")
     private String appName;
@@ -30,8 +28,8 @@ public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
     private String serverIp;
 
     @Bean
-    public MonitorRegistry monitorRegistry(@Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping) {
-        return new MonitorRegistry(handlerMapping);
+    public MonitorRegistry monitorRegistry(Toucan toucan, ApplicationContext applicationContext) {
+        return new MonitorRegistry(toucan, applicationContext);
     }
 
     @Bean
@@ -57,13 +55,5 @@ public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
     @Bean
     public ReportScheduler reportScheduler() {
         return new ReportScheduler();
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiMonitorInterceptor(
-                monitorRegistry(null),
-                recordCollector(),
-                slowRequestLogger())).order(0);
     }
 }
