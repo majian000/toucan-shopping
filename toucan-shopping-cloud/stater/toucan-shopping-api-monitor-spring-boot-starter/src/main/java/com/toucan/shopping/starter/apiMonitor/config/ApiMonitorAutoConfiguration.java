@@ -3,7 +3,7 @@ package com.toucan.shopping.starter.apiMonitor.config;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.starter.apiMonitor.interceptor.ApiMonitorInterceptor;
-import com.toucan.shopping.starter.apiMonitor.report.ReportScheduler;
+import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

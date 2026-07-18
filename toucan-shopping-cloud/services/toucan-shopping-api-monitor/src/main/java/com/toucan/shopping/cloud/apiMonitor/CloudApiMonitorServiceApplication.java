@@ -14,9 +14,9 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
-public class ApiMonitorServiceApplication {
+public class CloudApiMonitorServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ApiMonitorServiceApplication.class, args);
+        SpringApplication.run(CloudApiMonitorServiceApplication.class, args);
     }
 }

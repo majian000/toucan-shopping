@@ -1,4 +1,4 @@
-package com.toucan.shopping.starter.apiMonitor.report;
+package com.toucan.shopping.starter.apiMonitor.schedule;
 
 import com.toucan.shopping.cloud.apiMonitor.api.cloud.feign.service.FeignApiMonitorService;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;

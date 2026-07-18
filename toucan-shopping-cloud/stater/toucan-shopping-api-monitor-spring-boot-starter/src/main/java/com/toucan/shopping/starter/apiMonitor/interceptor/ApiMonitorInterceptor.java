@@ -1,12 +1,9 @@
 package com.toucan.shopping.starter.apiMonitor.interceptor;
 
-import com.toucan.shopping.cloud.apiMonitor.api.cloud.feign.service.FeignApiMonitorService;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.constant.TraceConstants;
-import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
-import com.toucan.shopping.starter.apiMonitor.report.ReportScheduler;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
