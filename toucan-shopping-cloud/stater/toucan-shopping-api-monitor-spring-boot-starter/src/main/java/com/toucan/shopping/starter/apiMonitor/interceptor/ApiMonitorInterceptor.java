@@ -10,8 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,30 +18,36 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * 接口监控拦截器
- * preHandle 记录开始时间，afterCompletion 计算耗时并采集
  */
 public class ApiMonitorInterceptor implements HandlerInterceptor {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private MonitorRegistry monitorRegistry;
-
-    @Autowired
-    private RecordCollector collector;
-
-    @Autowired
-    private SlowRequestLogger slowRequestLogger;
-
-    @Value("${spring.application.name:unknown}")
+    private final MonitorRegistry monitorRegistry;
+    private final RecordCollector collector;
+    private final SlowRequestLogger slowRequestLogger;
     private String appName;
-
-    @Value("${toucan.ip:unknown}")
     private String serverIp;
 
     private static final String START_TIME_ATTR = "_api_monitor_start";
     private static final String PATTERN_ATTR = "_api_monitor_pattern";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    public ApiMonitorInterceptor(MonitorRegistry monitorRegistry,
+                                  RecordCollector collector,
+                                  SlowRequestLogger slowRequestLogger) {
+        this.monitorRegistry = monitorRegistry;
+        this.collector = collector;
+        this.slowRequestLogger = slowRequestLogger;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,

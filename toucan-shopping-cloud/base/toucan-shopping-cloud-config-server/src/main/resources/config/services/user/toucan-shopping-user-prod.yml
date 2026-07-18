@@ -65,7 +65,7 @@ toucan:
     apiMonitor:
       enabled: true
       scanPackages:
-        - com.toucan.shopping.modules.user.controller
+        - com.toucan.shopping.cloud
       excludePatterns:
         - /actuator/**
         - /error

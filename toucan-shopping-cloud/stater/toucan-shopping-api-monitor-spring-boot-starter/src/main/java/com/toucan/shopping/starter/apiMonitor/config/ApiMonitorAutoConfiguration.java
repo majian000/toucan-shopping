@@ -6,6 +6,7 @@ import com.toucan.shopping.starter.apiMonitor.interceptor.ApiMonitorInterceptor;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
 import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,12 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @EnableScheduling
 @ConditionalOnProperty(prefix = "toucan.plugins.apiMonitor", name = "enabled", havingValue = "true")
 public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
+
+    @Value("${spring.application.name:unknown}")
+    private String appName;
+
+    @Value("${toucan.ip:unknown}")
+    private String serverIp;
 
     @Bean
     public MonitorRegistry monitorRegistry(@Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping) {
@@ -38,8 +45,13 @@ public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ApiMonitorInterceptor apiMonitorInterceptor() {
-        return new ApiMonitorInterceptor();
+    public ApiMonitorInterceptor apiMonitorInterceptor(MonitorRegistry monitorRegistry,
+                                                        RecordCollector collector,
+                                                        SlowRequestLogger slowRequestLogger) {
+        ApiMonitorInterceptor interceptor = new ApiMonitorInterceptor(monitorRegistry, collector, slowRequestLogger);
+        interceptor.setAppName(appName);
+        interceptor.setServerIp(serverIp);
+        return interceptor;
     }
 
     @Bean
@@ -49,6 +61,9 @@ public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiMonitorInterceptor()).order(0);
+        registry.addInterceptor(apiMonitorInterceptor(
+                monitorRegistry(null),
+                recordCollector(),
+                slowRequestLogger())).order(0);
     }
 }
