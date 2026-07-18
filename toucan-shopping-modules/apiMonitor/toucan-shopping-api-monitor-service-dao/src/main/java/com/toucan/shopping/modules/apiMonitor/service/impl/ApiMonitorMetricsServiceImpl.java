@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ApiMonitorMetricsServiceImpl implements ApiMonitorMetricsService {
@@ -27,7 +28,12 @@ public class ApiMonitorMetricsServiceImpl implements ApiMonitorMetricsService {
 
     @Override
     public Date selectMaxTimeWindow() {
-        return apiMonitorMetricsMapper.selectMaxTimeWindow();
+        // ShardingSphere 分表返回每个分片的 MAX，service 层取全局最大值
+        List<Date> dates = apiMonitorMetricsMapper.selectMaxTimeWindow();
+        return dates.stream()
+                .filter(Objects::nonNull)
+                .max(Date::compareTo)
+                .orElse(null);
     }
 
     @Override

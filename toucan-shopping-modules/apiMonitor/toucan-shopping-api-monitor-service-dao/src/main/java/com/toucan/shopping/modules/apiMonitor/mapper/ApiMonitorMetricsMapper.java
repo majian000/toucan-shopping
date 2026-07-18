@@ -18,8 +18,8 @@ public interface ApiMonitorMetricsMapper {
     /** 趋势查询 */
     List<ApiMonitorMetricsPO> selectTrend(String apiUrl, String appName, Date startTime, Date endTime);
 
-    /** 查询已聚合的最新时间窗口，用于补偿追赶 */
-    Date selectMaxTimeWindow();
+    /** 查询已聚合的最新时间窗口（ShardingSphere 分表返回多行，由 Service 层取最大值），用于补偿追赶 */
+    List<Date> selectMaxTimeWindow();
 
     /** 删除过期数据 */
     int deleteByCreateDate(Date beforeDate);
