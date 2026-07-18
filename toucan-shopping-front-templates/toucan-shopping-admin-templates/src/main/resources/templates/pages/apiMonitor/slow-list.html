@@ -38,19 +38,24 @@
 </div>
 
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
+<script th:inline="javascript">
+    var ctx = /*[[@{/}]]*/'';
+</script>
 <script>
-    layui.use(['table'], function() {
-        var table = layui.table;
+    layui.use(['table', 'form'], function() {
+        var table = layui.table, form = layui.form;
         var autoRefreshTimer = null;
+
+        form.render('select');
 
         function loadData() {
             var minElapsed = document.getElementById('minElapsed').value;
             table.render({
                 elem: '#slowTable',
-                url: '[[@{/}]]apiMonitor/slowList?minElapsed=' + minElapsed + '&page=1&size=50',
+                url: ctx + 'apiMonitor/slowList?minElapsed=' + minElapsed + '&page=1&size=50',
                 method: 'GET',
                 parseData: function(res) {
-                    if (res.code === 0 && res.data) {
+                    if ((res.code === 0 || res.code === 1) && res.data) {
                         return { code: 0, data: res.data };
                     }
                     return { code: res.code, data: [] };

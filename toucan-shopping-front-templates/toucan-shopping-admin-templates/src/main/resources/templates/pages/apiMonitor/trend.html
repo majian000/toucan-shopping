@@ -51,9 +51,13 @@
 </div>
 
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
+<script th:inline="javascript">
+    var ctx = /*[[@{/}]]*/'';
+</script>
 <script>
-    layui.use(['table'], function() {
-        var table = layui.table;
+    layui.use(['table', 'form'], function() {
+        var table = layui.table, form = layui.form;
+        form.render('select');
 
         function loadTrend() {
             var apiUrl = document.getElementById('apiUrl').value;
@@ -61,12 +65,12 @@
             var range = document.getElementById('rangeSelect').value;
             table.render({
                 elem: '#trendTable',
-                url: '[[@{/}]]apiMonitor/trend?apiUrl=' + encodeURIComponent(apiUrl)
+                url: ctx + 'apiMonitor/trend?apiUrl=' + encodeURIComponent(apiUrl)
                     + '&appName=' + encodeURIComponent(appName)
                     + '&range=' + range,
                 method: 'GET',
                 parseData: function(res) {
-                    if (res.code === 0 && res.data) {
+                    if ((res.code === 0 || res.code === 1) && res.data) {
                         return { code: 0, data: res.data };
                     }
                     return { code: res.code, data: [] };
@@ -87,7 +91,6 @@
         }
         document.getElementById('queryBtn').onclick = loadTrend;
 
-        // 如果 URL 参数带了 apiUrl，自动查询
         var apiUrlEl = document.getElementById('apiUrl');
         if (apiUrlEl.value) {
             loadTrend();

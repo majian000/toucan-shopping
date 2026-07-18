@@ -40,19 +40,23 @@
 </div>
 
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
+<script th:inline="javascript">
+    var ctx = /*[[@{/}]]*/'';
+</script>
 <script>
-    layui.use(['table', 'util'], function () {
-        var table = layui.table, util = layui.util;
+    layui.use(['table', 'util', 'form'], function () {
+        var table = layui.table, util = layui.util, form = layui.form;
+        form.render('select');
         var autoRefreshTimer = null;
 
         function loadData() {
             var minutes = document.getElementById('minutesSelect').value;
             table.render({
                 elem: '#dashboardTable',
-                url: '[[@{/}]]apiMonitor/summary?minutes=' + minutes,
+                url: ctx + 'apiMonitor/summary?minutes=' + minutes,
                 method: 'GET',
                 parseData: function(res) {
-                    return { code: res.code, data: res.data ? res.data.items : [] };
+                    return { code: res.code === 1 ? 0 : res.code, data: res.data ? res.data.items : [] };
                 },
                 cols: [[
                     {field: 'apiUrl', title: '接口URL', width: 350},
@@ -66,7 +70,7 @@
                         }},
                     {field: 'minMs', title: '最小耗时(ms)', width: 150},
                     {title: '操作', width: 120, templet: function(d) {
-                        return '<a class="layui-btn layui-btn-xs" lay-event="trend" href="[[@{/}]]apiMonitor/trendPage?apiUrl=' + encodeURIComponent(d.apiUrl) + '&appName=' + (d.appName || '') + '">趋势</a>';
+                        return '<a class="layui-btn layui-btn-xs" lay-event="trend" href="' + ctx + 'apiMonitor/trendPage?apiUrl=' + encodeURIComponent(d.apiUrl) + '&appName=' + (d.appName || '') + '">趋势</a>';
                     }}
                 ]],
                 page: false,
@@ -91,7 +95,7 @@
 
         table.on('tool(dashboardTable)', function(obj) {
             if (obj.event === 'trend') {
-                var url = '[[@{/}]]apiMonitor/trendPage?apiUrl='
+                var url = ctx + 'apiMonitor/trendPage?apiUrl='
                     + encodeURIComponent(obj.data.apiUrl)
                     + '&appName=' + (obj.data.appName || '');
                 window.location.href = url;
