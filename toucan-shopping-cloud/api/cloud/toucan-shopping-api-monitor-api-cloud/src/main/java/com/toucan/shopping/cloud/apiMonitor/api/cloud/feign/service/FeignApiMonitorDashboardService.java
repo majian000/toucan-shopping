@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * 接口监控看板查询 Feign 客户端
  */
-@FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-api-monitor-proxy/api-monitor/dashboard", fallbackFactory = FeignApiMonitorDashboardServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-api-monitor-proxy/dashboard", fallbackFactory = FeignApiMonitorDashboardServiceFallbackFactory.class)
 public interface FeignApiMonitorDashboardService extends ApiMonitorDashboardServiceAPI {
 
     @Override

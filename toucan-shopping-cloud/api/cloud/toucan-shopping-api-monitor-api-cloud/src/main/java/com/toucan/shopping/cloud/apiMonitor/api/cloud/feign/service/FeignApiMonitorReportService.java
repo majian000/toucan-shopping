@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 接口监控上报 Feign 客户端
  */
-@FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-api-monitor-proxy/api-monitor/report", fallbackFactory = FeignApiMonitorReportServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway", path = "/toucan-shopping-api-monitor-proxy/report", fallbackFactory = FeignApiMonitorReportServiceFallbackFactory.class)
 public interface FeignApiMonitorReportService extends ApiMonitorReportServiceAPI {
 
     @Override
