@@ -4,7 +4,6 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.starter.apiMonitor.interceptor.ApiMonitorInterceptor;
-import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
 import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -37,16 +36,11 @@ public class ApiMonitorAutoConfiguration {
         return new RecordCollector();
     }
 
-    @Bean
-    public SlowRequestLogger slowRequestLogger() {
-        return new SlowRequestLogger();
-    }
 
     @Bean
     public ApiMonitorInterceptor apiMonitorInterceptor(MonitorRegistry monitorRegistry,
-                                                        RecordCollector collector,
-                                                        SlowRequestLogger slowRequestLogger) {
-        ApiMonitorInterceptor interceptor = new ApiMonitorInterceptor(monitorRegistry, collector, slowRequestLogger);
+                                                        RecordCollector collector) {
+        ApiMonitorInterceptor interceptor = new ApiMonitorInterceptor(monitorRegistry, collector);
         interceptor.setAppName(appName);
         interceptor.setServerIp(serverIp);
         return interceptor;

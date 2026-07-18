@@ -4,7 +4,7 @@ import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.constant.TraceConstants;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
-import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
+import com.toucan.shopping.modules.common.context.ApiMonitorContext;
 import com.toucan.shopping.modules.common.context.TraceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,20 +26,15 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
 
     private final MonitorRegistry monitorRegistry;
     private final RecordCollector collector;
-    private final SlowRequestLogger slowRequestLogger;
     private String appName;
     private String serverIp;
 
-    private static final String START_TIME_ATTR = "_api_monitor_start";
-    private static final String PATTERN_ATTR = "_api_monitor_pattern";
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public ApiMonitorInterceptor(MonitorRegistry monitorRegistry,
-                                  RecordCollector collector,
-                                  SlowRequestLogger slowRequestLogger) {
+                                  RecordCollector collector) {
         this.monitorRegistry = monitorRegistry;
         this.collector = collector;
-        this.slowRequestLogger = slowRequestLogger;
     }
 
     public void setAppName(String appName) {
@@ -60,26 +55,23 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
         if (pattern == null) {
             return true;
         }
-        request.setAttribute(PATTERN_ATTR, pattern);
-        request.setAttribute(START_TIME_ATTR, System.nanoTime());
+        ApiMonitorContext.setPattern(pattern);
+        ApiMonitorContext.setStartNanos(System.nanoTime());
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
                                 Object handler, Exception ex) {
-        String pattern = (String) request.getAttribute(PATTERN_ATTR);
+        String pattern = ApiMonitorContext.getPattern();
         if (pattern == null) {
             return;
         }
         try {
-            Long startNanos = (Long) request.getAttribute(START_TIME_ATTR);
-            long elapsedMs = (System.nanoTime() - startNanos) / 1_000_000;
+            Long startNanos = ApiMonitorContext.getStartNanos();
+            long elapsedMs = startNanos != null ? (System.nanoTime() - startNanos) / 1_000_000 : 0;
 
-            String traceId = (String) request.getAttribute(TraceConstants.TRACE_ID_ATTR);
-            if (traceId == null) {
-                traceId = TraceContext.get();
-            }
+            String traceId = TraceContext.get();
             if (traceId == null) {
                 traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
             }
@@ -95,9 +87,10 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             record.setRequestTime(LocalDateTime.now().format(DTF));
 
             collector.collect(record);
-            slowRequestLogger.check(record);
         } catch (Exception e) {
             // 静默，不影响业务
+        } finally {
+            ApiMonitorContext.remove();
         }
     }
 }
