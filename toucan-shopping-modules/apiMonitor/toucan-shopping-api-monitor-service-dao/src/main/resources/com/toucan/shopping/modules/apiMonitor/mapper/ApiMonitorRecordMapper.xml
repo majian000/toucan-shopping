@@ -43,7 +43,7 @@
         <if test="endTime != null">
             AND request_time <![CDATA[ < ]]> #{endTime}
         </if>
-        ORDER BY elapsed_ms DESC
+        ORDER BY request_time DESC
         <if test="offset != null and limit != null">
             LIMIT #{offset}, #{limit}
         </if>

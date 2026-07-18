@@ -48,7 +48,7 @@
         <if test="appName != null and appName != ''">
             AND app_name = #{appName}
         </if>
-        ORDER BY time_window ASC
+        ORDER BY time_window DESC
     </select>
 
     <!-- 查询已聚合的最新时间窗口（用于故障恢复追赶） -->
