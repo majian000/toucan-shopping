@@ -20,12 +20,12 @@ public class FeignApiMonitorDashboardServiceFallbackFactory implements FallbackF
         logger.warn(throwable.getMessage(), throwable);
         return new FeignApiMonitorDashboardService() {
             @Override
-            public ResultObjectVO getSummary(int minutes) {
+            public ResultObjectVO getSummary(int minutes, int page, int limit) {
                 return fail();
             }
 
             @Override
-            public ResultObjectVO getTrend(String apiUrl, String appName, int range) {
+            public ResultObjectVO getTrend(String apiUrl, String appName, int range, int page, int limit) {
                 return fail();
             }
 

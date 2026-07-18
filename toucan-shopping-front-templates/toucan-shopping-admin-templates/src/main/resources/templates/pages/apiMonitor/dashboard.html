@@ -97,7 +97,8 @@
             parseData: function(res) {
                 if (res.code === 1 && res.data) {
                     var items = res.data.items || [];
-                    return { code: 0, data: items, count: items.length };
+                    var total = res.data.total || 0;
+                    return { code: 0, data: items, count: total };
                 }
                 return { code: res.code || 1, data: [], count: 0, msg: res.msg || '请求失败' };
             },
@@ -118,7 +119,9 @@
                     {title: '操作', width: 100, align: 'center',templet: '#dashboardTableBar'}
                 ]
             ],
-            page: false,
+            page: true,
+            limits: [15, 30, 50, 100],
+            limit: 30,
             skin: 'line'
         });
 

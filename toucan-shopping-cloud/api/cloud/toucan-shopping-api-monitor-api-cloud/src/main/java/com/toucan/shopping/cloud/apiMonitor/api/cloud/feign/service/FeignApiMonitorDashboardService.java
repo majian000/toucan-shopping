@@ -16,17 +16,21 @@ public interface FeignApiMonitorDashboardService extends ApiMonitorDashboardServ
 
     @Override
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
-    ResultObjectVO getSummary(@RequestParam(defaultValue = "5") int minutes);
+    ResultObjectVO getSummary(@RequestParam(defaultValue = "5") int minutes,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "30") int limit);
 
     @Override
     @RequestMapping(value = "/trend", method = RequestMethod.GET)
     ResultObjectVO getTrend(@RequestParam String apiUrl,
                             @RequestParam(required = false) String appName,
-                            @RequestParam(defaultValue = "60") int range);
+                            @RequestParam(defaultValue = "60") int range,
+                            @RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "30") int limit);
 
     @Override
     @RequestMapping(value = "/slow-list", method = RequestMethod.GET)
     ResultObjectVO getSlowList(@RequestParam(defaultValue = "3000") int minElapsed,
                                @RequestParam(defaultValue = "1") int page,
-                               @RequestParam(defaultValue = "20") int size);
+                               @RequestParam(defaultValue = "50") int size);
 }

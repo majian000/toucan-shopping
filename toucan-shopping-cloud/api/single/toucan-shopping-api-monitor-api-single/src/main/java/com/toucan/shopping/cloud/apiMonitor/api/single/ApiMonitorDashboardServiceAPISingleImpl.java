@@ -16,10 +16,10 @@ public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashbo
     private DashboardService dashboardService;
 
     @Override
-    public ResultObjectVO getSummary(int minutes) {
+    public ResultObjectVO getSummary(int minutes, int page, int limit) {
         ResultObjectVO result = new ResultObjectVO();
         try {
-            result.setData(dashboardService.getSummary(null, null, minutes));
+            result.setData(dashboardService.getSummary(null, null, minutes, page, limit));
             result.setCode(ResultObjectVO.SUCCESS);
         } catch (Exception e) {
             result.setCode(ResultObjectVO.FAILD);
@@ -29,10 +29,10 @@ public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashbo
     }
 
     @Override
-    public ResultObjectVO getTrend(String apiUrl, String appName, int range) {
+    public ResultObjectVO getTrend(String apiUrl, String appName, int range, int page, int limit) {
         ResultObjectVO result = new ResultObjectVO();
         try {
-            result.setData(dashboardService.getTrend(apiUrl, appName, range));
+            result.setData(dashboardService.getTrend(apiUrl, appName, range, page, limit));
             result.setCode(ResultObjectVO.SUCCESS);
         } catch (Exception e) {
             result.setCode(ResultObjectVO.FAILD);

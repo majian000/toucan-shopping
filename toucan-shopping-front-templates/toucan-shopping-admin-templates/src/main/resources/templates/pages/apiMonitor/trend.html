@@ -112,8 +112,9 @@
             }],
             parseData: function(res) {
                 if (res.code === 1 && res.data) {
-                    var list = res.data;
-                    return { code: 0, data: list, count: list.length };
+                    var items = res.data.items || [];
+                    var total = res.data.total || 0;
+                    return { code: 0, data: items, count: total };
                 }
                 return { code: res.code || 1, data: [], count: 0, msg: res.msg || '请求失败' };
             },
@@ -132,7 +133,9 @@
                     {field: 'minMs', title: '最小耗时(ms)', width: 150}
                 ]
             ],
-            page: false,
+            page: true,
+            limits: [15, 30, 50, 100],
+            limit: 30,
             skin: 'line'
         });
 

@@ -23,10 +23,12 @@ public class DashboardController {
     public ResultObjectVO summary(
             @RequestParam(defaultValue = "5") int minutes,
             @RequestParam(required = false) String apiUrl,
-            @RequestParam(required = false) String appName) {
+            @RequestParam(required = false) String appName,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "30") int limit) {
         ResultObjectVO result = new ResultObjectVO();
         try {
-            result.setData(dashboardService.getSummary(apiUrl, appName, minutes));
+            result.setData(dashboardService.getSummary(apiUrl, appName, minutes, page, limit));
             result.setCode(ResultObjectVO.SUCCESS);
         } catch (Exception e) {
             result.setCode(ResultObjectVO.FAILD);
@@ -40,10 +42,12 @@ public class DashboardController {
     public ResultObjectVO trend(
             @RequestParam String apiUrl,
             @RequestParam(required = false) String appName,
-            @RequestParam(defaultValue = "60") int range) {
+            @RequestParam(defaultValue = "60") int range,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "30") int limit) {
         ResultObjectVO result = new ResultObjectVO();
         try {
-            result.setData(dashboardService.getTrend(apiUrl, appName, range));
+            result.setData(dashboardService.getTrend(apiUrl, appName, range, page, limit));
             result.setCode(ResultObjectVO.SUCCESS);
         } catch (Exception e) {
             result.setCode(ResultObjectVO.FAILD);
@@ -59,7 +63,7 @@ public class DashboardController {
             @RequestParam(required = false) String apiUrl,
             @RequestParam(required = false) String appName,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "50") int size) {
         ResultObjectVO result = new ResultObjectVO();
         try {
             result.setData(dashboardService.getSlowList(apiUrl, appName, minElapsed, page, size));

@@ -44,6 +44,27 @@
             AND request_time <![CDATA[ < ]]> #{endTime}
         </if>
         ORDER BY elapsed_ms DESC
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 统计慢请求总数 -->
+    <select id="countSlowList" resultType="long">
+        SELECT COUNT(*) FROM api_monitor_record
+        WHERE elapsed_ms <![CDATA[ >= ]]> #{minElapsedMs}
+        <if test="apiUrl != null and apiUrl != ''">
+            AND api_url = #{apiUrl}
+        </if>
+        <if test="appName != null and appName != ''">
+            AND app_name = #{appName}
+        </if>
+        <if test="startTime != null">
+            AND request_time <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND request_time <![CDATA[ < ]]> #{endTime}
+        </if>
     </select>
 
     <!-- 聚合到分钟表（幂等由唯一索引 uk_api_app_time (api_url, app_name, time_window) 保证） -->

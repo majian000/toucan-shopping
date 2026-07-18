@@ -21,5 +21,8 @@ public interface ApiMonitorRecordService {
     List<ApiMonitorMetricsPO> selectAggregated(Date startTime, Date endTime);
 
     /** 查询慢请求列表 */
-    List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime);
+    List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, Integer offset, Integer limit);
+
+    /** 统计慢请求总数 */
+    long countSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime);
 }
