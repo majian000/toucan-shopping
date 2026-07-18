@@ -66,10 +66,10 @@
     <!-- 批量插入聚合结果 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO api_monitor_metrics
-        (api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms, sharding_date)
+        (id, api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms, sharding_date)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.apiUrl}, #{item.appName}, #{item.timeWindow},
+            (#{item.id}, #{item.apiUrl}, #{item.appName}, #{item.timeWindow},
              #{item.requestCount}, #{item.avgMs}, #{item.maxMs}, #{item.minMs}, #{item.shardingDate})
         </foreach>
     </insert>

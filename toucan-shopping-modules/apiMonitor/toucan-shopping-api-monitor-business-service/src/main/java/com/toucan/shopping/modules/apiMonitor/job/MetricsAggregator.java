@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.apiMonitor.job;
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorMetricsService;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,9 @@ public class MetricsAggregator {
 
     @Autowired
     private ApiMonitorMetricsService apiMonitorMetricsService;
+
+    @Autowired
+    private IdGenerator idGenerator;
 
     private final AtomicBoolean startupCatchUpDone = new AtomicBoolean(false);
 
@@ -98,6 +102,10 @@ public class MetricsAggregator {
                 .collect(Collectors.toList());
 
         if (!newRows.isEmpty()) {
+            // 生成雪花ID
+            for (ApiMonitorMetricsPO row : newRows) {
+                row.setId(idGenerator.id());
+            }
             int count = apiMonitorMetricsService.batchInsert(newRows);
             logger.debug("[聚合] 新增 {} 行 (from={}, to={})", count, from, to);
         }
