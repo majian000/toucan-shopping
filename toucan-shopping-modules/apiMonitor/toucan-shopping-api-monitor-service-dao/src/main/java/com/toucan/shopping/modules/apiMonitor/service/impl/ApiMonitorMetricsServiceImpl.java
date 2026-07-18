@@ -37,6 +37,19 @@ public class ApiMonitorMetricsServiceImpl implements ApiMonitorMetricsService {
     }
 
     @Override
+    public int batchInsert(List<ApiMonitorMetricsPO> list) {
+        if (list == null || list.isEmpty()) {
+            return 0;
+        }
+        return apiMonitorMetricsMapper.batchInsert(list);
+    }
+
+    @Override
+    public List<ApiMonitorMetricsPO> selectExistingKeys(Date startTime, Date endTime) {
+        return apiMonitorMetricsMapper.selectExistingKeys(startTime, endTime);
+    }
+
+    @Override
     public int deleteByCreateDate(Date beforeDate) {
         return apiMonitorMetricsMapper.deleteByCreateDate(beforeDate);
     }

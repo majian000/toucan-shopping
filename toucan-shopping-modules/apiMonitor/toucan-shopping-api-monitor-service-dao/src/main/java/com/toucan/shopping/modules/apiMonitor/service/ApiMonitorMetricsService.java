@@ -19,6 +19,12 @@ public interface ApiMonitorMetricsService {
     /** 查询已聚合的最新时间窗口（ShardingSphere 分表，Service 层取各分片的最大值），用于补偿追赶 */
     Date selectMaxTimeWindow();
 
+    /** 批量插入聚合结果 */
+    int batchInsert(List<ApiMonitorMetricsPO> list);
+
+    /** 查询已存在的窗口 keys（用于 Java 侧去重） */
+    List<ApiMonitorMetricsPO> selectExistingKeys(Date startTime, Date endTime);
+
     /** 删除过期数据 */
     int deleteByCreateDate(Date beforeDate);
 }

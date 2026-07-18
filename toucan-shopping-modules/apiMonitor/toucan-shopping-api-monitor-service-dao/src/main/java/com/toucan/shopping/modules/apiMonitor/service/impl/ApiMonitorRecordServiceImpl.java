@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.apiMonitor.service.impl;
 
+import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
 import com.toucan.shopping.modules.apiMonitor.mapper.ApiMonitorRecordMapper;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
@@ -26,6 +27,11 @@ public class ApiMonitorRecordServiceImpl implements ApiMonitorRecordService {
     @Override
     public int aggregateToMetrics(Date startTime, Date endTime) {
         return apiMonitorRecordMapper.aggregateToMetrics(startTime, endTime);
+    }
+
+    @Override
+    public List<ApiMonitorMetricsPO> selectAggregated(Date startTime, Date endTime) {
+        return apiMonitorRecordMapper.selectAggregated(startTime, endTime);
     }
 
     @Override
