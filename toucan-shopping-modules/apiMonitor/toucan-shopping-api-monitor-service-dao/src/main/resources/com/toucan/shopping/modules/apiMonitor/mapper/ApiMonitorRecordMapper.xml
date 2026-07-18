@@ -19,10 +19,10 @@
     <!-- 批量插入 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO api_monitor_record
-        (api_url, http_method, elapsed_ms, status_code, trace_id, app_name, server_ip, request_time, sharding_date)
+        (id, api_url, http_method, elapsed_ms, status_code, trace_id, app_name, server_ip, request_time, sharding_date)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.apiUrl}, #{item.httpMethod}, #{item.elapsedMs}, #{item.statusCode},
+            (#{item.id}, #{item.apiUrl}, #{item.httpMethod}, #{item.elapsedMs}, #{item.statusCode},
              #{item.traceId}, #{item.appName}, #{item.serverIp}, #{item.requestTime}, #{item.shardingDate})
         </foreach>
     </insert>

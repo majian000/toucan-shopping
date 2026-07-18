@@ -1,8 +1,8 @@
 package com.toucan.shopping.modules.apiMonitor.service;
 
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
-import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,9 @@ public class PersistService {
     @Autowired
     private ApiMonitorRecordService apiMonitorRecordService;
 
+    @Autowired
+    private IdGenerator idGenerator;
+
     /**
      * 批量保存上报记录
      */
@@ -31,6 +34,7 @@ public class PersistService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         for (ApiMonitorRecordVO vo : voList) {
             ApiMonitorRecordPO po = new ApiMonitorRecordPO();
+            po.setId(idGenerator.id());
             po.setApiUrl(vo.getApiUrl());
             po.setHttpMethod(vo.getMethod());
             po.setElapsedMs((int) vo.getElapsedMs());

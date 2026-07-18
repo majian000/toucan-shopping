@@ -3,9 +3,9 @@ package com.toucan.shopping.starter.apiMonitor.config;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.starter.apiMonitor.interceptor.ApiMonitorInterceptor;
-import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
 import com.toucan.shopping.starter.apiMonitor.report.SlowRequestLogger;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.toucan.shopping.starter.apiMonitor.schedule.ReportScheduler;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +22,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @ConditionalOnProperty(prefix = "toucan.plugins.apiMonitor", name = "enabled", havingValue = "true")
 public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
 
-    @Autowired
-    private ApiMonitorInterceptor apiMonitorInterceptor;
-
     @Bean
-    public MonitorRegistry monitorRegistry(RequestMappingHandlerMapping handlerMapping) {
+    public MonitorRegistry monitorRegistry(@Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping) {
         return new MonitorRegistry(handlerMapping);
     }
 
@@ -52,7 +49,6 @@ public class ApiMonitorAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册为第一个拦截器，确保最先记录开始时间
-        registry.addInterceptor(apiMonitorInterceptor).order(0);
+        registry.addInterceptor(apiMonitorInterceptor()).order(0);
     }
 }
