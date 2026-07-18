@@ -69,7 +69,7 @@ toucan:
   machine-id: 2201
   app-code: 10001008
   modules:
-    log:
+    log: #日志模块
       param:
         request:
           enabled: false
@@ -80,17 +80,17 @@ toucan:
           content-type-list[0]: application/json
       email:
         enabled: true
-        title: ——监控服务——异常邮件
+        title: ——权限中台服务——异常邮件
         ignore-exception-list[0]: javax.mail.MessagingException
         protocol: smtp
-        smtp:
-          host: smtp.163.com
-          auth: true
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
           port: 465
           socketFactory-class: javax.net.ssl.SSLSocketFactory
           socketFactory-fallback: false
-        sender: mmdrss@163.com
-        sender-authentication-code: IJHWJFZINFUPQIUC
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
         receiver-list[0]:
           email: 695391446@qq.com
           name: majian

@@ -29,6 +29,7 @@ spring:
                             classpath:/config/services/message,\
                             classpath:/config/services/adminAuth,\
                             classpath:/config/services/seller,\
+                            classpath:/config/services/apiMonitor,\
                             classpath:/config/apps/shopping/web,\
                             classpath:/config/apps/shopping/adminAuth,\
                             classpath:/config/apps/scheduler/shopping,\
