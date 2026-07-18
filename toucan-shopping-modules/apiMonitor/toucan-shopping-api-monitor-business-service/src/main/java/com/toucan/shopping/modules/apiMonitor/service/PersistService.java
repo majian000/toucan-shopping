@@ -40,9 +40,13 @@ public class PersistService {
             po.setServerIp(vo.getServerIp());
             if (vo.getRequestTime() != null) {
                 try {
-                    po.setRequestTime(sdf.parse(vo.getRequestTime()));
+                    java.util.Date requestTime = sdf.parse(vo.getRequestTime());
+                    po.setRequestTime(requestTime);
+                    po.setShardingDate(requestTime);
                 } catch (ParseException e) {
-                    po.setRequestTime(new java.util.Date());
+                    java.util.Date now = new java.util.Date();
+                    po.setRequestTime(now);
+                    po.setShardingDate(now);
                 }
             }
             poList.add(po);

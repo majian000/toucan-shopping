@@ -37,6 +37,9 @@ public class ApiMonitorRecordPO {
     /** 请求时间(毫秒精度) */
     private Date requestTime;
 
+    /** 分片日期 */
+    private Date shardingDate;
+
     /** 记录创建时间 */
     private Date createDate;
 }

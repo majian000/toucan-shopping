@@ -35,6 +35,9 @@ public class ApiMonitorMetricsPO {
     /** 最小响应耗时(毫秒) */
     private Integer minMs;
 
+    /** 分片日期 */
+    private Date shardingDate;
+
     /** 记录创建时间 */
     private Date createDate;
 }

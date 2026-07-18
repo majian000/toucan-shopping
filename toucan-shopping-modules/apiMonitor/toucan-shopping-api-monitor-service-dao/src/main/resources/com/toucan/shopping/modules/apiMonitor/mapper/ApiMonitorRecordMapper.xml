@@ -12,17 +12,18 @@
         <result column="app_name" property="appName"/>
         <result column="server_ip" property="serverIp"/>
         <result column="request_time" property="requestTime"/>
+        <result column="sharding_date" property="shardingDate"/>
         <result column="create_date" property="createDate"/>
     </resultMap>
 
     <!-- 批量插入 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO api_monitor_record
-        (api_url, http_method, elapsed_ms, status_code, trace_id, app_name, server_ip, request_time)
+        (api_url, http_method, elapsed_ms, status_code, trace_id, app_name, server_ip, request_time, sharding_date)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.apiUrl}, #{item.httpMethod}, #{item.elapsedMs}, #{item.statusCode},
-             #{item.traceId}, #{item.appName}, #{item.serverIp}, #{item.requestTime})
+             #{item.traceId}, #{item.appName}, #{item.serverIp}, #{item.requestTime}, #{item.shardingDate})
         </foreach>
     </insert>
 
@@ -48,7 +49,7 @@
     <!-- 聚合到分钟表 -->
     <insert id="aggregateToMetrics">
         INSERT INTO api_monitor_metrics
-        (api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms)
+        (api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms, sharding_date)
         SELECT
             api_url,
             app_name,
@@ -56,11 +57,12 @@
             COUNT(*) AS request_count,
             ROUND(AVG(elapsed_ms), 2) AS avg_ms,
             MAX(elapsed_ms) AS max_ms,
-            MIN(elapsed_ms) AS min_ms
+            MIN(elapsed_ms) AS min_ms,
+            DATE(request_time) AS sharding_date
         FROM api_monitor_record
         WHERE request_time >= #{startTime}
           AND request_time &lt; #{endTime}
-        GROUP BY api_url, app_name, time_window
+        GROUP BY api_url, app_name, time_window, sharding_date
     </insert>
 
     <!-- 删除过期数据 -->

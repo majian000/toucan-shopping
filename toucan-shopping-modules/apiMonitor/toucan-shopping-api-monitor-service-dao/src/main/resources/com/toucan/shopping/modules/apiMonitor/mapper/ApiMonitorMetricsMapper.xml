@@ -11,6 +11,7 @@
         <result column="avg_ms" property="avgMs"/>
         <result column="max_ms" property="maxMs"/>
         <result column="min_ms" property="minMs"/>
+        <result column="sharding_date" property="shardingDate"/>
         <result column="create_date" property="createDate"/>
     </resultMap>
 

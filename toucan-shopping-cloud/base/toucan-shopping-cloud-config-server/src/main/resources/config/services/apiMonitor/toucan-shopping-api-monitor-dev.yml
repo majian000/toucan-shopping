@@ -35,16 +35,7 @@ spring:
       circuitbreaker:
         enabled: true
 
-  datasource:
-    url: jdbc:mysql://${toucan.mysql.ip}:3306/api_monitor_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: ${toucan.mysql.username}
-    password: ${toucan.mysql.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-mybatis:
-  mapper-locations: classpath*:com/toucan/shopping/modules/apiMonitor/mapper/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
+# 数据源和分库分表配置在 toucan-shopping-api-monitor-dev.properties 中
 
 feign:
   client:
