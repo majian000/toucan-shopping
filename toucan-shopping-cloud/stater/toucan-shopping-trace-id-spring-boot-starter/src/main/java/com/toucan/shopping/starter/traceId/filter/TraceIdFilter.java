@@ -28,8 +28,9 @@ public class TraceIdFilter extends OncePerRequestFilter {
         String traceId = UUID.randomUUID().toString()
                 .replace("-", "")
                 .substring(0, TraceConstants.TRACE_ID_LENGTH);
-        MDC.put(TraceConstants.TRACE_ID_KEY, traceId);       // logback 日志用
-        TraceContext.set(traceId);                            // 代码中获取用
+        MDC.put(TraceConstants.TRACE_ID_KEY, traceId);
+        TraceContext.set(traceId);
+        request.setAttribute(TraceConstants.TRACE_ID_ATTR, traceId);
         try {
             filterChain.doFilter(request, response);
         } finally {

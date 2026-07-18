@@ -76,7 +76,10 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             Long startNanos = (Long) request.getAttribute(START_TIME_ATTR);
             long elapsedMs = (System.nanoTime() - startNanos) / 1_000_000;
 
-            String traceId = TraceContext.get();
+            String traceId = (String) request.getAttribute(TraceConstants.TRACE_ID_ATTR);
+            if (traceId == null) {
+                traceId = TraceContext.get();
+            }
             if (traceId == null) {
                 traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
             }
