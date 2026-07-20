@@ -30,7 +30,9 @@ public class ApiMonitorController extends UIController {
     @Autowired
     private ApiMonitorDashboardServiceAPI apiMonitorDashboardServiceAPI;
 
-    /** 实时大盘页面 */
+    /**
+     * 实时大盘页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/dashboardPage", method = RequestMethod.GET)
     public String dashboardPage(HttpServletRequest request) {
@@ -38,7 +40,9 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/dashboard.html";
     }
 
-    /** 耗时趋势页面 */
+    /**
+     * 耗时趋势页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/trendPage", method = RequestMethod.GET)
     public String trendPage(HttpServletRequest request) {
@@ -46,7 +50,9 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/trend.html";
     }
 
-    /** 慢请求列表页面 */
+    /**
+     * 慢请求列表页面
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/slowListPage", method = RequestMethod.GET)
     public String slowListPage(HttpServletRequest request) {
@@ -54,7 +60,9 @@ public class ApiMonitorController extends UIController {
         return "pages/apiMonitor/slowList.html";
     }
 
-    /** 概要统计 API */
+    /**
+     * 概要统计 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
@@ -64,7 +72,9 @@ public class ApiMonitorController extends UIController {
         return apiMonitorDashboardServiceAPI.getSummary(minutes, page, limit);
     }
 
-    /** 趋势 API */
+    /**
+     * 趋势 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/trend", method = RequestMethod.GET)
     @ResponseBody
@@ -76,7 +86,9 @@ public class ApiMonitorController extends UIController {
         return apiMonitorDashboardServiceAPI.getTrend(apiUrl, appName, range, page, limit);
     }
 
-    /** 慢请求列表 API */
+    /**
+     * 慢请求列表 API
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/slowList", method = RequestMethod.GET)
     @ResponseBody
