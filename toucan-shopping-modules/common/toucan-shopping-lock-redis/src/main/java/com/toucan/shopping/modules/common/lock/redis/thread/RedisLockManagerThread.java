@@ -77,24 +77,18 @@ public class RedisLockManagerThread extends Thread {
                             }
                         } catch (Exception e) {
                             logger.warn("处理锁key:{} 异常: {}", lockKey, e.getMessage());
-                            // 单个key处理失败不影响其他key,但清理可能残留的脏数据
-                            // 先清理本地续期桶，防止续期线程继续为已不存在的锁续期，导致内存泄漏
-                            renewKeysBucket.remove(lockKey);
-                            try {
-                                stringRedisTemplate.opsForHash()
-                                        .delete(RedisLockManagerThread.globalLockTable, lockKey);
-                            } catch (Exception ignored) {
-                            }
                         }
                     }
                 }
-                Thread.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
-            } catch (InterruptedException e) {
-                logger.info("锁管理线程 {} 被中断,退出", getName());
-                Thread.currentThread().interrupt();
-                break;
             } catch (Exception e) {
                 logger.warn("锁管理线程 {} 异常: {}", getName(), e.getMessage(), e);
+            }finally{
+                try {
+                    Thread.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();  // 恢复中断标志
+                    break;                                // 退出循环
+                }
             }
         }
         logger.info("锁管理线程 {} 已退出", getName());

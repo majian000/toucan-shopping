@@ -56,7 +56,7 @@ public class RedisLockImpl implements RedisLock {
     /**
      * 最大重试次数,可通过setter覆盖(默认1000)
      */
-    private long maxRetryCount = RedisLock.DEFAULT_TRY_COUNT;
+    private long maxRetryCount = 3;
 
     /**
      * 重试间隔(毫秒),可通过setter覆盖(默认50)

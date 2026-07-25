@@ -5,17 +5,13 @@ public interface RedisLock {
     /**
      * 默认key有效期毫秒
      */
-    public static long DEFAULT_MILLISECOND = 30000;
-
-    /**
-     * 拿锁重试次数
-     */
-    public static long DEFAULT_TRY_COUNT = 1000;
+    long DEFAULT_MILLISECOND = 30000;
 
 
-    public boolean lock(String lockKey, String lockValue);
 
-    public boolean lock(String lockKey, String lockValue, long millisecond);
+    boolean lock(String lockKey, String lockValue);
 
-    public void unLock(String lockKey, String lockValue);
+    boolean lock(String lockKey, String lockValue, long millisecond);
+
+    void unLock(String lockKey, String lockValue);
 }
