@@ -60,11 +60,15 @@ public class RedisLockManagerThread extends Thread {
                     while (lockKeyIterator.hasNext()) {
                         String lockKey = String.valueOf(lockKeyIterator.next());
                         try {
-                            String lockCreateTime = String.valueOf(
-                                    stringRedisTemplate.opsForHash()
-                                            .get(RedisLockManagerThread.globalLockTable, lockKey));
-                            // 如果创建时间为null或已超时,强制释放
-                            if ("null".equals(lockCreateTime) || StringUtils.isEmpty(lockCreateTime)
+                            Object raw = stringRedisTemplate.opsForHash()
+                                    .get(RedisLockManagerThread.globalLockTable, lockKey);
+                            // HKEYS和HGET之间存在竞态: field可能已被unlock删除,跳过
+                            if (raw == null) {
+                                continue;
+                            }
+                            String lockCreateTime = String.valueOf(raw);
+                            // 如果创建时间为空字符串或已超时,强制释放
+                            if (StringUtils.isEmpty(lockCreateTime)
                                     || DateUtils.currentDate().getTime() - Long.parseLong(lockCreateTime) >= RedisLockManagerThread.lockTimeOutMillisecond) {
                                 logger.info("删除超时锁 {},创建时间:{}", lockKey, lockCreateTime);
                                 // 从续期分片桶中移除,续期线程不再续期此锁
