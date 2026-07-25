@@ -12,7 +12,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>云雀分布式锁</description>
+    <description>云雀分布式锁(统一接口,委托toucan-shopping-lock-redis实现)</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.skylark</groupId>
@@ -30,19 +30,9 @@
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-        <!--集成redis -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
         </dependency>
 
-        <!--集成jedis -->
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-        </dependency>
     </dependencies>
 
 

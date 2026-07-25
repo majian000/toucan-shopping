@@ -6,7 +6,6 @@ import com.toucan.shopping.modules.common.properties.modules.categoryCache.Categ
 import com.toucan.shopping.modules.common.properties.modules.contentCache.ContentCache;
 import com.toucan.shopping.modules.common.properties.modules.email.Email;
 import com.toucan.shopping.modules.common.properties.modules.log.Log;
-import com.toucan.shopping.modules.common.properties.modules.skylarkLock.SkylarkLock;
 import com.toucan.shopping.modules.common.properties.modules.toucanRedis.ToucanRedis;
 import com.toucan.shopping.modules.common.properties.modules.userLoginCache.UserLoginCache;
 import lombok.Data;
@@ -37,11 +36,6 @@ public class Modules {
      * 类别缓存模块
      */
     private CategoryCache categoryCache;
-
-    /**
-     * 云雀 分布式锁
-     */
-    private SkylarkLock skylarkLock;
 
     /**
      * redis封装

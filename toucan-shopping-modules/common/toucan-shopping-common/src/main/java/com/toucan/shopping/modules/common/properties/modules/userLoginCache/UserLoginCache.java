@@ -1,6 +1,5 @@
 package com.toucan.shopping.modules.common.properties.modules.userLoginCache;
 
-import com.toucan.shopping.modules.common.properties.modules.skylarkLock.SkylarkLockRedis;
 import lombok.Data;
 
 import java.util.List;
