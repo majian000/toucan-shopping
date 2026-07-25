@@ -339,12 +339,13 @@ public class RedisLockStressTest {
         log.info("└──────────────────────────────────────────────┘");
 
         final String key = PREFIX + "timeout";
-        assertTrue(redisLock.lock(key, "timeout-v", 30_000L));
+        // TTL=2s < 续期间隔10s, 确保续期线程不会续期此锁, 全局锁表时间戳不会被更新
+        assertTrue(redisLock.lock(key, "timeout-v", 2_000L));
         assertNotNull(stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, key));
-        log.info("[场景6] 加锁成功, 故意不解锁");
+        log.info("[场景6] 加锁成功 (TTL=2s), 故意不解锁, 续期线程不会续期此锁");
 
         boolean cleaned = false;
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= 18; i++) {
             Thread.sleep(1_000);
             String val = stringRedisTemplate.opsForValue().get(key);
             Object entry = stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, key);
@@ -353,10 +354,11 @@ public class RedisLockStressTest {
                 cleaned = true;
                 break;
             }
-            if (i % 3 == 0) log.info("[场景6] 第{}s: key存在, globalLockTable存在={}", i, entry != null);
+            if (i % 4 == 0) log.info("[场景6] 第{}s: key存在={}, globalLockTable存在={}",
+                    i, val != null, entry != null);
         }
 
-        assertTrue(cleaned, "管理线程应在15s内清理");
+        assertTrue(cleaned, "管理线程应在18s内清理");
         assertTrue(redisLock.lock(key, "new-owner", 5_000L), "清理后应能重新加锁");
         redisLock.unLock(key, "new-owner");
         log.info("[场景6结果] 超时清理正常");
