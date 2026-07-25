@@ -2,7 +2,7 @@ package com.toucan.shopping.modules.common.lock.redis.impl;
 
 import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
-import com.toucan.shopping.modules.common.util.RenewKeysBucket;
+import com.toucan.shopping.modules.common.lock.redis.bucket.RenewKeysBucket;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import org.slf4j.Logger;

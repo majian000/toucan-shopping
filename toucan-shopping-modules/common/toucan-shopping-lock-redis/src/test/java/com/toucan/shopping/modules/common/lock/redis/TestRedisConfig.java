@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * 集成测试配置 —— 使用application.properties中的Redis地址(8.140.187.184:6379)
+ * 集成测试配置 —— 使用application.properties中的Redis地址
  */
 @SpringBootConfiguration
 @EnableAutoConfiguration

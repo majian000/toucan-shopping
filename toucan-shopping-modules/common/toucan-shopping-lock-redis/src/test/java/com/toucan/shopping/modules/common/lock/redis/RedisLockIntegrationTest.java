@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.common.lock.redis;
 
 import com.toucan.shopping.modules.common.lock.redis.impl.RedisLockImpl;
-import com.toucan.shopping.modules.common.util.RenewKeysBucket;
+import com.toucan.shopping.modules.common.lock.redis.bucket.RenewKeysBucket;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

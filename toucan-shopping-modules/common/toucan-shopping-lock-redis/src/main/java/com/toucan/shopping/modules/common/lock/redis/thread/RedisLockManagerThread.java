@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.common.lock.redis.thread;
 
 import com.toucan.shopping.modules.common.util.DateUtils;
-import com.toucan.shopping.modules.common.util.RenewKeysBucket;
+import com.toucan.shopping.modules.common.lock.redis.bucket.RenewKeysBucket;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

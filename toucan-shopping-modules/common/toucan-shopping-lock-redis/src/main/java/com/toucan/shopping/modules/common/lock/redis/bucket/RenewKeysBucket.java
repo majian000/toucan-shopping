@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.common.util;
+package com.toucan.shopping.modules.common.lock.redis.bucket;
 
 import java.util.concurrent.ConcurrentHashMap;
 
