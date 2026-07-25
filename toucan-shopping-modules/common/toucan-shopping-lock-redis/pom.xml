@@ -36,16 +36,10 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
 
-        <!-- test: 连接内嵌Redis的集成测试,不需要时注释掉此依赖 + RedisLockIntegrationTest.java -->
+        <!-- test: 集成测试连接远程Redis(见src/test/resources/application.properties) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.codemonstur</groupId>
-            <artifactId>embedded-redis</artifactId>
-            <version>1.4.3</version>
             <scope>test</scope>
         </dependency>
 
