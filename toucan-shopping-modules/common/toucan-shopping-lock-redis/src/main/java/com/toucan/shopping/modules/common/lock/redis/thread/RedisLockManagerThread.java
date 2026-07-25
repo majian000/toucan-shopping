@@ -1,9 +1,8 @@
 package com.toucan.shopping.modules.common.lock.redis.thread;
 
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
-import com.toucan.shopping.modules.common.lock.redis.impl.RedisLockImpl;
 import com.toucan.shopping.modules.common.util.DateUtils;
-import lombok.Data;
+import com.toucan.shopping.modules.common.util.RenewKeysBucket;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +13,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * 管理那些持有了很久没有释放的锁,将有这个类释放
+ * 全局锁管理线程,定期扫描globalLockTable,强制释放超时未释放的锁
  */
-@Data
 public class RedisLockManagerThread extends Thread {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -25,7 +23,6 @@ public class RedisLockManagerThread extends Thread {
      * 全局锁表,记录所有锁的key以及创建时间
      */
     public static String globalLockTable = "global_lock_table";
-
 
     /**
      * 全局锁管理线程 每隔多少时间管理一次
@@ -42,40 +39,69 @@ public class RedisLockManagerThread extends Thread {
      */
     public static boolean enableLockManager = true;
 
+    @Setter
     private StringRedisTemplate stringRedisTemplate;
 
-    private RedisLock redisLock;
+    @Setter
+    private RenewKeysBucket renewKeysBucket;
+
+    private volatile boolean running = true;
 
     @Override
     public void run() {
-        while (RedisLockManagerThread.enableLockManager) {
+        logger.info("锁管理线程 {} 启动,扫描间隔:{}ms,超时阈值:{}ms",
+                getName(), redisManagerExecMillisecond, lockTimeOutMillisecond);
+        while (running && RedisLockManagerThread.enableLockManager) {
             try {
-                logger.info("锁管理线程启动 查询表:" + RedisLockManagerThread.globalLockTable);
-                Set<Object> lockKeys = stringRedisTemplate.opsForHash().keys(RedisLockManagerThread.globalLockTable);
+                Set<Object> lockKeys = stringRedisTemplate.opsForHash()
+                        .keys(RedisLockManagerThread.globalLockTable);
                 if (!CollectionUtils.isEmpty(lockKeys)) {
-                    Iterator lockKeyIterator = lockKeys.iterator();
+                    Iterator<Object> lockKeyIterator = lockKeys.iterator();
                     while (lockKeyIterator.hasNext()) {
-                        //拿到锁的创建时间
                         String lockKey = String.valueOf(lockKeyIterator.next());
-                        //如果对象为空 lockCreateTime的值将为"null"
-                        String lockCreateTime = String.valueOf(stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, lockKey));
-                        //如果这个锁已经很久没释放,将强制释放这个锁
-                        if ("null".equals(lockCreateTime) || StringUtils.isEmpty(lockCreateTime) || DateUtils.currentDate().getTime() - Long.parseLong(lockCreateTime) >= RedisLockManagerThread.lockTimeOutMillisecond) {
-                            logger.info("删除超时锁 " + lockKey + "创建时间" + lockCreateTime);
-                            //从续期分片桶中移除,续期线程将不再续期此锁
-                            ((RedisLockImpl) redisLock).getRenewKeysBucket().remove(lockKey);
-                            stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
-
-                            //从锁表中删除这个锁
-                            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable, ((Object) lockKey));
+                        try {
+                            String lockCreateTime = String.valueOf(
+                                    stringRedisTemplate.opsForHash()
+                                            .get(RedisLockManagerThread.globalLockTable, lockKey));
+                            // 如果创建时间为null或已超时,强制释放
+                            if ("null".equals(lockCreateTime) || StringUtils.isEmpty(lockCreateTime)
+                                    || DateUtils.currentDate().getTime() - Long.parseLong(lockCreateTime) >= RedisLockManagerThread.lockTimeOutMillisecond) {
+                                logger.info("删除超时锁 {},创建时间:{}", lockKey, lockCreateTime);
+                                // 从续期分片桶中移除,续期线程不再续期此锁
+                                renewKeysBucket.remove(lockKey);
+                                // 删除Redis中的锁key
+                                stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
+                                // 从锁表中删除记录
+                                stringRedisTemplate.opsForHash()
+                                        .delete(RedisLockManagerThread.globalLockTable, lockKey);
+                            }
+                        } catch (Exception e) {
+                            logger.warn("处理锁key:{} 异常: {}", lockKey, e.getMessage());
+                            // 单个key处理失败不影响其他key,但清理可能残留的脏数据
+                            // 先清理本地续期桶，防止续期线程继续为已不存在的锁续期，导致内存泄漏
+                            renewKeysBucket.remove(lockKey);
+                            try {
+                                stringRedisTemplate.opsForHash()
+                                        .delete(RedisLockManagerThread.globalLockTable, lockKey);
+                            } catch (Exception ignored) {
+                            }
                         }
                     }
                 }
-                //锁管理线程休眠
-                this.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
+                Thread.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
+            } catch (InterruptedException e) {
+                logger.info("锁管理线程 {} 被中断,退出", getName());
+                Thread.currentThread().interrupt();
+                break;
             } catch (Exception e) {
-                logger.warn(e.getMessage(), e);
+                logger.warn("锁管理线程 {} 异常: {}", getName(), e.getMessage(), e);
             }
         }
+        logger.info("锁管理线程 {} 已退出", getName());
+    }
+
+    public void shutdown() {
+        this.running = false;
+        this.interrupt();
     }
 }
