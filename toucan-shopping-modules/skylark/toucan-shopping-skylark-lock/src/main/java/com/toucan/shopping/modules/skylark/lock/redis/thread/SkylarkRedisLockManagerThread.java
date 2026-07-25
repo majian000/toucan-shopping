@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Iterator;
@@ -64,11 +63,8 @@ public class SkylarkRedisLockManagerThread extends Thread {
                         if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= SkylarkRedisLockManagerThread.lockTimeOutMillisecond)
                         {
                             logger.info("删除超时锁 {} 创建时间 {}",lockKey,lockCreateTime);
-                            if(((SkylarkRedisLockImpl)redisLock).getThreadHashMap().get(lockKey)!=null)
-                            {
-                                ((SkylarkRedisLockImpl)redisLock).getThreadHashMap().get(lockKey).setLoop(false);
-                                ((SkylarkRedisLockImpl)redisLock).getThreadHashMap().remove(lockKey);
-                            }
+                            //从续期集合中移除,续期线程将不再续期此锁
+                            ((SkylarkRedisLockImpl)redisLock).getRenewKeys().remove(lockKey);
                             redisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁

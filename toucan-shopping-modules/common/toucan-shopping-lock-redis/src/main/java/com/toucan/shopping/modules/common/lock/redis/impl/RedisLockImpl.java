@@ -1,8 +1,8 @@
 package com.toucan.shopping.modules.common.lock.redis.impl;
 
-import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockThread;
 import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
+import jakarta.annotation.Resource;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -20,73 +19,68 @@ public class RedisLockImpl implements RedisLock {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<String, RedisLockThread> threadHashMap=new ConcurrentHashMap<String,RedisLockThread>();
+    /**
+     * 续期key集合,key为lockKey,value为锁的TTL(毫秒)
+     * 由RedisLockRenewalConfig统一管理,注入后与2个续期线程共享
+     */
+    @Resource(name = "renewKeys")
+    private ConcurrentHashMap<String, Long> renewKeys;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
 
-
-    public boolean lock(String lockKey,String lockValue)
-    {
-        return lock(lockKey,lockValue,RedisLock.DEFAULT_MILLISECOND);
+    public boolean lock(String lockKey, String lockValue) {
+        return lock(lockKey, lockValue, RedisLock.DEFAULT_MILLISECOND);
     }
 
 
-    public boolean lock(String lockKey,String lockValue,long millisecond)
-    {
+    public boolean lock(String lockKey, String lockValue, long millisecond) {
 
-        int tryCount=1;
-        while(true) {
-            if(tryCount>=DEFAULT_TRY_COUNT)
-            {
-                logger.warn("redis key "+lockKey+" 已存在 重试次数已到"+DEFAULT_TRY_COUNT);
+        int tryCount = 1;
+        while (true) {
+            if (tryCount >= DEFAULT_TRY_COUNT) {
+                logger.warn("redis key " + lockKey + " 已存在 重试次数已到" + DEFAULT_TRY_COUNT);
                 break;
             }
             tryCount++;
-            //利用setnx 设置一个key
-            Boolean result= stringRedisTemplate.opsForValue().setIfAbsent(lockKey,lockValue);
-            if (result!=null&&result.booleanValue()) {
-                //维持key有效期
-                stringRedisTemplate.expire(lockKey,millisecond,TimeUnit.MILLISECONDS);
-                if(threadHashMap.get(lockKey+"_thread")!=null)
-                {
-                    threadHashMap.get(lockKey+"_thread").setLoop(false);
-                }
-                //维持心跳
-                RedisLockThread expireThread = new RedisLockThread();
-                expireThread.setLockKey(lockKey);
-                threadHashMap.put(lockKey+"_thread",expireThread);
+            //利用setIfAbsent原子操作同时设置key和过期时间,避免SETNX+EXPIRE两步操作的非原子性问题
+            Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, lockValue, millisecond, TimeUnit.MILLISECONDS);
+            if (result != null && result.booleanValue()) {
+                //将key加入续期集合,由2个续期线程统一续期
+                renewKeys.put(lockKey, millisecond);
 
                 //将key保存到锁表中
-                stringRedisTemplate.opsForHash().put(RedisLockManagerThread.globalLockTable,lockKey,String.valueOf(System.currentTimeMillis()));
+                stringRedisTemplate.opsForHash().put(RedisLockManagerThread.globalLockTable, lockKey, String.valueOf(System.currentTimeMillis()));
 
                 return true;
+            }
+            //重试间隔,避免忙等对Redis造成压力
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                logger.warn("lock retry sleep interrupted for key " + lockKey, e);
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         return false;
     }
 
 
-
-    public void unLock(String lockKey,String lockValue)
-    {
+    public void unLock(String lockKey, String lockValue) {
         String redisLockValue = stringRedisTemplate.opsForValue().get(lockKey);
         //防止别人误操作释放锁 判断传进来的值与缓存存储的值是否一致
-        if(redisLockValue==null||lockValue.equals(stringRedisTemplate.opsForValue().get(lockKey)))
-        {
-            if(threadHashMap.get(lockKey+"_thread")!=null)
-            {
-                threadHashMap.get(lockKey+"_thread").setLoop(false);
-                threadHashMap.remove(lockKey+"_thread");
-            }
+        if (redisLockValue == null || lockValue.equals(redisLockValue)) {
+            //从续期集合中移除
+            renewKeys.remove(lockKey);
+
             stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
 
             //从锁表中删除这个锁
-            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable,lockKey);
+            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable, lockKey);
         }
     }
-
 
 
 }
