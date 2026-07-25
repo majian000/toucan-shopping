@@ -71,8 +71,9 @@ public class RedisLockImpl implements RedisLock {
 
     public void unLock(String lockKey,String lockValue)
     {
+        String redisLockValue = stringRedisTemplate.opsForValue().get(lockKey);
         //防止别人误操作释放锁 判断传进来的值与缓存存储的值是否一致
-        if(lockValue.equals(stringRedisTemplate.opsForValue().get(lockKey)))
+        if(redisLockValue==null||lockValue.equals(stringRedisTemplate.opsForValue().get(lockKey)))
         {
             if(threadHashMap.get(lockKey+"_thread")!=null)
             {
