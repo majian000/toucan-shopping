@@ -28,6 +28,16 @@ public class RedisLockImpl implements RedisLock {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 最大重试次数,可通过setter覆盖(默认1000)
+     */
+    private long maxRetryCount = RedisLock.DEFAULT_TRY_COUNT;
+
+    /**
+     * 重试间隔(毫秒),可通过setter覆盖(默认50)
+     */
+    private long retrySleepMs = 50;
+
 
     public boolean lock(String lockKey, String lockValue) {
         return lock(lockKey, lockValue, RedisLock.DEFAULT_MILLISECOND);
@@ -38,8 +48,8 @@ public class RedisLockImpl implements RedisLock {
 
         int tryCount = 1;
         while (true) {
-            if (tryCount >= DEFAULT_TRY_COUNT) {
-                logger.warn("redis key " + lockKey + " 已存在 重试次数已到" + DEFAULT_TRY_COUNT);
+            if (tryCount >= maxRetryCount) {
+                logger.warn("redis key " + lockKey + " 已存在 重试次数已到" + maxRetryCount);
                 break;
             }
             tryCount++;
@@ -56,7 +66,7 @@ public class RedisLockImpl implements RedisLock {
             }
             //重试间隔,避免忙等对Redis造成压力
             try {
-                Thread.sleep(50);
+                Thread.sleep(retrySleepMs);
             } catch (InterruptedException e) {
                 logger.warn("lock retry sleep interrupted for key " + lockKey, e);
                 Thread.currentThread().interrupt();
