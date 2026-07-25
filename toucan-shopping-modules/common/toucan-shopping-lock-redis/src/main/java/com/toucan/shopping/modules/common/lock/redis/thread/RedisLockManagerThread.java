@@ -24,7 +24,7 @@ public class RedisLockManagerThread extends Thread {
     /**
      * 全局锁表,记录所有锁的key以及创建时间
      */
-    public static String globalLockTable ="global_lock_table";
+    public static String globalLockTable = "global_lock_table";
 
 
     /**
@@ -35,12 +35,12 @@ public class RedisLockManagerThread extends Thread {
     /**
      * 锁过期时间,默认2分钟超时
      */
-    public static long lockTimeOutMillisecond = 1000*60*2;
+    public static long lockTimeOutMillisecond = 1000 * 60 * 2;
 
     /**
      * 开启全局锁管理线程
      */
-    public static boolean enableLockManager =true;
+    public static boolean enableLockManager = true;
 
     private StringRedisTemplate stringRedisTemplate;
 
@@ -48,37 +48,36 @@ public class RedisLockManagerThread extends Thread {
 
     @Override
     public void run() {
-        while(RedisLockManagerThread.enableLockManager) {
+        while (RedisLockManagerThread.enableLockManager) {
             try {
-                logger.info("锁管理线程启动 查询表:"+ RedisLockManagerThread.globalLockTable);
+                logger.info("锁管理线程启动 查询表:" + RedisLockManagerThread.globalLockTable);
                 Set<Object> lockKeys = stringRedisTemplate.opsForHash().keys(RedisLockManagerThread.globalLockTable);
-                if(!CollectionUtils.isEmpty(lockKeys)) {
+                if (!CollectionUtils.isEmpty(lockKeys)) {
                     Iterator lockKeyIterator = lockKeys.iterator();
-                    while(lockKeyIterator.hasNext()) {
+                    while (lockKeyIterator.hasNext()) {
                         //拿到锁的创建时间
                         String lockKey = String.valueOf(lockKeyIterator.next());
                         //如果对象为空 lockCreateTime的值将为"null"
-                        String lockCreateTime =  String.valueOf(stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, lockKey));
+                        String lockCreateTime = String.valueOf(stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, lockKey));
                         //如果这个锁已经很久没释放,将强制释放这个锁
-                        if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= RedisLockManagerThread.lockTimeOutMillisecond)
-                        {
-                            logger.info("删除超时锁 "+lockKey+ "创建时间"+lockCreateTime);
-                            if(((RedisLockImpl)redisLock).getThreadHashMap().get(lockKey)!=null)
-                            {
-                                ((RedisLockImpl)redisLock).getThreadHashMap().get(lockKey).setLoop(false);
-                                ((RedisLockImpl)redisLock).getThreadHashMap().remove(lockKey);
+                        if ("null".equals(lockCreateTime) || StringUtils.isEmpty(lockCreateTime) || DateUtils.currentDate().getTime() - Long.parseLong(lockCreateTime) >= RedisLockManagerThread.lockTimeOutMillisecond) {
+                            logger.info("删除超时锁 " + lockKey + "创建时间" + lockCreateTime);
+                            String threadKey = lockKey + "_thread";
+                            if (((RedisLockImpl) redisLock).getThreadHashMap().get(threadKey) != null) {
+                                ((RedisLockImpl) redisLock).getThreadHashMap().get(threadKey).setLoop(false);
+                                ((RedisLockImpl) redisLock).getThreadHashMap().remove(threadKey);
                             }
                             stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁
-                            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable,((Object)lockKey));
+                            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable, ((Object) lockKey));
                         }
                     }
                 }
                 //锁管理线程休眠
                 this.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
             } catch (Exception e) {
-                logger.warn(e.getMessage(),e);
+                logger.warn(e.getMessage(), e);
             }
         }
     }
