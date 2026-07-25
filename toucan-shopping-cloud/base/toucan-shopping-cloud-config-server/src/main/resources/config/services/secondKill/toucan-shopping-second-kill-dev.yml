@@ -68,19 +68,6 @@ toucan:
     enabled: false
     name: toucan-shopping-admin-auth
   modules:
-    skylarkLock:
-      type: redis
-      redis:
-        select: single
-        timeout: 10000
-        password: mj_tocan_redis_7612
-        host: 8.140.187.184
-        port: 6379
-        database: 0
-        maxActive: 50
-        maxWaitMillis: 15
-        maxIdle: 50
-        minIdle: 0
   plugins:
     traceId:
       enabled: true
@@ -91,7 +78,6 @@ toucan:
       excludePatterns:
         - /actuator/**
         - /error
-
 
 management:
   health:
