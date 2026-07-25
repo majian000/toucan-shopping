@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.common.lock.redis.thread;
 
+import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,17 @@ public class RedisLockRenewalThread extends Thread {
                     try {
                         Boolean result = stringRedisTemplate.expire(
                                 entry.getKey(), entry.getValue(), TimeUnit.MILLISECONDS);
-                        if (result == null || !result) {
+                        if (result != null && result) {
+                            // 续期成功后同步更新globalLockTable时间戳,防止管理线程误判超时
+                            try {
+                                stringRedisTemplate.opsForHash().put(
+                                        RedisLockManagerThread.globalLockTable,
+                                        entry.getKey(),
+                                        String.valueOf(System.currentTimeMillis()));
+                            } catch (Exception e) {
+                                logger.warn("续期后更新globalLockTable失败 key:{}: {}", entry.getKey(), e.getMessage());
+                            }
+                        } else {
                             expiredKeys.add(entry.getKey());
                         }
                     } catch (Exception e) {
