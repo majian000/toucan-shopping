@@ -63,8 +63,8 @@ public class SkylarkRedisLockManagerThread extends Thread {
                         if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= SkylarkRedisLockManagerThread.lockTimeOutMillisecond)
                         {
                             logger.info("删除超时锁 {} 创建时间 {}",lockKey,lockCreateTime);
-                            //从续期集合中移除,续期线程将不再续期此锁
-                            ((SkylarkRedisLockImpl)redisLock).getRenewKeys().remove(lockKey);
+                            //从续期分片桶中移除,续期线程将不再续期此锁
+                            ((SkylarkRedisLockImpl)redisLock).getRenewKeysBucket().remove(lockKey);
                             redisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁

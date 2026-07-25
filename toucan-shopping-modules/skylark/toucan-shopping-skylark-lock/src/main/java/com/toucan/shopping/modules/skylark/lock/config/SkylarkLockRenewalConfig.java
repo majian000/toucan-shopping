@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.skylark.lock.config;
 
+import com.toucan.shopping.modules.common.util.RenewKeysBucket;
 import com.toucan.shopping.modules.skylark.lock.redis.thread.SkylarkRedisLockRenewalThread;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -11,10 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
- * 锁续期配置,管理2个续期线程的生命周期以及共享的续期key集合
+ * 锁续期配置,管理2个续期线程的生命周期以及分片桶
+ * 每个线程绑定一个分片,key通过hash路由到对应分片,避免重复续期
  */
 @Configuration
 public class SkylarkLockRenewalConfig {
@@ -26,11 +26,11 @@ public class SkylarkLockRenewalConfig {
     private RedisTemplate redisTemplate;
 
     /**
-     * 共享的续期key集合,暴露为Spring Bean供SkylarkRedisLockImpl和SkylarkRedisLockManagerThread使用
+     * 分片桶,2个分片对应2个续期线程
      */
-    @Bean("skylarkRenewKeys")
-    public ConcurrentHashMap<String, Long> renewKeys() {
-        return new ConcurrentHashMap<>();
+    @Bean("skylarkRenewKeysBucket")
+    public RenewKeysBucket renewKeysBucket() {
+        return new RenewKeysBucket(2);
     }
 
     private SkylarkRedisLockRenewalThread renewalThread1;
@@ -38,21 +38,21 @@ public class SkylarkLockRenewalConfig {
 
     @PostConstruct
     public void init() {
-        ConcurrentHashMap<String, Long> map = renewKeys();
+        RenewKeysBucket bucket = renewKeysBucket();
 
         renewalThread1 = new SkylarkRedisLockRenewalThread();
         renewalThread1.setName("skylark-lock-renewal-1");
-        renewalThread1.setRenewKeys(map);
+        renewalThread1.setShard(bucket.getBucket(0));
         renewalThread1.setRedisTemplate(redisTemplate);
         renewalThread1.start();
 
         renewalThread2 = new SkylarkRedisLockRenewalThread();
         renewalThread2.setName("skylark-lock-renewal-2");
-        renewalThread2.setRenewKeys(map);
+        renewalThread2.setShard(bucket.getBucket(1));
         renewalThread2.setRedisTemplate(redisTemplate);
         renewalThread2.start();
 
-        logger.info("云雀锁续期线程已启动: {}, {}", renewalThread1.getName(), renewalThread2.getName());
+        logger.info("云雀锁续期线程已启动(分片模式): {}, {}", renewalThread1.getName(), renewalThread2.getName());
     }
 
     @PreDestroy

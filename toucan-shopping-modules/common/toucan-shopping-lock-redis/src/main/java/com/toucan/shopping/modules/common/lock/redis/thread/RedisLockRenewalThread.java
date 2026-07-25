@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 锁续期线程(统一管理所有锁的续期,由2个线程实例共享同一个 renewKeys 进行负载分担)
+ * 锁续期线程,绑定一个分片桶,只续期该分片内的key
  */
 @Data
 public class RedisLockRenewalThread extends Thread {
@@ -23,9 +23,9 @@ public class RedisLockRenewalThread extends Thread {
     private long renewalInterval = 10000;
 
     /**
-     * 共享的续期key集合,key为lockKey,value为锁的TTL(毫秒)
+     * 本线程绑定的分片,只续期这个分片内的key
      */
-    private ConcurrentHashMap<String, Long> renewKeys;
+    private ConcurrentHashMap<String, Long> shard;
 
     private StringRedisTemplate stringRedisTemplate;
 
@@ -36,13 +36,13 @@ public class RedisLockRenewalThread extends Thread {
         logger.info("锁续期线程 {} 启动,续期间隔:{}ms", getName(), renewalInterval);
         while (running) {
             try {
-                for (Map.Entry<String, Long> entry : renewKeys.entrySet()) {
+                for (Map.Entry<String, Long> entry : shard.entrySet()) {
                     try {
                         Boolean result = stringRedisTemplate.expire(
                                 entry.getKey(), entry.getValue(), TimeUnit.MILLISECONDS);
-                        // key在Redis中已不存在(已过期或被删除),从续期集合中移除
+                        // key在Redis中已不存在(已过期或被删除),从分片中移除
                         if (result == null || !result) {
-                            renewKeys.remove(entry.getKey());
+                            shard.remove(entry.getKey());
                         }
                     } catch (Exception e) {
                         logger.warn("续期失败 key:{}: {}", entry.getKey(), e.getMessage());

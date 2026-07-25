@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.skylark.lock.redis.impl;
 
+import com.toucan.shopping.modules.common.util.RenewKeysBucket;
 import com.toucan.shopping.modules.skylark.lock.redis.SkylarkRedisLock;
 import com.toucan.shopping.modules.skylark.lock.redis.thread.SkylarkRedisLockManagerThread;
 import jakarta.annotation.Resource;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -21,11 +21,10 @@ public class SkylarkRedisLockImpl implements SkylarkRedisLock {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 续期key集合,key为lockKey,value为锁的TTL(毫秒)
-     * 由SkylarkLockRenewalConfig统一管理,注入后与2个续期线程共享
+     * 续期key分片桶,key通过hash路由到不同分片,每个续期线程绑定一个分片
      */
-    @Resource(name = "skylarkRenewKeys")
-    private ConcurrentHashMap<String, Long> renewKeys;
+    @Resource(name = "skylarkRenewKeysBucket")
+    private RenewKeysBucket renewKeysBucket;
 
     @Autowired
     @Qualifier("skylarkLockRedisTemplate")
@@ -49,8 +48,8 @@ public class SkylarkRedisLockImpl implements SkylarkRedisLock {
             //利用setIfAbsent原子操作同时设置key和过期时间,避免SETNX+EXPIRE两步操作的非原子性问题
             Boolean result = redisTemplate.opsForValue().setIfAbsent(lockKey, lockValue, millisecond, TimeUnit.MILLISECONDS);
             if (result != null && result.booleanValue()) {
-                //将key加入续期集合,由2个续期线程统一续期
-                renewKeys.put(lockKey, millisecond);
+                //将key加入续期分片桶,由对应分片的续期线程负责续期
+                renewKeysBucket.put(lockKey, millisecond);
 
                 //将key保存到锁表中
                 redisTemplate.opsForHash().put(SkylarkRedisLockManagerThread.globalLockTable, lockKey, String.valueOf(System.currentTimeMillis()));
@@ -74,8 +73,8 @@ public class SkylarkRedisLockImpl implements SkylarkRedisLock {
         Object redisLockValue = redisTemplate.opsForValue().get(lockKey);
         //防止别人误操作释放锁 判断传进来的值与缓存存储的值是否一致
         if (redisLockValue == null || lockValue.equals(String.valueOf(redisLockValue))) {
-            //从续期集合中移除
-            renewKeys.remove(lockKey);
+            //从续期分片桶中移除
+            renewKeysBucket.remove(lockKey);
 
             redisTemplate.opsForValue().getOperations().delete(lockKey);
 

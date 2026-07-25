@@ -62,8 +62,8 @@ public class RedisLockManagerThread extends Thread {
                         //如果这个锁已经很久没释放,将强制释放这个锁
                         if ("null".equals(lockCreateTime) || StringUtils.isEmpty(lockCreateTime) || DateUtils.currentDate().getTime() - Long.parseLong(lockCreateTime) >= RedisLockManagerThread.lockTimeOutMillisecond) {
                             logger.info("删除超时锁 " + lockKey + "创建时间" + lockCreateTime);
-                            //从续期集合中移除,续期线程将不再续期此锁
-                            ((RedisLockImpl) redisLock).getRenewKeys().remove(lockKey);
+                            //从续期分片桶中移除,续期线程将不再续期此锁
+                            ((RedisLockImpl) redisLock).getRenewKeysBucket().remove(lockKey);
                             stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁
