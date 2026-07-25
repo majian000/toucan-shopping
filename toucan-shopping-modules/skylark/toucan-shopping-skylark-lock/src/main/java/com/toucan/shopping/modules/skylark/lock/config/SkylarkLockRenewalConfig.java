@@ -26,29 +26,30 @@ public class SkylarkLockRenewalConfig {
     private RedisTemplate redisTemplate;
 
     /**
-     * 分片桶,2个分片对应2个续期线程
+     * 分片桶,2个分片对应2个续期线程(static避免与@Autowired自己产生循环依赖)
      */
     @Bean("skylarkRenewKeysBucket")
-    public RenewKeysBucket renewKeysBucket() {
+    public static RenewKeysBucket renewKeysBucket() {
         return new RenewKeysBucket(2);
     }
+
+    @Autowired
+    private RenewKeysBucket renewKeysBucket;
 
     private SkylarkRedisLockRenewalThread renewalThread1;
     private SkylarkRedisLockRenewalThread renewalThread2;
 
     @PostConstruct
     public void init() {
-        RenewKeysBucket bucket = renewKeysBucket();
-
         renewalThread1 = new SkylarkRedisLockRenewalThread();
         renewalThread1.setName("skylark-lock-renewal-1");
-        renewalThread1.setShard(bucket.getBucket(0));
+        renewalThread1.setShard(renewKeysBucket.getBucket(0));
         renewalThread1.setRedisTemplate(redisTemplate);
         renewalThread1.start();
 
         renewalThread2 = new SkylarkRedisLockRenewalThread();
         renewalThread2.setName("skylark-lock-renewal-2");
-        renewalThread2.setShard(bucket.getBucket(1));
+        renewalThread2.setShard(renewKeysBucket.getBucket(1));
         renewalThread2.setRedisTemplate(redisTemplate);
         renewalThread2.start();
 

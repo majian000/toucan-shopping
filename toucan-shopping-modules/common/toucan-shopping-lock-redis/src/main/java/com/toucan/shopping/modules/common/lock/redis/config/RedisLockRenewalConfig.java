@@ -24,29 +24,31 @@ public class RedisLockRenewalConfig {
     private StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 分片桶,2个分片对应2个续期线程
+     * 分片桶,2个分片对应2个续期线程(static避免与@Autowired自己产生循环依赖)
      */
     @Bean("renewKeysBucket")
-    public RenewKeysBucket renewKeysBucket() {
+    public static RenewKeysBucket renewKeysBucket() {
         return new RenewKeysBucket(2);
     }
+
+    @Autowired
+    private RenewKeysBucket renewKeysBucket;
 
     private RedisLockRenewalThread renewalThread1;
     private RedisLockRenewalThread renewalThread2;
 
     @PostConstruct
     public void init() {
-        RenewKeysBucket bucket = renewKeysBucket();
 
         renewalThread1 = new RedisLockRenewalThread();
         renewalThread1.setName("redis-lock-renewal-1");
-        renewalThread1.setShard(bucket.getBucket(0));
+        renewalThread1.setShard(renewKeysBucket.getBucket(0));
         renewalThread1.setStringRedisTemplate(stringRedisTemplate);
         renewalThread1.start();
 
         renewalThread2 = new RedisLockRenewalThread();
         renewalThread2.setName("redis-lock-renewal-2");
-        renewalThread2.setShard(bucket.getBucket(1));
+        renewalThread2.setShard(renewKeysBucket.getBucket(1));
         renewalThread2.setStringRedisTemplate(stringRedisTemplate);
         renewalThread2.start();
 
