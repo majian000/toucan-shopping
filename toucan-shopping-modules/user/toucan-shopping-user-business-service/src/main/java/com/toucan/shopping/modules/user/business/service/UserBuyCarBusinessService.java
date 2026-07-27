@@ -3,7 +3,10 @@ package com.toucan.shopping.modules.user.business.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -13,7 +16,6 @@ import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import com.toucan.shopping.modules.user.redis.UserBuyCarKey;
 import com.toucan.shopping.modules.user.service.UserBuyCarItemService;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,32 +41,12 @@ public class UserBuyCarBusinessService {
     private UserBuyCarItemService userBuyCarItemService;
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserBuyCarItemVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
-        if(userBuyCarVO.getShopProductSkuId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("SKUID不能为空");
-            return resultObjectVO;
-        }
-        if(userBuyCarVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userBuyCarVO.getShopProductSkuId(), ResultObjectVO.FAILD, "SKUID不能为空");
+        Check.notNull(userBuyCarVO.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         String userMainId = String.valueOf(userBuyCarVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserBuyCarKey.getSaveLockKey(userMainId), userMainId);
@@ -76,12 +58,7 @@ public class UserBuyCarBusinessService {
             UserBuyCarItemVO queryUserBuyCar = new UserBuyCarItemVO();
             queryUserBuyCar.setUserMainId(userBuyCarVO.getUserMainId());
             List<UserBuyCarItem> userBuyCarItems = userBuyCarItemService.findListByEntity(queryUserBuyCar);
-            if(!CollectionUtils.isEmpty(userBuyCarItems)&& userBuyCarItems.size()>= UserBuyCarConstant.MAX_BUY_ITEM_COUNT)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("购物车中商品数量达到上限");
-                return resultObjectVO;
-            }
+            Check.isTrue(CollectionUtils.isEmpty(userBuyCarItems) || userBuyCarItems.size() < UserBuyCarConstant.MAX_BUY_ITEM_COUNT, ResultObjectVO.FAILD, "购物车中商品数量达到上限");
 
             queryUserBuyCar.setShopProductSkuId(userBuyCarVO.getShopProductSkuId());
             userBuyCarItems = userBuyCarItemService.findListByEntity(queryUserBuyCar);
@@ -113,6 +90,8 @@ public class UserBuyCarBusinessService {
             }
 
             resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -130,28 +109,20 @@ public class UserBuyCarBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO removeBuyCar(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserBuyCarItem entity = JSONObject.parseObject(requestVo.getEntityJson(), UserBuyCarItem.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultObjectVO.FAILD, "没有找到ID");
 
 
             int row = userBuyCarItemService.deleteByIdAndUserMainId(entity.getId(),entity.getUserMainId());
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -168,28 +139,20 @@ public class UserBuyCarBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO clearByUserMainId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserBuyCarItem entity = JSONObject.parseObject(requestVo.getEntityJson(), UserBuyCarItem.class);
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getUserMainId(), ResultObjectVO.FAILD, "没有找到用户ID");
 
 
             int row = userBuyCarItemService.deleteByUserMainId(entity.getUserMainId());
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -205,29 +168,16 @@ public class UserBuyCarBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO listByUserMainId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserBuyCarItemVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
-        if(userBuyCarVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userBuyCarVO.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             //查询购物车信息列表
             resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -238,43 +188,18 @@ public class UserBuyCarBusinessService {
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updates(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         List<UserBuyCarItemVO> userBuyCarVos = JSONArray.parseArray(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
 
         if(!CollectionUtils.isEmpty(userBuyCarVos)) {
             String userMainId = "-1";
             for(UserBuyCarItemVO userBuyCarVO:userBuyCarVos)
             {
-                if(userBuyCarVO.getId()==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("ID不能为空");
-                    return resultObjectVO;
-                }
-                if(userBuyCarVO.getUserMainId()==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("用户ID不能为空");
-                    return resultObjectVO;
-                }
-                if(userBuyCarVO.getBuyCount()==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("数量不能为空");
-                    return resultObjectVO;
-                }
+                Check.notNull(userBuyCarVO.getId(), ResultObjectVO.FAILD, "ID不能为空");
+                Check.notNull(userBuyCarVO.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
+                Check.notNull(userBuyCarVO.getBuyCount(), ResultObjectVO.FAILD, "数量不能为空");
             }
             try {
                 userMainId = String.valueOf(userBuyCarVos.get(0).getUserMainId());
@@ -304,6 +229,8 @@ public class UserBuyCarBusinessService {
                 }
 
 
+            } catch (BusinessValidationException e) {
+                return ResultObjectVO.fail(e.getCode(), e.getMessage());
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -316,39 +243,14 @@ public class UserBuyCarBusinessService {
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserBuyCarItemVO userBuyCarItemVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
         String userMainId = "-1";
-        if(userBuyCarItemVO.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空");
-            return resultObjectVO;
-        }
-        if(userBuyCarItemVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
-        if(userBuyCarItemVO.getBuyCount()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("数量不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userBuyCarItemVO.getId(), ResultObjectVO.FAILD, "ID不能为空");
+        Check.notNull(userBuyCarItemVO.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
+        Check.notNull(userBuyCarItemVO.getBuyCount(), ResultObjectVO.FAILD, "数量不能为空");
         try {
             userMainId = String.valueOf(userBuyCarItemVO.getUserMainId());
             boolean lockStatus = skylarkLock.lock(UserBuyCarKey.getUpdateLockKey(userMainId), userMainId);
@@ -373,6 +275,8 @@ public class UserBuyCarBusinessService {
 
 
 
+        } catch (BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);

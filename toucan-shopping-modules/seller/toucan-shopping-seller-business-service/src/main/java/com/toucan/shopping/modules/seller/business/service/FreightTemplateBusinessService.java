@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.seller.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -72,34 +75,23 @@ public class FreightTemplateBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FreightTemplatePageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), FreightTemplatePageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(freightTemplateService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -111,16 +103,10 @@ public class FreightTemplateBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         FreightTemplateVO freightTemplateVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplateVO.class);
         String userMainId = String.valueOf(freightTemplateVO.getUserMainId());
@@ -128,45 +114,13 @@ public class FreightTemplateBusinessService {
 
             boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
 
-            if(StringUtils.isEmpty(freightTemplateVO.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("名称为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-
-
-                return resultObjectVO;
-            }
-            if(freightTemplateVO.getUserMainId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(freightTemplateVO.getShopId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(freightTemplateVO.getName(), ResultVO.FAILD, "名称不能为空!");
+            Check.notNull(freightTemplateVO.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
+            Check.notNull(freightTemplateVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
 
             FreightTemplateVO queryCountVO = new FreightTemplateVO();
@@ -175,24 +129,14 @@ public class FreightTemplateBusinessService {
             Long count = freightTemplateService.queryCount(queryCountVO);
             if(count+1>toucan.getSeller().getFreightTemplateMaxCount())
             {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
-
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("数量已达到上限");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "数量已达到上限");
             }
 
             queryCountVO.setName(freightTemplateVO.getName());
             count = freightTemplateService.queryCount(queryCountVO);
             if(count>0)
             {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
-
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("模板已存在,请检查名称是否重复");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "模板已存在,请检查名称是否重复");
             }
 
             Long templateId = idGenerator.id();
@@ -202,9 +146,7 @@ public class FreightTemplateBusinessService {
 
             int row = freightTemplateService.save(freightTemplateVO);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             try {
@@ -403,6 +345,8 @@ public class FreightTemplateBusinessService {
                 throw e;
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -423,52 +367,31 @@ public class FreightTemplateBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdAndUserMainId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FreightTemplateVO query = JSONObject.parseObject(requestVo.getEntityJson(),FreightTemplateVO.class);
-            if(query.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
-            if(query.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(query.getId(), ResultVO.FAILD, "没有找到ID");
+            Check.notNull(query.getUserMainId(), ResultVO.FAILD, "没有找到用户ID");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(query.getUserMainId());
 
             if(sellerShop==null)
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到店铺");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到店铺");
             }
             if(sellerShop.getEnableStatus().shortValue()==0)
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺已被禁用");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "店铺已被禁用");
             }
 
             //查询运费模板
             List<FreightTemplate> freightTemplates = freightTemplateService.queryListByVO(query);
             if(CollectionUtils.isEmpty(freightTemplates))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "对象不存在!");
             }
 
             FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
@@ -565,12 +488,13 @@ public class FreightTemplateBusinessService {
 
             resultObjectVO.setData(freightTemplateVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -581,31 +505,19 @@ public class FreightTemplateBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FreightTemplateVO query = JSONObject.parseObject(requestVo.getEntityJson(),FreightTemplateVO.class);
-            if(query.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(query.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询运费模板
             List<FreightTemplate> freightTemplates = freightTemplateService.queryListByVO(query);
             if(CollectionUtils.isEmpty(freightTemplates))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "对象不存在!");
             }
 
             FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
@@ -702,12 +614,13 @@ public class FreightTemplateBusinessService {
 
             resultObjectVO.setData(freightTemplateVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -720,31 +633,22 @@ public class FreightTemplateBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FreightTemplateVO query = JSONObject.parseObject(requestVo.getEntityJson(),FreightTemplateVO.class);
             if(CollectionUtils.isEmpty(query.getIdList()))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID集合");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID集合");
             }
 
             //查询运费模板
             List<FreightTemplate> freightTemplates = freightTemplateService.queryListByVO(query);
             if(CollectionUtils.isEmpty(freightTemplates))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "对象不存在!");
             }
 
             if(!CollectionUtils.isEmpty(freightTemplates))
@@ -848,12 +752,13 @@ public class FreightTemplateBusinessService {
                 resultObjectVO.setData(freightTemplateVOList);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -866,69 +771,26 @@ public class FreightTemplateBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         FreightTemplateVO freightTemplateVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplateVO.class);
-        if(freightTemplateVO.getId()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空!");
-            return resultObjectVO;
-        }
+        Check.notNull(freightTemplateVO.getId(), ResultVO.FAILD, "ID不能为空!");
 
         String userMainId = String.valueOf(freightTemplateVO.getUserMainId());
         try {
 
             boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
 
-            if(StringUtils.isEmpty(freightTemplateVO.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
-
-                logger.warn("名称为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-
-
-                return resultObjectVO;
-            }
-            if(freightTemplateVO.getUserMainId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
-
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(freightTemplateVO.getShopId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
-
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(freightTemplateVO.getName(), ResultVO.FAILD, "名称不能为空!");
+            Check.notNull(freightTemplateVO.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
+            Check.notNull(freightTemplateVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
 
             FreightTemplateVO queryCountVO = new FreightTemplateVO();
@@ -937,12 +799,7 @@ public class FreightTemplateBusinessService {
             Long count = freightTemplateService.queryCount(queryCountVO);
             if(count+1>toucan.getSeller().getFreightTemplateMaxCount())
             {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
-
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("数量已达到上限");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "数量已达到上限");
             }
 
             queryCountVO.setName(freightTemplateVO.getName());
@@ -951,12 +808,7 @@ public class FreightTemplateBusinessService {
             {
                 for(FreightTemplate freightTemplate:freightTemplates) {
                     if(freightTemplate.getId().longValue()!=freightTemplateVO.getId().longValue()) {
-                        //释放锁
-                        skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
-
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("模板已存在,请检查名称是否重复");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "模板已存在,请检查名称是否重复");
                     }
                 }
             }
@@ -965,9 +817,7 @@ public class FreightTemplateBusinessService {
             FreightTemplate persistentFreightTemplate = freightTemplateService.findByIdAndUserMainId(freightTemplateVO.getId(),freightTemplateVO.getUserMainId());
             if(persistentFreightTemplate==null)
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到该模板,请检查是否已被删除");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到该模板,请检查是否已被删除");
             }
             //查询模板默认规则
             FreightTemplateDefaultRuleVO queryPerFreightTemplateDefaultRuleVO = new FreightTemplateDefaultRuleVO();
@@ -984,9 +834,7 @@ public class FreightTemplateBusinessService {
             freightTemplateVO.setUpdateDate(new Date());
             int row = freightTemplateService.update(freightTemplateVO);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,请稍后重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "修改失败,请稍后重试!");
             }
 
             try {
@@ -1225,6 +1073,8 @@ public class FreightTemplateBusinessService {
                 throw e;
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1243,42 +1093,15 @@ public class FreightTemplateBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(String signHeader,RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         FreightTemplateVO freightTemplate = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplateVO.class);
 
-        if(freightTemplate.getId()==null)
-        {
-            logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空!");
-            return resultObjectVO;
-        }
-
-
-        if(freightTemplate.getUserMainId()==null)
-        {
-            logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空!");
-            return resultObjectVO;
-        }
+        Check.notNull(freightTemplate.getId(), ResultVO.FAILD, "ID不能为空!");
+        Check.notNull(freightTemplate.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
 
         String userMainId = String.valueOf(freightTemplate.getUserMainId());
@@ -1287,16 +1110,12 @@ public class FreightTemplateBusinessService {
             String newSign = FreightTemplateUtils.getDeleteSignHeader(userMainId);
             if(!signHeader.equals(newSign))
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("签名校验失败,请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "签名校验失败,请稍后重试");
             }
 
             boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
 
@@ -1311,25 +1130,16 @@ public class FreightTemplateBusinessService {
 
             if(freightTemplate.getShopId()==null)
             {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
-
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(freightTemplate));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有查询到关联店铺!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有查询到关联店铺!");
             }
 
             int row = freightTemplateService.deleteByIdAndShopId(freightTemplate.getId(),freightTemplate.getShopId());
             if (row <=0) {
-                //释放锁
-                skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
-
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);

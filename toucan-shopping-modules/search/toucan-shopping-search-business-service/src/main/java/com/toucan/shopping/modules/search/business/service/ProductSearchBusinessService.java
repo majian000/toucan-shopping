@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @Service
 public class ProductSearchBusinessService {
@@ -23,159 +24,114 @@ public class ProductSearchBusinessService {
     private ProductSearchService productSearchService;
 
     /**
-     * 搜索商品
-     * @param requestJsonVO
-     * @return
+     * 安全执行业务逻辑并返回带数据的ResultObjectVO。
+     * 自动捕获异常，记录日志并设置失败状态码。
      */
-    public ResultObjectVO search(RequestJsonVO requestJsonVO)
-    {
+    private ResultObjectVO safeCall(Callable<?> callable) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
         try {
-            if(productSearch.getPage()<1)
-            {
-                productSearch.setPage(1);
-            }
-
-            resultObjectVO.setData(productSearchService.search(productSearch));
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
+            resultObjectVO.setData(callable.call());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
     }
 
+    /**
+     * 安全执行业务逻辑（无返回数据的操作）。
+     * 自动捕获异常，记录日志并设置失败状态码。
+     */
+    @FunctionalInterface
+    private interface ThrowingRunnable {
+        void run() throws Exception;
+    }
+
+    private ResultObjectVO safeRun(ThrowingRunnable action) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            action.run();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
+    /**
+     * 搜索商品
+     */
+    public ResultObjectVO search(RequestJsonVO requestJsonVO) {
+        return safeCall(() -> {
+            ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
+            if (productSearch.getPage() < 1) {
+                productSearch.setPage(1);
+            }
+            return productSearchService.search(productSearch);
+        });
+    }
 
     /**
      * 搜索商品数量
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO count(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
-        try {
-            resultObjectVO.setData(productSearchService.queryCount(productSearch));
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+    public ResultObjectVO count(RequestJsonVO requestJsonVO) {
+        return safeCall(() -> {
+            ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
+            return productSearchService.queryCount(productSearch);
+        });
     }
-
 
     /**
      * 保存到搜索
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO save(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
-        try {
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+        return safeRun(() -> {
+            ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
             productSearchService.save(productSearchResultVO);
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+        });
     }
-
-
-
-
 
     /**
      * 根据SKUID查询
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryBySkuId(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        Long skuId = requestJsonVO.formatEntity(Long.class);
-        try {
-            resultObjectVO.setData(productSearchService.queryBySkuId(skuId));
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+    public ResultObjectVO queryBySkuId(RequestJsonVO requestJsonVO) {
+        return safeCall(() -> {
+            Long skuId = requestJsonVO.formatEntity(Long.class);
+            return productSearchService.queryBySkuId(skuId);
+        });
     }
-
-
-
-
 
     /**
      * 更新到搜索
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO update(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
-        try {
+    public ResultObjectVO update(RequestJsonVO requestJsonVO) {
+        return safeRun(() -> {
+            ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
             productSearchService.update(productSearchResultVO);
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+        });
     }
-
 
     /**
      * 从搜索中删除
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO removeById(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        Long skuId = requestJsonVO.formatEntity(Long.class);
-        try {
+    public ResultObjectVO removeById(RequestJsonVO requestJsonVO) {
+        return safeCall(() -> {
+            Long skuId = requestJsonVO.formatEntity(Long.class);
             List<Long> deleteFaildList = new ArrayList<>();
-            productSearchService.removeById(skuId,deleteFaildList);
-            resultObjectVO.setData(deleteFaildList);
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+            productSearchService.removeById(skuId, deleteFaildList);
+            return deleteFaildList;
+        });
     }
 
-
-
     /**
-     * 清空
-     * @param requestJsonVO
-     * @return
+     * 清空索引并重建
      */
-    public ResultObjectVO clear(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            List<Long> deleteFaildList = new ArrayList<>();
+    public ResultObjectVO clear(RequestJsonVO requestJsonVO) {
+        return safeRun(() -> {
             productSearchService.deleteIndex();
             productSearchService.createIndex();
             productSearchService.setMaxResultWindow(ProductIndex.MAX_RESULT_WINDOW);
-            resultObjectVO.setData(deleteFaildList);
-        }catch(Exception e)
-        {
-            logger.error(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-        }
-        return resultObjectVO;
+        });
     }
 
 }

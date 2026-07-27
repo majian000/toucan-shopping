@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -52,46 +55,20 @@ public class ProductSpuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         String lockKey="-1";
         Long productSpuId = idGenerator.id();
         try {
             logger.info("保存商品SPU {} ",requestJsonVO.getEntityJson());
             ProductSpuVO productSpuVO = requestJsonVO.formatEntity(ProductSpuVO.class);
-            if(productSpuVO.getCategoryId()==null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(productSpuVO.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("SPU名称不能为空!");
-                return resultObjectVO;
-            }
-            if(productSpuVO.getBrandId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSpuVO.getCategoryId(), ResultVO.FAILD, "分类ID不能为空!");
+            Check.notEmpty(productSpuVO.getName(), ResultVO.FAILD, "SPU名称不能为空!");
+            Check.notNull(productSpuVO.getBrandId(), ResultVO.FAILD, "品牌ID不能为空!");
+
             lockKey = MD5Util.md5(productSpuVO.getName());
             skylarkLock.lock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(lockKey), lockKey);
 
@@ -194,6 +171,11 @@ public class ProductSpuBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -226,44 +208,21 @@ public class ProductSpuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("修改失败,请稍后重试");
-            return resultObjectVO;
-        }
 
         try {
             ProductSpuVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuVO.class);
 
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空");
 
-            if(entity.getCategoryId()==null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("SPU名称不能为空");
-                return resultObjectVO;
-            }
-            if(entity.getBrandId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌ID不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getCategoryId(), ResultVO.FAILD, "分类ID不能为空");
+
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "SPU名称不能为空");
+
+            Check.notNull(entity.getBrandId(), ResultVO.FAILD, "品牌ID不能为空");
 
             logger.info("修改平台商品 {} ",requestJsonVO.getEntityJson());
 
@@ -339,6 +298,11 @@ public class ProductSpuBusinessService {
             }
 
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
+            logger.warn(e.getMessage(),e);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -357,23 +321,13 @@ public class ProductSpuBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ProductSpu entity = requestVo.formatEntity(ProductSpu.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             int row = productSpuService.deleteById(entity.getId());
             if (row < 1) {
@@ -384,6 +338,11 @@ public class ProductSpuBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -403,34 +362,19 @@ public class ProductSpuBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ProductSpuVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ProductSpuVO.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存
             ProductSpuVO query=new ProductSpuVO();
             query.setId(entity.getId());
             List<ProductSpuVO> entityList = productSpuService.queryList(query);
-            if(CollectionUtils.isEmpty(entityList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entityList, ResultVO.FAILD, "对象不存在!");
 
             ProductSpuVO productSpuVO = entityList.get(0);
             List<ProductSpuAttributeKeyValueVO> attributeValueVOS = new LinkedList<>();
@@ -520,6 +464,11 @@ public class ProductSpuBusinessService {
 
             resultObjectVO.setData(productSpuVO);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -539,23 +488,14 @@ public class ProductSpuBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<ProductSpuVO> productSpuVOS = JSONObject.parseArray(requestVo.getEntityJson(),ProductSpuVO.class);
-            if(CollectionUtils.isEmpty(productSpuVOS))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(productSpuVOS, ResultVO.FAILD, "没有找ID");
+
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(ProductSpuVO productSpuVO:productSpuVOS) {
                 if(productSpuVO.getId()!=null) {
@@ -577,6 +517,11 @@ public class ProductSpuBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -596,27 +541,19 @@ public class ProductSpuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ProductSpuPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuPageInfo.class);
             PageInfo<ProductSpuVO> pageInfo =  productSpuService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

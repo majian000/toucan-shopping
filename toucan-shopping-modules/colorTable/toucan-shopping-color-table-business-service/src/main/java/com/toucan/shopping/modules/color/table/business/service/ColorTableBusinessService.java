@@ -21,6 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 
 
 /**
@@ -31,6 +35,24 @@ public class ColorTableBusinessService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    // ── 常用错误消息 ──────────────────────────────────────────────
+
+    private static final String MSG_RETRY              = "请重试!";
+    private static final String MSG_RETRY_LATER        = "请稍后重试";
+    private static final String MSG_PARAM_EMPTY        = "请求参数为空";
+    private static final String MSG_ENTITY_NOT_FOUND   = "没有找到实体对象";
+    private static final String MSG_OBJECT_NOT_FOUND   = "没有找到对象!";
+    private static final String MSG_APP_CODE_NOT_FOUND = "没有找到对象编码!";
+    private static final String MSG_ID_NOT_FOUND       = "没有找到ID";
+    private static final String MSG_ID_REQUIRED        = "请传入ID";
+    private static final String MSG_NAME_EMPTY         = "名称不能为空!";
+    private static final String MSG_COLOR_EMPTY        = "颜色值不能为空!";
+    private static final String MSG_NAME_EXISTS        = "该名称已存在!";
+    private static final String MSG_NOT_EXIST          = "不存在!";
+    private static final String MSG_COLOR_TABLE_NOT_EXIST = "颜色表不存在!";
+    private static final String MSG_NAMES_EMPTY        = "名称集合不能为空!";
+    private static final String MSG_QUERY_FAILED       = "查询失败!";
+
     @Autowired
     private ColorTableService colorTableService;
 
@@ -38,431 +60,287 @@ public class ColorTableBusinessService {
     private IdGenerator idGenerator;
 
 
+    // ── 工具方法 ──────────────────────────────────────────────────
+
+    /**
+     * 创建失败结果
+     */
+    private ResultObjectVO fail(String msg) {
+        ResultObjectVO vo = new ResultObjectVO();
+        vo.setCode(ResultVO.FAILD);
+        vo.setMsg(msg);
+        return vo;
+    }
+
+    /**
+     * 校验 requestJsonVO 是否为空
+     * @return null 表示校验通过，否则返回错误结果
+     */
+    private ResultObjectVO validateRequestJson(RequestJsonVO requestJsonVO, String entityLabel) {
+        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
+            logger.warn("{} {}", MSG_PARAM_EMPTY, requestJsonVO == null ? "" : JSONObject.toJSONString(requestJsonVO));
+            return fail(entityLabel);
+        }
+        return null;
+    }
+
+    /**
+     * 校验 appCode
+     * @return null 表示校验通过，否则返回错误结果
+     */
+    private ResultObjectVO validateAppCode(RequestJsonVO requestJsonVO) {
+        if (requestJsonVO.getAppCode() == null) {
+            logger.warn("{} param:{}", MSG_APP_CODE_NOT_FOUND, JSONObject.toJSONString(requestJsonVO));
+            return fail(MSG_APP_CODE_NOT_FOUND);
+        }
+        return null;
+    }
+
+    /**
+     * 校验请求体（实体JSON）以及 appCode
+     * @return null 表示校验通过，否则返回错误结果
+     */
+    private ResultObjectVO validateRequest(RequestJsonVO requestJsonVO) {
+        if (requestJsonVO == null) {
+            logger.warn(MSG_PARAM_EMPTY);
+            return fail(MSG_RETRY);
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.warn("{} param:{}", MSG_OBJECT_NOT_FOUND, JSONObject.toJSONString(requestJsonVO));
+            return fail(MSG_OBJECT_NOT_FOUND);
+        }
+        return null;
+    }
+
+    /**
+     * 统一异常处理
+     */
+    private ResultObjectVO handleException(Exception e) {
+        logger.warn(e.getMessage(), e);
+        return fail(MSG_RETRY_LATER);
+    }
+
+    // ── 业务方法 ──────────────────────────────────────────────────
+
     /**
      * 保存颜色表
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO save(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到对象编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
-            return resultObjectVO;
-        }
-
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         Long entityId = -1L;
         try {
             entityId = idGenerator.id();
-            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTableVO.class);
-            if(StringUtils.isEmpty(colorTableVO.getName()))
-            {
-                logger.warn("名称不能为空: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-                return resultObjectVO;
-            }
+            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+
+            Check.notEmpty(colorTableVO.getName(), ResultObjectVO.FAILD, MSG_NAME_EMPTY);
 
             ColorTableVO queryColorTable = new ColorTableVO();
             queryColorTable.setName(colorTableVO.getName());
             List<ColorTableVO> colorTableVOS = colorTableService.queryList(queryColorTable);
-            if(CollectionUtils.isNotEmpty(colorTableVOS))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该名称已存在!");
-                return resultObjectVO;
+            if (CollectionUtils.isNotEmpty(colorTableVOS)) {
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_NAME_EXISTS);
             }
-
 
             ColorTable colorTable = new ColorTable();
-            BeanUtils.copyProperties(colorTable,colorTableVO);
+            BeanUtils.copyProperties(colorTable, colorTableVO);
             colorTable.setId(entityId);
             colorTable.setCreateDate(new Date());
-            colorTable.setDeleteStatus((short)0);
+            colorTable.setDeleteStatus((short) 0);
             int row = colorTableService.save(colorTable);
-            if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
+            Check.isTrue(row > 0, ResultObjectVO.FAILD, MSG_RETRY);
 
-        }catch(Exception e)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_RETRY);
         }
-        return resultObjectVO;
+        return new ResultObjectVO();
     }
-
-
-
 
 
     /**
      * 根据ID查询
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO findById(RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO findById(RequestJsonVO requestJsonVO) {
         try {
-            ColorTableVO entityVO = JSONObject.parseObject(requestVo.getEntityJson(),ColorTableVO.class);
-            if(entityVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+            Check.notNull(entityVO.getId(), ResultObjectVO.FAILD, MSG_ID_NOT_FOUND);
 
-            //查询是否存在该对象
-            ColorTableVO query=new ColorTableVO();
+            ColorTableVO query = new ColorTableVO();
             query.setId(entityVO.getId());
             List<ColorTableVO> colorTableVOS = colorTableService.queryList(query);
-            if(CollectionUtils.isEmpty(colorTableVOS))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
-                return resultObjectVO;
-            }
-            resultObjectVO.setData(colorTableVOS);
+            Check.notEmpty(colorTableVOS, ResultObjectVO.FAILD, MSG_NOT_EXIST);
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(colorTableVOS);
+            return result;
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            return handleException(e);
         }
-        return resultObjectVO;
     }
-
 
 
     /**
      * 编辑
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO update(RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         try {
-            ColorTableVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ColorTableVO.class);
+            ColorTableVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
 
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                logger.info("名称为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(entity.getRgbColor()))
-            {
-                logger.info("颜色值为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("颜色值不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultObjectVO.FAILD, MSG_NAME_EMPTY);
+            Check.notEmpty(entity.getRgbColor(), ResultObjectVO.FAILD, MSG_COLOR_EMPTY);
+            Check.notNull(entity.getId(), ResultObjectVO.FAILD, MSG_ID_REQUIRED);
 
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入ID");
-                return resultObjectVO;
-            }
-
+            // 检查名称是否已被其他记录占用
             ColorTableVO queryColorTable = new ColorTableVO();
             queryColorTable.setName(entity.getName());
             List<ColorTableVO> colorTableVOS = colorTableService.queryList(queryColorTable);
-            if(CollectionUtils.isNotEmpty(colorTableVOS))
-            {
-                for(ColorTableVO colorTableVO:colorTableVOS)
-                {
-                    if(colorTableVO.getId()!=null&&colorTableVO.getId().intValue()!=entity.getId().intValue())
-                    {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("该名称已存在!");
-                        return resultObjectVO;
+            if (CollectionUtils.isNotEmpty(colorTableVOS)) {
+                for (ColorTableVO colorTableVO : colorTableVOS) {
+                    if (colorTableVO.getId() != null && !Objects.equals(colorTableVO.getId(), entity.getId())) {
+                        return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_NAME_EXISTS);
                     }
                 }
             }
 
-
-
             entity.setUpdateDate(new Date());
             int row = colorTableService.update(entity);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
+            Check.isTrue(row >= 1, ResultObjectVO.FAILD, MSG_RETRY);
 
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(entity);
+            return result;
 
-            resultObjectVO.setData(entity);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            return handleException(e);
         }
-        return resultObjectVO;
     }
-
 
 
     /**
      * 查询列表分页
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         try {
-            ColorTablePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTablePageInfo.class);
-            PageInfo<ColorTableVO> pageInfo =  colorTableService.queryListPage(queryPageInfo);
-            resultObjectVO.setData(pageInfo);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            ColorTablePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTablePageInfo.class);
+            PageInfo<ColorTableVO> pageInfo = colorTableService.queryListPage(queryPageInfo);
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(pageInfo);
+            return result;
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_QUERY_FAILED);
         }
-
-        return resultObjectVO;
     }
-
 
 
     /**
      * 根据名称集合查询列表
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryListByNames(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryListByNames(RequestJsonVO requestJsonVO) {
         try {
-            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTableVO.class);
-            if(CollectionUtils.isEmpty(colorTableVO.getNameList()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称集合不能为空!");
-                return resultObjectVO;
-            }
-            resultObjectVO.setData(colorTableService.queryList(colorTableVO));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+            Check.notEmpty(colorTableVO.getNameList(), ResultObjectVO.FAILD, MSG_NAMES_EMPTY);
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(colorTableService.queryList(colorTableVO));
+            return result;
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_QUERY_FAILED);
         }
-
-        return resultObjectVO;
     }
-
-
 
 
     /**
      * 查询列表
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryList(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         try {
-            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTableVO.class);
+            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
             List<ColorTableVO> entityVOS = colorTableService.queryList(entityVO);
-            resultObjectVO.setData(entityVOS);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(entityVOS);
+            return result;
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, MSG_QUERY_FAILED);
         }
-
-        return resultObjectVO;
     }
-
 
 
     /**
      * 删除指定
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO deleteById(RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         try {
-            ColorTable entity = JSONObject.parseObject(requestVo.getEntityJson(),ColorTable.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            ColorTable entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTable.class);
+            Check.notNull(entity.getId(), ResultObjectVO.FAILD, MSG_ID_NOT_FOUND);
 
-            //查询是否存在该数据
-            ColorTableVO query=new ColorTableVO();
+            ColorTableVO query = new ColorTableVO();
             query.setId(entity.getId());
-            List<ColorTableVO> adminList = colorTableService.queryList(query);
-            if(CollectionUtils.isEmpty(adminList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("颜色表不存在!");
-                return resultObjectVO;
-            }
+            List<ColorTableVO> colorTableList = colorTableService.queryList(query);
+            Check.notEmpty(colorTableList, ResultObjectVO.FAILD, MSG_COLOR_TABLE_NOT_EXIST);
 
             int row = colorTableService.deleteById(entity.getId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
+            Check.isTrue(row >= 1, ResultObjectVO.FAILD, MSG_RETRY);
 
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(entity);
+            return result;
 
-
-            resultObjectVO.setData(entity);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            return handleException(e);
         }
-        return resultObjectVO;
     }
 
 
     /**
      * 批量删除
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
         try {
-            List<ColorTable> entitys = JSONObject.parseArray(requestVo.getEntityJson(),ColorTable.class);
-            if(CollectionUtils.isEmpty(entitys))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(ColorTable entity:entitys) {
-                if(entity.getId()!=null) {
-                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(entity);
+            List<ColorTable> entities = JSONObject.parseArray(requestJsonVO.getEntityJson(), ColorTable.class);
+            Check.notEmpty(entities, ResultObjectVO.FAILD, MSG_ID_NOT_FOUND);
 
+            List<ResultObjectVO> resultList = new ArrayList<>();
+            for (ColorTable entity : entities) {
+                if (entity.getId() != null) {
                     int row = colorTableService.deleteById(entity.getId());
                     if (row < 1) {
-                        logger.warn("删除颜色表失败，id:{}",entity.getId());
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请重试!");
-                        continue;
+                        logger.warn("删除颜色表失败，id:{}", entity.getId());
                     }
-
                 }
             }
-            resultObjectVO.setData(resultObjectVOList);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+            ResultObjectVO result = new ResultObjectVO();
+            result.setData(entities);
+            return result;
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            return handleException(e);
         }
-        return resultObjectVO;
     }
-
-
 
 }

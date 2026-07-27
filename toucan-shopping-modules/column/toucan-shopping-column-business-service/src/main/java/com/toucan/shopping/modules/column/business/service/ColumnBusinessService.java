@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.column.business.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.column.entity.Column;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.ColumnService;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,335 +42,174 @@ public class ColumnBusinessService {
     @Autowired
     private IdGenerator idGenerator;
 
+    // ==================== 公有业务方法 ====================
+
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
             logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
         }
         if (requestJsonVO.getAppCode() == null) {
             logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到对象!");
         }
         try {
             ColumnPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnPageInfo.class);
             PageInfo<ColumnVO> pageInfo = columnService.queryListPage(queryPageInfo);
-            resultObjectVO.setData(pageInfo);
+            return ResultObjectVO.ok(pageInfo);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            return ResultObjectVO.fail(ResultVO.FAILD, "查询失败!");
         }
-
-        return resultObjectVO;
     }
 
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到请求对象");
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到应用编码");
         }
         ColumnVO columnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
         if (columnVO.getId() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目ID不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "栏目ID不能为空");
         }
         if (StringUtils.isEmpty(columnVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "栏目标题不能为空");
         }
         if (StringUtils.isEmpty(columnVO.getColumnTypeCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目类型编码不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "栏目类型编码不能为空");
         }
         if (StringUtils.isEmpty(columnVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "所属应用不能为空");
         }
-        if (columnVO.getPid().equals(columnVO.getId())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("上级节点不能为自己");
-            return resultObjectVO;
+        if (columnVO.getPid() != null && Objects.equals(columnVO.getPid(), columnVO.getId())) {
+            return ResultObjectVO.fail(ResultVO.FAILD, "上级节点不能为自己");
         }
-        String lockKey = columnVO.getAppCode() + "_" + columnVO.getColumnTypeCode();
+        String lockKey = buildLockKey(columnVO);
         try {
-            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+            if (!skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey)) {
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
-
-            ColumnVO query = new ColumnVO();
-            query.setCode(columnVO.getCode());
-            query.setColumnTypeCode(columnVO.getColumnTypeCode());
-            query.setAppCode(columnVO.getAppCode());
-            List<ColumnVO> columnVOS = columnService.queryList(query);
-            if (!CollectionUtils.isEmpty(columnVOS)) {
-                for (ColumnVO cvo : columnVOS) {
-                    if (!cvo.getId().equals(columnVO.getId())) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("该编码已存在");
-                        return resultObjectVO;
-                    }
-                }
+            ResultObjectVO duplicateCheck = checkCodeExists(columnVO, columnVO.getId());
+            if (duplicateCheck != null) {
+                return duplicateCheck;
             }
-
             int ret = columnService.update(columnVO);
             if (ret <= 0) {
                 logger.warn("修改栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), columnVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
-            resultObjectVO.setData(columnVO);
-
+            return ResultObjectVO.ok(columnVO);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         } finally {
             skylarkLock.unLock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
         }
-        return resultObjectVO;
     }
 
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到请求对象");
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到应用编码");
         }
         ColumnVO columnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
         if (StringUtils.isEmpty(columnVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "栏目标题不能为空");
         }
         if (StringUtils.isEmpty(columnVO.getColumnTypeCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目类型编码不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "栏目类型编码不能为空");
         }
         if (StringUtils.isEmpty(columnVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "所属应用不能为空");
         }
-        String lockKey = columnVO.getAppCode() + "_" + columnVO.getColumnTypeCode();
+        String lockKey = buildLockKey(columnVO);
         try {
-            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+            if (!skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey)) {
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
-
-            ColumnVO query = new ColumnVO();
-            query.setCode(columnVO.getCode());
-            query.setColumnTypeCode(columnVO.getColumnTypeCode());
-            query.setAppCode(columnVO.getAppCode());
-            List<ColumnVO> columnVOS = columnService.queryList(query);
-            if (!CollectionUtils.isEmpty(columnVOS)) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("该编码已存在");
-                return resultObjectVO;
+            ResultObjectVO duplicateCheck = checkCodeExists(columnVO, null);
+            if (duplicateCheck != null) {
+                return duplicateCheck;
             }
-
             columnVO.setId(idGenerator.id());
             columnVO.setDeleteStatus((short) 0);
             columnVO.setCreateDate(new Date());
             int ret = columnService.save(columnVO);
             if (ret <= 0) {
                 logger.warn("保存栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), columnVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
-            resultObjectVO.setData(columnVO);
-
+            return ResultObjectVO.ok(columnVO);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         } finally {
             skylarkLock.unLock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
         }
-        return resultObjectVO;
     }
 
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到实体对象");
         }
-
         try {
-
             ColumnPageInfo queryPageInfo = requestJsonVO.formatEntity(ColumnPageInfo.class);
+            boolean queryCriteria = StringUtils.isNotEmpty(queryPageInfo.getTitle())
+                    || StringUtils.isNotEmpty(queryPageInfo.getAppCode());
 
-            List<ColumnVO> columnVoList = new ArrayList<ColumnVO>();
-            boolean queryCriteria = false;
-            //按指定条件查询
-            if (StringUtils.isNotEmpty(queryPageInfo.getTitle())
-                    || StringUtils.isNotEmpty(queryPageInfo.getAppCode())) {
-                queryCriteria = true;
-                ColumnVO queryColumnVO = new ColumnVO();
-                BeanUtils.copyProperties(queryColumnVO, queryPageInfo);
-                queryColumnVO.setPid(null);
-                List<ColumnVO> columnVOS = columnService.queryList(queryColumnVO);
-                for (int i = 0; i < columnVOS.size(); i++) {
-                    columnVoList.add(columnVOS.get(i));
-                }
-            } else {
-                //查询当前节点下的所有子节点
-                ColumnVO queryColumn = new ColumnVO();
-                if (queryPageInfo.getPid() != null) {
-                    queryColumn.setPid(queryPageInfo.getPid());
-                } else {
-                    queryColumn.setPid(-1L);
-                }
-                //设置分类
-                queryColumn.setTitle(queryPageInfo.getTitle());
-                queryColumn.setColumnTypeCode(queryPageInfo.getColumnTypeCode());
-                List<ColumnVO> columnVOS = columnService.queryList(queryColumn);
-                for (int i = 0; i < columnVOS.size(); i++) {
-                    ColumnVO columnVO = columnVOS.get(i);
-
-                    queryColumn = new ColumnVO();
-                    queryColumn.setPid(columnVO.getId());
-                    Long childCount = columnService.queryListCount(queryColumn);
-                    if (childCount > 0) {
-                        columnVO.setHaveChild(true);
-                    }
-                    columnVoList.add(columnVO);
-                }
-            }
-
-
-            //先查询出属性路径相关
-            if (!CollectionUtils.isEmpty(columnVoList)) {
-                List<Long> parentIdList = new LinkedList<>();
-                boolean parentIdExists = false;
-
-                for (ColumnVO columnVO : columnVoList) {
-                    //设置上级节点ID
-                    parentIdExists = false;
-                    for (Long parentId : parentIdList) {
-                        if (columnVO.getPid() != null && parentId != null
-                                && parentId.longValue() == columnVO.getPid().longValue()) {
-                            parentIdExists = true;
-                            break;
-                        }
-                    }
-                    if (!parentIdExists && columnVO.getPid() != null && columnVO.getPid().longValue() != -1) {
-                        parentIdList.add(columnVO.getPid());
-                    }
-                }
-                for (ColumnVO columnVO : columnVoList) {
-                    if (columnVO.getPid() != null && columnVO.getPid().longValue() == -1) {
-                        columnVO.setParentTitle("根节点");
-                    }
-                }
-                if (!CollectionUtils.isEmpty(parentIdList)) {
-                    ColumnVO queryParentColumnVO = new ColumnVO();
-                    queryParentColumnVO.setIdList(parentIdList);
-                    List<ColumnVO> parentList = columnService.queryList(queryParentColumnVO);
-                    if (!CollectionUtils.isEmpty(parentList)) {
-                        for (ColumnVO columnVO : columnVoList) {
-                            if (columnVO.getPid() != null
-                                    && columnVO.getPid().longValue() != -1) {
-                                for (ColumnVO parent : parentList) {
-                                    if (columnVO.getPid() != null
-                                            && columnVO.getPid().longValue() == parent.getId().longValue()) {
-                                        columnVO.setParentTitle(parent.getTitle());
-                                        break;
-                                    }
-                                }
-                            } else {
-                                columnVO.setParentTitle("根节点");
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            //如果做了条件查询 就将查询的这些节点设置为顶级节点
+            List<ColumnVO> columnVoList;
             if (queryCriteria) {
-                if (!CollectionUtils.isEmpty(columnVoList)) {
-                    for (ColumnVO dictVO : columnVoList) {
-                        dictVO.setPid(-1L);
-                    }
-                }
+                columnVoList = queryColumnsByCriteria(queryPageInfo);
+            } else {
+                columnVoList = queryColumnsByParentId(queryPageInfo);
             }
 
-            resultObjectVO.setData(columnVoList);
+            resolveParentTitles(columnVoList);
 
+            // 条件查询时，将查询到的节点设置为顶级节点
+            if (queryCriteria && !CollectionUtils.isEmpty(columnVoList)) {
+                columnVoList.forEach(vo -> vo.setPid(-1L));
+            }
+
+            return ResultObjectVO.ok(columnVoList);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
-        return resultObjectVO;
     }
 
     public ResultObjectVO queryColumnTreeByPid(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             ColumnTreeVO query = requestJsonVO.formatEntity(ColumnTreeVO.class);
-            List<ColumnVO> columnVOS = columnService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(), query.getAppCode(), query.getColumnTypeCode());
+            List<ColumnVO> columnVOS = columnService.queryOneLevelChildrenByIdAndAppCode(
+                    query.getParentId(), query.getAppCode(), query.getColumnTypeCode());
             List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
             for (ColumnVO columnVO : columnVOS) {
                 ColumnTreeVO columnTreeVO = new ColumnTreeVO();
                 BeanUtils.copyProperties(columnTreeVO, columnVO);
-                Long childrenCount = columnService.queryOneLevelChildrenCountByIdAndAppCode(columnVO.getId(), columnVO.getAppCode(), query.getColumnTypeCode());
-                if (childrenCount != null && childrenCount.longValue() > 0) {
-                    columnTreeVO.setIsParent(true);
-                } else {
-                    columnTreeVO.setIsParent(false);
-                }
+                Long childrenCount = columnService.queryOneLevelChildrenCountByIdAndAppCode(
+                        columnVO.getId(), columnVO.getAppCode(), query.getColumnTypeCode());
+                columnTreeVO.setIsParent(childrenCount != null && childrenCount > 0);
                 columnTreeVOS.add(columnTreeVO);
             }
-            resultObjectVO.setData(columnTreeVOS);
+            return ResultObjectVO.ok(columnTreeVOS);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
-        return resultObjectVO;
     }
 
     public ResultTypeObjectVO<ColumnVO> findById(RequestJsonVO requestVo) {
-        ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
+        ResultTypeObjectVO<ColumnVO> resultObjectVO = new ResultTypeObjectVO<>();
         if (requestVo == null || requestVo.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
-
         try {
             ColumnVO columnVO = requestVo.formatEntity(ColumnVO.class);
             if (columnVO.getId() == null) {
@@ -378,21 +217,13 @@ public class ColumnBusinessService {
                 resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
-
             columnVO = columnService.findById(columnVO.getId());
             if (columnVO != null) {
-                ColumnVO parentColumn = columnService.findById(columnVO.getPid());
-                if (parentColumn != null) {
-                    columnVO.setParentTitle(parentColumn.getTitle());
-                } else {
-                    columnVO.setParentTitle("根节点");
-                }
+                resolveParentTitle(columnVO);
             }
             resultObjectVO.setData(columnVO);
-
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -400,118 +231,199 @@ public class ColumnBusinessService {
     }
 
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到实体对象");
         }
-
         try {
             ColumnVO columnVO = JSONObject.parseObject(requestVo.getEntityJson(), ColumnVO.class);
             if (columnVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到栏目ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到栏目ID");
             }
-
-
-            List<ColumnVO> chidlren = new ArrayList<ColumnVO>();
-            columnService.queryChildren(chidlren, columnVO);
-            //把当前的添加进去
-            chidlren.add(columnVO);
-
-            List<Long> dictIdList = chidlren.stream().map(ColumnVO::getId).collect(Collectors.toList());
-            columnService.deleteByIdList(dictIdList);
-
-
-            resultObjectVO.setData(columnVO);
-
+            List<ColumnVO> children = new ArrayList<>();
+            columnService.queryChildren(children, columnVO);
+            children.add(columnVO);
+            List<Long> columnIdList = children.stream().map(ColumnVO::getId).collect(Collectors.toList());
+            columnService.deleteByIdList(columnIdList);
+            return ResultObjectVO.ok(columnVO);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
-        return resultObjectVO;
     }
 
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到实体对象");
         }
-
         try {
             List<ColumnVO> columnVOS = JSONObject.parseArray(requestVo.getEntityJson(), ColumnVO.class);
             if (CollectionUtils.isEmpty(columnVOS)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到栏目ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到栏目ID");
             }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            List<ResultObjectVO> resultList = new ArrayList<>();
             for (ColumnVO columnVO : columnVOS) {
                 if (columnVO.getId() != null) {
-                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(columnVO);
-
-
-                    List<ColumnVO> chidlren = new ArrayList<ColumnVO>();
-                    columnService.queryChildren(chidlren, columnVO);
-                    //把当前的添加进去
-                    chidlren.add(columnVO);
-
-                    List<Long> dictIdList = chidlren.stream().map(ColumnVO::getId).collect(Collectors.toList());
-                    columnService.deleteByIdList(dictIdList);
+                    List<ColumnVO> children = new ArrayList<>();
+                    columnService.queryChildren(children, columnVO);
+                    children.add(columnVO);
+                    List<Long> columnIdList = children.stream().map(ColumnVO::getId).collect(Collectors.toList());
+                    columnService.deleteByIdList(columnIdList);
+                    resultList.add(ResultObjectVO.ok(columnVO));
                 }
             }
-            resultObjectVO.setData(resultObjectVOList);
-
+            return ResultObjectVO.ok(resultList);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
-        return resultObjectVO;
     }
 
     public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到实体对象");
         }
         try {
             ColumnVO queryColumn = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
-            List<ColumnVO> columnVOS = columnService.queryListByPidAndAppCode(queryColumn.getPid(), queryColumn.getAppCode());
+            List<ColumnVO> columnVOS = columnService.queryListByPidAndAppCode(
+                    queryColumn.getPid(), queryColumn.getAppCode());
             List<ColumnTreeVO> columnTreeVOS = new LinkedList<>();
             if (!CollectionUtils.isEmpty(columnVOS)) {
                 for (ColumnVO columnVO : columnVOS) {
                     ColumnTreeVO columnTreeVO = new ColumnTreeVO();
                     BeanUtils.copyProperties(columnTreeVO, columnVO);
-                    Long categoryChildCount = columnService.findCountByParentId(columnTreeVO.getId());
-                    if (categoryChildCount != null && categoryChildCount.longValue() > 0) {
-                        columnTreeVO.setIsParent(true);
-                    } else {
-                        columnTreeVO.setIsParent(false);
-                    }
+                    Long childCount = columnService.findCountByParentId(columnTreeVO.getId());
+                    columnTreeVO.setIsParent(childCount != null && childCount > 0);
                     columnTreeVOS.add(columnTreeVO);
                 }
-
             }
-            resultObjectVO.setData(columnTreeVOS);
-
+            return ResultObjectVO.ok(columnTreeVOS);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
-        return resultObjectVO;
+    }
+
+    // ==================== 私有辅助方法 ====================
+
+    /**
+     * 构建分布式锁的 key
+     */
+    private String buildLockKey(ColumnVO columnVO) {
+        return columnVO.getAppCode() + "_" + columnVO.getColumnTypeCode();
+    }
+
+    /**
+     * 检查编码是否已存在。excludeId 为当前记录ID（更新场景排除自身），为 null 表示新增场景。
+     *
+     * @return 如果编码重复则返回错误 ResultObjectVO，否则返回 null
+     */
+    private ResultObjectVO checkCodeExists(ColumnVO columnVO, Long excludeId) {
+        ColumnVO query = new ColumnVO();
+        query.setCode(columnVO.getCode());
+        query.setColumnTypeCode(columnVO.getColumnTypeCode());
+        query.setAppCode(columnVO.getAppCode());
+        List<ColumnVO> existingList = columnService.queryList(query);
+        if (CollectionUtils.isEmpty(existingList)) {
+            return null;
+        }
+        for (ColumnVO existing : existingList) {
+            if (!Objects.equals(existing.getId(), excludeId)) {
+                return ResultObjectVO.fail(ResultVO.FAILD, "该编码已存在");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 为栏目列表中的每个栏目解析其父级标题
+     */
+    private void resolveParentTitles(List<ColumnVO> columnVoList) {
+        if (CollectionUtils.isEmpty(columnVoList)) {
+            return;
+        }
+
+        // 收集所有需要查询的父节点ID（去重）
+        List<Long> parentIdList = columnVoList.stream()
+                .map(ColumnVO::getPid)
+                .filter(pid -> pid != null && pid != -1)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 设置根节点
+        columnVoList.stream()
+                .filter(vo -> vo.getPid() != null && vo.getPid() == -1)
+                .forEach(vo -> vo.setParentTitle("根节点"));
+
+        // 批量查询父节点并设置标题
+        if (!CollectionUtils.isEmpty(parentIdList)) {
+            ColumnVO queryParent = new ColumnVO();
+            queryParent.setIdList(parentIdList);
+            List<ColumnVO> parentList = columnService.queryList(queryParent);
+            if (!CollectionUtils.isEmpty(parentList)) {
+                for (ColumnVO columnVO : columnVoList) {
+                    if (columnVO.getPid() != null && columnVO.getPid() != -1) {
+                        for (ColumnVO parent : parentList) {
+                            if (Objects.equals(columnVO.getPid(), parent.getId())) {
+                                columnVO.setParentTitle(parent.getTitle());
+                                break;
+                            }
+                        }
+                    } else if (columnVO.getPid() != null && columnVO.getPid() == -1) {
+                        columnVO.setParentTitle("根节点");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 为单个栏目解析其父级标题
+     */
+    private void resolveParentTitle(ColumnVO columnVO) {
+        if (columnVO.getPid() != null) {
+            ColumnVO parentColumn = columnService.findById(columnVO.getPid());
+            if (parentColumn != null) {
+                columnVO.setParentTitle(parentColumn.getTitle());
+            } else {
+                columnVO.setParentTitle("根节点");
+            }
+        }
+    }
+
+    /**
+     * 按指定条件（标题、应用编码）查询栏目
+     */
+    private List<ColumnVO> queryColumnsByCriteria(ColumnPageInfo queryPageInfo) {
+        ColumnVO queryColumnVO = new ColumnVO();
+        try {
+            BeanUtils.copyProperties(queryColumnVO, queryPageInfo);
+        } catch (Exception e) {
+            logger.warn("BeanUtils.copyProperties error", e);
+        }
+        queryColumnVO.setPid(null);
+        return new ArrayList<>(columnService.queryList(queryColumnVO));
+    }
+
+    /**
+     * 按父节点ID查询子栏目
+     */
+    private List<ColumnVO> queryColumnsByParentId(ColumnPageInfo queryPageInfo) {
+        ColumnVO queryColumn = new ColumnVO();
+        queryColumn.setPid(queryPageInfo.getPid() != null ? queryPageInfo.getPid() : -1L);
+        queryColumn.setTitle(queryPageInfo.getTitle());
+        queryColumn.setColumnTypeCode(queryPageInfo.getColumnTypeCode());
+        List<ColumnVO> columnVOS = columnService.queryList(queryColumn);
+        List<ColumnVO> result = new ArrayList<>(columnVOS.size());
+        for (ColumnVO columnVO : columnVOS) {
+            ColumnVO childQuery = new ColumnVO();
+            childQuery.setPid(columnVO.getId());
+            Long childCount = columnService.queryListCount(childQuery);
+            if (childCount > 0) {
+                columnVO.setHaveChild(true);
+            }
+            result.add(columnVO);
+        }
+        return result;
     }
 
 }

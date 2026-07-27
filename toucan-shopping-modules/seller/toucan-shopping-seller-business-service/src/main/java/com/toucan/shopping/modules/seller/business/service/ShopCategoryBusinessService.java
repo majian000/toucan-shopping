@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.seller.business.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -57,16 +60,10 @@ public class ShopCategoryBusinessService {
     /**
      * 保存分类
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         String userMainId = String.valueOf(shopCategory.getUserMainId());
@@ -79,29 +76,8 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
-
-            if(StringUtils.isEmpty(shopCategory.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类名称不能为空!");
-
-
-                return resultObjectVO;
-            }
-            if(shopCategory.getUserMainId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(shopCategory.getName(), ResultVO.FAILD, "分类名称不能为空!");
+            Check.notNull(shopCategory.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -109,29 +85,8 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getParentId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
-                logger.warn("上级ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级ID不能为空!");
-                return resultObjectVO;
-
-            }
-
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -150,9 +105,6 @@ public class ShopCategoryBusinessService {
                 int categoryMaxCount = entity.getCategoryMaxCount()!=null?entity.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();
                 if(count+1>categoryMaxCount)
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("分类数量已达到上限");
                     return resultObjectVO;
@@ -169,9 +121,6 @@ public class ShopCategoryBusinessService {
                 List<ShopCategory> shopCategories = shopCategoryService.queryList(queryParentShopCategory);
                 if(CollectionUtils.isEmpty(shopCategories))
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("上级分类不存在");
                     return resultObjectVO;
@@ -180,9 +129,6 @@ public class ShopCategoryBusinessService {
                 ShopCategory parentShopCategory = shopCategories.get(0);
                 if(parentShopCategory.getParentId()!=-1)
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("只能添加二级分类");
                     return resultObjectVO;
@@ -205,6 +151,10 @@ public class ShopCategoryBusinessService {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -220,25 +170,17 @@ public class ShopCategoryBusinessService {
     /**
      * 保存分类(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
         if(shopCategory.getShopId()==null)
         {
             logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("店铺ID不能为空!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "店铺ID不能为空!");
         }
         String shopId = String.valueOf(shopCategory.getShopId());
         try {
@@ -250,18 +192,7 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
-
-            if(StringUtils.isEmpty(shopCategory.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
-                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类名称不能为空!");
-
-                return resultObjectVO;
-            }
+            Check.notEmpty(shopCategory.getName(), ResultVO.FAILD, "分类名称不能为空!");
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setId(shopCategory.getShopId());
@@ -271,30 +202,8 @@ public class ShopCategoryBusinessService {
                 shopCategory.setUserMainId(sellerShops.get(0).getUserMainId());
             }
 
-            if(shopCategory.getUserMainId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(shopCategory.getParentId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
-                logger.warn("上级ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级ID不能为空!");
-                return resultObjectVO;
-
-            }
-
+            Check.notNull(shopCategory.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -313,9 +222,6 @@ public class ShopCategoryBusinessService {
                 int categoryMaxCount = sellerShop.getCategoryMaxCount()!=null?sellerShop.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();
                 if(count+1>categoryMaxCount)
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("分类数量已达到上限");
                     return resultObjectVO;
@@ -332,9 +238,6 @@ public class ShopCategoryBusinessService {
                 List<ShopCategory> shopCategories = shopCategoryService.queryList(queryParentShopCategory);
                 if(CollectionUtils.isEmpty(shopCategories))
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("上级分类不存在");
                     return resultObjectVO;
@@ -343,9 +246,6 @@ public class ShopCategoryBusinessService {
                 ShopCategory parentShopCategory = shopCategories.get(0);
                 if(parentShopCategory.getParentId()!=-1)
                 {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
-
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("只能添加二级分类");
                     return resultObjectVO;
@@ -368,6 +268,10 @@ public class ShopCategoryBusinessService {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -383,16 +287,10 @@ public class ShopCategoryBusinessService {
     /**
      * 更新分类
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         String userMainId = String.valueOf(shopCategory.getUserMainId());
@@ -405,29 +303,8 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
-
-            if(StringUtils.isEmpty(shopCategory.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
-
-                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类名称不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(shopCategory.getId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
-
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(shopCategory.getName(), ResultVO.FAILD, "分类名称不能为空!");
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             shopCategory.setUpdateDate(new Date());
             int row = shopCategoryService.updateName(shopCategory);
@@ -438,6 +315,10 @@ public class ShopCategoryBusinessService {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -455,16 +336,10 @@ public class ShopCategoryBusinessService {
     /**
      * 更新分类(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         String shopCategoryId = String.valueOf(shopCategory.getId());
@@ -477,29 +352,8 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
-
-            if(StringUtils.isEmpty(shopCategory.getName()))
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
-
-                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类名称不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(shopCategory.getId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
-
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(shopCategory.getName(), ResultVO.FAILD, "分类名称不能为空!");
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setId(shopCategory.getShopId());
@@ -509,16 +363,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setUserMainId(sellerShops.get(0).getUserMainId());
             }
 
-            if(shopCategory.getUserMainId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopCategoryId), shopCategoryId);
-
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             shopCategory.setUpdateDate(new Date());
             int row = shopCategoryService.updateName(shopCategory);
@@ -529,6 +374,10 @@ public class ShopCategoryBusinessService {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -547,27 +396,15 @@ public class ShopCategoryBusinessService {
     /**
      * 置顶
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveTop(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -575,13 +412,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -612,6 +443,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -627,44 +462,17 @@ public class ShopCategoryBusinessService {
     /**
      * 置顶(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveTopForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(shopCategory.getParentId()==null)
-            {
-                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级分类ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -695,6 +503,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -708,27 +520,15 @@ public class ShopCategoryBusinessService {
     /**
      * 置底
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveBottom(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -736,13 +536,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -773,6 +567,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -788,43 +586,17 @@ public class ShopCategoryBusinessService {
     /**
      * 置底(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveBottomForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getParentId()==null)
-            {
-                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级分类ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -855,6 +627,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -869,27 +645,15 @@ public class ShopCategoryBusinessService {
     /**
      * 向上
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveUp(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -897,13 +661,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -949,6 +707,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -965,42 +727,17 @@ public class ShopCategoryBusinessService {
     /**
      * 向上(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveUpForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
-            if(shopCategory.getParentId()==null)
-            {
-                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级分类ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -1046,6 +783,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1060,27 +801,15 @@ public class ShopCategoryBusinessService {
     /**
      * 向下
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveDown(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -1088,13 +817,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -1140,6 +863,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1156,43 +883,17 @@ public class ShopCategoryBusinessService {
     /**
      * 向下(后台管理端)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO moveDownForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("移动失败,请稍后重试!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
         try {
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getParentId()==null)
-            {
-                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级分类ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "分类ID不能为空!");
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
+            Check.notNull(shopCategory.getParentId(), ResultVO.FAILD, "上级分类ID不能为空!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
@@ -1238,6 +939,10 @@ public class ShopCategoryBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1251,34 +956,15 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
         try {
             ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(shopCategory.getUserMainId()==null)
-            {
-                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getId(), ResultVO.FAILD, "ID不能为空!");
+            Check.notNull(shopCategory.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
             if(sellerShop!=null)
@@ -1286,14 +972,12 @@ public class ShopCategoryBusinessService {
                 shopCategory.setShopId(sellerShop.getId());
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有查询到关联店铺!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "没有查询到关联店铺!");
             resultObjectVO.setData(shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId()));
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1308,16 +992,10 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
         try {
             List<ShopCategory> shopCategorys = JSONArray.parseArray(requestJsonVO.getEntityJson(),ShopCategory.class);
             if(!CollectionUtils.isEmpty(shopCategorys)) {
@@ -1330,6 +1008,10 @@ public class ShopCategoryBusinessService {
                 }
                 resultObjectVO.setData(ShopCategoryList);
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1345,22 +1027,12 @@ public class ShopCategoryBusinessService {
     /**
      * 批量刷新缓存
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO flushCache(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
         try {
             ShopCategoryVO shopCategoryVO = requestVo.formatEntity(ShopCategoryVO.class);
-            if(shopCategoryVO.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("刷新失败,店铺ID不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategoryVO.getShopId(), ResultVO.FAILD, "刷新失败,店铺ID不能为空");
             ShopCategoryVO query = new ShopCategoryVO();
             List<ShopCategory> shopCategoryList = shopCategoryService.queryPcIndexList(query);
             if(!CollectionUtils.isEmpty(shopCategoryList)) {
@@ -1413,6 +1085,10 @@ public class ShopCategoryBusinessService {
                 }
                 toucanStringRedisService.set(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()),JSONArray.toJSONString(shopCategoryTreeVOS));
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1427,17 +1103,17 @@ public class ShopCategoryBusinessService {
     /**
      * 清空缓存
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO clearCache(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             ShopCategoryVO shopCategoryVO = requestVo.formatEntity(ShopCategoryVO.class);
-            if(shopCategoryVO.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("清空失败,店铺ID不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategoryVO.getShopId(), ResultVO.FAILD, "清空失败,店铺ID不能为空");
             toucanStringRedisService.delete(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()));
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1453,23 +1129,13 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该数据
             ShopCategoryVO query=new ShopCategoryVO();
@@ -1483,6 +1149,10 @@ public class ShopCategoryBusinessService {
             }
             resultObjectVO.setData(shopCategories);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1499,24 +1169,14 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID查询返回分类ID路径
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findIdPathById(RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该分类
             ShopCategoryVO query=new ShopCategoryVO();
@@ -1539,6 +1199,10 @@ public class ShopCategoryBusinessService {
 
             resultObjectVO.setData(shopCategoryVO);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1553,23 +1217,13 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID数组查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdArray(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
-            if(entity.getIdArray()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID数组");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getIdArray(), ResultVO.FAILD, "没有找到ID数组");
 
             //查询是否存在该功能项
             ShopCategoryVO query=new ShopCategoryVO();
@@ -1602,6 +1256,10 @@ public class ShopCategoryBusinessService {
             resultObjectVO.setData(shopCategoryVOS);
 
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1616,6 +1274,7 @@ public class ShopCategoryBusinessService {
     /**
      * 查询树
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1654,6 +1313,10 @@ public class ShopCategoryBusinessService {
 
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1668,6 +1331,7 @@ public class ShopCategoryBusinessService {
     /**
      * 查询PC端首页分类树
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryWebIndexTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1692,6 +1356,10 @@ public class ShopCategoryBusinessService {
                 resultObjectVO.setData(ShopCategoryTreeVOS);
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1706,24 +1374,14 @@ public class ShopCategoryBusinessService {
     /**
      * 查询树表格
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ShopCategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryTreeInfo.class);
 
-            if(queryPageInfo.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到店铺ID");
-                return resultObjectVO;
-            }
+            Check.notNull(queryPageInfo.getShopId(), ResultVO.FAILD, "没有找到店铺ID");
             //查询所有结构树
             List<ShopCategoryVO>  ShopCategoryVOS = shopCategoryService.findTreeTable(queryPageInfo);
 
@@ -1748,6 +1406,10 @@ public class ShopCategoryBusinessService {
 
             resultObjectVO.setData(ShopCategoryVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1763,18 +1425,17 @@ public class ShopCategoryBusinessService {
     /**
      * 查询指定节点下所有子节点
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
         try {
             ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
             resultObjectVO.setData(shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory));
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1789,37 +1450,20 @@ public class ShopCategoryBusinessService {
     /**
      * 查询全部类别
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAllList(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
         try {
             ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
 
-            if(queryShopCategory.getUserMainId()==null)
-            {
-                logger.warn("用户ID为空 param:{}", requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(queryShopCategory.getUserMainId(), ResultVO.FAILD, "店铺ID不能为空!");
             SellerShop sellerShop = sellerShopService.findByUserMainId(queryShopCategory.getUserMainId());
             if(sellerShop!=null)
             {
                 queryShopCategory.setShopId(sellerShop.getId());
             }
 
-            if(queryShopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:{}",JSONObject.toJSONString(queryShopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(queryShopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             List<ShopCategory> shopCategorys = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
             List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
             for(ShopCategory shopCategory:shopCategorys)
@@ -1845,6 +1489,10 @@ public class ShopCategoryBusinessService {
             }
             resultObjectVO.setData(shopCategoryVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1860,24 +1508,13 @@ public class ShopCategoryBusinessService {
     /**
      * 根据店铺ID查询所有分类
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByShopId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
         try {
             ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
 
-            if(queryShopCategory.getShopId()==null)
-            {
-                logger.warn("店铺ID为空 param:{}",JSONObject.toJSONString(queryShopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(queryShopCategory.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             List<ShopCategory> shopCategorys = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
             List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
             for(ShopCategory shopCategory:shopCategorys)
@@ -1890,6 +1527,10 @@ public class ShopCategoryBusinessService {
             }
             resultObjectVO.setData(shopCategoryVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1903,14 +1544,9 @@ public class ShopCategoryBusinessService {
     /**
      * 查询树表格
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ShopCategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryTreeInfo.class);
@@ -1962,6 +1598,10 @@ public class ShopCategoryBusinessService {
 
             resultObjectVO.setData(ShopCategoryTreeVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1977,41 +1617,24 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
         if(shopCategory.getId()==null)
         {
             logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "ID不能为空!");
         }
 
 
         if(shopCategory.getUserMainId()==null)
         {
             logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "用户ID不能为空!");
         }
 
         String userMainId = String.valueOf(shopCategory.getUserMainId());
@@ -2034,16 +1657,7 @@ public class ShopCategoryBusinessService {
                 shopCategory.setUserMainId(null);
             }
 
-            if(shopCategory.getShopId()==null)
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
-
-                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有查询到关联店铺!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopCategory.getShopId(), ResultVO.FAILD, "没有查询到关联店铺!");
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setParentId(shopCategory.getId());
@@ -2052,9 +1666,6 @@ public class ShopCategoryBusinessService {
             List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
             if(!CollectionUtils.isEmpty(shopCategoryList))
             {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
-
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请先删除所有子分类!");
                 return resultObjectVO;
@@ -2070,6 +1681,10 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -2086,41 +1701,24 @@ public class ShopCategoryBusinessService {
     /**
      * 根据ID删除(后台管理)
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIdForAdmin(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
         if(shopCategory.getId()==null)
         {
             logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "ID不能为空!");
         }
 
 
         if(shopCategory.getShopId()==null)
         {
             logger.warn("店铺ID为空 param:"+ requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("店铺ID不能为空!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "店铺ID不能为空!");
         }
 
         String shopId = String.valueOf(shopCategory.getShopId());
@@ -2168,6 +1766,10 @@ public class ShopCategoryBusinessService {
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -2184,14 +1786,9 @@ public class ShopCategoryBusinessService {
     /**
      * 批量删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<ShopCategory> ShopCategorys = JSONObject.parseArray(requestVo.getEntityJson(),ShopCategory.class);
@@ -2230,6 +1827,10 @@ public class ShopCategoryBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

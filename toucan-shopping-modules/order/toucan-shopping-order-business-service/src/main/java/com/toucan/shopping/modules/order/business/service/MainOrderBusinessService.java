@@ -21,7 +21,9 @@ import com.toucan.shopping.modules.order.vo.CreateOrderVO;
 import com.toucan.shopping.modules.order.vo.MainOrderVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import org.apache.commons.lang3.StringUtils;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,7 @@ public class MainOrderBusinessService {
     /**
      * 测试分片
      */
+    @RequestCheck
     public ResultObjectVO testSharding(RequestJsonVO requestJsonVO) throws Exception {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         for(int i=2021;i<=2023;i++) {
@@ -91,46 +94,27 @@ public class MainOrderBusinessService {
     /**
      * 创建订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO create(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("订单创建失败");
-            return resultObjectVO;
-        }
         logger.info("创建订单 {} ",requestJsonVO.getEntityJson());
         CreateOrderVO createOrder = JSON.parseObject(requestJsonVO.getEntityJson(), CreateOrderVO.class);
         try {
-            if(createOrder.getMainOrder()==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("主订单不能为空");
-                return resultObjectVO;
-            }
-            if(CollectionUtils.isEmpty(createOrder.getMainOrder().getOrders()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("子订单不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(createOrder.getMainOrder(), ResultObjectVO.FAILD, "主订单不能为空");
+            Check.notEmpty(createOrder.getMainOrder().getOrders(), ResultObjectVO.FAILD, "子订单不能为空");
             for(OrderVO orderVO:createOrder.getMainOrder().getOrders())
             {
-                if(CollectionUtils.isEmpty(orderVO.getBuyCarItems()))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("子订单项不能为空");
-                    return resultObjectVO;
-                }
+                Check.notEmpty(orderVO.getBuyCarItems(), ResultObjectVO.FAILD, "子订单项不能为空");
             }
             mainOrderService.createOrder(createOrder);
             resultObjectVO.setCode(ResultObjectVO.SUCCESS);
             resultObjectVO.setMsg("订单创建完成");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("订单创建失败");
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "订单创建失败");
         }
         return resultObjectVO;
     }
@@ -138,52 +122,41 @@ public class MainOrderBusinessService {
     /**
      * 取消订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO cancel(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
 
+        try {
             MainOrderVO mainOrderVO = JSON.parseObject(requestJsonVO.getEntityJson(), MainOrderVO.class);
-            if(mainOrderVO.getUserId()==null)
+            Check.notNull(mainOrderVO.getUserId(), ResultObjectVO.FAILD, "没有找到用户");
+            Check.notEmpty(mainOrderVO.getOrderNo(), ResultObjectVO.FAILD, "没有找到订单编号");
+            logger.info("取消订单 params {}",requestJsonVO.getEntityJson());
+            int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
+            if(row<1)
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户");
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                resultObjectVO.setMsg("取消主订单失败");
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(mainOrderVO.getOrderNo()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("没有找到订单编号");
-                return resultObjectVO;
+
+            List<Order> orderList = orderService.findListByMainOrderNo(mainOrderVO.getOrderNo());
+
+            if(!CollectionUtils.isEmpty(orderList)) {
+                String logBatchId = GlobalUUID.uuid();
+                for(Order order:orderList) {
+                    orderLogService.save(logBatchId, mainOrderVO.getUserId(), requestJsonVO.getAppCode(), order.getOrderNo(),
+                            "手动取消订单", null,null, OrderConstant.ORDER_LOG_TYPE_CANCEL_ORDER);
+                }
             }
 
-            try {
-                logger.info("取消订单 params {}",requestJsonVO.getEntityJson());
-                int row = mainOrderService.cancelMainOrder(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
-                if(row<1)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                    resultObjectVO.setMsg("取消主订单失败");
-                    return resultObjectVO;
-                }
+            orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
 
-                List<Order> orderList = orderService.findListByMainOrderNo(mainOrderVO.getOrderNo());
-
-                if(!CollectionUtils.isEmpty(orderList)) {
-                    String logBatchId = GlobalUUID.uuid();
-                    for(Order order:orderList) {
-                        orderLogService.save(logBatchId, mainOrderVO.getUserId(), requestJsonVO.getAppCode(), order.getOrderNo(),
-                                "手动取消订单", null,null, OrderConstant.ORDER_LOG_TYPE_CANCEL_ORDER);
-                    }
-                }
-
-                orderService.cancelNoPayOrderByMainOrderNo(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),"手动取消订单");
-
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-            }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求失败");
         }
         return resultObjectVO;
     }
@@ -191,21 +164,20 @@ public class MainOrderBusinessService {
     /**
      * 查询主订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryMainOrderByOrderNoAndUserId(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
-
-            try {
-                MainOrderVO mainOrderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderVO.class);
-                resultObjectVO.setData(mainOrderService.queryOneByVO(mainOrderVO));
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-            }
+        try {
+            MainOrderVO mainOrderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderVO.class);
+            resultObjectVO.setData(mainOrderService.queryOneByVO(mainOrderVO));
+            resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+            resultObjectVO.setMsg("请求完成");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求失败");
         }
         return resultObjectVO;
     }
@@ -213,20 +185,19 @@ public class MainOrderBusinessService {
     /**
      * 查询支付超时订单页
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOrderByPayTimeOutPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
-
-            try {
-                MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
-                pageInfo.setAppCode(requestJsonVO.getAppCode());
-                resultObjectVO.setData(mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo));
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-            }
+        try {
+            MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
+            pageInfo.setAppCode(requestJsonVO.getAppCode());
+            resultObjectVO.setData(mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求失败");
         }
         return resultObjectVO;
     }
@@ -234,30 +205,29 @@ public class MainOrderBusinessService {
     /**
      * 批量取消支付超时订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO batchCancelPayTimeout(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
-
-            try {
-                MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
-                pageInfo.setAppCode(requestJsonVO.getAppCode());
-                pageInfo.setSystemDate(new Date());
-                PageInfo<MainOrderVO> pageResult =  mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo);
-                List<MainOrderVO> mainOrders = pageResult.getList();
-                String cancelRemark = "支付超时,自动取消订单";
-                if(!CollectionUtils.isEmpty(mainOrders)) {
-                    for(MainOrderVO mainOrderVO:mainOrders) {
-                        //取消订单和子订单
-                        mainOrderService.cancelMainOrderAndOrders(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),mainOrderVO.getAppCode(),cancelRemark,mainOrderVO.getShardingDate());
-                    }
+        try {
+            MainOrderPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),MainOrderPageInfo.class);
+            pageInfo.setAppCode(requestJsonVO.getAppCode());
+            pageInfo.setSystemDate(new Date());
+            PageInfo<MainOrderVO> pageResult =  mainOrderService.queryMainOrderListByPayTimeoutPage(pageInfo);
+            List<MainOrderVO> mainOrders = pageResult.getList();
+            String cancelRemark = "支付超时,自动取消订单";
+            if(!CollectionUtils.isEmpty(mainOrders)) {
+                for(MainOrderVO mainOrderVO:mainOrders) {
+                    //取消订单和子订单
+                    mainOrderService.cancelMainOrderAndOrders(mainOrderVO.getOrderNo(),mainOrderVO.getUserId(),mainOrderVO.getAppCode(),cancelRemark,mainOrderVO.getShardingDate());
                 }
-                resultObjectVO.setData(pageResult);
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
             }
+            resultObjectVO.setData(pageResult);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求失败");
         }
         return resultObjectVO;
     }

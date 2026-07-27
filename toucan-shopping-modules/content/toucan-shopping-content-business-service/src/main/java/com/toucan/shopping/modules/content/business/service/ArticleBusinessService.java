@@ -22,6 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,79 +54,40 @@ public class ArticleBusinessService {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             ArticlePageInfo queryPageInfo = requestJsonVO.formatEntity(ArticlePageInfo.class);
             PageInfo<ArticleVO> pageInfo = articleService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            return ResultObjectVO.fail(ResultVO.FAILD, "查询失败!");
         }
 
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         ArticleVO articleVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ArticleVO.class);
-        if (StringUtils.isEmpty(articleVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("标题不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(articleVO.getContent())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("内容不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(articleVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(articleVO.getTitle(), ResultObjectVO.FAILD, "标题不能为空");
+        Check.notEmpty(articleVO.getContent(), ResultObjectVO.FAILD, "内容不能为空");
+        Check.notEmpty(articleVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
         String lockKey = articleVO.getAppCode() + "_" + articleVO.getCreateAdminId();
         try {
             boolean lockStatus = skylarkLock.lock(ArticleLockKey.getSaveLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请稍后重试");
 
             ArticleVO query = new ArticleVO();
             query.setTitle(articleVO.getTitle());
             query.setColumnId(articleVO.getColumnId());
             List<ArticleVO> articles = articleService.queryList(query);
-            if (!CollectionUtils.isEmpty(articles)) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("\"" + articleVO.getTitle() + "\"文章已存在");
-                return resultObjectVO;
-            }
+            Check.isTrue(CollectionUtils.isEmpty(articles), ResultObjectVO.FAILD, "\"" + articleVO.getTitle() + "\"文章已存在");
 
             Long articleId = idGenerator.id();
             Long articleContentId = idGenerator.id();
@@ -137,12 +101,7 @@ public class ArticleBusinessService {
             articleContent.setAppCode(articleVO.getAppCode());
             articleContent.setDeleteStatus((short) 0);
             int ret = articleContentService.save(articleContent);
-            if (ret <= 0) {
-                logger.warn("保存文章内容失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(ret > 0, ResultVO.FAILD, "请稍后重试");
             if (articleVO.getArticleSort() == null) {
                 Long maxArticleSort = articleService.queryMaxSort(articleVO.getColumnId());
                 articleVO.setArticleSort(maxArticleSort + 1);
@@ -158,9 +117,7 @@ public class ArticleBusinessService {
             if (ret <= 0) {
                 articleContentService.deleteByArticleId(articleId);
                 logger.warn("保存文章失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
 
             //更新图片和文章关联
@@ -179,35 +136,23 @@ public class ArticleBusinessService {
 
             resultObjectVO.setData(articleVO);
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         } finally {
             skylarkLock.unLock(ArticleLockKey.getSaveLockKey(lockKey), lockKey);
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultTypeObjectVO<ArticleVO> findById(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         ArticleVO queryArticleVO = requestJsonVO.formatEntity(ArticleVO.class);
-        if (queryArticleVO.getId() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(queryArticleVO.getId(), ResultObjectVO.FAILD, "ID不能为空");
         try {
             ArticleVO articleVO = articleService.findById(queryArticleVO.getId());
             if (articleVO != null) {
@@ -217,14 +162,16 @@ public class ArticleBusinessService {
                 }
             }
             resultObjectVO.setData(articleVO);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return new ResultTypeObjectVO<>(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return new ResultTypeObjectVO<>(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultTypeObjectVO<Long> queryMaxSort(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
         try {
@@ -233,68 +180,36 @@ public class ArticleBusinessService {
                 maxSort = 0L;
             }
             resultObjectVO.setData(maxSort);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return new ResultTypeObjectVO<>(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return new ResultTypeObjectVO<>(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         ArticleVO articleVO = requestJsonVO.formatEntity(ArticleVO.class);
-        if (articleVO.getId() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("文章ID不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(articleVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(articleVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(articleVO.getId(), ResultObjectVO.FAILD, "文章ID不能为空");
+        Check.notEmpty(articleVO.getTitle(), ResultObjectVO.FAILD, "栏目标题不能为空");
+        Check.notEmpty(articleVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
         String lockKey = articleVO.getAppCode() + "_" + articleVO.getId();
         try {
             boolean lockStatus = skylarkLock.lock(ArticleLockKey.getUpdateLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请稍后重试");
 
             int ret = articleService.update(articleVO);
-            if (ret <= 0) {
-                logger.warn("修改文章失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-            }
+            Check.isTrue(ret > 0, ResultVO.FAILD, "请稍后重试");
 
             ArticleContent articleContent = articleContentService.findByArticleId(articleVO.getId());
             articleContent.setContent(articleVO.getContent());
 
             ret = articleContentService.update(articleContent);
-            if (ret <= 0) {
-                logger.warn("修改文章内容失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-            }
+            Check.isTrue(ret > 0, ResultVO.FAILD, "请稍后重试");
 
             //更新图片和文章关联
             List<ArticleImage> oldArticleImages = articleImageService.queryListByArticleId(articleVO.getId());
@@ -345,57 +260,31 @@ public class ArticleBusinessService {
 
             resultObjectVO.setData(articleVO);
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         } finally {
             skylarkLock.unLock(ArticleLockKey.getUpdateLockKey(lockKey), lockKey);
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         ArticleVO articleVO = requestJsonVO.formatEntity(ArticleVO.class);
-        if (articleVO.getId() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("文章ID不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(articleVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(articleVO.getId(), ResultObjectVO.FAILD, "文章ID不能为空");
+        Check.notEmpty(articleVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
         try {
 
             int ret = articleService.deleteById(articleVO.getId());
-            if (ret <= 0) {
-                logger.warn("删除文章失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(ret > 0, ResultVO.FAILD, "请稍后重试");
 
             ret = articleContentService.deleteByArticleId(articleVO.getId());
-            if (ret <= 0) {
-                logger.warn("删除文章内容失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(ret > 0, ResultVO.FAILD, "请稍后重试");
             List<ArticleImage> articleImages = articleImageService.queryListByArticleId(articleVO.getId());
             for (ArticleImage articleImage : articleImages) {
                 int articleImageRet = imageUploadService.deleteFile(articleImage.getImgPath());
@@ -408,34 +297,22 @@ public class ArticleBusinessService {
             }
             resultObjectVO.setData(articleVO);
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         try {
             List<ArticleVO> articleVOS = requestJsonVO.formatEntityList(ArticleVO.class);
-            if (CollectionUtils.isEmpty(articleVOS)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(articleVOS, ResultVO.FAILD, "没有找到ID");
 
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for (ArticleVO articleVO : articleVOS) {
@@ -478,10 +355,11 @@ public class ArticleBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

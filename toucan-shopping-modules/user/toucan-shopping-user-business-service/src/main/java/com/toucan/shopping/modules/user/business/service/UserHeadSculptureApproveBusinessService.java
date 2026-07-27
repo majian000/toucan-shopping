@@ -2,10 +2,13 @@ package com.toucan.shopping.modules.user.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.user.constant.AppCodeEnum;
 import com.toucan.shopping.modules.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -58,39 +61,17 @@ public class UserHeadSculptureApproveBusinessService {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(StringUtils.isEmpty(userHeadSculptureApprove.getHeadSculpture()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("真实姓名不能为空");
-            return resultObjectVO;
-        }
-        if(userHeadSculptureApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(userHeadSculptureApprove.getHeadSculpture(), ResultObjectVO.FAILD, "真实姓名不能为空");
+        Check.notNull(userHeadSculptureApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         String userMainId = String.valueOf(userHeadSculptureApprove.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             //查询是否存在审核中
             UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
@@ -99,9 +80,7 @@ public class UserHeadSculptureApproveBusinessService {
             List<UserHeadSculptureApprove> userHeadSculptureApproves = userHeadSculptureApproveService.findListByEntity(queryUserHeadSculptureApprove);
             if(CollectionUtils.isNotEmpty(userHeadSculptureApproves))
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("头像认证正在审核中");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "头像认证正在审核中");
             }
 
 
@@ -115,11 +94,12 @@ public class UserHeadSculptureApproveBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userHeadSculptureApprove);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
         }
@@ -127,46 +107,19 @@ public class UserHeadSculptureApproveBusinessService {
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(userHeadSculptureApprove.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("ID为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userHeadSculptureApprove.getHeadSculpture()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("真实姓名不能为空");
-            return resultObjectVO;
-        }
-        if(userHeadSculptureApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userHeadSculptureApprove.getId(), ResultObjectVO.FAILD, "ID为空");
+        Check.notEmpty(userHeadSculptureApprove.getHeadSculpture(), ResultObjectVO.FAILD, "真实姓名不能为空");
+        Check.notNull(userHeadSculptureApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
 
         String userMainId = String.valueOf(userHeadSculptureApprove.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
             userHeadSculptureApprove.setDeleteStatus((short)0);
@@ -178,11 +131,12 @@ public class UserHeadSculptureApproveBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userHeadSculptureApprove);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterHeadSculptureApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
         }
@@ -195,55 +149,34 @@ public class UserHeadSculptureApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserHeadSculptureApprovePageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserHeadSculptureApprovePageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(userHeadSculptureApproveService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByUserMainId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(userHeadSculptureApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userHeadSculptureApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setUserMainId(userHeadSculptureApprove.getUserMainId());
@@ -252,11 +185,12 @@ public class UserHeadSculptureApproveBusinessService {
             }
             List<UserHeadSculptureApprove> userHeadSculptureApproves = userHeadSculptureApproveService.findListByEntity(queryUserHeadSculptureApprove);
             resultObjectVO.setData(userHeadSculptureApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -265,21 +199,11 @@ public class UserHeadSculptureApproveBusinessService {
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAliveByUserMainId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(userHeadSculptureApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userHeadSculptureApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setUserMainId(userHeadSculptureApprove.getUserMainId());
@@ -290,31 +214,22 @@ public class UserHeadSculptureApproveBusinessService {
             if(CollectionUtils.isNotEmpty(userHeadSculptureApproves)) {
                 resultObjectVO.setData(userHeadSculptureApproves.get(0));
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(userHeadSculptureApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userHeadSculptureApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setUserMainId(userHeadSculptureApprove.getUserMainId());
@@ -323,42 +238,34 @@ public class UserHeadSculptureApproveBusinessService {
             }
             List<UserHeadSculptureApprove> userHeadSculptureApproves = userHeadSculptureApproveService.findListByEntityOrderByUpdateDateDesc(queryUserHeadSculptureApprove);
             resultObjectVO.setData(userHeadSculptureApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
-        if(userHeadSculptureApprove.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("查询失败,ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userHeadSculptureApprove.getId(), ResultObjectVO.FAILD, "查询失败,ID不能为空");
         try {
             UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setId(userHeadSculptureApprove.getId());
             List<UserHeadSculptureApprove> userHeadSculptureApproves = userHeadSculptureApproveService.findListByEntity(queryUserHeadSculptureApprove);
             resultObjectVO.setData(userHeadSculptureApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "查询失败,请稍后重试");
         }
         return resultObjectVO;
     }
@@ -369,23 +276,13 @@ public class UserHeadSculptureApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO passById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserHeadSculptureApproveVO userHeadSculptureApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserHeadSculptureApproveVO.class);
-            if(userHeadSculptureApproveVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userHeadSculptureApproveVO.getId(), ResultVO.FAILD, "操作失败,没有找到ID");
 
             UserHeadSculptureApprove queryUserHeadSculptureApprove= new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setId(userHeadSculptureApproveVO.getId());
@@ -400,9 +297,7 @@ public class UserHeadSculptureApproveBusinessService {
 
                     if (ret <= 0) {
                         logger.warn("头像审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("操作失败,请稍后重试");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
                     }
 
 
@@ -456,18 +351,17 @@ public class UserHeadSculptureApproveBusinessService {
                 }
             }
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
         }
-        return resultObjectVO;
     }
+
 
 
 
@@ -478,23 +372,13 @@ public class UserHeadSculptureApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO rejectById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserHeadSculptureApproveVO userHeadSculptureApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserHeadSculptureApproveVO.class);
-            if(userHeadSculptureApproveVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userHeadSculptureApproveVO.getId(), ResultVO.FAILD, "操作失败,没有找到ID");
 
             UserHeadSculptureApprove queryUserHeadSculptureApprove= new UserHeadSculptureApprove();
             queryUserHeadSculptureApprove.setId(userHeadSculptureApproveVO.getId());
@@ -510,9 +394,7 @@ public class UserHeadSculptureApproveBusinessService {
 
                     if (ret <= 0) {
                         logger.warn("头像审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("操作失败,请稍后重试");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
                     }
 
 
@@ -534,17 +416,15 @@ public class UserHeadSculptureApproveBusinessService {
                 }
             }
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
         }
-        return resultObjectVO;
     }
 
 
@@ -554,22 +434,15 @@ public class UserHeadSculptureApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<UserHeadSculptureApprove> userHeadSculptureApproves = JSONObject.parseArray(requestVo.getEntityJson(),UserHeadSculptureApprove.class);
             if(CollectionUtils.isEmpty(userHeadSculptureApproves))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(UserHeadSculptureApprove userHeadSculptureApprove:userHeadSculptureApproves) {
@@ -589,12 +462,13 @@ public class UserHeadSculptureApproveBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

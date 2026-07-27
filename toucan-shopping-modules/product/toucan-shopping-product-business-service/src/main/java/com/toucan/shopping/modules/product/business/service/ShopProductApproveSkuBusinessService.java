@@ -2,6 +2,9 @@ package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -62,23 +65,10 @@ public class ShopProductApproveSkuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveSkuPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSkuPageInfo.class);
             PageInfo<ShopProductApproveSkuVO> pageInfo =  shopProductApproveSkuService.queryListPage(queryPageInfo);
@@ -104,6 +94,10 @@ public class ShopProductApproveSkuBusinessService {
                 }
             }
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -119,26 +113,17 @@ public class ShopProductApproveSkuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
             resultObjectVO.setData(shopProductApproveSkuService.queryById(productSku.getId()));
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -264,34 +249,20 @@ public class ShopProductApproveSkuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdForFront(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
 
-            if(productSku.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSku.getId(), ResultVO.FAILD, "商品ID不能为空!");
             ShopProductApproveSkuVO shopProductApproveSkuVO =queryProductApproveSkuByCacheOrDB(productSku.getId());
             resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -307,35 +278,21 @@ public class ShopProductApproveSkuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOneByProductApproveIdForFront(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveVO shopProductApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
-            if(shopProductApproveVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductApproveVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
 
             ShopProductApproveSku productSku = shopProductApproveSkuService.queryFirstOneByProductApproveId(shopProductApproveVO.getId());
             ShopProductApproveSkuVO shopProductApproveSkuVO =queryProductApproveSkuByCacheOrDB(productSku.getId());
             resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -351,23 +308,10 @@ public class ShopProductApproveSkuBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             List<ShopProductApproveSku> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ShopProductApproveSku.class);
             if(!CollectionUtils.isEmpty(productSkus)) {
@@ -384,6 +328,10 @@ public class ShopProductApproveSkuBusinessService {
                 }
                 resultObjectVO.setData(productSkuList);
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

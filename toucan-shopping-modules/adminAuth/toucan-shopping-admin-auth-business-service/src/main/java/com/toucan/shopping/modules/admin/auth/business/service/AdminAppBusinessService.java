@@ -12,7 +12,10 @@ import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -48,45 +51,27 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminApp adminApp = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
-            if(StringUtils.isEmpty(adminApp.getAppCode()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请传入应用编码");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(adminApp.getAdminId()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请传入账号ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(adminApp.getAppCode(), AdminResultVO.FAILD, "请传入应用编码");
+            Check.notEmpty(adminApp.getAdminId(), AdminResultVO.FAILD, "请传入账号ID");
 
             adminApp.setCreateDate(new Date());
             adminApp.setDeleteStatus((short)0);
             int row = adminAppService.save(adminApp);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,创建当前账号与该应用关联失败!");
-                return resultObjectVO;
-            }
+            Check.isTrue(row >= 1, ResultVO.FAILD, "添加失败,创建当前账号与该应用关联失败!");
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -100,26 +85,22 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByEntity(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminApp adminAppQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
             List<AdminApp> adminApps = adminAppService.findListByEntity(adminAppQuery);
             resultObjectVO.setData(adminApps);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -132,36 +113,25 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminAppPageInfo adminAppPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
 
             //查询账号应用
             PageInfo<AdminAppVO> pageInfo =  adminAppService.queryListPage(adminAppPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -174,36 +144,25 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO onlineList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminAppPageInfo adminAppPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
 
             //查询账号应用
             PageInfo<AdminAppVO> pageInfo =  adminAppService.queryOnlineListPage(adminAppPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -216,30 +175,14 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO logout(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminAppVO adminAppVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppVO.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(adminAppVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(adminAppVO.getId(), ResultVO.FAILD, "没有找到ID");
 
             adminAppVO = adminAppService.findById(adminAppVO.getId());
             adminAppService.updateLoginStatus(adminAppVO.getAdminId(),adminAppVO.getAppCode(),(short)0);
@@ -247,12 +190,13 @@ public class AdminAppBusinessService {
             //删除缓存
             AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminAppVO.getAdminId(),adminAppVO.getAppCode());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -262,36 +206,25 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO loginList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminAppPageInfo adminAppPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
 
             //查询账号应用登录列表
             PageInfo<AdminAppVO> pageInfo =  adminAppService.queryLoginListPage(adminAppPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -305,26 +238,22 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppListByAdminId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminApp adminAppQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
             List<AdminAppVO> adminAppVOs = adminAppService.findAppListByAdminAppEntity(adminAppQuery);
             resultObjectVO.setData(adminAppVOs);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -334,25 +263,21 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByAppCode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminApp adminApp = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
             resultObjectVO.setData(adminAppService.deleteByAppCode(adminApp.getAppCode()));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -364,14 +289,9 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO batchUpdateLoginStatus(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             List<AdminAppVO> adminApps = requestVo.formatEntityList(AdminAppVO.class);
@@ -389,12 +309,13 @@ public class AdminAppBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -405,26 +326,22 @@ public class AdminAppBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppLoginUserCountList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AppLoginUserVO appLoginUserVO = JSONObject.parseObject(requestVo.getEntityJson(), AppLoginUserVO.class);
             List<AppLoginUserVO> appLoginUserVOS = adminAppService.queryAppLoginUserCountList(appLoginUserVO);
             resultObjectVO.setData(appLoginUserVOS);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

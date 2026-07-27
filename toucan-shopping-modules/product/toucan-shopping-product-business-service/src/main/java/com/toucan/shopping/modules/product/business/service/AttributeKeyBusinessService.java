@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -56,23 +59,10 @@ public class AttributeKeyBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
             PageInfo<AttributeKeyVO> pageInfo =  attributeKeyService.queryListPage(queryPageInfo);
@@ -137,6 +127,11 @@ public class AttributeKeyBusinessService {
                 }
             }
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -153,14 +148,9 @@ public class AttributeKeyBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
@@ -296,6 +286,11 @@ public class AttributeKeyBusinessService {
 
             resultObjectVO.setData(attributeVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -312,18 +307,13 @@ public class AttributeKeyBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTreeByCategoryId(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AttributeKeyVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyVO.class);
-            if(query.getCategoryId()==null||query.getCategoryId()==-1)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到分类ID或不支持查询顶级分类");
-                return resultObjectVO;
-
-            }
+            Check.isTrue(query.getCategoryId() != null && query.getCategoryId() != -1, ResultVO.FAILD, "没有找到分类ID或不支持查询顶级分类");
 
             List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
 
@@ -360,6 +350,11 @@ public class AttributeKeyBusinessService {
             List<AttributeKeyVO> rootAttributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
             rootAttributeKeyTreeVOS.add(rootTreeVO);
             resultObjectVO.setData(rootAttributeKeyTreeVOS);
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -376,34 +371,19 @@ public class AttributeKeyBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AttributeKeyVO attributeKeyVO = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKeyVO.class);
-            if(attributeKeyVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(attributeKeyVO.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该对象
             AttributeKeyVO query=new AttributeKeyVO();
             query.setId(attributeKeyVO.getId());
             List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
-            if(CollectionUtils.isEmpty(attributeKeyVOS))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(attributeKeyVOS, ResultVO.FAILD, "不存在!");
 
             attributeKeyVO = attributeKeyVOS.get(0);
             if(attributeKeyVO.getParentId()==-1)
@@ -419,6 +399,11 @@ public class AttributeKeyBusinessService {
             }
             resultObjectVO.setData(attributeKeyVOS);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -433,50 +418,27 @@ public class AttributeKeyBusinessService {
 
 
 
+
     /**
      * 保存
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到对象编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
-            return resultObjectVO;
-        }
 
         try {
             AttributeKeyVO vo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyVO.class);
 
-            if(vo.getCategoryId()==null)
-            {
-                logger.warn("关联类别为空 param:"+ requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("关联类别为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(vo.getCategoryId(), ResultVO.FAILD, "关联类别为空!");
 
             AttributeKeyVO query = new AttributeKeyVO();
             query.setAttributeName(vo.getAttributeName());
             query.setCategoryId(vo.getCategoryId());
             query.setParentId(vo.getParentId());
-            if(attributeKeyService.exists(query)>0)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("属性名已经存在!");
-                return resultObjectVO;
-            }
+            Check.isTrue(attributeKeyService.exists(query) <= 0, ResultVO.FAILD, "属性名已经存在!");
 
             AttributeKey entity = new AttributeKey();
             BeanUtils.copyProperties(entity,vo);
@@ -490,6 +452,10 @@ public class AttributeKeyBusinessService {
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -591,8 +557,8 @@ public class AttributeKeyBusinessService {
 //            saveAttributeValue(entity.getId(),"驼色","168, 132, 98");
 //            saveAttributeValue(entity.getId(),"花色","");
 //            saveAttributeValue(entity.getId(),"透明","");
-//
-//
+
+
 //        }
 //        return resultObjectVO;
 //    }
@@ -602,23 +568,13 @@ public class AttributeKeyBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AttributeKey entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKey.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             int row = attributeKeyService.deleteById(entity.getId());
             if (row < 1) {
@@ -648,6 +604,11 @@ public class AttributeKeyBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -664,23 +625,14 @@ public class AttributeKeyBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<AttributeKey> attributeKeys = JSONObject.parseArray(requestVo.getEntityJson(),AttributeKey.class);
-            if(CollectionUtils.isEmpty(attributeKeys))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(attributeKeys, ResultVO.FAILD, "没有找到ID");
+
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(AttributeKey attributeKey:attributeKeys) {
                 if(attributeKey.getId()!=null) {
@@ -718,6 +670,11 @@ public class AttributeKeyBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -735,32 +692,16 @@ public class AttributeKeyBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AttributeKeyVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKeyVO.class);
 
-            if(StringUtils.isEmpty(entity.getAttributeName()))
-            {
-                logger.info("属性名为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("属性名不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getAttributeName(), ResultVO.FAILD, "属性名不能为空!");
 
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入ID");
 
             entity.setUpdateDate(new Date());
             int row = attributeKeyService.update(entity);
@@ -775,6 +716,11 @@ public class AttributeKeyBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -787,30 +733,19 @@ public class AttributeKeyBusinessService {
 
 
 
-
-
     /**
      * 查询所有可搜索的属性键值对
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO querySearchList(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             AttributeKeyVO keyQuery = requestJsonVO.formatEntity(AttributeKeyVO.class);
-            if(keyQuery==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询不能为空");
-                return resultObjectVO;
-            }
-            if(keyQuery.getCategoryId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询分类条件不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(keyQuery.getCategoryId(), ResultVO.FAILD, "查询分类条件不能为空");
+
             keyQuery.setQueryStatus((short)1);
             keyQuery.setShowStatus((short)1);
             //可被搜素的属性
@@ -843,6 +778,10 @@ public class AttributeKeyBusinessService {
                 }
                 resultObjectVO.setData(attributeKeyVOS);
             }
+        }catch(BusinessValidationException e)
+        {
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.error(e.getMessage(),e);

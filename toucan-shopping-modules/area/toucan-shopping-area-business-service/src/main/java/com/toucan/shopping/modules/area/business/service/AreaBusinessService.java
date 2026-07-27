@@ -23,9 +23,14 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 
 /**
  * 管理端地区操作
@@ -44,60 +49,28 @@ public class AreaBusinessService {
     @Autowired
     private Toucan toucan;
 
+    // ========================================================================
+    //  CRUD 方法
+    // ========================================================================
+
     /**
      * 保存地区编码
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO save(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
-
         try {
             Area area = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
 
-            if(area.getAppCode()==null)
-            {
-                logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码!");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(area.getCode()))
-            {
-                logger.info("编码为空 param:"+ JSONObject.toJSONString(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("编码不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(area.getAppCode(), ResultVO.FAILD, "没有找到应用编码!");
+            Check.notEmpty(area.getCode(), ResultVO.FAILD, "编码不能为空!");
 
             Area queryArea = new Area();
             queryArea.setCode(area.getCode());
-            queryArea.setDeleteStatus((short)0);
+            queryArea.setDeleteStatus((short) 0);
             queryArea.setAppCode(area.getAppCode());
 
-            if(!CollectionUtils.isEmpty(areaService.queryList(queryArea)))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该编码!");
-                return resultObjectVO;
-            }
+            Check.isTrue(CollectionUtils.isEmpty(areaService.queryList(queryArea)), ResultVO.FAILD, "已存在该编码!");
 
             area.setCreateDate(new Date());
             int row = areaService.save(area);
@@ -106,135 +79,73 @@ public class AreaBusinessService {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
-            try{
-                //刷新到缓存
-                initAllAreaCache();
-            }catch (Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("刷新缓存失败!");
+            if (!refreshCache(resultObjectVO)) {
                 return resultObjectVO;
             }
-        }catch(Exception e)
-        {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
     /**
      * 根据ID删除
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
-
         try {
             Area area = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
 
-            if(area.getAppCode()==null)
-            {
-                logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码!");
-                return resultObjectVO;
-            }
-
-
-            if(area.getId()==null)
-            {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
-
+            Check.notNull(area.getAppCode(), ResultVO.FAILD, "没有找到应用编码!");
+            Check.notNull(area.getId(), ResultVO.FAILD, "ID不能为空!");
 
             Area queryArea = new Area();
             queryArea.setId(area.getId());
-            queryArea.setDeleteStatus((short)0);
+            queryArea.setDeleteStatus((short) 0);
 
             List<Area> areas = areaService.queryList(queryArea);
-            if(CollectionUtils.isEmpty(areas))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该地区!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(areas, ResultVO.FAILD, "不存在该地区!");
 
             area = areas.get(0);
-            areaService.deleteChildrenByParentCode(area.getAppCode(),area.getCode());
-            int row = areaService.deleteById(area.getAppCode(),area.getId());
-            if (row <=0) {
+            areaService.deleteChildrenByParentCode(area.getAppCode(), area.getCode());
+            int row = areaService.deleteById(area.getAppCode(), area.getId());
+            if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
-            try{
-                //刷新到缓存
-                initAllAreaCache();
-            }catch (Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("刷新缓存失败!");
+            if (!refreshCache(resultObjectVO)) {
                 return resultObjectVO;
             }
-        }catch(Exception e)
-        {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
     /**
      * 根据ID查询
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryById(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             Area area = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
             resultObjectVO.setData(areaService.queryById(area.getId()));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
@@ -244,68 +155,43 @@ public class AreaBusinessService {
 
     /**
      * 批量删除功能项
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            List<Area> areas = JSONObject.parseArray(requestVo.getEntityJson(),Area.class);
-            if(CollectionUtils.isEmpty(areas))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找地区ID");
-                return resultObjectVO;
-            }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Area area:areas) {
-                if(area.getId()!=null) {
+            List<Area> areas = JSONObject.parseArray(requestVo.getEntityJson(), Area.class);
+            Check.notEmpty(areas, ResultVO.FAILD, "没有找地区ID");
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<>();
+            for (Area area : areas) {
+                if (area.getId() != null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(area);
 
+                    List<Area> children = new ArrayList<>();
+                    areaService.queryChildren(children, area);
+                    children.add(area);
 
-                    List<Area> chidlren = new ArrayList<Area>();
-                    areaService.queryChildren(chidlren,area);
-
-                    //把当前功能项添加进去,循环这个集合
-                    chidlren.add(area);
-
-                    for(Area a:chidlren) {
-                        //删除当前功能项
-                        int row = areaService.deleteById(a.getAppCode(),a.getId());
+                    for (Area a : children) {
+                        int row = areaService.deleteById(a.getAppCode(), a.getId());
                         if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请重试!");
                             continue;
                         }
-
                     }
-
                 }
             }
 
             resultObjectVO.setData(resultObjectVOList);
 
-            try{
-                //刷新到缓存
-                initAllAreaCache();
-            }catch (Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("刷新缓存失败!");
+            if (!refreshCache(resultObjectVO)) {
                 return resultObjectVO;
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -313,42 +199,27 @@ public class AreaBusinessService {
     }
 
     /**
-     * 根据ID查询
-     * @param requestJsonVO
-     * @return
+     * 根据ID列表查询
      */
-    public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
-            List<Area> areas = JSONArray.parseArray(requestJsonVO.getEntityJson(),Area.class);
-            if(!CollectionUtils.isEmpty(areas)) {
-                List<Area> areaList = new ArrayList<Area>();
-                for(Area area:areas) {
+            List<Area> areas = JSONArray.parseArray(requestJsonVO.getEntityJson(), Area.class);
+            if (!CollectionUtils.isEmpty(areas)) {
+                List<Area> areaList = new ArrayList<>();
+                for (Area area : areas) {
                     Area areaEntity = areaService.queryById(area.getId());
-                    if(areaEntity!=null) {
+                    if (areaEntity != null) {
                         areaList.add(areaEntity);
                     }
                 }
                 resultObjectVO.setData(areaList);
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
@@ -356,34 +227,23 @@ public class AreaBusinessService {
         return resultObjectVO;
     }
 
+    // ========================================================================
+    //  查询方法
+    // ========================================================================
+
     /**
      * 查询指定应用下地区树
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryAll(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck
+    public ResultObjectVO queryAll(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             List<AreaVO> areaVOS = areaService.queryTree(requestJsonVO.getAppCode());
             resultObjectVO.setData(areaVOS);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
@@ -393,43 +253,24 @@ public class AreaBusinessService {
 
     /**
      * 根据ID查询
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO findById(RequestJsonVO requestVo){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到功能项ID");
-                return resultObjectVO;
-            }
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(), AreaVO.class);
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到功能项ID");
 
-            //查询是否存在该功能项
-            Area query=new Area();
+            Area query = new Area();
             query.setId(entity.getId());
             List<Area> areas = areaService.queryList(query);
-            if(CollectionUtils.isEmpty(areas))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("地区不存在!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(areas, ResultVO.FAILD, "地区不存在!");
             resultObjectVO.setData(areas);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -438,61 +279,38 @@ public class AreaBusinessService {
 
     /**
      * 根据编码查询
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO findByCodes(RequestJsonVO requestVo){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO findByCodes(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
-            if(entity.getCodeArray()==null||entity.getCodeArray().length<=0)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到编码数组");
-                return resultObjectVO;
-            }
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(), AreaVO.class);
+            Check.isTrue(entity.getCodeArray() != null && entity.getCodeArray().length > 0, ResultVO.FAILD, "没有找到编码数组");
 
-            //查询是否存在该功能项
             List<Area> areas = areaService.queryList(entity);
-            if(CollectionUtils.isEmpty(areas))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("地区不存在!");
-                return resultObjectVO;
-            }
-            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
-            for(Area area:areas)
-            {
+            Check.notEmpty(areas, ResultVO.FAILD, "地区不存在!");
+            List<AreaVO> areaVOS = new ArrayList<>();
+            for (Area area : areas) {
                 AreaVO areaVO = new AreaVO();
-                BeanUtils.copyProperties(areaVO,area);
-                //逐个替换,最后会替换为这个节点的名称
-                if(StringUtils.isNotEmpty(areaVO.getProvince()))
-                {
+                BeanUtils.copyProperties(areaVO, area);
+                // 逐级替换为最具体的名称
+                if (StringUtils.isNotEmpty(areaVO.getProvince())) {
                     areaVO.setName(area.getProvince());
                 }
-                if(StringUtils.isNotEmpty(areaVO.getCity()))
-                {
+                if (StringUtils.isNotEmpty(areaVO.getCity())) {
                     areaVO.setName(area.getCity());
                 }
-                if(StringUtils.isNotEmpty(areaVO.getArea()))
-                {
+                if (StringUtils.isNotEmpty(areaVO.getArea())) {
                     areaVO.setName(area.getArea());
                 }
                 areaVOS.add(areaVO);
             }
             resultObjectVO.setData(areaVOS);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -500,56 +318,22 @@ public class AreaBusinessService {
     }
 
     /**
-     * 編輯
-     * @param requestVo
-     * @return
+     * 编辑
      */
-    public ResultObjectVO update(RequestJsonVO requestVo){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(), AreaVO.class);
 
+            Check.isTrue(entity.getId().longValue() != entity.getPid().longValue(), ResultVO.FAILD, "上级节点不能为自己!");
+            Check.notEmpty(entity.getCode(), ResultVO.FAILD, "编码不能为空!");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入ID");
 
-            if(entity.getId().longValue()==entity.getPid().longValue())
-            {
-                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级节点不能为自己!");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getCode()))
-            {
-                logger.info("编码为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("编码不能为空!");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入ID");
-                return resultObjectVO;
-            }
-
-
-            AreaVO query=new AreaVO();
+            AreaVO query = new AreaVO();
             query.setId(entity.getId());
             List<Area> areas = areaService.queryList(query);
-            if(CollectionUtils.isEmpty(areas))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该地区不存在!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(areas, ResultVO.FAILD, "该地区不存在!");
 
             entity.setUpdateDate(new Date());
             int row = areaService.update(entity);
@@ -560,23 +344,15 @@ public class AreaBusinessService {
             }
 
             List<Area> children = new LinkedList<>();
-            areaService.queryChildren(children,query);
-            if(!CollectionUtils.isEmpty(children))
-            {
-                for(Area child:children)
-                {
-                    if(child.getBigAreaCode()==null||child.getCountryCode()==null)
-                    {
-                        child.setCountryCode(entity.getCountryCode());
-                        child.setCountryName(entity.getCountryName());
-                        child.setBigAreaCode(entity.getBigAreaCode());
-                        child.setBigAreaName(entity.getBigAreaName());
-                        child.setUpdateAdminId(entity.getUpdateAdminId());
-                        child.setUpdateDate(entity.getUpdateDate());
-                        areaService.update(child);
-                    }else if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
-                            ||(!child.getBigAreaCode().equals(entity.getBigAreaCode())||!child.getBigAreaName().equals(entity.getBigAreaName())))
-                    {
+            areaService.queryChildren(children, query);
+            if (!CollectionUtils.isEmpty(children)) {
+                for (Area child : children) {
+                    boolean needsUpdate = (child.getBigAreaCode() == null || child.getCountryCode() == null)
+                            || (!child.getCountryCode().equals(entity.getCountryCode())
+                                || !child.getCountryName().equals(entity.getCountryName())
+                                || !child.getBigAreaCode().equals(entity.getBigAreaCode())
+                                || !child.getBigAreaName().equals(entity.getBigAreaName()));
+                    if (needsUpdate) {
                         child.setCountryCode(entity.getCountryCode());
                         child.setCountryName(entity.getCountryName());
                         child.setBigAreaCode(entity.getBigAreaCode());
@@ -588,76 +364,48 @@ public class AreaBusinessService {
                 }
             }
 
-            try{
-                //刷新到缓存
-                initAllAreaCache();
-            }catch (Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("刷新缓存失败!");
+            if (!refreshCache(resultObjectVO)) {
                 return resultObjectVO;
             }
 
             resultObjectVO.setData(entity);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    // ========================================================================
+    //  树形表格查询
+    // ========================================================================
+
     /**
      * 查询树表格
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryTreeTable(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
             AreaTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaTreeInfo.class);
 
-            //查询所有结构树
-            List<AreaVO>  areas = areaService.findTreeTable(queryPageInfo);
-            List<String> adminIds = new ArrayList<String>();
-            //拿到树节点中所有创建人和修改人
-            if(!CollectionUtils.isEmpty(areas)) {
-                for (AreaVO areaVO : areas) {
-                    if (areaVO.getCreateAdminId() != null&&!"-1".equals(areaVO.getCreateAdminId())&&!existsAdminId(adminIds,areaVO.getCreateAdminId())) {
-                        adminIds.add(areaVO.getCreateAdminId());
-                    }
-                    if (areaVO.getUpdateAdminId() != null&&!"-1".equals(areaVO.getUpdateAdminId())&&!existsAdminId(adminIds,areaVO.getUpdateAdminId())) {
-                        adminIds.add(areaVO.getUpdateAdminId());
-                    }
-                }
-            }
+            List<AreaVO> areas = areaService.findTreeTable(queryPageInfo);
+            List<String> adminIds = new ArrayList<>();
+            collectAdminIds(areas, adminIds);
 
-
-            //将查询的这个节点设置为顶级节点
-            if(StringUtils.isNotEmpty(queryPageInfo.getCode())) {
-                if(!CollectionUtils.isEmpty(areas)) {
-                    for (Area area : areas) {
-                        area.setPid(-1L);
-                    }
-                }
-            }
+            // 将查询的节点设置为顶级节点
+            setTopLevelPid(areas, queryPageInfo.getCode());
 
             resultObjectVO.setData(areas);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -665,63 +413,40 @@ public class AreaBusinessService {
     }
 
     /**
-     * 查询树表格
-     * @param requestJsonVO
-     * @return
+     * 查询树表格（按PID）
      */
-    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
             AreaTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaTreeInfo.class);
 
-            List<AreaTreeVO> areaVOs = new ArrayList<AreaTreeVO>();
-            //按指定条件查询
-            if(StringUtils.isNotEmpty(queryPageInfo.getCode())||StringUtils.isNotEmpty(queryPageInfo.getName()))
-            {
+            List<AreaTreeVO> areaVOs = new ArrayList<>();
+            if (StringUtils.isNotEmpty(queryPageInfo.getCode()) || StringUtils.isNotEmpty(queryPageInfo.getName())) {
+                // 按指定条件查询
                 AreaVO queryArea = new AreaVO();
                 queryArea.setCode(queryPageInfo.getCode());
                 queryArea.setName(queryPageInfo.getName());
 
                 List<Area> areas = areaService.queryListByVO(queryArea);
-                for (int i = 0; i < areas.size(); i++) {
-                    Area area = areas.get(i);
+                for (Area area : areas) {
                     AreaTreeVO areaTreeVO = new AreaTreeVO();
                     BeanUtils.copyProperties(areaTreeVO, area);
-                    if (area.getType() == 1) {
-                        areaTreeVO.setName(area.getProvince());
-                    } else if (area.getType() == 2) {
-                        areaTreeVO.setName(area.getCity());
-                    } else if (area.getType() == 3) {
-                        areaTreeVO.setName(area.getArea());
-                    }
+                    setAreaNameByType(areaTreeVO, area);
                     areaVOs.add(areaTreeVO);
                 }
-            }else {
-                //查询当前节点下的所有子节点
+            } else {
+                // 查询当前节点下的所有子节点
                 Area queryArea = new Area();
                 queryArea.setPid(queryPageInfo.getPid());
                 List<Area> areas = areaService.queryList(queryArea);
-                for (int i = 0; i < areas.size(); i++) {
-                    Area area = areas.get(i);
+                for (Area area : areas) {
                     AreaTreeVO areaTreeVO = new AreaTreeVO();
                     BeanUtils.copyProperties(areaTreeVO, area);
-                    if (area.getType() == 1) {
-                        areaTreeVO.setName(area.getProvince());
-                    } else if (area.getType() == 2) {
-                        areaTreeVO.setName(area.getCity());
-                    } else if (area.getType() == 3) {
-                        areaTreeVO.setName(area.getArea());
-                    }
-                    queryArea = new Area();
-                    queryArea.setPid(area.getId());
-                    Long childCount = areaService.queryCount(queryArea);
+                    setAreaNameByType(areaTreeVO, area);
+                    Area childQuery = new Area();
+                    childQuery.setPid(area.getId());
+                    Long childCount = areaService.queryCount(childQuery);
                     if (childCount > 0) {
                         areaTreeVO.setHaveChild(true);
                     }
@@ -729,35 +454,97 @@ public class AreaBusinessService {
                 }
             }
 
-            List<String> adminIds = new ArrayList<String>();
-            //拿到树节点中所有创建人和修改人
-            if(!CollectionUtils.isEmpty(areaVOs)) {
-                for (AreaVO areaVO : areaVOs) {
-                    if (areaVO.getCreateAdminId() != null&&!"-1".equals(areaVO.getCreateAdminId())&&!existsAdminId(adminIds,areaVO.getCreateAdminId())) {
-                        adminIds.add(areaVO.getCreateAdminId());
-                    }
-                    if (areaVO.getUpdateAdminId() != null&&!"-1".equals(areaVO.getUpdateAdminId())&&!existsAdminId(adminIds,areaVO.getUpdateAdminId())) {
-                        adminIds.add(areaVO.getUpdateAdminId());
-                    }
-                }
+            List<String> adminIds = new ArrayList<>();
+            collectAdminIds(areaVOs, adminIds);
+
+            // 将查询的节点设置为顶级节点
+            setTopLevelPidFromCode(new ArrayList<>(areaVOs), queryPageInfo.getCode());
+
+            resultObjectVO.setData(areaVOs);
+
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    // ========================================================================
+    //  下级节点查询
+    // ========================================================================
+
+    /**
+     * 查询指定节点下所有子节点
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<Area> areas = areaService.queryList(queryArea);
+            List<AreaVO> areaVOS = new ArrayList<>();
+            for (Area area : areas) {
+                AreaVO areaVO = new AreaVO();
+                BeanUtils.copyProperties(areaVO, area);
+                setAreaNameByType(areaVO, area);
+                areaVOS.add(areaVO);
             }
+            resultObjectVO.setData(areaVOS);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
-            //将查询的这个节点设置为顶级节点
-            if(StringUtils.isNotEmpty(queryPageInfo.getCode())) {
-                if(!CollectionUtils.isEmpty(areaVOs)) {
-                    for (Area area : areaVOs) {
-                        area.setPid(-1L);
+    /**
+     * 查询指定节点下子节点（树形结构）
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<AreaTreeVO> areaVOs = new ArrayList<>();
+            if (queryArea.getPid() == null) {
+                AreaTreeVO areaVO = new AreaTreeVO();
+                areaVO.setId(-1L);
+                areaVO.setName("中国");
+                areaVO.setParentId(-1L);
+                Long childCount = areaService.queryOneChildCountByPid(-1L, queryArea.getAppCode());
+                if (childCount > 0) {
+                    areaVO.setIsParent(true);
+                }
+                areaVOs.add(areaVO);
+            } else {
+                List<Area> areas = areaService.queryList(queryArea);
+                for (Area area : areas) {
+                    AreaTreeVO areaTreeVO = new AreaTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    setAreaNameByType(areaTreeVO, area);
+                    Long childCount = areaService.queryOneChildCountByPid(areaTreeVO.getId(), areaTreeVO.getAppCode());
+                    if (childCount > 0) {
+                        areaTreeVO.setIsParent(true);
+                    } else {
+                        areaTreeVO.setIsParent(false);
                     }
+                    areaVOs.add(areaTreeVO);
                 }
             }
 
             resultObjectVO.setData(areaVOs);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -765,228 +552,106 @@ public class AreaBusinessService {
     }
 
     /**
-     * 查询指定节点下所有子节点
-     * @param requestJsonVO
-     * @return
+     * 查询指定节点下所有子节点（按父编码，优先从缓存获取）
      */
-    public ResultObjectVO queryListByPid(RequestJsonVO requestJsonVO){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryListByParentCode(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
             Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
-            List<Area> areas = areaService.queryList(queryArea);
-            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
-            for (int i = 0; i < areas.size(); i++) {
-                Area area = areas.get(i);
-                AreaVO areaVO = new AreaVO();
-                BeanUtils.copyProperties(areaVO, area);
-                if (area.getType() == 1) {
-                    areaVO.setName(area.getProvince());
-                } else if (area.getType() == 2) {
-                    areaVO.setName(area.getCity());
-                } else if (area.getType() == 3) {
-                    areaVO.setName(area.getArea());
-                }
-                areaVOS.add(areaVO);
-            }
-            resultObjectVO.setData(areaVOS);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
-    }
-
-    /**
-     * 查询指定节点下子节点
-     * @param requestJsonVO
-     * @return
-     */
-    public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
-            List<AreaTreeVO> areaVOS = new ArrayList<AreaTreeVO>();
-            if(queryArea.getPid()==null)
-            {
-                AreaTreeVO areaVO = new AreaTreeVO();
-                areaVO.setId(-1L);
-                areaVO.setName("中国");
-                areaVO.setParentId(-1L);
-                Long childCount = areaService.queryOneChildCountByPid(-1L,queryArea.getAppCode());
-                if(childCount>0)
-                {
-                    areaVO.setIsParent(true);
-                }
-                areaVOS.add(areaVO);
-            }else {
-                List<Area> areas = areaService.queryList(queryArea);
-                for (int i = 0; i < areas.size(); i++) {
-                    Area area = areas.get(i);
-                    AreaTreeVO areaTreeVO = new AreaTreeVO();
-                    BeanUtils.copyProperties(areaTreeVO, area);
-                    if (area.getType() == 1) {
-                        areaTreeVO.setName(area.getProvince());
-                    } else if (area.getType() == 2) {
-                        areaTreeVO.setName(area.getCity());
-                    } else if (area.getType() == 3) {
-                        areaTreeVO.setName(area.getArea());
-                    }
-                    Long childCount = areaService.queryOneChildCountByPid(areaTreeVO.getId(),areaTreeVO.getAppCode());
-                    if(childCount>0)
-                    {
-                        areaTreeVO.setIsParent(true);
-                    }else{
-                        areaTreeVO.setIsParent(false);
-                    }
-                    areaVOS.add(areaTreeVO);
-                }
-            }
-
-            resultObjectVO.setData(areaVOS);
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
-    }
-
-    /**
-     * 查询指定节点下所有子节点
-     * @param requestJsonVO
-     * @return
-     */
-    public ResultObjectVO queryListByParentCode(RequestJsonVO requestJsonVO){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
-        try {
-            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
-            List<AreaVO> areaVOS =null;
-            if("-1".equals(queryArea.getCode()))
-            {
+            List<AreaVO> areaVOS = null;
+            if ("-1".equals(queryArea.getCode())) {
                 areaVOS = areaRedisService.queryProvinceList();
-            }else{
-                //先查询地市,之后在查询区县,因为不确定这个节点是指定省还是指定地市
+            } else {
+                // 先查地市，再查区县（不确定该节点是省还是地市）
                 areaVOS = areaRedisService.queryCityListByProvinceCode(queryArea.getCode());
-                if(CollectionUtils.isEmpty(areaVOS))
-                {
+                if (CollectionUtils.isEmpty(areaVOS)) {
                     areaVOS = areaRedisService.queryAreaListByCityCode(queryArea.getCode());
                 }
-
             }
-            //如果缓存不存在,查询数据库然后同步到缓存
-            if(CollectionUtils.isEmpty(areaVOS)) {
-                List<Area> areas = null;
-                if (!"-1".equals(queryArea.getCode())) {
-                    areas = areaService.queryList(queryArea);
-                    if (CollectionUtils.isEmpty(areas)) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("没有找到该节点");
-                        return resultObjectVO;
-                    }
-                    Area currentArea = areas.get(0);
-                    queryArea = new Area();
-                    //设置当前节点到PID
-                    queryArea.setPid(currentArea.getId());
-                }else{
-                    queryArea.setCode(null);
-                    queryArea.setPid(-1L); //默认查询所有省
-                }
-                areaVOS = new ArrayList<AreaVO>();
-                areas = areaService.queryList(queryArea);
-                for (int i = 0; i < areas.size(); i++) {
-                    Area area = areas.get(i);
-                    AreaVO areaVO = new AreaVO();
-                    BeanUtils.copyProperties(areaVO, area);
-                    if (area.getType() == 1) {
-                        areaVO.setName(area.getProvince());
-                    } else if (area.getType() == 2) {
-                        areaVO.setName(area.getCity());
-                    } else if (area.getType() == 3) {
-                        areaVO.setName(area.getArea());
-                    }
-                    areaVOS.add(areaVO);
-                }
-
-                try{
-                    //刷新到缓存
-                    initAllAreaCache();
-                }catch (Exception e)
-                {
-                    logger.warn("同步地区缓存失败 {}",e.getMessage());
-                    logger.warn(e.getMessage(),e);
+            // 缓存不存在则查询数据库并同步缓存
+            if (CollectionUtils.isEmpty(areaVOS)) {
+                areaVOS = queryListByParentCodeFromDb(queryArea, resultObjectVO);
+                if (areaVOS == null) {
+                    return resultObjectVO;
                 }
             }
 
             resultObjectVO.setData(areaVOS);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
+
+    /**
+     * 从数据库查询子节点列表并构建缓存
+     */
+    private List<AreaVO> queryListByParentCodeFromDb(Area queryArea, ResultObjectVO resultObjectVO)
+            throws InvocationTargetException, IllegalAccessException {
+        List<Area> areas;
+        Area originalQuery = queryArea;
+        if (!"-1".equals(originalQuery.getCode())) {
+            areas = areaService.queryList(originalQuery);
+            if (CollectionUtils.isEmpty(areas)) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到该节点");
+                return null;
+            }
+            Area currentArea = areas.get(0);
+            queryArea = new Area();
+            queryArea.setPid(currentArea.getId());
+        } else {
+            queryArea.setCode(null);
+            queryArea.setPid(-1L);
+        }
+        List<AreaVO> areaVOS = new ArrayList<>();
+        areas = areaService.queryList(queryArea);
+        for (Area area : areas) {
+            AreaVO areaVO = new AreaVO();
+            BeanUtils.copyProperties(areaVO, area);
+            setAreaNameByType(areaVO, area);
+            areaVOS.add(areaVO);
+        }
+
+        try {
+            initAllAreaCache();
+        } catch (Exception e) {
+            logger.warn("同步地区缓存失败 {}", e.getMessage());
+            logger.warn(e.getMessage(), e);
+        }
+        return areaVOS;
+    }
+
+    // ========================================================================
+    //  缓存相关
+    // ========================================================================
 
     /**
      * 查询全量缓存
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryFullCache(RequestJsonVO requestJsonVO){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryFullCache(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
 
             List<AreaVO> areaVOS = areaRedisService.queryFullCache();
-            if(CollectionUtils.isEmpty(areaVOS))
-            {
-                //刷新下全部缓存
+            if (CollectionUtils.isEmpty(areaVOS)) {
                 initAllAreaCache();
                 areaVOS = areaRedisService.queryFullCache();
             }
             resultObjectVO.setData(areaVOS);
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -995,69 +660,48 @@ public class AreaBusinessService {
 
     /**
      * 刷新全部缓存
-     * @param requestVo
-     * @return
      */
-    public ResultObjectVO flushAllCache(RequestJsonVO requestVo){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO flushAllCache(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
-            AreaVO areaVOS = requestVo.formatEntity(AreaVO.class);
-            //刷新到缓存
+            requestVo.formatEntity(AreaVO.class);
             initAllAreaCache();
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    // ========================================================================
+    //  地区树
+    // ========================================================================
+
     /**
      * 查询地区树
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryTree(RequestJsonVO requestJsonVO)
-    {
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AreaVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaVO.class);
 
             List<Area> areas = areaService.queryList(query);
-            if(!CollectionUtils.isEmpty(areas))
-            {
-                List<AreaTreeVO> areaTreeVOS = new ArrayList<AreaTreeVO>();
-                for(Area area : areas)
-                {
-                    if("-1".equals(area.getParentCode())) {
+            if (!CollectionUtils.isEmpty(areas)) {
+                List<AreaTreeVO> areaTreeVOS = new ArrayList<>();
+                for (Area area : areas) {
+                    if ("-1".equals(area.getParentCode())) {
                         AreaTreeVO areaTreeVO = new AreaTreeVO();
                         BeanUtils.copyProperties(areaTreeVO, area);
-                        if(1==area.getType().shortValue())
-                        {
-                            areaTreeVO.setTitle(area.getProvince());
-                            areaTreeVO.setText(area.getProvince());
-                        }else if(2==area.getType().shortValue())
-                        {
-                            areaTreeVO.setTitle(area.getCity());
-                            areaTreeVO.setText(area.getCity());
-                        }else if(3==area.getType().shortValue())
-                        {
-                            areaTreeVO.setTitle(area.getArea());
-                            areaTreeVO.setText(area.getArea());
-                        }
+                        setTreeTitleAndText(areaTreeVO, area);
                         areaTreeVOS.add(areaTreeVO);
 
-                        areaTreeVO.setChildren(new ArrayList<AreaTreeVO>());
-                        areaService.setChildren(areas,areaTreeVO);
+                        areaTreeVO.setChildren(new ArrayList<>());
+                        areaService.setChildren(areas, areaTreeVO);
                     }
                 }
 
@@ -1068,15 +712,15 @@ public class AreaBusinessService {
                 rootTreeVO.setId(-1L);
                 rootTreeVO.setText("中国");
                 rootTreeVO.setChildren(areaTreeVOS);
-                List<AreaTreeVO> rootAreaTreeVOS = new ArrayList<AreaTreeVO>();
+                List<AreaTreeVO> rootAreaTreeVOS = new ArrayList<>();
                 rootAreaTreeVOS.add(rootTreeVO);
                 resultObjectVO.setData(rootAreaTreeVOS);
-
             }
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -1085,243 +729,273 @@ public class AreaBusinessService {
 
     /**
      * 根据所有市级名称查询出所有市级对象
-     * @param requestJsonVO
-     * @return
      */
-    public ResultObjectVO queryCityListByNames(RequestJsonVO requestJsonVO){
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryCityListByNames(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
             AreaVO queryAreaVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaVO.class);
-            if(!CollectionUtils.isEmpty(queryAreaVO.getCityNameList())) {
-                queryAreaVO.setType((short)2);
+            if (!CollectionUtils.isEmpty(queryAreaVO.getCityNameList())) {
+                queryAreaVO.setType((short) 2);
                 resultObjectVO.setData(areaService.queryListByVO(queryAreaVO));
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
-    private boolean existsAdminId(List<String> adminIds,String adminId)
-    {
-        for (String aid : adminIds) {
-            if (aid != null && aid.equals(adminId)) {
-                return true;
-            }
+    // ========================================================================
+    //  私有工具方法
+    // ========================================================================
+
+    /**
+     * 根据地区类型设置显示名称（1:省 2:市 3:区县）
+     */
+    private void setAreaNameByType(AreaVO areaVO, Area area) {
+        if (area.getType() == 1) {
+            areaVO.setName(area.getProvince());
+        } else if (area.getType() == 2) {
+            areaVO.setName(area.getCity());
+        } else if (area.getType() == 3) {
+            areaVO.setName(area.getArea());
         }
-        return false;
     }
 
     /**
-     * 初始化地区缓存
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * 设置树节点的标题和文本（用于ztree/dtree等前端组件）
+     */
+    private void setTreeTitleAndText(AreaTreeVO treeVO, Area area) {
+        if (area.getType() == 1) {
+            treeVO.setTitle(area.getProvince());
+            treeVO.setText(area.getProvince());
+        } else if (area.getType() == 2) {
+            treeVO.setTitle(area.getCity());
+            treeVO.setText(area.getCity());
+        } else if (area.getType() == 3) {
+            treeVO.setTitle(area.getArea());
+            treeVO.setText(area.getArea());
+        }
+    }
+
+    /**
+     * 刷新地区缓存，失败时填充错误信息到resultObjectVO
+     * @return true=成功, false=失败
+     */
+    private boolean refreshCache(ResultObjectVO resultObjectVO) {
+        try {
+            initAllAreaCache();
+            return true;
+        } catch (Exception e) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("刷新缓存失败!");
+            return false;
+        }
+    }
+
+    /**
+     * 收集地区VO列表中的创建人和修改人ID
+     */
+    private void collectAdminIds(Collection<? extends AreaVO> areaVOs, List<String> adminIds) {
+        if (CollectionUtils.isEmpty(areaVOs)) {
+            return;
+        }
+        for (AreaVO areaVO : areaVOs) {
+            if (areaVO.getCreateAdminId() != null && !"-1".equals(areaVO.getCreateAdminId())
+                    && !adminIds.contains(areaVO.getCreateAdminId())) {
+                adminIds.add(areaVO.getCreateAdminId());
+            }
+            if (areaVO.getUpdateAdminId() != null && !"-1".equals(areaVO.getUpdateAdminId())
+                    && !adminIds.contains(areaVO.getUpdateAdminId())) {
+                adminIds.add(areaVO.getUpdateAdminId());
+            }
+        }
+    }
+
+    /**
+     * 将符合条件的地区列表的pid设置为-1（顶级节点）
+     */
+    private void setTopLevelPid(List<? extends Area> areas, String code) {
+        if (StringUtils.isNotEmpty(code) && !CollectionUtils.isEmpty(areas)) {
+            for (Area area : areas) {
+                area.setPid(-1L);
+            }
+        }
+    }
+
+    /**
+     * 将符合条件的地区列表的pid设置为-1（通过code判断），AreaTreeVO列表版本
+     */
+    private void setTopLevelPidFromCode(List<Area> areas, String code) {
+        if (StringUtils.isNotEmpty(code) && !CollectionUtils.isEmpty(areas)) {
+            for (Area area : areas) {
+                area.setPid(-1L);
+            }
+        }
+    }
+
+    // ========================================================================
+    //  缓存初始化（拆分为多个子方法）
+    // ========================================================================
+
+    /**
+     * 初始化全部地区缓存
      */
     private void initAllAreaCache() throws InvocationTargetException, IllegalAccessException {
-        //清空缓存
         areaRedisService.clearAreaCache();
 
-        //查询所有省、直辖市
         Area query = new Area();
         List<Area> areas = areaService.queryList(query);
-        List<AreaVO> areaVOS = JSONArray.parseArray(JSONObject.toJSONString(areas),AreaVO.class);
+        List<AreaVO> allAreaVOs = JSONArray.parseArray(JSONObject.toJSONString(areas), AreaVO.class);
 
-        //初始化省、直辖市
-        List<AreaVO> allProvinces = new ArrayList<AreaVO>();
-        for(AreaVO areaVO:areaVOS)
-        {
-            if(areaVO.getPid()==null||areaVO.getPid().longValue()==-1L)
-            {
-                if (areaVO.getType() == 1) {
-                    areaVO.setName(areaVO.getProvince());
-                } else if (areaVO.getType() == 2) {
-                    areaVO.setName(areaVO.getCity());
-                } else if (areaVO.getType() == 3) {
-                    areaVO.setName(areaVO.getArea());
-                }
-                allProvinces.add(areaVO);
+        List<AreaVO> provinces = buildProvinceCache(allAreaVOs);
+        List<AreaVO> cities = buildCityCache(allAreaVOs, provinces);
+        buildAreaCache(allAreaVOs, provinces, cities);
+        stripFieldsRecursively(provinces);
+
+        areaRedisService.flushFullAreaCache(provinces);
+    }
+
+    /**
+     * 构建省级缓存
+     */
+    private List<AreaVO> buildProvinceCache(List<AreaVO> allAreaVOs) {
+        List<AreaVO> provinces = new ArrayList<>();
+        for (AreaVO vo : allAreaVOs) {
+            if (vo.getPid() == null || vo.getPid().longValue() == -1L) {
+                setAreaNameByType(vo, vo);
+                provinces.add(vo);
             }
         }
-        if(!CollectionUtils.isEmpty(allProvinces)) {
-            areaRedisService.flushProvinceCache(allProvinces);
+        if (!CollectionUtils.isEmpty(provinces)) {
+            areaRedisService.flushProvinceCache(provinces);
         }
+        return provinces;
+    }
 
-        List<AreaVO> allCitys = new ArrayList<AreaVO>();
-        //初始化地市
-        for(AreaVO provinceVO:allProvinces)
-        {
-            List<AreaVO> citys = new ArrayList<AreaVO>();
-            for(AreaVO cityVO:areaVOS)
-            {
-                if(provinceVO.getId()!=null&&cityVO.getPid()!=null&&provinceVO.getId().longValue()==cityVO.getPid().longValue())
-                {
-                    //如果不是直辖市,就初始化这个省下的地市,否则是直辖市就初始化下面的区县
-                    if(provinceVO.getIsMunicipality().intValue()==0) {
-                        if (cityVO.getType() == 1) {
-                            cityVO.setName(cityVO.getProvince());
-                        } else if (cityVO.getType() == 2) {
-                            cityVO.setName(cityVO.getCity());
-                        } else if (cityVO.getType() == 3) {
-                            cityVO.setName(cityVO.getArea());
-                        }
-                        citys.add(cityVO);
-                        allCitys.add(cityVO);
+    /**
+     * 构建市级缓存，挂载到省级节点下
+     */
+    private List<AreaVO> buildCityCache(List<AreaVO> allAreaVOs, List<AreaVO> provinces) {
+        List<AreaVO> allCities = new ArrayList<>();
+        for (AreaVO province : provinces) {
+            List<AreaVO> cities = new ArrayList<>();
+            for (AreaVO vo : allAreaVOs) {
+                if (isDirectChild(province.getId(), vo.getPid())) {
+                    // 非直辖市才初始化地市，直辖市直接初始化区县
+                    if (province.getIsMunicipality().intValue() == 0) {
+                        setAreaNameByType(vo, vo);
+                        cities.add(vo);
+                        allCities.add(vo);
                     }
                 }
             }
-            //设置子节点
-            provinceVO.setChildren(citys);
-            if(!CollectionUtils.isEmpty(citys))
-            {
-                //根据省ID作为Key的一部分
-                areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("ID_"+String.valueOf(provinceVO.getId())),citys);
-                //根据省编码作为Key的一部分
-                areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("CODE_"+provinceVO.getCode()),citys);
+            province.setChildren(cities);
+            if (!CollectionUtils.isEmpty(cities)) {
+                areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("ID_" + province.getId()), cities);
+                areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("CODE_" + province.getCode()), cities);
             }
         }
+        return allCities;
+    }
 
-
-        List<AreaVO> allAreas = new ArrayList<AreaVO>();
-        //初始化区县
-        for(AreaVO provinceVO:allProvinces)
-        {
-            //如果是省,不是直辖市的话,就找到下面所有地市再查询区县,如果是直辖市,就直接查询区县
-            if (provinceVO.getIsMunicipality().intValue() == 0) {
-                for (AreaVO cityVO : allCitys) {
-                    //找到地市
-                    if (provinceVO.getId() != null && cityVO.getPid() != null && provinceVO.getId().longValue() == cityVO.getPid().longValue()) {
-                        List<AreaVO> areaVOList = new ArrayList<AreaVO>();
-                        for (AreaVO areaVO : areaVOS) {
-                            if (cityVO.getId() != null && areaVO.getPid() != null && cityVO.getId().longValue() == areaVO.getPid().longValue()) {
-                                if (areaVO.getType() == 1) {
-                                    areaVO.setName(areaVO.getProvince());
-                                } else if (areaVO.getType() == 2) {
-                                    areaVO.setName(areaVO.getCity());
-                                } else if (areaVO.getType() == 3) {
-                                    areaVO.setName(areaVO.getArea());
-                                }
-                                areaVOList.add(areaVO);
-                                allAreas.add(areaVO);
-                            }
-                        }
-
-                        //设置子节点
-                        cityVO.setChildren(areaVOList);
-                        if (!CollectionUtils.isEmpty(areaVOList)) {
-                            //根据省ID作为Key的一部分
-                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_" + String.valueOf(cityVO.getId())), areaVOList);
-                            //根据省编码作为Key的一部分
-                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_" + cityVO.getCode()), areaVOList);
-                        }
+    /**
+     * 构建区县级缓存，挂载到市级节点下（直辖市直接挂载到省级下）
+     */
+    private void buildAreaCache(List<AreaVO> allAreaVOs, List<AreaVO> provinces, List<AreaVO> allCities) {
+        for (AreaVO province : provinces) {
+            if (province.getIsMunicipality().intValue() == 0) {
+                // 省：查找每个市下的区县
+                for (AreaVO city : allCities) {
+                    if (isDirectChild(province.getId(), city.getPid())) {
+                        List<AreaVO> areaList = findDirectChildren(allAreaVOs, city.getId());
+                        city.setChildren(areaList);
+                        flushAreaCacheFor(city, areaList);
                     }
                 }
-            }else{
-                //找到区县
-                List<AreaVO> areaVOList = new ArrayList<AreaVO>();
-                for (AreaVO areaVO : areaVOS) {
-                    if (provinceVO.getId() != null && areaVO.getPid() != null && provinceVO.getId().longValue() == areaVO.getPid().longValue()) {
-                        if (areaVO.getType() == 1) {
-                            areaVO.setName(areaVO.getProvince());
-                        } else if (areaVO.getType() == 2) {
-                            areaVO.setName(areaVO.getCity());
-                        } else if (areaVO.getType() == 3) {
-                            areaVO.setName(areaVO.getArea());
-                        }
-                        areaVOList.add(areaVO);
-                        allAreas.add(areaVO);
-                    }
-                }
-
-                //设置子节点
-                provinceVO.setChildren(areaVOList);
-                if (!CollectionUtils.isEmpty(areaVOList)) {
-                    //根据省ID作为Key的一部分
-                    areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_" + String.valueOf(provinceVO.getId())), areaVOList);
-                    //根据省编码作为Key的一部分
-                    areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_" + provinceVO.getCode()), areaVOList);
-                }
+            } else {
+                // 直辖市：直接查找省下的区县
+                List<AreaVO> areaList = findDirectChildren(allAreaVOs, province.getId());
+                province.setChildren(areaList);
+                flushAreaCacheFor(province, areaList);
             }
         }
+    }
 
-        //去除多余字段,只保留ID、编码、名称
-        for(AreaVO provinceVO:allProvinces)
-        {
-            provinceVO.setPid(null);
-            provinceVO.setAppCode(null);
-            provinceVO.setParentName(null);
-            provinceVO.setCreateAdminName(null);
-            provinceVO.setCreateDate(null);
-            provinceVO.setCreateAdminId(null);
-            provinceVO.setUpdateAdminName(null);
-            provinceVO.setUpdateAdminId(null);
-            provinceVO.setUpdateDate(null);
-            provinceVO.setDeleteStatus(null);
-            provinceVO.setCodeArray(null);
-            provinceVO.setArea(null);
-            provinceVO.setAreaSort(null);
-            provinceVO.setCity(null);
-            provinceVO.setProvince(null);
-            provinceVO.setRemark(null);
-            if(!CollectionUtils.isEmpty(provinceVO.getChildren()))
-            {
-                List<AreaVO> cityOrAreaVOChildren = (List<AreaVO>)provinceVO.getChildren();
-                for(AreaVO cityOrAreaVO:cityOrAreaVOChildren)
-                {
-                    cityOrAreaVO.setPid(null);
-                    cityOrAreaVO.setAppCode(null);
-                    cityOrAreaVO.setParentName(null);
-                    cityOrAreaVO.setCreateAdminName(null);
-                    cityOrAreaVO.setCreateDate(null);
-                    cityOrAreaVO.setCreateAdminId(null);
-                    cityOrAreaVO.setUpdateAdminName(null);
-                    cityOrAreaVO.setUpdateAdminId(null);
-                    cityOrAreaVO.setUpdateDate(null);
-                    cityOrAreaVO.setDeleteStatus(null);
-                    cityOrAreaVO.setCodeArray(null);
-                    cityOrAreaVO.setArea(null);
-                    cityOrAreaVO.setAreaSort(null);
-                    cityOrAreaVO.setCity(null);
-                    cityOrAreaVO.setProvince(null);
-                    cityOrAreaVO.setRemark(null);
+    /**
+     * 判断childPid是否是parentId的直接子节点
+     */
+    private boolean isDirectChild(Long parentId, Long childPid) {
+        return parentId != null && childPid != null && parentId.longValue() == childPid.longValue();
+    }
 
-                    if(!CollectionUtils.isEmpty(cityOrAreaVO.getChildren())) {
-                        List<AreaVO> areaVOChildren = (List<AreaVO>) cityOrAreaVO.getChildren();
-                        for (AreaVO areaVO : areaVOChildren) {
-                            areaVO.setPid(null);
-                            areaVO.setAppCode(null);
-                            areaVO.setParentName(null);
-                            areaVO.setCreateAdminName(null);
-                            areaVO.setCreateDate(null);
-                            areaVO.setCreateAdminId(null);
-                            areaVO.setUpdateAdminName(null);
-                            areaVO.setUpdateAdminId(null);
-                            areaVO.setUpdateDate(null);
-                            areaVO.setDeleteStatus(null);
-                            areaVO.setCodeArray(null);
-                            areaVO.setArea(null);
-                            areaVO.setAreaSort(null);
-                            areaVO.setCity(null);
-                            areaVO.setProvince(null);
-                            areaVO.setRemark(null);
+    /**
+     * 在allAreaVOs中查找parentId的所有直接子节点
+     */
+    private List<AreaVO> findDirectChildren(List<AreaVO> allAreaVOs, Long parentId) {
+        List<AreaVO> children = new ArrayList<>();
+        for (AreaVO vo : allAreaVOs) {
+            if (isDirectChild(parentId, vo.getPid())) {
+                setAreaNameByType(vo, vo);
+                children.add(vo);
+            }
+        }
+        return children;
+    }
+
+    /**
+     * 刷新指定节点的区县缓存
+     */
+    private void flushAreaCacheFor(AreaVO parent, List<AreaVO> areaList) {
+        if (!CollectionUtils.isEmpty(areaList)) {
+            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_" + parent.getId()), areaList);
+            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_" + parent.getCode()), areaList);
+        }
+    }
+
+    /**
+     * 递归清除缓存对象中的冗余字段，仅保留核心字段
+     */
+    private void stripFieldsRecursively(List<AreaVO> areaVOs) {
+        for (AreaVO vo : areaVOs) {
+            stripAreaVOFields(vo);
+            if (!CollectionUtils.isEmpty(vo.getChildren())) {
+                for (AreaVO child : (List<AreaVO>) vo.getChildren()) {
+                    stripAreaVOFields(child);
+                    if (!CollectionUtils.isEmpty(child.getChildren())) {
+                        for (AreaVO grandchild : (List<AreaVO>) child.getChildren()) {
+                            stripAreaVOFields(grandchild);
                         }
                     }
                 }
             }
-
         }
+    }
 
-        areaRedisService.flushFullAreaCache(allProvinces);
+    /**
+     * 清除AreaVO中不需要缓存到Redis的字段
+     */
+    private void stripAreaVOFields(AreaVO vo) {
+        vo.setPid(null);
+        vo.setAppCode(null);
+        vo.setParentName(null);
+        vo.setCreateAdminName(null);
+        vo.setCreateDate(null);
+        vo.setCreateAdminId(null);
+        vo.setUpdateAdminName(null);
+        vo.setUpdateAdminId(null);
+        vo.setUpdateDate(null);
+        vo.setDeleteStatus(null);
+        vo.setCodeArray(null);
+        vo.setArea(null);
+        vo.setAreaSort(null);
+        vo.setCity(null);
+        vo.setProvince(null);
+        vo.setRemark(null);
     }
 
 }

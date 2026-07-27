@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.user.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -41,39 +44,17 @@ public class UserCollectProductBusinessService {
     private UserCollectProductService userCollectProductService;
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserCollectProductVO userCollectProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserCollectProductVO.class);
-        if(userCollectProductVO.getProductSkuId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("商品ID不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userCollectProductVO.getAppCode()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("应用编码不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userCollectProductVO.getProductSkuId(), ResultObjectVO.FAILD, "商品ID不能为空");
+        Check.notEmpty(userCollectProductVO.getAppCode(), ResultObjectVO.FAILD, "应用编码不能为空");
         String userMainId = String.valueOf(userCollectProductVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             UserCollectProductVO queryUserCollectProduct = new UserCollectProductVO();
             queryUserCollectProduct.setUserMainId(userCollectProductVO.getUserMainId());
@@ -81,18 +62,14 @@ public class UserCollectProductBusinessService {
             List<UserCollectProduct> userCollectProducts = userCollectProductService.findListByEntity(queryUserCollectProduct);
             if(!CollectionUtils.isEmpty(userCollectProducts)&&userCollectProducts.size()>= UserCollectProductConstant.MAX_COUNT)
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("收藏商品数量达到"+ UserCollectProductConstant.MAX_COUNT+"个上限");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "收藏商品数量达到"+ UserCollectProductConstant.MAX_COUNT+"个上限");
             }
 
             queryUserCollectProduct.setProductSkuId(userCollectProductVO.getProductSkuId());
             List<UserCollectProduct> userCollectProductList = userCollectProductService.findListByEntity(queryUserCollectProduct);
             if(!CollectionUtils.isEmpty(userCollectProductList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该商品收藏");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "已存在该商品收藏");
             }
 
             userCollectProductVO.setId(idGenerator.id());
@@ -106,11 +83,12 @@ public class UserCollectProductBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userCollectProductVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
         }
@@ -123,56 +101,33 @@ public class UserCollectProductBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteBySkuIdAndUserMainIdAndAppCode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
         UserCollectProduct entity = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProduct.class);
-        if(entity.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
-        if(entity.getProductSkuId()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("商品ID不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(entity.getAppCode()))
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("应用编码不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+        Check.notNull(entity.getProductSkuId(), ResultVO.FAILD, "商品ID不能为空");
+        Check.notEmpty(entity.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
 
         String userMainId = String.valueOf(entity.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             int row = userCollectProductService.deleteBySkuIdAndUserMainIdAndAppCode(entity.getProductSkuId(),entity.getUserMainId(),entity.getAppCode());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCollectProductKey.getCollectKey(userMainId), userMainId);
         }
@@ -185,47 +140,30 @@ public class UserCollectProductBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryCollectProducts(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserCollectProductVO userCollectProductVO = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProductVO.class);
 
-            if(userCollectProductVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-            if(StringUtils.isEmpty(userCollectProductVO.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(userCollectProductVO.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+            Check.notEmpty(userCollectProductVO.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
 
             if(CollectionUtils.isEmpty(userCollectProductVO.getProductSkuIds()))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品SKU ID不能为空");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "商品SKU ID不能为空");
             }
 
             resultObjectVO.setData(userCollectProductService.findListByEntity(userCollectProductVO));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -234,23 +172,23 @@ public class UserCollectProductBusinessService {
     /**
      * 查询列表页
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO){
 
-        ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
-        if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
 
-            try {
-                UserCollectProductPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserCollectProductPageInfo.class);
-                PageInfo<UserCollectProductVO> listPage = userCollectProductService.queryListPage(pageInfo);
-                resultObjectVO.setData(listPage);
-                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                resultObjectVO.setMsg("请求完成");
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-            }
+        try {
+            UserCollectProductPageInfo pageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserCollectProductPageInfo.class);
+            PageInfo<UserCollectProductVO> listPage = userCollectProductService.queryListPage(pageInfo);
+            resultObjectVO.setData(listPage);
+            resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+            resultObjectVO.setMsg("请求完成");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求失败");
         }
         return resultObjectVO;
     }
@@ -261,23 +199,13 @@ public class UserCollectProductBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserCollectProduct entity = JSONObject.parseObject(requestVo.getEntityJson(),UserCollectProduct.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该数据
             UserCollectProductVO query=new UserCollectProductVO();
@@ -285,26 +213,23 @@ public class UserCollectProductBusinessService {
             List<UserCollectProduct> list = userCollectProductService.findListByEntity(query);
             if(CollectionUtils.isEmpty(list))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该数据不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "该数据不存在!");
             }
 
             int row = userCollectProductService.deleteById(entity.getId());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -315,22 +240,15 @@ public class UserCollectProductBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<UserCollectProduct> entitys = JSONObject.parseArray(requestVo.getEntityJson(),UserCollectProduct.class);
             if(CollectionUtils.isEmpty(entitys))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(UserCollectProduct entity:entitys) {
@@ -350,12 +268,13 @@ public class UserCollectProductBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

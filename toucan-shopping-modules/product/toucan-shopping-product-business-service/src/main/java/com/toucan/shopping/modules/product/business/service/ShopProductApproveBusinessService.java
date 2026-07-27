@@ -1,6 +1,9 @@
 package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -114,32 +117,15 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO publish(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         String shopId ="";
         try {
             logger.info("发布商品 {} ",requestJsonVO.getEntityJson());
             PublishProductApproveVO publishProductApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PublishProductApproveVO.class);
-            if(publishProductApproveVO.getShopId()==null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(publishProductApproveVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             if(publishProductApproveVO.getName().length()>ProductConstant.MAX_SHOP_PRODUCT_NAME_SIZE)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -326,6 +312,10 @@ public class ShopProductApproveBusinessService {
                 }
 
             }
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -344,32 +334,15 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO republish(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         String shopId ="";
         try {
             logger.info("发布商品 {} ",requestJsonVO.getEntityJson());
             RePublishProductApproveVO rePublishProductApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), RePublishProductApproveVO.class);
-            if(rePublishProductApproveVO.getShopId()==null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(rePublishProductApproveVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             shopId = String.valueOf(rePublishProductApproveVO.getShopId());
             skylarkLock.lock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
 
@@ -598,6 +571,10 @@ public class ShopProductApproveBusinessService {
                 }
 
             }
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -618,28 +595,21 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck
     public ResultObjectVO queryApproveListByShopId(RequestJsonVO requestJsonVO)
     {
 
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             ShopProductApproveVO query = requestJsonVO.formatEntity(ShopProductApproveVO.class);
-            if(query.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(query.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             query.setApproveStatus(ProductConstant.PROCESSING.shortValue());
             resultObjectVO.setData(shopProductApproveService.queryList(query));
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -655,23 +625,10 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApprovePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApprovePageInfo.class);
             PageInfo<ShopProductApproveVO> pageInfo =  shopProductApproveService.queryListPage(queryPageInfo);
@@ -713,6 +670,10 @@ public class ShopProductApproveBusinessService {
             }
 
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -730,32 +691,14 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByProductApproveId(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
-            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
-            {
-                logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductVO, ResultVO.FAILD, "没有找到ID!");
+            Check.isTrue(shopProductVO.getId()!=null&&shopProductVO.getId().longValue()!=-1, ResultVO.FAILD, "没有找到ID!");
             ShopProductApproveVO queryShopProductApproveVO = new ShopProductApproveVO();
             queryShopProductApproveVO.setId(shopProductVO.getId());
             List<ShopProductApproveVO> shopProductVOS = shopProductApproveService.queryList(queryShopProductApproveVO);
@@ -829,6 +772,10 @@ public class ShopProductApproveBusinessService {
                 }
             }
             resultObjectVO.setData(shopProductVOS);
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -846,39 +793,15 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByProductApproveIdAndShopId(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
-            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
-            {
-                logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID!");
-                return resultObjectVO;
-            }
-            if(shopProductVO==null||shopProductVO.getShopId()==null||shopProductVO.getShopId().longValue()==-1)
-            {
-                logger.warn("没有找到店铺ID: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到店铺ID!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductVO, ResultVO.FAILD, "没有找到ID!");
+            Check.isTrue(shopProductVO.getId()!=null&&shopProductVO.getId().longValue()!=-1, ResultVO.FAILD, "没有找到ID!");
+            Check.isTrue(shopProductVO.getShopId()!=null&&shopProductVO.getShopId().longValue()!=-1, ResultVO.FAILD, "没有找到店铺ID!");
             ShopProductApproveVO queryShopProductApproveVO = new ShopProductApproveVO();
             queryShopProductApproveVO.setId(shopProductVO.getId());
             queryShopProductApproveVO.setShopId(shopProductVO.getShopId());
@@ -956,6 +879,10 @@ public class ShopProductApproveBusinessService {
 
                 resultObjectVO.setData(shopProductVO);
             }
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -975,21 +902,14 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck
     public ResultObjectVO queryNewestListByShopId(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             ShopProductApprovePageInfo shopProductApprovePageInfo = requestJsonVO.formatEntity(ShopProductApprovePageInfo.class);
-            if(shopProductApprovePageInfo==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,无效查询对象!");
-            }
-            if(shopProductApprovePageInfo.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,没有找到店铺ID!");
-            }
+            Check.notNull(shopProductApprovePageInfo, ResultVO.FAILD, "查询失败,无效查询对象!");
+            Check.notNull(shopProductApprovePageInfo.getShopId(), ResultVO.FAILD, "查询失败,没有找到店铺ID!");
             List<ShopProductApproveVO> shopProductApproves = shopProductApproveService.queryNewestListByShopId(shopProductApprovePageInfo.getShopId(),shopProductApprovePageInfo.getLimit());
 
             List<Long> shopProductIdList = new LinkedList<>();
@@ -1044,6 +964,10 @@ public class ShopProductApproveBusinessService {
 
 
             resultObjectVO.setData(shopProductApproves);
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1062,39 +986,15 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByProductApproveIdAndShopId(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ShopProductApproveVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
-            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
-            {
-                logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID!");
-                return resultObjectVO;
-            }
-            if(shopProductVO==null||shopProductVO.getShopId()==null||shopProductVO.getShopId().longValue()==-1)
-            {
-                logger.warn("没有找到店铺ID: param:"+ JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到店铺ID!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductVO, ResultVO.FAILD, "没有找到ID!");
+            Check.isTrue(shopProductVO.getId()!=null&&shopProductVO.getId().longValue()!=-1, ResultVO.FAILD, "没有找到ID!");
+            Check.isTrue(shopProductVO.getShopId()!=null&&shopProductVO.getShopId().longValue()!=-1, ResultVO.FAILD, "没有找到店铺ID!");
             ShopProductApproveVO queryShopProductApproveVO = new ShopProductApproveVO();
             queryShopProductApproveVO.setId(shopProductVO.getId());
             queryShopProductApproveVO.setShopId(shopProductVO.getShopId());
@@ -1108,6 +1008,10 @@ public class ShopProductApproveBusinessService {
                 shopProductApproveDescriptionService.deleteByShopProductApproveId(shopProductVO.getId());
                 shopProductApproveDescriptionImgService.deleteByProductApproveId(shopProductVO.getId());
             }
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1123,26 +1027,17 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck
     public ResultObjectVO reject(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             ShopProductApproveRecordVO shopProductApproveRecordVO = requestJsonVO.formatEntity(ShopProductApproveRecordVO.class);
-            if(shopProductApproveRecordVO.getApproveId()==null)
-            {
-                resultObjectVO.setMsg("审核ID不能为空");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductApproveRecordVO.getApproveId(), ResultObjectVO.FAILD, "审核ID不能为空");
 
             //查询审核状态
             ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductApproveRecordVO.getApproveId());
-            if(shopProductApprove==null)
-            {
-                resultObjectVO.setMsg("该商品已被删除");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductApprove, ResultObjectVO.FAILD, "该商品已被删除");
             if(shopProductApprove!=null&&shopProductApprove.getId()!=-1&&shopProductApprove.getApproveStatus().intValue()!=ProductConstant.PROCESSING.intValue()) {
                 resultObjectVO.setMsg("该商品已被审核,不能重复审核");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -1176,6 +1071,10 @@ public class ShopProductApproveBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1196,6 +1095,7 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck
     public ResultObjectVO pass(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1205,37 +1105,16 @@ public class ShopProductApproveBusinessService {
         try{
             ShopProductApproveVO shopProductApproveVO = requestJsonVO.formatEntity(ShopProductApproveVO.class);
 
-            if(shopProductApproveVO.getId()==null)
-            {
-                resultObjectVO.setMsg("审核ID不能为空");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-
-            if(shopProductApproveVO.getProductId()==null)
-            {
-                resultObjectVO.setMsg("平台商品ID不能为空");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(shopProductApproveVO.getProductUuid()))
-            {
-                resultObjectVO.setMsg("平台商品UUID不能为空");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductApproveVO.getId(), ResultObjectVO.FAILD, "审核ID不能为空");
+            Check.notNull(shopProductApproveVO.getProductId(), ResultObjectVO.FAILD, "平台商品ID不能为空");
+            Check.notEmpty(shopProductApproveVO.getProductUuid(), ResultObjectVO.FAILD, "平台商品UUID不能为空");
             productApproveId = String.valueOf(shopProductApproveVO.getId());
             skylarkLock.lock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId), productApproveId);
 
 
             //查询审核状态
             ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductApproveVO.getId());
-            if(shopProductApprove==null)
-            {
-                resultObjectVO.setMsg("该商品已被删除");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductApprove, ResultObjectVO.FAILD, "该商品已被删除");
             if(shopProductApprove!=null&&shopProductApprove.getId()!=-1&&shopProductApprove.getApproveStatus().intValue()!=ProductConstant.PROCESSING.intValue()) {
                 resultObjectVO.setMsg("该商品已被审核,不能重复审核");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -1415,6 +1294,14 @@ public class ShopProductApproveBusinessService {
                 throw new IllegalArgumentException("保存商品图片失败");
             }
 
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
+            logger.warn("开始回滚数据 shopProductId {}",shopProductId);
+            shopProductService.deleteById(shopProductId);
+            shopProductImgService.deleteByShopProductId(shopProductId);
+            productSkuService.deleteByShopProductId(shopProductId);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1439,39 +1326,21 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findOneUnderReviewByFreightTemplateId(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try {
             ShopProductApproveVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
 
-            if(entity.getFreightTemplateId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("运费模板ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if(entity.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getFreightTemplateId(), ResultVO.FAILD, "运费模板ID不能为空!");
+            Check.notNull(entity.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             entity.setApproveStatus(ProductConstant.PROCESSING.shortValue());
             resultObjectVO.setData(shopProductApproveService.queryOne(entity));
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1486,34 +1355,15 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try {
             ShopProductApprove entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApprove.class);
 
-            if(entity.getId()==null)
-            {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空!");
 
             List<ShopProductApproveSkuVO>  shopProductApproveSkuVOS = shopProductApproveSkuService.queryListByProductApproveId(entity.getId());
             if(CollectionUtils.isNotEmpty(shopProductApproveSkuVOS))
@@ -1542,6 +1392,10 @@ public class ShopProductApproveBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -1559,29 +1413,22 @@ public class ShopProductApproveBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck
     public ResultTypeObjectVO<Long> queryApproveCountByShopId(RequestJsonVO requestJsonVO)
     {
 
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             ShopProductApproveVO query = requestJsonVO.formatEntity(ShopProductApproveVO.class);
-            if(query.getShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(query.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             query.setApproveStatus(ProductConstant.PROCESSING.shortValue());
             Long count = shopProductApproveService.queryCount(query);
             resultObjectVO.setData(count!=null?count:0L);
+        }catch(BusinessValidationException e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(e.getCode());
+            resultObjectVO.setMsg(e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

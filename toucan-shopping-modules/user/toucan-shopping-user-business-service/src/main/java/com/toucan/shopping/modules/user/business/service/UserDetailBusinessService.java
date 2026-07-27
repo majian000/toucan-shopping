@@ -2,10 +2,13 @@ package com.toucan.shopping.modules.user.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.user.entity.UserDetail;
 import com.toucan.shopping.modules.user.kafka.constant.UserMessageTopicConstant;
 import com.toucan.shopping.modules.user.kafka.message.UserDetailModifyMessage;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -44,37 +47,19 @@ public class UserDetailBusinessService {
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateDetail(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到要修改的用户");
-            return resultObjectVO;
-        }
 
         try {
             UserDetailVO userDetailVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserDetailVO.class);
 
-            if(userDetailVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户ID");
-                return resultObjectVO;
-            }
-
-            if(StringUtils.isEmpty(userDetailVO.getNickName()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请输入昵称");
-                return resultObjectVO;
-            }
+            Check.notNull(userDetailVO.getUserMainId(), ResultObjectVO.FAILD, "没有找到用户ID");
+            Check.notEmpty(userDetailVO.getNickName(), ResultObjectVO.FAILD, "请输入昵称");
 
             if(userDetailVO.getNickName().length()>15)
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("昵称过长,请重新输入");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "昵称过长,请重新输入");
             }
             UserDetail userDetail = new UserDetail();
             BeanUtils.copyProperties(userDetail,userDetailVO);
@@ -101,11 +86,12 @@ public class UserDetailBusinessService {
                 kafkaTemplate.send(UserMessageTopicConstant.user_detail_modify.name(),JSONObject.toJSONString(userDetailModifyMessage));
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

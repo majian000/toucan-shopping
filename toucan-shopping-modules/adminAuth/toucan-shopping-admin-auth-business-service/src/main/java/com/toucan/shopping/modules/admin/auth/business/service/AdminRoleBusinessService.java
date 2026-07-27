@@ -12,7 +12,10 @@ import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -50,29 +53,24 @@ public class AdminRoleBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveRoles(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminRoleVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminRoleVO.class);
-            if(StringUtils.isEmpty(entity.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
-            if(CollectionUtils.isEmpty(entity.getRoles()))
-            {
-                throw new IllegalArgumentException("roles为空");
-            }
+            Check.notEmpty(entity.getAdminId(), ResultVO.FAILD, "adminId为空");
+
+            Check.notEmpty(entity.getRoles(), ResultVO.FAILD, "roles为空");
+
 
             AdminApp queryAdminApp = new AdminApp();
             queryAdminApp.setAdminId(entity.getCreateAdminId());
 
             List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
 
-            if(CollectionUtils.isEmpty(adminApps))
-            {
-                throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
-            }
+            Check.notEmpty(adminApps, ResultVO.FAILD, "当前登录用户,关联应用列表为空");
+
 
             //拿到当前这个账户的操作人可管理的所有应用
             String[] appCodes = new String[adminApps.size()];
@@ -134,11 +132,12 @@ public class AdminRoleBusinessService {
                 resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(),e);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -152,25 +151,21 @@ public class AdminRoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByEntity(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminRole queryAdminRole = JSONObject.parseObject(requestVo.getEntityJson(),AdminRole.class);
             List<AdminRole> adminRoles = adminRoleService.findListByEntity(queryAdminRole);
             resultObjectVO.setData(adminRoles);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -184,14 +179,9 @@ public class AdminRoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminRolePageInfo adminRolePageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminRolePageInfo.class);
@@ -201,12 +191,13 @@ public class AdminRoleBusinessService {
             PageInfo<AdminRole> pageInfo =  adminRoleService.queryListPage(adminRolePageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

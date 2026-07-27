@@ -4,10 +4,8 @@ import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +20,13 @@ public class GlobalControllerException {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+
+    @ExceptionHandler(BusinessValidationException.class)
+    @ResponseBody
+    public ResultObjectVO handleBusinessValidationException(BusinessValidationException ex) {
+        logger.warn("业务校验失败: code={}, msg={}", ex.getCode(), ex.getMessage());
+        return new ResultObjectVO(ex.getCode(), ex.getMessage());
+    }
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody

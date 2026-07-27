@@ -22,6 +22,9 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,54 +71,27 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("添加失败,没有找到要注册的用户");
-            return resultObjectVO;
-        }
 
         try {
             Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
-            if(StringUtils.isEmpty(admin.getUsername()))
-            {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
-                resultObjectVO.setMsg("添加失败,请输入账号");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getUsername(), AdminResultVO.NOT_FOUND_USERNAME, "添加失败,请输入账号");
 
             if(admin.getUsername().length()>20)
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,账号长度不能大与20位");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "登录失败,账号长度不能大与20位");
             }
-            if(StringUtils.isEmpty(admin.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("添加失败,请输入密码");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getPassword(), AdminResultVO.PASSWORD_NOT_FOUND, "添加失败,请输入密码");
 
-            if(!AdminRegistUtil.checkPwd(admin.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("添加失败,请输入6至25位的密码并且只能是字母、数字或下划线");
-                return resultObjectVO;
-            }
+            Check.isTrue(AdminRegistUtil.checkPwd(admin.getPassword()), AdminResultVO.PASSWORD_ERROR, "添加失败,请输入6至25位的密码并且只能是字母、数字或下划线");
 
 
             Admin query=new Admin();
             query.setUsername(admin.getUsername());
             query.setDeleteStatus((short)0);
-            if(!CollectionUtils.isEmpty(adminService.findListByEntity(query)))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("账号已注册!");
-                return resultObjectVO;
-            }
+            Check.isTrue(CollectionUtils.isEmpty(adminService.findListByEntity(query)), AdminResultVO.FAILD, "账号已注册!");
             admin.setId(idGenerator.id());
             admin.setCreateDate(new Date());
             admin.setPassword(MD5Util.md5(admin.getPassword()));
@@ -125,9 +101,7 @@ public class AdminBusinessService {
             int row = adminService.save(admin);
             if (row < 1) {
 
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "添加失败,请重试!");
             }
             if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
                 for (AdminApp adminApp : admin.getAdminApps()) {
@@ -141,6 +115,8 @@ public class AdminBusinessService {
 
             resultObjectVO.setData(admin);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -159,20 +135,17 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByEntity(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             Admin adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
             List<Admin> admins = adminService.findListByEntity(adminQuery);
             resultObjectVO.setData(admins);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -189,20 +162,17 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryVOByEntity(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             Admin adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
             AdminVO adminVO = adminService.findVOByEntity(adminQuery);
             resultObjectVO.setData(adminVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -222,42 +192,27 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updatePassword(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到账号");
-            return resultObjectVO;
-        }
 
         try {
             AdminVO adminVO = JSONObject.parseObject(requestVo.getEntityJson(),AdminVO.class);
 
-            if(StringUtils.isEmpty(adminVO.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("请输入密码");
-                return resultObjectVO;
-            }
+            Check.notEmpty(adminVO.getPassword(), AdminResultVO.PASSWORD_NOT_FOUND, "请输入密码");
 
-            if(!AdminRegistUtil.checkPwd(adminVO.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("请输入6至25位的密码并且只能是字母、数字或下划线");
-                return resultObjectVO;
-            }
+            Check.isTrue(AdminRegistUtil.checkPwd(adminVO.getPassword()), AdminResultVO.PASSWORD_ERROR, "请输入6至25位的密码并且只能是字母、数字或下划线");
             adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
             int row = adminService.updatePassword(adminVO);
             if (row < 1) {
 
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "请重试!");
             }
 
             resultObjectVO.setData(adminVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -275,43 +230,24 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO login(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到要登录的用户");
-            return resultObjectVO;
-        }
 
         try {
             String entityJson = requestVo.getEntityJson();
             AdminVO admin =JSONObject.parseObject(entityJson,AdminVO.class);
-            if(StringUtils.isEmpty(admin.getUsername()))
-            {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
-                resultObjectVO.setMsg("登录失败,请输入账号");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getUsername(), AdminResultVO.NOT_FOUND_USERNAME, "登录失败,请输入账号");
             if(admin.getUsername().length()>20)
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,账号长度不能大与20位");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "登录失败,账号长度不能大与20位");
             }
 
-            if(StringUtils.isEmpty(admin.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("登录失败,请输入密码");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getPassword(), AdminResultVO.PASSWORD_NOT_FOUND, "登录失败,请输入密码");
 
             if(admin.getPassword().length()>25)
             {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("登录失败,密码长度不能大与25位");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.PASSWORD_NOT_FOUND, "登录失败,密码长度不能大与25位");
             }
             Admin query=new Admin();
             query.setUsername(admin.getUsername());
@@ -320,19 +256,12 @@ public class AdminBusinessService {
             List<Admin> adminPersistence = adminService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminPersistence))
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,账号不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "登录失败,账号不存在!");
             }
 
             admin.setAdminId(adminPersistence.get(0).getAdminId());
 
-            if(!MD5Util.md5(admin.getPassword()).equals(adminPersistence.get(0).getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,密码输入有误!");
-                return resultObjectVO;
-            }
+            Check.isTrue(MD5Util.md5(admin.getPassword()).equals(adminPersistence.get(0).getPassword()), AdminResultVO.FAILD, "登录失败,密码输入有误!");
 
             AdminApp queryAdminApp =new AdminApp();
             queryAdminApp.setDeleteStatus((short)0);
@@ -341,16 +270,12 @@ public class AdminBusinessService {
             List<AdminApp> adminApps=adminAppService.findListByEntity(queryAdminApp);
             if(CollectionUtils.isEmpty(adminApps))
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,没有权限登录应用!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "登录失败,没有权限登录应用!");
             }
             App app = appService.findByAppCode(requestVo.getAppCode());
             if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==0)
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,该应用已被禁用!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "登录失败,该应用已被禁用!");
             }
 
             String loginToken =UUID.randomUUID().toString().replace("-","");
@@ -366,6 +291,8 @@ public class AdminBusinessService {
             //保存登录日志
             adminLoginHistoryAsyncService.asyncSave(adminPersistence.get(0).getAdminId(),requestVo.getAppCode(),admin.getLoginIp(),admin.getLoginSrcType());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -382,30 +309,15 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO logout(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到要注销的用户");
-            return resultObjectVO;
-        }
 
         try {
             String entityJson = requestVo.getEntityJson();
             Admin admin =JSONObject.parseObject(entityJson,Admin.class);
-            if(StringUtils.isEmpty(admin.getAdminId()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请传入adminId");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(admin.getLoginToken()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请传入登录token");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getAdminId(), AdminResultVO.FAILD, "请传入adminId");
+            Check.notEmpty(admin.getLoginToken(), AdminResultVO.FAILD, "请传入登录token");
 
 
             Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(),requestVo.getAppCode());
@@ -425,6 +337,8 @@ public class AdminBusinessService {
             }else{
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -440,23 +354,13 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
-            if(admin.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(admin.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该应用
             Admin query=new Admin();
@@ -464,9 +368,7 @@ public class AdminBusinessService {
             List<Admin> adminList = adminService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("账号不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "账号不存在!");
             }
 
             for(Admin adminEntity:adminList)
@@ -478,6 +380,8 @@ public class AdminBusinessService {
             }
             resultObjectVO.setData(adminList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -494,31 +398,20 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryLoginToken(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             Admin admin =JSONObject.parseObject(entityJson,Admin.class);
-            if(StringUtils.isEmpty(admin.getUsername()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入账号");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getUsername(), ResultVO.FAILD, "请传入账号");
             Admin queryAdmin = new Admin();
             queryAdmin.setUsername(admin.getUsername());
             queryAdmin.setDeleteStatus((short)0);
             List<Admin> adminList = adminService.findListByEntity(queryAdmin);
             if(CollectionUtils.isEmpty(adminList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("账号不存在");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "账号不存在");
             }
 
             admin.setAdminId(adminList.get(0).getAdminId());
@@ -530,6 +423,8 @@ public class AdminBusinessService {
 
             resultObjectVO.setData(admin);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -549,29 +444,18 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO isOnline(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             Admin admin =JSONObject.parseObject(entityJson,Admin.class);
             if(StringUtils.isEmpty(admin.getUsername())&&StringUtils.isEmpty(admin.getAdminId()))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入账号或管理员ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请传入账号或管理员ID");
             }
-            if(StringUtils.isEmpty(admin.getLoginToken()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入loginToken");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getLoginToken(), ResultVO.FAILD, "请传入loginToken");
             if(StringUtils.isEmpty(admin.getAdminId()))
             {
                 Admin queryAdmin = new Admin();
@@ -579,9 +463,7 @@ public class AdminBusinessService {
                 queryAdmin.setDeleteStatus((short) 0);
                 List<Admin> adminList = adminService.findListByEntity(queryAdmin);
                 if (CollectionUtils.isEmpty(adminList)) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("账号不存在");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "账号不存在");
                 }
 
                 admin.setAdminId(adminList.get(0).getAdminId());
@@ -594,12 +476,16 @@ public class AdminBusinessService {
                         resultObjectVO.setData(true);
                     }
                 }
+            }catch(BusinessValidationException e){
+                return ResultObjectVO.fail(e.getCode(), e.getMessage());
             } catch (Exception redisEx) {
                 logger.warn("Redis 查询登录会话异常，临时放行 adminId={}: {}", admin.getAdminId(), redisEx.getMessage());
                 resultObjectVO.setData(true);
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -616,35 +502,18 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
-            if(StringUtils.isEmpty(admin.getAdminId()))
-            {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,adminId为空");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(admin.getUsername()))
-            {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
-                resultObjectVO.setMsg("修改失败,请输入账号");
-                return resultObjectVO;
-            }
+            Check.notEmpty(admin.getAdminId(), AdminResultVO.FAILD, "修改失败,adminId为空");
+            Check.notEmpty(admin.getUsername(), AdminResultVO.NOT_FOUND_USERNAME, "修改失败,请输入账号");
 
             if(admin.getUsername().length()>20)
             {
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,账号长度不能大与20位");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "修改失败,账号长度不能大与20位");
             }
 
             Admin query=new Admin();
@@ -655,17 +524,13 @@ public class AdminBusinessService {
             {
                 if(!queryAdmins.get(0).getAdminId().equals(admin.getAdminId()))
                 {
-                    resultObjectVO.setCode(AdminResultVO.FAILD);
-                    resultObjectVO.setMsg("账号已存在!");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(AdminResultVO.FAILD, "账号已存在!");
                 }
             }
             int row = adminService.update(admin);
             if (row < 1) {
 
-                resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(AdminResultVO.FAILD, "修改失败,请重试!");
             }
 
 
@@ -742,6 +607,8 @@ public class AdminBusinessService {
             resultObjectVO.setData(admin);
 
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -761,30 +628,20 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminPageInfo adminPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
 
             //查询账号主表
             PageInfo<AdminVO> pageInfo =  adminService.queryListPage(adminPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -800,28 +657,19 @@ public class AdminBusinessService {
 
 
 
+
     /**
      * 删除指定
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Admin entity = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到账号ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到账号ID");
 
             //查询是否存在该角色
             Admin query=new Admin();
@@ -829,17 +677,13 @@ public class AdminBusinessService {
             List<Admin> adminList = adminService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("账号不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "账号不存在!");
             }
 
 
             int row = adminService.deleteById(entity.getId());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //删除账号应用关联
@@ -854,6 +698,8 @@ public class AdminBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -870,22 +716,15 @@ public class AdminBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Admin> admins = JSONObject.parseArray(requestVo.getEntityJson(),Admin.class);
             if(CollectionUtils.isEmpty(admins))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到账号ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到账号ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Admin admin:admins) {
@@ -925,6 +764,8 @@ public class AdminBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

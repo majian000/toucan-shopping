@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
+
 /**
  * 管理员信息管理
  */
@@ -35,26 +39,16 @@ public class AdminInfoBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveOrUpdate(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminInfo adminInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminInfo.class);
-            if (StringUtils.isEmpty(adminInfo.getAdminId())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("adminId不能为空");
-                return resultObjectVO;
-            }
-            if (StringUtils.isEmpty(adminInfo.getRealName())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请输入真实姓名");
-                return resultObjectVO;
-            }
+            Check.notEmpty(adminInfo.getAdminId(), ResultVO.FAILD, "adminId不能为空");
+
+            Check.notEmpty(adminInfo.getRealName(), ResultVO.FAILD, "请输入真实姓名");
+
 
             AdminInfo existInfo = adminInfoService.findByAdminId(adminInfo.getAdminId());
             if (existInfo != null) {
@@ -72,10 +66,11 @@ public class AdminInfoBusinessService {
             }
 
             resultObjectVO.setData(adminInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -85,28 +80,22 @@ public class AdminInfoBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByAdminId(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminInfo query = JSONObject.parseObject(requestVo.getEntityJson(), AdminInfo.class);
-            if (StringUtils.isEmpty(query.getAdminId())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("adminId不能为空");
-                return resultObjectVO;
-            }
+            Check.notEmpty(query.getAdminId(), ResultVO.FAILD, "adminId不能为空");
+
 
             AdminInfo adminInfo = adminInfoService.findByAdminId(query.getAdminId());
             resultObjectVO.setData(adminInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

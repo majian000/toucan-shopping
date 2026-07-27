@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.category.business.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.category.entity.CategoryHot;
 import com.toucan.shopping.modules.category.page.CategoryHotTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryHotService;
 import com.toucan.shopping.modules.category.vo.CategoryHotTreeVO;
@@ -39,74 +38,44 @@ public class CategoryHotBusinessService {
 
 
     /**
-     * 保存类别
-     * @param signHeader
+     * 保存热门类别
      * @param requestJsonVO
      * @return
      */
-    public ResultObjectVO save(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
+    public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+        if (requestJsonVO == null) {
             logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
+            return failResult("请重试!");
         }
 
         try {
             CategoryHotVO categoryHot = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryHotVO.class);
 
-
-
-            if(categoryHot.getCategoryId()==null)
-            {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(categoryHot));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别名称不能为空!");
-                return resultObjectVO;
+            if (categoryHot.getCategoryId() == null) {
+                logger.info("类别ID为空 param:" + JSONObject.toJSONString(categoryHot));
+                return failResult("类别ID不能为空!");
             }
 
             CategoryHotVO queryCategory = new CategoryHotVO();
             queryCategory.setName(categoryHot.getName());
-            queryCategory.setDeleteStatus((short)0);
+            queryCategory.setDeleteStatus((short) 0);
 
-            if(!CollectionUtils.isEmpty(categoryHotService.queryList(queryCategory)))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该类别!");
-                return resultObjectVO;
+            if (!CollectionUtils.isEmpty(categoryHotService.queryList(queryCategory))) {
+                return failResult("已存在该类别!");
             }
 
             categoryHot.setId(idGenerator.id());
             categoryHot.setCreateDate(new Date());
             int row = categoryHotService.save(categoryHot);
             if (row != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return failResult("请重试!");
             }
-        }catch(Exception e)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return failResult("请重试!");
         }
-        return resultObjectVO;
+        return new ResultObjectVO();
     }
-
-
-    private boolean existsAdminId(List<String> adminIds, String adminId)
-    {
-        for (String aid : adminIds) {
-            if (aid != null && aid.equals(adminId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 
     /**
@@ -114,92 +83,106 @@ public class CategoryHotBusinessService {
      * @param requestJsonVO
      * @return
      */
-    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
+        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
+            return failResult("没有找到实体对象");
         }
 
         try {
             CategoryHotTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryHotTreeInfo.class);
 
-            List<CategoryHotTreeVO> categoryTreeVOS = new ArrayList<CategoryHotTreeVO>();
-            //按指定条件查询
-            if(StringUtils.isNotEmpty(queryPageInfo.getName()))
-            {
-                CategoryHotVO queryCategoryHot = new CategoryHotVO();
-                queryCategoryHot.setName(queryPageInfo.getName());
-                List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
-                for (int i = 0; i < categories.size(); i++) {
-                    CategoryHot category = categories.get(i);
-                    CategoryHotTreeVO categoryTreeVO = new CategoryHotTreeVO();
-                    BeanUtils.copyProperties(categoryTreeVO, category);
-                    categoryTreeVOS.add(categoryTreeVO);
-                }
-            }else {
-                //查询当前节点下的所有子节点
-                CategoryHotVO queryCategoryHot = new CategoryHotVO();
-                if(queryPageInfo.getParentId()!=null) {
-                    queryCategoryHot.setParentId(queryPageInfo.getParentId());
-                }else{
-                    queryCategoryHot.setParentId(-1L);
-                }
-                List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
-                for (int i = 0; i < categories.size(); i++) {
-                    CategoryHot category = categories.get(i);
-                    CategoryHotTreeVO categoryTreeVO = new CategoryHotTreeVO();
-                    BeanUtils.copyProperties(categoryTreeVO, category);
-
-                    queryCategoryHot = new CategoryHotVO();
-                    queryCategoryHot.setParentId(category.getId());
-                    Long childCount = categoryHotService.queryCount(queryCategoryHot);
-                    if (childCount > 0) {
-                        categoryTreeVO.setHaveChild(true);
-                    }
-                    categoryTreeVOS.add(categoryTreeVO);
-                }
+            List<CategoryHotTreeVO> categoryTreeVOS;
+            if (StringUtils.isNotEmpty(queryPageInfo.getName())) {
+                categoryTreeVOS = queryByName(queryPageInfo.getName());
+            } else {
+                categoryTreeVOS = queryByParentId(queryPageInfo.getParentId());
             }
 
-            List<String> adminIds = new ArrayList<String>();
-            //拿到树节点中所有创建人和修改人
-            if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
-                for (CategoryHotVO categoryVO : categoryTreeVOS) {
-                    if (categoryVO.getCreateAdminId() != null&&!"-1".equals(categoryVO.getCreateAdminId())&&!existsAdminId(adminIds,categoryVO.getCreateAdminId())) {
-                        adminIds.add(categoryVO.getCreateAdminId());
-                    }
-                    if (categoryVO.getUpdateAdminId() != null&&!"-1".equals(categoryVO.getUpdateAdminId())&&!existsAdminId(adminIds,categoryVO.getUpdateAdminId())) {
-                        adminIds.add(categoryVO.getUpdateAdminId());
-                    }
-                }
+            // 将按名称查询的结果设置为顶级节点
+            if (StringUtils.isNotEmpty(queryPageInfo.getName())) {
+                setAsTopLevel(categoryTreeVOS);
             }
 
-
-            //将查询的这个节点设置为顶级节点
-            if(StringUtils.isNotEmpty(queryPageInfo.getName())) {
-                if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
-                    for (CategoryHot category : categoryTreeVOS) {
-                        category.setParentId(-1L);
-                    }
-                }
-            }
-
+            ResultObjectVO resultObjectVO = new ResultObjectVO();
             resultObjectVO.setData(categoryTreeVOS);
+            return resultObjectVO;
 
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return failResult("请稍后重试");
         }
-        return resultObjectVO;
     }
 
 
+    // ==================== 私有辅助方法 ====================
 
+    /**
+     * 构建失败结果
+     */
+    private ResultObjectVO failResult(String msg) {
+        ResultObjectVO result = new ResultObjectVO();
+        result.setCode(ResultVO.FAILD);
+        result.setMsg(msg);
+        return result;
+    }
 
+    /**
+     * 按名称模糊查询
+     */
+    private List<CategoryHotTreeVO> queryByName(String name) {
+        List<CategoryHotTreeVO> result = new ArrayList<>();
+        CategoryHotVO queryCategoryHot = new CategoryHotVO();
+        queryCategoryHot.setName(name);
+        List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
+        for (CategoryHotVO category : categories) {
+            result.add(buildTreeVO(category));
+        }
+        return result;
+    }
+
+    /**
+     * 按父节点ID查询子节点
+     */
+    private List<CategoryHotTreeVO> queryByParentId(Long parentId) {
+        List<CategoryHotTreeVO> result = new ArrayList<>();
+        CategoryHotVO queryCategoryHot = new CategoryHotVO();
+        queryCategoryHot.setParentId(parentId != null ? parentId : -1L);
+        List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
+        for (CategoryHotVO category : categories) {
+            CategoryHotTreeVO treeVO = buildTreeVO(category);
+            // 检查是否有子节点
+            CategoryHotVO childQuery = new CategoryHotVO();
+            childQuery.setParentId(category.getId());
+            if (categoryHotService.queryCount(childQuery) > 0) {
+                treeVO.setHaveChild(true);
+            }
+            result.add(treeVO);
+        }
+        return result;
+    }
+
+    /**
+     * 将CategoryHotVO属性复制到CategoryHotTreeVO
+     */
+    private CategoryHotTreeVO buildTreeVO(CategoryHotVO source) {
+        CategoryHotTreeVO treeVO = new CategoryHotTreeVO();
+        try {
+            BeanUtils.copyProperties(treeVO, source);
+        } catch (Exception e) {
+            logger.warn("复制CategoryHot属性失败", e);
+        }
+        return treeVO;
+    }
+
+    /**
+     * 将所有节点设置为顶级节点（parentId=-1）
+     */
+    private void setAsTopLevel(List<CategoryHotTreeVO> categoryTreeVOS) {
+        if (!CollectionUtils.isEmpty(categoryTreeVOS)) {
+            for (CategoryHotTreeVO vo : categoryTreeVOS) {
+                vo.setParentId(-1L);
+            }
+        }
+    }
 
 }

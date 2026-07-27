@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 
 @Service
 public class SmsBusinessService {
@@ -49,46 +52,22 @@ public class SmsBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO send(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("短信发送失败,没有找到目标用户");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(requestJsonVO.getAppCode()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("短信发送失败,没有找到应用编码");
-            return resultObjectVO;
-        }
 
         UserSmsVO userSmsVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserSmsVO.class);
-        if (userSmsVO == null) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("短信发送失败,没有找到目标");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(userSmsVO.getMobilePhone())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("短信发送失败,请输入手机号");
-            return resultObjectVO;
-        }
+        Check.notNull(userSmsVO, UserRegistConstant.NOT_FOUND_USER, "短信发送失败,没有找到目标");
 
-        if (userSmsVO.getType()==null||
-                (userSmsVO.getType().intValue()!= SmsTypeConstant.USER_REGIST_TYPE&&userSmsVO.getType().intValue()!=SmsTypeConstant.USER_LOGIN_TYPE&&userSmsVO.getType().intValue()!=SmsTypeConstant.SHOP_REGIST_TYPE)) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_SMS_TYPE);
-            resultObjectVO.setMsg("短信发送失败,请选择发送类型");
-            return resultObjectVO;
-        }
+        Check.notEmpty(userSmsVO.getMobilePhone(), UserRegistConstant.NOT_FOUND_MOBILE, "短信发送失败,请输入手机号");
+
+        Check.isTrue(userSmsVO.getType()!=null && (userSmsVO.getType().intValue()==SmsTypeConstant.USER_REGIST_TYPE||userSmsVO.getType().intValue()==SmsTypeConstant.USER_LOGIN_TYPE||userSmsVO.getType().intValue()==SmsTypeConstant.SHOP_REGIST_TYPE), UserRegistConstant.NOT_FOUND_SMS_TYPE, "短信发送失败,请选择发送类型");
 
         try {
 
             boolean lockStatus = skylarkLock.lock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请求超时,请稍后重试");
             }
 
 //            int a = 1/0;
@@ -96,12 +75,13 @@ public class SmsBusinessService {
             //调用第三方短信接口
             logger.info("{} send messsage {}",userSmsVO.getMobilePhone(),userSmsVO.getMsg());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("发送短信验证码失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "发送短信验证码失败,请稍后重试");
         }finally {
             skylarkLock.unLock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
         }

@@ -32,6 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -78,31 +81,16 @@ public class UserBusinessService {
     @Autowired
     private UserLoginHistoryQueue userLoginHistoryQueue;
 
-
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByMobilePhone(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        Check.isTrue(StringUtils.isNotEmpty(userRegistVO.getMobilePhone())&&PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()), UserRegistConstant.MOBILE_ERROR, "查询失败,手机号错误");
         try {
-
-            if(StringUtils.isEmpty(userRegistVO.getMobilePhone())||!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
-            {
-                resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-                resultObjectVO.setMsg("查询失败,手机号错误");
-                return resultObjectVO;
-            }
             List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
             resultObjectVO.setData(userEntityList);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -112,65 +100,19 @@ public class UserBusinessService {
         return resultObjectVO;
     }
 
-
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO registByMobilePhone(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到要注册的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到要注册的用户");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("请输入注册手机号");
-            return resultObjectVO;
-        }
-
-        if(!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("手机号错误");
-            return resultObjectVO;
-        }
-
-        if(StringUtils.isEmpty(userRegistVO.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("请输入密码");
-            return resultObjectVO;
-        }
-
-        if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg(UserRegistUtil.checkPwdFailText());
-            return resultObjectVO;
-        }
-
-
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "没有找到要注册的用户");
+        Check.notEmpty(userRegistVO.getMobilePhone(), UserRegistConstant.NOT_FOUND_MOBILE, "请输入注册手机号");
+        Check.isTrue(PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()), UserRegistConstant.MOBILE_ERROR, "手机号错误");
+        Check.notEmpty(userRegistVO.getPassword(), UserRegistConstant.PASSWORD_NOT_FOUND, "请输入密码");
+        Check.isTrue(UserRegistUtil.checkPwd(userRegistVO.getPassword()), UserRegistConstant.PASSWORD_ERROR, UserRegistUtil.checkPwdFailText());
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请稍后重试");
             //查询手机号是否已注册
             List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
             if (!CollectionUtils.isEmpty(userEntityList)) {
@@ -255,6 +197,8 @@ public class UserBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -272,37 +216,16 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateHeadsculpture(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserVO.class);
 
-
-            if(StringUtils.isEmpty(userVO.getHeadSculpture()))
-            {
-                logger.info("头像为空 param:"+ JSONObject.toJSONString(userVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("头像不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(userVO.getUserMainId()==null)
-            {
-                logger.info("用户ID为空 param:"+ JSONObject.toJSONString(userVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(userVO.getHeadSculpture(), ResultVO.FAILD, "头像不能为空!");
+            Check.notNull(userVO.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             UserDetail userDetail = new UserDetail();
             userDetail.setHeadSculpture(userVO.getHeadSculpture());
@@ -310,9 +233,7 @@ public class UserBusinessService {
 
             int row = userDetailService.updateHeadSculpture(userDetail);
             if (row <=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             resultObjectVO.setData(userDetail);
@@ -325,6 +246,8 @@ public class UserBusinessService {
                 logger.warn(e.getMessage(),e);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -334,59 +257,19 @@ public class UserBusinessService {
         return resultObjectVO;
     }
 
-
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO resetPassword(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("重置失败,没有找到要重置的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("重置失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("重置失败,没有找到要重置的用户");
-            return resultObjectVO;
-        }
-
-        if(userRegistVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("重置失败,用户ID为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("重置失败,请输入密码");
-            return resultObjectVO;
-        }
-
-        if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("重置失败,"+UserRegistUtil.checkPwdFailText());
-            return resultObjectVO;
-        }
-
-
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "重置失败,没有找到要重置的用户");
+        Check.notNull(userRegistVO.getUserMainId(), UserRegistConstant.PASSWORD_NOT_FOUND, "重置失败,用户ID为空");
+        Check.notEmpty(userRegistVO.getPassword(), UserRegistConstant.PASSWORD_NOT_FOUND, "重置失败,请输入密码");
+        Check.isTrue(UserRegistUtil.checkPwd(userRegistVO.getPassword()), UserRegistConstant.PASSWORD_ERROR, "重置失败,"+UserRegistUtil.checkPwdFailText());
 
         String userMainId = String.valueOf(userRegistVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
 
             String password = MD5Util.md5(userRegistVO.getPassword());
 
@@ -397,6 +280,8 @@ public class UserBusinessService {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("重置失败,请稍后重试");
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -413,55 +298,18 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO connectUsername(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("关联失败,请输入用户名");
-            return resultObjectVO;
-        }
-
-        if(!UsernameUtils.isUsername(userRegistVO.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("关联失败,用户名格式错误");
-            return resultObjectVO;
-        }
-
-        if(userRegistVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到参数");
+        Check.notEmpty(userRegistVO.getUsername(), UserRegistConstant.NOT_FOUND_MOBILE, "关联失败,请输入用户名");
+        Check.isTrue(UsernameUtils.isUsername(userRegistVO.getUsername()), UserRegistConstant.MOBILE_ERROR, "关联失败,用户名格式错误");
+        Check.notNull(userRegistVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到要用户主ID");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindUserNameLock(userRegistVO.getUsername()), userRegistVO.getUsername());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
             //查询用户名是否已关联
             UserUserName query = new UserUserName();
             query.setUsername(userRegistVO.getUsername());
@@ -515,6 +363,8 @@ public class UserBusinessService {
                     logger.warn(e.getMessage(),e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -532,47 +382,21 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findUsernameListByUsername(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到要关联的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到要注册的用户");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("查询失败,请输入用户名");
-            return resultObjectVO;
-        }
-
-        if(!UsernameUtils.isUsername(userRegistVO.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("查询失败,用户名格式错误");
-            return resultObjectVO;
-        }
-
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "查询失败,没有找到要注册的用户");
+        Check.notEmpty(userRegistVO.getUsername(), UserRegistConstant.NOT_FOUND_MOBILE, "查询失败,请输入用户名");
+        Check.isTrue(UsernameUtils.isUsername(userRegistVO.getUsername()), UserRegistConstant.MOBILE_ERROR, "查询失败,用户名格式错误");
 
         try {
             UserUserName query = new UserUserName();
             query.setUsername(userRegistVO.getUsername());
             List<UserUserName> userUserNameList = userUserNameService.findListByEntity(query);
             resultObjectVO.setData(userUserNameList);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -589,55 +413,18 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO connectEmail(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("关联失败,请输入邮箱");
-            return resultObjectVO;
-        }
-
-        if(!EmailUtils.isEmail(userRegistVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("关联失败,邮箱格式错误");
-            return resultObjectVO;
-        }
-
-        if(userRegistVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到参数");
+        Check.notEmpty(userRegistVO.getEmail(), UserRegistConstant.NOT_FOUND_MOBILE, "关联失败,请输入邮箱");
+        Check.isTrue(EmailUtils.isEmail(userRegistVO.getEmail()), UserRegistConstant.MOBILE_ERROR, "关联失败,邮箱格式错误");
+        Check.notNull(userRegistVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到要用户主ID");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
             //查询邮箱是否已关联
             UserEmail query = new UserEmail();
             query.setEmail(userRegistVO.getEmail());
@@ -692,6 +479,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -709,55 +498,18 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateConnectEmail(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserBindEmailVO userBindEmailVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserBindEmailVO.class);
-        if(userBindEmailVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userBindEmailVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("关联失败,请输入邮箱");
-            return resultObjectVO;
-        }
-
-        if(!EmailUtils.isEmail(userBindEmailVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("关联失败,邮箱格式错误");
-            return resultObjectVO;
-        }
-
-        if(userBindEmailVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userBindEmailVO, UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到参数");
+        Check.notEmpty(userBindEmailVO.getEmail(), UserRegistConstant.NOT_FOUND_MOBILE, "关联失败,请输入邮箱");
+        Check.isTrue(EmailUtils.isEmail(userBindEmailVO.getEmail()), UserRegistConstant.MOBILE_ERROR, "关联失败,邮箱格式错误");
+        Check.notNull(userBindEmailVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到要用户主ID");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindEmailLock(String.valueOf(userBindEmailVO.getUserMainId())), String.valueOf(userBindEmailVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
 
             List<UserEmail> userEmails = userEmailService.findListByEmail(userBindEmailVO.getEmail());
             if (!CollectionUtils.isEmpty(userEmails)) {
@@ -804,6 +556,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -821,55 +575,18 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateConnectMobilePhone(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserBindMobilePhoneVO userBindMobilePhoneVO =requestJsonVO.formatEntity(UserBindMobilePhoneVO.class);
-        if(userBindMobilePhoneVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userBindMobilePhoneVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("关联失败,请输入手机号");
-            return resultObjectVO;
-        }
-
-        if(!PhoneUtils.isChinaPhoneLegal(userBindMobilePhoneVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("关联失败,手机号格式错误");
-            return resultObjectVO;
-        }
-
-        if(userBindMobilePhoneVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userBindMobilePhoneVO, UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到参数");
+        Check.notEmpty(userBindMobilePhoneVO.getMobilePhone(), UserRegistConstant.NOT_FOUND_MOBILE, "关联失败,请输入手机号");
+        Check.isTrue(PhoneUtils.isChinaPhoneLegal(userBindMobilePhoneVO.getMobilePhone()), UserRegistConstant.MOBILE_ERROR, "关联失败,手机号格式错误");
+        Check.notNull(userBindMobilePhoneVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到要用户主ID");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindMobilePhoneLock(String.valueOf(userBindMobilePhoneVO.getUserMainId())), String.valueOf(userBindMobilePhoneVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
 
             List<UserMobilePhone> userMobilePhoneList = userMobilePhoneService.findListByMobilePhone(userBindMobilePhoneVO.getMobilePhone());
             if (!CollectionUtils.isEmpty(userMobilePhoneList)) {
@@ -916,6 +633,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -933,40 +652,13 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findEmailListByEmail(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到要关联的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到要注册的用户");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("查询失败,请输入邮箱");
-            return resultObjectVO;
-        }
-
-        if(!EmailUtils.isEmail(userRegistVO.getEmail()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("查询失败,邮箱格式错误");
-            return resultObjectVO;
-        }
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "查询失败,没有找到要注册的用户");
+        Check.notEmpty(userRegistVO.getEmail(), UserRegistConstant.NOT_FOUND_MOBILE, "查询失败,请输入邮箱");
+        Check.isTrue(EmailUtils.isEmail(userRegistVO.getEmail()), UserRegistConstant.MOBILE_ERROR, "查询失败,邮箱格式错误");
 
         try {
             UserEmail query = new UserEmail();
@@ -974,6 +666,8 @@ public class UserBusinessService {
             List<UserEmail> userEmails = userEmailService.findListByEntity(query);
             resultObjectVO.setData(userEmails);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -990,40 +684,15 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateDetail(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要操作的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
-        if(userVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
-            return resultObjectVO;
-        }
-        if(userVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要用户ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userVO, UserRegistConstant.NOT_FOUND_USER, "修改失败,没有找到要修改的用户");
+        Check.notNull(userVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "修改失败,没有找到要用户ID");
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
             //判断这个昵称是否被占用,如果出现这个昵称两个人使用的情况就判断这两个人如果有一个人是这个用户,还允许使用
             UserDetail query = new UserDetail();
             List<UserDetail> userDetails = null;
@@ -1089,6 +758,8 @@ public class UserBusinessService {
                     logger.warn(e.getMessage(),e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1118,52 +789,17 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO editInfo(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,没有找到要操作的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
-        if(userVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
-            return resultObjectVO;
-        }
-        if(userVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,没有找到要用户ID");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userVO.getNickName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,昵称不能为空");
-            return resultObjectVO;
-        }
-        if(!NicknameUtils.isNickname(userVO.getNickName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("修改失败,昵称不合法,不能以数字开头,可以是汉字、字母下划线组合");
-            return resultObjectVO;
-        }
+        Check.notNull(userVO, ResultObjectVO.FAILD, "修改失败,没有找到要修改的用户");
+        Check.notNull(userVO.getUserMainId(), ResultObjectVO.FAILD, "修改失败,没有找到要用户ID");
+        Check.notEmpty(userVO.getNickName(), ResultObjectVO.FAILD, "修改失败,昵称不能为空");
+        Check.isTrue(NicknameUtils.isNickname(userVO.getNickName()), ResultObjectVO.FAILD, "修改失败,昵称不合法,不能以数字开头,可以是汉字、字母下划线组合");
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
             //过滤字段非法值
             this.executeFieldValueFilter(userVO);
 
@@ -1242,6 +878,8 @@ public class UserBusinessService {
                     logger.warn(e.getMessage(),e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1259,40 +897,15 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateIsShop(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要操作的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
-        if(userVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
-            return resultObjectVO;
-        }
-        if(userVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("修改失败,没有找到要用户ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userVO, UserRegistConstant.NOT_FOUND_USER, "修改失败,没有找到要修改的用户");
+        Check.notNull(userVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "修改失败,没有找到要用户ID");
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
 
             UserDetail query = new UserDetail();
             query.setUserMainId(userVO.getUserMainId());
@@ -1320,6 +933,8 @@ public class UserBusinessService {
                     logger.warn(e.getMessage(),e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1335,47 +950,20 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO loginByPassword(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到要登录的用户");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到应用编码");
-            return resultObjectVO;
-        }
 
         UserLoginVO userLogin = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserLoginVO.class);
-        if(userLogin==null)
-        {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到账号");
-            return resultObjectVO;
-        }
+        Check.notNull(userLogin, UserLoginConstant.NOT_FOUND_USER, "登录失败,没有找到账号");
         logger.info(" 用户登录 {} ",requestJsonVO.getEntityJson());
 
-        if (StringUtils.isEmpty(userLogin.getPassword())) {
-            resultObjectVO.setCode(UserLoginConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("登录失败,请输入密码");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userLogin.getLoginUserName()))
-        {
-            resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
-            resultObjectVO.setMsg("登录失败,请输入账号");
-            return resultObjectVO;
-        }
+        Check.notEmpty(userLogin.getPassword(), UserLoginConstant.PASSWORD_NOT_FOUND, "登录失败,请输入密码");
+        Check.notEmpty(userLogin.getLoginUserName(), UserLoginConstant.USERNAME_NOT_FOUND, "登录失败,请输入账号");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
 
             //如果当前输入的是手机号判断手机号是否存在
             Long userId = 0L;
@@ -1497,6 +1085,8 @@ public class UserBusinessService {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("登录失败,用户已被禁用");
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1515,34 +1105,15 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByUsername(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到要查询的用户");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到应用编码");
-            return resultObjectVO;
-        }
 
         UserVO user = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
-        if(user==null)
-        {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到账号");
-            return resultObjectVO;
-        }
+        Check.notNull(user, UserLoginConstant.NOT_FOUND_USER, "登录失败,没有找到账号");
         logger.info(" 用户查询 {} ",requestJsonVO.getEntityJson());
 
-        if(StringUtils.isEmpty(user.getUsername()))
-        {
-            resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
-            resultObjectVO.setMsg("查询失败,请输入账号");
-            return resultObjectVO;
-        }
+        Check.notEmpty(user.getUsername(), UserLoginConstant.USERNAME_NOT_FOUND, "查询失败,请输入账号");
 
         try {
 
@@ -1610,6 +1181,8 @@ public class UserBusinessService {
                 userVO.setEmail(userEmail.getEmail());
             }
             resultObjectVO.setData(userVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1626,22 +1199,13 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryLoginInfo(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userLoginVO.getUserMainId(), ResultVO.FAILD, "查询失败,请传入用户ID");
             String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
@@ -1654,6 +1218,8 @@ public class UserBusinessService {
                 resultObjectVO.setData(JSONObject.parseObject(String.valueOf(loginTokenObject),UserVO.class));
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1669,28 +1235,21 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO logout(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("退出登录失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("退出登录失败,请传入用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userLoginVO.getUserMainId(), ResultVO.FAILD, "退出登录失败,请传入用户ID");
             String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
 
             ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisServiceByUserMainId(userLoginVO.getUserMainId());
             //删除登录信息
             toucanStringRedisService.delete(loginGroupKey);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1707,29 +1266,15 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO isOnline(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入用户ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userLoginVO.getLoginToken()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入loginToken");
-                return resultObjectVO;
-            }
+            Check.notNull(userLoginVO.getUserMainId(), ResultVO.FAILD, "查询失败,请传入用户ID");
+            Check.notEmpty(userLoginVO.getLoginToken(), ResultVO.FAILD, "查询失败,请传入loginToken");
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
@@ -1746,6 +1291,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1762,28 +1309,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO verifyLoginToken(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入用户ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userLoginVO.getLoginToken()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入loginToken");
-                return resultObjectVO;
-            }
+            Check.notNull(userLoginVO.getUserMainId(), ResultVO.FAILD, "查询失败,请传入用户ID");
+            Check.notEmpty(userLoginVO.getLoginToken(), ResultVO.FAILD, "查询失败,请传入loginToken");
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
@@ -1797,6 +1330,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1813,28 +1348,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO verifyLoginTokenAndIsOnline(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入用户ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userLoginVO.getLoginToken()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请传入loginToken");
-                return resultObjectVO;
-            }
+            Check.notNull(userLoginVO.getUserMainId(), ResultVO.FAILD, "查询失败,请传入用户ID");
+            Check.notEmpty(userLoginVO.getLoginToken(), ResultVO.FAILD, "查询失败,请传入loginToken");
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
@@ -1859,6 +1380,8 @@ public class UserBusinessService {
             }
 
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1875,28 +1398,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO verifyRealName(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
-        if (requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
 
         UserVO userVo = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
-        if(userVo==null)
-        {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到账号");
-            return resultObjectVO;
-        }
-        if(userVo.getUserMainId() == null)
-        {
-            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userVo, UserLoginConstant.NOT_FOUND_USER, "查询失败,没有找到账号");
+        Check.notNull(userVo.getUserMainId(), UserLoginConstant.NOT_FOUND_USER, "查询失败,没有找到用户主ID");
         logger.info(" 用户登录 {} ",requestVo.getEntityJson());
 
         try {
@@ -1932,6 +1441,8 @@ public class UserBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1947,24 +1458,12 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
             List<Long> userMainIdLinkedList = new LinkedList();
             boolean findEntity = true;
@@ -2110,6 +1609,8 @@ public class UserBusinessService {
             }
 
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2126,35 +1627,20 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO mobilePhoneList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(userPageInfo.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户主ID");
-                return resultObjectVO;
-            }
-
+            Check.notNull(userPageInfo.getUserMainId(), ResultVO.FAILD, "没有找到用户主ID");
 
             //查询用户手机号关联表
             resultObjectVO.setData(userMobilePhoneService.queryListPageNothingDeleteStatus(userPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2171,35 +1657,20 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO emailList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(userPageInfo.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户主ID");
-                return resultObjectVO;
-            }
-
+            Check.notNull(userPageInfo.getUserMainId(), ResultVO.FAILD, "没有找到用户主ID");
 
             //查询用户邮箱关联表
             resultObjectVO.setData(userEmailService.queryListPageNothingDeleteStatus(userPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2216,35 +1687,20 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO usernameList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(userPageInfo.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户主ID");
-                return resultObjectVO;
-            }
-
+            Check.notNull(userPageInfo.getUserMainId(), ResultVO.FAILD, "没有找到用户主ID");
 
             //查询用户名关联表
             resultObjectVO.setData(userUserNameService.queryListPageNothingDeleteStatus(userPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2260,23 +1716,13 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledEnabledById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "操作失败,没有找到ID");
 
             List<User> users = userService.findListByUserMainId(entity.getUserMainId());
             if(CollectionUtils.isNotEmpty(users)) {
@@ -2305,6 +1751,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2321,29 +1769,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledEnabledMobilePhone(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserMobilePhoneVO queryUserMobile = JSONObject.parseObject(requestVo.getEntityJson(),UserMobilePhoneVO.class);
-            if(queryUserMobile.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(queryUserMobile.getMobilePhone()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到手机号");
-                return resultObjectVO;
-            }
+            Check.notNull(queryUserMobile.getUserMainId(), ResultVO.FAILD, "操作失败,没有找到ID");
+            Check.notEmpty(queryUserMobile.getMobilePhone(), ResultVO.FAILD, "操作失败,没有找到手机号");
 
             List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(queryUserMobile);
             if(CollectionUtils.isNotEmpty(userMobilePhones)) {
@@ -2390,6 +1823,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(queryUserMobile);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2406,29 +1841,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledEnabledEmail(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserEmailVO queryUserEmail = JSONObject.parseObject(requestVo.getEntityJson(),UserEmailVO.class);
-            if(queryUserEmail.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(queryUserEmail.getEmail()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到邮箱");
-                return resultObjectVO;
-            }
+            Check.notNull(queryUserEmail.getUserMainId(), ResultVO.FAILD, "操作失败,没有找到ID");
+            Check.notEmpty(queryUserEmail.getEmail(), ResultVO.FAILD, "操作失败,没有找到邮箱");
 
 
             List<UserEmail> userEmails = userEmailService.findListByEntityNothingDeleteStatus(queryUserEmail);
@@ -2476,6 +1896,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(queryUserEmail);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2492,29 +1914,14 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserUserNameVO queryUsername = JSONObject.parseObject(requestVo.getEntityJson(),UserUserNameVO.class);
-            if(queryUsername.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(queryUsername.getUsername()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到用户名");
-                return resultObjectVO;
-            }
+            Check.notNull(queryUsername.getUserMainId(), ResultVO.FAILD, "操作失败,没有找到ID");
+            Check.notEmpty(queryUsername.getUsername(), ResultVO.FAILD, "操作失败,没有找到用户名");
 
 
             List<UserUserName> userUserNames = userUserNameService.findListByEntityNothingDeleteStatus(queryUsername);
@@ -2562,6 +1969,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(queryUsername);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2577,22 +1986,15 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<UserVO> users = JSONObject.parseArray(requestVo.getEntityJson(),UserVO.class);
             if(CollectionUtils.isEmpty(users))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(UserVO user:users) {
@@ -2612,6 +2014,8 @@ public class UserBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2628,24 +2032,12 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByUserMainId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserVO userVO = JSONObject.parseObject(requestVo.getEntityJson(), UserVO.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
 
             List<User> users = userService.findListByUserMainId(userVO.getUserMainId());
@@ -2691,6 +2083,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(userVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2707,24 +2101,12 @@ public class UserBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByUserMainIdForCacheOrDB(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserVO userVO = JSONObject.parseObject(requestVo.getEntityJson(), UserVO.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
 
             List<UserElasticSearchVO> userElasticSearchVOS = null;
 
@@ -2798,6 +2180,8 @@ public class UserBusinessService {
 
             resultObjectVO.setData(userVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2813,55 +2197,18 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO connectMobilePhone(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到参数");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("关联失败,请输入手机号");
-            return resultObjectVO;
-        }
-
-        if(!PhoneUtils.isPhoneLegal(userRegistVO.getMobilePhone()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("关联失败,手机号格式错误");
-            return resultObjectVO;
-        }
-
-        if(userRegistVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("关联失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到参数");
+        Check.notEmpty(userRegistVO.getMobilePhone(), UserRegistConstant.NOT_FOUND_MOBILE, "关联失败,请输入手机号");
+        Check.isTrue(PhoneUtils.isPhoneLegal(userRegistVO.getMobilePhone()), UserRegistConstant.MOBILE_ERROR, "关联失败,手机号格式错误");
+        Check.notNull(userRegistVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "关联失败,没有找到要用户主ID");
 
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getBindMobilePhoneLock(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
+            Check.isTrue(lockStatus, ResultObjectVO.FAILD, "请求超时,请稍后重试");
             //查询邮箱是否已关联
             UserMobilePhone query = new UserMobilePhone();
             query.setMobilePhone(userRegistVO.getMobilePhone());
@@ -2915,6 +2262,8 @@ public class UserBusinessService {
                     logger.warn(e.getMessage(),e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -2932,38 +2281,19 @@ public class UserBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO flushCache(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("刷新失败,没有找到要操作的用户");
-            return resultObjectVO;
-        }
-
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("刷新失败,没有找到应用编码");
-            return resultObjectVO;
-        }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("刷新失败,没有找到要操作的用户");
-            return resultObjectVO;
-        }
-        if(userRegistVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("刷新失败,没有找到要用户主ID");
-            return resultObjectVO;
-        }
+        Check.notNull(userRegistVO, UserRegistConstant.NOT_FOUND_USER, "刷新失败,没有找到要操作的用户");
+        Check.notNull(userRegistVO.getUserMainId(), UserRegistConstant.NOT_FOUND_USER, "刷新失败,没有找到要用户主ID");
         try {
 
             //刷新用户信息到登录缓存
             userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()),userRegistVO.getAppCode());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.seller.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -57,44 +60,21 @@ public class SellerShopBusinessService {
     private ToucanStringRedisService toucanStringRedisService;
 
 
-
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         SellerShopVO sellerShopVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShopVO.class);
-        if(StringUtils.isEmpty(sellerShopVO.getName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("店铺名称不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(sellerShopVO.getName(), ResultObjectVO.FAILD, "店铺名称不能为空");
         //去空格
         sellerShopVO.setName(sellerShopVO.getName().replace(" ",""));
-        if(sellerShopVO.getType()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("类型不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(sellerShopVO.getType(), ResultObjectVO.FAILD, "类型不能为空");
 
         String userMainId = String.valueOf(sellerShopVO.getUserMainId());
         try {
 
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             //查询关联店铺
             SellerShop querySellerShop = new SellerShop();
@@ -107,11 +87,7 @@ public class SellerShopBusinessService {
                 List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
                 if(!CollectionUtils.isEmpty(sellerShops))
                 {
-                    //释放锁
-                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该用户已有店铺");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "该用户已有店铺");
                 }
 
                 //查询该店铺是否已被注册
@@ -121,11 +97,7 @@ public class SellerShopBusinessService {
                 sellerShops = sellerShopService.findListByEntity(querySellerShop);
                 if(!CollectionUtils.isEmpty(sellerShops))
                 {
-                    //释放锁
-                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该店铺已注册");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "该店铺已注册");
                 }
 
                 sellerShopVO.setApproveStatus(2);  //个人店铺直接审核通过
@@ -154,11 +126,12 @@ public class SellerShopBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(sellerShopVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
         }
@@ -171,30 +144,14 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByUser(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerShop querySellerShop = JSONObject.parseObject(requestVo.getEntityJson(), SellerShop.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(querySellerShop.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(querySellerShop.getUserMainId(), ResultVO.FAILD, "没有找到用户ID");
 
 
             Object shopJsonObject = toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(querySellerShop.getUserMainId())));
@@ -220,12 +177,13 @@ public class SellerShopBusinessService {
             }
 
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -239,23 +197,13 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerShopVO entity = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在
             SellerShop query=new SellerShop();
@@ -263,18 +211,17 @@ public class SellerShopBusinessService {
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(query);
             if(CollectionUtils.isEmpty(sellerShops))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "对象不存在!");
             }
             resultObjectVO.setData(sellerShops);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -286,40 +233,32 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerShopVO query = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
             if(query.getIdList()==null||query.getIdList().size()<=0)
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID集合");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID集合");
             }
 
             List<SellerShop> entitys = sellerShopService.queryList(query);
             if(CollectionUtils.isEmpty(entitys))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺列表为空");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "店铺列表为空");
             }
 
             resultObjectVO.setData(entitys);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -365,23 +304,13 @@ public class SellerShopBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO flushCache(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             SellerShop querySellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
 
-            if(StringUtils.isEmpty(requestJsonVO.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(querySellerShop.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户ID");
-                return resultObjectVO;
-            }
+            Check.notNull(querySellerShop.getUserMainId(), ResultVO.FAILD, "没有找到用户ID");
 
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
             if(!CollectionUtils.isEmpty(sellerShops)) {
@@ -392,6 +321,8 @@ public class SellerShopBusinessService {
 
                 refershRedisCache(sellerShopVO.getId());
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -405,37 +336,17 @@ public class SellerShopBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
 
 
-            if(StringUtils.isEmpty(sellerShop.getName()))
-            {
-                logger.info("名称为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(sellerShop.getId()==null)
-            {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(sellerShop.getName(), ResultVO.FAILD, "名称不能为空!");
+            Check.notNull(sellerShop.getId(), ResultVO.FAILD, "ID不能为空!");
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setName(sellerShop.getName());
@@ -446,9 +357,7 @@ public class SellerShopBusinessService {
             {
                 if(sellerShop.getId().longValue() != sellerShops.get(0).getId().longValue())
                 {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该店铺名称已被注册!");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "该店铺名称已被注册!");
                 }
             }
 
@@ -457,13 +366,13 @@ public class SellerShopBusinessService {
 
             int row = sellerShopService.update(sellerShop);
             if (row != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             refershRedisCache(sellerShop.getId());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -482,37 +391,17 @@ public class SellerShopBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateLogo(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
 
 
-            if(StringUtils.isEmpty(sellerShop.getLogo()))
-            {
-                logger.info("图标为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("图标不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(sellerShop.getUserMainId()==null)
-            {
-                logger.info("用户ID为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(sellerShop.getLogo(), ResultVO.FAILD, "图标不能为空!");
+            Check.notNull(sellerShop.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             SellerShop updateSellerShop = new SellerShop();
             updateSellerShop.setLogo(sellerShop.getLogo());
@@ -523,13 +412,13 @@ public class SellerShopBusinessService {
 
                 int row = sellerShopService.updateLogo(updateSellerShop);
                 if (row <= 0) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请重试!");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
                 }
 
                 refershRedisCache(sellerShopEntity.getId());
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -548,38 +437,18 @@ public class SellerShopBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateInfo(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
 
 
 
-            if(StringUtils.isEmpty(sellerShop.getName()))
-            {
-                logger.info("店铺名称为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺名称不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(sellerShop.getUserMainId()==null)
-            {
-                logger.info("用户ID为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notEmpty(sellerShop.getName(), ResultVO.FAILD, "店铺名称不能为空!");
+            Check.notNull(sellerShop.getUserMainId(), ResultVO.FAILD, "用户ID不能为空!");
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setName(sellerShop.getName());
@@ -591,9 +460,7 @@ public class SellerShopBusinessService {
                 {
                     if(sellerShopEntity.getUserMainId().longValue()!=sellerShop.getUserMainId().longValue())
                     {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("该店铺名称已被注册!");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "该店铺名称已被注册!");
                     }
                 }
             }
@@ -602,9 +469,7 @@ public class SellerShopBusinessService {
 
             if(CollectionUtils.isEmpty(sellerShops))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺不存在或已被禁用!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "店铺不存在或已被禁用!");
             }else{
                 SellerShop sellerShopRet= sellerShops.get(0);
                 if(!sellerShopRet.getName().equals(sellerShop.getName()))
@@ -622,9 +487,7 @@ public class SellerShopBusinessService {
 
 
             if(updateSellerShop.getChangeNameCount()> ShopConstant.CHANGE_NAME_COUNT) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改名称次数已达到限制!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "修改名称次数已达到限制!");
             }
 
             updateSellerShop.setName(sellerShop.getName());
@@ -642,11 +505,11 @@ public class SellerShopBusinessService {
 
             int row = sellerShopService.updateInfo(updateSellerShop);
             if (row <=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,请稍后重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "修改失败,请稍后重试!");
             }
             refershRedisCache(updateSellerShop.getId());
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -661,36 +524,17 @@ public class SellerShopBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try {
             SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
 
 
 
-            if(sellerShop.getId()==null)
-            {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(sellerShop));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(sellerShop.getId(), ResultVO.FAILD, "ID不能为空!");
 
 
             SellerShop query = new SellerShop();
@@ -699,21 +543,19 @@ public class SellerShopBusinessService {
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(query);
             if(CollectionUtils.isEmpty(sellerShops))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该店铺!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在该店铺!");
             }
 
             sellerShop = sellerShops.get(0);
             int row = sellerShopService.deleteById(sellerShop.getId());
             if (row <=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             removeRedisCache(sellerShop.getUserMainId());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -732,22 +574,15 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<SellerShop> sellerShops = JSONObject.parseArray(requestVo.getEntityJson(),SellerShop.class);
             if(CollectionUtils.isEmpty(sellerShops))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(SellerShop sellerShop:sellerShops) {
@@ -768,12 +603,13 @@ public class SellerShopBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -785,34 +621,23 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerShopPageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), SellerShopPageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(sellerShopService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -826,23 +651,13 @@ public class SellerShopBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO disabledEnabled(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerShopVO entity = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
-            if(entity.getPublicShopId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getPublicShopId(), ResultVO.FAILD, "没有找到ID");
 
             SellerShopVO querySellerShopVO = new SellerShopVO();
             querySellerShopVO.setPublicShopId(entity.getPublicShopId());
@@ -860,9 +675,7 @@ public class SellerShopBusinessService {
                     sellerShopList = sellerShopService.findListByEntity(queryUserSellerShopVO);
                     if(!CollectionUtils.isEmpty(sellerShopList)&&sellerShopList.size()>1)
                     {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("启用失败,该用户下已经存在其他店铺");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "启用失败,该用户下已经存在其他店铺");
                     }
 
 
@@ -887,12 +700,13 @@ public class SellerShopBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

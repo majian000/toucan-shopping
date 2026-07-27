@@ -2,10 +2,13 @@ package com.toucan.shopping.modules.user.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.user.constant.AppCodeEnum;
 import com.toucan.shopping.modules.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -58,63 +61,21 @@ public class UserTrueNameApproveBusinessService {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
-        if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("真实姓名不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件号码不能为空");
-            return resultObjectVO;
-        }
-        if(userTrueNameApprove.getIdcardType()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件类型不能为空");
-            return resultObjectVO;
-        }
-        if(userTrueNameApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件正面照片不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件背面照片不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(userTrueNameApprove.getTrueName(), ResultObjectVO.FAILD, "真实姓名不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdCard(), ResultObjectVO.FAILD, "证件号码不能为空");
+        Check.notNull(userTrueNameApprove.getIdcardType(), ResultObjectVO.FAILD, "证件类型不能为空");
+        Check.notNull(userTrueNameApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdcardImg1(), ResultObjectVO.FAILD, "证件正面照片不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdcardImg2(), ResultObjectVO.FAILD, "证件背面照片不能为空");
         String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             //查询是否存在审核中
             UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
@@ -123,9 +84,7 @@ public class UserTrueNameApproveBusinessService {
             List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
             if(CollectionUtils.isNotEmpty(userTrueNameApproves))
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("实名认证正在审核中");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "实名认证正在审核中");
             }
 
             userTrueNameApprove.setId(idGenerator.id());
@@ -138,11 +97,12 @@ public class UserTrueNameApproveBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userTrueNameApprove);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
         }
@@ -150,70 +110,23 @@ public class UserTrueNameApproveBusinessService {
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
-        if(userTrueNameApprove.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("ID为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("真实姓名不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件号码不能为空");
-            return resultObjectVO;
-        }
-        if(userTrueNameApprove.getIdcardType()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件类型不能为空");
-            return resultObjectVO;
-        }
-        if(userTrueNameApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件正面照片不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("证件背面照片不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userTrueNameApprove.getId(), ResultObjectVO.FAILD, "ID为空");
+        Check.notEmpty(userTrueNameApprove.getTrueName(), ResultObjectVO.FAILD, "真实姓名不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdCard(), ResultObjectVO.FAILD, "证件号码不能为空");
+        Check.notNull(userTrueNameApprove.getIdcardType(), ResultObjectVO.FAILD, "证件类型不能为空");
+        Check.notNull(userTrueNameApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdcardImg1(), ResultObjectVO.FAILD, "证件正面照片不能为空");
+        Check.notEmpty(userTrueNameApprove.getIdcardImg2(), ResultObjectVO.FAILD, "证件背面照片不能为空");
 
         String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
             userTrueNameApprove.setDeleteStatus((short)0);
@@ -225,11 +138,12 @@ public class UserTrueNameApproveBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userTrueNameApprove);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
         }
@@ -242,55 +156,34 @@ public class UserTrueNameApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserTrueNameApprovePageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserTrueNameApprovePageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(userTrueNameApproveService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByUserMainId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
-        if(userTrueNameApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userTrueNameApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
             queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
@@ -299,31 +192,22 @@ public class UserTrueNameApproveBusinessService {
             }
             List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
             resultObjectVO.setData(userTrueNameApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
-        if(userTrueNameApprove.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userTrueNameApprove.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
             queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
@@ -332,42 +216,34 @@ public class UserTrueNameApproveBusinessService {
             }
             List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntityOrderByUpdateDateDesc(queryUserTrueNameApprove);
             resultObjectVO.setData(userTrueNameApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
-            return resultObjectVO;
-        }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
-        if(userTrueNameApprove.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("查询失败,ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(userTrueNameApprove.getId(), ResultObjectVO.FAILD, "查询失败,ID不能为空");
         try {
             UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
             queryUserTrueNameApprove.setId(userTrueNameApprove.getId());
             List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
             resultObjectVO.setData(userTrueNameApproves);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "查询失败,请稍后重试");
         }
         return resultObjectVO;
     }
@@ -378,23 +254,13 @@ public class UserTrueNameApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO passById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserTrueNameApproveVO userTrueNameApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserTrueNameApproveVO.class);
-            if(userTrueNameApproveVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userTrueNameApproveVO.getId(), ResultVO.FAILD, "操作失败,没有找到ID");
 
             UserTrueNameApprove queryUserTrueNameApprove= new UserTrueNameApprove();
             queryUserTrueNameApprove.setId(userTrueNameApproveVO.getId());
@@ -409,9 +275,7 @@ public class UserTrueNameApproveBusinessService {
 
                     if (ret <= 0) {
                         logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("操作失败,请稍后重试");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
                     }
 
 
@@ -473,18 +337,17 @@ public class UserTrueNameApproveBusinessService {
                 }
             }
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
         }
-        return resultObjectVO;
     }
+
 
 
 
@@ -495,23 +358,13 @@ public class UserTrueNameApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO rejectById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             UserTrueNameApproveVO userTrueNameApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserTrueNameApproveVO.class);
-            if(userTrueNameApproveVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("操作失败,没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(userTrueNameApproveVO.getId(), ResultVO.FAILD, "操作失败,没有找到ID");
 
             UserTrueNameApprove queryUserTrueNameApprove= new UserTrueNameApprove();
             queryUserTrueNameApprove.setId(userTrueNameApproveVO.getId());
@@ -527,9 +380,7 @@ public class UserTrueNameApproveBusinessService {
 
                     if (ret <= 0) {
                         logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("操作失败,请稍后重试");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
                     }
 
 
@@ -551,17 +402,15 @@ public class UserTrueNameApproveBusinessService {
                 }
             }
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("操作失败,请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "操作失败,请稍后重试");
         }
-        return resultObjectVO;
     }
 
 
@@ -571,22 +420,15 @@ public class UserTrueNameApproveBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<UserTrueNameApprove> userTrueNameApproves = JSONObject.parseArray(requestVo.getEntityJson(),UserTrueNameApprove.class);
             if(CollectionUtils.isEmpty(userTrueNameApproves))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(UserTrueNameApprove userTrueNameApprove:userTrueNameApproves) {
@@ -606,12 +448,13 @@ public class UserTrueNameApproveBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

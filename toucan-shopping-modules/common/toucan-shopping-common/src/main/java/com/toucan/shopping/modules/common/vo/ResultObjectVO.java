@@ -32,6 +32,23 @@ public class ResultObjectVO extends ResultVO {
         return false;
     }
 
+    /** 快速构造失败响应 */
+    public static ResultObjectVO fail(Integer code, String msg) {
+        return new ResultObjectVO(code, msg);
+    }
+
+    /** 快速构造成功响应 */
+    public static ResultObjectVO ok() {
+        return new ResultObjectVO();
+    }
+
+    /** 快速构造成功响应（带数据） */
+    public static ResultObjectVO ok(Object data) {
+        ResultObjectVO vo = new ResultObjectVO();
+        vo.setData(data);
+        return vo;
+    }
+
     public <T> T formatData(Class<T> clazz)
     {
         if(data!=null) {

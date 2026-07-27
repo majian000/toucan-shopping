@@ -37,6 +37,9 @@ public class ColumnTypeBusinessService {
     @Autowired
     private ColumnTypeService columnTypeService;
 
+    /**
+     * 保存栏目类型
+     */
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
@@ -49,23 +52,23 @@ public class ColumnTypeBusinessService {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        ColumnTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypeVO.class);
-        if (StringUtils.isEmpty(messageTypeVO.getName())) {
+        ColumnTypeVO columnTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypeVO.class);
+        if (StringUtils.isEmpty(columnTypeVO.getName())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("类型名称不能为空");
             return resultObjectVO;
         }
-        if (StringUtils.isEmpty(messageTypeVO.getCode())) {
+        if (StringUtils.isEmpty(columnTypeVO.getCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("类型编码不能为空");
             return resultObjectVO;
         }
-        if (StringUtils.isEmpty(messageTypeVO.getAppCode())) {
+        if (StringUtils.isEmpty(columnTypeVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
-        String lockKey = messageTypeVO.getAppCode() + "_" + messageTypeVO.getCode();
+        String lockKey = columnTypeVO.getAppCode() + "_" + columnTypeVO.getCode();
         try {
             boolean lockStatus = skylarkLock.lock(ColumnTypeLockKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
@@ -75,24 +78,24 @@ public class ColumnTypeBusinessService {
             }
 
             ColumnTypeVO query = new ColumnTypeVO();
-            query.setCode(messageTypeVO.getCode());
-            List<ColumnTypeVO> messageTypes = columnTypeService.queryList(query);
-            if (!CollectionUtils.isEmpty(messageTypes)) {
+            query.setCode(columnTypeVO.getCode());
+            List<ColumnTypeVO> columnTypeList = columnTypeService.queryList(query);
+            if (!CollectionUtils.isEmpty(columnTypeList)) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("该编码已存在");
                 return resultObjectVO;
             }
 
-            messageTypeVO.setId(idGenerator.id());
-            messageTypeVO.setDeleteStatus((short) 0);
-            messageTypeVO.setCreateDate(new Date());
-            int ret = columnTypeService.save(messageTypeVO);
+            columnTypeVO.setId(idGenerator.id());
+            columnTypeVO.setDeleteStatus((short) 0);
+            columnTypeVO.setCreateDate(new Date());
+            int ret = columnTypeService.save(columnTypeVO);
             if (ret <= 0) {
-                logger.warn("保存消息类型失败 requestJson{} id{}", requestJsonVO.getEntityJson(), messageTypeVO.getId());
+                logger.warn("保存栏目类型失败 requestJson{} id{}", requestJsonVO.getEntityJson(), columnTypeVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
-            resultObjectVO.setData(messageTypeVO);
+            resultObjectVO.setData(columnTypeVO);
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
@@ -104,6 +107,9 @@ public class ColumnTypeBusinessService {
         return resultObjectVO;
     }
 
+    /**
+     * 批量删除栏目类型
+     */
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
@@ -113,65 +119,58 @@ public class ColumnTypeBusinessService {
         }
 
         try {
-            List<ColumnTypeVO> messageTypeVOS = JSONObject.parseArray(requestVo.getEntityJson(), ColumnTypeVO.class);
-            if (CollectionUtils.isEmpty(messageTypeVOS)) {
+            List<ColumnTypeVO> columnTypeVOS = JSONObject.parseArray(requestVo.getEntityJson(), ColumnTypeVO.class);
+            if (CollectionUtils.isEmpty(columnTypeVOS)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
-            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for (ColumnTypeVO messageTypeVO : messageTypeVOS) {
-                if (messageTypeVO.getId() != null) {
-                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(messageTypeVO);
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<>();
+            for (ColumnTypeVO columnTypeVO : columnTypeVOS) {
+                if (columnTypeVO.getId() != null) {
+                    ResultObjectVO itemResult = new ResultObjectVO();
+                    itemResult.setData(columnTypeVO);
 
-                    int row = columnTypeService.deleteById(messageTypeVO.getId());
+                    int row = columnTypeService.deleteById(columnTypeVO.getId());
                     if (row < 1) {
-                        logger.warn("删除消息类型失败，id:{}", messageTypeVO.getId());
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请重试!");
-                        continue;
+                        logger.warn("删除栏目类型失败，id:{}", columnTypeVO.getId());
+                        itemResult.setCode(ResultVO.FAILD);
+                        itemResult.setMsg("请重试!");
                     }
+                    resultObjectVOList.add(itemResult);
                 }
             }
             resultObjectVO.setData(resultObjectVOList);
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    /**
+     * 删除单个栏目类型
+     */
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
+        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
         try {
-            ColumnTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypeVO.class);
-
-            if (messageTypeVO.getId() == null) {
-                logger.info("ID为空 param:" + JSONObject.toJSONString(messageTypeVO));
+            ColumnTypeVO columnTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypeVO.class);
+            if (columnTypeVO.getId() == null) {
+                logger.info("ID为空 param:{}", JSONObject.toJSONString(columnTypeVO));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
                 return resultObjectVO;
             }
 
-
-            int ret = columnTypeService.deleteById(messageTypeVO.getId());
+            int ret = columnTypeService.deleteById(columnTypeVO.getId());
             if (ret <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在该类型!");
@@ -186,6 +185,9 @@ public class ColumnTypeBusinessService {
         return resultObjectVO;
     }
 
+    /**
+     * 更新栏目类型
+     */
     public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
@@ -195,60 +197,72 @@ public class ColumnTypeBusinessService {
         }
 
         try {
-            ColumnTypeVO entity = JSONObject.parseObject(requestVo.getEntityJson(), ColumnTypeVO.class);
+            ColumnTypeVO columnTypeVO = JSONObject.parseObject(requestVo.getEntityJson(), ColumnTypeVO.class);
 
-            if (StringUtils.isEmpty(entity.getCode())) {
-                logger.info("编码为空 param:" + JSONObject.toJSONString(entity));
+            if (columnTypeVO.getId() == null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请传入ID");
+                return resultObjectVO;
+            }
+            if (StringUtils.isEmpty(columnTypeVO.getCode())) {
+                logger.info("编码为空 param:{}", JSONObject.toJSONString(columnTypeVO));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("编码不能为空!");
                 return resultObjectVO;
             }
-            if (StringUtils.isEmpty(entity.getName())) {
-                logger.info("名称为空 param:" + JSONObject.toJSONString(entity));
+            if (StringUtils.isEmpty(columnTypeVO.getName())) {
+                logger.info("名称为空 param:{}", JSONObject.toJSONString(columnTypeVO));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("名称不能为空!");
                 return resultObjectVO;
             }
 
-            if (entity.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入ID");
+            String lockKey = columnTypeVO.getAppCode() + "_" + columnTypeVO.getCode();
+            boolean lockStatus = skylarkLock.lock(ColumnTypeLockKey.getUpdateLockKey(lockKey), lockKey);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
-
-            ColumnTypeVO query = new ColumnTypeVO();
-            query.setCode(entity.getCode());
-            List<ColumnTypeVO> messageTypes = columnTypeService.queryList(query);
-            if (!CollectionUtils.isEmpty(messageTypes)) {
-                for (ColumnTypeVO messageTypeVO : messageTypes) {
-                    if (messageTypeVO.getId().longValue() != entity.getId().longValue()) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("该编码已存在");
-                        return resultObjectVO;
+            try {
+                ColumnTypeVO query = new ColumnTypeVO();
+                query.setCode(columnTypeVO.getCode());
+                List<ColumnTypeVO> columnTypeList = columnTypeService.queryList(query);
+                if (!CollectionUtils.isEmpty(columnTypeList)) {
+                    for (ColumnTypeVO existing : columnTypeList) {
+                        if (existing.getId().longValue() != columnTypeVO.getId().longValue()) {
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                            resultObjectVO.setMsg("该编码已存在");
+                            return resultObjectVO;
+                        }
                     }
                 }
+
+                columnTypeVO.setUpdateDate(new Date());
+                int row = columnTypeService.update(columnTypeVO);
+                if (row < 1) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请重试!");
+                    return resultObjectVO;
+                }
+
+                resultObjectVO.setData(columnTypeVO);
+
+            } finally {
+                skylarkLock.unLock(ColumnTypeLockKey.getUpdateLockKey(lockKey), lockKey);
             }
-
-            entity.setUpdateDate(new Date());
-            int row = columnTypeService.update(entity);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
-
-            resultObjectVO.setData(entity);
-
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    /**
+     * 根据ID查询栏目类型
+     */
     public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
@@ -265,27 +279,28 @@ public class ColumnTypeBusinessService {
                 return resultObjectVO;
             }
 
-            //查询是否存在该对象
             ColumnTypeVO query = new ColumnTypeVO();
             query.setId(columnTypeVO.getId());
-            List<ColumnTypeVO> entitys = columnTypeService.queryList(query);
-            if (CollectionUtils.isEmpty(entitys)) {
+            List<ColumnTypeVO> columnTypeList = columnTypeService.queryList(query);
+            if (CollectionUtils.isEmpty(columnTypeList)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
 
-            resultObjectVO.setData(entitys);
+            resultObjectVO.setData(columnTypeList);
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    /**
+     * 根据编码查询栏目类型
+     */
     public ResultTypeObjectVO<ColumnTypeVO> findOneByCode(RequestJsonVO requestVo) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
         if (requestVo == null || requestVo.getEntityJson() == null) {
@@ -302,39 +317,33 @@ public class ColumnTypeBusinessService {
                 return resultObjectVO;
             }
 
-            //查询是否存在该对象
             ColumnTypeVO query = new ColumnTypeVO();
             query.setCode(columnTypeVO.getCode());
-            List<ColumnTypeVO> entitys = columnTypeService.queryList(query);
-            if (CollectionUtils.isEmpty(entitys)) {
+            List<ColumnTypeVO> columnTypeList = columnTypeService.queryList(query);
+            if (CollectionUtils.isEmpty(columnTypeList)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
 
-            resultObjectVO.setData(entitys.get(0));
+            resultObjectVO.setData(columnTypeList.get(0));
 
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
 
+    /**
+     * 分页查询栏目类型
+     */
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
+        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -346,22 +355,17 @@ public class ColumnTypeBusinessService {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
-
         return resultObjectVO;
     }
 
+    /**
+     * 查询栏目类型列表
+     */
     public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
+        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -372,7 +376,6 @@ public class ColumnTypeBusinessService {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
-
         return resultObjectVO;
     }
 

@@ -2,7 +2,10 @@ package com.toucan.shopping.modules.user.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -39,51 +42,19 @@ public class ConsigneeAddressBusinessService {
     private ConsigneeAddressService consigneeAddressService;
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
-        if(StringUtils.isEmpty(consigneeAddressVO.getAppCode()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("应用编码不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货人不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货地址不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("联系电话不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(consigneeAddressVO.getAppCode(), ResultObjectVO.FAILD, "应用编码不能为空");
+        Check.notEmpty(consigneeAddressVO.getName(), ResultObjectVO.FAILD, "收货人不能为空");
+        Check.notEmpty(consigneeAddressVO.getAddress(), ResultObjectVO.FAILD, "收货地址不能为空");
+        Check.notEmpty(consigneeAddressVO.getPhone(), ResultObjectVO.FAILD, "联系电话不能为空");
         String userMainId = String.valueOf(consigneeAddressVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
             //查询收货人数量
             ConsigneeAddressVO queryConsigneeAddress = new ConsigneeAddressVO();
@@ -92,9 +63,7 @@ public class ConsigneeAddressBusinessService {
             List<ConsigneeAddress> consigneeAddresses = consigneeAddressService.findListByEntity(queryConsigneeAddress);
             if(!CollectionUtils.isEmpty(consigneeAddresses)&&consigneeAddresses.size()>= ConsigneeAddressConstant.MAX_COUNT)
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("收货信息数量达到"+ ConsigneeAddressConstant.MAX_COUNT+"个上限");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "收货信息数量达到"+ ConsigneeAddressConstant.MAX_COUNT+"个上限");
             }
 
 
@@ -115,11 +84,12 @@ public class ConsigneeAddressBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(consigneeAddressVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
         }
@@ -135,52 +105,28 @@ public class ConsigneeAddressBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIdAndUserMainIdAndAppCode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空");
-                return resultObjectVO;
-            }
-
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空");
+            Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+            Check.notEmpty(entity.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
             int row = consigneeAddressService.deleteByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -191,54 +137,25 @@ public class ConsigneeAddressBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO listByUserMainId(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
-        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货人不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货地址不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("联系电话不能为空");
-            return resultObjectVO;
-        }
-        if(consigneeAddressVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("用户ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(consigneeAddressVO.getName(), ResultObjectVO.FAILD, "收货人不能为空");
+        Check.notEmpty(consigneeAddressVO.getAddress(), ResultObjectVO.FAILD, "收货地址不能为空");
+        Check.notEmpty(consigneeAddressVO.getPhone(), ResultObjectVO.FAILD, "联系电话不能为空");
+        Check.notNull(consigneeAddressVO.getUserMainId(), ResultObjectVO.FAILD, "用户ID不能为空");
         try {
             //查询收货信息列表
             ConsigneeAddressVO queryConsigneeAddress = new ConsigneeAddressVO();
             queryConsigneeAddress.setUserMainId(consigneeAddressVO.getUserMainId());
             resultObjectVO.setData(consigneeAddressService.findListByEntity(queryConsigneeAddress));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -251,34 +168,23 @@ public class ConsigneeAddressBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ConsigneeAddressPageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), ConsigneeAddressPageInfo.class);
 
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(consigneeAddressService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -292,55 +198,31 @@ public class ConsigneeAddressBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO setDefaultByIdAndUserMainId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空");
-                return resultObjectVO;
-            }
-
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空");
+            Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+            Check.notEmpty(entity.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
 
             consigneeAddressService.setCancelDefaultByUserMainIdAndAppCode(entity.getUserMainId(),entity.getAppCode());
 
             int row = consigneeAddressService.setDefaultByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -353,47 +235,25 @@ public class ConsigneeAddressBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdAndUserMainIdAndAppcode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空");
-                return resultObjectVO;
-            }
-
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空");
+            Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+            Check.notEmpty(entity.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
 
             resultObjectVO.setData(consigneeAddressService.findByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode()));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -402,57 +262,20 @@ public class ConsigneeAddressBusinessService {
 
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
-        if(StringUtils.isEmpty(consigneeAddressVO.getAppCode()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("应用编码不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货人不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("收货地址不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("联系电话不能为空");
-            return resultObjectVO;
-        }
-        if(consigneeAddressVO.getId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(consigneeAddressVO.getAppCode(), ResultObjectVO.FAILD, "应用编码不能为空");
+        Check.notEmpty(consigneeAddressVO.getName(), ResultObjectVO.FAILD, "收货人不能为空");
+        Check.notEmpty(consigneeAddressVO.getAddress(), ResultObjectVO.FAILD, "收货地址不能为空");
+        Check.notEmpty(consigneeAddressVO.getPhone(), ResultObjectVO.FAILD, "联系电话不能为空");
+        Check.notNull(consigneeAddressVO.getId(), ResultObjectVO.FAILD, "ID不能为空");
         String userMainId = String.valueOf(consigneeAddressVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserCenterConsigneeAddressKey.getUpdateLockKey(userMainId), userMainId);
             if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
             }
 
             consigneeAddressVO.setUpdateDate(new Date());
@@ -465,11 +288,12 @@ public class ConsigneeAddressBusinessService {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(consigneeAddressVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterConsigneeAddressKey.getUpdateLockKey(userMainId), userMainId);
         }
@@ -484,32 +308,15 @@ public class ConsigneeAddressBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findDefaultByUserMainIdAndAppcode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
 
-            if(entity.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(entity.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("应用编码不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getUserMainId(), ResultVO.FAILD, "用户ID不能为空");
+            Check.notEmpty(entity.getAppCode(), ResultVO.FAILD, "应用编码不能为空");
 
             ConsigneeAddressVO consigneeAddressVO = consigneeAddressService.findDefaultByUserMainIdAndAppCode(entity.getUserMainId(),entity.getAppCode());
             //如果没有默认 就查询最新一条
@@ -519,12 +326,13 @@ public class ConsigneeAddressBusinessService {
             }
             resultObjectVO.setData(consigneeAddressVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
