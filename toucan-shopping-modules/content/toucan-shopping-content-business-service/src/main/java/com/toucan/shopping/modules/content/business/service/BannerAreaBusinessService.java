@@ -1,8 +1,17 @@
 package com.toucan.shopping.modules.content.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.service.BannerAreaService;
@@ -23,6 +32,7 @@ public class BannerAreaBusinessService {
     @Autowired
     private BannerAreaService bannerAreaService;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryBannerAreaList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

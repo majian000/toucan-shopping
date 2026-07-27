@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.*;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.*;
@@ -159,6 +162,7 @@ public class ProductSkuBusinessService {
         return shopProductSkuVO;
     }
 
+    @RequestCheck
     public ResultListVO queryShelvesList(RequestJsonVO requestJsonVO) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("status", 1);
@@ -169,31 +173,18 @@ public class ProductSkuBusinessService {
         return resultListVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdForFront(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSku.class);
 
-            if (productSku.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSku.getId(), ResultVO.FAILD, "商品ID不能为空!");
             ProductSkuVO shopProductSkuVO = queryProductSkuByCacheOrDB(productSku.getId(), 1);
             shopProductSkuVO.setSkuStatusList(productSkuService.queryShelvesBuyStatus(shopProductSkuVO.getShopProductId()));
             resultObjectVO.setData(shopProductSkuVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -203,30 +194,17 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdForFrontPreview(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSku.class);
 
-            if (productSku.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSku.getId(), ResultVO.FAILD, "商品ID不能为空!");
             ProductSkuVO shopProductApproveSkuVO = queryProductSkuByCacheOrDB(productSku.getId(), -1);
             resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -236,27 +214,12 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOneByShopProductIdForFront(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
-            if (shopProductVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
 
             ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndAttrPath(shopProductVO.getId(), shopProductVO.getAttrPath());
             //如果当前属性路径没有商品,在往上查询,直到返回一个商品
@@ -291,6 +254,8 @@ public class ProductSkuBusinessService {
                     resultObjectVO.setData(productSkuVO);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -300,33 +265,20 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOneByShopProductIdForFrontPreview(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
-            if (shopProductVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(shopProductVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
 
             ProductSku productSku = productSkuService.queryFirstOneByShopProductIdAndStatus(shopProductVO.getId(), -1);
             if (productSku != null) {
                 ProductSkuVO shopProductSkuVO = queryProductSkuByCacheOrDB(productSku.getId(), -1);
                 resultObjectVO.setData(shopProductSkuVO);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -336,20 +288,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try {
             ProductSkuPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuPageInfo.class);
             PageInfo<ProductSkuVO> pageInfo = productSkuService.queryListPage(queryPageInfo);
@@ -374,6 +315,8 @@ public class ProductSkuBusinessService {
                 }
             }
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -383,20 +326,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSku.class);
             productSku = productSkuService.queryById(productSku.getId());
@@ -418,6 +350,8 @@ public class ProductSkuBusinessService {
                 }
             }
             resultObjectVO.setData(productSkuVO);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -427,29 +361,13 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
             //防止查询库中全部数据 在这里做个必填校验
-            if (productSkuVO.getShopProductId() == null) {
-                logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSkuVO.getShopProductId(), ResultVO.FAILD, "店铺商品ID不能为空!");
             List<ProductSkuVO> productSkuVOS = productSkuService.queryList(productSkuVO);
             if (!CollectionUtils.isEmpty(productSkuVOS)) {
                 if (productSkuVOS.get(0).getShopProductId() != null) {
@@ -472,6 +390,8 @@ public class ProductSkuBusinessService {
                 }
             }
             resultObjectVO.setData(productSkuVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -481,20 +401,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByIdList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             List<ProductSkuVO> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(), ProductSkuVO.class);
             if (!CollectionUtils.isEmpty(productSkus)) {
@@ -511,6 +420,8 @@ public class ProductSkuBusinessService {
                 }
                 resultObjectVO.setData(productSkuList);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -520,49 +431,30 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO inventoryReduction(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null || StringUtils.isEmpty(requestJsonVO.getEntityJson())) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         List<InventoryReductionVO> inventoryReductions = requestJsonVO.formatEntityList(InventoryReductionVO.class);
 
         logger.info("扣库存: param: {} ", requestJsonVO.getEntityJson());
         if (CollectionUtils.isEmpty(inventoryReductions)) {
             logger.info("没有找到扣除库存的商品: param:{} ", requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到商品!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param: {} ", requestJsonVO.getAppCode());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到商品!");
         }
 
         for (InventoryReductionVO inventoryReductionVO : inventoryReductions) {
             if (StringUtils.isEmpty(inventoryReductionVO.getUserId())) {
                 logger.info("没有找到用户: param: {} ", JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到用户");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到用户");
             }
             if (inventoryReductionVO.getProductSkuId() == null) {
                 logger.info("没有找到商品ID: param: {} ", JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到商品ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到商品ID");
             }
             if (inventoryReductionVO.getStockNum() == null || inventoryReductionVO.getStockNum().intValue() <= 0) {
                 logger.info("扣库存数量不能为0: param: {} ", JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("扣库存数量不能为0");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "扣库存数量不能为0");
             }
         }
 
@@ -577,20 +469,14 @@ public class ProductSkuBusinessService {
                 for (ProductSku productSku : productSkus) {
                     if (productSku.getId().longValue() == inventoryReductionVO.getProductSkuId().longValue()) {
                         if (productSku.getStockNum().intValue() < inventoryReductionVO.getStockNum().intValue()) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("没有库存了");
-                            resultObjectVO.setData(inventoryReductionVO);
-                            return resultObjectVO;
+                            return ResultObjectVO.fail(ResultVO.FAILD, "没有库存了", inventoryReductionVO);
                         }
                         isFind = true;
                         break;
                     }
                 }
                 if (!isFind) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("商品已下架");
-                    resultObjectVO.setData(inventoryReductionVO);
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "商品已下架", inventoryReductionVO);
                 }
             }
 
@@ -605,6 +491,8 @@ public class ProductSkuBusinessService {
                     productSkuRedisService.deleteCache(String.valueOf(inventoryReductionVO.getProductSkuId()));
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             //还原库存
             if (!CollectionUtils.isEmpty(restoreInventoryReductions)) {
@@ -622,28 +510,15 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateStock(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null || StringUtils.isEmpty(requestJsonVO.getEntityJson())) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         String productSkuId = "-1";
         try {
             ProductSkuVO productSkuVO = requestJsonVO.formatEntity(ProductSkuVO.class);
-            if (productSkuVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
-            if (productSkuVO.getStockNum() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("库存数量不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSkuVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
+            Check.notNull(productSkuVO.getStockNum(), ResultVO.FAILD, "库存数量不能为空!");
             productSkuId = String.valueOf(productSkuVO.getId());
             skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
@@ -652,6 +527,8 @@ public class ProductSkuBusinessService {
             //延时双删
             Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -662,28 +539,15 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updatePrice(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null || StringUtils.isEmpty(requestJsonVO.getEntityJson())) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         String productSkuId = "-1";
         try {
             ProductSkuVO productSkuVO = requestJsonVO.formatEntity(ProductSkuVO.class);
-            if (productSkuVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
-            if (productSkuVO.getPrice() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品单价不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSkuVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
+            Check.notNull(productSkuVO.getPrice(), ResultVO.FAILD, "商品单价不能为空!");
             productSkuId = String.valueOf(productSkuVO.getId());
             skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
@@ -692,6 +556,8 @@ public class ProductSkuBusinessService {
             //延时双删
             Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -702,43 +568,26 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO restoreStock(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null || StringUtils.isEmpty(requestJsonVO.getEntityJson())) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         List<InventoryReductionVO> inventoryReductions = requestJsonVO.formatEntityList(InventoryReductionVO.class);
 
         logger.info("扣库存: param: {} ", requestJsonVO.getEntityJson());
         if (CollectionUtils.isEmpty(inventoryReductions)) {
             logger.info("没有找到扣除库存的商品: param:{} ", requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到商品!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param: {} ", requestJsonVO.getAppCode());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
+            return ResultObjectVO.fail(ResultVO.FAILD, "没有找到商品!");
         }
 
         for (InventoryReductionVO inventoryReductionVO : inventoryReductions) {
             if (inventoryReductionVO.getProductSkuId() == null) {
                 logger.info("没有找到商品ID: param: {} ", JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到商品ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到商品ID");
             }
             if (inventoryReductionVO.getStockNum() == null || inventoryReductionVO.getStockNum().intValue() <= 0) {
                 logger.info("扣库存数量不能为0: param: {} ", JSONObject.toJSONString(inventoryReductionVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("扣库存数量不能为0");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "扣库存数量不能为0");
             }
         }
 
@@ -757,6 +606,8 @@ public class ProductSkuBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -766,42 +617,21 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO shelves(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         String productSkuId = "";
         try {
             logger.info("商品上架/下架 {} ", requestJsonVO.getEntityJson());
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
-            if (productSkuVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("商品ID不能为空!");
-                return resultObjectVO;
-            }
-            if (productSkuVO.getShopId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSkuVO.getId(), ResultVO.FAILD, "商品ID不能为空!");
+            Check.notNull(productSkuVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             productSkuId = String.valueOf(productSkuVO.getId());
             skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(productSkuId), productSkuId);
 
             ProductSku productSku = productSkuService.queryById(productSkuVO.getId());
             if (productSku == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该商品不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "该商品不存在!");
             }
 
             //如果当前是上架状态
@@ -831,6 +661,8 @@ public class ProductSkuBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -841,20 +673,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updatePreviewPhoto(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
 
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
@@ -862,11 +683,11 @@ public class ProductSkuBusinessService {
             productSku.setProductPreviewPath(productSkuVO.getProductPreviewPath());
             int ret = productSkuService.update(productSku);
             if (ret != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "修改失败");
             }
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -875,20 +696,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO updateDescriptionPhoto(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
 
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
@@ -914,6 +724,8 @@ public class ProductSkuBusinessService {
             productSkuDescriptionImgVO.setFilePath(productSkuVO.getDescriptionImgFilePath());
             shopProductDescriptionImgService.save(productSkuDescriptionImgVO);
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -922,20 +734,9 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO removeDescriptionPhoto(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
 
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
@@ -948,6 +749,8 @@ public class ProductSkuBusinessService {
                 shopProductDescriptionImgService.deleteById(productDescriptionImgSkuVO.getId());
             }
             productSkuRedisService.deleteCache(String.valueOf(productSkuVO.getId()));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -956,30 +759,16 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByShopProductIdList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
-            if (productSkuVO.getShopProductId() == null && CollectionUtils.isEmpty(productSkuVO.getShopProductIdList())) {
-                logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺商品ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.isTrue(productSkuVO.getShopProductId() != null || !CollectionUtils.isEmpty(productSkuVO.getShopProductIdList()), ResultVO.FAILD, "店铺商品ID不能为空!");
             List<ProductSkuVO> productSkuVOS = productSkuService.queryList(productSkuVO);
             resultObjectVO.setData(productSkuVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -989,30 +778,17 @@ public class ProductSkuBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultTypeObjectVO<Long> queryShelvesCountByShopId(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
 
         try {
             ProductSkuVO productSkuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSkuVO.class);
-            if (productSkuVO.getShopId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(productSkuVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             Long count = productSkuService.queryCount(productSkuVO);
             resultObjectVO.setData(count == null ? 0L : count);
+        }catch(BusinessValidationException e){
+            return ResultTypeObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);

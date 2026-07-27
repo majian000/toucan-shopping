@@ -1,6 +1,12 @@
 package com.toucan.shopping.modules.product.business.service;
 
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.product.service.ProductSkuStatisticService;
 import com.toucan.shopping.modules.product.vo.ProductSkuStatisticVO;
@@ -18,6 +24,7 @@ public class ProductSkuStatisticBusinessService {
     private ProductSkuStatisticService productSkuStatisticService;
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -38,6 +45,7 @@ public class ProductSkuStatisticBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryCategoryProductStatistic(RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

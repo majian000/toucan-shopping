@@ -1,6 +1,12 @@
 package com.toucan.shopping.modules.search.business.service;
 
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.search.es.index.ProductIndex;
 import com.toucan.shopping.modules.search.service.ProductSearchService;
@@ -61,6 +67,7 @@ public class ProductSearchBusinessService {
     /**
      * 搜索商品
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO search(RequestJsonVO requestJsonVO) {
         return safeCall(() -> {
             ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
@@ -74,6 +81,7 @@ public class ProductSearchBusinessService {
     /**
      * 搜索商品数量
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO count(RequestJsonVO requestJsonVO) {
         return safeCall(() -> {
             ProductSearchVO productSearch = requestJsonVO.formatEntity(ProductSearchVO.class);
@@ -84,6 +92,7 @@ public class ProductSearchBusinessService {
     /**
      * 保存到搜索
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         return safeRun(() -> {
             ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
@@ -94,6 +103,7 @@ public class ProductSearchBusinessService {
     /**
      * 根据SKUID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryBySkuId(RequestJsonVO requestJsonVO) {
         return safeCall(() -> {
             Long skuId = requestJsonVO.formatEntity(Long.class);
@@ -104,6 +114,7 @@ public class ProductSearchBusinessService {
     /**
      * 更新到搜索
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         return safeRun(() -> {
             ProductSearchResultVO productSearchResultVO = requestJsonVO.formatEntity(ProductSearchResultVO.class);
@@ -114,6 +125,7 @@ public class ProductSearchBusinessService {
     /**
      * 从搜索中删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO removeById(RequestJsonVO requestJsonVO) {
         return safeCall(() -> {
             Long skuId = requestJsonVO.formatEntity(Long.class);
@@ -126,6 +138,7 @@ public class ProductSearchBusinessService {
     /**
      * 清空索引并重建
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO clear(RequestJsonVO requestJsonVO) {
         return safeRun(() -> {
             productSearchService.deleteIndex();

@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.content.business.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -47,32 +50,16 @@ public class BannerBusinessService {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到对象编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
-            return resultObjectVO;
-        }
 
         Long bannerId = -1L;
         try {
             bannerId = idGenerator.id();
             BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
 
-            if (bannerVO.getAreaCodeArray() == null || bannerVO.getAreaCodeArray().length <= 0) {
-                logger.warn("关联地区编码为空 param:" + requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("关联地区编码为空!");
-                return resultObjectVO;
-            }
+            Check.isTrue(bannerVO.getAreaCodeArray() != null && bannerVO.getAreaCodeArray().length > 0, ResultVO.FAILD, "关联地区编码为空!");
 
             Banner banner = new Banner();
             BeanUtils.copyProperties(banner, bannerVO);
@@ -80,9 +67,7 @@ public class BannerBusinessService {
             banner.setCreateDate(new Date());
             int row = bannerService.save(banner);
             if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             BannerArea[] bannerAreas = new BannerArea[bannerVO.getAreaCodeArray().length];
@@ -101,6 +86,8 @@ public class BannerBusinessService {
             if (row <= 0) {
                 throw new IllegalArgumentException("保存地区轮播图关联失败");
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
@@ -113,20 +100,14 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO flushWebIndexCache(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<BannerVO> banners = JSONObject.parseArray(requestVo.getEntityJson(), BannerVO.class);
             if (CollectionUtils.isEmpty(banners)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for (BannerVO banner : banners) {
@@ -166,6 +147,8 @@ public class BannerBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -175,11 +158,14 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck
     public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             resultObjectVO.setData(bannerRedisService.clearWebIndexBanner());
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -187,30 +173,20 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BannerVO bannerVO = JSONObject.parseObject(requestVo.getEntityJson(), BannerVO.class);
-            if (bannerVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(bannerVO.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该对象
             BannerVO query = new BannerVO();
             query.setId(bannerVO.getId());
             List<BannerVO> banners = bannerService.queryList(query);
             if (CollectionUtils.isEmpty(banners)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在!");
             }
 
             //查询出所有轮播图地区关联
@@ -220,6 +196,8 @@ public class BannerBusinessService {
             banners.get(0).setBannerAreas(bannerAreaVOS);
             resultObjectVO.setData(banners);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -229,42 +207,21 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BannerVO entity = JSONObject.parseObject(requestVo.getEntityJson(), BannerVO.class);
 
-            if (StringUtils.isEmpty(entity.getTitle())) {
-                logger.info("标题为空 param:" + JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("标题不能为空!");
-                return resultObjectVO;
-            }
-            if (StringUtils.isEmpty(entity.getClickPath())) {
-                logger.info("点击连接为空 param:" + JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("点击连接不能为空!");
-                return resultObjectVO;
-            }
-
-            if (entity.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getTitle(), ResultVO.FAILD, "标题不能为空!");
+            Check.notEmpty(entity.getClickPath(), ResultVO.FAILD, "点击连接不能为空!");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入ID");
 
             entity.setUpdateDate(new Date());
             int row = bannerService.update(entity);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //删除轮播图地区关联
@@ -285,12 +242,13 @@ public class BannerBusinessService {
             //保存轮播图与地区关联
             row = bannerAreaService.saves(bannerAreas);
             if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存地区轮播图关联失败");
+                return ResultObjectVO.fail(ResultVO.FAILD, "保存地区轮播图关联失败");
             }
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -300,24 +258,15 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             BannerPageInfo adminPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerPageInfo.class);
             PageInfo<BannerVO> pageInfo = bannerService.queryListPage(adminPageInfo);
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -327,20 +276,9 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
             List<BannerVO> bannerVOS = bannerService.queryList(bannerVO);
@@ -361,6 +299,8 @@ public class BannerBusinessService {
                 }
             }
             resultObjectVO.setData(bannerVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -370,20 +310,9 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryIndexList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
             //查询首页轮播图
@@ -406,6 +335,8 @@ public class BannerBusinessService {
                 }
             }
             resultObjectVO.setData(bannerVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -415,37 +346,25 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Banner entity = JSONObject.parseObject(requestVo.getEntityJson(), Banner.class);
-            if (entity.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该数据
             BannerVO query = new BannerVO();
             query.setId(entity.getId());
             List<BannerVO> adminList = bannerService.queryList(query);
             if (CollectionUtils.isEmpty(adminList)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("轮播图不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "轮播图不存在!");
             }
 
             int row = bannerService.deleteById(entity.getId());
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //删除与地区关联
@@ -453,6 +372,8 @@ public class BannerBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -462,20 +383,14 @@ public class BannerBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Banner> banners = JSONObject.parseArray(requestVo.getEntityJson(), Banner.class);
             if (CollectionUtils.isEmpty(banners)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for (Banner banner : banners) {
@@ -497,6 +412,8 @@ public class BannerBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 

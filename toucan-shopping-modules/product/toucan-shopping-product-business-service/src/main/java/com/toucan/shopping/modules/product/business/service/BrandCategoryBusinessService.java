@@ -1,7 +1,10 @@
 package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -26,21 +29,13 @@ public class BrandCategoryBusinessService {
     @Autowired
     private IdGenerator idGenerator;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByBrandId(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BrandCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(), BrandCategoryVO.class);
-            if (entity.getBrandId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到品牌ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getBrandId(), ResultVO.FAILD, "没有找到品牌ID");
 
             //查询是否存在
             BrandCategoryVO query = new BrandCategoryVO();
@@ -48,6 +43,8 @@ public class BrandCategoryBusinessService {
             List<BrandCategory> entityList = brandCategoryService.queryList(query);
             resultObjectVO.setData(entityList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 

@@ -2,8 +2,11 @@ package com.toucan.shopping.modules.message.business.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -49,56 +52,49 @@ public class MessageTypeBusinessService {
     /**
      * 保存
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到请求对象");
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到应用编码");
-        }
-        MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
-        if (StringUtils.isEmpty(messageTypeVO.getName())) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "类型名称不能为空");
-        }
-        if (StringUtils.isEmpty(messageTypeVO.getCode())) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "类型编码不能为空");
-        }
-        if (StringUtils.isEmpty(messageTypeVO.getAppCode())) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "所属应用不能为空");
-        }
-        String lockKey = messageTypeVO.getAppCode() + "_" + messageTypeVO.getCode();
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            boolean lockStatus = skylarkLock.lock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
-            }
+            MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
+            Check.notEmpty(messageTypeVO.getName(), ResultObjectVO.FAILD, "类型名称不能为空");
+            Check.notEmpty(messageTypeVO.getCode(), ResultObjectVO.FAILD, "类型编码不能为空");
+            Check.notEmpty(messageTypeVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
+            String lockKey = messageTypeVO.getAppCode() + "_" + messageTypeVO.getCode();
+            try {
+                boolean lockStatus = skylarkLock.lock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
+                if (!lockStatus) {
+                    return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
+                }
 
-            MessageTypeVO query = new MessageTypeVO();
-            query.setCode(messageTypeVO.getCode());
-            List<MessageTypeVO> messageTypes = messageTypeService.queryList(query);
-            if (!CollectionUtils.isEmpty(messageTypes)) {
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "该编码已存在");
-            }
+                MessageTypeVO query = new MessageTypeVO();
+                query.setCode(messageTypeVO.getCode());
+                List<MessageTypeVO> messageTypes = messageTypeService.queryList(query);
+                if (!CollectionUtils.isEmpty(messageTypes)) {
+                    return ResultObjectVO.fail(ResultObjectVO.FAILD, "该编码已存在");
+                }
 
-            messageTypeVO.setId(idGenerator.id());
-            messageTypeVO.setDeleteStatus((short) 0);
-            messageTypeVO.setCreateDate(new Date());
-            int ret = messageTypeService.save(messageTypeVO);
-            if (ret <= 0) {
-                logger.warn("保存消息类型失败 requestJson{} id{}", requestJsonVO.getEntityJson(), messageTypeVO.getId());
+                messageTypeVO.setId(idGenerator.id());
+                messageTypeVO.setDeleteStatus((short) 0);
+                messageTypeVO.setCreateDate(new Date());
+                int ret = messageTypeService.save(messageTypeVO);
+                if (ret <= 0) {
+                    logger.warn("保存消息类型失败 requestJson{} id{}", requestJsonVO.getEntityJson(), messageTypeVO.getId());
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                }
+                resultObjectVO.setData(messageTypeVO);
+
+                flushCache();
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+            } finally {
+                skylarkLock.unLock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
             }
-            resultObjectVO.setData(messageTypeVO);
-
-            flushCache();
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        } finally {
-            skylarkLock.unLock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }
         return resultObjectVO;
     }
@@ -107,14 +103,14 @@ public class MessageTypeBusinessService {
     /**
      * 刷新缓存
      */
+    @RequestCheck
     public ResultObjectVO flushCache(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到请求对象");
-        }
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             flushCache();
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -126,11 +122,8 @@ public class MessageTypeBusinessService {
     /**
      * 批量删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到实体对象");
-        }
-
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             List<MessageTypeVO> messageTypeVOS = JSONObject.parseArray(requestJsonVO.getEntityJson(), MessageTypeVO.class);
@@ -156,7 +149,9 @@ public class MessageTypeBusinessService {
             resultObjectVO.setData(resultObjectVOList);
 
             flushCache();
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -168,23 +163,12 @@ public class MessageTypeBusinessService {
     /**
      * 根据ID删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请重试!");
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到应用编码!");
-        }
-
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
-            if (messageTypeVO.getId() == null) {
-                logger.info("ID为空 param:" + JSONObject.toJSONString(messageTypeVO));
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "ID不能为空!");
-            }
+            Check.notNull(messageTypeVO.getId(), ResultObjectVO.FAILD, "ID不能为空!");
 
             int ret = messageTypeService.deleteById(messageTypeVO.getId());
             if (ret <= 0) {
@@ -192,7 +176,9 @@ public class MessageTypeBusinessService {
             }
 
             flushCache();
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请重试!");
@@ -204,26 +190,15 @@ public class MessageTypeBusinessService {
     /**
      * 编辑
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到实体对象");
-        }
-
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypeVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
 
-            if (StringUtils.isEmpty(entity.getCode())) {
-                logger.info("编码为空 param:" + JSONObject.toJSONString(entity));
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "编码不能为空!");
-            }
-            if (StringUtils.isEmpty(entity.getName())) {
-                logger.info("名称为空 param:" + JSONObject.toJSONString(entity));
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "名称不能为空!");
-            }
-            if (entity.getId() == null) {
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "请传入ID");
-            }
+            Check.notEmpty(entity.getCode(), ResultObjectVO.FAILD, "编码不能为空!");
+            Check.notEmpty(entity.getName(), ResultObjectVO.FAILD, "名称不能为空!");
+            Check.notNull(entity.getId(), ResultObjectVO.FAILD, "请传入ID");
 
             MessageTypeVO query = new MessageTypeVO();
             query.setCode(entity.getCode());
@@ -245,7 +220,9 @@ public class MessageTypeBusinessService {
             resultObjectVO.setData(entity);
 
             flushCache();
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -257,17 +234,12 @@ public class MessageTypeBusinessService {
     /**
      * 根据code查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findCacheByCode(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到实体对象");
-        }
-
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
-            if (messageTypeVO.getCode() == null) {
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到Code");
-            }
+            Check.notNull(messageTypeVO.getCode(), ResultObjectVO.FAILD, "没有找到Code");
 
             MessageTypeVO messageTypeCacheVO = messageTypeRedisService.queryByCode(messageTypeVO.getCode());
             if (messageTypeCacheVO != null) {
@@ -290,7 +262,9 @@ public class MessageTypeBusinessService {
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
             }
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -302,17 +276,12 @@ public class MessageTypeBusinessService {
     /**
      * 根据ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到实体对象");
-        }
-
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
-            if (messageTypeVO.getId() == null) {
-                return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到ID");
-            }
+            Check.notNull(messageTypeVO.getId(), ResultObjectVO.FAILD, "没有找到ID");
 
             MessageTypeVO query = new MessageTypeVO();
             query.setId(messageTypeVO.getId());
@@ -322,7 +291,9 @@ public class MessageTypeBusinessService {
             }
 
             resultObjectVO.setData(entitys);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -334,21 +305,16 @@ public class MessageTypeBusinessService {
     /**
      * 查询分页列表
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请重试!");
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到对象!");
-        }
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypePageInfo.class);
             PageInfo<MessageTypeVO> pageInfo = messageTypeService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
@@ -360,20 +326,15 @@ public class MessageTypeBusinessService {
     /**
      * 查询列表
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "请重试!");
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到对象!");
-        }
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             MessageTypeVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
             resultObjectVO.setData(messageTypeService.queryList(query));
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("查询失败!");

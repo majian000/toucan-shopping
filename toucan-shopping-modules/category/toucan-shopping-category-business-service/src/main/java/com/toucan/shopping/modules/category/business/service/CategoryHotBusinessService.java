@@ -5,7 +5,10 @@ import com.toucan.shopping.modules.category.page.CategoryHotTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryHotService;
 import com.toucan.shopping.modules.category.vo.CategoryHotTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryHotVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -42,39 +45,33 @@ public class CategoryHotBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            return failResult("请重试!");
-        }
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             CategoryHotVO categoryHot = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryHotVO.class);
 
-            if (categoryHot.getCategoryId() == null) {
-                logger.info("类别ID为空 param:" + JSONObject.toJSONString(categoryHot));
-                return failResult("类别ID不能为空!");
-            }
+            Check.notNull(categoryHot.getCategoryId(), ResultVO.FAILD, "类别ID不能为空!");
 
             CategoryHotVO queryCategory = new CategoryHotVO();
             queryCategory.setName(categoryHot.getName());
             queryCategory.setDeleteStatus((short) 0);
 
-            if (!CollectionUtils.isEmpty(categoryHotService.queryList(queryCategory))) {
-                return failResult("已存在该类别!");
-            }
+            Check.isTrue(CollectionUtils.isEmpty(categoryHotService.queryList(queryCategory)), ResultVO.FAILD, "已存在该类别!");
 
             categoryHot.setId(idGenerator.id());
             categoryHot.setCreateDate(new Date());
             int row = categoryHotService.save(categoryHot);
-            if (row != 1) {
-                return failResult("请重试!");
-            }
+            Check.isTrue(row == 1, ResultVO.FAILD, "请重试!");
+
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            return failResult("请重试!");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
         }
-        return new ResultObjectVO();
+        return resultObjectVO;
     }
 
 
@@ -83,10 +80,9 @@ public class CategoryHotBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            return failResult("没有找到实体对象");
-        }
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             CategoryHotTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryHotTreeInfo.class);
@@ -103,28 +99,19 @@ public class CategoryHotBusinessService {
                 setAsTopLevel(categoryTreeVOS);
             }
 
-            ResultObjectVO resultObjectVO = new ResultObjectVO();
             resultObjectVO.setData(categoryTreeVOS);
-            return resultObjectVO;
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            return failResult("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
+        return resultObjectVO;
     }
 
 
     // ==================== 私有辅助方法 ====================
-
-    /**
-     * 构建失败结果
-     */
-    private ResultObjectVO failResult(String msg) {
-        ResultObjectVO result = new ResultObjectVO();
-        result.setCode(ResultVO.FAILD);
-        result.setMsg(msg);
-        return result;
-    }
 
     /**
      * 按名称模糊查询

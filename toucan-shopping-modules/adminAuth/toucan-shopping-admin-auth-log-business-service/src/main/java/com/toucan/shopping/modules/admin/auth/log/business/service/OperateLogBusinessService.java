@@ -9,8 +9,11 @@ import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -50,20 +53,9 @@ public class OperateLogBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saves(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
         try{
             List<OperateLogVO> requestLogVOS = requestJsonVO.formatEntityList(OperateLogVO.class);
             if(!CollectionUtils.isEmpty(requestLogVOS))
@@ -109,10 +101,11 @@ public class OperateLogBusinessService {
                 int ret = operateLogService.saves(requestLogVOS);
                 if(ret!=requestLogVOS.size())
                 {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("部分保存失败");
+                    resultObjectVO = ResultObjectVO.fail(ResultObjectVO.FAILD, "部分保存失败");
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -127,35 +120,18 @@ public class OperateLogBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOperateChart(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try{
             OperateLogChartVO operateLogChartVO = requestJsonVO.formatEntity(OperateLogChartVO.class);
-            if (operateLogChartVO.getStartDate() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("开始时间不能为空!");
-                return resultObjectVO;
-            }
-            if (operateLogChartVO.getAdvanceDay() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("提前天数不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(operateLogChartVO.getStartDate(), ResultVO.FAILD, "开始时间不能为空!");
+            Check.notNull(operateLogChartVO.getAdvanceDay(), ResultVO.FAILD, "提前天数不能为空!");
             List<OperateLogChartVO> operateLogChartVOS = operateLogService.queryOperateLogCountList(operateLogChartVO.getStartDate(),operateLogChartVO.getEndDate(),operateLogChartVO.getAppCode());
             resultObjectVO.setData(operateLogChartVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -169,23 +145,13 @@ public class OperateLogBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             OperateLogVO operateLogVO = JSONObject.parseObject(requestVo.getEntityJson(),OperateLogVO.class);
-            if(operateLogVO.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(operateLogVO.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在
             OperateLogVO query=new OperateLogVO();
@@ -193,18 +159,17 @@ public class OperateLogBusinessService {
             List<OperateLog> list = operateLogService.findListByEntity(query);
             if(CollectionUtils.isEmpty(list))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("记录不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "记录不存在!");
             }
             resultObjectVO.setData(list);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
@@ -215,14 +180,9 @@ public class OperateLogBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO listPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             OperateLogPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), OperateLogPageInfo.class);
@@ -239,12 +199,13 @@ public class OperateLogBusinessService {
             }
             resultObjectVO.setData(page);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

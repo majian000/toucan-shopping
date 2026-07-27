@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.product.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.LetterFirstUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -40,39 +43,18 @@ public class BrandBusinessService {
     @Autowired
     private IdGenerator idGenerator;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO brandVo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
-            if (StringUtils.isEmpty(brandVo.getChineseName()) && StringUtils.isEmpty(brandVo.getEnglishName())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌名称不能为空");
-                return resultObjectVO;
-            }
-            if (StringUtils.isEmpty(brandVo.getCategoryIdCache())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌关联分类不能为空");
-                return resultObjectVO;
-            }
+            Check.isTrue(StringUtils.isNotEmpty(brandVo.getChineseName()) || StringUtils.isNotEmpty(brandVo.getEnglishName()), ResultVO.FAILD, "品牌名称不能为空");
+            Check.notEmpty(brandVo.getCategoryIdCache(), ResultVO.FAILD, "品牌关联分类不能为空");
 
             String[] categotyIdArray = brandVo.getCategoryIdCache().split(",");
             if (categotyIdArray.length > 30) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌最多只能关联30个分类");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "品牌最多只能关联30个分类");
             }
 
             BrandVO queryBrand = new BrandVO();
@@ -81,9 +63,7 @@ public class BrandBusinessService {
 
             List<Brand> brandList = brandService.queryList(queryBrand);
             if (!CollectionUtils.isEmpty(brandList)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg(brandVo.getChineseName() + "名称已存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, brandVo.getChineseName() + "名称已存在!");
             }
 
             if (StringUtils.isNotEmpty(brandVo.getEnglishName())) {
@@ -93,9 +73,7 @@ public class BrandBusinessService {
 
                 brandList = brandService.queryList(queryBrand);
                 if (!CollectionUtils.isEmpty(brandList)) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg(brandVo.getEnglishName() + "名称已存在!");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, brandVo.getEnglishName() + "名称已存在!");
                 }
             }
 
@@ -106,9 +84,7 @@ public class BrandBusinessService {
             entity.setDeleteStatus(0);
             int row = brandService.save(entity);
             if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             for (String categoryId : categotyIdArray) {
@@ -121,58 +97,38 @@ public class BrandBusinessService {
                 brandCategoryService.save(brandCategory);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(), e);
-
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByCategoryId(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO queryBrand = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
-            if (queryBrand.getCategoryId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-
-            }
+            Check.notNull(queryBrand.getCategoryId(), ResultVO.FAILD, "分类ID不能为空!");
 
             List<Brand> brands = brandService.queryList(queryBrand);
             resultObjectVO.setData(brands);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "查询失败!");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             BrandPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandPageInfo.class);
             PageInfo<BrandVO> pageInfo = brandService.queryListPage(queryPageInfo);
@@ -185,51 +141,30 @@ public class BrandBusinessService {
                 }
             }
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "查询失败!");
         }
 
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
 
-            if (entity.getId() == null) {
-                logger.info("ID为空 param:" + JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
-
-            if (StringUtils.isEmpty(entity.getChineseName()) && StringUtils.isEmpty(entity.getEnglishName())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌名称不能为空");
-                return resultObjectVO;
-            }
-
-            if (StringUtils.isEmpty(entity.getCategoryIdCache())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌分类不能为空");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "ID不能为空!");
+            Check.isTrue(StringUtils.isNotEmpty(entity.getChineseName()) || StringUtils.isNotEmpty(entity.getEnglishName()), ResultVO.FAILD, "品牌名称不能为空");
+            Check.notEmpty(entity.getCategoryIdCache(), ResultVO.FAILD, "品牌分类不能为空");
 
             String[] categotyIdArray = entity.getCategoryIdCache().split(",");
             if (categotyIdArray.length > 30) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌最多只能关联30个分类");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "品牌最多只能关联30个分类");
             }
 
             BrandVO queryBrand = new BrandVO();
@@ -241,9 +176,7 @@ public class BrandBusinessService {
                 brandList = brandService.queryList(queryBrand);
                 if (!CollectionUtils.isEmpty(brandList)) {
                     if (entity.getId().longValue() != brandList.get(0).getId().longValue()) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg(entity.getChineseName() + "名称已存在!");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, entity.getChineseName() + "名称已存在!");
                     }
                 }
             }
@@ -255,9 +188,7 @@ public class BrandBusinessService {
                 brandList = brandService.queryList(queryBrand);
                 if (!CollectionUtils.isEmpty(brandList)) {
                     if (entity.getId().longValue() != brandList.get(0).getId().longValue()) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg(entity.getEnglishName() + "名称已存在!");
-                        return resultObjectVO;
+                        return ResultObjectVO.fail(ResultVO.FAILD, entity.getEnglishName() + "名称已存在!");
                     }
                 }
             }
@@ -265,9 +196,7 @@ public class BrandBusinessService {
             entity.setUpdateDate(new Date());
             int row = brandService.update(entity);
             if (row != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //更新关联
@@ -283,38 +212,29 @@ public class BrandBusinessService {
                 brandCategoryService.save(brandCategory);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(), e);
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO entity = JSONObject.parseObject(requestVo.getEntityJson(), BrandVO.class);
-            if (entity.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存
             BrandVO query = new BrandVO();
             query.setId(entity.getId());
             List<Brand> entityList = brandService.queryList(query);
             if (CollectionUtils.isEmpty(entityList)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("对象不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "对象不存在!");
             }
             List<BrandVO> brandVOS = new ArrayList<BrandVO>();
             for (Brand brand : entityList) {
@@ -328,151 +248,109 @@ public class BrandBusinessService {
 
             resultObjectVO.setData(brandVOS);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByIdList(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO query = JSONObject.parseObject(requestVo.getEntityJson(), BrandVO.class);
-            if (query.getIdList() == null || query.getIdList().size() <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID集合");
-                return resultObjectVO;
-            }
+            Check.isTrue(query.getIdList() != null && query.getIdList().size() > 0, ResultVO.FAILD, "没有找到ID集合");
 
             List<Brand> brands = brandService.queryList(query);
             if (CollectionUtils.isEmpty(brands)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌列表为空");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "品牌列表为空");
             }
 
             resultObjectVO.setData(brands);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findListByNameAndCategoryIdAndEnabled(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             BrandVO query = JSONObject.parseObject(requestVo.getEntityJson(), BrandVO.class);
-            if (StringUtils.isEmpty(query.getName())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空");
-                return resultObjectVO;
-            }
+            Check.notEmpty(query.getName(), ResultVO.FAILD, "名称不能为空");
 
             List<Brand> brands = brandService.queryList(query);
             if (CollectionUtils.isEmpty(brands)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌列表为空");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "品牌列表为空");
             }
 
             resultObjectVO.setData(brands);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         try {
             Brand brand = JSONObject.parseObject(requestJsonVO.getEntityJson(), Brand.class);
 
-            if (brand.getId() == null) {
-                logger.info("ID为空 param:" + JSONObject.toJSONString(brand));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(brand.getId(), ResultVO.FAILD, "ID不能为空!");
 
             BrandVO queryBrand = new BrandVO();
             queryBrand.setId(brand.getId());
 
             List<Brand> brandList = brandService.queryList(queryBrand);
             if (CollectionUtils.isEmpty(brandList)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该品牌!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在该品牌!");
             }
 
             brand = brandList.get(0);
             int row = brandService.deleteById(brand.getId());
             if (row <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //删除品牌与类目关联
             brandCategoryService.deleteByBrandId(brand.getId());
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(), e);
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<BrandVO> brandVOS = JSONObject.parseArray(requestVo.getEntityJson(), BrandVO.class);
             if (CollectionUtils.isEmpty(brandVOS)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for (BrandVO brandVO : brandVOS) {
@@ -480,12 +358,9 @@ public class BrandBusinessService {
                     int row = brandService.deleteById(brandVO.getId());
                     if (row < 1) {
                         logger.warn("删除品牌失败 {} ", JSONObject.toJSONString(brandVO));
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请重试!");
+                        resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
 
-                        ResultObjectVO resultObjectRowVO = new ResultObjectVO();
-                        resultObjectRowVO.setCode(ResultVO.FAILD);
-                        resultObjectRowVO.setMsg("请重试!");
+                        ResultObjectVO resultObjectRowVO = ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
                         resultObjectRowVO.setData(brandVO.getId());
                         resultObjectVOList.add(resultObjectRowVO);
 
@@ -499,11 +374,12 @@ public class BrandBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

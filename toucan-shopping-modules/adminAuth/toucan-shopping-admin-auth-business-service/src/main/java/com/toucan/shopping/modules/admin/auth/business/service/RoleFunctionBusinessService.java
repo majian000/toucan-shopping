@@ -16,7 +16,10 @@ import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -62,16 +65,14 @@ public class RoleFunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunction query = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunction.class);
 
-            if(StringUtils.isEmpty(query.getRoleId()))
-            {
-                throw new IllegalArgumentException("roleId为空");
-            }
+            Check.notEmpty(query.getRoleId(), ResultVO.FAILD, "roleId为空");
 
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
             if(!CollectionUtils.isEmpty(roleFunctions))
@@ -79,6 +80,8 @@ public class RoleFunctionBusinessService {
                 resultObjectVO.setData(roleFunctions);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -97,19 +100,14 @@ public class RoleFunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
-            if(StringUtils.isEmpty(entity.getRoleId()))
-            {
-                throw new IllegalArgumentException("roleId为空");
-            }
-            if(CollectionUtils.isEmpty(entity.getFunctions()))
-            {
-                throw new IllegalArgumentException("functions为空");
-            }
+            Check.notEmpty(entity.getRoleId(), ResultVO.FAILD, "roleId为空");
+            Check.notEmpty(entity.getFunctions(), ResultVO.FAILD, "functions为空");
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
 
             //查询要关联到的所有功能项
@@ -168,6 +166,8 @@ public class RoleFunctionBusinessService {
                 }
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -184,14 +184,12 @@ public class RoleFunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO refreshCache(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
-            if(StringUtils.isEmpty(entity.getRoleId()))
-            {
-                throw new IllegalArgumentException("roleId为空");
-            }
+            Check.notEmpty(entity.getRoleId(), ResultVO.FAILD, "roleId为空");
             List<RoleFunction> roleFunctions = roleFunctionService.queryListByRoleId(entity.getRoleId());
 
             RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
@@ -213,6 +211,8 @@ public class RoleFunctionBusinessService {
             }
 
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.SUCCESS);
@@ -229,14 +229,9 @@ public class RoleFunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             RoleFunctionPageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RoleFunctionPageInfo.class);
@@ -246,6 +241,8 @@ public class RoleFunctionBusinessService {
             PageInfo<RoleFunction> pageInfo =  roleFunctionService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -257,21 +254,14 @@ public class RoleFunctionBusinessService {
     }
 
 
-
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionVO query = requestVo.formatEntity(RoleFunctionVO.class);
 
-            if(StringUtils.isEmpty(query.getRoleId()))
-            {
-                throw new IllegalArgumentException("roleId为空");
-            }
-
-            if(query.getPid()==null)
-            {
-                throw new IllegalArgumentException("pid为空");
-            }
+            Check.notEmpty(query.getRoleId(), ResultVO.FAILD, "roleId为空");
+            Check.notNull(query.getPid(), ResultVO.FAILD, "pid为空");
 
             //当前角色的所有关联项
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
@@ -293,6 +283,8 @@ public class RoleFunctionBusinessService {
             }
 
             resultObjectVO.setData(functionTreeVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

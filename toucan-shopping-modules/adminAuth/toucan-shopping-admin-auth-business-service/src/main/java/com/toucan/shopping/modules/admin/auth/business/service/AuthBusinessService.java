@@ -12,6 +12,9 @@ import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -53,30 +56,17 @@ public class AuthBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO verify(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
         try {
             //缓存是否可读取
             boolean cacheIsRead = true;
             AuthVerifyVO query = JSONObject.parseObject(requestVo.getEntityJson(), AuthVerifyVO.class);
-            if(StringUtils.isEmpty(query.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
-            if(StringUtils.isEmpty(query.getAppCode())){
-                throw new IllegalArgumentException("appCode为空");
-            }
-            if(StringUtils.isEmpty(query.getUrl()))
-            {
-                throw new IllegalArgumentException("url为空");
-            }
+            Check.notEmpty(query.getAdminId(), AdminResultVO.FAILD, "adminId为空");
+            Check.notEmpty(query.getAppCode(), AdminResultVO.FAILD, "appCode为空");
+            Check.notEmpty(query.getUrl(), AdminResultVO.FAILD, "url为空");
             AdminRole queryAdminRole = new AdminRole();
             queryAdminRole.setAdminId(query.getAdminId());
             queryAdminRole.setAppCode(query.getAppCode());
@@ -237,6 +227,8 @@ public class AuthBusinessService {
                     }
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -254,7 +246,6 @@ public class AuthBusinessService {
 
 
 
-
     /**
      * 校验权限
      * 首先从es中查询权限关联,如果es中没有就查询数据库就进行一次同步,如果数据库也没有 就认为没有权限
@@ -262,34 +253,18 @@ public class AuthBusinessService {
      * @param requestVo
      * @return -1 登录超时 -2 权限校验失败 1成功
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO verifyLoginAndUrl(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
         try {
             //缓存是否可读取
             boolean cacheIsRead = true;
             AuthVerifyVO query = JSONObject.parseObject(requestVo.getEntityJson(), AuthVerifyVO.class);
-            if(StringUtils.isEmpty(query.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
-            if(StringUtils.isEmpty(query.getAppCode())){
-                throw new IllegalArgumentException("appCode为空");
-            }
-            if(StringUtils.isEmpty(query.getUrl()))
-            {
-                throw new IllegalArgumentException("url为空");
-            }
-            if(StringUtils.isEmpty(query.getLoginToken()))
-            {
-                throw new IllegalArgumentException("loginToken为空");
-            }
+            Check.notEmpty(query.getAdminId(), AdminResultVO.FAILD, "adminId为空");
+            Check.notEmpty(query.getAppCode(), AdminResultVO.FAILD, "appCode为空");
+            Check.notEmpty(query.getUrl(), AdminResultVO.FAILD, "url为空");
+            Check.notEmpty(query.getLoginToken(), AdminResultVO.FAILD, "loginToken为空");
 
 
             //校验登录会话
@@ -492,6 +467,8 @@ public class AuthBusinessService {
                     resultObjectVO.setData(-2);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             resultObjectVO.setData(-1);

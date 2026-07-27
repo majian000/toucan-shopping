@@ -12,6 +12,9 @@ import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleTreeVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -63,23 +66,13 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Role role = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(StringUtils.isEmpty(role.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入角色名称");
-                return resultObjectVO;
-            }
+            Check.notEmpty(role.getName(), ResultVO.FAILD, "添加失败,请输入角色名称");
 
 
             role.setRoleId(GlobalUUID.uuid());
@@ -93,6 +86,8 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(role);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -112,29 +107,14 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入角色名称");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入角色ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入角色名称");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入角色ID");
 
 
             Role query=new Role();
@@ -159,6 +139,8 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -175,6 +157,7 @@ public class RoleBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAdminRoleTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -232,6 +215,8 @@ public class RoleBusinessService {
                 resultObjectVO.setData(roleTreeVOS);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -247,19 +232,16 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO listPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             RolePageInfo rolePageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RolePageInfo.class);
             resultObjectVO.setData(roleService.queryListPage(rolePageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -275,23 +257,13 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到角色ID");
 
             //查询是否存在该角色
             Role query=new Role();
@@ -305,6 +277,8 @@ public class RoleBusinessService {
             }
             resultObjectVO.setData(roleList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -321,23 +295,13 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findListByAdminId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             AdminVO adminVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminVO.class);
-            if(StringUtils.isEmpty(adminVO.getAdminId()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到AdminID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(adminVO.getAdminId(), ResultVO.FAILD, "没有找到AdminID");
 
             List<AdminRole> adminRoles = adminRoleService.findListByAdminId(adminVO.getAdminId());
 
@@ -357,6 +321,8 @@ public class RoleBusinessService {
                 resultObjectVO.setData(roles);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -373,23 +339,13 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到角色ID");
 
             //查询是否存在该角色
             Role query=new Role();
@@ -420,6 +376,8 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -436,23 +394,13 @@ public class RoleBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Role> roleList = JSONObject.parseArray(requestVo.getEntityJson(),Role.class);
-            if(CollectionUtils.isEmpty(roleList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到角色ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(roleList, ResultVO.FAILD, "没有找到角色ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Role role:roleList) {
                 if(role.getId()!=null) {
@@ -487,6 +435,8 @@ public class RoleBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

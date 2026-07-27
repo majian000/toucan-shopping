@@ -39,10 +39,6 @@ public class ColorTableBusinessService {
 
     private static final String MSG_RETRY              = "请重试!";
     private static final String MSG_RETRY_LATER        = "请稍后重试";
-    private static final String MSG_PARAM_EMPTY        = "请求参数为空";
-    private static final String MSG_ENTITY_NOT_FOUND   = "没有找到实体对象";
-    private static final String MSG_OBJECT_NOT_FOUND   = "没有找到对象!";
-    private static final String MSG_APP_CODE_NOT_FOUND = "没有找到对象编码!";
     private static final String MSG_ID_NOT_FOUND       = "没有找到ID";
     private static final String MSG_ID_REQUIRED        = "请传入ID";
     private static final String MSG_NAME_EMPTY         = "名称不能为空!";
@@ -59,66 +55,6 @@ public class ColorTableBusinessService {
     @Autowired
     private IdGenerator idGenerator;
 
-
-    // ── 工具方法 ──────────────────────────────────────────────────
-
-    /**
-     * 创建失败结果
-     */
-    private ResultObjectVO fail(String msg) {
-        ResultObjectVO vo = new ResultObjectVO();
-        vo.setCode(ResultVO.FAILD);
-        vo.setMsg(msg);
-        return vo;
-    }
-
-    /**
-     * 校验 requestJsonVO 是否为空
-     * @return null 表示校验通过，否则返回错误结果
-     */
-    private ResultObjectVO validateRequestJson(RequestJsonVO requestJsonVO, String entityLabel) {
-        if (requestJsonVO == null || requestJsonVO.getEntityJson() == null) {
-            logger.warn("{} {}", MSG_PARAM_EMPTY, requestJsonVO == null ? "" : JSONObject.toJSONString(requestJsonVO));
-            return fail(entityLabel);
-        }
-        return null;
-    }
-
-    /**
-     * 校验 appCode
-     * @return null 表示校验通过，否则返回错误结果
-     */
-    private ResultObjectVO validateAppCode(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("{} param:{}", MSG_APP_CODE_NOT_FOUND, JSONObject.toJSONString(requestJsonVO));
-            return fail(MSG_APP_CODE_NOT_FOUND);
-        }
-        return null;
-    }
-
-    /**
-     * 校验请求体（实体JSON）以及 appCode
-     * @return null 表示校验通过，否则返回错误结果
-     */
-    private ResultObjectVO validateRequest(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.warn(MSG_PARAM_EMPTY);
-            return fail(MSG_RETRY);
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("{} param:{}", MSG_OBJECT_NOT_FOUND, JSONObject.toJSONString(requestJsonVO));
-            return fail(MSG_OBJECT_NOT_FOUND);
-        }
-        return null;
-    }
-
-    /**
-     * 统一异常处理
-     */
-    private ResultObjectVO handleException(Exception e) {
-        logger.warn(e.getMessage(), e);
-        return fail(MSG_RETRY_LATER);
-    }
 
     // ── 业务方法 ──────────────────────────────────────────────────
 
@@ -179,7 +115,8 @@ public class ColorTableBusinessService {
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
-            return handleException(e);
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
     }
 
@@ -219,7 +156,8 @@ public class ColorTableBusinessService {
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
-            return handleException(e);
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
     }
 
@@ -308,7 +246,8 @@ public class ColorTableBusinessService {
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
-            return handleException(e);
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
     }
 
@@ -339,7 +278,8 @@ public class ColorTableBusinessService {
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
-            return handleException(e);
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
     }
 

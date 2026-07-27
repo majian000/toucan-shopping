@@ -32,6 +32,11 @@ public class ResultTypeObjectVO<T> extends ResultVO {
         return false;
     }
 
+    /** 快速构造失败响应 */
+    public static <T> ResultTypeObjectVO<T> fail(Integer code, String msg) {
+        return new ResultTypeObjectVO<>(code, msg);
+    }
+
     public <T> T formatData(Class<T> clazz)
     {
         if(data!=null) {

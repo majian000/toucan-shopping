@@ -1,7 +1,16 @@
 package com.toucan.shopping.modules.order.business.service;
 
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.OrderExpressDelivery;
@@ -36,6 +45,7 @@ public class OrderExpressDeliveryBusinessService {
     /**
      * 保存或修改
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveOrUpdate(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -105,6 +115,7 @@ public class OrderExpressDeliveryBusinessService {
     /**
      * 根据订单ID删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO removeByOrderId(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -164,6 +175,7 @@ public class OrderExpressDeliveryBusinessService {
     /**
      * 根据订单ID和店铺ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultTypeObjectVO<OrderExpressDeliveryVO> findOneByOrderIdAndShopId(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO<OrderExpressDeliveryVO> resultObjectVO = new ResultTypeObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {

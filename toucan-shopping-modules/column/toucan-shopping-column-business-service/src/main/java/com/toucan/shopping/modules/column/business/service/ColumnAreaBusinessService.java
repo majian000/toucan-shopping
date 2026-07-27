@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.service.ColumnAreaService;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -26,20 +29,9 @@ public class ColumnAreaBusinessService {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryColumnAreaList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             ColumnAreaVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnAreaVO.class);
 
@@ -50,10 +42,11 @@ public class ColumnAreaBusinessService {
             List<ColumnArea> columnAreas = columnAreaService.queryList(query);
             resultObjectVO.setData(columnAreas);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
         }
         return resultObjectVO;
     }

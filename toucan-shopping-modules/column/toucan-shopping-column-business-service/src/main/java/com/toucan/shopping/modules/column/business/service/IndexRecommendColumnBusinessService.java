@@ -9,8 +9,11 @@ import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.*;
 import com.toucan.shopping.modules.column.vo.*;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -72,25 +75,16 @@ public class IndexRecommendColumnBusinessService {
 
     // ==================== Public API ====================
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             ColumnPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnPageInfo.class);
             PageInfo<ColumnVO> pageInfo = columnService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
@@ -100,186 +94,126 @@ public class IndexRecommendColumnBusinessService {
     }
 
     @Transactional
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
-        PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
-        if (StringUtils.isEmpty(indexRecommendColumnVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(indexRecommendColumnVO.getColumnTypeCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目类型编码不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(indexRecommendColumnVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
-        String lockKey = indexRecommendColumnVO.getAppCode() + "_" + indexRecommendColumnVO.getColumnTypeCode();
         try {
-            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
+            PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
+            Check.notEmpty(indexRecommendColumnVO.getTitle(), ResultObjectVO.FAILD, "栏目标题不能为空");
+            Check.notEmpty(indexRecommendColumnVO.getColumnTypeCode(), ResultObjectVO.FAILD, "栏目类型编码不能为空");
+            Check.notEmpty(indexRecommendColumnVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
+            String lockKey = indexRecommendColumnVO.getAppCode() + "_" + indexRecommendColumnVO.getColumnTypeCode();
+            try {
+                boolean lockStatus = skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
+                if (!lockStatus) {
+                    return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
+                }
 
-            ColumnVO query = new ColumnVO();
-            query.setTitle(indexRecommendColumnVO.getTitle());
-            query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
-            query.setAppCode(indexRecommendColumnVO.getAppCode());
-            List<ColumnVO> columnVOS = columnService.queryList(query);
-            if (!CollectionUtils.isEmpty(columnVOS)) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("该栏目已存在");
-                return resultObjectVO;
-            }
+                ColumnVO query = new ColumnVO();
+                query.setTitle(indexRecommendColumnVO.getTitle());
+                query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
+                query.setAppCode(indexRecommendColumnVO.getAppCode());
+                List<ColumnVO> columnVOS = columnService.queryList(query);
+                if (!CollectionUtils.isEmpty(columnVOS)) {
+                    return ResultObjectVO.fail(ResultObjectVO.FAILD, "该栏目已存在");
+                }
 
-            indexRecommendColumnVO.setId(idGenerator.id());
-            indexRecommendColumnVO.setDeleteStatus((short) 0);
-            indexRecommendColumnVO.setCreateDate(new Date());
-            int ret = columnService.save(indexRecommendColumnVO);
-            if (ret <= 0) {
-                logger.warn("保存栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), indexRecommendColumnVO.getId());
+                indexRecommendColumnVO.setId(idGenerator.id());
+                indexRecommendColumnVO.setDeleteStatus((short) 0);
+                indexRecommendColumnVO.setCreateDate(new Date());
+                int ret = columnService.save(indexRecommendColumnVO);
+                if (ret <= 0) {
+                    logger.warn("保存栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), indexRecommendColumnVO.getId());
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                }
+
+                saveChildEntities(indexRecommendColumnVO);
+
+                resultObjectVO.setData(indexRecommendColumnVO);
+
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+            } finally {
+                skylarkLock.unLock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
             }
-
-            saveChildEntities(indexRecommendColumnVO);
-
-            resultObjectVO.setData(indexRecommendColumnVO);
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        } finally {
-            skylarkLock.unLock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }
         return resultObjectVO;
     }
 
     @Transactional
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
-        PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
-        if (StringUtils.isEmpty(indexRecommendColumnVO.getTitle())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
-            return resultObjectVO;
-        }
-        if (indexRecommendColumnVO.getId() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目ID不能为空");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(indexRecommendColumnVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
-        String lockKey = indexRecommendColumnVO.getAppCode() + "_" + indexRecommendColumnVO.getColumnTypeCode();
         try {
-            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
-
-            ColumnVO query = new ColumnVO();
-            query.setTitle(indexRecommendColumnVO.getTitle());
-            query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
-            query.setAppCode(indexRecommendColumnVO.getAppCode());
-            List<ColumnVO> columnVOS = columnService.queryList(query);
-            if (!CollectionUtils.isEmpty(columnVOS)) {
-                if (columnVOS.get(0).getId().longValue() != indexRecommendColumnVO.getId().longValue()) {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("该栏目已存在");
-                    return resultObjectVO;
+            PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
+            Check.notEmpty(indexRecommendColumnVO.getTitle(), ResultObjectVO.FAILD, "栏目标题不能为空");
+            Check.notNull(indexRecommendColumnVO.getId(), ResultObjectVO.FAILD, "栏目ID不能为空");
+            Check.notEmpty(indexRecommendColumnVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
+            String lockKey = indexRecommendColumnVO.getAppCode() + "_" + indexRecommendColumnVO.getColumnTypeCode();
+            try {
+                boolean lockStatus = skylarkLock.lock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
+                if (!lockStatus) {
+                    return ResultObjectVO.fail(ResultObjectVO.FAILD, "请稍后重试");
                 }
-            }
 
-            indexRecommendColumnVO.setUpdateDate(new Date());
-            int ret = columnService.update(indexRecommendColumnVO);
-            if (ret <= 0) {
-                logger.warn("修改栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), indexRecommendColumnVO.getId());
+                ColumnVO query = new ColumnVO();
+                query.setTitle(indexRecommendColumnVO.getTitle());
+                query.setColumnTypeCode(indexRecommendColumnVO.getColumnTypeCode());
+                query.setAppCode(indexRecommendColumnVO.getAppCode());
+                List<ColumnVO> columnVOS = columnService.queryList(query);
+                if (!CollectionUtils.isEmpty(columnVOS)) {
+                    if (columnVOS.get(0).getId().longValue() != indexRecommendColumnVO.getId().longValue()) {
+                        return ResultObjectVO.fail(ResultObjectVO.FAILD, "该栏目已存在");
+                    }
+                }
+
+                indexRecommendColumnVO.setUpdateDate(new Date());
+                int ret = columnService.update(indexRecommendColumnVO);
+                if (ret <= 0) {
+                    logger.warn("修改栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), indexRecommendColumnVO.getId());
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                }
+
+                replaceChildEntities(indexRecommendColumnVO);
+
+                resultObjectVO.setData(indexRecommendColumnVO);
+
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+            } finally {
+                skylarkLock.unLock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
             }
-
-            replaceChildEntities(indexRecommendColumnVO);
-
-            resultObjectVO.setData(indexRecommendColumnVO);
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        } finally {
-            skylarkLock.unLock(ColumnLockKey.getUpdateLockKey(lockKey), lockKey);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
-
         try {
             PcIndexColumnVO indexRecommendColumnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), PcIndexColumnVO.class);
-
-            if (indexRecommendColumnVO.getId() == null) {
-                logger.info("ID为空 param:" + JSONObject.toJSONString(indexRecommendColumnVO));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(indexRecommendColumnVO.getId(), ResultVO.FAILD, "ID不能为空!");
 
             int ret = columnService.deleteById(indexRecommendColumnVO.getId());
             if (ret <= 0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该栏目!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在该栏目!");
             }
 
             deleteChildEntitiesByColumnId(indexRecommendColumnVO.getId());
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(), e);
@@ -287,18 +221,9 @@ public class IndexRecommendColumnBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryPcIndexColumns(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-        if (requestVo.getAppCode() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
         try {
             ColumnVO columnVO = requestVo.formatEntity(ColumnVO.class);
             List<PcIndexColumnVO> indexRecommendColumnVOS = columnService.queryPcIndexColumns(columnVO);
@@ -317,7 +242,9 @@ public class IndexRecommendColumnBusinessService {
             }
 
             resultObjectVO.setData(indexRecommendColumnVOS);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -326,28 +253,15 @@ public class IndexRecommendColumnBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
-
         try {
             ColumnVO columnVO = JSONObject.parseObject(requestVo.getEntityJson(), ColumnVO.class);
-            if (columnVO.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(columnVO.getId(), ResultVO.FAILD, "没有找到ID");
 
             columnVO = columnService.findById(columnVO.getId());
-            if (columnVO == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
-                return resultObjectVO;
-            }
+            Check.notNull(columnVO, ResultVO.FAILD, "不存在!");
 
             PcIndexColumnVO indexRecommendColumnVO = new PcIndexColumnVO();
             BeanUtils.copyProperties(indexRecommendColumnVO, columnVO);
@@ -359,7 +273,9 @@ public class IndexRecommendColumnBusinessService {
 
             resultObjectVO.setData(indexRecommendColumnVO);
 
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);

@@ -6,8 +6,11 @@ import com.toucan.shopping.modules.column.page.HotProductPageInfo;
 import com.toucan.shopping.modules.column.redis.HotProductLockKey;
 import com.toucan.shopping.modules.column.service.HotProductService;
 import com.toucan.shopping.modules.column.vo.HotProductVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -43,56 +46,7 @@ public class HotProductBusinessService {
     // ----------------------------------------------------------------
 
     private ResultObjectVO fail(String msg) {
-        ResultObjectVO vo = new ResultObjectVO();
-        vo.setCode(ResultVO.FAILD);
-        vo.setMsg(msg);
-        return vo;
-    }
-
-    /**
-     * 校验请求对象和实体JSON非空，返回错误响应则调用方直接返回
-     */
-    private ResultObjectVO validateRequestAndEntity(RequestJsonVO requestJsonVO) {
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            return fail("请重试!");
-        }
-        if (requestJsonVO.getEntityJson() == null) {
-            logger.warn("没有找到实体对象");
-            return fail("没有找到实体对象");
-        }
-        return null;
-    }
-
-    /**
-     * 校验应用编码非空
-     */
-    private ResultObjectVO validateAppCode(RequestJsonVO requestJsonVO) {
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            logger.warn("没有找到应用编码");
-            return fail("没有找到应用编码");
-        }
-        return null;
-    }
-
-    /**
-     * 校验商品名称非空
-     */
-    private ResultObjectVO validateProductName(HotProductVO hotProductVO) {
-        if (StringUtils.isEmpty(hotProductVO.getProductName())) {
-            return fail("商品名称不能为空");
-        }
-        return null;
-    }
-
-    /**
-     * 校验VO上的应用编码非空
-     */
-    private ResultObjectVO validateVoAppCode(HotProductVO hotProductVO) {
-        if (StringUtils.isEmpty(hotProductVO.getAppCode())) {
-            return fail("所属应用不能为空");
-        }
-        return null;
+        return ResultObjectVO.fail(ResultVO.FAILD, msg);
     }
 
     /**
@@ -105,6 +59,8 @@ public class HotProductBusinessService {
         }
         try {
             return businessLogic.get();
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             return fail("请稍后重试");
@@ -127,87 +83,72 @@ public class HotProductBusinessService {
         return null;
     }
 
-    /**
-     * 保存和更新共用的实体层校验：商品名称 + 应用编码
-     */
-    private ResultObjectVO validateSaveOrUpdateEntity(HotProductVO hotProductVO) {
-        ResultObjectVO vo = validateProductName(hotProductVO);
-        if (vo != null) return vo;
-        return validateVoAppCode(hotProductVO);
-    }
-
     // ----------------------------------------------------------------
     //  public service methods
     // ----------------------------------------------------------------
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
-        resultObjectVO = validateAppCode(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             HotProductPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductPageInfo.class);
             PageInfo<HotProductVO> pageInfo = hotProductService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败!");
         }
-
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
+        try {
+            HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
+            Check.notEmpty(hotProductVO.getProductName(), ResultObjectVO.FAILD, "商品名称不能为空");
+            Check.notEmpty(hotProductVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
 
-        resultObjectVO = validateAppCode(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
+            String lockValue = hotProductVO.getAppCode();
+            return executeWithLock(HotProductLockKey.getSaveLockKey(lockValue), lockValue, () -> {
+                ResultObjectVO dup = checkDuplicateName(hotProductVO.getProductName(), hotProductVO.getAppCode(), "该编码已存在");
+                if (dup != null) return dup;
 
-        HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
-
-        resultObjectVO = validateSaveOrUpdateEntity(hotProductVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
-        String lockValue = hotProductVO.getAppCode();
-        return executeWithLock(HotProductLockKey.getSaveLockKey(lockValue), lockValue, () -> {
-            ResultObjectVO dup = checkDuplicateName(hotProductVO.getProductName(), hotProductVO.getAppCode(), "该编码已存在");
-            if (dup != null) return dup;
-
-            hotProductVO.setId(idGenerator.id());
-            hotProductVO.setDeleteStatus((short) 0);
-            hotProductVO.setCreateDate(new Date());
-            int ret = hotProductService.save(hotProductVO);
-            if (ret <= 0) {
-                logger.warn("保存热门商品失败 requestJson{} id{}", requestJsonVO.getEntityJson(), hotProductVO.getId());
-                return fail("请稍后重试");
-            }
-            ResultObjectVO ok = new ResultObjectVO();
-            ok.setData(hotProductVO);
-            return ok;
-        });
+                hotProductVO.setId(idGenerator.id());
+                hotProductVO.setDeleteStatus((short) 0);
+                hotProductVO.setCreateDate(new Date());
+                int ret = hotProductService.save(hotProductVO);
+                if (ret <= 0) {
+                    logger.warn("保存热门商品失败 requestJson{} id{}", requestJsonVO.getEntityJson(), hotProductVO.getId());
+                    return fail("请稍后重试");
+                }
+                ResultObjectVO ok = new ResultObjectVO();
+                ok.setData(hotProductVO);
+                return ok;
+            });
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestVo);
-        if (resultObjectVO != null) return resultObjectVO;
-
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             HotProduct hotProduct = JSONObject.parseObject(requestVo.getEntityJson(), HotProduct.class);
-            if (hotProduct.getId() == null) {
-                return fail("没有找到ID");
-            }
+            Check.notNull(hotProduct.getId(), ResultVO.FAILD, "没有找到ID");
 
             hotProduct = hotProductService.findById(hotProduct.getId());
             if (hotProduct == null) {
-                return fail("不存在!");
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在!");
             }
 
             resultObjectVO.setData(hotProduct);
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -215,25 +156,20 @@ public class HotProductBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
-        resultObjectVO = validateAppCode(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
-            if (hotProductVO.getId() == null) {
-                logger.warn("ID为空 param:{}", JSONObject.toJSONString(hotProductVO));
-                return fail("ID不能为空!");
-            }
+            Check.notNull(hotProductVO.getId(), ResultVO.FAILD, "ID不能为空!");
 
             int ret = hotProductService.deleteById(hotProductVO.getId());
             if (ret <= 0) {
-                return fail("不存在该热门商品!");
+                return ResultObjectVO.fail(ResultVO.FAILD, "不存在该热门商品!");
             }
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
@@ -241,63 +177,53 @@ public class HotProductBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     @Transactional
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
+        try {
+            HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
 
-        resultObjectVO = validateAppCode(requestJsonVO);
-        if (resultObjectVO != null) return resultObjectVO;
+            Check.notNull(hotProductVO.getId(), ResultVO.FAILD, "ID不能为空");
+            Check.notEmpty(hotProductVO.getProductName(), ResultVO.FAILD, "商品名称不能为空");
+            Check.notEmpty(hotProductVO.getAppCode(), ResultVO.FAILD, "所属应用不能为空");
 
-        HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
-
-        if (hotProductVO.getId() == null) {
-            return fail("ID不能为空");
-        }
-
-        resultObjectVO = validateSaveOrUpdateEntity(hotProductVO);
-        if (resultObjectVO != null) return resultObjectVO;
-
-        String lockValue = hotProductVO.getAppCode();
-        return executeWithLock(HotProductLockKey.getUpdateLockKey(lockValue), lockValue, () -> {
-            HotProductVO query = new HotProductVO();
-            query.setProductName(hotProductVO.getProductName());
-            query.setAppCode(hotProductVO.getAppCode());
-            List<HotProductVO> hotProductVOS = hotProductService.queryList(query);
-            if (!CollectionUtils.isEmpty(hotProductVOS)) {
-                if (hotProductVOS.get(0).getId().longValue() != hotProductVO.getId().longValue()) {
-                    return fail("该商品已存在");
+            String lockValue = hotProductVO.getAppCode();
+            return executeWithLock(HotProductLockKey.getUpdateLockKey(lockValue), lockValue, () -> {
+                HotProductVO query = new HotProductVO();
+                query.setProductName(hotProductVO.getProductName());
+                query.setAppCode(hotProductVO.getAppCode());
+                List<HotProductVO> hotProductVOS = hotProductService.queryList(query);
+                if (!CollectionUtils.isEmpty(hotProductVOS)) {
+                    if (hotProductVOS.get(0).getId().longValue() != hotProductVO.getId().longValue()) {
+                        return fail("该商品已存在");
+                    }
                 }
-            }
 
-            hotProductVO.setUpdateDate(new Date());
-            int ret = hotProductService.update(hotProductVO);
-            if (ret <= 0) {
-                logger.warn("修改热门商品失败 requestJson{} id{}", requestJsonVO.getEntityJson(), hotProductVO.getId());
-                return fail("请稍后重试");
-            }
+                hotProductVO.setUpdateDate(new Date());
+                int ret = hotProductService.update(hotProductVO);
+                if (ret <= 0) {
+                    logger.warn("修改热门商品失败 requestJson{} id{}", requestJsonVO.getEntityJson(), hotProductVO.getId());
+                    return fail("请稍后重试");
+                }
 
-            ResultObjectVO ok = new ResultObjectVO();
-            ok.setData(hotProductVO);
-            return ok;
-        });
+                ResultObjectVO ok = new ResultObjectVO();
+                ok.setData(hotProductVO);
+                return ok;
+            });
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryPcIndexHotProducts(RequestJsonVO requestVo) {
-        ResultObjectVO resultObjectVO = validateRequestAndEntity(requestVo);
-        if (resultObjectVO != null) return resultObjectVO;
-
-        // Bug fix: removed dead 'requestVo == null' check (already caught above);
-        // only appCode null check remains.
-        if (requestVo.getAppCode() == null) {
-            logger.warn("没有找到应用编码");
-            return fail("没有找到应用编码");
-        }
-
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             HotProductVO hotProductVO = requestVo.formatEntity(HotProductVO.class);
             resultObjectVO.setData(hotProductService.queryPcIndexHotProducts(hotProductVO));
-        } catch (Exception e) {
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");

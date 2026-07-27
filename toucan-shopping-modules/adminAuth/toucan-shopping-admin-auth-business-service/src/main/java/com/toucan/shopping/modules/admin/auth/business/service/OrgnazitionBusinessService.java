@@ -8,7 +8,10 @@ import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.CodeUtils;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -56,23 +59,13 @@ public class OrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入组织机构名称");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "添加失败,请输入组织机构名称");
 
             if(entity.getPid()==null)
             {
@@ -88,9 +81,7 @@ public class OrgnazitionBusinessService {
             entity.setCode("ORG"+CodeUtils.genMinCode(maxCodeVal+1,3));
             int row = orgnazitionService.save(entity);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "添加失败,请重试!");
             }
 
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
@@ -110,6 +101,8 @@ public class OrgnazitionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -129,14 +122,9 @@ public class OrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
@@ -144,22 +132,10 @@ public class OrgnazitionBusinessService {
             if(entity.getId().longValue()==entity.getPid().longValue())
             {
                 logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级节点不能为自己!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "上级节点不能为自己!");
             }
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入组织机构名称");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入组织机构ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入组织机构名称");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入组织机构ID");
 
 
             Orgnazition query=new Orgnazition();
@@ -168,17 +144,13 @@ public class OrgnazitionBusinessService {
             List<OrgnazitionVO> orgnazitions = orgnazitionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(orgnazitions))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该组织机构不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "该组织机构不存在!");
             }
 
             entity.setUpdateDate(new Date());
             int row = orgnazitionService.update(entity);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
             //删除机构应用关联
@@ -204,6 +176,8 @@ public class OrgnazitionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -221,14 +195,9 @@ public class OrgnazitionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppOrgnazitionTreeTable(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             OrgnazitionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), OrgnazitionTreeInfo.class);
@@ -241,6 +210,8 @@ public class OrgnazitionBusinessService {
             List<Orgnazition>  orgnazitions = orgnazitionService.findTreeTable(queryPageInfo);
             resultObjectVO.setData(orgnazitions);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -256,23 +227,13 @@ public class OrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到组织机构ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到组织机构ID");
 
             //查询是否存在该组织机构
             Orgnazition query=new Orgnazition();
@@ -280,9 +241,7 @@ public class OrgnazitionBusinessService {
             List<OrgnazitionVO> orgnazitionVOS = orgnazitionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(orgnazitionVOS))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("组织机构不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "组织机构不存在!");
             }
             for(OrgnazitionVO orgnazitionVO:orgnazitionVOS) {
                 OrgnazitionApp queryOrgnazitionApp = new OrgnazitionApp();
@@ -292,6 +251,8 @@ public class OrgnazitionBusinessService {
             }
             resultObjectVO.setData(orgnazitionVOS);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -309,11 +270,13 @@ public class OrgnazitionBusinessService {
 
 
 
+
     /**
      * 查询当前账号下组织机构树
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAdminOrgnazitionTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -323,6 +286,8 @@ public class OrgnazitionBusinessService {
             appCodes[0] = query.getAppCode();
             resultObjectVO.setData(orgnazitionService.queryTreeByAppCodeArray(appCodes));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -341,23 +306,13 @@ public class OrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到组织机构ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到组织机构ID");
 
             List<Orgnazition> chidlren = new ArrayList<Orgnazition>();
             orgnazitionService.queryChildren(chidlren,entity);
@@ -388,6 +343,8 @@ public class OrgnazitionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -404,22 +361,15 @@ public class OrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Orgnazition> OrgnazitionList = JSONObject.parseArray(requestVo.getEntityJson(),Orgnazition.class);
             if(CollectionUtils.isEmpty(OrgnazitionList))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到组织机构ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到组织机构ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Orgnazition Orgnazition:OrgnazitionList) {
@@ -458,6 +408,8 @@ public class OrgnazitionBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -474,6 +426,7 @@ public class OrgnazitionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOrgnazationTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -486,6 +439,8 @@ public class OrgnazitionBusinessService {
                 resultObjectVO.setData(orgnazitionService.queryTree(queryApp.getCode()));
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

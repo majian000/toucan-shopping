@@ -9,7 +9,10 @@ import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -57,29 +60,14 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategoryVO dictCategoryVO = JSONObject.parseObject(requestVo.getEntityJson(),DictCategoryVO.class);
-            if(StringUtils.isEmpty(dictCategoryVO.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请输入字典分类名称");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(dictCategoryVO.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请输入字典分类编码");
-                return resultObjectVO;
-            }
+            Check.notEmpty(dictCategoryVO.getName(), ResultVO.FAILD, "请输入字典分类名称");
+            Check.notEmpty(dictCategoryVO.getCode(), ResultVO.FAILD, "请输入字典分类编码");
 
             dictCategoryVO.setAppCodes(new LinkedList<>());
             dictCategoryVO.getAppCodes().add(dictCategoryVO.getAppCode());
@@ -106,6 +94,8 @@ public class DictCategoryBusinessService {
 
             resultObjectVO.setData(dictCategoryVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -124,30 +114,15 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),DictCategoryVO.class);
 
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入字典分类名称");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入字典分类ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入字典分类名称");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入字典分类ID");
 
 
             DictCategory query=new DictCategory();
@@ -177,6 +152,8 @@ public class DictCategoryBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -194,19 +171,16 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO listPage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategoryPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), DictCategoryPageInfo.class);
             resultObjectVO.setData(dictCategoryService.queryListPage(pageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -222,19 +196,16 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategoryVO dictCategoryVO = requestVo.formatEntity(DictCategoryVO.class);
             resultObjectVO.setData(dictCategoryService.queryList(dictCategoryVO));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -251,23 +222,13 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategory entity = JSONObject.parseObject(requestVo.getEntityJson(),DictCategory.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到字典分类ID");
 
             //查询是否存在该字典分类
             DictCategory query=new DictCategory();
@@ -281,6 +242,8 @@ public class DictCategoryBusinessService {
             }
             resultObjectVO.setData(list);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -297,34 +260,27 @@ public class DictCategoryBusinessService {
 
 
 
+
     /**
      * 删除指定字典分类(仅限中台使用)
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             DictCategory entity = JSONObject.parseObject(requestVo.getEntityJson(),DictCategory.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到字典分类ID");
 
             dictCategoryService.deleteById(entity.getId());
             dictService.deleteByCategoryId(entity.getId());
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -341,23 +297,13 @@ public class DictCategoryBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<DictCategory> dictCategoryList = JSONObject.parseArray(requestVo.getEntityJson(),DictCategory.class);
-            if(CollectionUtils.isEmpty(dictCategoryList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到字典分类ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(dictCategoryList, ResultVO.FAILD, "没有找到字典分类ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(DictCategory dictCategory:dictCategoryList) {
                 if(dictCategory.getId()!=null) {
@@ -369,6 +315,8 @@ public class DictCategoryBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

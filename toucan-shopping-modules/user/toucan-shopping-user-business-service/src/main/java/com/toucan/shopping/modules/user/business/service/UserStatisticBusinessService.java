@@ -1,6 +1,9 @@
 package com.toucan.shopping.modules.user.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -40,6 +43,7 @@ public class UserStatisticBusinessService {
     private ToucanStringRedisService toucanStringRedisService;
 
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear(RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -73,6 +77,7 @@ public class UserStatisticBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO refershTotal(RequestJsonVO requestVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

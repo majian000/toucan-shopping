@@ -10,7 +10,10 @@ import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -61,23 +64,13 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入功能项名称");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "添加失败,请输入功能项名称");
 
 
             entity.setFunctionId(GlobalUUID.uuid());
@@ -85,9 +78,7 @@ public class FunctionBusinessService {
             entity.setDeleteStatus((short)0);
             int row = functionService.save(entity);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "添加失败,请重试!");
             }
 
             resultObjectVO.setData(entity);
@@ -105,6 +96,8 @@ public class FunctionBusinessService {
                 resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(), e);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -122,24 +115,15 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saves(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("添加失败,没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Function> entitys = requestVo.formatEntityList(Function.class);
 
             for(Function entity:entitys) {
-                if (StringUtils.isEmpty(entity.getName())) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("添加失败,请输入功能项名称");
-                    return resultObjectVO;
-                }
+                Check.notEmpty(entity.getName(), ResultVO.FAILD, "添加失败,请输入功能项名称");
 
 
                 entity.setFunctionId(GlobalUUID.uuid());
@@ -147,9 +131,7 @@ public class FunctionBusinessService {
                 entity.setDeleteStatus((short) 0);
                 int row = functionService.save(entity);
                 if (row < 1) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("添加失败,请重试!");
-                    return resultObjectVO;
+                    return ResultObjectVO.fail(ResultVO.FAILD, "添加失败,请重试!");
                 }
 
                 resultObjectVO.setData(entity);
@@ -168,6 +150,8 @@ public class FunctionBusinessService {
                     logger.warn(e.getMessage(), e);
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -184,6 +168,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppFunctionTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -210,6 +195,8 @@ public class FunctionBusinessService {
                 resultObjectVO.setData(appFunctionTreeVOS);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -227,6 +214,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppFunctionTreeByPid(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -248,6 +236,8 @@ public class FunctionBusinessService {
                 functionTreeVOS.add(functionTreeVO);
             }
             resultObjectVO.setData(functionTreeVOS);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -263,6 +253,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryFunctionTree(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -271,6 +262,8 @@ public class FunctionBusinessService {
             //查询指定应用下的权限树
             resultObjectVO.setData(functionService.queryTreeByAppCode(query.getCode()));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -287,14 +280,9 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
@@ -302,22 +290,10 @@ public class FunctionBusinessService {
             if(entity.getId().longValue()==entity.getPid().longValue())
             {
                 logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级节点不能为自己!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "上级节点不能为自己!");
             }
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入功能项名称");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请传入功能项ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入功能项名称");
+            Check.notNull(entity.getId(), ResultVO.FAILD, "请传入功能项ID");
 
 
             Function query=new Function();
@@ -326,17 +302,13 @@ public class FunctionBusinessService {
             List<Function> functions = functionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(functions))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该功能项不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "该功能项不存在!");
             }
 
             entity.setUpdateDate(new Date());
             int row = functionService.update(entity);
             if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
             }
 
 
@@ -389,6 +361,8 @@ public class FunctionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -406,14 +380,9 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppFunctionTreeTable(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FunctionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeInfo.class);
@@ -460,6 +429,8 @@ public class FunctionBusinessService {
                 resultObjectVO.setData(appFunctionTreeVOS);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -476,14 +447,9 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAppFunctionTreeTableByPid(RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FunctionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeInfo.class);
@@ -610,6 +576,8 @@ public class FunctionBusinessService {
                 resultObjectVO.setData(functionTreeVOS);
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -626,23 +594,13 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到功能项ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到功能项ID");
 
             //查询是否存在该功能项
             Function query=new Function();
@@ -650,12 +608,12 @@ public class FunctionBusinessService {
             List<Function> listByEntity = functionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(listByEntity))
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("功能项不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "功能项不存在!");
             }
             resultObjectVO.setData(listByEntity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -669,28 +627,19 @@ public class FunctionBusinessService {
 
 
 
+
     /**
      * 删除指定功能项
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到功能项ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到功能项ID");
 
             List<Function> chidlren = new ArrayList<Function>();
             //查询当前节点下所有的子节点
@@ -742,6 +691,8 @@ public class FunctionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -760,23 +711,13 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByAppCode(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
-            if(entity.getAppCode()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到功能项ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getAppCode(), ResultVO.FAILD, "没有找到功能项ID");
 
 
             List<FunctionVO> chidlren =functionService.queryListByAppCode(entity.getAppCode());
@@ -817,6 +758,8 @@ public class FunctionBusinessService {
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -833,23 +776,13 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<Function> functionList = JSONObject.parseArray(requestVo.getEntityJson(),Function.class);
-            if(CollectionUtils.isEmpty(functionList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到功能项ID");
-                return resultObjectVO;
-            }
+            Check.notEmpty(functionList, ResultVO.FAILD, "没有找到功能项ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Function function:functionList) {
                 if(function.getId()!=null) {
@@ -907,6 +840,8 @@ public class FunctionBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -925,6 +860,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAdminAppFunctions(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -952,6 +888,8 @@ public class FunctionBusinessService {
             }
 
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -970,6 +908,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryChildren(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -983,6 +922,8 @@ public class FunctionBusinessService {
                 query.setAppCode(childs.get(0).getAppCode());
                 resultObjectVO.setData(functionService.findListByEntity(query));
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1002,6 +943,7 @@ public class FunctionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1101,6 +1043,8 @@ public class FunctionBusinessService {
                     resultObjectVO.setData(functionService.queryListByRoleIdArrayAndParentId(roleIdArray,String.valueOf(functions.get(0).getId())));
                 }
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1117,14 +1061,9 @@ public class FunctionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO list(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             FunctionTreeInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), FunctionTreeInfo.class);
@@ -1134,6 +1073,8 @@ public class FunctionBusinessService {
             PageInfo<Function> pageInfo =  functionService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

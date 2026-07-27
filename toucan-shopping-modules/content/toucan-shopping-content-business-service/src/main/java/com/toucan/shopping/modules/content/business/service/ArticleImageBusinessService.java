@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.content.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -42,25 +45,12 @@ public class ArticleImageBusinessService {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO save(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         ArticleImageVO articleVO = requestJsonVO.formatEntity(ArticleImageVO.class);
-        if (StringUtils.isEmpty(articleVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("所属应用不能为空");
-            return resultObjectVO;
-        }
+        Check.notEmpty(articleVO.getAppCode(), ResultObjectVO.FAILD, "所属应用不能为空");
         try {
             articleVO.setId(idGenerator.id());
             articleVO.setDeleteStatus((short) 0);
@@ -69,12 +59,12 @@ public class ArticleImageBusinessService {
             int ret = articleImageService.save(articleVO);
             if (ret <= 0) {
                 logger.warn("保存文章图片失败 requestJson{} id{}", requestJsonVO.getEntityJson(), articleVO.getId());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
             }
             resultObjectVO.setData(articleVO);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -83,25 +73,12 @@ public class ArticleImageBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteInvalidData(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到请求对象");
-            return resultObjectVO;
-        }
-        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码");
-            return resultObjectVO;
-        }
 
         DeleteArticleImagePageInfo deleteArticleImagePageInfo = requestJsonVO.formatEntity(DeleteArticleImagePageInfo.class);
-        if (deleteArticleImagePageInfo.getEndDate() == null) {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("截止时间不能为空");
-            return resultObjectVO;
-        }
+        Check.notNull(deleteArticleImagePageInfo.getEndDate(), ResultObjectVO.FAILD, "截止时间不能为空");
         try {
             PageInfo pageInfo = null;
             int page = 1;
@@ -143,6 +120,8 @@ public class ArticleImageBusinessService {
                 }
             } while (pageInfo != null && !CollectionUtils.isEmpty(pageInfo.getList()));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }
@@ -150,50 +129,38 @@ public class ArticleImageBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             ArticleImage entity = JSONObject.parseObject(requestVo.getEntityJson(), ArticleImage.class);
-            if (entity.getId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
-            }
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到ID");
 
             //查询是否存在该数据
             ArticleImage articleImage = articleImageService.findById(entity.getId());
             if (articleImage == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("图片不存在!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "图片不存在!");
             }
 
             int ret = imageUploadService.deleteFile(articleImage.getImgPath());
             if (ret != 0) {
                 articleImageService.updateFileDeleteStatusById(articleImage.getId(), 0, articleImage.getUpdateAdminId());
                 logger.info("文件中心图片删除失败 {} ", articleImage.getImgPath());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("图片删除失败!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "图片删除失败!");
             }
 
             int row = articleImageService.deleteById(articleImage.getId(), articleImage.getUpdateAdminId());
             if (row != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("删除失败!");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "删除失败!");
             } else {
                 articleImageService.updateFileDeleteStatusById(articleImage.getId(), 1, articleImage.getUpdateAdminId());
             }
 
             resultObjectVO.setData(entity);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -203,20 +170,14 @@ public class ArticleImageBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             List<ArticleImage> articleImages = requestVo.formatEntityList(ArticleImage.class);
             if (CollectionUtils.isEmpty(articleImages)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
-                return resultObjectVO;
+                return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for (ArticleImage articleImage : articleImages) {
@@ -250,6 +211,8 @@ public class ArticleImageBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -259,24 +222,15 @@ public class ArticleImageBusinessService {
         return resultObjectVO;
     }
 
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到对象: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
         try {
             ArticleImagePageInfo queryPageInfo = requestJsonVO.formatEntity(ArticleImagePageInfo.class);
             PageInfo<ArticleImageVO> pageInfo = articleImageService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);

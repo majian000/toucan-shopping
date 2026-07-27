@@ -11,6 +11,9 @@ import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminOrgnazitionVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -47,15 +50,13 @@ public class AdminOrgnazitionBusinessService {
      * @param requestJsonVO
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO saveOrgnazitions(RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminOrgnazitionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminOrgnazitionVO.class);
-            if(StringUtils.isEmpty(entity.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
+            Check.notEmpty(entity.getAdminId(), ResultVO.FAILD, "adminId为空");
             if(CollectionUtils.isEmpty(entity.getAdminOrgnazitions()))
             {
                 String[] appCodes = {entity.getSelectAppCode()};
@@ -92,6 +93,8 @@ public class AdminOrgnazitionBusinessService {
                 }
                 adminOrgnazitionService.saves(adminOrgnazitions);
             }
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -110,19 +113,16 @@ public class AdminOrgnazitionBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListByEntity(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo.getEntityJson()==null)
-        {
-            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("没有找到参数");
-            return resultObjectVO;
-        }
 
         try {
             AdminOrgnazition queryAdminOrgnazition = JSONObject.parseObject(requestVo.getEntityJson(),AdminOrgnazition.class);
             List<AdminOrgnazition> adminOrgnazitions = adminOrgnazitionService.findListByEntity(queryAdminOrgnazition);
             resultObjectVO.setData(adminOrgnazitions);
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

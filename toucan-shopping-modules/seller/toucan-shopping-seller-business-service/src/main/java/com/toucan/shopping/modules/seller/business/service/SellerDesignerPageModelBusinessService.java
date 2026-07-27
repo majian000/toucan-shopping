@@ -1,7 +1,10 @@
 package com.toucan.shopping.modules.seller.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -39,20 +42,9 @@ public class SellerDesignerPageModelBusinessService {
     /**
      * 只保存1个
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO onlySaveOne(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到对象编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
-            return resultObjectVO;
-        }
 
         Long designerPageId = -1L;
         String userMainId = "-1";
@@ -112,6 +104,8 @@ public class SellerDesignerPageModelBusinessService {
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("保存失败,请稍后重试!");
@@ -125,26 +119,18 @@ public class SellerDesignerPageModelBusinessService {
     /**
      * 查询列表页
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestVo == null || requestVo.getEntityJson() == null) {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到实体对象");
-            return resultObjectVO;
-        }
 
         try {
             SellerDesignerPageModelPageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), SellerDesignerPageModelPageInfo.class);
 
-            if (StringUtils.isEmpty(requestVo.getAppCode())) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-
             //查询列表页
             resultObjectVO.setData(sellerDesignerPageModelService.queryListPage(queryPageInfo));
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
 
@@ -157,33 +143,20 @@ public class SellerDesignerPageModelBusinessService {
     /**
      * 查询最后一个模型
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryLastOne(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.warn("没有找到对象编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
-            return resultObjectVO;
-        }
 
         String userMainId = "-1";
         try {
             SellerDesignerPageModelVO sellerDesignerPageVO = requestJsonVO.formatEntity(SellerDesignerPageModelVO.class);
-            if (sellerDesignerPageVO.getShopId() == null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
+            Check.notNull(sellerDesignerPageVO.getShopId(), ResultVO.FAILD, "店铺ID不能为空!");
             SellerDesignerPageModel query = new SellerDesignerPageModel();
             BeanUtils.copyProperties(query, sellerDesignerPageVO);
             query.setEnableStatus(1);
             resultObjectVO.setData(sellerDesignerPageModelService.queryLastOne(query));
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败,请稍后重试!");
@@ -195,29 +168,13 @@ public class SellerDesignerPageModelBusinessService {
     /**
      * 根据ID删除
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIdForAdmin(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if (requestJsonVO == null) {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if (requestJsonVO.getAppCode() == null) {
-            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
 
         SellerDesignerPageModel sellerDesignerPageModel = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerDesignerPageModel.class);
 
-        if (sellerDesignerPageModel.getId() == null) {
-            logger.warn("ID为空 param:" + requestJsonVO.getEntityJson());
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("ID不能为空!");
-            return resultObjectVO;
-        }
+        Check.notNull(sellerDesignerPageModel.getId(), ResultVO.FAILD, "ID不能为空!");
 
         String id = String.valueOf(sellerDesignerPageModel.getId());
         try {
@@ -239,6 +196,8 @@ public class SellerDesignerPageModelBusinessService {
                 return resultObjectVO;
             }
 
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch (Exception e) {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");

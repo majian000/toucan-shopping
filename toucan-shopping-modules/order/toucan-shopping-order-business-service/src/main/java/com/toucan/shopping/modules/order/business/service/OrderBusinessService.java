@@ -7,9 +7,21 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.PhoneUtils;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.entity.Order;
@@ -74,6 +86,7 @@ public class OrderBusinessService {
     /**
      * 测试分片
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO testSharding(RequestJsonVO requestJsonVO) throws Exception {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         for(int i=2022;i<=2023;i++) {
@@ -105,6 +118,7 @@ public class OrderBusinessService {
     /**
      * 取消订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO cancel(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -137,6 +151,7 @@ public class OrderBusinessService {
     /**
      * 根据订单编号查询所有skuid
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO querySkuUuidsByOrderNo(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -179,6 +194,7 @@ public class OrderBusinessService {
     /**
      * 查询支付超时订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOrderByPayTimeOut(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -202,6 +218,7 @@ public class OrderBusinessService {
     /**
      * 更新订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO update(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -237,6 +254,7 @@ public class OrderBusinessService {
     /**
      * 查询支付超时订单页
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryOrderByPayTimeOutPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -258,6 +276,7 @@ public class OrderBusinessService {
     /**
      * 完成订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO finish(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -296,6 +315,7 @@ public class OrderBusinessService {
     /**
      * 查询列表页
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -350,6 +370,7 @@ public class OrderBusinessService {
     /**
      * 查询子订单
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryByOrderNoAndUserId(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {
@@ -372,6 +393,7 @@ public class OrderBusinessService {
     /**
      * 根据ID查询
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findById(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -391,6 +413,7 @@ public class OrderBusinessService {
     /**
      * 查询已完成订单数量
      */
+    @RequestCheck(requireEntity = true)
     public ResultTypeObjectVO<Long> queryFinishCountByShopId(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {

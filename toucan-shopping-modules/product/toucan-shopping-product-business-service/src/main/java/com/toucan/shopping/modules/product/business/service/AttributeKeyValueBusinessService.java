@@ -3,8 +3,17 @@ package com.toucan.shopping.modules.product.business.service;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.annotation.RequestCheck;
+import com.toucan.shopping.modules.common.exception.BusinessValidationException;
+import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
@@ -53,6 +62,7 @@ public class AttributeKeyValueBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO findByCategoryId(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
@@ -129,6 +139,7 @@ public class AttributeKeyValueBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO queryAttributeTreePage(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
@@ -191,6 +202,7 @@ public class AttributeKeyValueBusinessService {
      * @param requestVo
      * @return
      */
+    @RequestCheck(requireEntity = true)
     public ResultObjectVO querySearchAttributeList(RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
