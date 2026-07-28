@@ -1,7 +1,7 @@
 package com.toucan.shopping.starter.admin.auth.interceptor;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AuthServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;

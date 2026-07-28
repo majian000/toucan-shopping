@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
@@ -302,7 +303,7 @@ public class DictCategoryBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<DictCategory> dictCategoryList = JSONObject.parseArray(requestVo.getEntityJson(),DictCategory.class);
+            List<DictCategory> dictCategoryList = JSON.parseArray(requestVo.getEntityJson(),DictCategory.class);
             Check.notEmpty(dictCategoryList, ResultVO.FAILD, "没有找到字典分类ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(DictCategory dictCategory:dictCategoryList) {

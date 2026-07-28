@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.product.business.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
@@ -177,7 +178,7 @@ public class AttributeKeyValueBusinessService {
                 }
                 attributeKeyPage.setList(attributeKeyVOS);
             }
-            resultObjectVO.setData(JSONObject.toJSONString(attributeKeyPage,simplePropertyPreFilters));
+            resultObjectVO.setData(JSON.toJSONString(attributeKeyPage,simplePropertyPreFilters));
 
         }catch(Exception e)
         {

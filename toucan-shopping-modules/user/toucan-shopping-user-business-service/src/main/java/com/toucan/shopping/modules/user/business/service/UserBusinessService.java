@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.user.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.modules.user.queue.UserLoginHistoryQueue;
 import com.toucan.shopping.modules.user.service.UserRedisService;
@@ -1991,7 +1992,7 @@ public class UserBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<UserVO> users = JSONObject.parseArray(requestVo.getEntityJson(),UserVO.class);
+            List<UserVO> users = JSON.parseArray(requestVo.getEntityJson(),UserVO.class);
             if(CollectionUtils.isEmpty(users))
             {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");

@@ -1,6 +1,6 @@
 package com.toucan.shopping.starter.xss.config;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.starter.xss.filter.RequestXssWrapperFilter;
 import org.apache.commons.collections.CollectionUtils;

@@ -1,8 +1,9 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
@@ -406,7 +407,7 @@ public class AppBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<App> appList = JSONObject.parseArray(requestVo.getEntityJson(),App.class);
+            List<App> appList = JSON.parseArray(requestVo.getEntityJson(),App.class);
             Check.isTrue(!CollectionUtils.isEmpty(appList), ResultVO.FAILD, "没有找到应用ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(App app:appList) {

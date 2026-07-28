@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.content.business.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -105,7 +106,7 @@ public class BannerBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<BannerVO> banners = JSONObject.parseArray(requestVo.getEntityJson(), BannerVO.class);
+            List<BannerVO> banners = JSON.parseArray(requestVo.getEntityJson(), BannerVO.class);
             if (CollectionUtils.isEmpty(banners)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }
@@ -388,7 +389,7 @@ public class BannerBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Banner> banners = JSONObject.parseArray(requestVo.getEntityJson(), Banner.class);
+            List<Banner> banners = JSON.parseArray(requestVo.getEntityJson(), Banner.class);
             if (CollectionUtils.isEmpty(banners)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");
             }

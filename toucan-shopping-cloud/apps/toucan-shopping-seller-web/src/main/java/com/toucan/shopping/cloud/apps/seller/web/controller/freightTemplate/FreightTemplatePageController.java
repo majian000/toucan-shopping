@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.freightTemplate;
 
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.SellerCategoryService;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;

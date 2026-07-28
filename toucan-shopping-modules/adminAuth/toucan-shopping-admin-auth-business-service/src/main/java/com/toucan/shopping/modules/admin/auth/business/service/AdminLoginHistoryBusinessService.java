@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminLoginHistory;
 import com.toucan.shopping.modules.admin.auth.page.AdminLoginHistoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminLoginHistoryService;

@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.column.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
 import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
@@ -24,7 +23,6 @@ public class ColumnTreeVO extends ColumnVO {
      * 上级节点ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long parentId;
 
     /**

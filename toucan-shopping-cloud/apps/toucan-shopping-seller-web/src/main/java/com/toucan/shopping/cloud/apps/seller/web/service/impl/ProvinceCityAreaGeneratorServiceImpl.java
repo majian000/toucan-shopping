@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.service.ProvinceCityAreaGeneratorService;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -71,7 +72,7 @@ public class ProvinceCityAreaGeneratorServiceImpl implements ProvinceCityAreaGen
                 ResultObjectVO resultObjectVO = areaService.queryFullCache( requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
-                    params.put("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
+                    params.put("areaList", JSON.toJSONString(resultObjectVO.getData()));
                 }else{
                     params.put("areaList","[]");
                 }

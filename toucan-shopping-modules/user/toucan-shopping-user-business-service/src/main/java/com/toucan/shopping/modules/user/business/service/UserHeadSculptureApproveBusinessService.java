@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.user.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.user.constant.AppCodeEnum;
@@ -439,7 +440,7 @@ public class UserHeadSculptureApproveBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<UserHeadSculptureApprove> userHeadSculptureApproves = JSONObject.parseArray(requestVo.getEntityJson(),UserHeadSculptureApprove.class);
+            List<UserHeadSculptureApprove> userHeadSculptureApproves = JSON.parseArray(requestVo.getEntityJson(),UserHeadSculptureApprove.class);
             if(CollectionUtils.isEmpty(userHeadSculptureApproves))
             {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");

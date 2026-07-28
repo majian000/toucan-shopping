@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.user.kafka.thread;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.modules.user.kafka.constant.UserMessageTopicConstant;
 import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;

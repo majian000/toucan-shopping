@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler.user;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;
 import com.toucan.shopping.cloud.apps.scheduler.service.OrderPayTimeOutService;
 import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;

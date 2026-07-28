@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -399,7 +400,7 @@ public class RoleBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Role> roleList = JSONObject.parseArray(requestVo.getEntityJson(),Role.class);
+            List<Role> roleList = JSON.parseArray(requestVo.getEntityJson(),Role.class);
             Check.notEmpty(roleList, ResultVO.FAILD, "没有找到角色ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Role role:roleList) {

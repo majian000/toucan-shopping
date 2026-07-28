@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.product;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.ql.util.express.DefaultContext;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.BrandServiceAPI;

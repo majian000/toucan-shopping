@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.web.controller.generate;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 import com.toucan.shopping.cloud.apps.web.service.ProvinceCityAreaGeneratorService;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.area.vo.AreaVO;

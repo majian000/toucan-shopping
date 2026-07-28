@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.user.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;

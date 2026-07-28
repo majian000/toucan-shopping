@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.seller.page;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerDesignerPageModel;
@@ -27,12 +26,10 @@ public class SellerDesignerPageModelPageInfo extends PageInfo<SellerDesignerPage
     // ===============查询条件===================
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
     private Integer type; //类型 1:预览页 2:正式页

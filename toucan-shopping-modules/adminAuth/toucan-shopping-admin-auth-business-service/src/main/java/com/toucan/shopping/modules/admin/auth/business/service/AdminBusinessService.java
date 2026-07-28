@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
@@ -721,7 +722,7 @@ public class AdminBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Admin> admins = JSONObject.parseArray(requestVo.getEntityJson(),Admin.class);
+            List<Admin> admins = JSON.parseArray(requestVo.getEntityJson(),Admin.class);
             if(CollectionUtils.isEmpty(admins))
             {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到账号ID");

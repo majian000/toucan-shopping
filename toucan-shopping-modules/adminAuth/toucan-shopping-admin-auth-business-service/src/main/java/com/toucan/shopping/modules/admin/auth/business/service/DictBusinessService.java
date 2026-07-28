@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
@@ -335,7 +336,7 @@ public class DictBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<DictVO> dictVOS = JSONObject.parseArray(requestVo.getEntityJson(),DictVO.class);
+            List<DictVO> dictVOS = JSON.parseArray(requestVo.getEntityJson(),DictVO.class);
             Check.notEmpty(dictVOS, ResultVO.FAILD, "没有找到字典ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(DictVO dictVO:dictVOS) {

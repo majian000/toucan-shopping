@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.AttributeValue;
@@ -32,7 +31,6 @@ public class AttributeValueVO extends AttributeValue {
     private String rgbColor; //颜色值
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long attributeValueId;
 
     private List<String> attributeValueList; //属性值列表

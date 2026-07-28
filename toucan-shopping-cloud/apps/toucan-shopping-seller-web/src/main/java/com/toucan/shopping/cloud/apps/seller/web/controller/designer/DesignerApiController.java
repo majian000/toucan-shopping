@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.designer;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
 import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;

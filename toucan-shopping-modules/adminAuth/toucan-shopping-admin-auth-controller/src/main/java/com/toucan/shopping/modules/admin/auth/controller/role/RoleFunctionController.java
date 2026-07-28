@@ -1,8 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.controller.role;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.admin.auth.business.service.RoleFunctionBusinessService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;

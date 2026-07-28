@@ -2,8 +2,9 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSpu;
 
 
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
@@ -665,7 +666,7 @@ public class ProductSpuController extends UIController {
                     }
 
                     //将属性名和属性值转换成字符串
-                    productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(productSpuVO.getAttributeKeyValues()));
+                    productSpuVO.setAttributeKeyValuesJson(JSON.toJSONString(productSpuVO.getAttributeKeyValues()));
 
                     request.setAttribute("model",productSpuVO);
                 }
@@ -735,7 +736,7 @@ public class ProductSpuController extends UIController {
                     }
 
                     //将属性名和属性值转换成字符串
-                    productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(productSpuVO.getAttributeKeyValues()));
+                    productSpuVO.setAttributeKeyValuesJson(JSON.toJSONString(productSpuVO.getAttributeKeyValues()));
 
                     request.setAttribute("model",productSpuVO);
                 }

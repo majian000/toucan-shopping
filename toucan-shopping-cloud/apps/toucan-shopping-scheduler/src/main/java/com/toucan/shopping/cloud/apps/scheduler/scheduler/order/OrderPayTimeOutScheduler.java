@@ -1,7 +1,8 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler.order;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;
 import com.toucan.shopping.cloud.apps.scheduler.service.OrderPayTimeOutService;
 import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
@@ -100,7 +101,7 @@ public class OrderPayTimeOutScheduler {
                 {
                     String globalTransactionId = UUID.randomUUID().toString().replace("-","");
                     List<MainOrderVO> mainOrders= JSONArray.parseArray(JSONObject.toJSONString(pageInfo.getList()),MainOrderVO.class);
-                    logger.info("超时订单列表 : {} ",JSONObject.toJSON(pageInfo.getList()));
+                    logger.info("超时订单列表 : {} ",JSON.toJSONString(pageInfo.getList()));
                     //保存取消订单数据事件
                     EventPublish eventProcess = orderPayTimeOutService.saveEvent(globalTransactionId,mainOrders,"取消超时订单", PublishEventConstant.cancel_main_order.name());
                     //查询商品库存

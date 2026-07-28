@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.area.cache.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.area.cache.service.AreaRedisService;
 import com.toucan.shopping.modules.area.constant.AreaRedisKey;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -68,7 +69,7 @@ public class AreaRedisServiceImpl implements AreaRedisService {
 
     @Override
     public void flushFullAreaCache(List<AreaVO> allAreas) {
-        redisTemplate.opsForValue().set(AreaRedisKey.getFullAreaCacheKey(), JSONArray.toJSONString(allAreas));
+        redisTemplate.opsForValue().set(AreaRedisKey.getFullAreaCacheKey(), JSON.toJSONString(allAreas));
     }
 
     @Override

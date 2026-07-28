@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopRegistRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.MobilePhoneVCodeUtil;

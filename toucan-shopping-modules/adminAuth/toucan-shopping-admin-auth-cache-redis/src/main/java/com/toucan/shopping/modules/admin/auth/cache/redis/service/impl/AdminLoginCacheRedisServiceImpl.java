@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.cache.redis.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminLoginCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.AppCacheService;
 import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;

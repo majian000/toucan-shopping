@@ -1,8 +1,7 @@
 package com.toucan.shopping.modules.seller.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,14 +16,12 @@ public class SellerShop {
      * 主键 雪花算法生成
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     /**
      * 所属用户ID,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.message.redis.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.message.redis.MessageTypeKey;
 import com.toucan.shopping.modules.message.redis.service.MessageTypeRedisService;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
@@ -26,7 +27,7 @@ public class MessageTypeRedisServiceImpl implements MessageTypeRedisService {
         Object messageTypesObject = toucanStringRedisService.get(MessageTypeKey.getMessageTypeKey());
         if(messageTypesObject!=null)
         {
-            return JSONObject.parseArray(String.valueOf(messageTypesObject),MessageTypeVO.class);
+            return JSON.parseArray(String.valueOf(messageTypesObject),MessageTypeVO.class);
         }
         return null;
     }

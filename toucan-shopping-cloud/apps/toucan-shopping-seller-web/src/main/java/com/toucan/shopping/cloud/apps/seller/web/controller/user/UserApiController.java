@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.user;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.queue.SellerLoginHistoryQueue;
 import com.toucan.shopping.cloud.apps.seller.web.redis.UserLoginRedisKey;

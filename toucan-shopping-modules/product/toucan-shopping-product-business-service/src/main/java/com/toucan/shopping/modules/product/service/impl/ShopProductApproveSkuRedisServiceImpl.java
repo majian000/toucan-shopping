@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.product.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.redis.ProductApproveSkuRedisKey;

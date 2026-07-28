@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.user.order;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.ShopProductServiceAPI;
 import com.toucan.shopping.modules.category.vo.CategoryVO;

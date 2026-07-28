@@ -1,8 +1,7 @@
 package com.toucan.shopping.modules.order.entity;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.toucan.shopping.modules.order.vo.OrderLogDataBodyVO;
@@ -24,7 +23,6 @@ import java.util.Date;
 public class OrderLog {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private String orderNo; //订单编号
     private String operateUserId; //用户ID

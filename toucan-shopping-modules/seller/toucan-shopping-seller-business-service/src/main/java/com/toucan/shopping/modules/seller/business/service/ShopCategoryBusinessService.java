@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.seller.business.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -1083,7 +1084,7 @@ public class ShopCategoryBusinessService {
                         shopCategoryService.setChildren(shopCategoryList,treeVO);
                     }
                 }
-                toucanStringRedisService.set(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()),JSONArray.toJSONString(shopCategoryTreeVOS));
+                toucanStringRedisService.set(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()),JSON.toJSONString(shopCategoryTreeVOS));
             }
         }catch(BusinessValidationException e)
         {
@@ -1791,7 +1792,7 @@ public class ShopCategoryBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<ShopCategory> ShopCategorys = JSONObject.parseArray(requestVo.getEntityJson(),ShopCategory.class);
+            List<ShopCategory> ShopCategorys = JSON.parseArray(requestVo.getEntityJson(),ShopCategory.class);
             if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

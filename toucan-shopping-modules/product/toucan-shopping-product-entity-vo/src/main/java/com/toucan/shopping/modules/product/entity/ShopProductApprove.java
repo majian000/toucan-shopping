@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,23 +17,19 @@ public class ShopProductApprove {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     private String uuid; //SPU UUID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //所属类别
 
     private String productUuid; //平台维度的SPU的UUID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long freightTemplateId; //运费模板ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productId; //平台维度的SPU的ID
 
     private String name; //商品名称
@@ -50,7 +45,6 @@ public class ShopProductApprove {
     private Date createDate; //创建时间
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long createUserId; //创建人ID
 
 
@@ -59,13 +53,11 @@ public class ShopProductApprove {
     private Date updateDate; //修改时间
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long updateUserId; //修改人ID
 
     private Short shelvesStatus; //上架状态 1:放入仓库 2:立即上架
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId; //店铺ID
 
     private Short approveStatus; //1审核中 2审核通过 3审核驳回
@@ -86,18 +78,15 @@ public class ShopProductApprove {
     private String articleNumber; //货号
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopCategoryId; //店铺内的所属分类
 
     private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopProductId; //店铺商品ID
 
 

@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.designer.seller.parser;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.designer.core.model.component.AbstractComponent;
 import com.toucan.shopping.modules.designer.core.model.component.ComponentProperty;
 import com.toucan.shopping.modules.designer.core.model.component.IComponent;

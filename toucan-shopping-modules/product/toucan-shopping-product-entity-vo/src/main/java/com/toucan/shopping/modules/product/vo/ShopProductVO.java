@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
 import lombok.Data;

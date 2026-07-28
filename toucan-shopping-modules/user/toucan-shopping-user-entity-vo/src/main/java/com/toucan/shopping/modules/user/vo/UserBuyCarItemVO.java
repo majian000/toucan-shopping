@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.user.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;

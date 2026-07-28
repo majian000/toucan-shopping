@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.category.business.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
@@ -271,7 +272,7 @@ public class CategoryBusinessService {
     @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         try {
-            List<Category> categorys = JSONObject.parseArray(requestVo.getEntityJson(), Category.class);
+            List<Category> categorys = JSON.parseArray(requestVo.getEntityJson(), Category.class);
             if (CollectionUtils.isEmpty(categorys)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找ID");
             }

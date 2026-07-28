@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,21 +17,17 @@ public class ShopProductApproveDescriptionImg {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productApproveId; //商品审核ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productDescriptionId; //商品介绍主表ID
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productSkuId; //商品SKU ID
 
     private Short type = 1 ; //介绍图类型 1:店铺商品 2:SKU
@@ -55,7 +50,6 @@ public class ShopProductApproveDescriptionImg {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long createUserId; //创建人ID
 
     private Integer deleteStatus; //删除状态 0未删除 1已删除

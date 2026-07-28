@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.category.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.category.page.CategoryHotTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryHotService;
 import com.toucan.shopping.modules.category.vo.CategoryHotTreeVO;

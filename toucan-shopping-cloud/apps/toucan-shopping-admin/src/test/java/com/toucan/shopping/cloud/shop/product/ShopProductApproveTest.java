@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.shop.product;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;

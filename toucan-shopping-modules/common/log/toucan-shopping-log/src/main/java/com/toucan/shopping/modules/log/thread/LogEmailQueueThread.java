@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.log.thread;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.EmailHelper;
 import com.toucan.shopping.modules.log.message.LogEmailMessage;

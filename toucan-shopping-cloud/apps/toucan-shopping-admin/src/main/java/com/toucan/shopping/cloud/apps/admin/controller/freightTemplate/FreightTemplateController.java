@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.apps.admin.controller.freightTemplate;
 
 
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.product.api.ShopProductApproveServiceAPI;

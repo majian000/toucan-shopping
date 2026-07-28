@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.product.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -348,7 +349,7 @@ public class BrandBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<BrandVO> brandVOS = JSONObject.parseArray(requestVo.getEntityJson(), BrandVO.class);
+            List<BrandVO> brandVOS = JSON.parseArray(requestVo.getEntityJson(), BrandVO.class);
             if (CollectionUtils.isEmpty(brandVOS)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找ID");
             }
@@ -394,7 +395,7 @@ public class BrandBusinessService {
             while ((line = bufferedReader.readLine()) != null) {
                 buffer.append(line);
             }
-            List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
+            List<Map> rows = JSON.parseArray(buffer.toString(), Map.class);
             int size = rows.size();
             for (int i = 0; i < size; i++) {
                 logger.info("遍历到{} 总数{}", i, size);

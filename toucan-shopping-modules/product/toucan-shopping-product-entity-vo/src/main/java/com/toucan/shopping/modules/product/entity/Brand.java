@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +16,6 @@ import java.util.Date;
 public class Brand {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private Integer trademarkAreaType; //商标注册地区 1:中国大陆地区 2:香港、澳门特别行政区，台湾省和境外国家
     private String chineseName; //品牌名(中文)

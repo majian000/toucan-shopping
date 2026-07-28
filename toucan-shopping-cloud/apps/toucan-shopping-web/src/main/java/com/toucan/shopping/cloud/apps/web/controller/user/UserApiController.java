@@ -1,7 +1,8 @@
 package com.toucan.shopping.cloud.apps.web.controller.user;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.EmailForgetPwdUtil;
 import com.toucan.shopping.cloud.apps.web.util.MobilePhoneVCodeUtil;
@@ -114,7 +115,7 @@ public class UserApiController extends BaseController {
             }
             if(resultObjectVO.getData()!=null)
             {
-                List<UserMobilePhone> userMobilePhoneList = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), UserMobilePhone.class);
+                List<UserMobilePhone> userMobilePhoneList = JSON.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), UserMobilePhone.class);
                 if(CollectionUtils.isNotEmpty(userMobilePhoneList))
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);

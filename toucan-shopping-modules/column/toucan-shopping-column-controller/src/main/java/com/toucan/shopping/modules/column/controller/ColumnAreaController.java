@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.column.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.service.ColumnAreaService;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;

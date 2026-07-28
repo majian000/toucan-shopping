@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +17,6 @@ import java.util.Date;
 public class ShopProductApproveSku {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     private String name; //SKU名称(商品名称 + 属性值)
@@ -32,7 +30,6 @@ public class ShopProductApproveSku {
     private String productApproveUuid; //店铺SPU的UUID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productApproveId; //这个店铺发布的商品的ID
 
     private String uuid; //SKU的UUID
@@ -47,12 +44,10 @@ public class ShopProductApproveSku {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long createUserId; //创建人ID
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long updateUserId; //创建人ID
 
     /**
@@ -70,12 +65,10 @@ public class ShopProductApproveSku {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId; //店铺ID
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
 
     private Integer stockNum=0; //库存
@@ -90,15 +83,12 @@ public class ShopProductApproveSku {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productId; //这个商品的ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //商品分类ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopCategoryId; //店铺商品分类ID
 
     private BigDecimal roughWeight; //毛重

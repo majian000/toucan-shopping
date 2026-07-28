@@ -1,11 +1,10 @@
 package com.toucan.shopping.modules.product.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
@@ -104,7 +103,6 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productSkuId; //SKU的ID
 
 }

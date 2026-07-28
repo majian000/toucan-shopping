@@ -1,7 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.SellerCategoryService;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
@@ -64,7 +65,7 @@ public class ShopProductApprovePageController extends BaseController {
     public String republish (HttpServletRequest request, @PathVariable Long approveId){
         request.setAttribute("approveId",String.valueOf(approveId));
         try {
-            request.setAttribute("categoryList", JSONArray.toJSONString(sellerCategoryService.queryMiniCategorys(),simplePropertyPreFilter));
+            request.setAttribute("categoryList", JSON.toJSONString(sellerCategoryService.queryMiniCategorys(),simplePropertyPreFilter));
         }catch(Exception e)
         {
             request.setAttribute("categoryList", "[]");
@@ -79,7 +80,7 @@ public class ShopProductApprovePageController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataList(ShopCategoryVO.class);
-                request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryVOList));
+                request.setAttribute("shopCategoryList", JSON.toJSONString(shopCategoryVOList));
             }else{
                 request.setAttribute("shopCategoryList", "[]");
             }

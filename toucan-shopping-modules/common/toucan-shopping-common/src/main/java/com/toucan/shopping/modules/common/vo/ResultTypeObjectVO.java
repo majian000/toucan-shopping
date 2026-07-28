@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.common.vo;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.Data;
 
 import java.util.List;

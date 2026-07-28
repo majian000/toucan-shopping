@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.seller.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +17,6 @@ import java.util.Date;
 public class FreightTemplateDefaultRule {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     private String transportModel; //运送方式 1:快递 2:EMS 3:平邮
@@ -36,7 +34,6 @@ public class FreightTemplateDefaultRule {
      * 模板ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long templateId;
 
 
@@ -44,14 +41,12 @@ public class FreightTemplateDefaultRule {
      * 所属用户ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**
      * 关联店铺,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
 

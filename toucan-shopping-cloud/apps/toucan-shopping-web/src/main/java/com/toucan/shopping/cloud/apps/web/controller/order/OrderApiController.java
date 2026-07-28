@@ -1,8 +1,8 @@
 package com.toucan.shopping.cloud.apps.web.controller.order;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.order.api.MainOrderServiceAPI;
 import com.toucan.shopping.cloud.seller.api.FreightTemplateServiceAPI;
@@ -963,7 +963,7 @@ public class OrderApiController {
                     InventoryReductionVO inventoryReductionVo = new InventoryReductionVO();
                     inventoryReductionVo.setAppCode(appCode);
                     inventoryReductionVo.setUserId(payCallbackVO.getUserId());
-                    List<ProductSku> productSkus = JSONArray.parseArray(JSONArray.toJSONString(resultObjectVO.getData()), ProductSku.class);
+                    List<ProductSku> productSkus = JSONArray.parseArray(JSON.toJSONString(resultObjectVO.getData()), ProductSku.class);
 //                    inventoryReductionVo.setProductSkuList(productSkus);
 
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payCallbackVO.getUserId(), inventoryReductionVo);

@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
@@ -781,7 +782,7 @@ public class FunctionBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Function> functionList = JSONObject.parseArray(requestVo.getEntityJson(),Function.class);
+            List<Function> functionList = JSON.parseArray(requestVo.getEntityJson(),Function.class);
             Check.notEmpty(functionList, ResultVO.FAILD, "没有找到功能项ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(Function function:functionList) {
@@ -962,7 +963,7 @@ public class FunctionBusinessService {
                 if(adminRoleCacheService!=null) {
                     adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
                     if (!CollectionUtils.isEmpty(adminRoleCacheVOS)) {
-                        adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleCacheVOS), AdminRole.class);
+                        adminRoles = JSON.parseArray(JSONObject.toJSONString(adminRoleCacheVOS), AdminRole.class);
                     }
                 }
             }catch(Exception e)
@@ -1001,7 +1002,7 @@ public class FunctionBusinessService {
                             BeanUtils.copyProperties(queryFunctionCacheVO, query);
                             functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
                             if (!CollectionUtils.isEmpty(functionCacheVOS)) {
-                                functions = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                functions = JSON.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
                             }
                         }
                     }

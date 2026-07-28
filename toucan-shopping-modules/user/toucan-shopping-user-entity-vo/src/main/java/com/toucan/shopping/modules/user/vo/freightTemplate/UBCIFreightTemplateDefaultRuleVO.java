@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.user.vo.freightTemplate;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -18,7 +17,6 @@ public class UBCIFreightTemplateDefaultRuleVO {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     private String transportModel; //运送方式 1:快递 2:EMS 3:平邮

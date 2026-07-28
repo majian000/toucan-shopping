@@ -1,33 +1,31 @@
 package com.toucan.shopping.modules.order.serializer;
 
-import com.alibaba.fastjson.serializer.JSONSerializer;
-import com.alibaba.fastjson.serializer.ObjectSerializer;
-import com.alibaba.fastjson.serializer.SerializeWriter;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.writer.ObjectWriter;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
 /**
- * 金额反序列化 去掉多余0
+ * 金额序列化 去掉多余0
  */
-public class AmountSerializer implements ObjectSerializer {
+public class AmountSerializer implements ObjectWriter<Object> {
     public static final AmountSerializer instance = new AmountSerializer();
 
     public AmountSerializer() {
     }
 
-    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType, int features) throws IOException {
-        SerializeWriter out = serializer.out;
+    @Override
+    public void write(JSONWriter jsonWriter, Object object, Object fieldName, Type fieldType, long features) {
         if (object == null) {
-            out.writeNull();
+            jsonWriter.writeNull();
         } else {
-            if(object instanceof BigDecimal) {
+            if (object instanceof BigDecimal) {
                 String strVal = ((BigDecimal) object).toPlainString();
-                out.writeString(strVal);
-            }else{
+                jsonWriter.writeString(strVal);
+            } else {
                 String strVal = object.toString();
-                out.writeString(strVal);
+                jsonWriter.writeString(strVal);
             }
         }
     }

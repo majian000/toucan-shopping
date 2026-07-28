@@ -1,8 +1,9 @@
 package com.toucan.shopping.modules.category.cache.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.constant.CategoryRedisKey;
 import com.toucan.shopping.modules.category.entity.Category;
@@ -58,7 +59,7 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
             redisTemplate.delete(CategoryRedisKey.getMiniTreeKey());
         }
         //保存到redis
-        redisTemplate.opsForValue().set(CategoryRedisKey.getMiniTreeKey(), JSONObject.toJSONString(categoryVOS,simplePropertyPreFilter));
+        redisTemplate.opsForValue().set(CategoryRedisKey.getMiniTreeKey(), JSON.toJSONString(categoryVOS,simplePropertyPreFilter));
     }
 
 
@@ -70,7 +71,7 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
             redisTemplate.delete(CategoryRedisKey.getNavigationMiniTreeKey());
         }
         //保存到redis
-        redisTemplate.opsForValue().set(CategoryRedisKey.getNavigationMiniTreeKey(), JSONObject.toJSONString(categoryVOS,navigationPropertyPreFilter));
+        redisTemplate.opsForValue().set(CategoryRedisKey.getNavigationMiniTreeKey(), JSON.toJSONString(categoryVOS,navigationPropertyPreFilter));
     }
 
     @Override

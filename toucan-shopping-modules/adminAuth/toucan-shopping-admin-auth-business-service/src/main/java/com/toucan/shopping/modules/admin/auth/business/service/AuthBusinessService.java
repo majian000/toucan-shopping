@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
@@ -93,7 +94,7 @@ public class AuthBusinessService {
             if(CollectionUtils.isNotEmpty(adminRoleCacheVOS))
             {
                 //将缓存数据进行格式化
-                adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleCacheVOS),AdminRole.class);
+                adminRoles = JSON.parseArray(JSONObject.toJSONString(adminRoleCacheVOS),AdminRole.class);
             }else{
                 //查询这个账户下应用下的所有角色
                 adminRoles = adminRoleService.findListByEntity(queryAdminRole);
@@ -137,7 +138,7 @@ public class AuthBusinessService {
                                     BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
                                     functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
                                     if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
-                                        List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                        List<Function> functionCacheList = JSON.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
                                         if (CollectionUtils.isNotEmpty(functionCacheList)) {
                                             for (Function functioncache : functionCacheList) {
                                                 //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
@@ -310,7 +311,7 @@ public class AuthBusinessService {
             if(CollectionUtils.isNotEmpty(adminRoleCacheVOS))
             {
                 //将缓存数据进行格式化
-                adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleCacheVOS),AdminRole.class);
+                adminRoles = JSON.parseArray(JSONObject.toJSONString(adminRoleCacheVOS),AdminRole.class);
             }else{
                 //查询这个账户下应用下的所有角色
                 adminRoles = adminRoleService.findListByEntity(queryAdminRole);
@@ -359,7 +360,7 @@ public class AuthBusinessService {
                                 BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
                                 functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
                                 if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
-                                    List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                    List<Function> functionCacheList = JSON.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
                                     if (CollectionUtils.isNotEmpty(functionCacheList)) {
                                         for (Function functioncache : functionCacheList) {
                                             //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询

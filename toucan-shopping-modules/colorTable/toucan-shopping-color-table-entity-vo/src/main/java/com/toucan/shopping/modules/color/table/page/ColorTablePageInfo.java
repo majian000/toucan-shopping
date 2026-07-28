@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.color.table.page;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.color.table.entity.ColorTable;
 import com.toucan.shopping.modules.common.page.PageInfo;

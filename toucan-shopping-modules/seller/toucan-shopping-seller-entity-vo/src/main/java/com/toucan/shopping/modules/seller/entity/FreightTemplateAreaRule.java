@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.seller.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +17,6 @@ import java.util.Date;
 public class FreightTemplateAreaRule {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     /**
@@ -63,7 +61,6 @@ public class FreightTemplateAreaRule {
     private Double appendWeightMoney; //续重金额
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long groupId; //分组ID
 
 
@@ -72,14 +69,12 @@ public class FreightTemplateAreaRule {
      * 默认规则ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long defaultRuleId;
 
     /**
      * 模板ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long templateId;
 
 
@@ -87,14 +82,12 @@ public class FreightTemplateAreaRule {
      * 所属用户ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**
      * 关联店铺,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
 

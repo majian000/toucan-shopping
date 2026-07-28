@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.column.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.entity.ColumnBanner;
 import lombok.Data;

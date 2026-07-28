@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.product.vo;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.toucan.shopping.second.kill.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.order.kafka.constant.OrderMessageTopicConstant;

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnTypeLockKey;
 import com.toucan.shopping.modules.column.service.ColumnTypeService;
@@ -91,7 +92,7 @@ public class ColumnTypeBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<ColumnTypeVO> columnTypeVOS = JSONObject.parseArray(requestVo.getEntityJson(), ColumnTypeVO.class);
+            List<ColumnTypeVO> columnTypeVOS = JSON.parseArray(requestVo.getEntityJson(), ColumnTypeVO.class);
             Check.notEmpty(columnTypeVOS, ResultVO.FAILD, "没有找到ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<>();
             for (ColumnTypeVO columnTypeVO : columnTypeVOS) {

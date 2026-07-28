@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.content.cache.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.constant.BannerRedisKey;
 import com.toucan.shopping.modules.content.vo.BannerVO;

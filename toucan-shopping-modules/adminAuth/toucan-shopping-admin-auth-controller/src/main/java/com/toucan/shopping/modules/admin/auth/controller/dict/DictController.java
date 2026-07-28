@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.controller.dict;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.admin.auth.business.service.DictBusinessService;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;

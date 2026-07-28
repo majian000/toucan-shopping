@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.area.business.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.area.cache.service.AreaRedisService;
 import com.toucan.shopping.modules.area.constant.AreaRedisKey;
 import com.toucan.shopping.modules.area.entity.Area;
@@ -160,7 +161,7 @@ public class AreaBusinessService {
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            List<Area> areas = JSONObject.parseArray(requestVo.getEntityJson(), Area.class);
+            List<Area> areas = JSON.parseArray(requestVo.getEntityJson(), Area.class);
             Check.notEmpty(areas, ResultVO.FAILD, "没有找地区ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<>();
             for (Area area : areas) {

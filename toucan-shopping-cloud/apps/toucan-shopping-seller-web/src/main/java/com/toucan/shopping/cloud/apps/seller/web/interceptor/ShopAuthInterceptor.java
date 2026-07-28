@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.seller.web.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.auth.shop.ShopAuth;

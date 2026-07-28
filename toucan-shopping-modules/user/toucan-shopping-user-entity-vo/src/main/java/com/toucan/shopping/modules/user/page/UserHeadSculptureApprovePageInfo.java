@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.user.page;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove;
@@ -27,14 +26,12 @@ public class UserHeadSculptureApprovePageInfo extends PageInfo<UserHeadSculpture
      * 主键 雪花算法生成
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     /**
      * 用户ID,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
 

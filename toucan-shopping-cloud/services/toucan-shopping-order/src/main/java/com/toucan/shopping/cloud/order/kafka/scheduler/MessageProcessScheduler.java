@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.order.kafka.scheduler;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
@@ -72,7 +73,7 @@ public class MessageProcessScheduler {
                         List<ProductSku> productSkus = null;
                         if(createOrderMessage.getProductSkuListJson()!=null)
                         {
-                            productSkus = JSONObject.parseArray(createOrderMessage.getProductSkuListJson(),ProductSku.class);
+                            productSkus = JSON.parseArray(createOrderMessage.getProductSkuListJson(),ProductSku.class);
                         }
 
                         //拿到购买信息
@@ -92,7 +93,7 @@ public class MessageProcessScheduler {
 //                        Order order = orderService.createOrder(userId,orderNo,appCode,1,productSkus,buyMap);
 //                        logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
 //                        List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap, order);
-//                        logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//                        logger.info("保存子订单 提交本地事务{}", JSON.toJSONString(orderItems));
 
                         eventProcess.setStatus((short)1); //已处理
                         eventProcessService.updateStatus(eventProcess);

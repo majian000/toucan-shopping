@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.column.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.column.entity.HotProduct;
 import com.toucan.shopping.modules.column.page.HotProductPageInfo;
 import com.toucan.shopping.modules.column.redis.HotProductLockKey;

@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
@@ -366,7 +367,7 @@ public class OrgnazitionBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Orgnazition> OrgnazitionList = JSONObject.parseArray(requestVo.getEntityJson(),Orgnazition.class);
+            List<Orgnazition> OrgnazitionList = JSON.parseArray(requestVo.getEntityJson(),Orgnazition.class);
             if(CollectionUtils.isEmpty(OrgnazitionList))
             {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到组织机构ID");

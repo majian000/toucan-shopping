@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.lang3.StringUtils;

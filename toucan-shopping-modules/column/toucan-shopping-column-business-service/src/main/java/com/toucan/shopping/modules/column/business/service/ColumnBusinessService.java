@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.ColumnService;
@@ -238,7 +239,7 @@ public class ColumnBusinessService {
     @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         try {
-            List<ColumnVO> columnVOS = JSONObject.parseArray(requestVo.getEntityJson(), ColumnVO.class);
+            List<ColumnVO> columnVOS = JSON.parseArray(requestVo.getEntityJson(), ColumnVO.class);
             Check.notEmpty(columnVOS, ResultVO.FAILD, "没有找到栏目ID");
             List<ResultObjectVO> resultList = new ArrayList<>();
             for (ColumnVO columnVO : columnVOS) {

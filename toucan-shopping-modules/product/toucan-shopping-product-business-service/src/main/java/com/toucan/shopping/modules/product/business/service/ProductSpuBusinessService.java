@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.product.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -493,7 +494,7 @@ public class ProductSpuBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<ProductSpuVO> productSpuVOS = JSONObject.parseArray(requestVo.getEntityJson(),ProductSpuVO.class);
+            List<ProductSpuVO> productSpuVOS = JSON.parseArray(requestVo.getEntityJson(),ProductSpuVO.class);
             Check.notEmpty(productSpuVOS, ResultVO.FAILD, "没有找ID");
 
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();

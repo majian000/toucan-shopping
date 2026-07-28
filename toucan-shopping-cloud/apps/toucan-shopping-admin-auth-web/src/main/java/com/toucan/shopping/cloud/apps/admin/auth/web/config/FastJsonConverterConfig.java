@@ -1,9 +1,8 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.config;
 
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.support.config.FastJsonConfig;
+import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +22,11 @@ public class FastJsonConverterConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        logger.info("初始化fastjson转换器.");
+        logger.info("初始化fastjson2转换器.");
         FastJsonHttpMessageConverter fastJsonConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        SerializeConfig serializeConfig = SerializeConfig.globalInstance;
-        serializeConfig.put(Long.class , ToStringSerializer.instance);
-        fastJsonConfig.setSerializeConfig(serializeConfig);
+        // Long类型全局转String，解决JS精度丢失
+        fastJsonConfig.setWriterFeatures(JSONWriter.Feature.WriteLongAsString);
         fastJsonConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(fastJsonConverter);
     }

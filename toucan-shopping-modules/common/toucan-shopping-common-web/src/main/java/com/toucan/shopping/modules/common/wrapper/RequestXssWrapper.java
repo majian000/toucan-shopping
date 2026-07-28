@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.common.wrapper;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.common.xss.XSSConvert;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

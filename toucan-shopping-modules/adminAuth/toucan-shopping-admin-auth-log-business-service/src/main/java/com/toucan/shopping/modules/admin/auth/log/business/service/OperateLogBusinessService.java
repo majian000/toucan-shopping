@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.log.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.modules.admin.auth.log.entity.OperateLog;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;

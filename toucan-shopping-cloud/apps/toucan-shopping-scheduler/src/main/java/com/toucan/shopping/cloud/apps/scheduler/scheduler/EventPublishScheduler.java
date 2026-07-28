@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.scheduler.scheduler;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 //import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 //import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.cloud.apps.scheduler.constant.PublishEventConstant;

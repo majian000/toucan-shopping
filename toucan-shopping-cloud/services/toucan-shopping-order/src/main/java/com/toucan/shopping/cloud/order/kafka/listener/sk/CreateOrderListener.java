@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.order.kafka.listener.sk;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.cloud.order.message.CreateOrderMessage;
@@ -72,7 +73,7 @@ public class CreateOrderListener {
             List<ProductSku> productSkus = null;
             if(kafkaMessage.getProductSkuListJson()!=null)
             {
-                productSkus = JSONObject.parseArray(kafkaMessage.getProductSkuListJson(),ProductSku.class);
+                productSkus = JSON.parseArray(kafkaMessage.getProductSkuListJson(),ProductSku.class);
             }
 
             //拿到购买信息
@@ -100,7 +101,7 @@ public class CreateOrderListener {
 //            {
 //                throw new IllegalArgumentException("子订单创建失败");
 //            }
-//            logger.info("保存子订单 提交本地事务{}", JSONArray.toJSONString(orderItems));
+//            logger.info("保存子订单 提交本地事务{}", JSON.toJSONString(orderItems));
 
             //修改为已处理
 //            eventProcess.setStatus((short)1); //已处理

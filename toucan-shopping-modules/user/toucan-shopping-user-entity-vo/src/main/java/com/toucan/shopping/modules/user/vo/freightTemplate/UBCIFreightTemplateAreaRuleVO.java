@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.user.vo.freightTemplate;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -19,7 +18,6 @@ public class UBCIFreightTemplateAreaRuleVO {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
     /**
@@ -64,7 +62,6 @@ public class UBCIFreightTemplateAreaRuleVO {
     private BigDecimal appendWeightMoney; //续重金额
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long groupId; //分组ID
 
 
@@ -73,7 +70,6 @@ public class UBCIFreightTemplateAreaRuleVO {
      * 默认规则ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long defaultRuleId;
 
     private String selectAreas; //选择区域名称

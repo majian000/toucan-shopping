@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.content.api.cloud.feign.fallback;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.content.api.cloud.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;

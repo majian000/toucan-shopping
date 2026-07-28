@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.category;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;

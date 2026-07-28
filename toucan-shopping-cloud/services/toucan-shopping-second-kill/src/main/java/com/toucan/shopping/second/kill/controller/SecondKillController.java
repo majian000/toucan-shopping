@@ -1,7 +1,8 @@
 package com.toucan.shopping.second.kill.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
@@ -83,7 +84,7 @@ public class SecondKillController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到要初始化的商品列表");
             }
-            List<ProductSku> products = JSONObject.parseArray(JSONObject.toJSONString(resultListVO.getData()),ProductSku.class);
+            List<ProductSku> products = JSON.parseArray(JSONObject.toJSONString(resultListVO.getData()),ProductSku.class);
             if (!CollectionUtils.isEmpty(products)) {
                 for (ProductSku productSku : products) {
                     if(productSku!=null) {

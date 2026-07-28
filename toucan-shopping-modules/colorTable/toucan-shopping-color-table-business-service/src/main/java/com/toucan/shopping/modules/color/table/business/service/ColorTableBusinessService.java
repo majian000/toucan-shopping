@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.color.table.business.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.color.table.entity.ColorTable;
 import com.toucan.shopping.modules.color.table.page.ColorTablePageInfo;
 import com.toucan.shopping.modules.color.table.service.ColorTableService;
@@ -258,7 +259,7 @@ public class ColorTableBusinessService {
     @RequestCheck(requireEntity = true)
     public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
         try {
-            List<ColorTable> entities = JSONObject.parseArray(requestJsonVO.getEntityJson(), ColorTable.class);
+            List<ColorTable> entities = JSON.parseArray(requestJsonVO.getEntityJson(), ColorTable.class);
             Check.notEmpty(entities, ResultObjectVO.FAILD, MSG_ID_NOT_FOUND);
 
             List<ResultObjectVO> resultList = new ArrayList<>();

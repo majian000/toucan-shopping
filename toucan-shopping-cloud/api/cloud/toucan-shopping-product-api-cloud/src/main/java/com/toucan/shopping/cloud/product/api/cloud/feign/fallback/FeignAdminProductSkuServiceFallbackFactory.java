@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.product.api.cloud.feign.fallback;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.product.api.cloud.feign.service.FeignAdminProductSkuService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;

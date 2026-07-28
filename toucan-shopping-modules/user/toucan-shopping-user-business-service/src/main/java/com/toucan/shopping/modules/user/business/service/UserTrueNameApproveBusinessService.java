@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.user.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.user.constant.AppCodeEnum;
@@ -425,7 +426,7 @@ public class UserTrueNameApproveBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<UserTrueNameApprove> userTrueNameApproves = JSONObject.parseArray(requestVo.getEntityJson(),UserTrueNameApprove.class);
+            List<UserTrueNameApprove> userTrueNameApproves = JSON.parseArray(requestVo.getEntityJson(),UserTrueNameApprove.class);
             if(CollectionUtils.isEmpty(userTrueNameApproves))
             {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到ID");

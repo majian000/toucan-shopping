@@ -1,7 +1,8 @@
 package com.toucan.shopping.modules.message.business.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -126,7 +127,7 @@ public class MessageTypeBusinessService {
     public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            List<MessageTypeVO> messageTypeVOS = JSONObject.parseArray(requestJsonVO.getEntityJson(), MessageTypeVO.class);
+            List<MessageTypeVO> messageTypeVOS = JSON.parseArray(requestJsonVO.getEntityJson(), MessageTypeVO.class);
             if (CollectionUtils.isEmpty(messageTypeVOS)) {
                 return ResultObjectVO.fail(ResultObjectVO.FAILD, "没有找到ID");
             }
