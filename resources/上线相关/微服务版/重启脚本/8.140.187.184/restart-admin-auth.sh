@@ -12,7 +12,8 @@ mkdir -p ${LOG_DIR}
 echo "===== 重启 ${SERVICE} (权限服务) ====="
 
 # ===== 1. 停服 =====
-OLD_PID=$(ps aux | grep "${SERVICE}" | grep -v grep | awk '{print $2}')
+# 用JAR包名精确匹配，避免 admin 误匹配 admin-auth / admin-auth-web 等
+OLD_PID=$(ps aux | grep "toucan-shopping-admin-auth-[0-9]" | grep -v grep | awk '{print $2}')
 if [ -n "${OLD_PID}" ]; then
     echo "[1/3] 停止旧进程 PID: ${OLD_PID}"
     kill ${OLD_PID} 2>/dev/null || true
