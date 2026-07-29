@@ -3,11 +3,10 @@
 # 犀鸟电商 - 权限中台 重启脚本
 # 服务器: 8.140.187.184
 # ==========================================
-set -e
 
 SERVICE="toucan-shopping-admin-auth-web"
-DEPLOY_DIR="/opt/toucan-shopping/services"
-LOG_DIR="/var/log/toucan"
+DEPLOY_DIR="/usr/toucan_shopping"
+LOG_DIR="/usr/toucan_shopping/logs"
 mkdir -p ${LOG_DIR}
 
 echo "===== 重启 ${SERVICE} (权限中台) ====="
@@ -18,9 +17,15 @@ if [ -n "${OLD_PID}" ]; then
     echo "[1/3] 停止旧进程 PID: ${OLD_PID}"
     kill -9 ${OLD_PID} 2>/dev/null || true
     sleep 1
+    # 再次检查是否还在
     if ps -p ${OLD_PID} > /dev/null 2>&1; then
-        echo "      停止失败! 手动检查"
-        exit 1
+        echo "      进程仍在，尝试再次强杀..."
+        kill -9 ${OLD_PID} 2>/dev/null || true
+        sleep 2
+        if ps -p ${OLD_PID} > /dev/null 2>&1; then
+            echo "      停止失败! 请手动检查 PID: ${OLD_PID}"
+            exit 1
+        fi
     fi
     echo "      已停止"
 else
@@ -44,9 +49,8 @@ sleep 3
 if ps -p ${NEW_PID} > /dev/null 2>&1; then
     echo "[3/3] 启动成功! PID: ${NEW_PID}"
 else
-    echo "[3/3] 启动失败!"
-    echo "------ 最近日志 ------"
-    tail -20 "${LOG_DIR}/admin-auth-web.log"
+    echo "[3/3] 启动失败! 查看日志: tail -20 ${LOG_DIR}/admin-auth-web.log"
+    tail -20 "${LOG_DIR}/admin-auth-web.log" 2>/dev/null || echo "(日志为空)"
     exit 1
 fi
 echo ""

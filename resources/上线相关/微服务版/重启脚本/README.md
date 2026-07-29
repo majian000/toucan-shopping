@@ -33,29 +33,29 @@
 
 ### 首次部署到服务器
 
-把脚本一次性传到服务器的 `/opt/toucan-shopping/bin/` 目录：
+把脚本一次性传到服务器的 JAR 包目录 `/usr/toucan_shopping/`：
 
 ```bash
-# 主服务器
-scp 8.140.187.184/* root@8.140.187.184:/opt/toucan-shopping/bin/
+# 主服务器（-p 保留文件权限）
+scp -p 8.140.187.184/* root@8.140.187.184:/usr/toucan_shopping/
 
 # 服务节点
-scp 123.56.127.178/* root@123.56.127.178:/opt/toucan-shopping/bin/
-
-# 确保可执行
-ssh root@8.140.187.184 "chmod +x /opt/toucan-shopping/bin/*.sh"
-ssh root@123.56.127.178 "chmod +x /opt/toucan-shopping/bin/*.sh"
+scp -p 123.56.127.178/* root@123.56.127.178:/usr/toucan_shopping/
 ```
 
 ### 日常使用
 
 ```bash
-# 重启单个服务
-ssh root@8.140.187.184 "bash /opt/toucan-shopping/bin/restart-user.sh"
-ssh root@123.56.127.178 "bash /opt/toucan-shopping/bin/restart-order.sh"
+# 方式一：SSH 远程执行
+ssh root@8.140.187.184 "cd /usr/toucan_shopping && ./restart-user.sh"
+ssh root@123.56.127.178 "cd /usr/toucan_shopping && ./restart-order.sh"
+
+# 方式二：登录服务器后执行
+cd /usr/toucan_shopping
+./restart-user.sh
 
 # 查看日志
-ssh root@8.140.187.184 "tail -f /var/log/toucan/user.log"
+tail -f /usr/toucan_shopping/logs/user.log
 ```
 
 ### 参数修改
@@ -112,4 +112,4 @@ write_script "123.56.127.178" "new-service" "新服务" "200m" "" \
 2. `nohup java ...` 启动新进程
 3. 等 3 秒确认进程存活，失败则打印日志
 
-日志位置：`/var/log/toucan/<服务名>.log`
+日志位置：`/usr/toucan_shopping/logs/<服务名>.log`
