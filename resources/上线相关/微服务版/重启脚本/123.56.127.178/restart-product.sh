@@ -15,19 +15,25 @@ echo "===== 重启 ${SERVICE} (商品服务) ====="
 OLD_PID=$(ps aux | grep "${SERVICE}" | grep -v grep | awk '{print $2}')
 if [ -n "${OLD_PID}" ]; then
     echo "[1/3] 停止旧进程 PID: ${OLD_PID}"
-    kill -9 ${OLD_PID} 2>/dev/null || true
-    sleep 1
-    # 再次检查是否还在
-    if ps -p ${OLD_PID} > /dev/null 2>&1; then
-        echo "      进程仍在，尝试再次强杀..."
-        kill -9 ${OLD_PID} 2>/dev/null || true
+    kill ${OLD_PID} 2>/dev/null || true
+    for i in $(seq 1 10); do
         sleep 2
-        if ps -p ${OLD_PID} > /dev/null 2>&1; then
-            echo "      停止失败! 请手动检查 PID: ${OLD_PID}"
+        # 检查进程是否还存在（zombie 也算已死，直接跳过）
+        STATE=$(ps -o state= -p ${OLD_PID} 2>/dev/null || echo "")
+        if [ -z "${STATE}" ] || [ "${STATE}" = "Z" ]; then
+            echo "      已停止"
+            break
+        fi
+        # 第3轮开始强杀
+        if [ $i -ge 3 ]; then
+            echo "      强杀..."
+            kill -9 ${OLD_PID} 2>/dev/null || true
+        fi
+        if [ $i -eq 10 ]; then
+            echo "      停止失败! 状态: ${STATE}, 请手动 kill -9 ${OLD_PID}"
             exit 1
         fi
-    fi
-    echo "      已停止"
+    done
 else
     echo "[1/3] 服务未运行，跳过停服"
 fi
