@@ -3,9 +3,9 @@
 # 用法: bash gen-restart-scripts.sh
 
 set -e
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")"
 
-OUTPUT_BASE="resources/上线相关/微服务版/重启脚本"
+OUTPUT_BASE="."
 mkdir -p "${OUTPUT_BASE}/8.140.187.184"
 mkdir -p "${OUTPUT_BASE}/123.56.127.178"
 
