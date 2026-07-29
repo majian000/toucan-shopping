@@ -158,7 +158,7 @@ write_script "123.56.127.178" "search" "搜索服务" "200m" "" \
   "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8106 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
 
 write_script "123.56.127.178" "api-monitor" "接口监控服务" "100m" "" \
-  "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8106 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
+  "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8107 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
 
 write_script "123.56.127.178" "scheduler" "商城任务调度" "200m" "" \
   "--spring.profiles.active=cloud_prod --toucan.nacos.ip=8.140.187.184 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.workerId=0 --toucan.datacenterId=0"

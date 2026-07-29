@@ -44,7 +44,7 @@ cd ${DEPLOY_DIR}
 echo "[2/3] 启动..."
 nohup java -Xmx100m  -XX:+UseG1GC -XX:SoftRefLRUPolicyMSPerMB=0 -Djava.awt.headless=true -Dfile.encoding=UTF-8 -XX:ParallelGCThreads=4 -XX:SurvivorRatio=8 -XX:TargetSurvivorRatio=80 -XX:MaxTenuringThreshold=15 -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc*:file=./gc.log:time,level,tags:filecount=5,filesize=10M \
     -jar toucan-shopping-api-monitor-1.0-SNAPSHOT.jar \
-    --spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8106 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0 \
+    --spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8107 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0 \
     > ${LOG_DIR}/api-monitor.log 2>&1 &
 
 NEW_PID=$!
