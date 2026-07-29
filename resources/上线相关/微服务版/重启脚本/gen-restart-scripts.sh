@@ -27,11 +27,10 @@ write_script() {
 # 犀鸟电商 - ${SVC_TITLE} 重启脚本
 # 服务器: ${SERVER_IP}
 # ==========================================
-set -e
 
 SERVICE="toucan-shopping-${SVC_NAME}"
-DEPLOY_DIR="/opt/toucan-shopping/services"
-LOG_DIR="/var/log/toucan"
+DEPLOY_DIR="/usr/toucan_shopping"
+LOG_DIR="/usr/toucan_shopping/logs"
 mkdir -p \${LOG_DIR}
 
 echo "===== 重启 \${SERVICE} (${SVC_TITLE}) ====="
@@ -40,13 +39,23 @@ echo "===== 重启 \${SERVICE} (${SVC_TITLE}) ====="
 OLD_PID=\$(ps aux | grep "\${SERVICE}" | grep -v grep | awk '{print \$2}')
 if [ -n "\${OLD_PID}" ]; then
     echo "[1/3] 停止旧进程 PID: \${OLD_PID}"
-    kill -9 \${OLD_PID} 2>/dev/null || true
-    sleep 1
-    if ps -p \${OLD_PID} > /dev/null 2>&1; then
-        echo "      停止失败! 手动检查"
-        exit 1
-    fi
-    echo "      已停止"
+    kill \${OLD_PID} 2>/dev/null || true
+    for i in \$(seq 1 10); do
+        sleep 2
+        STATE=\$(ps -o state= -p \${OLD_PID} 2>/dev/null || echo "")
+        if [ -z "\${STATE}" ] || [ "\${STATE}" = "Z" ]; then
+            echo "      已停止"
+            break
+        fi
+        if [ \$i -ge 3 ]; then
+            echo "      强杀..."
+            kill -9 \${OLD_PID} 2>/dev/null || true
+        fi
+        if [ \$i -eq 10 ]; then
+            echo "      停止失败! 状态: \${STATE}, 请手动 kill -9 \${OLD_PID}"
+            exit 1
+        fi
+    done
 else
     echo "[1/3] 服务未运行，跳过停服"
 fi
@@ -68,9 +77,8 @@ sleep 3
 if ps -p \${NEW_PID} > /dev/null 2>&1; then
     echo "[3/3] 启动成功! PID: \${NEW_PID}"
 else
-    echo "[3/3] 启动失败!"
-    echo "------ 最近日志 ------"
-    tail -20 "\${LOG_DIR}/${SVC_NAME}.log"
+    echo "[3/3] 启动失败! 查看日志: tail -20 \${LOG_DIR}/${SVC_NAME}.log"
+    tail -20 "\${LOG_DIR}/${SVC_NAME}.log" 2>/dev/null || echo "(日志为空)"
     exit 1
 fi
 echo ""
@@ -148,7 +156,7 @@ write_script "123.56.127.178" "search" "搜索服务" "200m" "" \
   "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8106 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
 
 write_script "123.56.127.178" "api-monitor" "接口监控服务" "100m" "" \
-  "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8106 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
+  "--spring.profiles.active=prod --toucan.ip=123.56.127.178 --toucan.port=8107 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.nacos.ip=8.140.187.184 --toucan.nacos.username=nacos --toucan.nacos.password=nacos --toucan.workerId=0 --toucan.datacenterId=0"
 
 write_script "123.56.127.178" "scheduler" "商城任务调度" "200m" "" \
   "--spring.profiles.active=cloud_prod --toucan.nacos.ip=8.140.187.184 --toucan.config.server.ip=8.140.187.184 --toucan.config.server.port=9090 --toucan.workerId=0 --toucan.datacenterId=0"
