@@ -133,6 +133,12 @@
             <artifactId>toucan-shopping-db-sharding</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 
