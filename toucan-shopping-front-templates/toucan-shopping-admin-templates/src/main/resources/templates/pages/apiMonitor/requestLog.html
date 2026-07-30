@@ -36,13 +36,21 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">最低耗时(ms)</label>
+                            <label class="layui-form-label">接口URL</label>
                             <div class="layui-input-inline">
-                                <select id="minElapsed" name="minElapsed" lay-search="">
-                                    <option value="3000" selected>3000ms</option>
-                                    <option value="5000">5000ms</option>
-                                    <option value="10000">10000ms</option>
-                                </select>
+                                <input type="text" id="apiUrl" name="apiUrl" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">应用</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="appName" name="appName" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">耗时 ≥ (ms)</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="minElapsed" name="minElapsed" placeholder="不填查全部" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -149,7 +157,9 @@
                 where: {
                     startTime: data.field.startTime,
                     endTime: data.field.endTime,
-                    minElapsed: data.field.minElapsed || '3000'
+                    apiUrl: data.field.apiUrl || '',
+                    appName: data.field.appName || '',
+                    minElapsed: data.field.minElapsed || '0'
                 }
             });
             return false;

@@ -23,6 +23,6 @@ public class DashboardQueryVO {
     /** 每页条数 */
     private int limit = 30;
 
-    /** 最低耗时ms（慢请求用） */
-    private int minElapsed = 3000;
+    /** 最低耗时ms，null 表示不限制 */
+    private Integer minElapsed;
 }

@@ -51,11 +51,12 @@ public class DashboardService {
         try {
             Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
             Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
+            int elapsed = query.getMinElapsed() != null ? query.getMinElapsed() : 0;
             int offset = (query.getPage() - 1) * query.getLimit();
             List<?> items = apiMonitorRecordService.selectSlowList(
-                    query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end, offset, query.getLimit());
+                    query.getApiUrl(), query.getAppName(), elapsed, start, end, offset, query.getLimit());
             long total = apiMonitorRecordService.countSlowList(
-                    query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end);
+                    query.getApiUrl(), query.getAppName(), elapsed, start, end);
             PageInfo<Object> pageInfo = new PageInfo<>();
             pageInfo.setList((List<Object>) items);
             pageInfo.setTotal(total);
