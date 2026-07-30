@@ -24,6 +24,18 @@
                 <form class="layui-form layui-form-pane" id="searchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">接口URL</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="apiUrl" name="apiUrl" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">应用</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="appName" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">开始时间</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="startTime" name="startTime" placeholder="" class="layui-input" readonly>
@@ -36,9 +48,9 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">应用</label>
+                            <label class="layui-form-label">耗时 ≥ (ms)</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="appName" placeholder="输入应用名称模糊搜索" class="layui-input">
+                                <input type="text" id="minElapsed" name="minElapsed" placeholder="不填查全部" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -150,9 +162,11 @@
                 url: "[[@{/}]]apiMonitor/summary",
                 page: { curr: 1 },
                 where: {
+                    apiUrl: data.field.apiUrl || '',
+                    appName: data.field.appName || '',
                     startTime: data.field.startTime,
                     endTime: data.field.endTime,
-                    appName: data.field.appName || ''
+                    minElapsed: data.field.minElapsed || ''
                 }
             });
             return false;

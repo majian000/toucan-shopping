@@ -28,12 +28,15 @@
         WHERE time_window <![CDATA[ >= ]]> #{startTime}
           AND time_window <![CDATA[ < ]]> #{endTime}
         <if test="apiUrl != null and apiUrl != ''">
-            AND api_url = #{apiUrl}
+            AND api_url LIKE CONCAT('%', #{apiUrl}, '%')
         </if>
         <if test="appName != null and appName != ''">
-            AND app_name LIKE CONCAT(#{appName}, '%')
+            AND app_name LIKE CONCAT('%', #{appName}, '%')
         </if>
         GROUP BY api_url, app_name
+        <if test="minElapsed != null and minElapsed > 0">
+            HAVING avg_ms <![CDATA[ >= ]]> #{minElapsed}
+        </if>
         ORDER BY avg_ms DESC
     </select>
 

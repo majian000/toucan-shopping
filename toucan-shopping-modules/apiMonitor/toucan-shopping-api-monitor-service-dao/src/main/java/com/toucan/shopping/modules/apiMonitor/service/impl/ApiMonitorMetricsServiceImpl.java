@@ -17,8 +17,8 @@ public class ApiMonitorMetricsServiceImpl implements ApiMonitorMetricsService {
     private ApiMonitorMetricsMapper apiMonitorMetricsMapper;
 
     @Override
-    public List<ApiMonitorMetricsPO> selectSummary(String apiUrl, String appName, Date startTime, Date endTime) {
-        return apiMonitorMetricsMapper.selectSummary(apiUrl, appName, startTime, endTime);
+    public List<ApiMonitorMetricsPO> selectSummary(String apiUrl, String appName, Date startTime, Date endTime, Integer minElapsed) {
+        return apiMonitorMetricsMapper.selectSummary(apiUrl, appName, startTime, endTime, minElapsed);
     }
 
     @Override

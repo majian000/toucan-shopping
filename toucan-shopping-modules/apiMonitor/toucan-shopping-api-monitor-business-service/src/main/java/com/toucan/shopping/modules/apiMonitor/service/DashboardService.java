@@ -27,7 +27,7 @@ public class DashboardService {
             Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
             Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
             List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(
-                    query.getApiUrl(), query.getAppName(), start, end);
+                    query.getApiUrl(), query.getAppName(), start, end, query.getMinElapsed());
             int total = list.size();
             int from = (query.getPage() - 1) * query.getLimit();
             int to = Math.min(from + query.getLimit(), total);
