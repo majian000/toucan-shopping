@@ -38,13 +38,13 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">开始时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="startTime" name="startTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" readonly>
+                                <input type="text" id="startTime" name="startTime" placeholder="" class="layui-input" readonly>
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">结束时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="endTime" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" readonly>
+                                <input type="text" id="endTime" name="endTime" placeholder="" class="layui-input" readonly>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -75,8 +75,8 @@
 <script>
     layui.use(['form', 'table', 'laydate'], function () {
         var laydate = layui.laydate;
-        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: new Date(Date.now() - 60*60*1000) });
-        laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: new Date() });
+        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
+        laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -100,14 +100,8 @@
 
         table.render({
             elem: '#trendTable',
-            url: "[[@{/}]]apiMonitor/trend",
-            method: 'GET',
-            where: {
-                apiUrl: $('#apiUrl').val() || '',
-                appName: $('#appName').val() || '',
-                startTime: $('#startTime').val() || '',
-                endTime: $('#endTime').val() || ''
-            },
+            url: '',
+            data: [],
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', {
                 title: '提示',
@@ -116,11 +110,10 @@
             }],
             parseData: function(res) {
                 if (res.code === 1 && res.data) {
-                    var items = res.data.list || [];
-                    var total = res.data.total || 0;
-                    return { code: 0, data: items, count: total };
+                    return { code: 0, data: res.data.list || [], count: res.data.total || 0 };
                 }
-                return { code: res.code || 1, data: [], count: 0, msg: res.msg || '请求失败' };
+                layer.msg(res.msg || '请求失败', { icon: 5 });
+                return { code: -1, data: [], count: 0 };
             },
             cols: [
                 [
@@ -145,21 +138,24 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var apiUrl = data.field.apiUrl;
-            var appName = data.field.appName;
-            if (!apiUrl) {
-                layer.msg('请输入接口URL');
+            if (!data.field.apiUrl) {
+                layer.msg('请输入接口URL', { icon: 5 });
+                return false;
+            }
+            if (!data.field.startTime || !data.field.endTime) {
+                layer.msg('请选择时间范围', { icon: 5 });
                 return false;
             }
             table.reload('trendTable', {
+                url: "[[@{/}]]apiMonitor/trend",
                 page: { curr: 1 },
                 where: {
-                    apiUrl: data.field.apiUrl || '',
+                    apiUrl: data.field.apiUrl,
                     appName: data.field.appName || '',
-                    startTime: data.field.startTime || '',
-                    endTime: data.field.endTime || ''
+                    startTime: data.field.startTime,
+                    endTime: data.field.endTime
                 }
-            }, 'data');
+            });
             return false;
         });
 
