@@ -332,7 +332,7 @@
                 <!--使用了openFeign相关 -->
                 <dependency>
                     <groupId>com.toucan.shopping.cloud.starter</groupId>
-                    <artifactId>toucan-shopping-trace-id-spring-boot-starter</artifactId>
+                    <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
                 </dependency>
 
             </dependencies>
