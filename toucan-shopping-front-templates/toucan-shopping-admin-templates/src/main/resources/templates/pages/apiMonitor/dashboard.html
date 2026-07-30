@@ -57,9 +57,11 @@
 
         <table class="layui-hide" id="dashboardTable" lay-filter="dashboardTable"></table>
 
+
         <script type="text/html" id="dashboardTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
+
 
     </div>
 </div>
@@ -115,6 +117,29 @@
             skin: 'line'
         });
 
+
+
+        // 监听行工具事件
+        table.on('tool(dashboardTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'requestLog') {
+                var index = layer.open({
+                    title: '查看请求趋势 - ' + data.apiUrl,
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]apiMonitor/dashboardRequestLogPage?apiUrl='
+                        + encodeURIComponent(data.apiUrl) + '&appName=' + (data.appName || '')
+                        + '&startTime=' + encodeURIComponent($('#startTime').val() || '')
+                        + '&endTime=' + encodeURIComponent($('#endTime').val() || '')
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             if (!data.field.startTime || !data.field.endTime) {
@@ -136,36 +161,6 @@
         // 自动刷新
         var autoRefresh = false;
 
-        // 监听表格toolbar事件
-        table.on('toolbar(dashboardTable)', function (obj) {
-            if (obj.event === 'add') {
-                // 预留
-            } else if (obj.event === 'deleteToolbar') {
-                // 预留
-            }
-        });
-
-        // 监听行工具事件
-        table.on('tool(dashboardTable)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'trend') {
-                var index = layer.open({
-                    title: '接口趋势 - ' + data.apiUrl,
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]apiMonitor/trendPage?apiUrl='
-                        + encodeURIComponent(data.apiUrl)
-                        + '&appName=' + (data.appName || '')
-                        + '&startTime=' + encodeURIComponent($('#startTime').val() || '')
-                        + '&endTime=' + encodeURIComponent($('#endTime').val() || '')
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            }
-        });
     });
 </script>
 

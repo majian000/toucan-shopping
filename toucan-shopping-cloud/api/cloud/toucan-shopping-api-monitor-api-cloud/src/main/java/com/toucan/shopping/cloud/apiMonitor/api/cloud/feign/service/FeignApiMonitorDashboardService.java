@@ -17,10 +17,6 @@ public interface FeignApiMonitorDashboardService extends ApiMonitorDashboardServ
     ResultObjectVO getSummary(@SpringQueryMap DashboardQueryVO query);
 
     @Override
-    @RequestMapping(value = "/trend", method = RequestMethod.GET)
-    ResultObjectVO getTrend(@SpringQueryMap DashboardQueryVO query);
-
-    @Override
-    @RequestMapping(value = "/slow-list", method = RequestMethod.GET)
-    ResultObjectVO getSlowList(@SpringQueryMap DashboardQueryVO query);
+    @RequestMapping(value = "/request-log", method = RequestMethod.GET)
+    ResultObjectVO getRequestLog(@SpringQueryMap DashboardQueryVO query);
 }

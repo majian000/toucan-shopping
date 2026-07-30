@@ -7,7 +7,5 @@ public interface ApiMonitorDashboardServiceAPI {
 
     ResultObjectVO getSummary(DashboardQueryVO query);
 
-    ResultObjectVO getTrend(DashboardQueryVO query);
-
-    ResultObjectVO getSlowList(DashboardQueryVO query);
+    ResultObjectVO getRequestLog(DashboardQueryVO query);
 }

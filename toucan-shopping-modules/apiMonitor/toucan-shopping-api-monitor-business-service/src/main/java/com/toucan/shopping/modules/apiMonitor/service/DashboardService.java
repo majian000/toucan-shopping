@@ -1,8 +1,6 @@
 package com.toucan.shopping.modules.apiMonitor.service;
 
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
-import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorMetricsService;
-import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
 import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -28,7 +26,8 @@ public class DashboardService {
         try {
             Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
             Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
-            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(query.getApiUrl(), query.getAppName(), start, end);
+            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(
+                    query.getApiUrl(), query.getAppName(), start, end);
             int total = list.size();
             int from = (query.getPage() - 1) * query.getLimit();
             int to = Math.min(from + query.getLimit(), total);
@@ -47,38 +46,16 @@ public class DashboardService {
         return result;
     }
 
-    public ResultObjectVO getTrend(DashboardQueryVO query) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
-            Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
-            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectTrend(query.getApiUrl(), query.getAppName(), start, end);
-            int total = list.size();
-            int from = (query.getPage() - 1) * query.getLimit();
-            int to = Math.min(from + query.getLimit(), total);
-            PageInfo<ApiMonitorMetricsPO> pageInfo = new PageInfo<>();
-            pageInfo.setList(list.subList(Math.min(from, total), to));
-            pageInfo.setTotal((long) total);
-            result.setData(pageInfo);
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (ParseException e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg("时间格式错误，请使用 yyyy-MM-dd HH:mm:ss");
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
-        }
-        return result;
-    }
-
-    public ResultObjectVO getSlowList(DashboardQueryVO query) {
+    public ResultObjectVO getRequestLog(DashboardQueryVO query) {
         ResultObjectVO result = new ResultObjectVO();
         try {
             Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
             Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
             int offset = (query.getPage() - 1) * query.getLimit();
-            List<?> items = apiMonitorRecordService.selectSlowList(query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end, offset, query.getLimit());
-            long total = apiMonitorRecordService.countSlowList(query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end);
+            List<?> items = apiMonitorRecordService.selectSlowList(
+                    query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end, offset, query.getLimit());
+            long total = apiMonitorRecordService.countSlowList(
+                    query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end);
             PageInfo<Object> pageInfo = new PageInfo<>();
             pageInfo.setList((List<Object>) items);
             pageInfo.setTotal(total);

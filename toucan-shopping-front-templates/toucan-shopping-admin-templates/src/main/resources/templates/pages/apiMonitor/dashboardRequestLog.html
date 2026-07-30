@@ -24,18 +24,6 @@
                 <form class="layui-form layui-form-pane" id="searchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">接口URL</label>
-                            <div class="layui-input-inline" style="width: 300px;">
-                                <input type="text" id="apiUrl" name="apiUrl" autocomplete="off" class="layui-input" th:value="${param.apiUrl}">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">应用</label>
-                            <div class="layui-input-inline">
-                                <input type="text" id="appName" name="appName" autocomplete="off" class="layui-input" th:value="${param.appName}">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
                             <label class="layui-form-label">开始时间</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="startTime" name="startTime" placeholder="" class="layui-input" readonly>
@@ -48,8 +36,17 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">最低耗时(ms)</label>
+                            <div class="layui-input-inline">
+                                <select id="minElapsed" name="minElapsed" lay-search="">
+                                    <option value="3000" selected>3000ms</option>
+                                    <option value="5000">5000ms</option>
+                                    <option value="10000">10000ms</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
-                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn">重置</button>
                         </div>
                     </div>
                 </form>
@@ -62,9 +59,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="trendTable" lay-filter="trendTable"></table>
+        <table class="layui-hide" id="slowTable" lay-filter="slowTable"></table>
 
-        <script type="text/html" id="trendTableBar">
+        <script type="text/html" id="slowTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -78,16 +75,28 @@
             form = layui.form,
             table = layui.table,
             laydate = layui.laydate;
-        // 从仪表盘点过来的话，继承时间范围
+        // 从大盘带参进来
         var urlParams = new URLSearchParams(window.location.search);
-        var pStart = urlParams.get('startTime') || '';
-        var pEnd   = urlParams.get('endTime')   || '';
+        var pApiUrl = urlParams.get('apiUrl') || '';
+        var pApp    = urlParams.get('appName') || '';
+        var pStart  = urlParams.get('startTime') || '';
+        var pEnd    = urlParams.get('endTime')   || '';
         laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: pStart });
         laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: pEnd });
-        if (pStart && pEnd) {
-            $('#startTime').val(pStart);
-            $('#endTime').val(pEnd);
+        $('#apiUrl').val(pApiUrl);
+        $('#appName').val(pApp);
+        $('#startTime').val(pStart);
+        $('#endTime').val(pEnd);
+
+        function doSearch() {
+            if (!pStart || !pEnd) return;
+            table.reload('slowTable', {
+                url: "[[@{/}]]apiMonitor/requestLog",
+                page: { curr: 1 },
+                where: { apiUrl: pApiUrl, appName: pApp, startTime: pStart, endTime: pEnd, minElapsed: '3000' }
+            });
         }
+        var autoRefreshTimer = null;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -107,7 +116,7 @@
         };
 
         table.render({
-            elem: '#trendTable',
+            elem: '#slowTable',
             url: '',
             data: [],
             toolbar: '#toolbarDemo',
@@ -125,56 +134,72 @@
             },
             cols: [
                 [
-                    {field: 'timeWindow', title: '时间窗口', width: 180},
-                    {field: 'requestCount', title: '请求数', width: 120, sort: true},
-                    {field: 'avgMs', title: '平均耗时(ms)', width: 150, sort: true},
-                    {field: 'maxMs', title: '最大耗时(ms)', width: 150, sort: true,
+                    {field: 'apiUrl', title: '接口URL', width: 280},
+                    {field: 'httpMethod', title: '请求方法', width: 90},
+                    {field: 'appName', title: '应用', width: 150},
+                    {field: 'elapsedMs', title: '耗时(ms)', width: 120, sort: true,
                         templet: function(d) {
-                            if (d.maxMs > 3000) {
-                                return '<span style="color:red;font-weight:bold">' + d.maxMs + '</span>';
-                            }
-                            return d.maxMs;
+                            return '<span style="color:red;font-weight:bold">' + d.elapsedMs + '</span>';
                         }},
-                    {field: 'minMs', title: '最小耗时(ms)', width: 150}
+                    {field: 'statusCode', title: '状态码', width: 80},
+                    {field: 'traceId', title: 'TraceId', width: 150,
+                        templet: function(d) {
+                            return d.traceId ? '<code style="background:#f0f0f0;padding:2px 6px;border-radius:2px">' + d.traceId + '</code>' : '-';
+                        }},
+                    {field: 'serverIp', title: '服务器IP', width: 140},
+                    {field: 'requestTime', title: '请求时间', width: 180}
                 ]
             ],
+            limits: [20, 50, 100],
+            limit: 50,
             page: true,
-            limits: [15, 30, 50, 100],
-            limit: 30,
             skin: 'line'
         });
 
+        // 自动加载
+        if (pStart && pEnd) {
+            setTimeout(function() { doSearch(); }, 500);
+        }
+
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            if (!data.field.apiUrl) {
-                layer.msg('请输入接口URL', { icon: 5 });
-                return false;
-            }
             if (!data.field.startTime || !data.field.endTime) {
                 layer.msg('请选择时间范围', { icon: 5 });
                 return false;
             }
-            table.reload('trendTable', {
-                url: "[[@{/}]]apiMonitor/trend",
+            table.reload('slowTable', {
+                url: "[[@{/}]]apiMonitor/requestLog",
                 page: { curr: 1 },
                 where: {
-                    apiUrl: data.field.apiUrl,
-                    appName: data.field.appName || '',
                     startTime: data.field.startTime,
-                    endTime: data.field.endTime
+                    endTime: data.field.endTime,
+                    apiUrl: data.field.apiUrl || '',
+                    appName: data.field.appName || '',
+                    minElapsed: data.field.minElapsed || '3000'
                 }
             });
             return false;
         });
 
-        // 监听重置操作
-        $('#data-reset-btn').click(function() {
-            $('#searchForm')[0].reset();
-            form.render();
+        // 自动刷新
+        var autoRefresh = false;
+        $('#autoRefreshBtn').click(function() {
+            autoRefresh = !autoRefresh;
+            $(this).html('自动刷新: ' + (autoRefresh ? '开启(15s)' : '关闭'));
+            if (autoRefresh) {
+                autoRefreshTimer = setInterval(function() {
+                    table.reload('slowTable', {
+                        page: { curr: 1 },
+                        where: $('#searchForm').serializeJson()
+                    }, 'data');
+                }, 15000);
+            } else {
+                clearInterval(autoRefreshTimer);
+            }
         });
 
         // 监听表格toolbar事件
-        table.on('toolbar(trendTable)', function (obj) {
+        table.on('toolbar(slowTable)', function (obj) {
             if (obj.event === 'add') {
                 // 预留
             } else if (obj.event === 'deleteToolbar') {
@@ -183,7 +208,7 @@
         });
 
         // 监听行工具事件
-        table.on('tool(trendTable)', function (obj) {
+        table.on('tool(slowTable)', function (obj) {
             // 预留
         });
     });

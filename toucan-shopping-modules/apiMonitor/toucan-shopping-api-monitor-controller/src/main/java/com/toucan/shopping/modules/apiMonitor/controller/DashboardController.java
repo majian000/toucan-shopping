@@ -31,19 +31,11 @@ public class DashboardController {
         return dashboardService.getSummary(query);
     }
 
-    @RequestMapping(value = "/trend", method = RequestMethod.GET)
-    public ResultObjectVO trend(DashboardQueryVO query) {
+    @RequestMapping(value = "/request-log", method = RequestMethod.GET)
+    public ResultObjectVO requestLog(DashboardQueryVO query) {
         if (!StringUtils.hasText(query.getStartTime()) || !StringUtils.hasText(query.getEndTime())) {
             return fail("请选择时间范围");
         }
-        return dashboardService.getTrend(query);
-    }
-
-    @RequestMapping(value = "/slow-list", method = RequestMethod.GET)
-    public ResultObjectVO slowList(DashboardQueryVO query) {
-        if (!StringUtils.hasText(query.getStartTime()) || !StringUtils.hasText(query.getEndTime())) {
-            return fail("请选择时间范围");
-        }
-        return dashboardService.getSlowList(query);
+        return dashboardService.getRequestLog(query);
     }
 }

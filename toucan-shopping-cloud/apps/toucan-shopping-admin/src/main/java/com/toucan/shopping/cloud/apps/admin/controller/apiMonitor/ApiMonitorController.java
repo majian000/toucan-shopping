@@ -35,17 +35,17 @@ public class ApiMonitorController extends UIController {
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/trendPage", method = RequestMethod.GET)
-    public String trendPage(HttpServletRequest request) {
-        super.initButtons(request, toucan, "/apiMonitor/trendPage", functionServiceAPI);
-        return "pages/apiMonitor/trend.html";
+    @RequestMapping(value = "/requestLogPage", method = RequestMethod.GET)
+    public String requestLogPage(HttpServletRequest request) {
+        super.initButtons(request, toucan, "/apiMonitor/requestLogPage", functionServiceAPI);
+        return "pages/apiMonitor/requestLog.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/slowListPage", method = RequestMethod.GET)
-    public String slowListPage(HttpServletRequest request) {
-        super.initButtons(request, toucan, "/apiMonitor/slowListPage", functionServiceAPI);
-        return "pages/apiMonitor/slowList.html";
+    @RequestMapping(value = "/dashboardRequestLogPage", method = RequestMethod.GET)
+    public String dashboardRequestLogPage(HttpServletRequest request) {
+        super.initButtons(request, toucan, "/apiMonitor/dashboardRequestLogPage", functionServiceAPI);
+        return "pages/apiMonitor/dashboardRequestLog.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
@@ -56,16 +56,9 @@ public class ApiMonitorController extends UIController {
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/trend", method = RequestMethod.GET)
+    @RequestMapping(value = "/requestLog", method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO trend(DashboardQueryVO query) {
-        return apiMonitorDashboardServiceAPI.getTrend(query);
-    }
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/slowList", method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO slowList(DashboardQueryVO query) {
-        return apiMonitorDashboardServiceAPI.getSlowList(query);
+    public ResultObjectVO requestLog(DashboardQueryVO query) {
+        return apiMonitorDashboardServiceAPI.getRequestLog(query);
     }
 }

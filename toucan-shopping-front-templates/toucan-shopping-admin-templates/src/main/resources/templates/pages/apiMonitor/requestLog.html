@@ -144,7 +144,7 @@
                 return false;
             }
             table.reload('slowTable', {
-                url: "[[@{/}]]apiMonitor/slowList",
+                url: "[[@{/}]]apiMonitor/requestLog",
                 page: { curr: 1 },
                 where: {
                     startTime: data.field.startTime,

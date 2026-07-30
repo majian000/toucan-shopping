@@ -19,12 +19,7 @@ public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashbo
     }
 
     @Override
-    public ResultObjectVO getTrend(DashboardQueryVO query) {
-        return dashboardService.getTrend(query);
-    }
-
-    @Override
-    public ResultObjectVO getSlowList(DashboardQueryVO query) {
-        return dashboardService.getSlowList(query);
+    public ResultObjectVO getRequestLog(DashboardQueryVO query) {
+        return dashboardService.getRequestLog(query);
     }
 }

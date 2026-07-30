@@ -20,9 +20,7 @@ public class FeignApiMonitorDashboardServiceFallbackFactory implements FallbackF
             @Override
             public ResultObjectVO getSummary(DashboardQueryVO query) { return fail(); }
             @Override
-            public ResultObjectVO getTrend(DashboardQueryVO query) { return fail(); }
-            @Override
-            public ResultObjectVO getSlowList(DashboardQueryVO query) { return fail(); }
+            public ResultObjectVO getRequestLog(DashboardQueryVO query) { return fail(); }
 
             private ResultObjectVO fail() {
                 ResultObjectVO vo = new ResultObjectVO();
