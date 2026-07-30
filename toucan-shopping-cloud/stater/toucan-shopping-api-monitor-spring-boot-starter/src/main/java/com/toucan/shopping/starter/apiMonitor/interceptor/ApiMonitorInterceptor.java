@@ -75,6 +75,8 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             if (traceId == null) {
                 traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
             }
+            logger.info("[ApiMonitor] 记录 traceId={}, url={}, elapsed={}ms, thread={}",
+                    traceId, pattern, elapsedMs, Thread.currentThread().getName());
 
             ApiMonitorRecordVO record = new ApiMonitorRecordVO();
             record.setApiUrl(pattern);
