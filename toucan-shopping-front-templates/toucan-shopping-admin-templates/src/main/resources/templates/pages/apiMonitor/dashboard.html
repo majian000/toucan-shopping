@@ -156,7 +156,10 @@
                     maxmin: true,
                     area: ['100%', '100%'],
                     content: '[[@{/}]]apiMonitor/trendPage?apiUrl='
-                        + encodeURIComponent(data.apiUrl) + '&appName=' + (data.appName || '')
+                        + encodeURIComponent(data.apiUrl)
+                        + '&appName=' + (data.appName || '')
+                        + '&startTime=' + encodeURIComponent($('#startTime').val() || '')
+                        + '&endTime=' + encodeURIComponent($('#endTime').val() || '')
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

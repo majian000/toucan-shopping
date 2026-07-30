@@ -74,12 +74,20 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table', 'laydate'], function () {
-        var laydate = layui.laydate;
-        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
-        laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss' });
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            laydate = layui.laydate;
+        // 从仪表盘点过来的话，继承时间范围
+        var urlParams = new URLSearchParams(window.location.search);
+        var pStart = urlParams.get('startTime') || '';
+        var pEnd   = urlParams.get('endTime')   || '';
+        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: pStart });
+        laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: pEnd });
+        if (pStart && pEnd) {
+            $('#startTime').val(pStart);
+            $('#endTime').val(pEnd);
+        }
 
         $.fn.serializeJson=function(){
             var serializeObj={};
