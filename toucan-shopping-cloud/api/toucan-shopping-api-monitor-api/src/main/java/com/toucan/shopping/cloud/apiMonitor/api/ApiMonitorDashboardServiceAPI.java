@@ -10,7 +10,7 @@ public interface ApiMonitorDashboardServiceAPI {
     /**
      * 获取概要统计
      */
-    ResultObjectVO getSummary(int minutes, int page, int limit);
+    ResultObjectVO getSummary(int minutes, String appName, int page, int limit);
 
     /**
      * 获取趋势数据

@@ -16,10 +16,10 @@ public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashbo
     private DashboardService dashboardService;
 
     @Override
-    public ResultObjectVO getSummary(int minutes, int page, int limit) {
+    public ResultObjectVO getSummary(int minutes, String appName, int page, int limit) {
         ResultObjectVO result = new ResultObjectVO();
         try {
-            result.setData(dashboardService.getSummary(null, null, minutes, page, limit));
+            result.setData(dashboardService.getSummary(null, appName, minutes, page, limit));
             result.setCode(ResultObjectVO.SUCCESS);
         } catch (Exception e) {
             result.setCode(ResultObjectVO.FAILD);

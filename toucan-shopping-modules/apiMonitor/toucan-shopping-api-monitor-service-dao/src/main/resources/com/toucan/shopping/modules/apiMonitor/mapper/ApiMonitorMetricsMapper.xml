@@ -31,7 +31,7 @@
             AND api_url = #{apiUrl}
         </if>
         <if test="appName != null and appName != ''">
-            AND app_name = #{appName}
+            AND app_name LIKE CONCAT(#{appName}, '%')
         </if>
         GROUP BY api_url, app_name
         ORDER BY avg_ms DESC
@@ -46,7 +46,7 @@
             AND api_url = #{apiUrl}
         </if>
         <if test="appName != null and appName != ''">
-            AND app_name = #{appName}
+            AND app_name LIKE CONCAT(#{appName}, '%')
         </if>
         ORDER BY time_window DESC
     </select>

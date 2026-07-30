@@ -17,6 +17,7 @@ public interface FeignApiMonitorDashboardService extends ApiMonitorDashboardServ
     @Override
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     ResultObjectVO getSummary(@RequestParam(defaultValue = "5") int minutes,
+                              @RequestParam(required = false) String appName,
                               @RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "30") int limit);
 

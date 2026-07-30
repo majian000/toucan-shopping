@@ -67,9 +67,10 @@ public class ApiMonitorController extends UIController {
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO summary(@RequestParam(defaultValue = "5") int minutes,
+                                  @RequestParam(required = false) String appName,
                                   @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "30") int limit) {
-        return apiMonitorDashboardServiceAPI.getSummary(minutes, page, limit);
+        return apiMonitorDashboardServiceAPI.getSummary(minutes, appName, page, limit);
     }
 
     /**
