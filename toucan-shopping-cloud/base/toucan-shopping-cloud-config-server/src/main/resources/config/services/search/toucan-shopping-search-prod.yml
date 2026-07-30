@@ -48,7 +48,6 @@ spring:
 
 
 feign:
-
   client:
     config:
       default:
@@ -70,6 +69,14 @@ resilience4j:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
+  thread-pool-bulkhead:
+    configs:
+      default:
+        max-thread-pool-size: 50
+        core-thread-pool-size: 20
+        queue-capacity: 500
+
+
 
 
 

@@ -38,6 +38,37 @@ spring:
 #    serviceUrl:
 #      defaultZone: http://${toucan.eureka.ip}:${toucan.eureka.port}/eureka
 
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 120000
+        readTimeout: 120000
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 120s
+        cancelRunningFuture: true
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 8
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  thread-pool-bulkhead:
+    configs:
+      default:
+        max-thread-pool-size: 50
+        core-thread-pool-size: 20
+        queue-capacity: 500
+
+
 toucan:
   machine-id: 2202 #机器编码
   #雪花算法ID相关

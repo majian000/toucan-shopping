@@ -79,7 +79,6 @@ spring:
 #      defaultZone: http://localhost:8081/eureka
 
 feign:
-
   client:
     config:
       default:
@@ -105,6 +104,14 @@ resilience4j:
       coreSize: 80 #最大并发数
       maxQueueSize: 1500 #最大队列长度
       queueSizeRejectionThreshold: 1000
+  thread-pool-bulkhead:
+    configs:
+      default:
+        max-thread-pool-size: 50
+        core-thread-pool-size: 20
+        queue-capacity: 500
+
+
 
 toucan:
   machine-id: 2201 #机器编码
