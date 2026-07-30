@@ -3,13 +3,16 @@ package com.toucan.shopping.modules.apiMonitor.job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
+import javax.sql.DataSource;
 
 /**
  * 数据清理定时任务
@@ -20,7 +23,8 @@ public class CleanupJob {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @Qualifier("rawDataSource")
+    private DataSource dataSource;
 
     /** 每天凌晨3点清理过期数据 */
     @Scheduled(cron = "0 0 3 * * ?")
@@ -30,8 +34,8 @@ public class CleanupJob {
             // record 保留7天，TRUNCATE 过期表
             truncateDayTable("api_monitor_record", 7);
 
-            // metrics 保留30天，TRUNCATE 过期表
-            truncateDayTable("api_monitor_metrics", 30);
+            // metrics 保留7天，TRUNCATE 过期表
+            truncateDayTable("api_monitor_metrics", 7);
 
         } catch (Exception e) {
             logger.error("清理过期数据失败: {}", e.getMessage());
@@ -51,8 +55,10 @@ public class CleanupJob {
                 continue;
             }
             String tableName = tablePrefix + "_" + day;
-            try {
-                jdbcTemplate.execute("TRUNCATE TABLE " + tableName);
+            try (Connection conn = dataSource.getConnection();
+                 Statement stmt = conn.createStatement()) {
+                stmt.execute("TRUNCATE TABLE " + tableName);
+                logger.info("已清理表 {}", tableName);
             } catch (Exception e) {
                 logger.warn("清理表 {} 失败: {}", tableName, e.getMessage());
             }
