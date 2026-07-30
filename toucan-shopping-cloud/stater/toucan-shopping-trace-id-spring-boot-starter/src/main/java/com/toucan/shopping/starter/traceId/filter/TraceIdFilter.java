@@ -6,6 +6,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,6 +22,8 @@ import java.util.UUID;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceIdFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(TraceIdFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,9 +41,11 @@ public class TraceIdFilter extends OncePerRequestFilter {
         response.setHeader(TraceConstants.HTTP_HEADER, traceId);
         MDC.put(TraceConstants.TRACE_ID_KEY, traceId);
         TraceContext.set(traceId);
+        log.info("[TraceId] 设置完成: traceId={}, thread={}", traceId, Thread.currentThread().getName());
         try {
             filterChain.doFilter(request, response);
         } finally {
+            log.info("[TraceId] 清理: traceId={}, thread={}", traceId, Thread.currentThread().getName());
             MDC.remove(TraceConstants.TRACE_ID_KEY);
             TraceContext.remove();
         }
