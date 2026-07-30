@@ -58,6 +58,16 @@ resilience4j:
 toucan:
   machine-id: 2201
   app-code: 10001008
+  plugins:
+    traceId:
+      enabled: true
+    apiMonitor:
+      enabled: true
+      scanPackages:
+        - com.toucan.shopping.cloud
+      excludePatterns:
+        - /actuator/**
+        - /error
   modules:
     log: #日志模块
       param:
