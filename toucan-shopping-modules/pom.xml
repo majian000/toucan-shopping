@@ -65,6 +65,8 @@
         <module>apiMonitor/toucan-shopping-api-monitor-service-dao</module>
         <!--接口监控业务服务层 -->
         <module>apiMonitor/toucan-shopping-api-monitor-business-service</module>
+        <!--接口监控定时任务模块 -->
+        <module>apiMonitor/toucan-shopping-api-monitor-job</module>
         <!--接口监控控制层 -->
         <module>apiMonitor/toucan-shopping-api-monitor-controller</module>
         <!--redis封装 -->
@@ -961,6 +963,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
                 <artifactId>toucan-shopping-api-monitor-business-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+                <artifactId>toucan-shopping-api-monitor-job</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

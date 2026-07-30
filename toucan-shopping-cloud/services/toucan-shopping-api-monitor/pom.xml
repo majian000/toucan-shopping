@@ -78,6 +78,10 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
+            <artifactId>toucan-shopping-api-monitor-job</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.apiMonitor</groupId>
             <artifactId>toucan-shopping-api-monitor-service-dao</artifactId>
         </dependency>
         <dependency>
