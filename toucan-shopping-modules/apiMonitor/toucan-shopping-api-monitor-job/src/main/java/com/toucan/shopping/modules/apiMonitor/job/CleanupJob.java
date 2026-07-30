@@ -27,7 +27,7 @@ public class CleanupJob {
     private DataSource dataSource;
 
     /** 每天凌晨3点清理过期数据 */
-    @Scheduled(cron = "0 16 14 * * ? ")
+    @Scheduled(cron = "0 0 3 * * ?")
     public void cleanup() {
         try {
 
