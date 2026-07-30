@@ -98,7 +98,10 @@
             elem: '#dashboardTable',
             url: "[[@{/}]]apiMonitor/summary",
             method: 'GET',
-            where: {},
+            where: {
+                startTime: $('#startTime').val() || '',
+                endTime: $('#endTime').val() || ''
+            },
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', {
                 title: '提示',
