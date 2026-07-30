@@ -2,7 +2,10 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.config;
 
 
 import com.toucan.shopping.modules.admin.auth.constant.LoginHistoryAsyncConstant;
+import com.toucan.shopping.modules.common.constant.TraceConstants;
+import com.toucan.shopping.modules.common.context.TraceContext;
 import jakarta.annotation.Nonnull;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,7 +58,7 @@ public class ThreadPoolTaskConfig {
 
 
 /**
- * 保存请求上下文到子线程中
+ * 保存请求上下文、TraceId 到子线程中
  */
 class ThreadContextDecorator implements TaskDecorator {
     @Override
@@ -63,12 +66,23 @@ class ThreadContextDecorator implements TaskDecorator {
     public Runnable decorate(@Nonnull Runnable runnable) {
 
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        String traceId = TraceContext.get();
+        if (traceId == null) {
+            traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
+        }
+        String finalTraceId = traceId;
         return () -> {
             try {
                 RequestContextHolder.setRequestAttributes(attributes);
+                if (finalTraceId != null) {
+                    TraceContext.set(finalTraceId);
+                    MDC.put(TraceConstants.TRACE_ID_KEY, finalTraceId);
+                }
                 runnable.run();
             } finally {
                 RequestContextHolder.resetRequestAttributes();
+                TraceContext.remove();
+                MDC.remove(TraceConstants.TRACE_ID_KEY);
             }
         };
     }
