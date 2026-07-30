@@ -35,12 +35,12 @@ public class ApiMonitorRecordServiceImpl implements ApiMonitorRecordService {
     }
 
     @Override
-    public List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, Integer offset, Integer limit) {
-        return apiMonitorRecordMapper.selectSlowList(apiUrl, appName, minElapsedMs, startTime, endTime, offset, limit);
+    public List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, String traceId, Integer offset, Integer limit) {
+        return apiMonitorRecordMapper.selectSlowList(apiUrl, appName, minElapsedMs, startTime, endTime, traceId, offset, limit);
     }
 
     @Override
-    public long countSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime) {
-        return apiMonitorRecordMapper.countSlowList(apiUrl, appName, minElapsedMs, startTime, endTime);
+    public long countSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, String traceId) {
+        return apiMonitorRecordMapper.countSlowList(apiUrl, appName, minElapsedMs, startTime, endTime, traceId);
     }
 }

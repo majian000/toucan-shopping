@@ -48,6 +48,12 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">TraceId</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="traceId" name="traceId" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">耗时 ≥ (ms)</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="minElapsed" name="minElapsed" placeholder="不填查全部" class="layui-input">
@@ -183,6 +189,7 @@
                     endTime: data.field.endTime,
                     apiUrl: data.field.apiUrl || '',
                     appName: data.field.appName || '',
+                    traceId: data.field.traceId || '',
                     minElapsed: data.field.minElapsed || '0'
                 }
             });

@@ -1,5 +1,6 @@
 package com.toucan.shopping.starter.traceId.config;
 
+import com.toucan.shopping.starter.traceId.feign.TraceIdFeignInterceptor;
 import com.toucan.shopping.starter.traceId.filter.TraceIdFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,5 +16,10 @@ public class TraceIdAutoConfiguration {
     @Bean
     public TraceIdFilter traceIdFilter() {
         return new TraceIdFilter();
+    }
+
+    @Bean
+    public TraceIdFeignInterceptor traceIdFeignInterceptor() {
+        return new TraceIdFeignInterceptor();
     }
 }

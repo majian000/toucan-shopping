@@ -43,6 +43,9 @@
         <if test="endTime != null">
             AND request_time <![CDATA[ < ]]> #{endTime}
         </if>
+        <if test="traceId != null and traceId != ''">
+            AND trace_id = #{traceId}
+        </if>
         ORDER BY request_time DESC
         <if test="offset != null and limit != null">
             LIMIT #{offset}, #{limit}
@@ -64,6 +67,9 @@
         </if>
         <if test="endTime != null">
             AND request_time <![CDATA[ < ]]> #{endTime}
+        </if>
+        <if test="traceId != null and traceId != ''">
+            AND trace_id = #{traceId}
         </if>
     </select>
 

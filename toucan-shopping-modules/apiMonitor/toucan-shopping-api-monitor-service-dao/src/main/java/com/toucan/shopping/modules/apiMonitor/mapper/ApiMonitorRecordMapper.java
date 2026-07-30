@@ -17,10 +17,10 @@ public interface ApiMonitorRecordMapper {
     int batchInsert(List<ApiMonitorRecordPO> records);
 
     /** 查询慢请求列表 */
-    List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime, Integer offset, Integer limit);
+    List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime, String traceId, Integer offset, Integer limit);
 
-    /** 统计慢请求总数 */
-    long countSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime);
+    /** 统计请求总数 */
+    long countSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime, String traceId);
 
     /** 聚合到分钟表（已被 Java 侧聚合替代，保留用于兼容） */
     int aggregateToMetrics(Date startTime, Date endTime);

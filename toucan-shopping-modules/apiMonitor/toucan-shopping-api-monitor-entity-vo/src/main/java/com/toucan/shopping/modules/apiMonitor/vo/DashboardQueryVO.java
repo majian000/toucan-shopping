@@ -25,4 +25,7 @@ public class DashboardQueryVO {
 
     /** 最低耗时ms，null 表示不限制 */
     private Integer minElapsed;
+
+    /** TraceId 精确匹配 */
+    private String traceId;
 }
