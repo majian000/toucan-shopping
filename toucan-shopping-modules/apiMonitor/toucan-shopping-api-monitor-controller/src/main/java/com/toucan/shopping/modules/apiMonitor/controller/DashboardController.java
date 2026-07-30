@@ -1,16 +1,14 @@
 package com.toucan.shopping.modules.apiMonitor.controller;
 
 import com.toucan.shopping.modules.apiMonitor.service.DashboardService;
+import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Dashboard 查询控制器
- */
 @RestController
 @RequestMapping("/dashboard")
 public class DashboardController {
@@ -18,60 +16,34 @@ public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
 
-    /** 实时概要统计 */
+    private static ResultObjectVO fail(String msg) {
+        ResultObjectVO vo = new ResultObjectVO();
+        vo.setCode(ResultObjectVO.FAILD);
+        vo.setMsg(msg);
+        return vo;
+    }
+
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
-    public ResultObjectVO summary(
-            @RequestParam(defaultValue = "5") int minutes,
-            @RequestParam(required = false) String apiUrl,
-            @RequestParam(required = false) String appName,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "30") int limit) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getSummary(apiUrl, appName, minutes, page, limit));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
+    public ResultObjectVO summary(DashboardQueryVO query) {
+        if (!StringUtils.hasText(query.getStartTime()) || !StringUtils.hasText(query.getEndTime())) {
+            return fail("请选择时间范围");
         }
-        return result;
+        return dashboardService.getSummary(query);
     }
 
-    /** 趋势查询 */
     @RequestMapping(value = "/trend", method = RequestMethod.GET)
-    public ResultObjectVO trend(
-            @RequestParam String apiUrl,
-            @RequestParam(required = false) String appName,
-            @RequestParam(defaultValue = "60") int range,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "30") int limit) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getTrend(apiUrl, appName, range, page, limit));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
+    public ResultObjectVO trend(DashboardQueryVO query) {
+        if (!StringUtils.hasText(query.getStartTime()) || !StringUtils.hasText(query.getEndTime())) {
+            return fail("请选择时间范围");
         }
-        return result;
+        return dashboardService.getTrend(query);
     }
 
-    /** 慢请求列表 */
     @RequestMapping(value = "/slow-list", method = RequestMethod.GET)
-    public ResultObjectVO slowList(
-            @RequestParam(defaultValue = "3000") int minElapsed,
-            @RequestParam(required = false) String apiUrl,
-            @RequestParam(required = false) String appName,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "50") int size) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getSlowList(apiUrl, appName, minElapsed, page, size));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
+    public ResultObjectVO slowList(DashboardQueryVO query) {
+        if (!StringUtils.hasText(query.getStartTime()) || !StringUtils.hasText(query.getEndTime())) {
+            return fail("请选择时间范围");
         }
-        return result;
+        return dashboardService.getSlowList(query);
     }
 }

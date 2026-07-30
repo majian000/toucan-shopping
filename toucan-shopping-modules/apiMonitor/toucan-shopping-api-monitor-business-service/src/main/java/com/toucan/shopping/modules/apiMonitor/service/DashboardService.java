@@ -3,17 +3,17 @@ package com.toucan.shopping.modules.apiMonitor.service;
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorMetricsService;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
+import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Dashboard 查询服务
- */
 @Service
 public class DashboardService {
 
@@ -23,58 +23,74 @@ public class DashboardService {
     @Autowired
     private ApiMonitorRecordService apiMonitorRecordService;
 
-    /** 概要统计（Java 侧分页，metrics 聚合表数据量小） */
-    public Map<String, Object> getSummary(String apiUrl, String appName, int minutes, int page, int limit) {
-        Date endTime = new Date();
-        Date startTime = new Date(endTime.getTime() - (long) minutes * 60_000);
-
-        List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(
-                apiUrl, appName, startTime, endTime);
-        int total = list.size();
-        int fromIndex = (page - 1) * limit;
-        int toIndex = Math.min(fromIndex + limit, total);
-        List<ApiMonitorMetricsPO> pageItems = list.subList(
-                Math.min(fromIndex, total), toIndex);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("items", pageItems);
-        result.put("total", total);
+    public ResultObjectVO getSummary(DashboardQueryVO query) {
+        ResultObjectVO result = new ResultObjectVO();
+        try {
+            Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
+            Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
+            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(query.getApiUrl(), query.getAppName(), start, end);
+            int total = list.size();
+            int from = (query.getPage() - 1) * query.getLimit();
+            int to = Math.min(from + query.getLimit(), total);
+            PageInfo<ApiMonitorMetricsPO> pageInfo = new PageInfo<>();
+            pageInfo.setList(list.subList(Math.min(from, total), to));
+            pageInfo.setTotal((long) total);
+            result.setData(pageInfo);
+            result.setCode(ResultObjectVO.SUCCESS);
+        } catch (ParseException e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg("时间格式错误，请使用 yyyy-MM-dd HH:mm:ss");
+        } catch (Exception e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg(e.getMessage());
+        }
         return result;
     }
 
-    /** 趋势查询（Java 侧分页，metrics 聚合表数据量小） */
-    public Map<String, Object> getTrend(String apiUrl, String appName, int range, int page, int limit) {
-        Date endTime = new Date();
-        Date startTime = new Date(endTime.getTime() - (long) range * 60_000);
-
-        List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectTrend(
-                apiUrl, appName, startTime, endTime);
-        int total = list.size();
-        int fromIndex = (page - 1) * limit;
-        int toIndex = Math.min(fromIndex + limit, total);
-        List<ApiMonitorMetricsPO> pageItems = list.subList(
-                Math.min(fromIndex, total), toIndex);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("items", pageItems);
-        result.put("total", total);
+    public ResultObjectVO getTrend(DashboardQueryVO query) {
+        ResultObjectVO result = new ResultObjectVO();
+        try {
+            Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
+            Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
+            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectTrend(query.getApiUrl(), query.getAppName(), start, end);
+            int total = list.size();
+            int from = (query.getPage() - 1) * query.getLimit();
+            int to = Math.min(from + query.getLimit(), total);
+            PageInfo<ApiMonitorMetricsPO> pageInfo = new PageInfo<>();
+            pageInfo.setList(list.subList(Math.min(from, total), to));
+            pageInfo.setTotal((long) total);
+            result.setData(pageInfo);
+            result.setCode(ResultObjectVO.SUCCESS);
+        } catch (ParseException e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg("时间格式错误，请使用 yyyy-MM-dd HH:mm:ss");
+        } catch (Exception e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg(e.getMessage());
+        }
         return result;
     }
 
-    /** 慢请求列表（SQL 侧分页，record 表数据量大） */
-    public Map<String, Object> getSlowList(String apiUrl, String appName, int minElapsed, int page, int size) {
-        Date endTime = new Date();
-        Date startTime = new Date(endTime.getTime() - 3600_000L);
-
-        int offset = (page - 1) * size;
-        List<?> items = apiMonitorRecordService.selectSlowList(
-                apiUrl, appName, minElapsed, startTime, endTime, offset, size);
-        long total = apiMonitorRecordService.countSlowList(
-                apiUrl, appName, minElapsed, startTime, endTime);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("items", items);
-        result.put("total", total);
+    public ResultObjectVO getSlowList(DashboardQueryVO query) {
+        ResultObjectVO result = new ResultObjectVO();
+        try {
+            Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
+            Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
+            int offset = (query.getPage() - 1) * query.getLimit();
+            List<?> items = apiMonitorRecordService.selectSlowList(query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end, offset, query.getLimit());
+            long total = apiMonitorRecordService.countSlowList(query.getApiUrl(), query.getAppName(), query.getMinElapsed(), start, end);
+            PageInfo<Object> pageInfo = new PageInfo<>();
+            pageInfo.setList((List<Object>) items);
+            pageInfo.setTotal(total);
+            result.setData(pageInfo);
+            result.setCode(ResultObjectVO.SUCCESS);
+        } catch (ParseException e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg("时间格式错误，请使用 yyyy-MM-dd HH:mm:ss");
+        } catch (Exception e) {
+            result.setCode(ResultObjectVO.FAILD);
+            result.setMsg(e.getMessage());
+        }
         return result;
     }
 }

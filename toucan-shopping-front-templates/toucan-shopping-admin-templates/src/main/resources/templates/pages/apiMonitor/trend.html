@@ -36,15 +36,15 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">时间范围</label>
+                            <label class="layui-form-label">开始时间</label>
                             <div class="layui-input-inline">
-                                <select id="rangeSelect" name="range" lay-search="">
-                                    <option value="15">15分钟</option>
-                                    <option value="30">30分钟</option>
-                                    <option value="60" selected>60分钟</option>
-                                    <option value="180">3小时</option>
-                                    <option value="360">6小时</option>
-                                </select>
+                                <input type="text" id="startTime" name="startTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="endTime" name="endTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" readonly>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -73,7 +73,10 @@
 <script th:src="@{/lib/layui-v2.9.13/src/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table', 'laydate'], function () {
+        var laydate = layui.laydate;
+        laydate.render({ elem: '#startTime', type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: new Date(Date.now() - 60*60*1000) });
+        laydate.render({ elem: '#endTime',   type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss', value: new Date() });
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -101,8 +104,7 @@
             method: 'GET',
             where: {
                 apiUrl: $('#apiUrl').val() || '',
-                appName: $('#appName').val() || '',
-                range: '60'
+                appName: $('#appName').val() || ''
             },
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', {
@@ -112,7 +114,7 @@
             }],
             parseData: function(res) {
                 if (res.code === 1 && res.data) {
-                    var items = res.data.items || [];
+                    var items = res.data.list || [];
                     var total = res.data.total || 0;
                     return { code: 0, data: items, count: total };
                 }
@@ -149,7 +151,12 @@
             }
             table.reload('trendTable', {
                 page: { curr: 1 },
-                where: data.field
+                where: {
+                    apiUrl: data.field.apiUrl || '',
+                    appName: data.field.appName || '',
+                    startTime: data.field.startTime || '',
+                    endTime: data.field.endTime || ''
+                }
             }, 'data');
             return false;
         });

@@ -2,13 +2,11 @@ package com.toucan.shopping.cloud.apiMonitor.api.single;
 
 import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorDashboardServiceAPI;
 import com.toucan.shopping.modules.apiMonitor.service.DashboardService;
+import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * 单服务版接口监控看板查询实现
- */
 @Service
 public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashboardServiceAPI {
 
@@ -16,41 +14,17 @@ public class ApiMonitorDashboardServiceAPISingleImpl implements ApiMonitorDashbo
     private DashboardService dashboardService;
 
     @Override
-    public ResultObjectVO getSummary(int minutes, String appName, int page, int limit) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getSummary(null, appName, minutes, page, limit));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
-        }
-        return result;
+    public ResultObjectVO getSummary(DashboardQueryVO query) {
+        return dashboardService.getSummary(query);
     }
 
     @Override
-    public ResultObjectVO getTrend(String apiUrl, String appName, int range, int page, int limit) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getTrend(apiUrl, appName, range, page, limit));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
-        }
-        return result;
+    public ResultObjectVO getTrend(DashboardQueryVO query) {
+        return dashboardService.getTrend(query);
     }
 
     @Override
-    public ResultObjectVO getSlowList(int minElapsed, int page, int size) {
-        ResultObjectVO result = new ResultObjectVO();
-        try {
-            result.setData(dashboardService.getSlowList(null, null, minElapsed, page, size));
-            result.setCode(ResultObjectVO.SUCCESS);
-        } catch (Exception e) {
-            result.setCode(ResultObjectVO.FAILD);
-            result.setMsg(e.getMessage());
-        }
-        return result;
+    public ResultObjectVO getSlowList(DashboardQueryVO query) {
+        return dashboardService.getSlowList(query);
     }
 }

@@ -1,24 +1,13 @@
 package com.toucan.shopping.cloud.apiMonitor.api;
 
+import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 
-/**
- * 接口监控看板查询服务 API
- */
 public interface ApiMonitorDashboardServiceAPI {
 
-    /**
-     * 获取概要统计
-     */
-    ResultObjectVO getSummary(int minutes, String appName, int page, int limit);
+    ResultObjectVO getSummary(DashboardQueryVO query);
 
-    /**
-     * 获取趋势数据
-     */
-    ResultObjectVO getTrend(String apiUrl, String appName, int range, int page, int limit);
+    ResultObjectVO getTrend(DashboardQueryVO query);
 
-    /**
-     * 获取慢请求列表
-     */
-    ResultObjectVO getSlowList(int minElapsed, int page, int size);
+    ResultObjectVO getSlowList(DashboardQueryVO query);
 }
