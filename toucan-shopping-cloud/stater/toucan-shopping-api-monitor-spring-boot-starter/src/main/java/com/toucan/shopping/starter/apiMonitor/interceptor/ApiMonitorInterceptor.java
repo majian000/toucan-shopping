@@ -6,12 +6,10 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.modules.common.context.ApiMonitorContext;
-import com.toucan.shopping.modules.common.context.TraceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -69,14 +67,8 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             Long startNanos = ApiMonitorContext.getStartNanos();
             long elapsedMs = startNanos != null ? (System.nanoTime() - startNanos) / 1_000_000 : 0;
 
-            // 优先级：请求头 X-Trace-Id（网关透传） → TraceContext → MDC
+            // 直接从请求头拿，由网关 ToucanGlobalFilter 透传
             String traceId = request.getHeader(TraceConstants.HTTP_HEADER);
-            if (traceId == null) {
-                traceId = TraceContext.get();
-            }
-            if (traceId == null) {
-                traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
-            }
             logger.info("[ApiMonitor] 记录 traceId={}, url={}, elapsed={}ms, thread={}",
                     traceId, pattern, elapsedMs, Thread.currentThread().getName());
 
