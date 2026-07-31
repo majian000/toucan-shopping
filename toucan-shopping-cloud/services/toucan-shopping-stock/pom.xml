@@ -62,6 +62,12 @@
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
         <!--我们自己的包 -->
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -131,7 +137,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.stock.app.CloudStockServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.stock.CloudStockServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

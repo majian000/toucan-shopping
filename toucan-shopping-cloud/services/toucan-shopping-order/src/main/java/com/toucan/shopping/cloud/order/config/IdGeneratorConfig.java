@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.order.app.config;
+package com.toucan.shopping.cloud.order.config;
 
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

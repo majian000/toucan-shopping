@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.stock.app.config;
+package com.toucan.shopping.cloud.stock.config;
 
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;

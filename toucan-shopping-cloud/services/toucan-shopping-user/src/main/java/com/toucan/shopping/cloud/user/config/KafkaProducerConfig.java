@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.user.app.config;
+package com.toucan.shopping.cloud.user.config;
 
 
 import com.toucan.shopping.modules.user.kafka.callback.SendCallback;

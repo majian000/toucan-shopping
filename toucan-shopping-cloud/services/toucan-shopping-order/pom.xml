@@ -139,7 +139,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.order.app.CloudOrderServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.order.CloudOrderServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

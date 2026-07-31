@@ -42,6 +42,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
         <!--集成redis -->
         <dependency>

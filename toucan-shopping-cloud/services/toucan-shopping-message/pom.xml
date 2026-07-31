@@ -59,6 +59,11 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
         <!--链路追踪支持 -->
         <dependency>

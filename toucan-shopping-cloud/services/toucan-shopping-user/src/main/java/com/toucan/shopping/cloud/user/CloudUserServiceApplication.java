@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.user.app;
+package com.toucan.shopping.cloud.user;
 
 import com.toucan.shopping.modules.kafka.config.KafkaCustomerConfig;
 import com.toucan.shopping.modules.kafka.config.KafkaProducerConfig;
@@ -7,11 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.toucan.shopping")
 @MapperScan({"com.toucan.shopping.modules.user.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan(basePackages = {"com.toucan.shopping"},

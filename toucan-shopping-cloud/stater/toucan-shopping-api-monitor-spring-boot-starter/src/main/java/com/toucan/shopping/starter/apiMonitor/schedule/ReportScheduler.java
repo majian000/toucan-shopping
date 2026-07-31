@@ -65,18 +65,28 @@ public class ReportScheduler {
                 logger.warn("[MONITOR] 队列满，丢弃 {} 条记录", dropped);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            if (!loggedMissing.getAndSet(true)) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
+
+    private final AtomicBoolean loggedBeanError = new AtomicBoolean(false);
 
     /** 运行时从容器获取，兜底注入失败的场景 */
     private void ensureReportService() {
         if (apiMonitorReportServiceAPI != null) {
             return;
         }
-        apiMonitorReportServiceAPI = applicationContext.getBean(ApiMonitorReportServiceAPI.class);
-        if (apiMonitorReportServiceAPI != null) {
-            logger.info("[MONITOR] 运行时成功获取 ApiMonitorReportServiceAPI");
+        try {
+            apiMonitorReportServiceAPI = applicationContext.getBean(ApiMonitorReportServiceAPI.class);
+            if (apiMonitorReportServiceAPI != null) {
+                logger.info("[MONITOR] 运行时成功获取 ApiMonitorReportServiceAPI");
+            }
+        } catch (Exception e) {
+            if (!loggedBeanError.getAndSet(true)) {
+                logger.error("[MONITOR] 获取 ApiMonitorReportServiceAPI 失败: {}", e.getMessage());
+            }
         }
     }
 }

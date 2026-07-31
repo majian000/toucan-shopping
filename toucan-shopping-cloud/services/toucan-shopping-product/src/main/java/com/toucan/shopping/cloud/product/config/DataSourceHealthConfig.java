@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.stock.app.config;
+package com.toucan.shopping.cloud.product.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

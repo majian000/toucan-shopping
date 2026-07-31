@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.product.app.config;
+package com.toucan.shopping.cloud.product.config;
 
 import com.toucan.shopping.cloud.product.interceptor.SignInterceptor;
 import org.slf4j.Logger;
