@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * 将 Micrometer 的 traceId 同步到 TraceContext，方便业务代码扩展
  */
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Order(Ordered.HIGHEST_PRECEDENCE + 10) // 必须在 Brave TracingFilter (+5) 之后，否则 currentSpan 为 null
 public class TraceContextBridgeFilter extends OncePerRequestFilter {
 
     private final Tracer tracer;
