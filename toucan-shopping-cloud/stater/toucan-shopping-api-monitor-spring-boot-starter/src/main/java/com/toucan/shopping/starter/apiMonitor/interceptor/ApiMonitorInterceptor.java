@@ -1,7 +1,6 @@
 package com.toucan.shopping.starter.apiMonitor.interceptor;
 
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
-import com.toucan.shopping.modules.common.constant.TraceConstants;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
@@ -10,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -67,8 +67,7 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             Long startNanos = ApiMonitorContext.getStartNanos();
             long elapsedMs = startNanos != null ? (System.nanoTime() - startNanos) / 1_000_000 : 0;
 
-            // 直接从请求头拿，由网关 ToucanGlobalFilter 透传
-            String traceId = request.getHeader(TraceConstants.HTTP_HEADER);
+            String traceId = MDC.get("traceId");
             logger.info("[ApiMonitor] 记录 traceId={}, url={}, elapsed={}ms, thread={}",
                     traceId, pattern, elapsedMs, Thread.currentThread().getName());
 
