@@ -2,6 +2,7 @@ package com.toucan.shopping.starter.apiMonitor.interceptor;
 
 import com.toucan.shopping.modules.apiMonitor.vo.ApiMonitorRecordVO;
 import com.toucan.shopping.modules.common.constant.TraceConstants;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.starter.apiMonitor.core.MonitorRegistry;
 import com.toucan.shopping.starter.apiMonitor.core.RecordCollector;
 import com.toucan.shopping.modules.common.context.ApiMonitorContext;
@@ -15,7 +16,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * 接口监控拦截器
@@ -28,8 +28,6 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
     private final RecordCollector collector;
     private String appName;
     private String serverIp;
-
-    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public ApiMonitorInterceptor(MonitorRegistry monitorRegistry,
                                   RecordCollector collector) {
@@ -87,7 +85,7 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             record.setTraceId(traceId);
             record.setAppName(appName);
             record.setServerIp(serverIp);
-            record.setRequestTime(LocalDateTime.now().format(DTF));
+            record.setRequestTime(LocalDateTime.now().format(DateUtils.ISO_MS_FORMATTER));
 
             collector.collect(record);
         } catch (Exception e) {
