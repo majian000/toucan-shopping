@@ -25,6 +25,13 @@
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
+        <!-- Servlet（Filter 支持） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Actuator（提供 Tracing 自动配置） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

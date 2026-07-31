@@ -6,6 +6,7 @@ import brave.baggage.BaggagePropagationConfig;
 import brave.propagation.B3Propagation;
 import brave.propagation.Propagation;
 import com.toucan.shopping.modules.common.constant.TraceConstants;
+import com.toucan.shopping.starter.traceId.micrometer.support.TraceContextBridgeFilter;
 import com.toucan.shopping.starter.traceId.micrometer.support.TraceIdSupplier;
 import io.micrometer.tracing.Tracer;
 import org.slf4j.Logger;
@@ -45,6 +46,15 @@ public class TraceIdMicrometerAutoConfiguration {
         return BaggagePropagation.newFactoryBuilder(B3Propagation.FACTORY)
                 .add(BaggagePropagationConfig.SingleBaggageField.remote(xTraceIdBaggageField))
                 .build();
+    }
+
+    /**
+     * 将 Micrometer traceId 同步到 TraceContext，方便业务代码扩展。
+     */
+    @Bean
+    TraceContextBridgeFilter traceContextBridgeFilter(Tracer tracer) {
+        log.info("[TraceId-Micrometer] TraceContextBridgeFilter 注册完成");
+        return new TraceContextBridgeFilter(tracer);
     }
 
     /**

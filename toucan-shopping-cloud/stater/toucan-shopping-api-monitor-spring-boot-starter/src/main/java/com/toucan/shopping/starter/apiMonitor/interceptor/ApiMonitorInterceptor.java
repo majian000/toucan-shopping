@@ -71,6 +71,7 @@ public class ApiMonitorInterceptor implements HandlerInterceptor {
             Long startNanos = ApiMonitorContext.getStartNanos();
             long elapsedMs = startNanos != null ? (System.nanoTime() - startNanos) / 1_000_000 : 0;
 
+            // 优先 TraceContext（自定义扩展），MDC 兜底（Micrometer 自动写入）
             String traceId = TraceContext.get();
             if (traceId == null) {
                 traceId = MDC.get(TraceConstants.TRACE_ID_KEY);
