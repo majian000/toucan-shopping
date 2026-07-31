@@ -15,28 +15,29 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 /**
- * 全局过滤器 —— 生成或透传 traceId，确保全链路可追踪
+ * 全局过滤器 —— 透传上游 traceId，没有则生成，优先读 B3 头（Micrometer 标准）
  */
 @Component
 public class ToucanGlobalFilter implements GlobalFilter, Ordered {
 
-    private static final String TRACE_HEADER = "X-Trace-Id";
     private static final String TRACE_ID_KEY = "traceId";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        // 优先使用上游传入的 traceId
-        String traceId = exchange.getRequest().getHeaders().getFirst(TRACE_HEADER);
+        // 优先 Micrometer B3 头，其次自定义 X-Trace-Id，都没有才生成
+        String traceId = exchange.getRequest().getHeaders().getFirst("X-B3-TraceId");
         if (!StringUtils.hasText(traceId)) {
-            traceId = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+            traceId = exchange.getRequest().getHeaders().getFirst("X-Trace-Id");
+        }
+        if (!StringUtils.hasText(traceId)) {
+            traceId = UUID.randomUUID().toString().replace("-", "").substring(0, 32);
         }
         MDC.put(TRACE_ID_KEY, traceId);
         try {
-            // 将 traceId 注入到下游请求头
             ServerHttpRequest request = exchange.getRequest().mutate()
-                    .header(TRACE_HEADER, traceId)
+                    .header("X-Trace-Id", traceId)
                     .build();
             logger.debug("route request {} traceId={}", request.getPath(), traceId);
             return chain.filter(exchange.mutate().request(request).build());
