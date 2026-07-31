@@ -25,6 +25,12 @@
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
+        <!-- Feign Micrometer 能力：让 Feign 客户端自动注入/解析 B3 + X-Trace-Id 头 -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-micrometer</artifactId>
+        </dependency>
+
         <!-- Servlet（Filter 支持） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
