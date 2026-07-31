@@ -42,9 +42,7 @@ public class ReportScheduler {
         try {
             ensureReportService();
             if (apiMonitorReportServiceAPI == null) {
-                // 抛弃队列数据，避免内存堆积
-                List<ApiMonitorRecordVO> discard = new ArrayList<>();
-                collector.drainTo(discard, Integer.MAX_VALUE);
+                collector.clear();
                 if (!loggedMissing.getAndSet(true)) {
                     logger.warn("[MONITOR] ApiMonitorReportServiceAPI 不可用，监控数据暂不上报");
                 }

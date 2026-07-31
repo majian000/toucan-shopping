@@ -33,4 +33,9 @@ public class RecordCollector {
     public long getAndResetDroppedCount() {
         return droppedCount.getAndSet(0);
     }
+
+    /** 清空队列 */
+    public void clear() {
+        queue.clear();
+    }
 }
