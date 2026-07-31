@@ -26,11 +26,18 @@ public class ToucanGlobalFilter implements GlobalFilter, Ordered {
     }
 
     private String resolveTraceId(ServerWebExchange exchange) {
+        // W3C traceparent: 00-{traceId}-{spanId}-{flags}
+        String tp = exchange.getRequest().getHeaders().getFirst("traceparent");
+        if (StringUtils.hasText(tp) && tp.length() >= 37) {
+            return tp.substring(3, 35); // traceId 是 32 位 hex
+        }
+        // B3 单头: {traceId}-{spanId}-{sampled}
         String b3 = exchange.getRequest().getHeaders().getFirst("b3");
         if (StringUtils.hasText(b3)) {
             int dash = b3.indexOf('-');
             return dash > 0 ? b3.substring(0, dash) : b3;
         }
+        // B3 多头
         String b3TraceId = exchange.getRequest().getHeaders().getFirst("X-B3-TraceId");
         if (StringUtils.hasText(b3TraceId)) {
             return b3TraceId;
