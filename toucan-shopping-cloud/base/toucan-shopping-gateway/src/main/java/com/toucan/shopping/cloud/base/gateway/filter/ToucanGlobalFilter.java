@@ -34,8 +34,8 @@ public class ToucanGlobalFilter implements GlobalFilter, Ordered {
         String traceId = resolveTraceId(exchange);
         MDC.put(TRACE_ID_KEY, traceId);
         try {
+            // 只写 X-Trace-Id，不碰 B3 头，避免与 instrumented HttpClient 注入冲突
             ServerHttpRequest request = exchange.getRequest().mutate()
-                    .header("X-B3-TraceId", traceId)
                     .header("X-Trace-Id", traceId)
                     .build();
             logger.debug("route request {} traceId={}", request.getPath(), traceId);

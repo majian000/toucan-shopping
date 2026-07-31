@@ -64,7 +64,8 @@ public class TraceContextBridgeFilter extends OncePerRequestFilter {
         try {
             LinkedHashMap<String, String> carrier = new LinkedHashMap<>();
             carrier.put("X-B3-TraceId", traceId);
-            carrier.put("X-B3-SpanId", Long.toHexString(UUID.randomUUID().getLeastSignificantBits()));
+            // Long.toHexString 不补零，必须 16 位 hex 才行
+            carrier.put("X-B3-SpanId", String.format("%016x", UUID.randomUUID().getLeastSignificantBits()));
             carrier.put("X-B3-Sampled", "1");
             TraceContextOrSamplingFlags flags = Propagation.B3_STRING
                     .extractor((c, k) -> carrier.get(k))
