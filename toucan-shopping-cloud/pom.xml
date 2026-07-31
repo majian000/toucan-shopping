@@ -199,8 +199,6 @@
         <module>stater/toucan-shopping-user-sso-spring-boot-starter</module>
         <!--XSS代码替换 -->
         <module>stater/toucan-shopping-xss-spring-boot-starter</module>
-        <!--链路追踪（自定义实现） -->
-        <module>stater/toucan-shopping-trace-id-spring-boot-starter</module>
         <!--链路追踪（Micrometer Tracing 方案，推荐） -->
         <module>stater/toucan-shopping-trace-id-micrometer-spring-boot-starter</module>
         <!--接口监控 -->
@@ -729,13 +727,6 @@
             </dependency>
 
 
-
-            <dependency>
-                <groupId>com.toucan.shopping.cloud.starter</groupId>
-                <artifactId>toucan-shopping-trace-id-spring-boot-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>

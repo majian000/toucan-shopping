@@ -21,7 +21,7 @@
     6.toucan-shopping-admin-auth-log-spring-boot-starter
     权限中台操作日志插件(用户记录管理员的所有操作)
     
-    7.toucan-shopping-trace-id-spring-boot-starter
+    7.toucan-shopping-trace-id-micrometer-spring-boot-starter
     日志和监控需要的痕迹ID(非必须)
 
     8.toucan-shopping-api-monitor-spring-boot-starter

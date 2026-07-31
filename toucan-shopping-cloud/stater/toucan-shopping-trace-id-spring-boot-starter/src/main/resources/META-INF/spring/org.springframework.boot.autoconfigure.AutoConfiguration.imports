@@ -1,2 +1,0 @@
-com.toucan.shopping.starter.traceId.config.TraceIdAutoConfiguration
-com.toucan.shopping.starter.traceId.config.TraceIdResilience4jAutoConfiguration
