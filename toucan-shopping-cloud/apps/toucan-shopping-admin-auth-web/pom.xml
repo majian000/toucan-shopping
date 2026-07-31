@@ -117,6 +117,15 @@
 
 
 
+            <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 
 
@@ -156,7 +165,16 @@
                 </dependency>
 
 
-            </dependencies>
+                    <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
         </profile>
         <profile>
             <id>single</id>
@@ -180,7 +198,16 @@
                 </dependency>
 
 
-            </dependencies>
+                    <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
         </profile>
     </profiles>
 

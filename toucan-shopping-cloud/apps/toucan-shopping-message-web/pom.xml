@@ -72,6 +72,15 @@
             <artifactId>toucan-shopping-message-api</artifactId>
         </dependency>
 
+            <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -100,7 +109,16 @@
                     <artifactId>toucan-shopping-message-api-cloud</artifactId>
                 </dependency>
 
-            </dependencies>
+                    <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
         </profile>
         <profile>
             <id>single</id>
@@ -122,7 +140,16 @@
                     <artifactId>toucan-shopping-message-web-single-config</artifactId>
                 </dependency>
 
-            </dependencies>
+                    <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-api-monitor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-trace-id-micrometer-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
         </profile>
     </profiles>
 
