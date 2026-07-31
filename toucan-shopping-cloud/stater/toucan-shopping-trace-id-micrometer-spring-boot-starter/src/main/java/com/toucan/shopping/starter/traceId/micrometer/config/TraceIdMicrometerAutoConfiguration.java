@@ -1,5 +1,6 @@
 package com.toucan.shopping.starter.traceId.micrometer.config;
 
+import brave.Tracing;
 import brave.baggage.BaggageField;
 import brave.baggage.BaggagePropagation;
 import brave.baggage.BaggagePropagationConfig;
@@ -51,9 +52,9 @@ public class TraceIdMicrometerAutoConfiguration {
      * 将 Micrometer traceId 同步到 TraceContext，方便业务代码扩展。
      */
     @Bean
-    TraceContextBridgeFilter traceContextBridgeFilter(Tracer tracer) {
+    TraceContextBridgeFilter traceContextBridgeFilter(Tracer tracer, Tracing tracing) {
         log.info("[TraceId-Micrometer] TraceContextBridgeFilter 注册完成");
-        return new TraceContextBridgeFilter(tracer);
+        return new TraceContextBridgeFilter(tracer, tracing);
     }
 
     /**
