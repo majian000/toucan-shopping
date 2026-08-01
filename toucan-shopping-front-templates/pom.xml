@@ -31,7 +31,7 @@
         <!--后台管理界面 -->
         <module>toucan-shopping-admin-templates</module>
         <!--权限中台界面模板 -->
-        <module>toucan-shopping-admin-auth-web-templates</module>
+        <module>layui/toucan-shopping-admin-auth-web-templates</module>
         <!--卖家客户端界面模板 -->
         <module>toucan-shopping-seller-web-templates</module>
 
