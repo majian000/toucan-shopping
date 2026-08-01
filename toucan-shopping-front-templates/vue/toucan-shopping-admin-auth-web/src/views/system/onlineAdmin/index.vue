@@ -51,7 +51,7 @@ function handleForceLogout(row) {
     confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
   }).then(async () => {
     try {
-      await forceLogout(row.adminId)
+      await forceLogout(row.id)
       ElMessage.success(`「${row.username}」已被强制退出登录`)
       fetchData()
     } catch { /* 拦截器处理 */ }

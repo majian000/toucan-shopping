@@ -19,3 +19,7 @@ export function updateDictCategory(data) {
 export function delDictCategory(id) {
   return request({ url: '/dictCategory/delete', method: 'post', data: { id } })
 }
+
+export function delBatchDictCategory(data) {
+  return request({ url: '/dictCategory/delete/ids', method: 'post', data })
+}

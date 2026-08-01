@@ -16,6 +16,10 @@ export function delDict(id) {
   return request({ url: '/dict/delete', method: 'post', data: { id } })
 }
 
+export function delBatchDict(data) {
+  return request({ url: '/dict/delete/ids', method: 'post', data })
+}
+
 export function queryDictTree(data) {
-  return request({ url: '/system/dict/queryTree', method: 'post', data })
+  return request({ url: '/dict/query/tree', method: 'post', data })
 }

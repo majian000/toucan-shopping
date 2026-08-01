@@ -304,19 +304,17 @@ public class DictCategoryController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:category:delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody DictCategory dictCategory)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(dictCategory.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            DictCategory dictCategory =new DictCategory();
-            dictCategory.setId(Integer.parseInt(id));
-            dictCategory.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+                        dictCategory.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,dictCategory);
             resultObjectVO = dictCategoryServiceAPI.deleteById(requestVo);

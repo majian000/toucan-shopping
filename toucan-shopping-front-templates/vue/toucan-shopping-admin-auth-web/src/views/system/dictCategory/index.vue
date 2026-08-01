@@ -7,11 +7,17 @@
         <el-form-item label="分类名称">
           <el-input v-model="searchForm.name" placeholder="请输入分类名称" clearable style="width:220px" />
         </el-form-item>
+        <el-form-item label="编码">
+          <el-input v-model="searchForm.code" placeholder="请输入编码" clearable style="width:220px" />
+        </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="searchForm.enableStatus" placeholder="请选择状态" clearable style="width:140px">
             <el-option label="启用" :value="1" />
             <el-option label="禁用" :value="0" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="所属应用">
+          <el-input v-model="searchForm.appCode" placeholder="请输入应用编码" clearable style="width:220px" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :icon="Search" v-permission="'pms:dict:category:list'" @click="handleSearch">搜索</el-button>
@@ -23,14 +29,17 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <el-button type="primary" :icon="Plus" v-permission="'pms:dict:category:add'" @click="handleAdd">新增分类</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'pms:dict:category:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
       </div>
 
-      <el-table :data="list" border stripe v-loading="loading" style="width:100%">
+      <el-table :data="list" border stripe v-loading="loading" @selection-change="handleSelectionChange" style="width:100%">
+        <el-table-column type="selection" width="50" />
         <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="name" label="分类名称" width="150" />
         <el-table-column prop="code" label="编码" width="150" />
         <el-table-column prop="dictCategorySort" label="排序" width="80" align="center" />
         <el-table-column prop="remark" label="备注" min-width="180" show-overflow-tooltip />
+        <el-table-column prop="appName" label="关联应用" width="150" show-overflow-tooltip />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.enableStatus === 1 ? 'success' : 'danger'" size="small">
@@ -39,6 +48,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="createDate" label="创建时间" width="170" />
+        <el-table-column prop="createAdminUsername" label="创建人" width="120" />
+        <el-table-column prop="updateDate" label="修改时间" width="170" />
+        <el-table-column prop="updateAdminUsername" label="修改人" width="120" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:category:edit'" @click="handleEdit(row)">编辑</el-button>
@@ -102,7 +114,7 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit } from '@element-plus/icons-vue'
-import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory } from '@/api/system/dictCategory'
+import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory, delBatchDictCategory } from '@/api/system/dictCategory'
 
 const route = useRoute()
 
@@ -117,7 +129,9 @@ async function fetchData() {
       page: pagination.page,
       size: pagination.size,
       name: searchForm.name || undefined,
-      enableStatus: searchForm.enableStatus !== '' ? searchForm.enableStatus : undefined
+      code: searchForm.code || undefined,
+      enableStatus: searchForm.enableStatus !== '' ? searchForm.enableStatus : undefined,
+      appCode: searchForm.appCode || undefined
     }
     const res = await listDictCategory(params)
     list.value = res.data || []
@@ -129,13 +143,43 @@ async function fetchData() {
 
 onMounted(() => { fetchData() })
 
-const searchForm = reactive({ name: '', enableStatus: '' })
+const searchForm = reactive({ name: '', code: '', enableStatus: '', appCode: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.name = ''; searchForm.enableStatus = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; searchForm.appCode = ''; pagination.page = 1; fetchData() }
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)
 watch(() => pagination.size, () => { pagination.page = 1; fetchData() })
+
+// ========== 批量删除 ==========
+const selectedRows = ref([])
+
+function handleSelectionChange(rows) {
+  selectedRows.value = rows
+}
+
+async function handleBatchDelete() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请选择要操作的记录')
+    return
+  }
+  try {
+    await ElMessageBox.confirm('确定删除选中的字典分类?', '删除确认', {
+      confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning'
+    })
+  } catch {
+    return
+  }
+  loading.value = true
+  try {
+    await delBatchDictCategory(selectedRows.value)
+    ElMessage.success('删除成功')
+    selectedRows.value = []
+    fetchData()
+  } finally {
+    loading.value = false
+  }
+}
 
 const dialogVisible = ref(false)
 const isEdit = ref(false)
@@ -161,7 +205,7 @@ function handleAdd() {
 function handleEdit(row) {
   isEdit.value = true; editingId.value = row.id
   formData.name = row.name; formData.code = row.code
-  formData.dictCategorySort = row.dictCategorySort || 0; formData.remark = row.remark
+  formData.dictCategorySort = row.dictCategorySort || 0; formData.remark = row.remark || ''
   formData.enableStatus = row.enableStatus
   dialogVisible.value = true
 }

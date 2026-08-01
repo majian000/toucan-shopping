@@ -457,19 +457,17 @@ public class AdminController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Admin admin)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(admin.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Admin admin =new Admin();
-            // id from @RequestBody
-            admin.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+                        admin.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(admin);
             RequestJsonVO requestVo = new RequestJsonVO();

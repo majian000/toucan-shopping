@@ -30,8 +30,30 @@
         </el-card>
       </div>
 
-      <!-- 右侧：字典树表格 -->
+      <!-- 右侧：字典管理 -->
       <div class="right-panel">
+        <!-- 搜索栏 -->
+        <el-card shadow="never" class="search-card" v-if="selectedCategoryId">
+          <el-form :model="searchForm" inline>
+            <el-form-item label="名称">
+              <el-input v-model="searchForm.name" placeholder="请输入名称" clearable style="width:200px" />
+            </el-form-item>
+            <el-form-item label="编码">
+              <el-input v-model="searchForm.code" placeholder="请输入编码" clearable style="width:200px" />
+            </el-form-item>
+            <el-form-item label="启用状态">
+              <el-select v-model="searchForm.enableStatus" placeholder="请选择状态" clearable style="width:140px">
+                <el-option label="启用" :value="1" />
+                <el-option label="禁用" :value="0" />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :icon="Search" v-permission="'pms:dict:item:list'" @click="handleSearch">搜索</el-button>
+              <el-button :icon="Refresh" v-permission="'pms:dict:item:list'" @click="handleReset">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
             <span class="current-category" v-if="selectedCategory">
@@ -41,6 +63,7 @@
               <el-button :icon="Expand" v-permission="'pms:dict:item:list'" @click="expandAll">展开全部</el-button>
               <el-button :icon="Fold" v-permission="'pms:dict:item:list'" @click="collapseAll">折叠全部</el-button>
               <el-button type="primary" :icon="Plus" v-permission="'pms:dict:item:add'" @click="handleAdd">新增字典</el-button>
+              <el-button type="danger" :icon="Delete" v-permission="'pms:dict:item:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
               <el-button :icon="Refresh" @click="fetchData">刷新</el-button>
             </div>
           </div>
@@ -52,10 +75,13 @@
             :tree-props="{ children: 'children' }"
             :default-expand-all="expandAllFlag"
             v-loading="loading"
+            @selection-change="handleSelectionChange"
             style="width:100%"
           >
-            <el-table-column prop="name" label="字典名称" width="270" />
+            <el-table-column type="selection" width="50" />
+            <el-table-column prop="name" label="字典名称" width="240" />
             <el-table-column prop="code" label="编码" width="160" />
+            <el-table-column prop="parentName" label="上级节点" width="150" show-overflow-tooltip />
             <el-table-column prop="extendProperty" label="扩展属性" min-width="160" show-overflow-tooltip>
               <template #default="{ row }">
                 <span v-if="row.extendProperty">{{ row.extendProperty }}</span>
@@ -63,6 +89,14 @@
               </template>
             </el-table-column>
             <el-table-column prop="dictSort" label="排序" width="80" align="center" />
+            <el-table-column prop="appName" label="关联应用" width="150" show-overflow-tooltip />
+            <el-table-column label="是否快照" width="90" align="center">
+              <template #default="{ row }">
+                <el-tag :type="row.isSnapshot == 1 ? 'warning' : 'info'" size="small">
+                  {{ row.isSnapshot == 1 ? '是' : '否' }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="状态" width="80" align="center">
               <template #default="{ row }">
                 <el-tag :type="row.enableStatus === 1 ? 'success' : 'danger'" size="small">
@@ -70,7 +104,10 @@
                 </el-tag>
               </template>
             </el-table-column>
+            <el-table-column prop="createAdminName" label="创建人" width="120" />
             <el-table-column prop="createDate" label="创建时间" width="170" />
+            <el-table-column prop="updateAdminName" label="修改人" width="120" />
+            <el-table-column prop="updateDate" label="修改时间" width="170" />
             <el-table-column label="操作" width="220" fixed="right">
               <template #default="{ row }">
                 <el-button type="success" link size="small" :icon="Plus" @click="handleAddChild(row)">添加子项</el-button>
@@ -137,10 +174,24 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Expand, Fold } from '@element-plus/icons-vue'
-import { addDict, updateDict, delDict, queryDictTree } from '@/api/system/dict'
+import { addDict, updateDict, delDict, delBatchDict, queryDictTree } from '@/api/system/dict'
 import { listAllDictCategory } from '@/api/system/dictCategory'
 
 const route = useRoute()
+
+// ========== 搜索 ==========
+const searchForm = reactive({ name: '', code: '', enableStatus: '' })
+
+function handleSearch() {
+  fetchData()
+}
+
+function handleReset() {
+  searchForm.name = ''
+  searchForm.code = ''
+  searchForm.enableStatus = ''
+  fetchData()
+}
 
 // ========== 左侧分类 ==========
 const categoryList = ref([])
@@ -214,7 +265,11 @@ async function fetchData() {
   if (!selectedCategoryId.value) { dictTree.value = []; return }
   loading.value = true
   try {
-    const res = await queryDictTree({ categoryId: selectedCategoryId.value })
+    const params = { categoryId: selectedCategoryId.value }
+    if (searchForm.name) params.name = searchForm.name
+    if (searchForm.code) params.code = searchForm.code
+    if (searchForm.enableStatus !== '') params.enableStatus = searchForm.enableStatus
+    const res = await queryDictTree(params)
     const flat = res.data || []
     dictTree.value = buildTree(flat)
     treeSelectData.value = buildTree(flat)
@@ -235,6 +290,36 @@ function expandAll() {
 function collapseAll() {
   expandAllFlag.value = false
   tableKey.value++
+}
+
+// ========== 批量删除 ==========
+const selectedRows = ref([])
+
+function handleSelectionChange(rows) {
+  selectedRows.value = rows
+}
+
+async function handleBatchDelete() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请选择要操作的记录')
+    return
+  }
+  try {
+    await ElMessageBox.confirm('确定删除选中的字典?', '删除确认', {
+      confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning'
+    })
+  } catch {
+    return
+  }
+  loading.value = true
+  try {
+    await delBatchDict(selectedRows.value)
+    ElMessage.success('删除成功')
+    selectedRows.value = []
+    fetchData()
+  } finally {
+    loading.value = false
+  }
 }
 
 // ========== 新增/编辑 ==========
@@ -301,6 +386,7 @@ async function loadTreeSelectData(categoryId) {
 }
 
 async function handleAdd() {
+  if (!selectedCategoryId.value) { ElMessage.warning('请先选择字典分类'); return }
   isEdit.value = false; isAddChild.value = false; editingId.value = null
   resetForm()
   await loadTreeSelectData(formData.categoryId)
@@ -411,6 +497,8 @@ function handleDelete(row) {
   .right-panel {
     flex: 1;
     min-width: 0;
+
+    .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding: 16px 20px 0; } }
 
     .table-card {
       .toolbar {

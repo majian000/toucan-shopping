@@ -5,7 +5,7 @@ export function listRole(data) {
 }
 
 export function getRole(roleId) {
-  return request({ url: '/system/role/' + roleId, method: 'get' })
+  return request({ url: '/role/' + roleId, method: 'get' })
 }
 
 export function addRole(data) {
@@ -20,10 +20,18 @@ export function delRole(id) {
   return request({ url: '/role/delete', method: 'post', data: { id } })
 }
 
-export function getRoleFunctionTree(roleId) {
-  return request({ url: '/system/function/query/role/function/tree', method: 'post', data: { roleId } })
+export function batchDelRole(ids) {
+  return request({ url: '/role/delete/ids', method: 'post', data: ids.map(id => ({ id })) })
+}
+
+export function getRoleFunctionTree(roleId, appCode) {
+  return request({ url: '/function/query/role/function/tree', method: 'post', data: { roleId, appCode } })
 }
 
 export function saveRoleFunctions(data) {
-  return request({ url: '/system/role/save/functions', method: 'post', data })
+  return request({ url: '/role/saveFunctions', method: 'post', data })
+}
+
+export function refreshRoleFunctionCache(roleId) {
+  return request({ url: '/role/refresh/cache/functions', method: 'post', data: { roleId } })
 }

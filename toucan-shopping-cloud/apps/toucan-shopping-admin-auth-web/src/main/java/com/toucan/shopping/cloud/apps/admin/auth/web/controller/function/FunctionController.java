@@ -310,21 +310,18 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Function function)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(function.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Function entity =new Function();
-            // id from @RequestBody
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-
-            String entityJson = JSONObject.toJSONString(entity);
+            function.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+                        String entityJson = JSONObject.toJSONString(function);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
@@ -346,23 +343,19 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/by/app/code/{appCode}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/by/app/code",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteByAppCode(HttpServletRequest request,  @PathVariable String appCode)
+    public ResultObjectVO deleteByAppCode(HttpServletRequest request, @RequestBody FunctionVO functionVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(appCode))
+            if(StringUtils.isEmpty(functionVO.getAppCode()))
             {
                 resultObjectVO.setMsg("请传入应用编码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Function entity =new Function();
-            entity.setAppCode(appCode);
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-
-            String entityJson = JSONObject.toJSONString(entity);
+            String entityJson = JSONObject.toJSONString(functionVO);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
@@ -509,57 +502,6 @@ public class FunctionController extends UIController {
      * @param roleId
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String appCode,String roleId)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            //查询权限树
-            App query = new App();
-            query.setCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = functionServiceAPI.queryFunctionTree(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
-
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
-                AtomicLong id = new AtomicLong();
-                RoleFunction queryRoleFunction = new RoleFunction();
-                queryRoleFunction.setRoleId(roleId);
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
-                resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionList(requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
-                    if(!CollectionUtils.isEmpty(roleFunctions)) {
-                        for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
-                            functionTreeVO.setId(id.incrementAndGet());
-                            functionTreeVO.setNodeId(functionTreeVO.getId());
-                            functionTreeVO.setText(functionTreeVO.getTitle());
-                            for(RoleFunction roleFunction:roleFunctions) {
-                                if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
-                                    //设置节点被选中
-                                    functionTreeVO.getState().setChecked(true);
-                                }
-                            }
-                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(), roleFunctions);
-                        }
-                    }
-                }
-                resultObjectVO.setData(functionTreeVOList);
-            }
-            return resultObjectVO;
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请求失败");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 
 
 
@@ -573,21 +515,17 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/query/role/function/tree/{appCode}/{roleId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String id)
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(roleFunctionVO.getPid() == null)
             {
-                id="-1";
+                roleFunctionVO.setPid(-1L);
             }
             //查询权限树
-            RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
-            roleFunctionVO.setPid(Long.parseLong(id));
-            roleFunctionVO.setRoleId(roleId);
-            roleFunctionVO.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
             resultObjectVO = roleFunctionServiceAPI.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
             if(resultObjectVO.isSuccess())

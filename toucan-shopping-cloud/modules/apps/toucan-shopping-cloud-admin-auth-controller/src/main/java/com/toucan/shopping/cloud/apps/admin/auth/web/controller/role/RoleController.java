@@ -359,19 +359,17 @@ public class RoleController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Role role)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(role.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Role role =new Role();
-            // id from @RequestBody
-            role.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+                        role.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(role);
             RequestJsonVO requestVo = new RequestJsonVO();

@@ -108,20 +108,18 @@ public class OnlineAdminController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/logout/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO logout(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO logout(HttpServletRequest request, @RequestBody AdminApp adminApp)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(adminApp.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            AdminApp adminApp =new AdminApp();
-            // id from @RequestBody
             RequestJsonVO requestJsonVO=RequestJsonVOGenerator.generator(toucan.getAppCode(),adminApp);
             resultObjectVO = adminAppServiceAPI.logout(requestJsonVO);
         }catch(Exception e)

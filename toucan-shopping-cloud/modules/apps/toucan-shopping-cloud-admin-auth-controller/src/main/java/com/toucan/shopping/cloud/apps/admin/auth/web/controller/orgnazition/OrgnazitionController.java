@@ -257,11 +257,11 @@ public class OrgnazitionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:org:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Orgnazition orgnazition)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(orgnazition.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -269,9 +269,7 @@ public class OrgnazitionController extends UIController {
             }
             Orgnazition entity =new Orgnazition();
             // id from @RequestBody
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-
-            String entityJson = JSONObject.toJSONString(entity);
+                        String entityJson = JSONObject.toJSONString(orgnazition);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);

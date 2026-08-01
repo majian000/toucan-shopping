@@ -2,10 +2,27 @@
   <div class="org-management">
     <h2 class="page-title">{{ route.meta.title }}</h2>
 
+    <!-- 搜索栏 -->
+    <el-card shadow="never" class="search-card">
+      <el-form :model="searchForm" inline>
+        <el-form-item label="名称">
+          <el-input v-model="searchForm.name" placeholder="请输入名称" clearable style="width:220px" />
+        </el-form-item>
+        <el-form-item label="所属应用">
+          <el-input v-model="searchForm.appCode" placeholder="请输入应用编码" clearable style="width:220px" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :icon="Search" v-permission="'pms:system:org:list'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" v-permission="'pms:system:org:list'" @click="handleReset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
     <el-card shadow="never" class="table-card">
       <!-- 工具栏 -->
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'pms:system:org:add'" @click="handleAdd">新增机构</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'pms:system:org:add'" @click="handleAdd">添加</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'pms:system:org:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
         <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
       </div>
 
@@ -16,16 +33,22 @@
         border stripe row-key="id"
         :tree-props="{ children: 'children' }"
         v-loading="loading"
+        @selection-change="handleSelectionChange"
         style="width:100%"
       >
-        <el-table-column prop="name" label="机构名称" min-width="220" />
-        <el-table-column prop="code" label="机构编码" width="180" show-overflow-tooltip />
-        <el-table-column prop="orgnazitionSort" label="排序" width="80" align="center" sortable />
+        <el-table-column type="selection" width="50" />
+        <el-table-column prop="name" label="名称" min-width="260" />
+        <el-table-column prop="code" label="编码" width="180" show-overflow-tooltip />
+        <el-table-column prop="appNames" label="应用名称" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="orgnazitionSort" label="排序" width="80" align="center" />
         <el-table-column prop="remark" label="备注" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="createAdminUsername" label="创建人" width="120" />
         <el-table-column prop="createDate" label="创建时间" width="170" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column prop="updateAdminUsername" label="修改人" width="120" />
+        <el-table-column prop="updateDate" label="修改时间" width="170" />
+        <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:org:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:org:edit'" @click="handleEdit(row)">修改</el-button>
             <el-button type="success" link size="small" :icon="Plus"
               v-permission="'pms:system:org:add'" @click="handleAddChild(row)">添加子机构</el-button>
             <el-button type="danger" link size="small" :icon="Delete"
@@ -47,8 +70,11 @@
             :props="{ label: 'name', value: 'id', children: 'children' }"
             placeholder="请选择上级机构（留空为顶级）" check-strictly clearable style="width:100%" />
         </el-form-item>
-        <el-form-item label="机构名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入机构名称" />
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入名称" />
+        </el-form-item>
+        <el-form-item label="编码" prop="code">
+          <el-input v-model="formData.code" placeholder="请输入编码" />
         </el-form-item>
         <el-form-item label="排序" prop="orgnazitionSort">
           <el-input-number v-model="formData.orgnazitionSort" :min="0" :max="9999" style="width:160px" />
@@ -69,10 +95,23 @@
 import { ref, reactive, computed, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Refresh } from '@element-plus/icons-vue'
-import { listOrgnazitionTree, addOrgnazition, updateOrgnazition, delOrgnazition } from '@/api/system/orgnazition'
+import { Plus, Delete, Edit, Refresh, Search } from '@element-plus/icons-vue'
+import { listOrgnazitionTree, addOrgnazition, updateOrgnazition, delOrgnazition, delBatchOrgnazition } from '@/api/system/orgnazition'
 
 const route = useRoute()
+
+// ========== 搜索 ==========
+const searchForm = reactive({ name: '', appCode: '' })
+
+function handleSearch() {
+  fetchData()
+}
+
+function handleReset() {
+  searchForm.name = ''
+  searchForm.appCode = ''
+  fetchData()
+}
 
 // ========== 树形数据转换 ==========
 function transformTree(tree) {
@@ -91,7 +130,10 @@ const fullOrgTree = ref([])
 async function fetchData() {
   loading.value = true
   try {
-    const res = await listOrgnazitionTree()
+    const params = {}
+    if (searchForm.name) params.name = searchForm.name
+    if (searchForm.appCode) params.appCode = searchForm.appCode
+    const res = await listOrgnazitionTree(params)
     orgTree.value = transformTree(res.data || [])
   } finally {
     loading.value = false
@@ -101,6 +143,37 @@ async function fetchData() {
 onMounted(() => fetchData())
 
 async function handleRefresh() { await fetchData(); tableKey.value++ }
+
+// ========== 批量删除 ==========
+const selectedRows = ref([])
+
+function handleSelectionChange(rows) {
+  selectedRows.value = rows
+}
+
+async function handleBatchDelete() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请选择要操作的记录')
+    return
+  }
+  try {
+    await ElMessageBox.confirm('确定删除选中的组织机构?', '删除确认', {
+      confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning'
+    })
+  } catch {
+    return
+  }
+  loading.value = true
+  try {
+    await delBatchOrgnazition(selectedRows.value)
+    ElMessage.success('删除成功')
+    selectedRows.value = []
+    await fetchData()
+    tableKey.value++
+  } finally {
+    loading.value = false
+  }
+}
 
 // ========== 加载完整组织树（弹窗打开时调用，复用表格数据） ==========
 function loadFullTree() {
@@ -151,16 +224,16 @@ function findParentById(tree, id, parent = null) {
 }
 
 const formData = reactive({
-  pid: null, name: '', orgnazitionSort: 0, remark: ''
+  pid: null, name: '', code: '', orgnazitionSort: 0, remark: ''
 })
 
 const formRules = {
-  name: [{ required: true, message: '请输入机构名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   orgnazitionSort: [{ required: true, message: '请输入排序号', trigger: 'blur' }]
 }
 
 function resetForm() {
-  formData.pid = null; formData.name = ''
+  formData.pid = null; formData.name = ''; formData.code = ''
   formData.orgnazitionSort = 0; formData.remark = ''
 }
 
@@ -180,6 +253,7 @@ async function handleEdit(row) {
   isEdit.value = true; isAddChild.value = false; editingId.value = row.id
   formData.pid = null
   formData.name = row.name
+  formData.code = row.code || ''
   formData.orgnazitionSort = row.orgnazitionSort
   formData.remark = row.remark || ''
   await loadFullTree(); treeSelectKey.value++
@@ -200,6 +274,7 @@ async function handleSubmit() {
     const apiData = {
       pid: formData.pid,
       name: formData.name,
+      code: formData.code,
       orgnazitionSort: formData.orgnazitionSort,
       remark: formData.remark
     }
@@ -230,6 +305,7 @@ function handleDelete(row) {
 
 <style lang="scss" scoped>
 .org-management {
+  .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding: 16px 20px 0; } }
   .table-card {
     .toolbar { margin-bottom: $gap-md; }
   }

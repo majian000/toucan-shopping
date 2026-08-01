@@ -5,5 +5,5 @@ export function listOperateLog(data) {
 }
 
 export function delOperateLog(id) {
-  return request({ url: '/system/operateLog/delete', method: 'post', data: { id } })
+  return request({ url: '/operateLog/delete', method: 'post', data: { id } })
 }
