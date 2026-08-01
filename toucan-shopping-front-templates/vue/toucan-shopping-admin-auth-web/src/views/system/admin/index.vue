@@ -596,9 +596,7 @@ async function handleSubmitRole() {
   const tree = roleTreeRef.value
   if (!tree) return
   const checkedNodes = tree.getCheckedNodes(false, false)
-  const halfCheckedNodes = tree.getHalfCheckedNodes()
-  const allNodes = [...checkedNodes, ...halfCheckedNodes]
-  const idSet = new Set(allNodes.map(n => n.id))
+  const idSet = new Set(checkedNodes.map(n => n.id))
   const rolesArray = []
   collectNodesFromTree(roleTreeData.value, idSet, rolesArray)
   if (rolesArray.length === 0) {
@@ -649,13 +647,13 @@ function collectCheckedKeysFromTree(nodes, ids) {
   }
 }
 
-function collectOrgNodesFromTree(nodes, keySet, result) {
+function collectOrgNodesFromTree(nodes, keySet, result, appCode) {
   for (const node of nodes) {
     if (keySet.has(node.id)) {
-      result.push({ orgnazitionId: node.orgnazitionId, appCode: node.appCode })
+      result.push({ orgnazitionId: node.orgnazitionId, appCode: node.appCode || appCode })
     }
     if (node.children && node.children.length > 0) {
-      collectOrgNodesFromTree(node.children, keySet, result)
+      collectOrgNodesFromTree(node.children, keySet, result, appCode)
     }
   }
 }
@@ -696,11 +694,9 @@ async function handleSubmitOrg() {
   const tree = orgTreeRef.value
   if (!tree) return
   const checkedNodes = tree.getCheckedNodes(false, false)
-  const halfCheckedNodes = tree.getHalfCheckedNodes()
-  const allNodes = [...checkedNodes, ...halfCheckedNodes]
-  const idSet = new Set(allNodes.map(n => n.id))
+  const idSet = new Set(checkedNodes.map(n => n.id))
   const orgArray = []
-  collectOrgNodesFromTree(orgTreeData.value, idSet, orgArray)
+  collectOrgNodesFromTree(orgTreeData.value, idSet, orgArray, orgForm.appCode)
   orgTreeLoading.value = true
   try {
     await connectOrgs({
