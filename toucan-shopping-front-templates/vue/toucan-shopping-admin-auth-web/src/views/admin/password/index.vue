@@ -78,9 +78,13 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Check } from '@element-plus/icons-vue'
+import { updateMyPassword } from '@/api/system/admin'
+import { removeToken } from '@/utils/auth'
 
+const router = useRouter()
 const formRef = ref(null)
 const saveLoading = ref(false)
 
@@ -144,13 +148,16 @@ async function handleSave() {
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) return
   saveLoading.value = true
-  setTimeout(() => {
-    saveLoading.value = false
+  try {
+    await updateMyPassword({ password: form.newPassword })
     ElMessage.success('密码修改成功，请重新登录')
-    form.oldPassword = ''
-    form.newPassword = ''
-    form.confirmPassword = ''
-  }, 1000)
+    removeToken()
+    router.replace('/login')
+  } catch {
+    // 错误由拦截器统一处理
+  } finally {
+    saveLoading.value = false
+  }
 }
 
 function handleReset() {

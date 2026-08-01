@@ -442,5 +442,31 @@ public class FunctionController extends UIController {
     }
 
 
+    /**
+     * 查询指定节点的所有子孙节点(functionId列表)
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:tree"})
+    @RequestMapping(value = "/query/descendants",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDescendants(HttpServletRequest request, @RequestBody Function function)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(function.getId() == null) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("id为空");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), function);
+            resultObjectVO = functionServiceAPI.queryDescendants(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }
 

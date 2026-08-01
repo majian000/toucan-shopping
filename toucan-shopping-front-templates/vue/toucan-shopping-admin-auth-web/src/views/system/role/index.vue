@@ -138,10 +138,34 @@
           node-key="functionId"
           :props="{ label: 'name', isLeaf: isPermLeaf }"
           show-checkbox
+          check-strictly
           lazy
           :load="loadPermTree"
           class="perm-tree"
         >
+          <template #default="{ data }">
+            <span class="perm-node">
+              <el-icon class="perm-node-icon" :style="{ color: typeIcon[data.type]?.color }">
+                <component :is="typeIcon[data.type]?.icon || Document" />
+              </el-icon>
+              <span class="perm-node-label">{{ data.name }}</span>
+              <el-tag size="small" :type="typeIcon[data.type]?.tagType" class="perm-node-tag">
+                {{ typeIcon[data.type]?.label || data.type }}
+              </el-tag>
+              <template v-if="data.isParent">
+                <el-icon
+                  class="perm-select-all"
+                  title="全选子节点"
+                  @click.stop="handleNodeSelectAll(data)"
+                ><CircleCheck /></el-icon>
+                <el-icon
+                  class="perm-deselect-all"
+                  title="取消全选"
+                  @click.stop="handleNodeDeselectAll(data)"
+                ><RemoveFilled /></el-icon>
+              </template>
+            </span>
+          </template>
         </el-tree>
         <div class="perm-stat">
           已选择 <strong>{{ checkedPermCount }}</strong> 项权限
@@ -159,8 +183,8 @@
 import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight } from '@element-plus/icons-vue'
-import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
+import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, RemoveFilled } from '@element-plus/icons-vue'
+import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache, getFunctionDescendants } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -353,24 +377,63 @@ const checkedPermCount = computed(() => {
   return permTreeRef.value.getCheckedKeys().length
 })
 
-// 判断节点是否叶子（只有 type=0 目录类型才可展开，其他均为叶子）
+// 功能项类型图标配置
+const typeIcon = {
+  0: { icon: FolderOpened, color: '#e6a23c', tagType: 'warning', label: '目录' },
+  1: { icon: Document,     color: '#409eff', tagType: 'primary', label: '菜单' },
+  2: { icon: Pointer,      color: '#67c23a', tagType: 'success', label: '按钮' },
+  3: { icon: Setting,      color: '#e6a23c', tagType: 'warning', label: '工具条按钮' },
+  4: { icon: Link,         color: '#f56c6c', tagType: 'danger',  label: 'API' },
+  5: { icon: Grid,         color: '#909399', tagType: 'info',    label: '页面控件' }
+}
+
+// 根据后端返回的 isParent 判断是否有子节点
 function isPermLeaf(data) {
-  return data.type !== 0
+  return !data.isParent
 }
 
 // 懒加载权限树节点
-async function loadPermTree(node, resolve) {
+function loadPermTree(node, resolve) {
   const isRoot = node.level === 0
   const pid = node.data && node.data.id ? node.data.id : -1
-  try {
-    const res = await getRoleFunctionTree(permRoleId.value, permAppCode.value, pid)
-    const data = res.data || []
-    resolve(data)
-    if (isRoot) permTreeLoading.value = false
-  } catch {
+  getRoleFunctionTree(permRoleId.value, permAppCode.value, pid).then(res => {
+    const rawData = res.data || []
+    resolve(rawData)
+    // el-tree 懒加载内部异步创建节点，等两帧再同步勾选状态
+    nextTick(() => {
+      nextTick(() => {
+        rawData.forEach(item => {
+          if (item.checked === true || item.checked === 'true') {
+            permTreeRef.value?.setChecked(item.functionId, true, false)
+          }
+        })
+        if (isRoot) permTreeLoading.value = false
+      })
+    })
+  }).catch(() => {
     resolve([])
     if (isRoot) permTreeLoading.value = false
-  }
+  })
+}
+
+// 全选子节点：加载所有子孙并勾选
+async function handleNodeSelectAll(data) {
+  try {
+    const res = await getFunctionDescendants(data.id)
+    const descIds = res.data || []
+    permTreeRef.value?.setChecked(data.functionId, true, false)
+    descIds.forEach(id => permTreeRef.value?.setChecked(id, true, false))
+  } catch { /* ignore */ }
+}
+
+// 取消全选：加载所有子孙并取消勾选
+async function handleNodeDeselectAll(data) {
+  try {
+    const res = await getFunctionDescendants(data.id)
+    const descIds = res.data || []
+    permTreeRef.value?.setChecked(data.functionId, false, false)
+    descIds.forEach(id => permTreeRef.value?.setChecked(id, false, false))
+  } catch { /* ignore */ }
 }
 
 async function handleAssignPermission(row) {
@@ -428,14 +491,9 @@ function handleTreeCollapseAll() {
 async function handleSavePerm() {
   permSaveLoading.value = true
   try {
-    // 全选节点 halfCheck=false → 后端级联所有子节点
-    // 半选节点 halfCheck=true → 后端保留半选状态
+    // 勾选哪个关联哪个，不做级联（用"全选子节点"按钮显式操作）
     const checkedNodes = permTreeRef.value.getCheckedNodes(false, false)
-    const halfCheckedNodes = permTreeRef.value.getHalfCheckedNodes()
-    const functions = [
-      ...checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, halfCheck: false })),
-      ...halfCheckedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, halfCheck: true }))
-    ]
+    const functions = checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid }))
     await saveRoleFunctions({ roleId: permRoleId.value, appCode: permAppCode.value, functions })
     ElMessage.success('权限已更新')
     permDialogVisible.value = false
@@ -502,6 +560,16 @@ function handleRefreshCache(row) {
     .perm-tree {
       max-height: 400px;
       overflow-y: auto;
+    }
+    .perm-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      .perm-node-icon { font-size: 16px; flex-shrink: 0; }
+      .perm-node-label { font-size: 14px; }
+      .perm-node-tag { flex-shrink: 0; margin-left: 4px; }
+      .perm-select-all { color: #67c23a; cursor: pointer; margin-left: 6px; font-size: 16px; &:hover { opacity: 0.7; } }
+      .perm-deselect-all { color: #f56c6c; cursor: pointer; margin-left: 2px; font-size: 16px; &:hover { opacity: 0.7; } }
     }
     .perm-stat {
       margin-top: 12px;

@@ -29,7 +29,11 @@ export function getRoleFunctionTree(roleId, appCode, pid) {
 }
 
 export function saveRoleFunctions(data) {
-  return request({ url: '/role/saveFunctions', method: 'post', data })
+  return request({ url: '/role/connect/functions', method: 'post', data })
+}
+
+export function getFunctionDescendants(nodeId) {
+  return request({ url: '/function/query/descendants', method: 'post', data: { id: nodeId } })
 }
 
 export function refreshRoleFunctionCache(roleId) {

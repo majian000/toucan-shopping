@@ -37,12 +37,16 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   res => {
-    const code = res.data.code
-    const msg = errorCode[code] || res.data.msg || errorCode['default']
+    const data = res.data
+    const code = data.code
+    const msg = errorCode[code] || data.msg || errorCode['default']
 
-    // code === 0 或 code === 1 表示业务成功(兼容老后端ResultObjectVO/TableVO)
-    if (code === 0 || code === 1) {
-      return res.data
+    // ResultObjectVO 有 success 字段，优先用它判断（SUCCESS=1, FAILD=0）
+    // TableVO 没有 success 字段，用 code 判断（SUCCESS=0, FAILD=1）
+    if ('success' in data) {
+      if (data.success === true) return data
+    } else if (code === 0 || code === 1) {
+      return data
     }
 
     if (code === 401) {

@@ -92,4 +92,9 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
     public ResultObjectVO list(RequestJsonVO requestVo) {
         return functionBusinessService.list(requestVo);
     }
+
+    @Override
+    public ResultObjectVO queryDescendants(RequestJsonVO requestJsonVO) {
+        return functionBusinessService.queryDescendants(requestJsonVO);
+    }
 }

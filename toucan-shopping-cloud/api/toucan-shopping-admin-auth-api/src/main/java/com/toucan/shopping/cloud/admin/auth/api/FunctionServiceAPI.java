@@ -148,4 +148,12 @@ public interface FunctionServiceAPI {
     ResultObjectVO list(RequestJsonVO requestVo);
 
 
+    /**
+     * 查询指定节点的所有子孙节点(functionId列表)
+     * @param requestJsonVO
+     * @return
+     */
+    ResultObjectVO queryDescendants(RequestJsonVO requestJsonVO);
+
+
 }

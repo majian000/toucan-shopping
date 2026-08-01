@@ -107,21 +107,20 @@ public class RoleFunctionBusinessService {
         try {
             RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
             Check.notEmpty(entity.getRoleId(), ResultVO.FAILD, "roleId为空");
-            Check.notEmpty(entity.getFunctions(), ResultVO.FAILD, "functions为空");
-            List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
-
-            //查询要关联到的所有功能项
-            roleFunctionService.queryReleaseFunctionList(entity,functionTreeVOS);
+            // 前端勾选哪个就关联哪个，不做级联展开
+            List<FunctionTreeVO> functionTreeVOS = entity.getFunctions();
+            if(functionTreeVOS == null) {
+                functionTreeVOS = new LinkedList<>();
+            }
 
             //去重
-            List<FunctionTreeVO> uniqueList = functionTreeVOS.stream().collect(
+            functionTreeVOS = functionTreeVOS.stream().collect(
                     Collectors.collectingAndThen(
                             Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FunctionTreeVO::getId))), ArrayList::new)
             );
-            functionTreeVOS.clear();
-            functionTreeVOS = uniqueList;
+            // 先清空旧关联，再保存新提交的
+            roleFunctionService.deleteByRoleId(entity.getRoleId());
             if(!CollectionUtils.isEmpty(functionTreeVOS)) {
-                roleFunctionService.deleteByRoleId(entity.getRoleId());
 
                 RoleFunction[] roleFunctions = new RoleFunction[functionTreeVOS.size()];
                 int pos = 0;
