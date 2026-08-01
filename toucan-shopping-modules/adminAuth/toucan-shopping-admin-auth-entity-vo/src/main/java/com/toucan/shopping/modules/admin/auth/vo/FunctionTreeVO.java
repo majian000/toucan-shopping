@@ -95,4 +95,19 @@ public class FunctionTreeVO extends Function {
      */
     private Boolean isAppNode = false;
 
+    /**
+     * 子孙节点总数
+     */
+    private Integer descendantCount = 0;
+
+    /**
+     * 已勾选的子孙节点数
+     */
+    private Integer checkedDescendantCount = 0;
+
+    /**
+     * 是否级联模式（已勾选所有子孙）
+     */
+    private Boolean cascaded = false;
+
 }

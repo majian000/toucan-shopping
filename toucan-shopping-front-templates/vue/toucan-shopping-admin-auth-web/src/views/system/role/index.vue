@@ -142,6 +142,7 @@
           lazy
           :load="loadPermTree"
           class="perm-tree"
+          @check="handlePermCheck"
         >
           <template #default="{ data }">
             <span class="perm-node">
@@ -152,6 +153,20 @@
               <el-tag size="small" :type="typeIcon[data.type]?.tagType" class="perm-node-tag">
                 {{ typeIcon[data.type]?.label || data.type }}
               </el-tag>
+              <template v-if="data.descendantCount > 0">
+                <el-tag
+                  size="small"
+                  :type="data.cascaded ? 'success' : 'info'"
+                  class="perm-count-tag"
+                >{{ data.checkedDescendantCount || 0 }}/{{ data.descendantCount }} 项</el-tag>
+              </template>
+              <el-icon
+                v-if="data.isParent"
+                class="perm-cascade-btn"
+                :class="{ cascaded: data.cascaded }"
+                :title="data.cascaded ? '取消级联' : '级联所有子节点'"
+                @click.stop="handleCascadeToggle(data)"
+              ><CircleCheck /></el-icon>
             </span>
           </template>
         </el-tree>
@@ -171,7 +186,7 @@
 import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid } from '@element-plus/icons-vue'
+import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck } from '@element-plus/icons-vue'
 import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
@@ -395,6 +410,8 @@ function loadPermTree(node, resolve) {
             permTreeRef.value?.setChecked(item.functionId, true, false)
           }
         })
+        // 刷新当前节点的子孙计数（已加载子节点的级联状态已在数据中）
+        if (node.data) refreshAncestorCounts(permTreeRef.value?.store?.getNode(node.data.functionId))
         if (isRoot) permTreeLoading.value = false
       })
     })
@@ -404,6 +421,57 @@ function loadPermTree(node, resolve) {
   })
 }
 
+// 统一刷新：从指定节点向上更新所有祖先的已选子孙计数
+// descendantCount 是后端给的权威总数，不变；checkedDescendantCount 由前端根据当前勾选状态聚合
+function refreshAncestorCounts(startNode) {
+  const tree = permTreeRef.value
+  if (!tree) return
+  const checkedSet = new Set(tree.getCheckedKeys())
+  let parent = startNode
+  while (parent && parent.data) {
+    if (parent.data.descendantCount > 0) {
+      let checked = 0
+      parent.childNodes.forEach(child => {
+        if (checkedSet.has(child.key)) checked++       // 子节点本身已勾
+        if (child.data) {
+          // 加上子节点的已选子孙数（含级联展开的，来自数据对象不依赖 store）
+          checked += (child.data.checkedDescendantCount || 0)
+        }
+      })
+      parent.data.checkedDescendantCount = checked
+      parent.data.cascaded = checked > 0 && checked === parent.data.descendantCount
+    }
+    parent = parent.parent
+  }
+}
+
+// 手动勾选/取消节点时，向上刷新
+function handlePermCheck(data) {
+  const tree = permTreeRef.value
+  if (!tree) return
+  const node = tree.store.getNode(data.functionId)
+  if (node) refreshAncestorCounts(node.parent || node)
+}
+
+// 级联切换：勾选/取消所有子孙节点的勾选
+function handleCascadeToggle(data) {
+  const toggleTo = !data.cascaded
+  data.cascaded = toggleTo
+  const tree = permTreeRef.value
+  if (!tree) return
+  const node = tree.store.getNode(data.functionId)
+  if (!node) return
+  function walk(n) {
+    n.childNodes.forEach(child => {
+      child.setChecked(toggleTo, false)
+      walk(child)
+    })
+  }
+  walk(node)
+  node.setChecked(toggleTo, false)
+  data.checkedDescendantCount = toggleTo ? data.descendantCount : 0
+  refreshAncestorCounts(node.parent)
+}
 
 async function handleAssignPermission(row) {
   permRoleId.value = row.roleId
@@ -462,7 +530,7 @@ async function handleSavePerm() {
   try {
     // 勾选哪个关联哪个，不做级联（用"全选子节点"按钮显式操作）
     const checkedNodes = permTreeRef.value.getCheckedNodes(false, false)
-    const functions = checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid }))
+    const functions = checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, cascaded: n.cascaded || false }))
     await saveRoleFunctions({ roleId: permRoleId.value, appCode: permAppCode.value, functions })
     ElMessage.success('权限已更新')
     permDialogVisible.value = false
@@ -537,6 +605,13 @@ function handleRefreshCache(row) {
       .perm-node-icon { font-size: 16px; flex-shrink: 0; }
       .perm-node-label { font-size: 14px; }
       .perm-node-tag { flex-shrink: 0; margin-left: 4px; }
+      .perm-count-tag { flex-shrink: 0; margin-left: 4px; font-size: 11px; }
+      .perm-cascade-btn {
+        flex-shrink: 0; margin-left: 4px; font-size: 16px; cursor: pointer;
+        color: #c0c4cc; transition: color 0.2s;
+        &:hover { color: #67c23a; }
+        &.cascaded { color: #67c23a; }
+      }
     }
     .perm-stat {
       margin-top: 12px;

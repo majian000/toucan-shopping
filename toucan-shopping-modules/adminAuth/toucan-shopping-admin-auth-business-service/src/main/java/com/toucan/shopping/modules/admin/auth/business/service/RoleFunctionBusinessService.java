@@ -112,6 +112,15 @@ public class RoleFunctionBusinessService {
             if(functionTreeVOS == null) {
                 functionTreeVOS = new LinkedList<>();
             }
+            // 级联展开标记为 cascaded 的节点，将其所有子孙加入保存列表
+            List<FunctionTreeVO> expandedList = new LinkedList<>();
+            for(FunctionTreeVO ft : functionTreeVOS) {
+                expandedList.add(ft);
+                if(ft.getCascaded() != null && ft.getCascaded()) {
+                    functionService.queryFunctionTreeChildren(expandedList, ft);
+                }
+            }
+            functionTreeVOS = expandedList;
 
             //去重
             functionTreeVOS = functionTreeVOS.stream().collect(
@@ -279,6 +288,30 @@ public class RoleFunctionBusinessService {
             for(FunctionTreeVO functionTreeVO:functionTreeVOS)
             {
                 roleFunctionService.setHalfCheckAndIsParent(functionTreeVO,roleFunctions);
+            }
+
+            // 计算每个节点的子孙勾选统计
+            java.util.Set<String> roleFunctionIdSet = new java.util.HashSet<>();
+            for(RoleFunction rf : roleFunctions) {
+                roleFunctionIdSet.add(rf.getFunctionId());
+            }
+            for(FunctionTreeVO functionTreeVO:functionTreeVOS)
+            {
+                if(functionTreeVO.getIsParent() != null && functionTreeVO.getIsParent()) {
+                    java.util.List<FunctionTreeVO> descendants = new java.util.LinkedList<>();
+                    functionService.queryFunctionTreeChildren(descendants, functionTreeVO);
+                    functionTreeVO.setDescendantCount(descendants.size());
+                    if(descendants.size() > 0) {
+                        int checked = 0;
+                        for(FunctionTreeVO desc : descendants) {
+                            if(roleFunctionIdSet.contains(desc.getFunctionId())) {
+                                checked++;
+                            }
+                        }
+                        functionTreeVO.setCheckedDescendantCount(checked);
+                        functionTreeVO.setCascaded(checked == descendants.size());
+                    }
+                }
             }
 
             resultObjectVO.setData(functionTreeVOS);
