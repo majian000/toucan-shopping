@@ -87,5 +87,5 @@ export function queryAdminOrgnazitionTree(data) {
 
 // 查询管理员关联的应用列表
 export function listAdminApps(adminId) {
-  return request({ url: '/admin/apps/' + adminId, method: 'get' })
+  return request({ url: '/admin/apps', method: 'post', data: { adminId } })
 }

@@ -671,8 +671,6 @@ async function handleOrgnazition(row) {
   } catch { orgAppOptions.value = [] }
   orgDialogVisible.value = true
 }
-}
-}
 
 function handleOrgAppChange(appCode) {
   if (!appCode) {
