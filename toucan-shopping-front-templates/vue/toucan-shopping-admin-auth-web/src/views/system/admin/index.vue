@@ -69,9 +69,10 @@
         style="width:100%"
       >
         <el-table-column type="selection" width="50" align="center" />
+        <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="id" label="主键" width="200" />
-        <el-table-column prop="username" label="账号" width="100" />
         <el-table-column prop="adminId" label="账号ID" width="170" show-overflow-tooltip />
+        <el-table-column prop="username" label="账号" width="100" />
         <el-table-column label="关联应用" width="180">
           <template #default="{ row }">
             <div class="app-tags" v-if="row.appNames">

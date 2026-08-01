@@ -24,8 +24,8 @@ export function batchDelRole(ids) {
   return request({ url: '/role/delete/ids', method: 'post', data: ids.map(id => ({ id })) })
 }
 
-export function getRoleFunctionTree(roleId, appCode) {
-  return request({ url: '/function/query/role/function/tree', method: 'post', data: { roleId, appCode } })
+export function getRoleFunctionTree(roleId, appCode, pid) {
+  return request({ url: '/function/query/role/function/tree', method: 'post', data: { roleId, appCode, pid: pid != null ? pid : -1 } })
 }
 
 export function saveRoleFunctions(data) {

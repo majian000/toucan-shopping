@@ -71,7 +71,7 @@ public class DictCategoryController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:category:list"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, DictCategoryPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody DictCategoryPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

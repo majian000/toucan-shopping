@@ -66,6 +66,14 @@ public class PageInfo<E> {
     private List<E> list;
 
 
+    /**
+     * 设置每页显示数量时同步更新 limit，兼容前端传 size 后端用 limit 的问题
+     */
+    public void setSize(int size) {
+        this.size = size;
+        this.limit = size;
+    }
+
 
     public <T> T formatData(Class<T> clazz)
     {

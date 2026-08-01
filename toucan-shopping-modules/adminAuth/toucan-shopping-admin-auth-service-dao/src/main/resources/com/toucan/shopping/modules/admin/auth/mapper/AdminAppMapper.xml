@@ -161,6 +161,7 @@
             1=1
             <include refid="queryListPageWhere" />
         </where>
+        order by saa.create_date desc
         limit #{start},#{limit}
     </select>
 

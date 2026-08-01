@@ -79,6 +79,7 @@
             style="width:100%"
           >
             <el-table-column type="selection" width="50" />
+            <el-table-column type="index" label="序号" width="60" align="center" />
             <el-table-column prop="name" label="字典名称" width="240" />
             <el-table-column prop="code" label="编码" width="160" />
             <el-table-column prop="parentName" label="上级节点" width="150" show-overflow-tooltip />

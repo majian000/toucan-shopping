@@ -41,10 +41,15 @@
         style="width:100%"
       >
         <el-table-column type="selection" width="50" align="center" />
+        <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="roleId" label="角色ID" width="180" show-overflow-tooltip />
         <el-table-column prop="name" label="角色名称" width="180" />
-        <el-table-column prop="appCode" label="应用编码" width="180" show-overflow-tooltip />
-        <el-table-column prop="appName" label="所属应用" width="180" show-overflow-tooltip />
+        <el-table-column label="所属应用" width="220">
+          <template #default="{ row }">
+            <el-tag v-if="row.appName" size="small" type="info">{{ row.appName }}</el-tag>
+            <span v-else class="text-muted">--</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="createAdminUsername" label="创建人" width="180" />
         <el-table-column prop="createDate" label="创建时间" width="180" sortable />
         <el-table-column prop="updateAdminUsername" label="修改人" width="180" />
@@ -130,11 +135,11 @@
         </div>
         <el-tree
           ref="permTreeRef"
-          :data="menuTreeData"
           node-key="functionId"
-          :props="{ children: 'children', label: 'name' }"
+          :props="{ label: 'name', isLeaf: isPermLeaf }"
           show-checkbox
-          :default-checked-keys="currentPermKeys"
+          lazy
+          :load="loadPermTree"
           class="perm-tree"
         >
         </el-tree>
@@ -339,7 +344,6 @@ function handleBatchDelete() {
 const permDialogVisible = ref(false)
 const permTreeRef = ref(null)
 const permTreeLoading = ref(false)
-const currentPermKeys = ref([])
 const permRoleId = ref(null)
 const permAppCode = ref('')
 const permSaveLoading = ref(false)
@@ -349,54 +353,52 @@ const checkedPermCount = computed(() => {
   return permTreeRef.value.getCheckedKeys().length
 })
 
-// 收集树中 checked 为 true 的节点ID
-function collectCheckedIds(tree) {
-  const ids = []
-  function walk(nodes) {
-    nodes.forEach(n => {
-      if (n.checked === true || n.checked === 'true') ids.push(n.functionId)
-      if (n.children && n.children.length) walk(n.children)
-    })
+// 判断节点是否叶子（只有 type=0 目录类型才可展开，其他均为叶子）
+function isPermLeaf(data) {
+  return data.type !== 0
+}
+
+// 懒加载权限树节点
+async function loadPermTree(node, resolve) {
+  const isRoot = node.level === 0
+  const pid = node.data && node.data.id ? node.data.id : -1
+  try {
+    const res = await getRoleFunctionTree(permRoleId.value, permAppCode.value, pid)
+    const data = res.data || []
+    resolve(data)
+    if (isRoot) permTreeLoading.value = false
+  } catch {
+    resolve([])
+    if (isRoot) permTreeLoading.value = false
   }
-  walk(tree)
-  return ids
 }
 
 async function handleAssignPermission(row) {
   permRoleId.value = row.roleId
   permAppCode.value = row.appCode
-  permDialogVisible.value = true
   permTreeLoading.value = true
-  try {
-    const res = await getRoleFunctionTree(row.roleId, row.appCode)
-    const rawData = res.data || []
-    currentPermKeys.value = collectCheckedIds(rawData)
-    menuTreeData.value = rawData
-  } catch {
-    // error handled by request interceptor
-  } finally {
-    permTreeLoading.value = false
-  }
+  permDialogVisible.value = true
 }
 
 // ========== 权限树操作 ==========
-// 收集树中所有节点ID
-function collectAllNodeIds(tree) {
+// 递归收集已加载节点的所有 functionId
+function collectLoadedNodeIds(store) {
   const ids = []
   function walk(nodes) {
     nodes.forEach(n => {
-      ids.push(n.functionId)
-      if (n.children && n.children.length) walk(n.children)
+      ids.push(n.key)
+      if (n.childNodes && n.childNodes.length) walk(n.childNodes)
     })
   }
-  walk(tree)
+  if (store.root && store.root.childNodes) walk(store.root.childNodes)
   return ids
 }
 
 function handleTreeCheckAll() {
-  if (!permTreeRef.value) return
+  const store = permTreeRef.value?.store
+  if (!store) return
   const currentKeys = permTreeRef.value.getCheckedKeys()
-  const allIds = collectAllNodeIds(menuTreeData.value)
+  const allIds = collectLoadedNodeIds(store)
   const checkedCount = allIds.filter(id => currentKeys.includes(id)).length
   if (checkedCount >= allIds.length) {
     permTreeRef.value.setCheckedKeys([])
@@ -426,10 +428,14 @@ function handleTreeCollapseAll() {
 async function handleSavePerm() {
   permSaveLoading.value = true
   try {
-    const checkedKeys = permTreeRef.value.getCheckedKeys()
-    const halfCheckedKeys = permTreeRef.value.getHalfCheckedKeys()
-    const allKeys = [...checkedKeys, ...halfCheckedKeys]
-    const functions = allKeys.map(functionId => ({ functionId }))
+    // 全选节点 halfCheck=false → 后端级联所有子节点
+    // 半选节点 halfCheck=true → 后端保留半选状态
+    const checkedNodes = permTreeRef.value.getCheckedNodes(false, false)
+    const halfCheckedNodes = permTreeRef.value.getHalfCheckedNodes()
+    const functions = [
+      ...checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, halfCheck: false })),
+      ...halfCheckedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, halfCheck: true }))
+    ]
     await saveRoleFunctions({ roleId: permRoleId.value, appCode: permAppCode.value, functions })
     ElMessage.success('权限已更新')
     permDialogVisible.value = false

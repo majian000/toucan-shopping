@@ -271,7 +271,7 @@ public class RoleController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:list"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(RolePageInfo pageInfo)
+    public TableVO listPage(@RequestBody RolePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
