@@ -68,65 +68,15 @@ public class RoleController extends UIController {
     private AppServiceAPI appServiceAPI;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/role/listPage", functionServiceAPI);
-
-        return "pages/role/list.html";
-    }
 
 
 
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-        return "pages/role/add.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-
-            //初始化选择应用控件
-            super.initSelectApp(request,toucan, appServiceAPI);
-
-            Role entity = new Role();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = roleServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<Role> roles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Role.class);
-                    if(!CollectionUtils.isEmpty(roles))
-                    {
-                        request.setAttribute("model",roles.get(0));
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/role/edit.html";
-    }
 
 
 

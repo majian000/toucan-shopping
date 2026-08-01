@@ -49,36 +49,7 @@ public class AdminLoginHistoryController extends UIController {
     @Autowired
     private AppServiceAPI appServiceAPI;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage", method = RequestMethod.GET)
-    public String page(HttpServletRequest request) {
-        super.initSelectApp(request, toucan, appServiceAPI);
-        // 初始化工具条按钮、操作按钮
-        super.initButtons(request, toucan, "/adminLoginHistory/listPage", functionServiceAPI);
-        return "pages/adminLoginHistory/list.html";
-    }
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/showPage/{id}", method = RequestMethod.GET)
-    public String showPage(HttpServletRequest request, @PathVariable Long id) {
-        try {
-            AdminLoginHistoryVO adminLoginHistoryVO = new AdminLoginHistoryVO();
-            adminLoginHistoryVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminLoginHistoryVO);
-            ResultObjectVO resultObjectVO = adminLoginHistoryServiceAPI.findById(requestJsonVO);
-            if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
-                if (resultObjectVO.getData() != null) {
-                    List<AdminLoginHistoryVO> adminLoginHistoryVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminLoginHistoryVO.class);
-                    if (!CollectionUtils.isEmpty(adminLoginHistoryVOS)) {
-                        request.setAttribute("model", adminLoginHistoryVOS.get(0));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return "pages/adminLoginHistory/show.html";
-    }
 
     /**
      * 查询列表

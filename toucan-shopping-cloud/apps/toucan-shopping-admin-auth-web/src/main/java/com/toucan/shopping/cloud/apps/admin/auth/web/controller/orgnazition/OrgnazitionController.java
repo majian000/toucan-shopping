@@ -68,95 +68,12 @@ public class OrgnazitionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/orgnazition/listPage", functionServiceAPI);
-
-        return "pages/orgnazition/list.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-
-        return "pages/orgnazition/add.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-
-            super.initSelectApp(request,toucan, appServiceAPI);
-
-            Orgnazition entity = new Orgnazition();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = orgnazitionServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<OrgnazitionVO> orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),OrgnazitionVO.class);
-                    if(!CollectionUtils.isEmpty(orgnazitions))
-                    {
-                        //查询上级机构名称
-                        OrgnazitionVO orgnazitionVO = new OrgnazitionVO();
-                        BeanUtils.copyProperties(orgnazitionVO,orgnazitions.get(0));
-                        Orgnazition queryParentOrgnazition = new Orgnazition();
-                        queryParentOrgnazition.setId(orgnazitionVO.getPid());
-                        requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
-                        resultObjectVO = orgnazitionServiceAPI.findById(requestJsonVO);
-                        if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                            List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
-                            if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
-                                orgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
-                            }
-                        }
-
-                        //设置关联应用选中
-                        Object appsObject = request.getAttribute("apps");
-                        if(appsObject!=null) {
-                            List<AppVO> appVos = (List<AppVO>) appsObject;
-                            if(!CollectionUtils.isEmpty(orgnazitionVO.getOrgnazitionApps()))
-                            {
-                                for(OrgnazitionApp orgnazitionApp:orgnazitionVO.getOrgnazitionApps())
-                                {
-                                    for(AppVO aa:appVos)
-                                    {
-                                        if(orgnazitionApp.getAppCode().equals(aa.getCode()))
-                                        {
-                                            aa.setChecked(true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        request.setAttribute("model",orgnazitionVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/orgnazition/edit.html";
-    }
 
 
 

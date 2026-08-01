@@ -52,45 +52,9 @@ public class OperateLogController extends UIController {
     @Autowired
     private AppServiceAPI appServiceAPI;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        super.initSelectApp(request,toucan, appServiceAPI);
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/operateLog/listPage", functionServiceAPI);
-
-        return "pages/operateLog/list.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/showPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            OperateLogVO operateLogVO = new OperateLogVO();
-            operateLogVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, operateLogVO);
-            ResultObjectVO resultObjectVO = operateLogServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<OperateLogVO> operateLogVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),OperateLogVO.class);
-                    if(!CollectionUtils.isEmpty(operateLogVOS))
-                    {
-                        request.setAttribute("model",operateLogVOS.get(0));
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/operateLog/show.html";
-    }
 
 
     /**

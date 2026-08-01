@@ -58,52 +58,11 @@ public class AppController extends UIController {
     private AdminAppServiceAPI adminAppServiceAPI;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM, permissions = {"pms:system:app:list"})
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/app/listPage", functionServiceAPI);
-
-        return "pages/app/list.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage()
-    {
-        return "pages/app/add.html";
-    }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            App app = new App();
-            app.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
-            ResultObjectVO resultObjectVO = appServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<App> apps = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
-                    if(!CollectionUtils.isEmpty(apps))
-                    {
-                        request.setAttribute("model",apps.get(0));
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/app/edit.html";
-    }
 
 
     /**

@@ -73,96 +73,13 @@ public class FunctionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/function/listPage", functionServiceAPI);
-
-        return "pages/function/list.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-
-        return "pages/function/add.html";
-    }
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/batchAddPage",method = RequestMethod.GET)
-    public String batchAddPage(HttpServletRequest request)
-    {
-        super.initSelectApp(request,toucan, appServiceAPI);
 
-
-        return "pages/function/batchAdd.html";
-    }
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            Function entity = new Function();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = functionServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
-                    if(!CollectionUtils.isEmpty(functions))
-                    {
-                        FunctionVO functionVO = new FunctionVO();
-                        BeanUtils.copyProperties(functionVO,functions.get(0));
-                        //如果是顶级节点,上级节点就是所属应用
-                        if(functionVO.getPid().longValue()==-1)
-                        {
-                            App queryApp = new App();
-                            queryApp.setCode(functionVO.getAppCode());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryApp);
-                            resultObjectVO = appServiceAPI.findByCode(requestJsonVO);
-                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                                App app = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
-                                if(app!=null) {
-                                    functionVO.setParentName(app.getCode()+" "+ app.getName());
-                                }
-                            }
-                        }else{
-                            Function queryParentFunction = new Function();
-                            queryParentFunction.setId(functionVO.getPid());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentFunction);
-                            resultObjectVO = functionServiceAPI.findById(requestJsonVO);
-                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                                List<Function> parentFunctionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
-                                if(!CollectionUtils.isEmpty(parentFunctionList)) {
-                                    functionVO.setParentName(parentFunctionList.get(0).getName());
-                                }
-                            }
-                        }
-                        request.setAttribute("model",functionVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/function/edit.html";
-    }
 
 
 

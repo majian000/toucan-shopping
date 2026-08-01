@@ -57,18 +57,6 @@ public class DictCategoryController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/dictCategory/listPage", functionServiceAPI);
-        return "pages/dict/dictCategory/list.html";
-    }
 
 
 
@@ -189,14 +177,6 @@ public class DictCategoryController extends UIController {
         }
     }
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        return "pages/dict/dictCategory/add.html";
-    }
 
 
 
@@ -226,36 +206,6 @@ public class DictCategoryController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Integer id)
-    {
-        try {
-            super.initSelectApp(request,toucan, appServiceAPI);
-
-            DictCategoryVO dictCategory = new DictCategoryVO();
-            dictCategory.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
-            ResultObjectVO resultObjectVO = dictCategoryServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-
-                    List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
-                    if(!CollectionUtils.isEmpty(dictCategoryVOS))
-                    {
-                        dictCategory = dictCategoryVOS.get(0);
-                        request.setAttribute("model",dictCategory);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/dict/dictCategory/edit.html";
-    }
 
 
 
