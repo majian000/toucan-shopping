@@ -1088,34 +1088,6 @@ public class FunctionBusinessService {
     }
 
 
-    /**
-     * 查询指定节点的所有子孙节点，返回 functionId 列表
-     */
-    @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryDescendants(RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            Function query = JSONObject.parseObject(requestJsonVO.getEntityJson(), Function.class);
-            if(query.getId() == null) {
-                throw new IllegalArgumentException("id为空");
-            }
-            List<FunctionTreeVO> children = new LinkedList<>();
-            functionService.queryFunctionTreeChildren(children, query);
-            List<String> functionIds = children.stream()
-                    .map(FunctionTreeVO::getFunctionId)
-                    .collect(Collectors.toList());
-            resultObjectVO.setData(functionIds);
-        }catch(BusinessValidationException e){
-            return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请稍后重试");
-        }
-        return resultObjectVO;
-    }
 
 
 }

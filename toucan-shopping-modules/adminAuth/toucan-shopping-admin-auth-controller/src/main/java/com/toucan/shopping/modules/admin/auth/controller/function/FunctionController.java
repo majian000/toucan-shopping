@@ -260,16 +260,5 @@ public class FunctionController {
     }
 
 
-    /**
-     * 查询指定节点的所有子孙节点(functionId列表)
-     * @param requestJsonVO 包含 id(父节点ID) 和 appCode
-     * @return
-     */
-    @RequestMapping(value = "/query/descendants",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryDescendants(@RequestBody RequestJsonVO requestJsonVO)
-    {
-        return functionBusinessService.queryDescendants(requestJsonVO);
-    }
 
 }

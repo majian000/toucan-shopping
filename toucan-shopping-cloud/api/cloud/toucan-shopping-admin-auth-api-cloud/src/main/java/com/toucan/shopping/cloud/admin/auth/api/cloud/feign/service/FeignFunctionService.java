@@ -160,13 +160,6 @@ public interface FeignFunctionService extends FunctionServiceAPI {
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
-    /**
-     * 查询指定节点的所有子孙节点
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/descendants",method = RequestMethod.POST)
-    ResultObjectVO queryDescendants(@RequestBody RequestJsonVO requestJsonVO);
 
 
 }
