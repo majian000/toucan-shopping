@@ -85,10 +85,10 @@ public class AdminLoginHistoryController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AdminLoginHistoryPageInfo pageInfo) {
+    public TableVO listPage(HttpServletRequest request, @RequestBody AdminLoginHistoryPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);

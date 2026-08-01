@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
 // 应用列表
-export function listApp(params) {
-  return request({ url: '/app/list', method: 'post', data: params })
+export function listApp(data) {
+  return request({ url: '/app/list', method: 'post', data })
 }
 
 // 保存应用

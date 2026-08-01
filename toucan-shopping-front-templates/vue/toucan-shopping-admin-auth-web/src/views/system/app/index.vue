@@ -3,7 +3,7 @@
     <h2 class="page-title">{{ route.meta.title }}</h2>
 
     <el-card shadow="never" class="search-card">
-      <el-form :model="searchForm" inline>
+      <el-form :model="searchForm" inline @keyup.enter="handleSearch">
         <el-form-item label="应用编码">
           <el-input v-model="searchForm.code" placeholder="请输入应用编码" clearable style="width:180px" />
         </el-form-item>
@@ -119,6 +119,7 @@ watch(() => pagination.size, () => { pagination.page = 1; fetchData() })
 
 const dialogVisible = ref(false)
 const isEdit = ref(false)
+const editingId = ref(null)
 const submitLoading = ref(false)
 const formRef = ref(null)
 const dialogTitle = computed(() => isEdit.value ? '编辑应用' : '新增应用')

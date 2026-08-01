@@ -266,9 +266,9 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:delete"})
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -279,7 +279,7 @@ public class FunctionController extends UIController {
                 return resultObjectVO;
             }
             Function entity =new Function();
-            entity.setId(Long.parseLong(id));
+            // id from @RequestBody
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(entity);
@@ -332,7 +332,7 @@ public class FunctionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
     @RequestMapping(value = "/query/app/function/tree")
     @ResponseBody
     public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,FunctionTreeVO functionTreeVO)
@@ -408,7 +408,7 @@ public class FunctionController extends UIController {
      * @param roleId
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
     @RequestMapping(value = "/query/role/function/tree/{appCode}/{roleId}",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String id)

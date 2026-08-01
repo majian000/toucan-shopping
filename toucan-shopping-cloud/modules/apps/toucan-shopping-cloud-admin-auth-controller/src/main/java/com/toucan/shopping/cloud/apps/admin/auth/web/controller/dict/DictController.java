@@ -405,9 +405,9 @@ public class DictController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:delete"})
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -418,7 +418,7 @@ public class DictController extends UIController {
                 return resultObjectVO;
             }
             Dict entity =new Dict();
-            entity.setId(Long.parseLong(id));
+            // id from @RequestBody
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
 
@@ -440,7 +440,7 @@ public class DictController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:batch-delete-api"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:batch-delete-api"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Dict> dicts)

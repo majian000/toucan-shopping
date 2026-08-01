@@ -185,7 +185,7 @@ public class RoleController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
     @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryRoleTree(HttpServletRequest request,@RequestBody AdminAppVO entity)
@@ -319,7 +319,7 @@ public class RoleController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:list"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:list"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(RolePageInfo pageInfo)
@@ -356,10 +356,10 @@ public class RoleController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:delete"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -370,7 +370,7 @@ public class RoleController extends UIController {
                 return resultObjectVO;
             }
             Role role =new Role();
-            role.setId(Long.parseLong(id));
+            // id from @RequestBody
             role.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(role);
@@ -394,7 +394,7 @@ public class RoleController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:batch-delete"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:batch-delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)

@@ -1,19 +1,19 @@
 import request from '@/utils/request'
 
 export function listDict(data) {
-  return request({ url: '/system/dict/list', method: 'post', data })
+  return request({ url: '/dict/tree/table/by/pid', method: 'post', data })
 }
 
 export function addDict(data) {
-  return request({ url: '/system/dict/save', method: 'post', data })
+  return request({ url: '/dict/save', method: 'post', data })
 }
 
 export function updateDict(data) {
-  return request({ url: '/system/dict/update', method: 'post', data })
+  return request({ url: '/dict/update', method: 'post', data })
 }
 
 export function delDict(id) {
-  return request({ url: '/system/dict/delete', method: 'post', data: { id } })
+  return request({ url: '/dict/delete', method: 'post', data: { id } })
 }
 
 export function queryDictTree(data) {

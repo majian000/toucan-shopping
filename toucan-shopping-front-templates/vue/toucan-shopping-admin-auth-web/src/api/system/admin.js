@@ -9,7 +9,7 @@ export function postList() {
 }
 
 export function listAdmin(data) {
-  return request({ url: '/system/admin/list', method: 'post',  data })
+  return request({ url: '/admin/list', method: 'post',  data })
 }
 
 export function getAdmin(adminId) {

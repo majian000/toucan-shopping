@@ -255,9 +255,9 @@ public class OrgnazitionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:org:delete"})
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -268,7 +268,7 @@ public class OrgnazitionController extends UIController {
                 return resultObjectVO;
             }
             Orgnazition entity =new Orgnazition();
-            entity.setId(Long.parseLong(id));
+            // id from @RequestBody
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(entity);
@@ -287,7 +287,7 @@ public class OrgnazitionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
     @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
@@ -336,7 +336,7 @@ public class OrgnazitionController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
     @RequestMapping(value = "/query/admin/orgnazition/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAdminOrgnazitionTree(HttpServletRequest request,@RequestBody AdminAppVO entity)

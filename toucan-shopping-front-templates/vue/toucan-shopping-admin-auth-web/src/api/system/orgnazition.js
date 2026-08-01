@@ -14,7 +14,7 @@ export function delOrgnazition(id) {
 
 // 懒加载：根据父ID获取组织树
 export function listOrgnazitionByPid(data) {
-  return request({ url: '/system/orgnazition/tree/table/by/pid', method: 'post', data })
+  return request({ url: '/orgnazition/tree/table', method: 'post', data })
 }
 
 // 获取完整组织树（表格 + 上级机构下拉框共用）

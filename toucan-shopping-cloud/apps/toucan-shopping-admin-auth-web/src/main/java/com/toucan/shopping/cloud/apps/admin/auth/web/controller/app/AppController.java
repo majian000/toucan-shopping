@@ -162,10 +162,10 @@ public class AppController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AppPageInfo pageInfo)
+    public TableVO listPage(HttpServletRequest request, @RequestBody AppPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -193,10 +193,10 @@ public class AppController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -207,7 +207,7 @@ public class AppController extends UIController {
                 return resultObjectVO;
             }
             App app =new App();
-            app.setId(Long.parseLong(id));
+            // id from @RequestBody
             app.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(app);
@@ -230,7 +230,7 @@ public class AppController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AppVO> appVOs)

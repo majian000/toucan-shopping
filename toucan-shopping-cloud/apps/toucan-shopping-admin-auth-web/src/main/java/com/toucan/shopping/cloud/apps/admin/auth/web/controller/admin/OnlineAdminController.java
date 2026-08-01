@@ -70,10 +70,10 @@ public class OnlineAdminController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AdminAppPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody AdminAppPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -107,7 +107,7 @@ public class OnlineAdminController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/logout/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO logout(HttpServletRequest request,  @PathVariable String id)
@@ -121,7 +121,7 @@ public class OnlineAdminController extends UIController {
                 return resultObjectVO;
             }
             AdminApp adminApp =new AdminApp();
-            adminApp.setId(Long.parseLong(id));
+            // id from @RequestBody
             RequestJsonVO requestJsonVO=RequestJsonVOGenerator.generator(toucan.getAppCode(),adminApp);
             resultObjectVO = adminAppServiceAPI.logout(requestJsonVO);
         }catch(Exception e)
