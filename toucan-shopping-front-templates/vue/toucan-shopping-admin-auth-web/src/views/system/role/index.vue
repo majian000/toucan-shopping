@@ -152,18 +152,6 @@
               <el-tag size="small" :type="typeIcon[data.type]?.tagType" class="perm-node-tag">
                 {{ typeIcon[data.type]?.label || data.type }}
               </el-tag>
-              <template v-if="data.isParent">
-                <el-icon
-                  class="perm-select-all"
-                  title="全选子节点"
-                  @click.stop="handleNodeSelectAll(data)"
-                ><CircleCheck /></el-icon>
-                <el-icon
-                  class="perm-deselect-all"
-                  title="取消全选"
-                  @click.stop="handleNodeDeselectAll(data)"
-                ><RemoveFilled /></el-icon>
-              </template>
             </span>
           </template>
         </el-tree>
@@ -183,8 +171,8 @@
 import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, RemoveFilled } from '@element-plus/icons-vue'
-import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache, getFunctionDescendants } from '@/api/system/role'
+import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid } from '@element-plus/icons-vue'
+import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -416,25 +404,6 @@ function loadPermTree(node, resolve) {
   })
 }
 
-// 全选子节点：加载所有子孙并勾选
-async function handleNodeSelectAll(data) {
-  try {
-    const res = await getFunctionDescendants(data.id)
-    const descIds = res.data || []
-    permTreeRef.value?.setChecked(data.functionId, true, false)
-    descIds.forEach(id => permTreeRef.value?.setChecked(id, true, false))
-  } catch { /* ignore */ }
-}
-
-// 取消全选：加载所有子孙并取消勾选
-async function handleNodeDeselectAll(data) {
-  try {
-    const res = await getFunctionDescendants(data.id)
-    const descIds = res.data || []
-    permTreeRef.value?.setChecked(data.functionId, false, false)
-    descIds.forEach(id => permTreeRef.value?.setChecked(id, false, false))
-  } catch { /* ignore */ }
-}
 
 async function handleAssignPermission(row) {
   permRoleId.value = row.roleId
@@ -568,8 +537,6 @@ function handleRefreshCache(row) {
       .perm-node-icon { font-size: 16px; flex-shrink: 0; }
       .perm-node-label { font-size: 14px; }
       .perm-node-tag { flex-shrink: 0; margin-left: 4px; }
-      .perm-select-all { color: #67c23a; cursor: pointer; margin-left: 6px; font-size: 16px; &:hover { opacity: 0.7; } }
-      .perm-deselect-all { color: #f56c6c; cursor: pointer; margin-left: 2px; font-size: 16px; &:hover { opacity: 0.7; } }
     }
     .perm-stat {
       margin-top: 12px;

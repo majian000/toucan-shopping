@@ -32,10 +32,6 @@ export function saveRoleFunctions(data) {
   return request({ url: '/role/connect/functions', method: 'post', data })
 }
 
-export function getFunctionDescendants(nodeId) {
-  return request({ url: '/function/query/descendants', method: 'post', data: { id: nodeId } })
-}
-
 export function refreshRoleFunctionCache(roleId) {
   return request({ url: '/role/refresh/cache/functions', method: 'post', data: { roleId } })
 }
