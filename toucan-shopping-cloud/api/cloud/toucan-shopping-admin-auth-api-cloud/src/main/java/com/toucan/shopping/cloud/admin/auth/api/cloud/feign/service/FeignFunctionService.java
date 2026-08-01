@@ -62,7 +62,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id",method = RequestMethod.POST)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -73,7 +73,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo);
 
 
@@ -91,7 +91,7 @@ public interface FeignFunctionService extends FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids",method = RequestMethod.POST)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 

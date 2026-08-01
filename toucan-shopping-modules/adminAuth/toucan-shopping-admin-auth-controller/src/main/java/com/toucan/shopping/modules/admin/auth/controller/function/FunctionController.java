@@ -166,7 +166,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteById(requestVo);
@@ -180,7 +180,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/by/app/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteByAppCode(requestVo);
@@ -192,7 +192,7 @@ public class FunctionController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.deleteByIds(requestVo);

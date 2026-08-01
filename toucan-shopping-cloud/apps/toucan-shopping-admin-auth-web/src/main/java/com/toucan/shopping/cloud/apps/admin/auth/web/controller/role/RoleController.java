@@ -337,7 +337,7 @@ public class RoleController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:batch-delete"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)
     {

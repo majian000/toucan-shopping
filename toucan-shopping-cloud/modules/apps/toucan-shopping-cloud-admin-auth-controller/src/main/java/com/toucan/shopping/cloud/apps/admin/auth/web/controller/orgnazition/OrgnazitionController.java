@@ -396,7 +396,7 @@ public class OrgnazitionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:org:batch-delete-api"})
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<OrgnazitionVO> OrgnazitionVOS)
     {

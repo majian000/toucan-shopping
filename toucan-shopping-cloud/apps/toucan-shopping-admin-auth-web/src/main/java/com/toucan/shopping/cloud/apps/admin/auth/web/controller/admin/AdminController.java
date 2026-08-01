@@ -359,7 +359,7 @@ public class AdminController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:batch-delete-api"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AdminVO> adminVos)
     {

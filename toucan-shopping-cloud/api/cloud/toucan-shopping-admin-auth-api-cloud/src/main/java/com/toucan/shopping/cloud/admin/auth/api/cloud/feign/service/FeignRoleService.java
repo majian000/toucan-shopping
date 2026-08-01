@@ -56,7 +56,7 @@ public interface FeignRoleService extends RoleServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id",method = RequestMethod.POST)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
@@ -76,7 +76,7 @@ public interface FeignRoleService extends RoleServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids",method = RequestMethod.POST)
     ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 
 

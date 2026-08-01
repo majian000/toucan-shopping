@@ -150,7 +150,7 @@ public class AppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         return appBusinessService.deleteById(requestVo);
@@ -162,7 +162,7 @@ public class AppController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         return appBusinessService.deleteByIds(requestVo);

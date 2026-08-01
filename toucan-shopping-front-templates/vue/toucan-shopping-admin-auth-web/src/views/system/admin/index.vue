@@ -173,20 +173,39 @@
     <el-dialog
       v-model="roleDialogVisible"
       title="选择角色"
-      width="520px"
+      width="560px"
       :close-on-click-modal="false"
       destroy-on-close
     >
-      <div v-loading="roleTreeLoading" style="min-height:200px">
-        <el-tree
-          ref="roleTreeRef"
-          :data="roleTreeData"
-          show-checkbox
-          node-key="id"
-          :props="{ label: 'title', children: 'children' }"
-          :default-checked-keys="roleCheckedKeys"
-          default-expand-all
-        />
+      <div v-loading="roleTreeLoading">
+        <!-- 已选角色列表 -->
+        <div class="checked-roles-bar" v-if="checkedRoleInfos.length > 0">
+          <span class="checked-roles-label">已选角色：</span>
+          <el-tag
+            v-for="r in checkedRoleInfos"
+            :key="r.id"
+            size="small"
+            closable
+            @close="handleUncheckRole(r)"
+          >
+            {{ r.appName ? r.appName + '（' + r.appCode + '）' : r.appCode }} / {{ r.title }}
+          </el-tag>
+        </div>
+        <div class="checked-roles-bar checked-roles-bar--empty" v-else>
+          <span class="text-muted">未选择任何角色（提交空将清空角色）</span>
+        </div>
+
+        <div style="max-height:340px;overflow-y:auto">
+          <el-tree
+            ref="roleTreeRef"
+            :data="roleTreeData"
+            show-checkbox
+            node-key="id"
+            :props="{ label: 'title', children: 'children' }"
+            default-expand-all
+            @check="handleRoleTreeCheck"
+          />
+        </div>
       </div>
       <template #footer>
         <el-button @click="roleDialogVisible = false">取消</el-button>
@@ -302,7 +321,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, Folder } from '@element-plus/icons-vue'
@@ -546,15 +565,104 @@ const roleTreeData = ref([])
 const roleTreeRef = ref(null)
 const roleCheckedKeys = ref([])
 const currentRoleAdminId = ref(null)
+const checkedRoleInfos = ref([])
 
-// 递归收集已选中节点ID
+// 应用编码 -> 应用名称映射（从根节点 title 解析，格式："appCode appName"）
+const appNameMap = {}
+
+// 从树节点提取角色信息（叶子节点才有 roleId），附带应用名称
+function extractRoleInfo(node) {
+  const isLeaf = !node.children || node.children.length === 0
+  if (isLeaf && node.roleId) {
+    return {
+      id: node.id,
+      roleId: node.roleId,
+      appCode: node.appCode,
+      appName: appNameMap[node.appCode] || '',
+      title: node.title
+    }
+  }
+  return null
+}
+
+// 递归收集叶子节点信息
+function collectLeafRoleInfos(nodes, keySet, result) {
+  for (const node of nodes) {
+    if (keySet.has(node.id)) {
+      const info = extractRoleInfo(node)
+      if (info) result.push(info)
+    }
+    if (node.children && node.children.length > 0) {
+      collectLeafRoleInfos(node.children, keySet, result)
+    }
+  }
+}
+
+// 树选中状态变化时更新已选角色列表
+function handleRoleTreeCheck(_node, treeState) {
+  const idSet = new Set(treeState.checkedKeys)
+  const infos = []
+  collectLeafRoleInfos(roleTreeData.value, idSet, infos)
+  checkedRoleInfos.value = infos
+}
+
+// 点击标签关闭按钮取消勾选
+async function handleUncheckRole(role) {
+  const tree = roleTreeRef.value
+  if (!tree) return
+  tree.setChecked(role.id, false, false)
+  // setChecked 是程序化调用，需手动同步已选角色列表
+  await nextTick()
+  syncCheckedRoleInfos()
+}
+
+// 同步已选角色（初始化后调用）
+function syncCheckedRoleInfos() {
+  const tree = roleTreeRef.value
+  if (!tree) return
+  const checkedKeys = tree.getCheckedKeys()
+  const idSet = new Set(checkedKeys)
+  const infos = []
+  collectLeafRoleInfos(roleTreeData.value, idSet, infos)
+  checkedRoleInfos.value = infos
+}
+
+// 从根节点 title 解析应用名称映射（title 格式："appCode appName"，如 "10001002 商城后台"）
+function buildAppNameMap(treeData) {
+  for (const node of treeData) {
+    if (node.title) {
+      const idx = node.title.indexOf(' ')
+      if (idx > 0) {
+        const code = node.title.substring(0, idx)
+        const name = node.title.substring(idx + 1)
+        appNameMap[code] = name
+      }
+    }
+  }
+}
+
+// 递归收集已选中节点ID（只收集叶子节点，避免父节点因联动导致全选）
 function collectCheckedKeys(nodes, ids) {
   for (const node of nodes) {
-    if (node.state && node.state.checked) {
+    const isLeaf = !node.children || node.children.length === 0
+    const isChecked = node.checked === true || node.checked === 'true'
+      || (node.state && node.state.checked)
+    // 只收集叶子节点的选中状态，父节点的 checked 可能是因部分子节点选中导致的
+    if (isChecked && isLeaf) {
       ids.push(node.id)
     }
     if (node.children && node.children.length > 0) {
       collectCheckedKeys(node.children, ids)
+    }
+  }
+}
+
+// 递归清除节点上的 checked 属性，避免 el-tree 将其作为初始选中状态（统一由 default-checked-keys 控制）
+function stripChecked(nodes) {
+  for (const node of nodes) {
+    delete node.checked
+    if (node.children && node.children.length > 0) {
+      stripChecked(node.children)
     }
   }
 }
@@ -577,13 +685,22 @@ function handleRole(row) {
     return
   }
   currentRoleAdminId.value = row.adminId
+  // 先清空旧数据再打开对话框，防止树组件用旧数据渲染
+  roleTreeData.value = []
+  roleCheckedKeys.value = []
   roleDialogVisible.value = true
   roleTreeLoading.value = true
-  queryAdminRoleTree(row.adminId).then(res => {
+  queryAdminRoleTree(row.adminId).then(async res => {
     if (res.code === 1 || res.data) {
       roleTreeData.value = res.data || []
+      buildAppNameMap(roleTreeData.value)
       roleCheckedKeys.value = []
       collectCheckedKeys(roleTreeData.value, roleCheckedKeys.value)
+      stripChecked(roleTreeData.value)
+      // 数据加载后通过 setCheckedKeys 精确控制选中状态
+      await nextTick()
+      roleTreeRef.value?.setCheckedKeys(roleCheckedKeys.value)
+      syncCheckedRoleInfos()
     }
   }).catch(() => {
     roleTreeData.value = []
@@ -599,14 +716,10 @@ async function handleSubmitRole() {
   const idSet = new Set(checkedNodes.map(n => n.id))
   const rolesArray = []
   collectNodesFromTree(roleTreeData.value, idSet, rolesArray)
-  if (rolesArray.length === 0) {
-    ElMessage.warning('请选择角色')
-    return
-  }
   roleTreeLoading.value = true
   try {
     await connectRoles({ roles: rolesArray, adminId: currentRoleAdminId.value })
-    ElMessage.success('角色关联成功')
+    ElMessage.success(rolesArray.length === 0 ? '已清空角色' : '角色关联成功')
     roleDialogVisible.value = false
     fetchData()
   } catch {
@@ -866,5 +979,31 @@ async function handleSubmitInfo() {
 .org-tree-node {
   display: flex; align-items: center; gap: 6px; font-size: 14px;
   .el-icon { color: $primary; }
+}
+
+.checked-roles-bar {
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  background: #f0f9eb;
+  border: 1px solid #e1f3d8;
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+  .checked-roles-label {
+    font-size: 13px;
+    color: #67c23a;
+    font-weight: 600;
+    line-height: 22px;
+    flex-shrink: 0;
+  }
+  &--empty {
+    background: #fafafa;
+    border-color: #ebeef5;
+    .text-muted { font-size: 13px; }
+  }
 }
 </style>
