@@ -84,3 +84,8 @@ export function listOrgnazitionTree() {
 export function queryAdminOrgnazitionTree(data) {
   return request({ url: '/orgnazition/query/admin/orgnazition/tree', method: 'post', data })
 }
+
+// 查询管理员关联的应用列表
+export function listAdminApps(adminId) {
+  return request({ url: '/admin/apps/' + adminId, method: 'get' })
+}

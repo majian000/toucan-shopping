@@ -64,13 +64,22 @@
         stripe
         v-loading="loading"
         @selection-change="handleSelectionChange"
+        :default-sort="{ prop: 'createDate', order: 'descending' }"
+        @sort-change="handleSortChange"
         style="width:100%"
       >
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="id" label="主键" width="80" />
+        <el-table-column prop="id" label="主键" width="200" />
         <el-table-column prop="username" label="账号" width="100" />
         <el-table-column prop="adminId" label="账号ID" width="170" show-overflow-tooltip />
-        <el-table-column prop="appNames" label="关联应用" width="140" show-overflow-tooltip />
+        <el-table-column label="关联应用" width="180">
+          <template #default="{ row }">
+            <div class="app-tags" v-if="row.appNames">
+              <el-tag v-for="(name, i) in row.appNames.split(',')" :key="i" size="small" type="info" style="margin:1px 2px">{{ name }}</el-tag>
+            </div>
+            <span v-else class="text-muted">--</span>
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="85" align="center">
           <template #default="{ row }">
             <el-tag :type="row.enableStatus === 1 || row.enableStatus === '1' ? 'success' : 'danger'" size="small">
@@ -90,7 +99,7 @@
         <el-table-column prop="idCard" label="身份证号" width="175" show-overflow-tooltip />
         <el-table-column prop="birthday" label="出生日期" width="165" />
         <el-table-column prop="address" label="地址" width="200" show-overflow-tooltip />
-        <el-table-column prop="createDate" label="创建时间" width="165" />
+        <el-table-column prop="createDate" label="创建时间" width="165" sortable="custom" />
         <el-table-column prop="createAdminUsername" label="创建人" width="100" />
         <el-table-column prop="updateDate" label="修改时间" width="165" />
         <el-table-column prop="updateAdminUsername" label="修改人" width="100" />
@@ -189,33 +198,42 @@
     <el-dialog
       v-model="orgDialogVisible"
       title="选择组织机构"
-      width="520px"
+      width="600px"
       :close-on-click-modal="false"
       destroy-on-close
     >
-      <el-form :model="orgForm" label-width="80px" v-loading="orgTreeLoading">
-        <el-form-item label="关联应用">
-          <el-select v-model="orgForm.appCode" placeholder="请选择应用" style="width:100%" :loading="appLoading" @change="handleOrgAppChange">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
+      <div v-loading="orgTreeLoading">
+        <div class="org-tree-toolbar">
+          <el-select v-model="orgForm.appCode" placeholder="选择应用" style="width:220px" @change="handleOrgAppChange">
+            <el-option v-for="a in orgAppOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
           </el-select>
-        </el-form-item>
-        <el-form-item v-if="orgForm.appCode">
-          <div style="min-height:200px">
-            <el-tree
-              ref="orgTreeRef"
-              :data="orgTreeData"
-              show-checkbox
-              node-key="id"
-              :props="{ label: 'title', children: 'children' }"
-              :default-checked-keys="orgCheckedKeys"
-              default-expand-all
-            />
-          </div>
-        </el-form-item>
-      </el-form>
+          <el-input v-model="orgFilterText" placeholder="搜索组织机构..." :prefix-icon="Search" clearable style="width:200px" />
+        </div>
+        <div v-if="orgForm.appCode" class="org-tree-body">
+          <el-tree
+            ref="orgTreeRef"
+            :data="orgTreeData"
+            show-checkbox
+            node-key="id"
+            :props="{ label: 'title', children: 'children' }"
+            :default-checked-keys="orgCheckedKeys"
+            :filter-node-method="filterOrgNode"
+            default-expand-all
+            highlight-current
+          >
+            <template #default="{ node }">
+              <span class="org-tree-node">
+                <el-icon><Folder /></el-icon>
+                <span>{{ node.label }}</span>
+              </span>
+            </template>
+          </el-tree>
+        </div>
+        <el-empty v-if="orgForm.appCode && orgTreeData.length === 0" description="暂无组织机构数据" :image-size="80" />
+      </div>
       <template #footer>
         <el-button @click="orgDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="orgTreeLoading" @click="handleSubmitOrg">确定</el-button>
+        <el-button type="primary" :loading="orgTreeLoading" @click="handleSubmitOrg" :disabled="!orgForm.appCode">确定</el-button>
       </template>
     </el-dialog>
 
@@ -287,10 +305,10 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen } from '@element-plus/icons-vue'
+import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, Folder } from '@element-plus/icons-vue'
 import {
   listAdmin, saveAdmin, updateAdmin, delAdmin, batchDelAdmin, resetAdminPwd,
-  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listApp,
+  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listApp, listAdminApps,
   listOrgnazitionTree, queryAdminOrgnazitionTree, roleList
 } from '@/api/system/admin'
 
@@ -318,6 +336,14 @@ const searchForm = reactive({
 
 // ========== 分页 ==========
 const pagination = reactive({ page: 1, size: 15 })
+const sortField = ref('createDate')
+const sortOrder = ref('desc')
+
+function handleSortChange({ prop, order }) {
+  if (prop) sortField.value = prop
+  sortOrder.value = order === 'ascending' ? 'asc' : 'desc'
+  pagination.page = 1; fetchData()
+}
 
 // ========== 选择 ==========
 const selectedIds = ref([])
@@ -330,6 +356,8 @@ async function fetchData() {
     const params = {
       page: pagination.page,
       size: pagination.size,
+      sortField: sortField.value,
+      sortOrder: sortOrder.value,
       adminId: searchForm.adminId || undefined,
       username: searchForm.username || undefined,
       enableStatus: searchForm.enableStatus != null ? searchForm.enableStatus : undefined,
@@ -597,6 +625,17 @@ const orgTreeData = ref([])
 const orgTreeRef = ref(null)
 const orgCheckedKeys = ref([])
 const currentOrgAdminId = ref(null)
+const orgFilterText = ref('')
+const orgAppOptions = ref([])
+
+function filterOrgNode(value, data) {
+  if (!value) return true
+  return data.title.toLowerCase().includes(value.toLowerCase())
+}
+
+watch(orgFilterText, (val) => {
+  orgTreeRef.value?.filter(val)
+})
 const orgForm = reactive({ appCode: '' })
 
 function collectCheckedKeysFromTree(nodes, ids) {
@@ -621,12 +660,18 @@ function collectOrgNodesFromTree(nodes, keySet, result) {
   }
 }
 
-function handleOrgnazition(row) {
+async function handleOrgnazition(row) {
   currentOrgAdminId.value = row.adminId
   orgForm.appCode = ''
   orgTreeData.value = []
   orgCheckedKeys.value = []
+  try {
+    const res = await listAdminApps(row.adminId)
+    orgAppOptions.value = (res.data || []).map(a => ({ code: a.appCode || a.code, name: a.appName || a.name }))
+  } catch { orgAppOptions.value = [] }
   orgDialogVisible.value = true
+}
+}
 }
 
 function handleOrgAppChange(appCode) {
@@ -811,5 +856,21 @@ async function handleSubmitInfo() {
   :deep(.el-table) {
     th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; }
   }
+}
+.org-tree-toolbar {
+  display: flex; gap: 12px; align-items: center; margin-bottom: 16px;
+}
+
+.org-tree-body {
+  border: 1px solid $border-light; border-radius: 8px; padding: 12px;
+  max-height: 380px; overflow-y: auto; background: #fafbfc;
+}
+
+.app-tags { display: flex; flex-wrap: wrap; gap: 2px; }
+.text-muted { color: $text-placeholder; }
+
+.org-tree-node {
+  display: flex; align-items: center; gap: 6px; font-size: 14px;
+  .el-icon { color: $primary; }
 }
 </style>

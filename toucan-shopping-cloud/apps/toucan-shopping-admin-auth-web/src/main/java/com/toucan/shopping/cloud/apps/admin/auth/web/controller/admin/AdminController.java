@@ -77,6 +77,24 @@ public class AdminController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/apps/{adminId}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO appsByAdminId(HttpServletRequest request, @PathVariable String adminId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp adminApp = new AdminApp();
+            adminApp.setAdminId(adminId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminApp);
+            resultObjectVO = adminAppServiceAPI.queryAppListByAdminId(requestJsonVO);
+        } catch(Exception e) {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/selectOrgnazitionPage/{adminId}",method = RequestMethod.GET)
     public String orgnazitionPage(HttpServletRequest request,@PathVariable String adminId)
