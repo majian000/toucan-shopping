@@ -103,4 +103,12 @@ public interface RoleFunctionService {
      */
     List<RoleFunction> queryListByRoleId(String roleId);
 
+    /**
+     * 批量查询: 根据角色ID数组和应用编码查询角色-功能关联
+     * @param roleIdArray
+     * @param appCode
+     * @return
+     */
+    List<RoleFunction> findListByRoleIdsAndAppCode(String[] roleIdArray, String appCode);
+
 }

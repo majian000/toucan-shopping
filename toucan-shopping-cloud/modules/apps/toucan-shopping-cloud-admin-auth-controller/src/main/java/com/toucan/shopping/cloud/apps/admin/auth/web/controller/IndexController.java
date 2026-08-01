@@ -247,5 +247,43 @@ public class IndexController {
         return indexInfo;
     }
 
-}
 
+    /**
+     * 查询当前用户的权限标识列表(供Vue前端v-permission使用)
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/index/permissions",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO permissions(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = new AdminApp();
+            query.setAdminId(AdminLoginHolder.getCurrentAdminId());
+            query.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            ResultObjectVO functionsResult = functionServiceAPI.queryAdminAppFunctions(requestJsonVO);
+            if(functionsResult.isSuccess())
+            {
+                List<String> permissionList = new ArrayList<>();
+                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(functionsResult.getData()),FunctionVO.class);
+                if(functionVOList!=null) {
+                    for(FunctionVO f : functionVOList) {
+                        if(f.getPermission()!=null && !f.getPermission().isEmpty()) {
+                            permissionList.add(f.getPermission());
+                        }
+                    }
+                }
+                resultObjectVO.setData(permissionList);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
+
+}

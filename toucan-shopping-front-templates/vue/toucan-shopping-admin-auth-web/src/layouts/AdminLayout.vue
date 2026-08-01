@@ -5,8 +5,8 @@
       <div class="topbar-left" :class="{ 'topbar-left--side': appStore.layoutMode === 'side' }">
         <div class="logo" @click="goHome">
           <el-icon :size="22" color="#409eff"><Stamp /></el-icon>
-          <span class="logo-text" v-if="appStore.layoutMode === 'top'">Admin Framework</span>
-          <span class="logo-text logo-text--side" v-if="appStore.layoutMode === 'side'">Admin Framework</span>
+          <span class="logo-text" v-if="appStore.layoutMode === 'top'">权限中台</span>
+          <span class="logo-text logo-text--side" v-if="appStore.layoutMode === 'side'">权限中台</span>
         </div>
         <TopMenu
           v-if="appStore.layoutMode === 'top'"
@@ -23,26 +23,6 @@
           </span>
         </el-tooltip>
 
-        <!-- 消息通知 -->
-        <el-popover placement="bottom" :width="320" trigger="click" popper-class="notice-popover">
-          <template #reference>
-            <el-badge :value="unreadMsgCount" :hidden="unreadMsgCount === 0" class="notice-btn">
-              <el-icon :size="18"><Bell /></el-icon>
-            </el-badge>
-          </template>
-          <div class="notice-list">
-            <div class="notice-header"><span>消息通知</span><div class="notice-header-actions"><el-button type="primary" link size="small" @click="handleMarkAllRead">全部已读</el-button><el-button type="primary" link size="small" @click="goMessagePage">查看全部</el-button></div></div>
-            <div v-if="myNotices.length === 0" class="notice-empty">暂无消息</div>
-            <div v-for="item in pagedNotices" :key="item.id" class="notice-item" :class="{ unread: item.isRead === 0 }" @click="handleReadMsg(item)">
-              <div class="notice-dot" v-if="item.isRead === 0"></div>
-              <div class="notice-content"><div class="notice-title ellipsis">{{ item.messageTitle }}</div><div class="notice-time">{{ item.createDate }}</div></div>
-            </div>
-            <div class="notice-pagination" v-if="noticeTotal > noticePageSize">
-              <el-pagination v-model:current-page="noticePage" :page-size="noticePageSize" :total="noticeTotal" layout="prev, next" small background />
-            </div>
-          </div>
-        </el-popover>
-
         <!-- 用户下拉 -->
         <el-dropdown trigger="click" @command="handleUserCommand">
           <span class="user-info">
@@ -58,20 +38,6 @@
           </template>
         </el-dropdown>
       </div>
-
-      <!-- 消息详情弹窗 -->
-      <el-dialog v-model="msgDetailVisible" :title="msgDetail?.messageTitle" width="680px" destroy-on-close>
-        <div v-if="msgDetail" class="msg-detail">
-          <div class="detail-meta">
-            <span><el-icon><Clock /></el-icon> {{ msgDetail.createDate }}</span>
-            <el-tag v-if="msgDetail.isRead === 0" size="small" type="danger">未读</el-tag>
-            <el-tag v-else size="small" type="info">已读</el-tag>
-          </div>
-          <el-divider />
-          <div class="detail-content" v-html="msgDetail.messageContent || '--'"></div>
-        </div>
-        <template #footer><el-button @click="msgDetailVisible=false">关闭</el-button></template>
-      </el-dialog>
 
       <!-- 修改密码弹窗 -->
       <el-dialog v-model="passwordVisible" title="修改密码" width="440px" destroy-on-close>
@@ -115,7 +81,7 @@
 
     <!-- ========== 底部 ========== -->
     <footer class="al-footer">
-      <span>Copyright &copy; {{ new Date().getFullYear() }} Admin Framework. All Rights Reserved.</span>
+      <span>Copyright &copy; {{ new Date().getFullYear() }} 权限中台. All Rights Reserved.</span>
     </footer>
   </div>
 </template>
@@ -130,14 +96,13 @@ import { usePermissionStore } from '@/store/modules/permission'
 import TopMenu from '@/components/TopMenu/index.vue'
 import SideMenu from '@/components/SideMenu/index.vue'
 import TabBar from '@/components/TabBar/index.vue'
-import { Stamp, ArrowDown, UserFilled, Fold, Expand, Bell } from '@element-plus/icons-vue'
+import { Stamp, ArrowDown, UserFilled, Fold, Expand } from '@element-plus/icons-vue'
 import { removeToken } from '@/utils/auth'
 import { getPermissions } from '@/api/permission'
 import { filterMenuByPerms } from '@/utils/menuFilter'
 import { menuConfig } from '@/config/menu'
 import { getInfo, logout as logoutApi } from '@/api/login'
 import { updateMyPassword } from '@/api/system/admin'
-import { myMessageList, countUnreadMsg, markMsgRead, markMsgAllRead } from '@/api/system/adminMessageRecord'
 
 const route = useRoute()
 const router = useRouter()
@@ -159,32 +124,6 @@ function toggleLayout() {
   const next = appStore.layoutMode === 'top' ? 'side' : 'top'
   appStore.setLayoutMode(next)
 }
-
-// ========== 消息通知 ==========
-const myNotices = ref([])
-const unreadMsgCount = ref(0)
-const noticePage = ref(1)
-const noticePageSize = 5
-const noticeTotal = ref(0)
-const pagedNotices = computed(() => {
-  const start = (noticePage.value - 1) * noticePageSize
-  return myNotices.value.slice(start, start + noticePageSize)
-})
-
-async function fetchNotices() {
-  try { const r = await myMessageList({ page: 1, size: 20 }); myNotices.value = r.data?.list || r.data || []; noticeTotal.value = myNotices.value.length } catch {}
-  try { const r = await countUnreadMsg(); unreadMsgCount.value = r.data || 0 } catch {}
-}
-const msgDetailVisible = ref(false)
-const msgDetail = ref(null)
-function handleReadMsg(item) {
-  msgDetail.value = item; msgDetailVisible.value = true
-  if (item.isRead === 0) { markMsgRead(item.id); item.isRead = 1; unreadMsgCount.value = Math.max(0, unreadMsgCount.value - 1) }
-}
-async function handleMarkAllRead() {
-  try { await markMsgAllRead(); myNotices.value.forEach(n => n.isRead = 1); unreadMsgCount.value = 0 } catch {}
-}
-function goMessagePage() { tabsStore.openTab('/adminMessage/myMessage', '我的消息', 'MyMessages') }
 
 // ========== 修改密码 ==========
 const passwordVisible = ref(false)
@@ -315,8 +254,6 @@ onMounted(async () => {
   } catch { /* 忽略 */ } finally {
     loadingInstance.close()
   }
-  // 3. 加载消息通知
-  await fetchNotices()
 })
 
 watch(() => route.path, (newPath) => {

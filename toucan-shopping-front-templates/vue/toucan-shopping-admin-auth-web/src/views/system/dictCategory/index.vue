@@ -14,15 +14,15 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'system:dictCategory:list'" @click="handleSearch">搜索</el-button>
-          <el-button :icon="Refresh" v-permission="'system:dictCategory:list'" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'pms:dict:category:list'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" v-permission="'pms:dict:category:list'" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'system:dictCategory:add'" @click="handleAdd">新增分类</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'pms:dict:category:add'" @click="handleAdd">新增分类</el-button>
       </div>
 
       <el-table :data="list" border stripe v-loading="loading" style="width:100%">
@@ -41,8 +41,8 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'system:dictCategory:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'system:dictCategory:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:category:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:dict:category:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,8 +120,8 @@ async function fetchData() {
       enableStatus: searchForm.enableStatus !== '' ? searchForm.enableStatus : undefined
     }
     const res = await listDictCategory(params)
-    list.value = res.data.rows || res.data.list || []
-    tableTotal.value = res.data.total || 0
+    list.value = res.data || []
+    tableTotal.value = res.count || 0
   } finally {
     loading.value = false
   }

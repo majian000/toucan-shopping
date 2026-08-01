@@ -230,7 +230,7 @@ public class AdminController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:save"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody AdminVO entity)
@@ -270,7 +270,7 @@ public class AdminController extends UIController {
      * @param adminRoleVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:connect-roles"})
     @RequestMapping(value = "/connect/roles",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO connectRoles(HttpServletRequest request, @RequestBody AdminRoleVO adminRoleVO)
@@ -296,7 +296,7 @@ public class AdminController extends UIController {
      * @param adminOrgnazitionVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:connect-orgs"})
     @RequestMapping(value = "/connect/orgnazitions",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO connectOrgnazitions(HttpServletRequest request, @RequestBody AdminOrgnazitionVO adminOrgnazitionVO)
@@ -321,7 +321,7 @@ public class AdminController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:update-pwd"})
     @RequestMapping(value = "/update/password",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO updatePassword(HttpServletRequest request,@RequestBody AdminVO entity)
@@ -377,7 +377,7 @@ public class AdminController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request,@RequestBody AdminVO entity)
@@ -413,7 +413,7 @@ public class AdminController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:list"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO list(HttpServletRequest request, AdminPageInfo pageInfo)
@@ -446,7 +446,7 @@ public class AdminController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:delete"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -484,7 +484,7 @@ public class AdminController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:batch-delete-api"}, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AdminVO> adminVos)

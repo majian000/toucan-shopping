@@ -14,7 +14,7 @@
         <el-table-column prop="adminId" label="管理员ID" min-width="300" show-overflow-tooltip />
         <el-table-column label="操作" width="120" fixed="right">
           <template #default="{ row }">
-            <el-button type="danger" link size="small" :icon="SwitchButton" @click="handleForceLogout(row)">强制退出</el-button>
+            <el-button type="danger" link size="small" :icon="SwitchButton" v-permission="'pms:system:online:logout'" @click="handleForceLogout(row)">强制退出</el-button>
           </template>
         </el-table-column>
       </el-table>

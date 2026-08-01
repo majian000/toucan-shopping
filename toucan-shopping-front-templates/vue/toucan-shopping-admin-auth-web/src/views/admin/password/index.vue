@@ -66,7 +66,7 @@
         </el-alert>
 
         <el-form-item style="margin-top: 20px">
-          <el-button type="primary" :loading="saveLoading" :icon="Check" v-permission="'user:password:change'" @click="handleSave">
+          <el-button type="primary" :loading="saveLoading" :icon="Check" v-permission="'pms:system:user:change-password'" @click="handleSave">
             确认修改
           </el-button>
           <el-button @click="handleReset">重置</el-button>

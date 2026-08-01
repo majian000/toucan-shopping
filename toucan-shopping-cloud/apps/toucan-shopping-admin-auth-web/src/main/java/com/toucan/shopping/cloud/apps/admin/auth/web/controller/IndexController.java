@@ -89,6 +89,33 @@ public class IndexController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"pms:home:welcome","pms"})
+    @RequestMapping(value = "/index/getInfo",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO getInfo(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminVO adminVO = new AdminVO();
+            adminVO.setAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
+            resultObjectVO = adminServiceAPI.queryVOByEntity(requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                AdminVO vo = resultObjectVO.formatData(AdminVO.class);
+                if (vo != null) {
+                    vo.setPassword(null);
+                    resultObjectVO.setData(vo);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
     @RequestMapping(value = "/index/page",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
@@ -269,6 +296,45 @@ public class IndexController {
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询当前用户的权限标识列表(供Vue前端v-permission使用)
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"pms:home:welcome","pms"})
+    @RequestMapping(value = "/index/permissions",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO permissions(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = new AdminApp();
+            query.setAdminId(AdminLoginHolder.getCurrentAdminId());
+            query.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            ResultObjectVO functionsResult = functionServiceAPI.queryAdminAppFunctions(requestJsonVO);
+            if(functionsResult.isSuccess())
+            {
+                List<String> permissionList = new ArrayList<>();
+                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(functionsResult.getData()),FunctionVO.class);
+                if(functionVOList!=null) {
+                    for(FunctionVO f : functionVOList) {
+                        if(f.getPermission()!=null && !f.getPermission().isEmpty()) {
+                            permissionList.add(f.getPermission());
+                        }
+                    }
+                }
+                resultObjectVO.setData(permissionList);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
     }

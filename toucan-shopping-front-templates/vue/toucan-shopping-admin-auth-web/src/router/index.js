@@ -42,7 +42,8 @@ const routes = [
       // 由 menuConfig 动态生成
       ...extractLeafRoutes(menuConfig),
       // 不在侧边栏中的独立页面
-      { path: 'user/password', name: 'UserPassword', component: () => import('@/views/user/password/index.vue'), meta: { title: '修改密码', permission: 'user:profile:password' } }
+      { path: 'admin/password', name: 'AdminPassword', component: () => import('@/views/admin/password/index.vue'), meta: { title: '修改密码' } },
+      { path: 'admin/info', name: 'AdminInfo', component: () => import('@/views/admin/info/index.vue'), meta: { title: '完善个人信息' } }
     ]
   }
 ]

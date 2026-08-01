@@ -15,8 +15,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'system:role:search'" @click="handleSearch">搜索</el-button>
-          <el-button :icon="Refresh" v-permission="'system:role:search'" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'pms:system:role:list'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" v-permission="'pms:system:role:list'" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -24,7 +24,7 @@
     <!-- 数据表格 -->
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'system:role:add'" @click="handleAdd">新增角色</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'pms:system:role:add'" @click="handleAdd">新增角色</el-button>
       </div>
 
       <el-table :data="roles" border stripe v-loading="loading" style="width:100%">
@@ -41,9 +41,9 @@
         <el-table-column prop="createDate" label="创建时间" width="170" sortable />
         <el-table-column label="操作" width="260" fixed="right">
           <template #default="{ row }">
-            <el-button type="success" link size="small" :icon="Key" v-permission="'system:role:assignPerm'" @click="handleAssignPermission(row)">权限分配</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'system:role:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'system:role:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="success" link size="small" :icon="Key" v-permission="'pms:system:role:permission'" @click="handleAssignPermission(row)">权限分配</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:role:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:role:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -224,8 +224,8 @@ async function fetchData() {
       enableStatus: searchForm.enableStatus || undefined
     }
     const res = await listRole(params)
-    roles.value = res.data.rows || res.data.list || []
-    tableTotal.value = res.data.total || 0
+    roles.value = res.data || []
+    tableTotal.value = res.count || 0
   } finally {
     loading.value = false
   }

@@ -25,5 +25,10 @@ public class AuthVerifyVO {
      */
     private String loginToken;
 
+    /**
+     * 权限标识数组(verifyType=PERMISSION/ANY时使用)
+     */
+    private String[] permissions;
+
 
 }

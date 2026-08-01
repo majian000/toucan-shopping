@@ -27,6 +27,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
@@ -86,6 +87,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     /**
      * 校验权限
+     *
      * @param adminId
      * @param method
      * @return
@@ -94,60 +96,53 @@ public class AuthInterceptor implements HandlerInterceptor {
         AuthVerifyVO authVerifyVO = new AuthVerifyVO();
         authVerifyVO.setAdminId(adminId);
         authVerifyVO.setLoginToken(loginToken);
-        String url="";
+        String url = "";
         //拿到控制器的路径
-        RequestMapping controllerRequestMapping =((RequestMapping)clazz.getAnnotation(RequestMapping.class));
-        if(controllerRequestMapping!=null)
-        {
-            if(controllerRequestMapping.value()!=null&&controllerRequestMapping.value().length>0) {
+        RequestMapping controllerRequestMapping = ((RequestMapping) clazz.getAnnotation(RequestMapping.class));
+        if (controllerRequestMapping != null) {
+            if (controllerRequestMapping.value() != null && controllerRequestMapping.value().length > 0) {
                 url += controllerRequestMapping.value()[0];
             }
         }
         //拿到方法的路径
         RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
-        if(methodRequestMapping==null)
-        {
+        if (methodRequestMapping == null) {
             PostMapping methodPostMapping = method.getAnnotation(PostMapping.class);
-            if(methodPostMapping==null)
-            {
+            if (methodPostMapping == null) {
                 GetMapping methodGetMapping = method.getAnnotation(GetMapping.class);
-                if(methodGetMapping==null)
-                {
+                if (methodGetMapping == null) {
                     DeleteMapping methodDeleteMapping = method.getAnnotation(DeleteMapping.class);
-                    if(methodDeleteMapping==null)
-                    {
+                    if (methodDeleteMapping == null) {
                         PutMapping methodPutMapping = method.getAnnotation(PutMapping.class);
-                        if(methodPutMapping!=null)
-                        {
-                            if(methodPutMapping.value()!=null&&methodPutMapping.value().length>0) {
+                        if (methodPutMapping != null) {
+                            if (methodPutMapping.value() != null && methodPutMapping.value().length > 0) {
                                 url += methodPutMapping.value()[0];
                             }
                         }
-                    }else{
-                        if(methodDeleteMapping.value()!=null&&methodDeleteMapping.value().length>0) {
+                    } else {
+                        if (methodDeleteMapping.value() != null && methodDeleteMapping.value().length > 0) {
                             url += methodDeleteMapping.value()[0];
                         }
                     }
-                }else{
-                    if(methodGetMapping.value()!=null&&methodGetMapping.value().length>0) {
+                } else {
+                    if (methodGetMapping.value() != null && methodGetMapping.value().length > 0) {
                         url += methodGetMapping.value()[0];
                     }
                 }
-            }else{
-                if(methodPostMapping.value()!=null&&methodPostMapping.value().length>0) {
+            } else {
+                if (methodPostMapping.value() != null && methodPostMapping.value().length > 0) {
                     url += methodPostMapping.value()[0];
                 }
             }
-        }else{
-            if(methodRequestMapping.value()!=null&&methodRequestMapping.value().length>0) {
+        } else {
+            if (methodRequestMapping.value() != null && methodRequestMapping.value().length > 0) {
                 url += methodRequestMapping.value()[0];
             }
         }
 
         //去掉地址传递的参数
-        if(url.indexOf("{")!=-1)
-        {
-            url = url.substring(0,url.indexOf("{")-1);
+        if (url.indexOf("{") != -1) {
+            url = url.substring(0, url.indexOf("{") - 1);
         }
 
         authVerifyVO.setUrl(url);
@@ -155,14 +150,77 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         //这里可以优化,初始化的时候 传入这个bean
         AuthServiceAPI authServiceAPI = springContextHolder.getBean(AuthServiceAPI.class);
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),authVerifyVO);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), authVerifyVO);
         ResultObjectVO resultObjectVO = authServiceAPI.verifyLoginAndUrl(requestJsonVO);
 
         //-1 登录超时 -2没有权限
-        if(resultObjectVO.getData()!=null) {
+        if (resultObjectVO.getData() != null) {
             return resultObjectVO.formatData(Integer.class);
         }
         return -1;
+    }
+
+
+    /**
+     * 校验权限标识
+     *
+     * @param adminId
+     * @param loginToken
+     * @param permissions
+     * @return 1成功 / -1登录超时 / -2无权限
+     */
+    public Integer authVerifyPermission(String adminId, String loginToken, String[] permissions) throws NoSuchAlgorithmException {
+        AuthVerifyVO authVerifyVO = new AuthVerifyVO();
+        authVerifyVO.setAdminId(adminId);
+        authVerifyVO.setLoginToken(loginToken);
+        authVerifyVO.setAppCode(toucan.getAppCode());
+        authVerifyVO.setPermissions(permissions);
+
+        AuthServiceAPI authServiceAPI = springContextHolder.getBean(AuthServiceAPI.class);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), authVerifyVO);
+        ResultObjectVO resultObjectVO = authServiceAPI.verify(requestJsonVO);
+
+        if (resultObjectVO.getData() != null) {
+            if (resultObjectVO.getData() instanceof Boolean) {
+                return Boolean.TRUE.equals(resultObjectVO.getData()) ? 1 : -2;
+            }
+        }
+        return -2;
+    }
+
+
+    /**
+     * 根据注解的verifyType进行统一校验
+     *
+     * @param adminId
+     * @param loginToken
+     * @param verifyType  1=ANY 2=URL 3=PERMISSION
+     * @param permissions 权限标识数组
+     * @param clazz       Controller类
+     * @param method      Controller方法
+     * @return 1成功 / -1登录超时 / -2无权限
+     */
+    public Integer doVerify(String adminId, String loginToken, int verifyType, String[] permissions,
+                            Class clazz, Method method) throws Exception {
+        if (verifyType == AdminAuth.VERIFY_TYPE_PERMISSION) {
+            return authVerifyPermission(adminId, loginToken, permissions);
+        }
+        if (verifyType == AdminAuth.VERIFY_TYPE_ANY) {
+            int urlRet = authVerifyLoginAndUrl(adminId, loginToken, clazz, method);
+            if (urlRet == 1) {
+                return 1;
+            }
+            if (permissions != null && permissions.length > 0) {
+                int permRet = authVerifyPermission(adminId, loginToken, permissions);
+                if (permRet == 1) {
+                    return 1;
+                }
+                return urlRet;
+            }
+            return urlRet;
+        }
+        // 默认 VERIFY_TYPE_URL
+        return authVerifyLoginAndUrl(adminId, loginToken, clazz, method);
     }
 
 
@@ -173,12 +231,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
 
-        String aidKey = toucan.getAppCode()+"_aid=";
-        String ltKey = toucan.getAppCode()+"_lt=";
+        String aidKey = toucan.getAppCode() + "_aid=";
+        String ltKey = toucan.getAppCode() + "_lt=";
         String aid = "-1";
         String lt = "-1";
 
-        if(StringUtils.isNotEmpty(authHeader)){
+        if (StringUtils.isNotEmpty(authHeader)) {
             String[] authHeaderArray = authHeader.split(";");
             for (int i = 0; i < authHeaderArray.length; i++) {
                 if (authHeaderArray[i].indexOf(aidKey) != -1) {
@@ -188,10 +246,24 @@ public class AuthInterceptor implements HandlerInterceptor {
                     lt = authHeaderArray[i].split("=")[1];
                 }
             }
-            AdminLoginHolder.setAdminLoginContext(aid,lt);
+            AdminLoginHolder.setAdminLoginContext(aid, lt);
         }
 
-        if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
+        // Cookie中没有有效的认证信息时,尝试从Bearer Token解析
+        if (StringUtils.equals(aid, "-1") || StringUtils.equals(lt, "-1")) {
+            String bearerHeader = request.getHeader("Authorization");
+            if (StringUtils.isNotEmpty(bearerHeader) && bearerHeader.startsWith("Bearer ")) {
+                String token = bearerHeader.substring(7);
+                String[] parts = token.split(":");
+                if (parts.length == 2) {
+                    aid = parts[0];
+                    lt = parts[1];
+                    AdminLoginHolder.setAdminLoginContext(aid, lt);
+                }
+            }
+        }
+
+        if (handler instanceof HandlerMethod && toucan.getAdminAuth().isEnabled()) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             AdminAuth authAnnotation = method.getAnnotation(AdminAuth.class);
@@ -208,10 +280,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                             //ajax请求
                             if (authAnnotation.responseType() == AdminAuth.RESPONSE_JSON) {
-                                logger.info("request uri {} " , request.getRequestURI());
+                                logger.info("request uri {} ", request.getRequestURI());
                                 //JSON类型请求 - 从已缓存的RequestWrapper中读取body,避免重复消费InputStream
                                 String jsonBody = getCachedRequestBody(request);
-                                logger.info("recive param {} " , jsonBody);
+                                logger.info("recive param {} ", jsonBody);
 
                                 if (StringUtils.isEmpty(authHeader)) {
                                     logger.warn("权限请求头为空 " + toucan.getAdminAuth().getHttpToucanAuthHeader() + " : " + authHeader);
@@ -224,17 +296,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 logger.info(" auth header " + authHeader);
 
                                 if (authHeader.indexOf(ltKey) == -1) {
-                                    logger.info(ltKey+"不能为空 " + jsonBody);
+                                    logger.info(ltKey + "不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg(ltKey+"不能为空");
+                                    resultVO.setMsg(ltKey + "不能为空");
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
                                 if (authHeader.indexOf(aidKey) == -1) {
-                                    logger.info(aidKey+"不能为空 " + jsonBody);
+                                    logger.info(aidKey + "不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg(aidKey+"不能为空");
+                                    resultVO.setMsg(aidKey + "不能为空");
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -247,9 +319,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                //在这里调用权限中台 判断登录
-                                int verifyRet = authVerifyLoginAndUrl(aid,lt,handlerMethod.getBeanType(),method);
-                                if (verifyRet==-1) {
+                                // 根据verifyType进行校验(URL/权限标识/任意)
+                                int verifyRet = doVerify(aid, lt,
+                                        authAnnotation.verifyType(),
+                                        authAnnotation.permissions(),
+                                        handlerMethod.getBeanType(), method);
+                                if (verifyRet == -1) {
                                     logger.info("登录验证失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("登录超时,请重新登录");
@@ -260,8 +335,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 
                                 //校验请求权限
-                                if(verifyRet==-2)
-                                {
+                                if (verifyRet == -2) {
                                     logger.info("权限校验失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("没有权限访问");
@@ -288,9 +362,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-                                //在这里调用权限中台 判断登录
-                                int verifyRet = authVerifyLoginAndUrl(aid,lt,handlerMethod.getBeanType(),method);
-                                if (verifyRet==-1) {
+                                // 根据verifyType进行校验(URL/权限标识/任意)
+                                int verifyRet = doVerify(aid, lt,
+                                        authAnnotation.verifyType(),
+                                        authAnnotation.permissions(),
+                                        handlerMethod.getBeanType(), method);
+                                if (verifyRet == -1) {
                                     logger.info("登录验证失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
@@ -298,8 +375,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //校验请求权限
-                                if(verifyRet==-2)
-                                {
+                                if (verifyRet == -2) {
                                     logger.info("权限校验失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getPage403());
@@ -331,12 +407,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
 
-
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         AdminLoginHolder.clear();
     }
-
 
 
 }

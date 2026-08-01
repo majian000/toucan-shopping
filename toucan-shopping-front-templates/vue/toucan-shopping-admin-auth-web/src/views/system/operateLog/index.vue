@@ -22,8 +22,8 @@
           <el-input v-model="searchForm.createAdminId" placeholder="请输入管理员ID" clearable style="width:260px" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'system:operateLog:list'" @click="handleSearch">搜索</el-button>
-          <el-button :icon="Refresh" v-permission="'system:operateLog:list'" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'pms:log:operate:list'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" v-permission="'pms:log:operate:list'" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,8 +48,8 @@
         <el-table-column prop="createDate" label="请求时间" width="170" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="View" v-permission="'system:operateLog:detail'" @click="handleView(row)">详情</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'system:operateLog:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="primary" link size="small" :icon="View" v-permission="'pms:log:operate:detail'" @click="handleView(row)">详情</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:log:operate:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -117,8 +117,8 @@ async function fetchData() {
       keyword: searchForm.keyword || undefined
     }
     const res = await listOperateLog(params)
-    list.value = res.data.rows || res.data.list || []
-    tableTotal.value = res.data.total || 0
+    list.value = res.data || []
+    tableTotal.value = res.count || 0
   } finally {
     loading.value = false
   }

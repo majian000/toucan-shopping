@@ -63,47 +63,44 @@ public class LoginController {
      */
     @RequestMapping(value = "/submit",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO login(@RequestHeader("Cookie") String cookie,HttpServletRequest request,HttpServletResponse response, @RequestBody AdminVO adminVo)
+    public ResultObjectVO login(@RequestHeader(value = "Cookie", required = false) String cookie,HttpServletRequest request,HttpServletResponse response, @RequestBody AdminVO adminVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(adminVo.getVcode()))
+            if(StringUtils.isNotEmpty(adminVo.getVcode()))
             {
-                resultObjectVO.setMsg("登录失败,请输入验证码");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(cookie))
-            {
-                resultObjectVO.setMsg("登录失败,请检查是否禁用Cookie");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
-            if(StringUtils.isEmpty(ClientVCodeId))
-            {
-                resultObjectVO.setMsg("登录失败,验证码输入有误");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(appCode,ClientVCodeId);
+                if(StringUtils.isEmpty(cookie))
+                {
+                    resultObjectVO.setMsg("登录失败,请检查是否禁用Cookie");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+                if(StringUtils.isEmpty(ClientVCodeId))
+                {
+                    resultObjectVO.setMsg("登录失败,验证码输入有误");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(appCode,ClientVCodeId);
 
-            Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
-            if(vCodeObject==null)
-            {
-                resultObjectVO.setMsg("登录失败,验证码过期请刷新页面");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(adminVo.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
-            {
-                resultObjectVO.setMsg("登录失败,验证码输入有误");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
+                Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
+                if(vCodeObject==null)
+                {
+                    resultObjectVO.setMsg("登录失败,验证码过期请刷新页面");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                if(!StringUtils.equals(adminVo.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+                {
+                    resultObjectVO.setMsg("登录失败,验证码输入有误");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
 
-            //删除缓存中验证码
-            stringRedisTemplate.delete(vcodeRedisKey);
+                //删除缓存中验证码
+                stringRedisTemplate.delete(vcodeRedisKey);
+            }
 
             adminVo.setLoginSrcType(1);
             try {

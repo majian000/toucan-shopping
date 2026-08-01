@@ -56,8 +56,8 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-button type="primary" :icon="Plus" v-permission="'system:admin:add'" @click="handleAdd">新增用户</el-button>
-          <el-button type="danger" :icon="Delete" v-permission="'system:admin:batchDelete'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="primary" :icon="Plus" v-permission="'pms:system:user:add'" @click="handleAdd">新增用户</el-button>
+          <el-button type="danger" :icon="Delete" v-permission="'pms:system:user:batch-delete'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">批量删除</el-button>
         </div>
 
       </div>
@@ -96,10 +96,10 @@
         <el-table-column prop="createDate" label="创建时间" width="170" sortable />
         <el-table-column label="操作" width="320" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'system:admin:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="warning" link size="small" :icon="Lock" v-permission="'system:admin:resetPwd'" @click="handleResetPassword(row)">重置密码</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'system:admin:delete'" @click="handleDelete(row)">删除</el-button>
-            <el-button type="danger" link size="small" :icon="SwitchButton" v-permission="'system:admin:forceLogout'" @click="handleForceLogout(row)">退出登录</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:user:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="warning" link size="small" :icon="Lock" v-permission="'pms:system:user:reset-pwd'" @click="handleResetPassword(row)">重置密码</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:user:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="danger" link size="small" :icon="SwitchButton" v-permission="'pms:system:user:force-logout'" @click="handleForceLogout(row)">退出登录</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -259,8 +259,8 @@ async function fetchData() {
       enableStatus: searchForm.enableStatus ?? undefined
     }
     const res = await listAdmin(params)
-    users.value = res.data.list || []
-    tableTotal.value = res.data.total || 0
+    users.value = res.data || []
+    tableTotal.value = res.count || 0
   } catch (e) {
     console.error('获取管理员列表失败:', e)
   } finally {

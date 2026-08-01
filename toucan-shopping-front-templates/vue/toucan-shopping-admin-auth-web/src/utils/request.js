@@ -40,8 +40,8 @@ service.interceptors.response.use(
     const code = res.data.code
     const msg = errorCode[code] || res.data.msg || errorCode['default']
 
-    // code === 1 表示业务成功
-    if (code === 1) {
+    // code === 0 或 code === 1 表示业务成功(兼容老后端ResultObjectVO/TableVO)
+    if (code === 0 || code === 1) {
       return res.data
     }
 

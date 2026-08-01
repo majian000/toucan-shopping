@@ -168,4 +168,15 @@
     </select>
 
 
+    <select id="findListByRoleIdsAndAppCode" resultMap="roleFunctionMap">
+        select * from t_sa_role_function t
+        where t.delete_status = 0
+        and t.app_code = #{appCode}
+        and t.role_id in
+        <foreach item="item" index="index" collection="roleIdArray" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
 </mapper>

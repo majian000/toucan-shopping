@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.admin.auth.mapper;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,4 +44,9 @@ public interface RoleFunctionMapper {
 
 
     List<RoleFunction> queryListByRoleId(String roleId);
+
+    /**
+     * 批量查询: 根据角色ID数组和应用编码查询角色-功能关联
+     */
+    List<RoleFunction> findListByRoleIdsAndAppCode(@Param("roleIdArray") String[] roleIdArray, @Param("appCode") String appCode);
 }

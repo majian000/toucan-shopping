@@ -1,7 +1,7 @@
 {
   "name": "vue3-admin-framework",
   "version": "1.0.0",
-  "description": "Vue 3 后台管理框架 - 顶部导航 + 侧边多级菜单",
+  "description": "权限中台",
   "private": true,
   "scripts": {
     "dev": "vite",

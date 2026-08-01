@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 登录
-export function login(username, password, code, uuid) {
+export function login(username, password, vcode) {
   return request({
     url: '/login/submit',
     method: 'post',
-    data: { username, password, code, uuid }
+    data: { username, password, vcode }
   })
 }
 
@@ -17,18 +17,10 @@ export function logout() {
   })
 }
 
-// 获取用户信息
+// 获取当前用户信息
 export function getInfo() {
   return request({
     url: '/index/getInfo',
-    method: 'get'
-  })
-}
-
-// 获取验证码
-export function getCodeImg() {
-  return request({
-    url: '/captchaImage',
     method: 'get'
   })
 }

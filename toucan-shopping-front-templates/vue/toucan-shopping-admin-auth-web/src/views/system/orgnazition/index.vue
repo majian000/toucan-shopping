@@ -5,7 +5,7 @@
     <el-card shadow="never" class="table-card">
       <!-- 工具栏 -->
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'system:org:add'" @click="handleAdd">新增机构</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'pms:system:org:add'" @click="handleAdd">新增机构</el-button>
         <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
       </div>
 
@@ -25,11 +25,11 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'system:org:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:org:edit'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="success" link size="small" :icon="Plus"
-              v-permission="'system:org:add'" @click="handleAddChild(row)">添加子机构</el-button>
+              v-permission="'pms:system:org:add'" @click="handleAddChild(row)">添加子机构</el-button>
             <el-button type="danger" link size="small" :icon="Delete"
-              v-permission="'system:org:delete'" @click="handleDelete(row)">删除</el-button>
+              v-permission="'pms:system:org:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

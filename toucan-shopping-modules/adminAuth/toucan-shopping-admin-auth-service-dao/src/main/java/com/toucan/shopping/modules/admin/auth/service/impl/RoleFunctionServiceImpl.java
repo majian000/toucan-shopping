@@ -219,5 +219,10 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
         return roleFunctionMapper.queryListByRoleId(roleId);
     }
 
+    @Override
+    public List<RoleFunction> findListByRoleIdsAndAppCode(String[] roleIdArray, String appCode) {
+        return roleFunctionMapper.findListByRoleIdsAndAppCode(roleIdArray, appCode);
+    }
+
 
 }

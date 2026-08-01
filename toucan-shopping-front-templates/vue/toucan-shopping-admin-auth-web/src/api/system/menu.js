@@ -1,27 +1,31 @@
 import request from '@/utils/request'
 
-export function getMenu(menuId) {
-  return request({ url: '/system/menu/' + menuId, method: 'get' })
-}
-
-export function addMenu(data) {
-  return request({ url: '/system/function/save', method: 'post', data })
-}
-
-export function updateMenu(data) {
-  return request({ url: '/system/function/update', method: 'post', data })
-}
-
-export function delMenu(id, functionId) {
-  return request({ url: '/system/function/delete', method: 'post', data: { id, functionId } })
-}
-
-// 懒加载：根据父ID获取菜单树（pid为空则获取根节点/全量树）
+// 树形表格: 根据父ID获取下级菜单
 export function listMenuByPid(data) {
-  return request({ url: '/system/function/tree/table/by/pid', method: 'post', data })
+  return request({ url: '/function/tree/table/by/pid', method: 'post', data })
 }
 
-// 获取完整菜单树
+// 完整菜单树
 export function listMenuTree() {
-  return request({ url: '/system/function/tree/table', method: 'post', data: {} })
+  return request({ url: '/function/tree/table', method: 'post', data: {} })
+}
+
+// 保存
+export function addMenu(data) {
+  return request({ url: '/function/save', method: 'post', data })
+}
+
+// 更新
+export function updateMenu(data) {
+  return request({ url: '/function/update', method: 'post', data })
+}
+
+// 删除
+export function delMenu(id, functionId) {
+  return request({ url: '/function/delete', method: 'post', data: { id, functionId } })
+}
+
+// 批量保存
+export function batchAddMenus(data) {
+  return request({ url: '/function/saves', method: 'post', data })
 }
