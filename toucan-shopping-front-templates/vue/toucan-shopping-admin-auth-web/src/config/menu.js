@@ -16,33 +16,44 @@ export const menuConfig = [
       { path: '/dashboard', name: 'Dashboard', label: '工作台', icon: 'Monitor', component: () => import('@/views/dashboard/index.vue') }
     ]
   },
-  // ==================== 系统管理 ====================
+  // ==================== 权限管理 ====================
   {
-    key: 'system',
-    label: '系统管理',
-    icon: 'Menu',
-    permission: 'pms:system',
+    key: 'permission',
+    label: '权限管理',
+    icon: 'Lock',
+    permission: 'pms',
     children: [
-      { path: '/system/app/list', name: 'AppList', label: '应用管理', icon: 'Menu', permission: 'pms:system:app', component: () => import('@/views/system/app/index.vue') },
-      { path: '/system/admin/list', name: 'AdminList', label: '账号管理', icon: 'Menu', permission: 'pms:system:user', component: () => import('@/views/system/admin/index.vue') },
-      { path: '/system/role/list', name: 'RoleList', label: '角色管理', icon: 'Menu', permission: 'pms:system:role', component: () => import('@/views/system/role/index.vue') },
-      { path: '/system/menu/list', name: 'MenuList', label: '菜单管理', icon: 'Menu', permission: 'pms:system:menu', component: () => import('@/views/system/menu/index.vue') },
-      { path: '/system/orgnazition/list', name: 'OrgnazitionList', label: '组织机构', icon: 'Menu', permission: 'pms:system:org', component: () => import('@/views/system/orgnazition/index.vue') },
+      // ----- 系统管理 -----
+      {
+        key: 'system',
+        label: '系统管理',
+        icon: 'Setting',
+        permission: 'pms:system',
+        children: [
+          { path: '/system/app/list', name: 'AppList', label: '应用管理', icon: 'Menu', permission: 'pms:system:app', component: () => import('@/views/system/app/index.vue') },
+          { path: '/system/admin/list', name: 'AdminList', label: '账号管理', icon: 'User', permission: 'pms:system:user', component: () => import('@/views/system/admin/index.vue') },
+          { path: '/system/role/list', name: 'RoleList', label: '角色管理', icon: 'UserFilled', permission: 'pms:system:role', component: () => import('@/views/system/role/index.vue') },
+          { path: '/system/menu/list', name: 'MenuList', label: '菜单管理', icon: 'Menu', permission: 'pms:system:menu', component: () => import('@/views/system/menu/index.vue') },
+          { path: '/system/orgnazition/list', name: 'OrgnazitionList', label: '组织机构', icon: 'Share', permission: 'pms:system:org', component: () => import('@/views/system/orgnazition/index.vue') },
+          { path: '/system/onlineAdmin/list', name: 'OnlineAdminList', label: '在线管理', icon: 'Connection', permission: 'pms:system:online', component: () => import('@/views/system/onlineAdmin/index.vue') }
+        ]
+      },
+      // ----- 字典管理 -----
       {
         key: 'dict',
         label: '字典管理',
-        icon: 'Menu',
+        icon: 'Collection',
         permission: 'pms:dict',
         children: [
           { path: '/system/dictCategory/list', name: 'DictCategoryList', label: '字典分类', icon: 'Menu', permission: 'pms:dict:category', component: () => import('@/views/system/dictCategory/index.vue') },
           { path: '/system/dict/list', name: 'DictList', label: '字典管理', icon: 'Menu', permission: 'pms:dict:item', component: () => import('@/views/system/dict/index.vue') }
         ]
       },
-      { path: '/system/onlineAdmin/list', name: 'OnlineAdminList', label: '在线管理', icon: 'Menu', permission: 'pms:system:online', component: () => import('@/views/system/onlineAdmin/index.vue') },
+      // ----- 日志管理 -----
       {
         key: 'log',
         label: '日志管理',
-        icon: 'Menu',
+        icon: 'Document',
         permission: 'pms:log',
         children: [
           { path: '/system/operateLog/list', name: 'OperateLogList', label: '操作日志', icon: 'Menu', permission: 'pms:log:operate', component: () => import('@/views/system/operateLog/index.vue') },
