@@ -300,17 +300,16 @@ public class RoleFunctionBusinessService {
                 if(functionTreeVO.getIsParent() != null && functionTreeVO.getIsParent()) {
                     java.util.List<FunctionTreeVO> descendants = new java.util.LinkedList<>();
                     functionService.queryFunctionTreeChildren(descendants, functionTreeVO);
-                    functionTreeVO.setDescendantCount(descendants.size());
-                    if(descendants.size() > 0) {
-                        int checked = 0;
-                        for(FunctionTreeVO desc : descendants) {
-                            if(roleFunctionIdSet.contains(desc.getFunctionId())) {
-                                checked++;
-                            }
+                    // 总数 +1 包含当前节点自身
+                    functionTreeVO.setDescendantCount(descendants.size() + 1);
+                    int checked = roleFunctionIdSet.contains(functionTreeVO.getFunctionId()) ? 1 : 0;
+                    for(FunctionTreeVO desc : descendants) {
+                        if(roleFunctionIdSet.contains(desc.getFunctionId())) {
+                            checked++;
                         }
-                        functionTreeVO.setCheckedDescendantCount(checked);
-                        functionTreeVO.setCascaded(checked == descendants.size());
                     }
+                    functionTreeVO.setCheckedDescendantCount(checked);
+                    functionTreeVO.setCascaded(checked == descendants.size() + 1);
                 }
             }
 

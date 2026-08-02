@@ -466,7 +466,8 @@ function syncTreeState() {
     }
     node.childNodes.forEach(calc)
     if (node.data.descendantCount > 0) {
-      let checked = 0
+      // 自身是否勾选
+      let checked = checkedSet.has(node.key) ? 1 : 0
       node.childNodes.forEach(child => {
         if (checkedSet.has(child.key)) checked++
         checked += child.data?.cascaded ? (child.data.descendantCount || 0) : (child.data?.checkedDescendantCount || 0)
