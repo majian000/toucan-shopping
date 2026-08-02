@@ -436,7 +436,7 @@ function handleCascadeToggle(data) {
   data.cascaded = !data.cascaded
   const node = permTreeRef.value?.store?.getNode(data.functionId)
   if (!node) return
-  // 递归标记所有已加载子孙：勾选 + 同步数据对象的级联状态
+  // 递归标记所有已加载子孙
   function walk(n) {
     n.childNodes.forEach(child => {
       child.setChecked(data.cascaded, false)
@@ -449,6 +449,10 @@ function handleCascadeToggle(data) {
   }
   walk(node)
   node.setChecked(data.cascaded, false)
+  // 未展开时显式覆盖，避免 syncTreeState 用后端旧值
+  if (node.childNodes.length === 0 && data.descendantCount > 0) {
+    data.checkedDescendantCount = data.cascaded ? data.descendantCount : (node.checked ? 1 : 0)
+  }
   nextTick(() => syncTreeState())
 }
 
