@@ -100,35 +100,11 @@ public class RoleFunctionBusinessService {
         try {
             RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
             Check.notEmpty(entity.getRoleId(), ResultVO.FAILD, "roleId为空");
-            // 前端勾选哪个就关联哪个，不做级联展开
+            // 前端传什么就存什么，级联由前端全量树处理
             List<FunctionTreeVO> functionTreeVOS = entity.getFunctions();
             if (functionTreeVOS == null) {
                 functionTreeVOS = new LinkedList<>();
             }
-            // 级联展开标记为 cascaded 的节点，将其所有子孙加入保存列表（内存递归，不查DB）
-            List<FunctionTreeVO> expandedList = new ArrayList<>();
-            Map<Long, List<FunctionVO>> childrenMap = null;
-            for (FunctionTreeVO ft : functionTreeVOS) {
-                expandedList.add(ft);
-                if (ft.getCascaded() != null && ft.getCascaded()) {
-                    if (childrenMap == null) {
-                        childrenMap = new HashMap<>();
-                        List<FunctionVO> allFunctions = functionService.queryListByAppCode(entity.getAppCode());
-                        for (FunctionVO f : allFunctions) {
-                            Long pid = f.getPid() != null ? f.getPid() : -1L;
-                            childrenMap.computeIfAbsent(pid, k -> new ArrayList<>()).add(f);
-                        }
-                    }
-                    addDescendants(ft.getId(), childrenMap, expandedList);
-                }
-            }
-            functionTreeVOS = expandedList;
-
-            //去重
-            functionTreeVOS = functionTreeVOS.stream().collect(
-                    Collectors.collectingAndThen(
-                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FunctionTreeVO::getId))), ArrayList::new)
-            );
             // 先清空旧关联，再保存新提交的
             roleFunctionService.deleteByRoleId(entity.getRoleId());
             if (!CollectionUtils.isEmpty(functionTreeVOS)) {
@@ -329,24 +305,6 @@ public class RoleFunctionBusinessService {
         return resultObjectVO;
     }
 
-
-    /**
-     * 内存递归统计子孙节点总数[0]和已勾选数[1]（不含当前节点自身）
-     */
-    private void addDescendants(Long nodeId, Map<Long, List<FunctionVO>> childrenMap, List<FunctionTreeVO> result) {
-        List<FunctionVO> children = childrenMap.get(nodeId);
-        if (children == null) return;
-        for (FunctionVO child : children) {
-            FunctionTreeVO ft = new FunctionTreeVO();
-            try {
-                BeanUtils.copyProperties(ft, child);
-            } catch (Exception e) {
-                continue;
-            }
-            result.add(ft);
-            addDescendants(child.getId(), childrenMap, result);
-        }
-    }
 
     private int[] countDescendants(Long nodeId, Map<Long, List<FunctionVO>> childrenMap, Set<String> checkedSet) {
         int[] result = new int[]{0, 0};

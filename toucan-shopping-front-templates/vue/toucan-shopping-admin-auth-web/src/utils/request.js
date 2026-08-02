@@ -67,6 +67,13 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response && error.response.status === 403) {
+      const data = error.response.data
+      // 没有权限：提示后不跳转登录，留在当前页
+      if (data && data.code === 0) {
+        ElMessage({ message: data.msg || '没有权限访问', type: 'warning', duration: 3000 })
+        return Promise.reject(data.msg || '没有权限访问')
+      }
+      // 登录过期
       if (!isRelogin) {
         isRelogin = true
         ElMessage({ message: '登录状态已过期，请重新登录', type: 'error', duration: 2000 })

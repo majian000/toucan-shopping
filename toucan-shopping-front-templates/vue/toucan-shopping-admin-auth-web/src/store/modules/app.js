@@ -7,7 +7,7 @@ export const useAppStore = defineStore('app', () => {
   const breadcrumbs = ref([])
 
   // 布局模式：'top' 顶部菜单 | 'side' 左侧菜单
-  const layoutMode = ref(localStorage.getItem('layoutMode') || 'side')
+  const layoutMode = ref(localStorage.getItem('layoutMode') || 'top')
 
   // 菜单数据：权限接口未返回时为空，加载完成后才显示
   const menuData = ref([])

@@ -536,7 +536,7 @@ async function handleSavePerm() {
   try {
     // 勾选哪个关联哪个，不做级联（用"全选子节点"按钮显式操作）
     const checkedNodes = permTreeRef.value.getCheckedNodes(false, false)
-    const functions = checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid, cascaded: n.cascaded || false }))
+    const functions = checkedNodes.map(n => ({ id: n.id, functionId: n.functionId, pid: n.pid }))
     await saveRoleFunctions({ roleId: permRoleId.value, appCode: permAppCode.value, functions })
     ElMessage.success('权限已更新')
     permDialogVisible.value = false
