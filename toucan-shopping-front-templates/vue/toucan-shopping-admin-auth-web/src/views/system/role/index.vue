@@ -459,18 +459,31 @@ function syncTreeState() {
   const checkedSet = new Set(tree.getCheckedKeys())
   function calc(node) {
     if (!node || !node.data) return
-    // 自身级联且未展开 → 全量；已展开则走下面逐个统计
-    if (node.data.cascaded && node.childNodes.length === 0 && node.data.descendantCount > 0) {
-      node.data.checkedDescendantCount = node.data.descendantCount
+    node.childNodes.forEach(calc)
+    // 未展开 → 保留后端的子孙统计，只修正自身勾选变化
+    if (node.childNodes.length === 0 && node.data.descendantCount > 0) {
+      const selfChecked = checkedSet.has(node.key) ? 1 : 0
+      // 后端 checkedDescendantCount 含自身，需减去旧自身状态 + 新自身状态
+      const descChecked = (node.data.checkedDescendantCount || 0) - (node.data.checked ? 1 : 0) + selfChecked
+      node.data.checkedDescendantCount = Math.max(0, Math.min(node.data.descendantCount, descChecked))
+      if (node.data.cascaded && !checkedSet.has(node.key)) {
+        node.data.cascaded = false
+      }
+      node.data.cascaded = node.data.checkedDescendantCount === node.data.descendantCount
       return
     }
-    node.childNodes.forEach(calc)
     if (node.data.descendantCount > 0) {
-      // 自身是否勾选
+      // 自身是否勾选（descendantCount 含自身，child 不重复加 has(key)）
       let checked = checkedSet.has(node.key) ? 1 : 0
       node.childNodes.forEach(child => {
-        if (checkedSet.has(child.key)) checked++
-        checked += child.data?.cascaded ? (child.data.descendantCount || 0) : (child.data?.checkedDescendantCount || 0)
+        if (child.data?.descendantCount > 0) {
+          // child 的 descendantCount 已含自身，直接用 checkedDescendantCount
+          checked += child.data?.cascaded ? child.data.descendantCount : (child.data?.checkedDescendantCount || 0)
+        } else {
+          // 叶子节点，加 check 状态
+          if (checkedSet.has(child.key)) checked++
+          checked += (child.data?.checkedDescendantCount || 0)
+        }
       })
       node.data.checkedDescendantCount = checked
       node.data.cascaded = checked > 0 && checked === node.data.descendantCount
