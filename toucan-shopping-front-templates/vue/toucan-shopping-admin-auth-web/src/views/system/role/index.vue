@@ -140,6 +140,7 @@
           :props="{ label: 'name', isLeaf: isPermLeaf }"
           show-checkbox
           check-strictly
+          @check="syncTreeState"
           class="perm-tree"
         >
           <template #default="{ data }">
@@ -181,7 +182,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, markRaw } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck } from '@element-plus/icons-vue'
@@ -379,11 +380,11 @@ const checkedPermCount = computed(() => {
 })
 // 全量树数据
 const permTreeData = ref([])
-// 节点统计用 reactive+ref：模板读 .value 响应式更新
+// reactive 自动解包 ref，用 markRaw 保护内部 ref 不被解包
 const nodeStats = reactive({})
 function ensureNodeStats(functionId) {
   if (!nodeStats[functionId]) {
-    nodeStats[functionId] = { checked: ref(0), total: ref(0), cascaded: ref(false) }
+    nodeStats[functionId] = markRaw({ checked: ref(0), total: ref(0), cascaded: ref(false) })
   }
   return nodeStats[functionId]
 }
@@ -453,23 +454,34 @@ async function handleAssignPermission(row) {
   try {
     const res = await getRoleFunctionFullTree(row.roleId, row.appCode)
     const tree = res.data || []
-    permTreeData.value = tree
-    // 初始化 nodeStats 并勾选已关联节点
-    await nextTick()
-    function walk(nodes) {
+    // 先初始化 nodeStats（渲染前），再赋值触发渲染
+    function initStats(nodes) {
       nodes.forEach(item => {
-        if (item.checked) permTreeRef.value?.setChecked(item.functionId, true, false)
         if (item.descendantCount > 0) {
           const s = ensureNodeStats(item.functionId)
           s.checked.value = item.checkedDescendantCount || 0
           s.total.value = item.descendantCount
           s.cascaded.value = item.cascaded || false
         }
-        if (item.children) walk(item.children)
+        if (item.children) initStats(item.children)
       })
     }
-    walk(tree)
-  } catch { /* ignore */ } finally {
+    initStats(tree)
+    permTreeData.value = tree
+    // 等 DOM 渲染后同步勾选状态
+    await nextTick()
+    function setCheckedNodes(nodes) {
+      nodes.forEach(item => {
+        if (item.checked) permTreeRef.value?.setChecked(item.functionId, true, false)
+        if (item.children) setCheckedNodes(item.children)
+      })
+    }
+    setCheckedNodes(tree)
+  } catch (e) {
+    console.error('加载权限树失败', e)
+    ElMessage.error('加载权限树失败')
+    permTreeData.value = []
+  } finally {
     permTreeLoading.value = false
   }
 }
