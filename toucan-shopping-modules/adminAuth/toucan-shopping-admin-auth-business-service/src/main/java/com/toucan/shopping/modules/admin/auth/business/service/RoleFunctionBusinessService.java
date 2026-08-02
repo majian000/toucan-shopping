@@ -58,16 +58,14 @@ public class RoleFunctionBusinessService {
     private FunctionService functionService;
 
 
-
-
     /**
      * 查询指定角色的所有功能项
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO queryRoleFunctionList(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunction query = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunction.class);
@@ -75,16 +73,14 @@ public class RoleFunctionBusinessService {
             Check.notEmpty(query.getRoleId(), ResultVO.FAILD, "roleId为空");
 
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(roleFunctions))
-            {
+            if (!CollectionUtils.isEmpty(roleFunctions)) {
                 resultObjectVO.setData(roleFunctions);
             }
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -92,32 +88,38 @@ public class RoleFunctionBusinessService {
     }
 
 
-
-
-
     /**
      * 保存角色功能项
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO saveFunctions(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunctionVO.class);
             Check.notEmpty(entity.getRoleId(), ResultVO.FAILD, "roleId为空");
             // 前端勾选哪个就关联哪个，不做级联展开
             List<FunctionTreeVO> functionTreeVOS = entity.getFunctions();
-            if(functionTreeVOS == null) {
+            if (functionTreeVOS == null) {
                 functionTreeVOS = new LinkedList<>();
             }
-            // 级联展开标记为 cascaded 的节点，将其所有子孙加入保存列表
-            List<FunctionTreeVO> expandedList = new LinkedList<>();
-            for(FunctionTreeVO ft : functionTreeVOS) {
+            // 级联展开标记为 cascaded 的节点，将其所有子孙加入保存列表（内存递归，不查DB）
+            List<FunctionTreeVO> expandedList = new ArrayList<>();
+            Map<Long, List<FunctionVO>> childrenMap = null;
+            for (FunctionTreeVO ft : functionTreeVOS) {
                 expandedList.add(ft);
-                if(ft.getCascaded() != null && ft.getCascaded()) {
-                    functionService.queryFunctionTreeChildren(expandedList, ft);
+                if (ft.getCascaded() != null && ft.getCascaded()) {
+                    if (childrenMap == null) {
+                        childrenMap = new HashMap<>();
+                        List<FunctionVO> allFunctions = functionService.queryListByAppCode(entity.getAppCode());
+                        for (FunctionVO f : allFunctions) {
+                            Long pid = f.getPid() != null ? f.getPid() : -1L;
+                            childrenMap.computeIfAbsent(pid, k -> new ArrayList<>()).add(f);
+                        }
+                    }
+                    addDescendants(ft.getId(), childrenMap, expandedList);
                 }
             }
             functionTreeVOS = expandedList;
@@ -129,7 +131,7 @@ public class RoleFunctionBusinessService {
             );
             // 先清空旧关联，再保存新提交的
             roleFunctionService.deleteByRoleId(entity.getRoleId());
-            if(!CollectionUtils.isEmpty(functionTreeVOS)) {
+            if (!CollectionUtils.isEmpty(functionTreeVOS)) {
 
                 RoleFunction[] roleFunctions = new RoleFunction[functionTreeVOS.size()];
                 int pos = 0;
@@ -174,11 +176,10 @@ public class RoleFunctionBusinessService {
                 }
             }
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -186,9 +187,9 @@ public class RoleFunctionBusinessService {
     }
 
 
-
     /**
      * 刷新缓存
+     *
      * @param requestJsonVO
      * @return
      */
@@ -219,10 +220,9 @@ public class RoleFunctionBusinessService {
             }
 
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setCode(ResultVO.SUCCESS);
             resultObjectVO.setMsg("更新缓存出现异常");
             logger.warn(e.getMessage(), e);
@@ -231,14 +231,14 @@ public class RoleFunctionBusinessService {
     }
 
 
-
     /**
      * 查询列表分页
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO list(RequestJsonVO requestVo){
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
@@ -246,14 +246,13 @@ public class RoleFunctionBusinessService {
 
 
             //查询角色 功能项关联
-            PageInfo<RoleFunction> pageInfo =  roleFunctionService.queryListPage(queryPageInfo);
+            PageInfo<RoleFunction> pageInfo = roleFunctionService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -263,7 +262,7 @@ public class RoleFunctionBusinessService {
 
 
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(RequestJsonVO requestVo){
+    public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionVO query = requestVo.formatEntity(RoleFunctionVO.class);
@@ -274,51 +273,56 @@ public class RoleFunctionBusinessService {
             //当前角色的所有关联项
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
             //当前节点的子节点
-            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenByIdAndAppCode(query.getPid(),query.getAppCode());
+            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenByIdAndAppCode(query.getPid(), query.getAppCode());
 
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
-            for(FunctionVO functionVO:functionVOS)
-            {
+            for (FunctionVO functionVO : functionVOS) {
                 FunctionTreeVO functionTreeVO = new FunctionTreeVO();
-                BeanUtils.copyProperties(functionTreeVO,functionVO);
+                BeanUtils.copyProperties(functionTreeVO, functionVO);
                 functionTreeVOS.add(functionTreeVO);
             }
 
-            //设置当前节点的半选状态
-            for(FunctionTreeVO functionTreeVO:functionTreeVOS)
-            {
-                roleFunctionService.setHalfCheckAndIsParent(functionTreeVO,roleFunctions);
-            }
-
-            // 计算每个节点的子孙勾选统计
-            java.util.Set<String> roleFunctionIdSet = new java.util.HashSet<>();
-            for(RoleFunction rf : roleFunctions) {
+            // 一次性加载该应用所有功能项，构建 pid→子节点 内存索引
+            Set<String> roleFunctionIdSet = new HashSet<>();
+            for (RoleFunction rf : roleFunctions) {
                 roleFunctionIdSet.add(rf.getFunctionId());
             }
-            for(FunctionTreeVO functionTreeVO:functionTreeVOS)
-            {
-                if(functionTreeVO.getIsParent() != null && functionTreeVO.getIsParent()) {
-                    java.util.List<FunctionTreeVO> descendants = new java.util.LinkedList<>();
-                    functionService.queryFunctionTreeChildren(descendants, functionTreeVO);
-                    // 总数 +1 包含当前节点自身
-                    functionTreeVO.setDescendantCount(descendants.size() + 1);
-                    int checked = roleFunctionIdSet.contains(functionTreeVO.getFunctionId()) ? 1 : 0;
-                    for(FunctionTreeVO desc : descendants) {
-                        if(roleFunctionIdSet.contains(desc.getFunctionId())) {
-                            checked++;
+            List<FunctionVO> allFunctions = functionService.queryListByAppCode(query.getAppCode());
+            Map<Long, List<FunctionVO>> childrenMap = new HashMap<>();
+            for (FunctionVO f : allFunctions) {
+                Long pid = f.getPid() != null ? f.getPid() : -1L;
+                childrenMap.computeIfAbsent(pid, k -> new ArrayList<>()).add(f);
+            }
+            // 内存设置 isParent/checked/halfCheck + 统计子孙（不做DB查询）
+            for (FunctionTreeVO functionTreeVO : functionTreeVOS) {
+                // 设置选中状态
+                functionTreeVO.setChecked(roleFunctionIdSet.contains(functionTreeVO.getFunctionId()));
+                // 设置父节点状态
+                functionTreeVO.setIsParent(childrenMap.containsKey(functionTreeVO.getId()));
+                if (functionTreeVO.getIsParent()) {
+                    // halfCheck: 是否所有直接子节点都在 roleFunctions 中
+                    List<FunctionVO> directChildren = childrenMap.get(functionTreeVO.getId());
+                    boolean allChildrenChecked = true;
+                    for (FunctionVO child : directChildren) {
+                        if (!roleFunctionIdSet.contains(child.getFunctionId())) {
+                            allChildrenChecked = false;
+                            break;
                         }
                     }
-                    functionTreeVO.setCheckedDescendantCount(checked);
-                    functionTreeVO.setCascaded(checked == descendants.size() + 1);
+                    functionTreeVO.setHalfCheck(!allChildrenChecked);
+                    // 统计子孙
+                    int[] counts = countDescendants(functionTreeVO.getId(), childrenMap, roleFunctionIdSet);
+                    functionTreeVO.setDescendantCount(counts[0] + 1);
+                    functionTreeVO.setCheckedDescendantCount(counts[1] + (roleFunctionIdSet.contains(functionTreeVO.getFunctionId()) ? 1 : 0));
+                    functionTreeVO.setCascaded(functionTreeVO.getCheckedDescendantCount().intValue() == functionTreeVO.getDescendantCount().intValue());
                 }
             }
 
             resultObjectVO.setData(functionTreeVOS);
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -326,6 +330,37 @@ public class RoleFunctionBusinessService {
     }
 
 
+    /**
+     * 内存递归统计子孙节点总数[0]和已勾选数[1]（不含当前节点自身）
+     */
+    private void addDescendants(Long nodeId, Map<Long, List<FunctionVO>> childrenMap, List<FunctionTreeVO> result) {
+        List<FunctionVO> children = childrenMap.get(nodeId);
+        if (children == null) return;
+        for (FunctionVO child : children) {
+            FunctionTreeVO ft = new FunctionTreeVO();
+            try {
+                org.apache.commons.beanutils.BeanUtils.copyProperties(ft, child);
+            } catch (Exception e) {
+                continue;
+            }
+            result.add(ft);
+            addDescendants(child.getId(), childrenMap, result);
+        }
+    }
+
+    private int[] countDescendants(Long nodeId, Map<Long, List<FunctionVO>> childrenMap, Set<String> checkedSet) {
+        int[] result = new int[]{0, 0};
+        List<FunctionVO> children = childrenMap.get(nodeId);
+        if (children == null) return result;
+        for (FunctionVO child : children) {
+            result[0]++;
+            if (checkedSet.contains(child.getFunctionId())) result[1]++;
+            int[] sub = countDescendants(child.getId(), childrenMap, checkedSet);
+            result[0] += sub[0];
+            result[1] += sub[1];
+        }
+        return result;
+    }
 
 
 }
