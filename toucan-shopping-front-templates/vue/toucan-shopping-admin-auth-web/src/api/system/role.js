@@ -28,6 +28,10 @@ export function getRoleFunctionTree(roleId, appCode, pid) {
   return request({ url: '/function/query/role/function/tree', method: 'post', data: { roleId, appCode, pid: pid != null ? pid : -1 } })
 }
 
+export function getRoleFunctionFullTree(roleId, appCode) {
+  return request({ url: '/function/query/role/function/full/tree', method: 'post', data: { roleId, appCode } })
+}
+
 export function saveRoleFunctions(data) {
   return request({ url: '/role/connect/functions', method: 'post', data })
 }

@@ -34,6 +34,11 @@ public class RoleFunctionServiceAPISingleImpl implements RoleFunctionServiceAPI 
     }
 
     @Override
+    public ResultObjectVO queryRoleFunctionFullTree(RequestJsonVO requestJsonVO) {
+        return roleFunctionBusinessService.queryRoleFunctionFullTree(requestJsonVO);
+    }
+
+    @Override
     public ResultObjectVO refreshCache(RequestJsonVO requestJsonVO) {
         return roleFunctionBusinessService.refreshCache(requestJsonVO);
     }

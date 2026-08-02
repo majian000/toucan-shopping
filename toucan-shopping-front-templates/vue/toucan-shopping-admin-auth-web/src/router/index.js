@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { isLoggedIn } from '@/utils/auth'
 import { usePermissionStore } from '@/store/modules/permission'
@@ -64,7 +65,7 @@ router.beforeEach((to, from, next) => {
       if (requiredPerm) {
         const permStore = usePermissionStore()
         if (!permStore.hasPermission(requiredPerm)) {
-          // 已经在工作台就不再跳转，避免死循环
+          ElMessage.warning('没有访问权限')
           if (to.path === '/dashboard') {
             next()
             return

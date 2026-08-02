@@ -363,4 +363,61 @@ public class RoleFunctionBusinessService {
     }
 
 
+    /**
+     * 查询角色完整功能树（含所有层级的 children 嵌套）
+     */
+    public ResultObjectVO queryRoleFunctionFullTree(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RoleFunctionVO query = requestVo.formatEntity(RoleFunctionVO.class);
+            Check.notEmpty(query.getRoleId(), ResultVO.FAILD, "roleId为空");
+            Check.notEmpty(query.getAppCode(), ResultVO.FAILD, "appCode为空");
+
+            Set<String> roleFunctionIdSet = new HashSet<>();
+            List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
+            for (RoleFunction rf : roleFunctions) {
+                roleFunctionIdSet.add(rf.getFunctionId());
+            }
+
+            List<FunctionVO> allFunctions = functionService.queryListByAppCode(query.getAppCode());
+            Map<Long, List<FunctionVO>> childrenMap = new HashMap<>();
+            for (FunctionVO f : allFunctions) {
+                Long pid = f.getPid() != null ? f.getPid() : -1L;
+                childrenMap.computeIfAbsent(pid, k -> new ArrayList<>()).add(f);
+            }
+
+            // 递归构建完整树，设置 checked/descendantCount/cascaded
+            List<FunctionTreeVO> result = buildFullTree(-1L, childrenMap, roleFunctionIdSet);
+            resultObjectVO.setData(result);
+        } catch (BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    private List<FunctionTreeVO> buildFullTree(Long pid, Map<Long, List<FunctionVO>> childrenMap, Set<String> checkedSet) {
+        List<FunctionTreeVO> result = new ArrayList<>();
+        List<FunctionVO> children = childrenMap.get(pid);
+        if (children == null) return result;
+        for (FunctionVO vo : children) {
+            FunctionTreeVO node = new FunctionTreeVO();
+            try { BeanUtils.copyProperties(node, vo); } catch (Exception e) { continue; }
+            node.setChecked(checkedSet.contains(node.getFunctionId()));
+            node.setIsParent(childrenMap.containsKey(node.getId()));
+            if (node.getIsParent()) {
+                node.setChildren(buildFullTree(node.getId(), childrenMap, checkedSet));
+                int[] counts = countDescendants(node.getId(), childrenMap, checkedSet);
+                node.setDescendantCount(counts[0] + 1);
+                node.setCheckedDescendantCount(counts[1] + (checkedSet.contains(node.getFunctionId()) ? 1 : 0));
+                node.setCascaded(node.getCheckedDescendantCount().intValue() == node.getDescendantCount().intValue());
+            }
+            result.add(node);
+        }
+        return result;
+    }
+
 }

@@ -113,4 +113,10 @@ public class RoleFunctionController {
 
 
 
+@RequestMapping(value="/query/role/function/full/tree", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public ResultObjectVO queryRoleFunctionFullTree(@RequestBody RequestJsonVO requestJsonVO) {
+		return roleFunctionBusinessService.queryRoleFunctionFullTree(requestJsonVO);
+	}
+
 }

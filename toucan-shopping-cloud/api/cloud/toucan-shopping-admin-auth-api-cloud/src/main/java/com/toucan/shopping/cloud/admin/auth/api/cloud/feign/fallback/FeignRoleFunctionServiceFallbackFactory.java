@@ -106,6 +106,14 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
                 resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryRoleFunctionFullTree(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

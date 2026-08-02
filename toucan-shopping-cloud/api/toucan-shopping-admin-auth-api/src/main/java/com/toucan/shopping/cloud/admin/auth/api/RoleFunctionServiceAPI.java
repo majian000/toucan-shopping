@@ -31,6 +31,11 @@ public interface RoleFunctionServiceAPI {
     ResultObjectVO queryFunctionTreeByRoleIdAndParentId( RequestJsonVO requestVo);
 
 
+    /**
+     * 查询角色完整功能树（含嵌套children）
+     */
+    ResultObjectVO queryRoleFunctionFullTree(RequestJsonVO requestJsonVO);
+
 
     /**
      * 刷新缓存

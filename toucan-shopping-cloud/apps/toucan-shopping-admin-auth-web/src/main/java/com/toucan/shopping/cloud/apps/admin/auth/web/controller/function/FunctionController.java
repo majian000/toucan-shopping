@@ -468,6 +468,26 @@ public class FunctionController extends UIController {
     }
 
 
+    /**
+     * 查询角色完整功能树（含嵌套children）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:permission"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
+    @RequestMapping(value = "/query/role/function/full/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryRoleFunctionFullTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), roleFunctionVO);
+            resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionFullTree(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
 

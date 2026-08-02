@@ -136,13 +136,11 @@
         <el-tree
           ref="permTreeRef"
           node-key="functionId"
+          :data="permTreeData"
           :props="{ label: 'name', isLeaf: isPermLeaf }"
           show-checkbox
           check-strictly
-          lazy
-          :load="loadPermTree"
           class="perm-tree"
-          @check="handlePermCheck"
         >
           <template #default="{ data }">
             <span class="perm-node">
@@ -153,18 +151,18 @@
               <el-tag size="small" :type="typeIcon[data.type]?.tagType" class="perm-node-tag">
                 {{ typeIcon[data.type]?.label || data.type }}
               </el-tag>
-              <template v-if="data.descendantCount > 0">
+              <template v-if="nodeStats[data.functionId]">
                 <el-tag
                   size="small"
-                  :type="data.cascaded ? 'success' : 'info'"
+                  :type="nodeStats[data.functionId].cascaded.value ? 'success' : 'info'"
                   class="perm-count-tag"
-                >{{ data.checkedDescendantCount || 0 }}/{{ data.descendantCount }} 项</el-tag>
+                >{{ nodeStats[data.functionId].checked.value }}/{{ nodeStats[data.functionId].total.value }} 项</el-tag>
               </template>
               <el-icon
                 v-if="data.isParent"
                 class="perm-cascade-btn"
-                :class="{ cascaded: data.cascaded }"
-                :title="data.cascaded ? '取消级联' : '级联所有子节点'"
+                :class="{ cascaded: nodeStats[data.functionId]?.cascaded.value || data.cascaded }"
+                :title="(nodeStats[data.functionId]?.cascaded.value || data.cascaded) ? '取消级联' : '级联所有子节点'"
                 @click.stop="handleCascadeToggle(data)"
               ><CircleCheck /></el-icon>
             </span>
@@ -187,7 +185,7 @@ import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck } from '@element-plus/icons-vue'
-import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
+import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -379,6 +377,16 @@ const checkedPermCount = computed(() => {
   if (!permTreeRef.value) return 0
   return permTreeRef.value.getCheckedKeys().length
 })
+// 全量树数据
+const permTreeData = ref([])
+// 节点统计用 reactive+ref：模板读 .value 响应式更新
+const nodeStats = reactive({})
+function ensureNodeStats(functionId) {
+  if (!nodeStats[functionId]) {
+    nodeStats[functionId] = { checked: ref(0), total: ref(0), cascaded: ref(false) }
+  }
+  return nodeStats[functionId]
+}
 
 // 功能项类型图标配置
 const typeIcon = {
@@ -395,68 +403,22 @@ function isPermLeaf(data) {
   return !data.isParent
 }
 
-// ========== 懒加载 ==========
-function loadPermTree(node, resolve) {
-  const isRoot = node.level === 0
-  const pid = node.data && node.data.id ? node.data.id : -1
-  getRoleFunctionTree(permRoleId.value, permAppCode.value, pid).then(res => {
-    const rawData = res.data || []
-    // 父节点已级联 → 子节点继承级联状态（在 resolve 前修改数据）
-    if (node.data && node.data.cascaded) {
-      rawData.forEach(item => {
-        item.checked = true
-        item.cascaded = true
-        item.checkedDescendantCount = item.descendantCount || 0
-      })
-    }
-    resolve(rawData)
-    nextTick(() => {
-      nextTick(() => {
-        rawData.forEach(item => {
-          if (item.checked === true || item.checked === 'true') {
-            permTreeRef.value?.setChecked(item.functionId, true, false)
-          }
-        })
-        syncTreeState()
-        if (isRoot) permTreeLoading.value = false
-      })
-    })
-  }).catch(() => {
-    resolve([])
-    if (isRoot) permTreeLoading.value = false
-  })
-}
-
-// ========== 操作入口（全部走 syncTreeState） ==========
-function handlePermCheck() {
-  nextTick(() => syncTreeState())
-}
-
+// ========== 全量树：级联 + 同步统计 ==========
 function handleCascadeToggle(data) {
   data.cascaded = !data.cascaded
   const node = permTreeRef.value?.store?.getNode(data.functionId)
   if (!node) return
-  // 递归标记所有已加载子孙
   function walk(n) {
     n.childNodes.forEach(child => {
       child.setChecked(data.cascaded, false)
-      if (child.data && child.data.descendantCount > 0) {
-        child.data.cascaded = data.cascaded
-        child.data.checkedDescendantCount = data.cascaded ? child.data.descendantCount : 0
-      }
       walk(child)
     })
   }
   walk(node)
   node.setChecked(data.cascaded, false)
-  // 未展开时显式覆盖，避免 syncTreeState 用后端旧值
-  if (node.childNodes.length === 0 && data.descendantCount > 0) {
-    data.checkedDescendantCount = data.cascaded ? data.descendantCount : (node.checked ? 1 : 0)
-  }
-  nextTick(() => syncTreeState())
+  syncTreeState()
 }
 
-// syncTreeState 中：遇到 data.cascaded=true 的节点，直接取 descendantCount
 function syncTreeState() {
   const tree = permTreeRef.value
   if (!tree) return
@@ -464,33 +426,20 @@ function syncTreeState() {
   function calc(node) {
     if (!node || !node.data) return
     node.childNodes.forEach(calc)
-    // 未展开 → 保留后端的子孙统计，只修正自身勾选变化
-    if (node.childNodes.length === 0 && node.data.descendantCount > 0) {
-      const selfChecked = checkedSet.has(node.key) ? 1 : 0
-      // 后端 checkedDescendantCount 含自身，需减去旧自身状态 + 新自身状态
-      const descChecked = (node.data.checkedDescendantCount || 0) - (node.data.checked ? 1 : 0) + selfChecked
-      node.data.checkedDescendantCount = Math.max(0, Math.min(node.data.descendantCount, descChecked))
-      if (node.data.cascaded && !checkedSet.has(node.key)) {
-        node.data.cascaded = false
-      }
-      node.data.cascaded = node.data.checkedDescendantCount === node.data.descendantCount
-      return
-    }
     if (node.data.descendantCount > 0) {
-      // 自身是否勾选（descendantCount 含自身，child 不重复加 has(key)）
       let checked = checkedSet.has(node.key) ? 1 : 0
       node.childNodes.forEach(child => {
-        if (child.data?.descendantCount > 0) {
-          // child 的 descendantCount 已含自身，直接用 checkedDescendantCount
-          checked += child.data?.cascaded ? child.data.descendantCount : (child.data?.checkedDescendantCount || 0)
-        } else {
-          // 叶子节点，加 check 状态
+        checked += child.data?.cascaded ? (child.data.descendantCount || 0) : (child.data?.checkedDescendantCount || 0)
+        if (!child.data?.cascaded && !child.data?.descendantCount) {
           if (checkedSet.has(child.key)) checked++
-          checked += (child.data?.checkedDescendantCount || 0)
         }
       })
       node.data.checkedDescendantCount = checked
       node.data.cascaded = checked > 0 && checked === node.data.descendantCount
+      const s = ensureNodeStats(node.data.functionId)
+      s.checked.value = checked
+      s.total.value = node.data.descendantCount
+      s.cascaded.value = node.data.cascaded
     }
   }
   tree.store.root?.childNodes?.forEach(calc)
@@ -501,6 +450,28 @@ async function handleAssignPermission(row) {
   permAppCode.value = row.appCode
   permTreeLoading.value = true
   permDialogVisible.value = true
+  try {
+    const res = await getRoleFunctionFullTree(row.roleId, row.appCode)
+    const tree = res.data || []
+    permTreeData.value = tree
+    // 初始化 nodeStats 并勾选已关联节点
+    await nextTick()
+    function walk(nodes) {
+      nodes.forEach(item => {
+        if (item.checked) permTreeRef.value?.setChecked(item.functionId, true, false)
+        if (item.descendantCount > 0) {
+          const s = ensureNodeStats(item.functionId)
+          s.checked.value = item.checkedDescendantCount || 0
+          s.total.value = item.descendantCount
+          s.cascaded.value = item.cascaded || false
+        }
+        if (item.children) walk(item.children)
+      })
+    }
+    walk(tree)
+  } catch { /* ignore */ } finally {
+    permTreeLoading.value = false
+  }
 }
 
 // ========== 权限树操作 ==========
