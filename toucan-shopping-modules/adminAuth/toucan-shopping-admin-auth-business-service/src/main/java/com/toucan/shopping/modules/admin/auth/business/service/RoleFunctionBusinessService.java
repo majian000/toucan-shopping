@@ -339,7 +339,7 @@ public class RoleFunctionBusinessService {
         for (FunctionVO child : children) {
             FunctionTreeVO ft = new FunctionTreeVO();
             try {
-                org.apache.commons.beanutils.BeanUtils.copyProperties(ft, child);
+                BeanUtils.copyProperties(ft, child);
             } catch (Exception e) {
                 continue;
             }
