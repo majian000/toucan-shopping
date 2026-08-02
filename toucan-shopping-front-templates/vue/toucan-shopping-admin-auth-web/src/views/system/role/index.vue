@@ -395,14 +395,21 @@ function isPermLeaf(data) {
   return !data.isParent
 }
 
-// 懒加载权限树节点
+// ========== 懒加载 ==========
 function loadPermTree(node, resolve) {
   const isRoot = node.level === 0
   const pid = node.data && node.data.id ? node.data.id : -1
   getRoleFunctionTree(permRoleId.value, permAppCode.value, pid).then(res => {
     const rawData = res.data || []
+    // 父节点已级联 → 子节点继承级联状态（在 resolve 前修改数据）
+    if (node.data && node.data.cascaded) {
+      rawData.forEach(item => {
+        item.checked = true
+        item.cascaded = true
+        item.checkedDescendantCount = item.descendantCount || 0
+      })
+    }
     resolve(rawData)
-    // el-tree 懒加载内部异步创建节点，等两帧再同步勾选状态
     nextTick(() => {
       nextTick(() => {
         rawData.forEach(item => {
@@ -410,8 +417,7 @@ function loadPermTree(node, resolve) {
             permTreeRef.value?.setChecked(item.functionId, true, false)
           }
         })
-        // 刷新当前节点的子孙计数（已加载子节点的级联状态已在数据中）
-        if (node.data) refreshAncestorCounts(permTreeRef.value?.store?.getNode(node.data.functionId))
+        syncTreeState()
         if (isRoot) permTreeLoading.value = false
       })
     })
@@ -421,56 +427,55 @@ function loadPermTree(node, resolve) {
   })
 }
 
-// 统一刷新：从指定节点向上更新所有祖先的已选子孙计数
-// descendantCount 是后端给的权威总数，不变；checkedDescendantCount 由前端根据当前勾选状态聚合
-function refreshAncestorCounts(startNode) {
-  const tree = permTreeRef.value
-  if (!tree) return
-  const checkedSet = new Set(tree.getCheckedKeys())
-  let parent = startNode
-  while (parent && parent.data) {
-    if (parent.data.descendantCount > 0) {
-      let checked = 0
-      parent.childNodes.forEach(child => {
-        if (checkedSet.has(child.key)) checked++       // 子节点本身已勾
-        if (child.data) {
-          // 加上子节点的已选子孙数（含级联展开的，来自数据对象不依赖 store）
-          checked += (child.data.checkedDescendantCount || 0)
-        }
-      })
-      parent.data.checkedDescendantCount = checked
-      parent.data.cascaded = checked > 0 && checked === parent.data.descendantCount
-    }
-    parent = parent.parent
-  }
+// ========== 操作入口（全部走 syncTreeState） ==========
+function handlePermCheck() {
+  nextTick(() => syncTreeState())
 }
 
-// 手动勾选/取消节点时，向上刷新
-function handlePermCheck(data) {
-  const tree = permTreeRef.value
-  if (!tree) return
-  const node = tree.store.getNode(data.functionId)
-  if (node) refreshAncestorCounts(node.parent || node)
-}
-
-// 级联切换：勾选/取消所有子孙节点的勾选
 function handleCascadeToggle(data) {
-  const toggleTo = !data.cascaded
-  data.cascaded = toggleTo
-  const tree = permTreeRef.value
-  if (!tree) return
-  const node = tree.store.getNode(data.functionId)
+  data.cascaded = !data.cascaded
+  const node = permTreeRef.value?.store?.getNode(data.functionId)
   if (!node) return
+  // 递归标记所有已加载子孙：勾选 + 同步数据对象的级联状态
   function walk(n) {
     n.childNodes.forEach(child => {
-      child.setChecked(toggleTo, false)
+      child.setChecked(data.cascaded, false)
+      if (child.data && child.data.descendantCount > 0) {
+        child.data.cascaded = data.cascaded
+        child.data.checkedDescendantCount = data.cascaded ? child.data.descendantCount : 0
+      }
       walk(child)
     })
   }
   walk(node)
-  node.setChecked(toggleTo, false)
-  data.checkedDescendantCount = toggleTo ? data.descendantCount : 0
-  refreshAncestorCounts(node.parent)
+  node.setChecked(data.cascaded, false)
+  nextTick(() => syncTreeState())
+}
+
+// syncTreeState 中：遇到 data.cascaded=true 的节点，直接取 descendantCount
+function syncTreeState() {
+  const tree = permTreeRef.value
+  if (!tree) return
+  const checkedSet = new Set(tree.getCheckedKeys())
+  function calc(node) {
+    if (!node || !node.data) return
+    // 自身级联且未展开 → 全量；已展开则走下面逐个统计
+    if (node.data.cascaded && node.childNodes.length === 0 && node.data.descendantCount > 0) {
+      node.data.checkedDescendantCount = node.data.descendantCount
+      return
+    }
+    node.childNodes.forEach(calc)
+    if (node.data.descendantCount > 0) {
+      let checked = 0
+      node.childNodes.forEach(child => {
+        if (checkedSet.has(child.key)) checked++
+        checked += child.data?.cascaded ? (child.data.descendantCount || 0) : (child.data?.checkedDescendantCount || 0)
+      })
+      node.data.checkedDescendantCount = checked
+      node.data.cascaded = checked > 0 && checked === node.data.descendantCount
+    }
+  }
+  tree.store.root?.childNodes?.forEach(calc)
 }
 
 async function handleAssignPermission(row) {
