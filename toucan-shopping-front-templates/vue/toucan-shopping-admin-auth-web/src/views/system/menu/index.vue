@@ -34,8 +34,23 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-button type="primary" :icon="Plus" v-permission="'pms:system:menu:add'" @click="handleAdd">添加</el-button>
-          <el-button type="success" :icon="Plus" v-permission="'pms:system:menu:batch-add'" @click="handleBatchAdd">批量添加</el-button>
+          <span class="app-select-label">已选应用：</span>
+          <el-select
+            v-model="selectedAppCode"
+            placeholder="请选择应用"
+            style="width:240px"
+            @change="handleAppChange"
+            :loading="appLoading"
+          >
+            <el-option
+              v-for="a in appOptions"
+              :key="a.code"
+              :label="a.code + ' ' + a.name"
+              :value="a.code"
+            />
+          </el-select>
+          <el-button type="primary" :icon="Plus" v-permission="'pms:system:menu:add'" :disabled="!selectedAppCode" @click="handleAdd">添加</el-button>
+          <el-button type="success" :icon="Plus" v-permission="'pms:system:menu:batch-add'" :disabled="!selectedAppCode" @click="handleBatchAdd">批量添加</el-button>
         </div>
       </div>
 
@@ -153,6 +168,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Refresh, Search } from '@element-plus/icons-vue'
 import { listMenuByPid, listMenuTree, addMenu, updateMenu, delMenu, batchAddMenus } from '@/api/system/menu'
+import { listApp } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -168,6 +184,27 @@ function transformTypes(tree) {
   }))
 }
 
+// ========== 应用选择 ==========
+const appOptions = ref([])
+const appLoading = ref(false)
+const selectedAppCode = ref('')
+
+async function loadApps() {
+  appLoading.value = true
+  try {
+    const res = await listApp({ page: 1, size: 1000 })
+    appOptions.value = res.data || []
+    if (appOptions.value.length > 0) {
+      selectedAppCode.value = appOptions.value[0].code
+    }
+  } catch { /* ignore */ } finally { appLoading.value = false }
+}
+
+function handleAppChange() {
+  fetchData()
+  tableKey.value++
+}
+
 // ========== 树形菜单数据 ==========
 const menuTree = ref([])
 const tableKey = ref(0)
@@ -175,27 +212,30 @@ const loading = ref(false)
 const fullMenuTree = ref([])
 
 async function fetchData(params = {}) {
+  if (!selectedAppCode.value) { menuTree.value = []; return }
   loading.value = true
   try {
-    const res = await listMenuByPid({ pid: -1, ...params })
+    const base = { pid: -1, appCode: selectedAppCode.value }
+    const res = await listMenuByPid({ ...base, ...params })
     menuTree.value = transformTypes(res.data || [])
   } finally { loading.value = false }
 }
 
 async function loadFullTree() {
+  if (!selectedAppCode.value) { fullMenuTree.value = []; return }
   try {
-    const res = await listMenuTree()
+    const res = await listMenuByPid({ pid: -1, appCode: selectedAppCode.value })
     fullMenuTree.value = transformTypes(res.data || [])
   } catch { /* ignore */ }
 }
 
-onMounted(() => fetchData())
+onMounted(() => { loadApps().then(() => fetchData()) })
 
 function handleRefresh() { fetchData(); tableKey.value++ }
 
 async function loadChildren(row, _treeNode, resolve) {
   try {
-    const res = await listMenuByPid({ pid: row.id })
+    const res = await listMenuByPid({ pid: row.id, appCode: selectedAppCode.value })
     resolve(transformTypes(res.data || []))
   } catch { resolve([]) }
 }
@@ -278,7 +318,8 @@ async function handleSubmit() {
     const apiData = {
       pid: formData.pid, type: formData.type, name: formData.name,
       url: formData.url, permission: formData.permission, icon: formData.icon,
-      functionSort: formData.functionSort, enableStatus: formData.enableStatus
+      functionSort: formData.functionSort, enableStatus: formData.enableStatus,
+      appCode: selectedAppCode.value
     }
     if (isEdit.value) {
       apiData.id = editingId.value
@@ -339,7 +380,8 @@ async function handleBatchSubmit() {
         permission: parts[3].trim(),
         icon: parts[4].trim(),
         functionSort: parseInt(parts[5].trim()) || 0,
-        enableStatus: parts.length > 6 ? parseInt(parts[6].trim()) : 1
+        enableStatus: parts.length > 6 ? parseInt(parts[6].trim()) : 1,
+        appCode: selectedAppCode.value
       })
     }
     if (items.length === 0) { ElMessage.warning('没有有效数据'); return }
@@ -356,7 +398,8 @@ async function handleBatchSubmit() {
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding: 16px 20px 0; } }
   .table-card {
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: $gap-md; }
-    .toolbar-left { display: flex; gap: $gap-sm; }
+    .toolbar-left { display: flex; gap: $gap-sm; align-items: center; }
+    .app-select-label { font-size: 14px; color: $text-secondary; white-space: nowrap; }
   }
   :deep(.el-table) th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; }
 }
