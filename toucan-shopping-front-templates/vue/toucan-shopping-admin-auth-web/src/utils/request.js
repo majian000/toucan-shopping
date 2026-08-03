@@ -66,14 +66,8 @@ service.interceptors.response.use(
     }
   },
   error => {
-    if (error.response && error.response.status === 403) {
-      const data = error.response.data
-      // 没有权限：提示后不跳转登录，留在当前页
-      if (data && data.code === 0) {
-        ElMessage({ message: data.msg || '没有权限访问', type: 'warning', duration: 3000 })
-        return Promise.reject(data.msg || '没有权限访问')
-      }
-      // 登录过期
+    // 登录超时(401): 清除token跳转登录页
+    if (error.response && error.response.status === 401) {
       if (!isRelogin) {
         isRelogin = true
         ElMessage({ message: '登录状态已过期，请重新登录', type: 'error', duration: 2000 })
@@ -81,6 +75,12 @@ service.interceptors.response.use(
         location.href = '/#/login'
       }
       return Promise.reject(error)
+    }
+    // 没有权限(403): 提示后不跳转
+    if (error.response && error.response.status === 403) {
+      const data = error.response.data
+      ElMessage({ message: data?.msg || '没有权限访问', type: 'warning', duration: 3000 })
+      return Promise.reject(data?.msg || '没有权限访问')
     }
     let { message } = error
     if (message === 'Network Error') {

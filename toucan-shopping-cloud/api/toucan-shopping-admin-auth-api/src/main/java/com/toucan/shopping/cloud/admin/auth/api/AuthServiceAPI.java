@@ -12,7 +12,7 @@ public interface AuthServiceAPI {
 
     /**
      * 校验权限 并验证是否登录
-
+     * -1登录超时 -2权限校验失败 1成功
      * @param requestVo
      * @return
      */
