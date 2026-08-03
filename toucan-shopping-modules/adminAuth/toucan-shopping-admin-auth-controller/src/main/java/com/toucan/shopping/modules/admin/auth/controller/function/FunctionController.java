@@ -260,5 +260,11 @@ public class FunctionController {
     }
 
 
+    @RequestMapping(value="/queryListByAppCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByAppCode(@RequestBody RequestJsonVO requestVo){
+        return functionBusinessService.queryListByAppCode(requestVo);
+    }
+
 
 }
