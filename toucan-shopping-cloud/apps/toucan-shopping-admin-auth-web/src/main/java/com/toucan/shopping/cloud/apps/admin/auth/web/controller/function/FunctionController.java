@@ -34,6 +34,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -173,9 +175,9 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:tree"})
-    @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
+    @RequestMapping(value = "/tree/table",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO treeTable(HttpServletRequest request, FunctionTreeInfo queryPageInfo)
+    public ResultObjectVO treeTable(HttpServletRequest request, @RequestBody FunctionTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -201,7 +203,7 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:tree"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO treeTableByPid(HttpServletRequest request, FunctionTreeInfo queryPageInfo)
+    public ResultObjectVO treeTableByPid(HttpServletRequest request, @RequestBody FunctionTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -216,6 +218,63 @@ public class FunctionController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 查询应用功能树(简化版,供上级功能选择器使用)
+     * 返回指定应用下所有功能项的完整嵌套树,仅包含id/name/pid/children
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:tree"})
+    @RequestMapping(value = "/query/app/function/simple/tree", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionSimpleTree(HttpServletRequest request, @RequestBody FunctionTreeVO functionTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Function query = new Function();
+            query.setAppCode(functionTreeVO.getAppCode());
+            query.setDeleteStatus((short) 0);
+            query.setEnableStatus((short) 1);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            resultObjectVO = functionServiceAPI.queryListByAppCode(requestJsonVO);
+
+            if (!resultObjectVO.isSuccess() || resultObjectVO.getData() == null) {
+                resultObjectVO.setData(new ArrayList<>());
+                return resultObjectVO;
+            }
+            List<Function> allFunctions = JSONArray.parseArray(
+                JSONObject.toJSONString(resultObjectVO.getData()), Function.class);
+            if (CollectionUtils.isEmpty(allFunctions)) {
+                resultObjectVO.setData(new ArrayList<>());
+                return resultObjectVO;
+            }
+
+            java.util.Map<Long, java.util.List<java.util.Map<String, Object>>> pidMap = new java.util.LinkedHashMap<>();
+            for (Function f : allFunctions) {
+                Long pid = f.getPid() != null ? f.getPid() : -1L;
+                pidMap.computeIfAbsent(pid, k -> new ArrayList<>())
+                    .add(new java.util.HashMap<String, Object>() {{
+                        put("id", f.getId());
+                        put("name", f.getName());
+                    }});
+            }
+            resultObjectVO.setData(buildSimpleTree(pidMap, -1L));
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
+    private java.util.List<java.util.Map<String, Object>> buildSimpleTree(
+            java.util.Map<Long, java.util.List<java.util.Map<String, Object>>> pidMap, Long pid) {
+        java.util.List<java.util.Map<String, Object>> list = pidMap.getOrDefault(pid, new ArrayList<>());
+        for (java.util.Map<String, Object> node : list) {
+            java.util.List<java.util.Map<String, Object>> children = buildSimpleTree(pidMap, (Long) node.get("id"));
+            if (!children.isEmpty()) node.put("children", children);
+        }
+        return list;
     }
 
 
@@ -325,7 +384,7 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/query/app/function/tree")
     @ResponseBody
-    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,FunctionTreeVO functionTreeVO)
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request, @RequestBody FunctionTreeVO functionTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

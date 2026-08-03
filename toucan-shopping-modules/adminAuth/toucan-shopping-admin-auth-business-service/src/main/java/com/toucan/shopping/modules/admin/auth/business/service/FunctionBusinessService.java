@@ -1088,6 +1088,23 @@ public class FunctionBusinessService {
     }
 
 
+    /**
+     * 查询指定应用下所有功能项(不分页)
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryListByAppCode(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Function query = JSONObject.parseObject(requestVo.getEntityJson(), Function.class);
+            query.setDeleteStatus((short) 0);
+            List<Function> list = functionService.findListByEntity(query);
+            resultObjectVO.setData(list);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+        }
+        return resultObjectVO;
+    }
 
 
 }

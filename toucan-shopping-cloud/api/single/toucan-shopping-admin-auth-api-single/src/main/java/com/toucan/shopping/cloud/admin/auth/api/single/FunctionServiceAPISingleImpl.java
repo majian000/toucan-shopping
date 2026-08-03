@@ -93,4 +93,9 @@ public class FunctionServiceAPISingleImpl implements FunctionServiceAPI {
         return functionBusinessService.list(requestVo);
     }
 
+    @Override
+    public ResultObjectVO queryListByAppCode(RequestJsonVO requestVo) {
+        return functionBusinessService.queryListByAppCode(requestVo);
+    }
+
 }

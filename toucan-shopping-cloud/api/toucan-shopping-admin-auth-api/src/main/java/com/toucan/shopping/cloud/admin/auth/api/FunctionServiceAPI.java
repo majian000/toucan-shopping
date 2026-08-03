@@ -148,5 +148,14 @@ public interface FunctionServiceAPI {
     ResultObjectVO list(RequestJsonVO requestVo);
 
 
+    /**
+     * 查询指定应用下所有功能项(不分页)
+
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/queryListByAppCode", method = RequestMethod.POST)
+    ResultObjectVO queryListByAppCode(@RequestBody RequestJsonVO requestVo);
+
 
 }

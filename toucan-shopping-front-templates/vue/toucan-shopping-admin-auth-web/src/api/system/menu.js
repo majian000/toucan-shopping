@@ -5,9 +5,9 @@ export function listMenuByPid(data) {
   return request({ url: '/function/tree/table/by/pid', method: 'post', data })
 }
 
-// 完整菜单树
-export function listMenuTree() {
-  return request({ url: '/function/tree/table', method: 'post', data: {} })
+// 简化版菜单树(上级功能选择器专用,仅返回id/name/children)
+export function listMenuSimpleTree(data) {
+  return request({ url: '/function/query/app/function/simple/tree', method: 'post', data })
 }
 
 // 保存
