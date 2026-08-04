@@ -85,6 +85,11 @@ export function queryAdminOrgnazitionTree(data) {
   return request({ url: '/orgnazition/query/admin/orgnazition/tree', method: 'post', data })
 }
 
+// 查询管理员详情
+export function getAdminDetail(id) {
+  return request({ url: '/admin/detail', method: 'post', data: { id } })
+}
+
 // 查询管理员关联的应用列表
 export function listAdminApps(adminId) {
   return request({ url: '/admin/apps', method: 'post', data: { adminId } })

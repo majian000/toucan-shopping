@@ -193,7 +193,7 @@ public class OrgnazitionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:org:list"})
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request, @RequestBody App query)
@@ -240,7 +240,7 @@ public class OrgnazitionController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:org"})
     @RequestMapping(value = "/query/admin/orgnazition/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAdminOrgnazitionTree(HttpServletRequest request,@RequestBody AdminAppVO entity)

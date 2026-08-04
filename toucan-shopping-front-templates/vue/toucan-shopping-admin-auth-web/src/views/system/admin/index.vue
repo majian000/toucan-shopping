@@ -111,6 +111,7 @@
             <el-button type="warning" link size="small" :icon="UserFilled" v-permission="'pms:system:user:role'" @click="handleRole(row)">角色</el-button>
             <el-button type="success" link size="small" :icon="Share" v-permission="'pms:system:user:org'" @click="handleOrgnazition(row)">组织机构</el-button>
             <el-button type="warning" link size="small" :icon="Lock" v-permission="'pms:system:user:password'" @click="handlePassword(row)">修改密码</el-button>
+            <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:user:show'" @click="handleViewAdmin(row)">查看</el-button>
             <el-button type="info" link size="small" :icon="EditPen" v-permission="'pms:system:user:info'" @click="handleInfo(row)">完善信息</el-button>
           </template>
         </el-table-column>
@@ -318,6 +319,28 @@
         <el-button type="primary" :loading="infoSubmitLoading" @click="handleSubmitInfo">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看弹窗 -->
+    <el-dialog v-model="viewVisible" title="账号详情" width="600px">
+      <el-descriptions :column="2" border>
+        <el-descriptions-item label="账号">{{ viewData.username }}</el-descriptions-item>
+        <el-descriptions-item label="昵称">{{ viewData.nickName || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="真实姓名">{{ viewData.realName || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="手机号">{{ viewData.phone || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="邮箱">{{ viewData.email || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="性别">{{ viewData.gender === 1 ? '男' : viewData.gender === 0 ? '女' : '--' }}</el-descriptions-item>
+        <el-descriptions-item label="身份证号" :span="2">{{ viewData.idCard || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="出生日期">{{ viewData.birthday || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="地址">{{ viewData.address || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="viewData.enableStatus === 1 ? 'success' : 'danger'" size="small">
+            {{ viewData.enableStatus === 1 ? '启用' : '禁用' }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="创建时间" :span="2">{{ viewData.createDate || '--' }}</el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 
@@ -325,10 +348,10 @@
 import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, Folder } from '@element-plus/icons-vue'
+import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, Folder, View } from '@element-plus/icons-vue'
 import {
   listAdmin, saveAdmin, updateAdmin, delAdmin, batchDelAdmin, resetAdminPwd,
-  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listApp, listAdminApps,
+  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listApp, listAdminApps, getAdminDetail,
   listOrgnazitionTree, queryAdminOrgnazitionTree, roleList
 } from '@/api/system/admin'
 
@@ -878,6 +901,8 @@ async function handleSubmitResetPwd() {
 }
 
 // ========== 完善信息弹窗 ==========
+const viewVisible = ref(false)
+const viewData = ref({})
 const infoDialogVisible = ref(false)
 const infoLoading = ref(false)
 const infoSubmitLoading = ref(false)
@@ -899,6 +924,15 @@ const infoRules = {
   phone: [{ pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }],
   email: [{ type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
   idCard: [{ pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: '身份证号格式不正确', trigger: 'blur' }]
+}
+
+async function handleViewAdmin(row) {
+  viewData.value = {}
+  viewVisible.value = true
+  try {
+    const res = await getAdminDetail(row.id)
+    viewData.value = res.data || row
+  } catch { viewData.value = row }
 }
 
 function handleInfo(row) {

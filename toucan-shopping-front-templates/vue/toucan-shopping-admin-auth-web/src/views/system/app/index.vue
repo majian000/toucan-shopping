@@ -38,10 +38,26 @@
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:app:edit-row'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:app:show'" @click="handleView(row)">查看</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:app:delete-row'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 查看弹窗 -->
+      <el-dialog v-model="viewVisible" title="应用详情" width="500px">
+        <el-descriptions :column="1" border>
+          <el-descriptions-item label="应用编码">{{ viewData.code }}</el-descriptions-item>
+          <el-descriptions-item label="应用名称">{{ viewData.name }}</el-descriptions-item>
+          <el-descriptions-item label="状态">
+            <el-tag :type="viewData.enableStatus === 1 ? 'success' : 'danger'" size="small">
+              {{ viewData.enableStatus === 1 ? '启用' : '禁用' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
+        </el-descriptions>
+      </el-dialog>
 
       <div class="pagination-wrapper">
         <el-pagination
@@ -82,7 +98,7 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit } from '@element-plus/icons-vue'
+import { Plus, Search, Refresh, Delete, Edit, View } from '@element-plus/icons-vue'
 import { listApp, saveApp, updateApp, delApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -118,6 +134,8 @@ watch(() => pagination.page, fetchData)
 watch(() => pagination.size, () => { pagination.page = 1; fetchData() })
 
 const dialogVisible = ref(false)
+const viewVisible = ref(false)
+const viewData = ref({})
 const isEdit = ref(false)
 const editingId = ref(null)
 const submitLoading = ref(false)
@@ -133,6 +151,7 @@ const formRules = {
 function resetForm() { formData.code = ''; formData.name = ''; formData.remark = ''; formData.enableStatus = 1 }
 
 function handleAdd() { isEdit.value = false; resetForm(); dialogVisible.value = true }
+function handleView(row) { viewData.value = row; viewVisible.value = true }
 
 function handleEdit(row) {
   isEdit.value = true

@@ -358,7 +358,29 @@ public class AdminController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:batch-delete-api"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:user:show"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody Admin admin)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminVO query = new AdminVO();
+            query.setId(admin.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            resultObjectVO = adminServiceAPI.queryVOByEntity(requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                AdminVO vo = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()), AdminVO.class);
+                vo.setPassword(null);
+                resultObjectVO.setData(vo);
+            }
+        } catch(Exception e) {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AdminVO> adminVos)
