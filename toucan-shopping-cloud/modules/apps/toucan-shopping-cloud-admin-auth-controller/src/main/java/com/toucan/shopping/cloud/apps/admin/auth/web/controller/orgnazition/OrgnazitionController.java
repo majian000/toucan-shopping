@@ -267,9 +267,7 @@ public class OrgnazitionController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Orgnazition entity =new Orgnazition();
-            // id from @RequestBody
-                        String entityJson = JSONObject.toJSONString(orgnazition);
+            String entityJson = JSONObject.toJSONString(orgnazition);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
@@ -286,7 +284,7 @@ public class OrgnazitionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType =AdminAuth.RESPONSE_JSON )
-    @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
     {

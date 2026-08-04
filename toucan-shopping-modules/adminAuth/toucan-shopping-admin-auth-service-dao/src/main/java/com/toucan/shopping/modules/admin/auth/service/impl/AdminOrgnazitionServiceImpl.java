@@ -40,6 +40,11 @@ public class AdminOrgnazitionServiceImpl implements AdminOrgnazitionService {
         return adminOrgnazitionMapper.deleteByOrgnazitionId(orgnazitionId);
     }
 
+    @Override
+    public int deleteByOrgnazitionIds(String[] orgnazitionIds) {
+        return adminOrgnazitionMapper.deleteByOrgnazitionIds(orgnazitionIds);
+    }
+
 
     @Override
     public int deleteByAdminIdAndAppCode(String adminId, String appCode) {

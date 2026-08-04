@@ -194,7 +194,7 @@ public class OrgnazitionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
     {

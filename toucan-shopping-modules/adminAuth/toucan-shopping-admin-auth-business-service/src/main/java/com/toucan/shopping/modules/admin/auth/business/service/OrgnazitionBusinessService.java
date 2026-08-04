@@ -27,7 +27,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 组织机构管理
@@ -57,43 +61,41 @@ public class OrgnazitionBusinessService {
 
     /**
      * 添加组织机构
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO save(RequestJsonVO requestVo){
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
+            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(), OrgnazitionVO.class);
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "添加失败,请输入组织机构名称");
 
-            if(entity.getPid()==null)
-            {
+            if (entity.getPid() == null) {
                 entity.setPid(-1L);
             }
             entity.setOrgnazitionId(GlobalUUID.uuid());
             entity.setCreateDate(new Date());
-            entity.setDeleteStatus((short)0);
+            entity.setDeleteStatus((short) 0);
             Integer maxCodeVal = orgnazitionService.queryMaxCode();
-            if(maxCodeVal==null){
-                maxCodeVal=0;
+            if (maxCodeVal == null) {
+                maxCodeVal = 0;
             }
-            entity.setCode("ORG"+CodeUtils.genMinCode(maxCodeVal+1,3));
+            entity.setCode("ORG" + CodeUtils.genMinCode(maxCodeVal + 1, 3));
             int row = orgnazitionService.save(entity);
             if (row < 1) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "添加失败,请重试!");
             }
 
-            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
-            {
-                for(String appCode:entity.getAppCodes())
-                {
+            if (!CollectionUtils.isEmpty(entity.getAppCodes())) {
+                for (String appCode : entity.getAppCodes()) {
                     OrgnazitionApp orgnazitionApp = new OrgnazitionApp();
                     orgnazitionApp.setOrgnazitionId(entity.getOrgnazitionId());
                     orgnazitionApp.setAppCode(appCode);
                     orgnazitionApp.setCreateDate(new Date());
-                    orgnazitionApp.setDeleteStatus((short)0);
+                    orgnazitionApp.setDeleteStatus((short) 0);
                     orgnazitionApp.setCreateAdminId(entity.getCreateAdminId());
 
                     orgnazitionAppService.save(orgnazitionApp);
@@ -102,11 +104,10 @@ public class OrgnazitionBusinessService {
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("添加失败,请稍后重试");
@@ -115,36 +116,32 @@ public class OrgnazitionBusinessService {
     }
 
 
-
-
-
     /**
      * 編輯组织机构
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO update(RequestJsonVO requestVo){
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
+            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(), OrgnazitionVO.class);
 
-            if(entity.getId().longValue()==entity.getPid().longValue())
-            {
-                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
+            if (entity.getId().longValue() == entity.getPid().longValue()) {
+                logger.info("上级节点不能为自己 param:" + JSONObject.toJSONString(entity));
                 return ResultObjectVO.fail(ResultVO.FAILD, "上级节点不能为自己!");
             }
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入组织机构名称");
             Check.notNull(entity.getId(), ResultVO.FAILD, "请传入组织机构ID");
 
 
-            Orgnazition query=new Orgnazition();
+            Orgnazition query = new Orgnazition();
             query.setId(entity.getId());
-            query.setDeleteStatus((short)0);
+            query.setDeleteStatus((short) 0);
             List<OrgnazitionVO> orgnazitions = orgnazitionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(orgnazitions))
-            {
+            if (CollectionUtils.isEmpty(orgnazitions)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "该组织机构不存在!");
             }
 
@@ -159,15 +156,13 @@ public class OrgnazitionBusinessService {
 
 
             //重新生成关联
-            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
-            {
-                for(String appCode:entity.getAppCodes())
-                {
+            if (!CollectionUtils.isEmpty(entity.getAppCodes())) {
+                for (String appCode : entity.getAppCodes()) {
                     OrgnazitionApp orgnazitionApp = new OrgnazitionApp();
                     orgnazitionApp.setOrgnazitionId(orgnazitions.get(0).getOrgnazitionId());
                     orgnazitionApp.setAppCode(appCode);
                     orgnazitionApp.setCreateDate(new Date());
-                    orgnazitionApp.setDeleteStatus((short)0);
+                    orgnazitionApp.setDeleteStatus((short) 0);
                     orgnazitionApp.setCreateAdminId(entity.getUpdateAdminId());
 
                     orgnazitionAppService.save(orgnazitionApp);
@@ -177,11 +172,10 @@ public class OrgnazitionBusinessService {
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -190,32 +184,30 @@ public class OrgnazitionBusinessService {
     }
 
 
-
     /**
      * 查询树表格
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryAppOrgnazitionTreeTable(RequestJsonVO requestJsonVO){
+    public ResultObjectVO queryAppOrgnazitionTreeTable(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             OrgnazitionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), OrgnazitionTreeInfo.class);
-            if(StringUtils.isEmpty(queryPageInfo.getAdminId()))
-            {
+            if (StringUtils.isEmpty(queryPageInfo.getAdminId())) {
                 throw new IllegalArgumentException("adminId为空");
             }
 
             //查询所有结构树
-            List<Orgnazition>  orgnazitions = orgnazitionService.findTreeTable(queryPageInfo);
+            List<Orgnazition> orgnazitions = orgnazitionService.findTreeTable(queryPageInfo);
             resultObjectVO.setData(orgnazitions);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -225,26 +217,26 @@ public class OrgnazitionBusinessService {
 
     /**
      * 根据ID查询
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO findById(RequestJsonVO requestVo){
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
+            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(), Orgnazition.class);
             Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到组织机构ID");
 
             //查询是否存在该组织机构
-            Orgnazition query=new Orgnazition();
+            Orgnazition query = new Orgnazition();
             query.setId(entity.getId());
             List<OrgnazitionVO> orgnazitionVOS = orgnazitionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(orgnazitionVOS))
-            {
+            if (CollectionUtils.isEmpty(orgnazitionVOS)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "组织机构不存在!");
             }
-            for(OrgnazitionVO orgnazitionVO:orgnazitionVOS) {
+            for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
                 OrgnazitionApp queryOrgnazitionApp = new OrgnazitionApp();
                 queryOrgnazitionApp.setOrgnazitionId(orgnazitionVO.getOrgnazitionId());
                 List<OrgnazitionApp> orgnazitionApps = orgnazitionAppService.findListByEntity(queryOrgnazitionApp);
@@ -252,46 +244,37 @@ public class OrgnazitionBusinessService {
             }
             resultObjectVO.setData(orgnazitionVOS);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
-
-
-
-
-
-
-
 
 
     /**
      * 查询当前账号下组织机构树
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryAdminOrgnazitionTree(RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO queryAdminOrgnazitionTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
-            String[] appCodes=new String[1];
+            String[] appCodes = new String[1];
             appCodes[0] = query.getAppCode();
             resultObjectVO.setData(orgnazitionService.queryTreeByAppCodeArray(appCodes));
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -299,56 +282,50 @@ public class OrgnazitionBusinessService {
     }
 
 
-
-
-
     /**
      * 删除指定组织机构(仅限中台使用)
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteById(RequestJsonVO requestVo){
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
+            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(), Orgnazition.class);
             Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到组织机构ID");
 
             List<Orgnazition> chidlren = new ArrayList<Orgnazition>();
-            orgnazitionService.queryChildren(chidlren,entity);
+            orgnazitionService.queryChildren(chidlren, entity);
 
             //把当前组织机构添加进去,循环这个集合
             chidlren.add(entity);
 
-            for(Orgnazition f:chidlren) {
-                //删除当前组织机构
+            //收集所有组织机构ID用于批量删除
+            Set<String> orgnazitionIds = new HashSet<>();
+            for (Orgnazition f : chidlren) {
                 int row = orgnazitionService.deleteById(f.getId());
                 if (row < 1) {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请重试!");
                     continue;
                 }
-
-                //删除组织机构下所有关联
-                AdminOrgnazition queryAdminOrgnazition = new AdminOrgnazition();
-                queryAdminOrgnazition.setOrgnazitionId(f.getOrgnazitionId());
-
-                List<AdminOrgnazition> adminOrgnazitions = adminOrgnazitionService.findListByEntity(queryAdminOrgnazition);
-                if (!CollectionUtils.isEmpty(adminOrgnazitions)) {
-                    row = adminOrgnazitionService.deleteByOrgnazitionId(f.getOrgnazitionId());
-
+                if (StringUtils.isNotEmpty(f.getOrgnazitionId())) {
+                    orgnazitionIds.add(f.getOrgnazitionId());
                 }
-
+            }
+            //批量删除组织机构关联
+            if (!orgnazitionIds.isEmpty()) {
+                adminOrgnazitionService.deleteByOrgnazitionIds(orgnazitionIds.toArray(new String[0]));
             }
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -359,61 +336,55 @@ public class OrgnazitionBusinessService {
 
     /**
      * 批量删除组织机构(仅限中台使用)
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Orgnazition> OrgnazitionList = JSON.parseArray(requestVo.getEntityJson(),Orgnazition.class);
-            if(CollectionUtils.isEmpty(OrgnazitionList))
-            {
+            List<Orgnazition> OrgnazitionList = JSON.parseArray(requestVo.getEntityJson(), Orgnazition.class);
+            if (CollectionUtils.isEmpty(OrgnazitionList)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "没有找到组织机构ID");
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Orgnazition Orgnazition:OrgnazitionList) {
-                if(Orgnazition.getId()!=null) {
+            Set<String> allOrgnazitionIds = new HashSet<>();
+            for (Orgnazition Orgnazition : OrgnazitionList) {
+                if (Orgnazition.getId() != null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(Orgnazition);
 
-
                     List<Orgnazition> chidlren = new ArrayList<Orgnazition>();
-                    orgnazitionService.queryChildren(chidlren,Orgnazition);
+                    orgnazitionService.queryChildren(chidlren, Orgnazition);
 
                     //把当前组织机构添加进去,循环这个集合
                     chidlren.add(Orgnazition);
 
-                    for(Orgnazition f:chidlren) {
-                        //删除当前组织机构
+                    for (Orgnazition f : chidlren) {
                         int row = orgnazitionService.deleteById(f.getId());
                         if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请重试!");
                             continue;
                         }
-
-                        //删除组织机构下所有关联
-                        AdminOrgnazition queryAdminOrgnazition = new AdminOrgnazition();
-                        queryAdminOrgnazition.setOrgnazitionId(f.getOrgnazitionId());
-
-                        List<AdminOrgnazition> adminOrgnazitions = adminOrgnazitionService.findListByEntity(queryAdminOrgnazition);
-                        if (!CollectionUtils.isEmpty(adminOrgnazitions)) {
-                            adminOrgnazitionService.deleteByOrgnazitionId(f.getOrgnazitionId());
+                        if (StringUtils.isNotEmpty(f.getOrgnazitionId())) {
+                            allOrgnazitionIds.add(f.getOrgnazitionId());
                         }
-
                     }
-
                 }
+            }
+            //批量删除所有组织机构关联
+            if (!allOrgnazitionIds.isEmpty()) {
+                adminOrgnazitionService.deleteByOrgnazitionIds(allOrgnazitionIds.toArray(new String[0]));
             }
             resultObjectVO.setData(resultObjectVOList);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -424,27 +395,29 @@ public class OrgnazitionBusinessService {
 
     /**
      * 查询组织机构树
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryOrgnazationTree(RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO queryOrgnazationTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App queryApp = JSONObject.parseObject(requestJsonVO.getEntityJson(),App.class);
-            if(queryApp==null||StringUtils.isEmpty(queryApp.getCode()))
-            {
-                resultObjectVO.setData(orgnazitionService.queryTree());
-            }else {
-                resultObjectVO.setData(orgnazitionService.queryTree(queryApp.getCode()));
+            App queryApp = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
+            List<OrgnazitionTreeVO> tree;
+            if (queryApp == null || StringUtils.isEmpty(queryApp.getCode())) {
+                tree = orgnazitionService.queryTree();
+            } else {
+                tree = orgnazitionService.queryTree(queryApp.getCode());
             }
+            // 填充关联应用信息
+            fillAppInfo(tree);
+            resultObjectVO.setData(tree);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -452,7 +425,64 @@ public class OrgnazitionBusinessService {
     }
 
 
+    private void fillAppInfo(List<OrgnazitionTreeVO> tree) {
+        if (CollectionUtils.isEmpty(tree)) {
+            return;
+        }
+        Set<String> orgIds = new HashSet<>();
+        collectOrgIds(tree, orgIds);
+        if (orgIds.isEmpty()) {
+            return;
+        }
+        Map<String, List<String>> orgAppMap = new HashMap<>();
+        // 一次性查出所有关联,内存中按orgId分组
+        List<OrgnazitionApp> allOrgApps = orgnazitionAppService.findListByEntity(new OrgnazitionApp());
+        for (OrgnazitionApp a : allOrgApps) {
+            if (a.getDeleteStatus() != null && a.getDeleteStatus() == 0
+                    && orgIds.contains(a.getOrgnazitionId())) {
+                orgAppMap.computeIfAbsent(a.getOrgnazitionId(), k -> new ArrayList<>()).add(a.getAppCode());
+            }
+        }
+        Map<String, String> appNameMap = new HashMap<>();
+        List<App> allApps = appService.findListByEntity(new App());
+        for (App a : allApps) {
+            appNameMap.put(a.getCode(), a.getName());
+        }
+        setAppInfo(tree, orgAppMap, appNameMap);
+    }
 
+    private void collectOrgIds(List<OrgnazitionTreeVO> tree, Set<String> orgIds) {
+        for (OrgnazitionTreeVO node : tree) {
+            if (StringUtils.isNotEmpty(node.getOrgnazitionId())) {
+                orgIds.add(node.getOrgnazitionId());
+            }
+            if (!CollectionUtils.isEmpty(node.getChildren())) {
+                collectOrgIds(node.getChildren(), orgIds);
+            }
+        }
+    }
+
+    private void setAppInfo(List<OrgnazitionTreeVO> tree,
+                            Map<String, List<String>> orgAppMap,
+                            Map<String, String> appNameMap) {
+        for (OrgnazitionTreeVO node : tree) {
+            List<String> codes = orgAppMap.get(node.getOrgnazitionId());
+            if (!CollectionUtils.isEmpty(codes)) {
+                node.setAppCodes(codes);
+                List<String> names = new ArrayList<>();
+                for (String c : codes) {
+                    String name = appNameMap.get(c);
+                    if (name != null) {
+                        names.add(name);
+                    }
+                }
+                node.setAppNames(String.join(",", names));
+            }
+            if (!CollectionUtils.isEmpty(node.getChildren())) {
+                setAppInfo(node.getChildren(), orgAppMap, appNameMap);
+            }
+        }
+    }
 
 
 }

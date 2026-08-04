@@ -40,6 +40,13 @@ public interface AdminOrgnazitionMapper {
      */
     int deleteByOrgnazitionId(String orgnazitionId);
 
+    /**
+     * 批量根据组织机构ID删除所有关联
+     * @param orgnazitionIds
+     * @return
+     */
+    int deleteByOrgnazitionIds(@org.apache.ibatis.annotations.Param("orgnazitionIds") String[] orgnazitionIds);
+
 
     /**
      * 删除指定账号下所有关联

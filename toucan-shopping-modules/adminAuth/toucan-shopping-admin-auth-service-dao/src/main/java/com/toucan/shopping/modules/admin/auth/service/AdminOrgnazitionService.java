@@ -46,6 +46,8 @@ public interface AdminOrgnazitionService {
      */
     int deleteByOrgnazitionId(String orgnazitionId);
 
+    int deleteByOrgnazitionIds(String[] orgnazitionIds);
+
 
     /**
      * 删除指定账号下指定应用的关联

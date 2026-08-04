@@ -75,4 +75,14 @@ public class OrgnazitionTreeVO extends Orgnazition {
      */
     private boolean checked;
 
+    /**
+     * 关联应用编码列表
+     */
+    private List<String> appCodes;
+
+    /**
+     * 关联应用名称(逗号分隔)
+     */
+    private String appNames;
+
 }

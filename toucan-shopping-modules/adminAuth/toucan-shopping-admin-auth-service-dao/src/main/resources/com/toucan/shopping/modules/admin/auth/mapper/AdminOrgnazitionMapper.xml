@@ -62,7 +62,16 @@
 
 
     <update id="deleteByOrgnazitionId" parameterType="java.lang.String">
-        update t_sa_admin_orgnazition set delete_status=1  where orgnazitionId = #{orgnazition_id} and delete_status=0
+        update t_sa_admin_orgnazition set delete_status=1  where orgnazition_id = #{orgnazition_id} and delete_status=0
+    </update>
+
+    <update id="deleteByOrgnazitionIds">
+        update t_sa_admin_orgnazition set delete_status=1
+        where delete_status=0
+        and orgnazition_id in
+        <foreach item="item" collection="orgnazitionIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </update>
 
 

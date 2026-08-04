@@ -511,6 +511,7 @@ function handleTreeCheckAll() {
   } else {
     permTreeRef.value.setCheckedKeys(allIds)
   }
+  syncTreeState()
 }
 
 function handleTreeExpandAll() {
