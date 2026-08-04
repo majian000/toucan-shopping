@@ -37,8 +37,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -250,11 +253,11 @@ public class FunctionController extends UIController {
                 return resultObjectVO;
             }
 
-            java.util.Map<Long, java.util.List<java.util.Map<String, Object>>> pidMap = new java.util.LinkedHashMap<>();
+            Map<Long, List<Map<String, Object>>> pidMap = new LinkedHashMap<>();
             for (Function f : allFunctions) {
                 Long pid = f.getPid() != null ? f.getPid() : -1L;
                 pidMap.computeIfAbsent(pid, k -> new ArrayList<>())
-                    .add(new java.util.HashMap<String, Object>() {{
+                    .add(new HashMap<String, Object>() {{
                         put("id", f.getId());
                         put("name", f.getName());
                     }});
@@ -267,12 +270,14 @@ public class FunctionController extends UIController {
         return resultObjectVO;
     }
 
-    private java.util.List<java.util.Map<String, Object>> buildSimpleTree(
-            java.util.Map<Long, java.util.List<java.util.Map<String, Object>>> pidMap, Long pid) {
-        java.util.List<java.util.Map<String, Object>> list = pidMap.getOrDefault(pid, new ArrayList<>());
-        for (java.util.Map<String, Object> node : list) {
-            java.util.List<java.util.Map<String, Object>> children = buildSimpleTree(pidMap, (Long) node.get("id"));
-            if (!children.isEmpty()) node.put("children", children);
+    private List<Map<String, Object>> buildSimpleTree(
+            Map<Long, List<Map<String, Object>>> pidMap, Long pid) {
+        List<Map<String, Object>> list = pidMap.getOrDefault(pid, new ArrayList<>());
+        for (Map<String, Object> node : list) {
+            List<Map<String, Object>> children = buildSimpleTree(pidMap, (Long) node.get("id"));
+            if (!children.isEmpty()) {
+                node.put("children", children);
+            }
         }
         return list;
     }
