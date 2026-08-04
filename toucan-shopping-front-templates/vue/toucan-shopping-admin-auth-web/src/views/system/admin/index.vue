@@ -321,25 +321,35 @@
     </el-dialog>
 
     <!-- 查看弹窗 -->
-    <el-dialog v-model="viewVisible" title="账号详情" width="600px">
-      <el-descriptions :column="2" border>
-        <el-descriptions-item label="账号">{{ viewData.username }}</el-descriptions-item>
-        <el-descriptions-item label="昵称">{{ viewData.nickName || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="真实姓名">{{ viewData.realName || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="手机号">{{ viewData.phone || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="邮箱">{{ viewData.email || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="性别">{{ viewData.gender === 1 ? '男' : viewData.gender === 0 ? '女' : '--' }}</el-descriptions-item>
-        <el-descriptions-item label="身份证号" :span="2">{{ viewData.idCard || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="出生日期">{{ viewData.birthday || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="地址">{{ viewData.address || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="状态">
-          <el-tag :type="viewData.enableStatus === 1 ? 'success' : 'danger'" size="small">
-            {{ viewData.enableStatus === 1 ? '启用' : '禁用' }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="创建时间" :span="2">{{ viewData.createDate || '--' }}</el-descriptions-item>
-      </el-descriptions>
+    <el-dialog v-model="viewVisible" title="账号详情" width="650px">
+      <el-tabs v-model="viewActiveTab">
+        <el-tab-pane label="基本信息" name="info">
+          <el-descriptions :column="2" border>
+            <el-descriptions-item label="账号">{{ viewData.username }}</el-descriptions-item>
+            <el-descriptions-item label="昵称">{{ viewData.nickName || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="真实姓名">{{ viewData.realName || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="手机号">{{ viewData.phone || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="邮箱">{{ viewData.email || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="性别">{{ viewData.gender === 1 ? '男' : viewData.gender === 0 ? '女' : '--' }}</el-descriptions-item>
+            <el-descriptions-item label="身份证号" :span="2">{{ viewData.idCard || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="出生日期">{{ viewData.birthday || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="地址">{{ viewData.address || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="状态">
+              <el-tag :type="viewData.enableStatus === 1 ? 'success' : 'danger'" size="small">
+                {{ viewData.enableStatus === 1 ? '启用' : '禁用' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="创建时间" :span="2">{{ viewData.createDate || '--' }}</el-descriptions-item>
+          </el-descriptions>
+        </el-tab-pane>
+        <el-tab-pane label="关联角色" name="role">
+          <div class="view-empty-tab">当前暂无关联角色</div>
+        </el-tab-pane>
+        <el-tab-pane label="组织机构" name="org">
+          <div class="view-empty-tab">当前暂无组织机构</div>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
   </div>
 </template>
@@ -902,6 +912,7 @@ async function handleSubmitResetPwd() {
 
 // ========== 完善信息弹窗 ==========
 const viewVisible = ref(false)
+const viewActiveTab = ref('info')
 const viewData = ref({})
 const infoDialogVisible = ref(false)
 const infoLoading = ref(false)
@@ -1040,5 +1051,11 @@ async function handleSubmitInfo() {
     border-color: #ebeef5;
     .text-muted { font-size: 13px; }
   }
+}
+.view-empty-tab {
+  padding: 40px 0;
+  text-align: center;
+  color: $text-placeholder;
+  font-size: 14px;
 }
 </style>
