@@ -129,6 +129,9 @@ public class OrgnazitionBusinessService {
         try {
             OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(), OrgnazitionVO.class);
 
+            if (entity.getPid() == null) {
+                entity.setPid(-1L);
+            }
             if (entity.getId().longValue() == entity.getPid().longValue()) {
                 logger.info("上级节点不能为自己 param:" + JSONObject.toJSONString(entity));
                 return ResultObjectVO.fail(ResultVO.FAILD, "上级节点不能为自己!");

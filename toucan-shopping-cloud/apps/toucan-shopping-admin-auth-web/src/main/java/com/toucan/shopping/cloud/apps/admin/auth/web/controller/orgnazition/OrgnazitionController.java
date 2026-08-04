@@ -196,11 +196,10 @@ public class OrgnazitionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
+    public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request, @RequestBody App query)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return orgnazitionServiceAPI.queryOrgnazationTree(requestJsonVO);
         }catch(Exception e)

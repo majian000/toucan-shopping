@@ -169,7 +169,7 @@ async function fetchData() {
   try {
     const params = {}
     if (searchForm.name) params.name = searchForm.name
-    if (searchForm.appCode) params.appCode = searchForm.appCode
+    if (searchForm.appCode) params.code = searchForm.appCode
     const res = await listOrgnazitionTree(params)
     orgTree.value = transformTree(res.data || [])
   } finally {
