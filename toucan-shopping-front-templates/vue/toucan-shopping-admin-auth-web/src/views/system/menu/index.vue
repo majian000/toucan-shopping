@@ -373,7 +373,7 @@ async function handleEdit(row) {
   formData.functionText = row.functionText || ''; formData.functionSort = row.functionSort
   formData.enableStatus = row.enableStatus
   dialogLoading.value = true; dialogVisible.value = true
-  formData.pid = row.pid != null ? row.pid : null
+  formData.pid = (row.pid != null && row.pid !== -1) ? row.pid : null
   await loadFullTree()
   treeSelectKey.value++
   dialogLoading.value = false
