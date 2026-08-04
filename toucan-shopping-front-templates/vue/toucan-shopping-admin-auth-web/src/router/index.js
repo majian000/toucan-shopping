@@ -46,7 +46,12 @@ const routes = [
       { path: 'admin/password', name: 'AdminPassword', component: () => import('@/views/admin/password/index.vue'), meta: { title: '修改密码' } },
       { path: 'admin/info', name: 'AdminInfo', component: () => import('@/views/admin/info/index.vue'), meta: { title: '完善个人信息' } }
     ]
-  }
+  },
+  // ========== 错误页 ==========
+  { path: '/403', name: 'Error403', component: () => import('@/views/error/index.vue'), meta: { title: '403', code: 403 } },
+  { path: '/404', name: 'Error404', component: () => import('@/views/error/index.vue'), meta: { title: '404', code: 404 } },
+  { path: '/500', name: 'Error500', component: () => import('@/views/error/index.vue'), meta: { title: '500', code: 500 } },
+  { path: '/:pathMatch(.*)*', redirect: '/404' }
 ]
 
 const router = createRouter({

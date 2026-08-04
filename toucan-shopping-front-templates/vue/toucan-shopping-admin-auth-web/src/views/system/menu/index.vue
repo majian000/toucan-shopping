@@ -109,7 +109,7 @@
         <el-form-item label="功能名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入功能名称" maxlength="100" />
         </el-form-item>
-        <el-form-item label="功能链接" prop="url" v-if="formData.type !== 0">
+        <el-form-item label="功能链接" prop="url">
           <el-input v-model="formData.url" placeholder="请输入功能链接" maxlength="500" />
         </el-form-item>
         <el-form-item label="权限标识" prop="permission">
@@ -148,25 +148,86 @@
     </el-dialog>
 
     <!-- 批量添加弹窗 -->
-    <el-dialog v-model="batchDialogVisible" title="批量添加菜单" width="750px"
+    <el-dialog v-model="batchDialogVisible" title="批量添加菜单" width="90%"
       :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="batchFormRef" :model="batchForm" :rules="batchRules" label-width="100px">
-        <el-form-item label="上级菜单" prop="pid">
-          <el-tree-select v-model="batchForm.pid"
-            :key="batchTreeKey"
-            :data="fullMenuTree"
-            :loading="treeLoading"
-            :props="{ label: 'name', value: 'id', children: 'children' }"
-            placeholder="请选择上级功能" check-strictly clearable style="width:100%" />
-        </el-form-item>
-        <el-form-item label="批量数据" prop="batchText">
-          <el-input v-model="batchForm.batchText" type="textarea" :rows="10"
-            placeholder="每行一条，格式：名称|类型|链接|权限标识|图标|功能内容|排序|状态&#10;类型：0目录 1菜单 2操作按钮 3工具条按钮 4API 5页面控件&#10;状态：1启用 0禁用&#10;&#10;例：&#10;用户列表|1|/user/listPage|pms:system:user|fa-user||1|1&#10;添加按钮|3||pms:system:user:add||&lt;button&gt;添加&lt;/button&gt;|2|1" />
-        </el-form-item>
-      </el-form>
+      <el-form-item label="上级功能" style="margin-bottom:16px">
+        <el-tree-select v-model="batchForm.pid"
+          :key="batchTreeKey"
+          :data="fullMenuTree"
+          :loading="treeLoading"
+          :props="{ label: 'name', value: 'id', children: 'children' }"
+          placeholder="请选择上级功能" check-strictly clearable style="width:320px" />
+      </el-form-item>
+      <div class="batch-table-wrapper">
+        <div style="margin-bottom:8px">
+          <el-button type="primary" size="small" @click="batchAddRow">添加行</el-button>
+        </div>
+        <el-table :data="batchRows" border size="small" max-height="400">
+          <el-table-column label="功能名称" width="150">
+            <template #default="{ row }">
+              <el-input v-model="row.name" placeholder="请输入" size="small" maxlength="100" />
+            </template>
+          </el-table-column>
+          <el-table-column label="功能链接" width="150">
+            <template #default="{ row }">
+              <el-input v-model="row.url" placeholder="请输入" size="small" maxlength="500" />
+            </template>
+          </el-table-column>
+          <el-table-column label="权限标识" width="160">
+            <template #default="{ row }">
+              <el-input v-model="row.permission" placeholder="请输入" size="small" maxlength="255" />
+            </template>
+          </el-table-column>
+          <el-table-column label="功能类型" width="120">
+            <template #default="{ row }">
+              <el-select v-model="row.type" size="small" style="width:100%">
+                <el-option label="目录" :value="0" />
+                <el-option label="菜单" :value="1" />
+                <el-option label="操作按钮" :value="2" />
+                <el-option label="工具条按钮" :value="3" />
+                <el-option label="API" :value="4" />
+                <el-option label="页面控件" :value="5" />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="功能内容" width="200">
+            <template #default="{ row }">
+              <el-input v-model="row.functionText" type="textarea" :rows="1" placeholder="请输入" size="small" />
+            </template>
+          </el-table-column>
+          <el-table-column label="图标" width="120">
+            <template #default="{ row }">
+              <el-input v-model="row.icon" placeholder="请输入" size="small" maxlength="60" />
+            </template>
+          </el-table-column>
+          <el-table-column label="排序" width="80">
+            <template #default="{ row }">
+              <el-input-number v-model="row.functionSort" :min="0" size="small" controls-position="right" style="width:100%" />
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" width="90">
+            <template #default="{ row }">
+              <el-select v-model="row.enableStatus" size="small" style="width:100%">
+                <el-option label="启用" :value="1" />
+                <el-option label="禁用" :value="0" />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注信息" width="200">
+            <template #default="{ row }">
+              <el-input v-model="row.remark" type="textarea" :rows="1" placeholder="请输入" size="small" maxlength="255" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="80" fixed="right">
+            <template #default="{ $index }">
+              <el-button type="danger" size="small" @click="batchRemoveRow($index)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <template #footer>
         <el-button @click="batchDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleBatchSubmit" :loading="batchLoading">批量保存</el-button>
+        <el-button type="primary" @click="handleBatchSubmit" :loading="batchLoading">确认保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -282,7 +343,7 @@ const editingFunctionId = ref(null)
 const submitLoading = ref(false)
 const formRef = ref(null)
 
-const dialogTitle = computed(() => isEdit.value ? '编辑功能项' : '添加功能项')
+const dialogTitle = computed(() => isEdit.value ? '编辑菜单' : '添加菜单')
 
 const formData = reactive({ pid: null, type: 1, name: '', url: '', permission: '', icon: '', functionText: '', functionSort: 0, enableStatus: 1 })
 const formRules = {
@@ -299,7 +360,9 @@ function resetForm() {
 
 async function handleAdd() {
   isEdit.value = false; editingId.value = null; resetForm()
-  await loadFullTree(); treeSelectKey.value++; dialogVisible.value = true
+  dialogVisible.value = true
+  treeSelectKey.value++
+  await loadFullTree()
 }
 
 async function handleEdit(row) {
@@ -308,14 +371,15 @@ async function handleEdit(row) {
   formData.permission = row.permission || ''; formData.icon = row.icon || ''
   formData.functionText = row.functionText || ''; formData.functionSort = row.functionSort
   formData.enableStatus = row.enableStatus
+  dialogVisible.value = true; treeSelectKey.value++
   await loadFullTree()
   // 找父节点
   const findParent = (tree, id, parent) => {
     for (const n of tree) {
-      if (n.id === id) return parent
+      if (n.id === id) { return parent }
       if (n.children?.length) {
         const found = findParent(n.children, id, n)
-        if (found !== undefined) return found
+        if (found !== undefined) { return found }
       }
     }
     return undefined
@@ -323,7 +387,6 @@ async function handleEdit(row) {
   formData.pid = findParent(fullMenuTree.value, row.id)?.id || null
   treeSelectKey.value++
   await nextTick()
-  dialogVisible.value = true
 }
 
 async function handleSubmit() {
@@ -332,7 +395,7 @@ async function handleSubmit() {
   submitLoading.value = true
   try {
     const apiData = {
-      pid: formData.pid, type: formData.type, name: formData.name,
+      pid: formData.pid != null ? formData.pid : -1, type: formData.type, name: formData.name,
       url: formData.url, permission: formData.permission, icon: formData.icon,
       functionText: formData.functionText, functionSort: formData.functionSort,
       enableStatus: formData.enableStatus, appCode: selectedAppCode.value
@@ -369,39 +432,40 @@ function handleDelete(row) {
 const batchDialogVisible = ref(false)
 const batchTreeKey = ref(0)
 const batchLoading = ref(false)
-const batchFormRef = ref(null)
-const batchForm = reactive({ pid: null, batchText: '' })
-const batchRules = { batchText: [{ required: true, message: '请输入批量数据', trigger: 'blur' }] }
+const batchRows = ref([])
+const batchForm = reactive({ pid: null })
+
+function batchAddRow() {
+  batchRows.value.push({ name: '', url: '', permission: '', type: 1, functionText: '', icon: '', functionSort: 0, enableStatus: 1, remark: '' })
+}
+
+function batchRemoveRow(index) {
+  batchRows.value.splice(index, 1)
+}
 
 async function handleBatchAdd() {
-  batchForm.pid = null; batchForm.batchText = ''
-  await loadFullTree(); batchTreeKey.value++; batchDialogVisible.value = true
+  batchForm.pid = null
+  batchRows.value = []
+  batchAddRow()
+  batchDialogVisible.value = true; batchTreeKey.value++
+  await loadFullTree()
 }
 
 async function handleBatchSubmit() {
-  const valid = await batchFormRef.value.validate().catch(() => false)
-  if (!valid) return
+  if (batchRows.value.length === 0) { ElMessage.warning('请至少添加一行数据'); return }
+  for (let i = 0; i < batchRows.value.length; i++) {
+    const r = batchRows.value[i]
+    if (!r.name) { ElMessage.warning(`第${i + 1}行的功能名称不能为空`); return }
+    if (!r.functionSort && r.functionSort !== 0) { ElMessage.warning(`第${i + 1}行的排序不能为空`); return }
+  }
   batchLoading.value = true
   try {
-    const lines = batchForm.batchText.trim().split('\n').filter(l => l.trim())
-    const items = []
-    for (const line of lines) {
-      const parts = line.split('|')
-      if (parts.length < 6) continue
-      items.push({
-        pid: batchForm.pid || -1,
-        name: parts[0].trim(),
-        type: parseInt(parts[1].trim()),
-        url: parts[2].trim(),
-        permission: parts[3].trim(),
-        icon: parts[4].trim(),
-        functionText: parts.length > 5 ? parts[5].trim() : '',
-        functionSort: parseInt(parts.length > 6 ? parts[6].trim() : '0') || 0,
-        enableStatus: parts.length > 7 ? parseInt(parts[7].trim()) : 1,
-        appCode: selectedAppCode.value
-      })
-    }
-    if (items.length === 0) { ElMessage.warning('没有有效数据'); return }
+    const items = batchRows.value.map(r => ({
+      pid: batchForm.pid || -1,
+      name: r.name, type: r.type, url: r.url, permission: r.permission,
+      functionText: r.functionText, icon: r.icon, functionSort: r.functionSort,
+      enableStatus: r.enableStatus, remark: r.remark, appCode: selectedAppCode.value
+    }))
     await batchAddMenus(items)
     ElMessage.success(`批量添加成功，共 ${items.length} 条`)
     batchDialogVisible.value = false
