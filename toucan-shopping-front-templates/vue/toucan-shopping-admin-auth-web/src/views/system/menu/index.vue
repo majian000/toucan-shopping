@@ -97,7 +97,7 @@
     <!-- 新增/编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="650px"
       :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="dialogLoading" element-loading-text="加载中...">
         <el-form-item label="上级功能" prop="pid">
           <el-tree-select v-model="formData.pid"
             :key="treeSelectKey"
@@ -143,7 +143,7 @@
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="submitLoading" :disabled="dialogLoading">确定</el-button>
       </template>
     </el-dialog>
 
@@ -234,7 +234,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, nextTick, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Refresh, Search } from '@element-plus/icons-vue'
@@ -336,6 +336,7 @@ function handleReset() {
 
 // ========== 新增/编辑 ==========
 const dialogVisible = ref(false)
+const dialogLoading = ref(false)
 const treeSelectKey = ref(0)
 const isEdit = ref(false)
 const editingId = ref(null)
@@ -371,22 +372,11 @@ async function handleEdit(row) {
   formData.permission = row.permission || ''; formData.icon = row.icon || ''
   formData.functionText = row.functionText || ''; formData.functionSort = row.functionSort
   formData.enableStatus = row.enableStatus
-  dialogVisible.value = true; treeSelectKey.value++
+  dialogLoading.value = true; dialogVisible.value = true
+  formData.pid = row.pid != null ? row.pid : null
   await loadFullTree()
-  // 找父节点
-  const findParent = (tree, id, parent) => {
-    for (const n of tree) {
-      if (n.id === id) { return parent }
-      if (n.children?.length) {
-        const found = findParent(n.children, id, n)
-        if (found !== undefined) { return found }
-      }
-    }
-    return undefined
-  }
-  formData.pid = findParent(fullMenuTree.value, row.id)?.id || null
   treeSelectKey.value++
-  await nextTick()
+  dialogLoading.value = false
 }
 
 async function handleSubmit() {
