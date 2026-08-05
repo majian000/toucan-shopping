@@ -63,6 +63,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="350" fixed="right" align="center">
           <template #default="{ row }">
+            <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:role:show'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:role:edit'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:role:delete'" @click="handleDelete(row)">删除</el-button>
             <el-button type="warning" link size="small" :icon="Key" v-permission="'pms:system:role:permission'" @click="handleAssignPermission(row)">权限</el-button>
@@ -117,6 +118,24 @@
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
+    </el-dialog>
+
+    <!-- 查看弹窗 -->
+    <el-dialog v-model="viewVisible" title="角色详情" width="500px">
+      <el-descriptions :column="1" border>
+        <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
+        <el-descriptions-item label="应用名称">{{ viewData.appName || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
+            {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
+        <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
+      </el-descriptions>
     </el-dialog>
 
     <!-- 权限分配弹窗 -->
@@ -185,7 +204,7 @@
 import { ref, reactive, computed, watch, nextTick, onMounted, markRaw } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck } from '@element-plus/icons-vue'
+import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, View } from '@element-plus/icons-vue'
 import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
@@ -254,6 +273,8 @@ function handleSelectionChange(selection) { selectedRows.value = selection }
 
 // ========== 新增/编辑弹窗 ==========
 const dialogVisible = ref(false)
+const viewVisible = ref(false)
+const viewData = ref({})
 const isEdit = ref(false)
 const editingId = ref(null)
 const submitLoading = ref(false)
@@ -282,6 +303,8 @@ function handleAdd() {
   resetForm()
   dialogVisible.value = true
 }
+
+function handleView(row) { viewData.value = row; viewVisible.value = true }
 
 function handleEdit(row) {
   isEdit.value = true
