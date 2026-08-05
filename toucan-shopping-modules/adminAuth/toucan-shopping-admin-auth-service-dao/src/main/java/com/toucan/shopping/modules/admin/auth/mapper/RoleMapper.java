@@ -21,4 +21,6 @@ public interface RoleMapper {
     Long queryListPageCount(RolePageInfo rolePageInfo);
 
     int deleteById(Long id);
+
+    List<Role> findListByRoleIds(@org.apache.ibatis.annotations.Param("roleIds") String[] roleIds);
 }

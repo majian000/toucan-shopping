@@ -65,4 +65,9 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.deleteById(id);
     }
 
+
+    @Override
+    public List<Role> findListByRoleIds(String[] roleIds) {
+        return roleMapper.findListByRoleIds(roleIds);
+    }
 }

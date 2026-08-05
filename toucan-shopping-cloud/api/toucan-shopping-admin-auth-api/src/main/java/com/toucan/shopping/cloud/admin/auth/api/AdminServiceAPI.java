@@ -63,6 +63,10 @@ public interface AdminServiceAPI {
     ResultObjectVO findById(RequestJsonVO requestVo);
 
 
+    @RequestMapping(value = "/queryDetail", method = RequestMethod.POST)
+    ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo);
+
+
     /**
      * 退出登录
 

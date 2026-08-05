@@ -115,4 +115,12 @@
         update t_sa_role set delete_status=1 where id = #{id}
     </update>
 
+    <select id="findListByRoleIds" resultMap="roleMap">
+        select * from t_sa_role t where t.delete_status = 0
+        and t.role_id in
+        <foreach item="item" collection="roleIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

@@ -19,6 +19,11 @@ public class AdminRoleVO extends AdminRole {
      */
     private List<AdminRole> roles;
 
+    /**
+     * 角色名称(JOIN查询填充)
+     */
+    private String roleName;
+
 
 
 }

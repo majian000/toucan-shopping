@@ -35,7 +35,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="createDate" label="创建时间" width="170" />
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:app:edit-row'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:app:show'" @click="handleView(row)">查看</el-button>

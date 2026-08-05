@@ -14,22 +14,22 @@ public class AdminServiceAPISingleImpl implements AdminServiceAPI {
     private AdminBusinessService adminBusinessService;
 
     @Override
-    public ResultObjectVO login( RequestJsonVO requestVo) {
+    public ResultObjectVO login(RequestJsonVO requestVo) {
         return adminBusinessService.login(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryLoginToken( RequestJsonVO requestVo) {
+    public ResultObjectVO queryLoginToken(RequestJsonVO requestVo) {
         return adminBusinessService.queryLoginToken(requestVo);
     }
 
     @Override
-    public ResultObjectVO isOnline( RequestJsonVO requestVo) {
+    public ResultObjectVO isOnline(RequestJsonVO requestVo) {
         return adminBusinessService.isOnline(requestVo);
     }
 
     @Override
-    public ResultObjectVO queryListByEntity( RequestJsonVO requestVo) {
+    public ResultObjectVO queryListByEntity(RequestJsonVO requestVo) {
         return adminBusinessService.queryListByEntity(requestVo);
     }
 
@@ -39,42 +39,47 @@ public class AdminServiceAPISingleImpl implements AdminServiceAPI {
     }
 
     @Override
-    public ResultObjectVO save( RequestJsonVO requestVo) {
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         return adminBusinessService.save(requestVo);
     }
 
     @Override
-    public ResultObjectVO update( RequestJsonVO requestVo) {
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         return adminBusinessService.update(requestVo);
     }
 
     @Override
-    public ResultObjectVO list( RequestJsonVO requestVo) {
+    public ResultObjectVO list(RequestJsonVO requestVo) {
         return adminBusinessService.list(requestVo);
     }
 
     @Override
-    public ResultObjectVO findById( RequestJsonVO requestVo) {
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         return adminBusinessService.findById(requestVo);
     }
 
     @Override
-    public ResultObjectVO logout( RequestJsonVO requestVo) {
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
+        return adminBusinessService.queryDetail(requestVo);
+    }
+
+    @Override
+    public ResultObjectVO logout(RequestJsonVO requestVo) {
         return adminBusinessService.logout(requestVo);
     }
 
     @Override
-    public ResultObjectVO updatePassword( RequestJsonVO requestVo) {
+    public ResultObjectVO updatePassword(RequestJsonVO requestVo) {
         return adminBusinessService.updatePassword(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteById( RequestJsonVO requestVo) {
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         return adminBusinessService.deleteById(requestVo);
     }
 
     @Override
-    public ResultObjectVO deleteByIds( RequestJsonVO requestVo) {
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return adminBusinessService.deleteByIds(requestVo);
     }
 }

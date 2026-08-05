@@ -20,4 +20,6 @@ public interface RoleService {
     PageInfo<Role> queryListPage(RolePageInfo RolePageInfo);
 
     int deleteById(Long id);
+
+    List<Role> findListByRoleIds(String[] roleIds);
 }

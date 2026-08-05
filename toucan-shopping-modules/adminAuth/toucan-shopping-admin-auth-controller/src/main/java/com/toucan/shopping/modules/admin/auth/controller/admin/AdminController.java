@@ -132,6 +132,12 @@ public class AdminController {
         return adminBusinessService.findById(requestVo);
     }
 
+    @RequestMapping(value="/queryDetail", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo){
+        return adminBusinessService.queryDetail(requestVo);
+    }
+
 
     /**
      * 查询管理员登录token
