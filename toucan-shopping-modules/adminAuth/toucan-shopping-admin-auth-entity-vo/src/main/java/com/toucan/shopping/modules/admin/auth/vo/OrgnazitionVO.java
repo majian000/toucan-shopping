@@ -50,5 +50,7 @@ public class OrgnazitionVO extends Orgnazition {
      * 关联应用名称
      */
     private String appNames;
+    private String appName;
+    private String appCode;
 
 }

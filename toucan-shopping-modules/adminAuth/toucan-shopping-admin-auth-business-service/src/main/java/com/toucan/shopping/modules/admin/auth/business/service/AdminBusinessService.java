@@ -57,6 +57,9 @@ public class AdminBusinessService {
     private AdminOrgnazitionService adminOrgnazitionService;
 
     @Autowired
+    private OrgnazitionService orgnazitionService;
+
+    @Autowired
     private RoleService roleService;
 
     @Autowired
@@ -761,7 +764,16 @@ public class AdminBusinessService {
                 detail.setBasicInfo(vo);
             }
 
-            // 2. 角色列表(批量IN查询角色名称)
+            // 2. 查询应用名称映射(角色和机构共用)
+            Map<String, String> appNameMap = new HashMap<>();
+            List<App> allApps = appService.findListByEntity(new App());
+            for (App a : allApps) {
+                if (StringUtils.isNotEmpty(a.getCode())) {
+                    appNameMap.put(a.getCode(), a.getName());
+                }
+            }
+
+            // 3. 角色列表(批量IN查询角色名称)
             AdminRole queryRole = new AdminRole();
             queryRole.setAdminId(vo != null ? vo.getAdminId() : entity.getAdminId());
             queryRole.setDeleteStatus((short) 0);
@@ -782,14 +794,6 @@ public class AdminBusinessService {
                             roleNameMap.put(r.getRoleId(), r.getName());
                         }
                     }
-                    // 查询所有应用名称
-                    Map<String, String> appNameMap = new HashMap<>();
-                    List<App> allApps = appService.findListByEntity(new App());
-                    for (App a : allApps) {
-                        if (StringUtils.isNotEmpty(a.getCode())) {
-                            appNameMap.put(a.getCode(), a.getName());
-                        }
-                    }
                     for (AdminRoleVO r : roleVOList) {
                         r.setRoleName(roleNameMap.getOrDefault(r.getRoleId(), ""));
                         r.setAppName(appNameMap.getOrDefault(r.getAppCode(), ""));
@@ -798,14 +802,46 @@ public class AdminBusinessService {
                 detail.setRoles(roleVOList);
             }
 
-            // 3. 组织机构列表
-            String adminId = vo != null ? vo.getAdminId() : entity.getAdminId();
-            if (StringUtils.isNotEmpty(adminId)) {
+            // 4. 组织机构列表(含路径)
+            String aid = vo != null ? vo.getAdminId() : entity.getAdminId();
+            if (StringUtils.isNotEmpty(aid)) {
                 AdminOrgnazition orgQuery = new AdminOrgnazition();
-                orgQuery.setAdminId(adminId);
+                orgQuery.setAdminId(aid);
                 List<AdminOrgnazition> orgList = adminOrgnazitionService.findListByEntity(orgQuery);
                 if (!CollectionUtils.isEmpty(orgList)) {
-                    detail.setOrgs(JSONArray.parseArray(JSONObject.toJSONString(orgList), OrgnazitionVO.class));
+                    List<OrgnazitionVO> orgVOList = new ArrayList<>();
+                    List<OrgnazitionVO> allOrgs = orgnazitionService.findListByEntity(new Orgnazition());
+                    Map<Long, Orgnazition> idMap = new HashMap<>();
+                    for (Orgnazition o : allOrgs) {
+                        idMap.put(o.getId(), o);
+                    }
+                    for (AdminOrgnazition ao : orgList) {
+                        OrgnazitionVO ovo = new OrgnazitionVO();
+                        ovo.setOrgnazitionId(ao.getOrgnazitionId());
+                        ovo.setAppCode(ao.getAppCode());
+                        ovo.setAppName(appNameMap.get(ao.getAppCode()));
+                        for (Orgnazition o : allOrgs) {
+                            if (ao.getOrgnazitionId().equals(o.getOrgnazitionId())) {
+                                ovo.setName(o.getName());
+                                List<String> pathParts = new ArrayList<>();
+                                pathParts.add(o.getName());
+                                Long pid = o.getPid();
+                                while (pid != null && pid > 0) {
+                                    Orgnazition parent = idMap.get(pid);
+                                    if (parent != null) {
+                                        pathParts.add(0, parent.getName());
+                                        pid = parent.getPid();
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                ovo.setRemark(String.join(" 》 ", pathParts));
+                                break;
+                            }
+                        }
+                        orgVOList.add(ovo);
+                    }
+                    detail.setOrgs(orgVOList);
                 }
             }
 

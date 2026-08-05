@@ -353,7 +353,14 @@
           <div v-else class="view-empty-tab">当前暂无关联角色</div>
         </el-tab-pane>
         <el-tab-pane label="组织机构" name="org">
-          <div class="view-empty-tab">当前暂无组织机构</div>
+          <el-table :data="viewOrgs" border size="small" max-height="300" v-if="viewOrgs.length > 0">
+            <el-table-column type="index" label="序号" width="60" align="center" />
+            <el-table-column prop="appCode" label="应用编码" width="120" />
+            <el-table-column prop="appName" label="应用名称" width="120" />
+            <el-table-column prop="name" label="机构名称" width="150" />
+            <el-table-column prop="remark" label="机构层级" min-width="200" show-overflow-tooltip />
+          </el-table>
+          <div v-else class="view-empty-tab">当前暂无组织机构</div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
