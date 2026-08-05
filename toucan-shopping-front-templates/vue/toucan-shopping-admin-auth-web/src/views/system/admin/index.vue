@@ -223,7 +223,7 @@
       :close-on-click-modal="false"
       destroy-on-close
     >
-      <div v-loading="orgTreeLoading">
+      <div v-loading="orgTreeLoading" element-loading-text="加载中...">
         <div class="org-tree-toolbar">
           <el-select v-model="orgForm.appCode" placeholder="选择应用" style="width:220px" @change="handleOrgAppChange">
             <el-option v-for="a in orgAppOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
@@ -241,6 +241,7 @@
             :filter-node-method="filterOrgNode"
             default-expand-all
             highlight-current
+            check-strictly
           >
             <template #default="{ node }">
               <span class="org-tree-node">
@@ -321,10 +322,10 @@
     </el-dialog>
 
     <!-- 查看弹窗 -->
-    <el-dialog v-model="viewVisible" title="账号详情" width="650px">
-      <el-tabs v-model="viewActiveTab" v-loading="viewLoading">
+    <el-dialog v-model="viewVisible" title="账号详情" width="800px">
+      <el-tabs v-model="viewActiveTab" v-loading="viewLoading" class="view-tabs">
         <el-tab-pane label="基本信息" name="info">
-          <el-descriptions :column="2" border>
+          <el-descriptions :column="2" border class="view-descriptions">
             <el-descriptions-item label="账号">{{ viewData.username }}</el-descriptions-item>
             <el-descriptions-item label="昵称">{{ viewData.nickName || '--' }}</el-descriptions-item>
             <el-descriptions-item label="真实姓名">{{ viewData.realName || '--' }}</el-descriptions-item>
@@ -353,12 +354,12 @@
           <div v-else class="view-empty-tab">当前暂无关联角色</div>
         </el-tab-pane>
         <el-tab-pane label="组织机构" name="org">
-          <el-table :data="viewOrgs" border size="small" max-height="300" v-if="viewOrgs.length > 0">
+          <el-table :data="viewOrgs" border size="small" max-height="350" v-if="viewOrgs.length > 0" style="width:100%">
             <el-table-column type="index" label="序号" width="60" align="center" />
             <el-table-column prop="appCode" label="应用编码" width="120" />
-            <el-table-column prop="appName" label="应用名称" width="120" />
+            <el-table-column prop="appName" label="应用名称" width="150" />
+            <el-table-column prop="remark" label="机构层级" width="300" show-overflow-tooltip />
             <el-table-column prop="name" label="机构名称" width="150" />
-            <el-table-column prop="remark" label="机构层级" min-width="200" show-overflow-tooltip />
           </el-table>
           <div v-else class="view-empty-tab">当前暂无组织机构</div>
         </el-tab-pane>
@@ -823,11 +824,14 @@ async function handleOrgnazition(row) {
   orgForm.appCode = ''
   orgTreeData.value = []
   orgCheckedKeys.value = []
+  orgAppOptions.value = []
+  orgTreeLoading.value = true
+  orgDialogVisible.value = true
   try {
     const res = await listAdminApps(row.adminId)
     orgAppOptions.value = (res.data || []).map(a => ({ code: a.appCode || a.code, name: a.appName || a.name }))
   } catch { orgAppOptions.value = [] }
-  orgDialogVisible.value = true
+  finally { orgTreeLoading.value = false }
 }
 
 function handleOrgAppChange(appCode) {
@@ -1084,5 +1088,11 @@ async function handleSubmitInfo() {
   text-align: center;
   color: $text-placeholder;
   font-size: 14px;
+}
+.view-tabs {
+  :deep(.el-tabs__content) { padding: 8px 4px; }
+}
+.view-descriptions {
+  :deep(.el-descriptions__body) { padding: 8px; }
 }
 </style>
