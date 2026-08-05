@@ -275,6 +275,7 @@ function handleSelectionChange(selection) { selectedRows.value = selection }
 const dialogVisible = ref(false)
 const viewVisible = ref(false)
 const viewData = ref({})
+const viewActiveTab = ref('info')
 const isEdit = ref(false)
 const editingId = ref(null)
 const submitLoading = ref(false)
