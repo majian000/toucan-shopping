@@ -322,7 +322,7 @@
 
     <!-- 查看弹窗 -->
     <el-dialog v-model="viewVisible" title="账号详情" width="650px">
-      <el-tabs v-model="viewActiveTab">
+      <el-tabs v-model="viewActiveTab" v-loading="viewLoading">
         <el-tab-pane label="基本信息" name="info">
           <el-descriptions :column="2" border>
             <el-descriptions-item label="账号">{{ viewData.username }}</el-descriptions-item>
@@ -344,7 +344,13 @@
           </el-descriptions>
         </el-tab-pane>
         <el-tab-pane label="关联角色" name="role">
-          <div class="view-empty-tab">当前暂无关联角色</div>
+          <el-table :data="viewRoles" border size="small" max-height="300" v-if="viewRoles.length > 0">
+            <el-table-column type="index" label="序号" width="60" align="center" />
+            <el-table-column prop="appCode" label="应用编码" width="120" />
+            <el-table-column prop="appName" label="应用名称" width="120" />
+            <el-table-column prop="roleName" label="角色名" min-width="150" />
+          </el-table>
+          <div v-else class="view-empty-tab">当前暂无关联角色</div>
         </el-tab-pane>
         <el-tab-pane label="组织机构" name="org">
           <div class="view-empty-tab">当前暂无组织机构</div>
@@ -912,8 +918,11 @@ async function handleSubmitResetPwd() {
 
 // ========== 完善信息弹窗 ==========
 const viewVisible = ref(false)
+const viewLoading = ref(false)
 const viewActiveTab = ref('info')
 const viewData = ref({})
+const viewRoles = ref([])
+const viewOrgs = ref([])
 const infoDialogVisible = ref(false)
 const infoLoading = ref(false)
 const infoSubmitLoading = ref(false)
@@ -939,11 +948,22 @@ const infoRules = {
 
 async function handleViewAdmin(row) {
   viewData.value = {}
+  viewRoles.value = []
+  viewOrgs.value = []
   viewVisible.value = true
+  viewActiveTab.value = 'info'
+  viewLoading.value = true
   try {
     const res = await getAdminDetail(row.id)
-    viewData.value = res.data || row
+    if (res.data) {
+      viewData.value = res.data.basicInfo || row
+      viewRoles.value = res.data.roles || []
+      viewOrgs.value = res.data.orgs || []
+    } else {
+      viewData.value = row
+    }
   } catch { viewData.value = row }
+  finally { viewLoading.value = false }
 }
 
 function handleInfo(row) {

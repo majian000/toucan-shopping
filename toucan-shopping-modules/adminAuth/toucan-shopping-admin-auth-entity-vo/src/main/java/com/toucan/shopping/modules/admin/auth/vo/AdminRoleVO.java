@@ -24,6 +24,11 @@ public class AdminRoleVO extends AdminRole {
      */
     private String roleName;
 
+    /**
+     * 应用名称(批量查询填充)
+     */
+    private String appName;
+
 
 
 }

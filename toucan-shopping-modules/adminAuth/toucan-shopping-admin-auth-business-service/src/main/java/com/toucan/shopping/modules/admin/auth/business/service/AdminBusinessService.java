@@ -782,8 +782,17 @@ public class AdminBusinessService {
                             roleNameMap.put(r.getRoleId(), r.getName());
                         }
                     }
+                    // 查询所有应用名称
+                    Map<String, String> appNameMap = new HashMap<>();
+                    List<App> allApps = appService.findListByEntity(new App());
+                    for (App a : allApps) {
+                        if (StringUtils.isNotEmpty(a.getCode())) {
+                            appNameMap.put(a.getCode(), a.getName());
+                        }
+                    }
                     for (AdminRoleVO r : roleVOList) {
                         r.setRoleName(roleNameMap.getOrDefault(r.getRoleId(), ""));
+                        r.setAppName(appNameMap.getOrDefault(r.getAppCode(), ""));
                     }
                 }
                 detail.setRoles(roleVOList);
