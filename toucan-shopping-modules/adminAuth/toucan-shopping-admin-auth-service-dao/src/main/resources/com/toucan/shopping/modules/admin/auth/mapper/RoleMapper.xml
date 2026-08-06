@@ -127,4 +127,8 @@
         select * from t_sa_role t where t.id = #{id} and t.delete_status = 0
     </select>
 
+    <select id="findByRoleId" resultMap="roleMap">
+        select * from t_sa_role t where t.role_id = #{roleId} and t.delete_status = 0 limit 1
+    </select>
+
 </mapper>

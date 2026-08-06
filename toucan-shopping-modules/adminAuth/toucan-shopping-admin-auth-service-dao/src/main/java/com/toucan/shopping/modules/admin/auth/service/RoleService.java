@@ -25,4 +25,6 @@ public interface RoleService {
     List<Role> findListByRoleIds(String[] roleIds);
 
     RoleVO findVOById(Long id);
+
+    Role findByRoleId(String roleId);
 }

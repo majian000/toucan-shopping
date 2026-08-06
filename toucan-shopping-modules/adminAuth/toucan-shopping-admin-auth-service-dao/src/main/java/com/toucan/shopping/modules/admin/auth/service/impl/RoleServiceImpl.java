@@ -76,4 +76,9 @@ public class RoleServiceImpl implements RoleService {
     public RoleVO findVOById(Long id) {
         return roleMapper.findVOById(id);
     }
+
+    @Override
+    public Role findByRoleId(String roleId) {
+        return roleMapper.findByRoleId(roleId);
+    }
 }

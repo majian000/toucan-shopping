@@ -142,6 +142,16 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
+    public List<FunctionVO> findListByIds(List<Long> ids) {
+        return functionMapper.findListByIds(ids);
+    }
+
+    @Override
+    public List<FunctionVO> findAllIdNamePid(String appCode) {
+        return functionMapper.findAllIdNamePid(appCode);
+    }
+
+    @Override
     public void queryChildren(List children, Function query) {
         List<FunctionVO> functions = functionMapper.findListByPid(query.getId());
         children.addAll(functions);

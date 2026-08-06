@@ -173,6 +173,8 @@
         <result column="function_url" jdbcType="VARCHAR" property="functionUrl" />
         <result column="function_permission" jdbcType="VARCHAR" property="functionPermission" />
         <result column="function_type" jdbcType="INTEGER" property="functionType" />
+        <result column="function_entity_id" jdbcType="BIGINT" property="functionEntityId" />
+        <result column="function_pid" jdbcType="BIGINT" property="functionPid" />
     </resultMap>
 
 
@@ -191,7 +193,8 @@
 
     <select id="queryRoleFunctionListPage" resultMap="roleFunctionListVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo">
         select t.id, t.function_id, t.role_id, t.app_code, t.create_date, t.delete_status, t.create_admin_id,
-               tsf.name as function_name, tsf.url as function_url, tsf.permission as function_permission, tsf.type as function_type
+               tsf.name as function_name, tsf.url as function_url, tsf.permission as function_permission, tsf.type as function_type,
+               tsf.id as function_entity_id, tsf.pid as function_pid
         from t_sa_role_function t
         left join t_sa_function tsf on t.function_id = tsf.function_id and tsf.delete_status = 0
         <where>

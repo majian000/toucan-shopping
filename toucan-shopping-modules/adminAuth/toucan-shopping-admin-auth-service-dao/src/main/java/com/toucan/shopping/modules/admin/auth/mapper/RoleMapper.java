@@ -25,4 +25,5 @@ public interface RoleMapper {
 
     List<Role> findListByRoleIds(@org.apache.ibatis.annotations.Param("roleIds") String[] roleIds);
     RoleVO findVOById(Long id);
+    Role findByRoleId(@org.apache.ibatis.annotations.Param("roleId") String roleId);
 }

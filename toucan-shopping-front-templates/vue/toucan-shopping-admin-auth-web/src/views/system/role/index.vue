@@ -717,7 +717,7 @@ function handleRefreshCache(row) {
 
   .pagination-wrapper { margin-top: $gap-md; display: flex; justify-content: flex-end; }
 
-  .func-search-form { margin-bottom: 12px; :deep(.el-form-item) { margin-bottom: 0; } }
+  .func-search-form { margin-bottom: 12px; :deep(.el-form-item) { margin-right: 12px; margin-bottom: 8px; } }
 
   .perm-dialog-body {
     .perm-toolbar {

@@ -211,6 +211,20 @@
     </select>
 
 
+    <select id="findListByIds" resultMap="functionVOMap">
+        select * from t_sa_function t where t.delete_status = 0
+        and t.id in
+        <foreach item="id" index="index" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="findAllIdNamePid" resultMap="functionVOMap">
+        select t.id, t.name, t.pid from t_sa_function t where t.delete_status = 0 and t.app_code = #{appCode}
+    </select>
+
+
 
     <select id="queryListByAppCode" resultMap="functionVOMap" parameterType="java.lang.String">
         select * from t_sa_function t where  1=1 and t.app_code = #{appCode} and t.delete_status = 0

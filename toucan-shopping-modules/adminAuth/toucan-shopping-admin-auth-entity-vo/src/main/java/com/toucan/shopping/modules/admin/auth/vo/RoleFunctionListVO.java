@@ -12,7 +12,7 @@ public class RoleFunctionListVO extends RoleFunction {
     /** 功能名称 */
     private String functionName;
 
-    /** 功能路径 */
+    /** 功能路径(层级路径,如: 系统管理 》 角色管理 》 查看) */
     private String functionUrl;
 
     /** 权限标识 */
@@ -20,5 +20,11 @@ public class RoleFunctionListVO extends RoleFunction {
 
     /** 功能类型 0目录 1菜单 2按钮 3工具条按钮 4:API 5页面控件 */
     private Short functionType;
+
+    /** 功能项实体ID(t_sa_function.id) */
+    private Long functionEntityId;
+
+    /** 功能项父节点ID(t_sa_function.pid) */
+    private Long functionPid;
 
 }

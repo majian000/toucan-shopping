@@ -83,6 +83,20 @@ public interface FunctionService {
     List<FunctionVO> queryListByAppCode(String appCode);
 
     /**
+     * 批量根据ID查询
+     * @param ids
+     * @return
+     */
+    List<FunctionVO> findListByIds(List<Long> ids);
+
+    /**
+     * 查询全部功能项的id、名称、pid(用于构建层级路径)
+     * @param appCode
+     * @return
+     */
+    List<FunctionVO> findAllIdNamePid(String appCode);
+
+    /**
      * 查询所有子节点
      * @param children
      * @param query

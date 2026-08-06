@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.util.Check;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -26,7 +27,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色管理
@@ -457,18 +460,64 @@ public class RoleBusinessService {
     /**
      * 查询角色功能列表(关联t_sa_function)
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public ResultObjectVO queryRoleFunctionListPage(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunctionPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RoleFunctionPageInfo.class);
-            resultObjectVO.setData(roleFunctionService.queryRoleFunctionListPage(pageInfo));
-        } catch(BusinessValidationException e) {
+            PageInfo<RoleFunctionListVO> pageResult = roleFunctionService.queryRoleFunctionListPage(pageInfo);
+
+            List<RoleFunctionListVO> list = pageResult.getList();
+            if (!CollectionUtils.isEmpty(list)) {
+                // 从角色获取appCode，只查询该应用下的功能项
+                String roleAppCode = "-1";
+                String roleId = pageInfo.getRoleId();
+                if (StringUtils.isNotEmpty(roleId)) {
+                    Role role = roleService.findByRoleId(roleId);
+                    if (role != null) {
+                        roleAppCode = role.getAppCode();
+                    }
+                }
+
+                if (StringUtils.isNotEmpty(roleAppCode)) {
+                    List<FunctionVO> allFunctions = functionService.findAllIdNamePid(roleAppCode);
+                    Map<Long, FunctionVO> funcMap = new HashMap<>();
+                    for (FunctionVO f : allFunctions) {
+                        funcMap.put(f.getId(), f);
+                    }
+
+                    // 在内存中为每个VO构建层级路径 a 》 b 》 c
+                    for (RoleFunctionListVO vo : list) {
+                        StringBuilder path = new StringBuilder();
+                        buildFunctionPath(vo.getFunctionEntityId(), funcMap, path);
+                        vo.setFunctionUrl(path.toString());
+                    }
+                }
+            }
+
+            resultObjectVO.setData(pageResult);
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
         }
         return resultObjectVO;
+    }
+
+
+    private void buildFunctionPath(Long funcId, Map<Long, FunctionVO> funcMap, StringBuilder path) {
+        FunctionVO f = funcMap.get(funcId);
+        if (f == null) {
+            return;
+        }
+        if (f.getPid() != null && f.getPid() > 0) {
+            buildFunctionPath(f.getPid(), funcMap, path);
+        }
+        if (path.length() > 0) {
+            path.append(" 》 ");
+        }
+        path.append(f.getName());
     }
 
 

@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -77,6 +78,13 @@ public interface FunctionMapper {
     Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode);
 
     List<FunctionVO> findById(Long id);
+
+    List<FunctionVO> findListByIds(@Param("ids") List<Long> ids);
+
+    /**
+     * 查询全部功能项的id、名称、pid(用于构建层级路径)
+     */
+    List<FunctionVO> findAllIdNamePid(@Param("appCode") String appCode);
 
     List<Function> findTreeTableByPageInfo(FunctionTreeInfo functionTreeInfo);
 
