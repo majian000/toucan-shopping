@@ -458,23 +458,6 @@ public class RoleBusinessService {
             RoleVO vo = roleService.findVOById(roleQuery.getId());
             if (vo != null) {
                 detail.setBasicInfo(vo);
-                if (StringUtils.isNotEmpty(vo.getRoleId()) && StringUtils.isNotEmpty(vo.getAppCode())) {
-                    RoleFunction rfQuery = new RoleFunction();
-                    rfQuery.setRoleId(vo.getRoleId());
-                    rfQuery.setAppCode(vo.getAppCode());
-                    rfQuery.setDeleteStatus((short) 0);
-                    List<RoleFunction> rfList = roleFunctionService.findListByEntity(rfQuery);
-                    if (!CollectionUtils.isEmpty(rfList)) {
-                        List<String> functionIds = new ArrayList<>();
-                        for (RoleFunction rf : rfList) {
-                            if (rf.getFunctionId() != null) { functionIds.add(rf.getFunctionId()); }
-                        }
-                        if (!functionIds.isEmpty()) {
-                            List<Function> funcs = functionService.findListByFunctionIds(functionIds.toArray(new String[0]));
-                            detail.setFunctions(JSONArray.parseArray(JSONObject.toJSONString(funcs), FunctionVO.class));
-                        }
-                    }
-                }
             }
             resultObjectVO.setData(detail);
         } catch(BusinessValidationException e) {

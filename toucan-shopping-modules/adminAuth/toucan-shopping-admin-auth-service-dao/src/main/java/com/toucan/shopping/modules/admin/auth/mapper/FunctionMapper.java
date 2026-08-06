@@ -86,5 +86,4 @@ public interface FunctionMapper {
 
     List<FunctionVO> queryListByUrlsAndAppCodes(List<String> urls, List<String> appCodes);
 
-    List<Function> findListByFunctionIds(@org.apache.ibatis.annotations.Param("functionIds") String[] functionIds);
 }

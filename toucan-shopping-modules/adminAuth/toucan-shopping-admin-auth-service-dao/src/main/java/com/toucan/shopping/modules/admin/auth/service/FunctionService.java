@@ -155,5 +155,4 @@ public interface FunctionService {
 
 
 
-    List<Function> findListByFunctionIds(String[] functionIds);
 }

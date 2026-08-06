@@ -255,8 +255,4 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
 
-    @Override
-    public List<Function> findListByFunctionIds(String[] functionIds) {
-        return functionMapper.findListByFunctionIds(functionIds);
-    }
 }

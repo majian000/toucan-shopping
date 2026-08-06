@@ -21,7 +21,7 @@
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
-        
+
     </resultMap>
 
     <resultMap id="functionVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionVO" extends="functionMap">
@@ -54,7 +54,7 @@
         t.create_admin_id,
         t.update_admin_id
     </sql>
-    
+
 
     <sql id="queryListPageWhere">
 
@@ -127,7 +127,7 @@
             </if>
             and t.delete_status = 0
         </where>
-         order by t.function_sort desc
+        order by t.function_sort desc
     </select>
 
     <select id="findListByEntityFieldLike" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
@@ -167,8 +167,8 @@
 
     <select id="findTreeTableByPageInfo" resultMap="functionVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
         select <include refid="queryColumns" />,tsa.username as create_admin_username,tsau.username as update_admin_username from t_sa_function t
-            left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
-            left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
+        left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
+        left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
             1=1
             <include refid="queryTreePageWhere" />
@@ -243,10 +243,10 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
         update t_sa_function set  name=#{name},type=#{type},pid=#{pid},icon=#{icon},url=#{url},permission=#{permission},
-         function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},function_text=#{functionText},
-         update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
-         remark=#{remark}
-          where id = #{id}
+                                  function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},function_text=#{functionText},
+                                  update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
+                                  remark=#{remark}
+        where id = #{id}
     </update>
 
     <update id="deleteById" parameterType="java.lang.Long">
@@ -257,15 +257,15 @@
 
     <select id="queryListByRoleIdArray" resultMap="functionVOMap" >
         select distinct * from (
-            select <include refid="queryColumns" /> from t_sa_function t
-                right join t_sa_role_function tsrf on t.function_id = tsrf.function_id and tsrf.delete_status = 0
-                    and tsrf.role_id in
-                    <foreach item="item" index="index" collection="roleIds" open="("  close=")" separator=",">
-                        #{item}
-                    </foreach>
-            )ds
-            where ds.delete_status=0
-            order by ds.function_sort desc
+        select <include refid="queryColumns" /> from t_sa_function t
+        right join t_sa_role_function tsrf on t.function_id = tsrf.function_id and tsrf.delete_status = 0
+        and tsrf.role_id in
+        <foreach item="item" index="index" collection="roleIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        )ds
+        where ds.delete_status=0
+        order by ds.function_sort desc
 
     </select>
 
@@ -304,13 +304,5 @@
 
     </select>
 
-
-    <select id="findListByFunctionIds" resultMap="functionBaseMap">
-        select * from t_sa_function t where t.delete_status = 0
-        and t.function_id in
-        <foreach item="item" collection="functionIds" open="(" close=")" separator=",">
-            #{item}
-        </foreach>
-    </select>
 
 </mapper>
