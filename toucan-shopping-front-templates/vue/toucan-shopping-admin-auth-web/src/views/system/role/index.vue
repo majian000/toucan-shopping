@@ -143,17 +143,14 @@
         <el-tab-pane label="权限列表" name="functions" v-loading="funcLoading">
           <el-form :model="funcSearchForm" inline class="func-search-form">
             <el-form-item label="功能名称">
-              <el-input v-model="funcSearchForm.functionName" placeholder="请输入" clearable style="width:160px" />
-            </el-form-item>
-            <el-form-item label="功能路径">
-              <el-input v-model="funcSearchForm.url" placeholder="请输入" clearable style="width:160px" />
+              <el-input v-model="funcSearchForm.functionName" placeholder="请输入" clearable style="width:180px" />
             </el-form-item>
             <el-form-item label="权限标识">
               <el-input v-model="funcSearchForm.permission" placeholder="请输入" clearable style="width:180px" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :icon="Search" size="small" @click="handleFuncSearch">搜索</el-button>
-              <el-button :icon="Refresh" size="small" @click="handleFuncReset">重置</el-button>
+              <el-button type="primary" :icon="Search" @click="handleFuncSearch">搜索</el-button>
+              <el-button :icon="Refresh" @click="handleFuncReset">重置</el-button>
             </el-form-item>
           </el-form>
           <el-table :data="funcTableData" border stripe style="width:100%">
@@ -161,7 +158,7 @@
             <el-table-column prop="functionName" label="功能名称" min-width="140" show-overflow-tooltip />
             <el-table-column prop="functionUrl" label="功能路径" min-width="160" show-overflow-tooltip />
             <el-table-column prop="functionPermission" label="权限标识" min-width="180" show-overflow-tooltip />
-            <el-table-column prop="functionType" label="功能类型" width="100" align="center">
+            <el-table-column prop="functionType" label="功能类型" width="130" align="center">
               <template #default="{ row }">
                 <el-tag size="small" :type="funcTypeTag[row.functionType] || 'info'">{{ funcTypeMap[row.functionType] || row.functionType }}</el-tag>
               </template>
@@ -354,8 +351,6 @@ function handleFuncReset() {
   funcSearchForm.functionName = ''
   funcSearchForm.url = ''
   funcSearchForm.permission = ''
-  funcPagination.page = 1
-  fetchRoleFunctions()
 }
 
 // 权限列表 tab 切换 & 分页
