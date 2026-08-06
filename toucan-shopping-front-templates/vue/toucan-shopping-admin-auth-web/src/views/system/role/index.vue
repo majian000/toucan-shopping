@@ -122,7 +122,7 @@
 
     <!-- 查看弹窗 -->
     <el-dialog v-model="viewVisible" title="角色详情" width="650px">
-      <el-tabs v-model="viewActiveTab">
+      <el-tabs v-model="viewActiveTab" v-loading="viewLoading">
         <el-tab-pane label="基本信息" name="info">
           <el-descriptions :column="1" border>
             <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
@@ -278,9 +278,9 @@ function handleSelectionChange(selection) { selectedRows.value = selection }
 // ========== 新增/编辑弹窗 ==========
 const dialogVisible = ref(false)
 const viewVisible = ref(false)
+const viewLoading = ref(false)
 const viewActiveTab = ref('info')
 const viewData = ref({})
-const viewActiveTab = ref('info')
 const isEdit = ref(false)
 const editingId = ref(null)
 const submitLoading = ref(false)
@@ -311,13 +311,15 @@ function handleAdd() {
 }
 
 async function handleView(row) {
-  viewData.value = row
+  viewData.value = {}
   viewVisible.value = true
   viewActiveTab.value = 'info'
+  viewLoading.value = true
   try {
     const res = await getRoleDetail(row.id)
     if (res.data && res.data.basicInfo) { viewData.value = res.data.basicInfo }
   } catch { /* ignore */ }
+  finally { viewLoading.value = false }
 }
 
 function handleEdit(row) {
