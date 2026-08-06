@@ -34,6 +34,12 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.stock</groupId>
             <artifactId>toucan-shopping-stock-entity-vo</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.toucan.shopping.modules.common</groupId>
+                    <artifactId>toucan-shopping-common-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

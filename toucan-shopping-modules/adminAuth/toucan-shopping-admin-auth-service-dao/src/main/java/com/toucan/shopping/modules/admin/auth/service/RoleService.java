@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface RoleService {
     int deleteById(Long id);
 
     List<Role> findListByRoleIds(String[] roleIds);
+
+    RoleVO findVOById(Long id);
 }

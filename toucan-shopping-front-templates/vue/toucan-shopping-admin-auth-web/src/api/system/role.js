@@ -39,3 +39,8 @@ export function saveRoleFunctions(data) {
 export function refreshRoleFunctionCache(roleId) {
   return request({ url: '/role/refresh/cache/functions', method: 'post', data: { roleId } })
 }
+
+// 角色详情
+export function getRoleDetail(id) {
+  return request({ url: "/role/detail", method: "post", data: { id } })
+}

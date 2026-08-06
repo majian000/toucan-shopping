@@ -305,4 +305,12 @@
     </select>
 
 
+    <select id="findListByFunctionIds" resultMap="functionBaseMap">
+        select * from t_sa_function t where t.delete_status = 0
+        and t.function_id in
+        <foreach item="item" collection="functionIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

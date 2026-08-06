@@ -115,4 +115,8 @@ public interface FeignAdminService extends AdminServiceAPI {
 
 
 
+
+    @RequestMapping(value = "/queryDetail",method = RequestMethod.POST)
+    ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo);
+
 }

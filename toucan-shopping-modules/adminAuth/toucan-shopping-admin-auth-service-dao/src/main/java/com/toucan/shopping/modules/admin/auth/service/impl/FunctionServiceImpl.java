@@ -254,4 +254,9 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByUrlsAndAppCodes(urls,appCodes);
     }
 
+
+    @Override
+    public List<Function> findListByFunctionIds(String[] functionIds) {
+        return functionMapper.findListByFunctionIds(functionIds);
+    }
 }

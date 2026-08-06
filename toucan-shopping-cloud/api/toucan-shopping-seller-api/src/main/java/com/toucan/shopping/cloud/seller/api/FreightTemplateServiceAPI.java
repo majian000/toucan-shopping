@@ -2,7 +2,6 @@ package com.toucan.shopping.cloud.seller.api;
 
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * 运费模板

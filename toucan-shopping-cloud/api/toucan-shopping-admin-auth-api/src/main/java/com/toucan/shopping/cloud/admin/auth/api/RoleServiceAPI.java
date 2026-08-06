@@ -72,6 +72,7 @@ public interface RoleServiceAPI {
      */
     ResultObjectVO deleteByIds(RequestJsonVO requestVo);
 
+    ResultObjectVO queryDetail(RequestJsonVO requestVo);
 
 
 }

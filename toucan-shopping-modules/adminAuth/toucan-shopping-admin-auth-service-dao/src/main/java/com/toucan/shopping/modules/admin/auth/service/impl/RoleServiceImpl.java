@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.admin.auth.mapper.RoleMapper;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
+import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findListByRoleIds(String[] roleIds) {
         return roleMapper.findListByRoleIds(roleIds);
+    }
+
+    @Override
+    public RoleVO findVOById(Long id) {
+        return roleMapper.findVOById(id);
     }
 }

@@ -2,7 +2,6 @@ package com.toucan.shopping.cloud.admin.auth.api;
 
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import org.springframework.web.bind.annotation.*;
 
 
 public interface FunctionServiceAPI {
@@ -154,8 +153,7 @@ public interface FunctionServiceAPI {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value = "/queryListByAppCode", method = RequestMethod.POST)
-    ResultObjectVO queryListByAppCode(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListByAppCode(RequestJsonVO requestVo);
 
 
 }

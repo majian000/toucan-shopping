@@ -123,4 +123,8 @@
         </foreach>
     </select>
 
+    <select id="findVOById" resultMap="roleVOMap">
+        select * from t_sa_role t where t.id = #{id} and t.delete_status = 0
+    </select>
+
 </mapper>

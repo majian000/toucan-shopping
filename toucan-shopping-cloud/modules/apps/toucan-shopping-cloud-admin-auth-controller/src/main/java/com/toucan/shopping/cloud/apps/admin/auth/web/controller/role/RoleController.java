@@ -421,5 +421,12 @@ public class RoleController extends UIController {
 
 
 
-}
 
+    @RequestMapping(value="/queryDetail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo){
+        return roleServiceAPI.queryDetail(requestVo);
+    }
+
+
+}

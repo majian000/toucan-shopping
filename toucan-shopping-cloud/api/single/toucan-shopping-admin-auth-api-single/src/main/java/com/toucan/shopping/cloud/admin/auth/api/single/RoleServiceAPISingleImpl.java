@@ -47,4 +47,9 @@ public class RoleServiceAPISingleImpl implements RoleServiceAPI {
     public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         return roleBusinessService.deleteByIds(requestVo);
     }
+
+    @Override
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
+        return roleBusinessService.queryDetail(requestVo);
+    }
 }

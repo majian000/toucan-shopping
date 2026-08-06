@@ -2,7 +2,6 @@ package com.toucan.shopping.cloud.admin.auth.api;
 
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import org.springframework.web.bind.annotation.*;
 
 public interface AdminServiceAPI {
 
@@ -63,8 +62,7 @@ public interface AdminServiceAPI {
     ResultObjectVO findById(RequestJsonVO requestVo);
 
 
-    @RequestMapping(value = "/queryDetail", method = RequestMethod.POST)
-    ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryDetail(RequestJsonVO requestVo);
 
 
     /**

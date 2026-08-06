@@ -162,4 +162,8 @@ public interface FeignFunctionService extends FunctionServiceAPI {
 
 
 
+
+    @RequestMapping(value = "/queryListByAppCode",method = RequestMethod.POST)
+    ResultObjectVO queryListByAppCode(@RequestBody RequestJsonVO requestVo);
+
 }

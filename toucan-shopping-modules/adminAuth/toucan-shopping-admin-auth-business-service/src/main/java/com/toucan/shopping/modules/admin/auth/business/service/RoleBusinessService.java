@@ -1,18 +1,14 @@
 package com.toucan.shopping.modules.admin.auth.business.service;
 
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSON;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
-import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
-import com.toucan.shopping.modules.admin.auth.entity.App;
-import com.toucan.shopping.modules.admin.auth.entity.Role;
+import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
 import com.toucan.shopping.modules.common.util.Check;
@@ -59,6 +55,9 @@ public class RoleBusinessService {
 
     @Autowired
     private AppService appService;
+
+    @Autowired
+    private FunctionService functionService;
 
 
 
@@ -444,6 +443,45 @@ public class RoleBusinessService {
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Role roleQuery = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
+            RoleDetailVO detail = new RoleDetailVO();
+            RoleVO vo = roleService.findVOById(roleQuery.getId());
+            if (vo != null) {
+                detail.setBasicInfo(vo);
+                if (StringUtils.isNotEmpty(vo.getRoleId()) && StringUtils.isNotEmpty(vo.getAppCode())) {
+                    RoleFunction rfQuery = new RoleFunction();
+                    rfQuery.setRoleId(vo.getRoleId());
+                    rfQuery.setAppCode(vo.getAppCode());
+                    rfQuery.setDeleteStatus((short) 0);
+                    List<RoleFunction> rfList = roleFunctionService.findListByEntity(rfQuery);
+                    if (!CollectionUtils.isEmpty(rfList)) {
+                        List<String> functionIds = new ArrayList<>();
+                        for (RoleFunction rf : rfList) {
+                            if (rf.getFunctionId() != null) { functionIds.add(rf.getFunctionId()); }
+                        }
+                        if (!functionIds.isEmpty()) {
+                            List<Function> funcs = functionService.findListByFunctionIds(functionIds.toArray(new String[0]));
+                            detail.setFunctions(JSONArray.parseArray(JSONObject.toJSONString(funcs), FunctionVO.class));
+                        }
+                    }
+                }
+            }
+            resultObjectVO.setData(detail);
+        } catch(BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        } catch(Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
         }
         return resultObjectVO;
     }

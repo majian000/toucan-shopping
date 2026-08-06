@@ -121,21 +121,25 @@
     </el-dialog>
 
     <!-- 查看弹窗 -->
-    <el-dialog v-model="viewVisible" title="角色详情" width="500px">
-      <el-descriptions :column="1" border>
-        <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
-        <el-descriptions-item label="应用名称">{{ viewData.appName || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="状态">
-          <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
-            {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
-        <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
-      </el-descriptions>
+    <el-dialog v-model="viewVisible" title="角色详情" width="650px">
+      <el-tabs v-model="viewActiveTab">
+        <el-tab-pane label="基本信息" name="info">
+          <el-descriptions :column="1" border>
+            <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
+            <el-descriptions-item label="应用名称">{{ viewData.appName || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="状态">
+              <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
+                {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
+          </el-descriptions>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
 
     <!-- 权限分配弹窗 -->
@@ -205,7 +209,7 @@ import { ref, reactive, computed, watch, nextTick, onMounted, markRaw } from 'vu
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, View } from '@element-plus/icons-vue'
-import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache } from '@/api/system/role'
+import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache, getRoleDetail } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -274,6 +278,7 @@ function handleSelectionChange(selection) { selectedRows.value = selection }
 // ========== 新增/编辑弹窗 ==========
 const dialogVisible = ref(false)
 const viewVisible = ref(false)
+const viewActiveTab = ref('info')
 const viewData = ref({})
 const viewActiveTab = ref('info')
 const isEdit = ref(false)
@@ -305,7 +310,15 @@ function handleAdd() {
   dialogVisible.value = true
 }
 
-function handleView(row) { viewData.value = row; viewVisible.value = true }
+async function handleView(row) {
+  viewData.value = row
+  viewVisible.value = true
+  viewActiveTab.value = 'info'
+  try {
+    const res = await getRoleDetail(row.id)
+    if (res.data && res.data.basicInfo) { viewData.value = res.data.basicInfo }
+  } catch { /* ignore */ }
+}
 
 function handleEdit(row) {
   isEdit.value = true

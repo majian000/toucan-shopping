@@ -365,5 +365,20 @@ public class RoleController extends UIController {
 
 
 
-}
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:show"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody Role role) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
+            resultObjectVO = roleServiceAPI.queryDetail(requestJsonVO);
+        } catch(Exception e) {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+}

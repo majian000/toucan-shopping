@@ -26,12 +26,14 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.seller</groupId>
             <artifactId>toucan-shopping-seller-entity-vo</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.toucan.shopping.modules.common</groupId>
+                    <artifactId>toucan-shopping-common-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
