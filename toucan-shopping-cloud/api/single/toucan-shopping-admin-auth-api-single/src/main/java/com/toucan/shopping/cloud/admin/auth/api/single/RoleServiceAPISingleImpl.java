@@ -52,4 +52,9 @@ public class RoleServiceAPISingleImpl implements RoleServiceAPI {
     public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
         return roleBusinessService.queryDetail(requestVo);
     }
+
+    @Override
+    public ResultObjectVO queryRoleFunctionListPage(RequestJsonVO requestVo) {
+        return roleBusinessService.queryRoleFunctionListPage(requestVo);
+    }
 }

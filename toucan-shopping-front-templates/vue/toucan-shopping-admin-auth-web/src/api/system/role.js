@@ -44,3 +44,8 @@ export function refreshRoleFunctionCache(roleId) {
 export function getRoleDetail(id) {
   return request({ url: "/role/detail", method: "post", data: { id } })
 }
+
+// 角色功能列表分页
+export function listRoleFunctions(data) {
+  return request({ url: "/role/function/list/page", method: "post", data })
+}

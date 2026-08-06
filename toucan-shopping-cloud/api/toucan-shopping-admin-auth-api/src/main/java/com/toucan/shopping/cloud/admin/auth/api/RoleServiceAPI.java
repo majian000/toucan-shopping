@@ -75,4 +75,6 @@ public interface RoleServiceAPI {
     ResultObjectVO queryDetail(RequestJsonVO requestVo);
 
 
+    ResultObjectVO queryRoleFunctionListPage(RequestJsonVO requestVo);
+
 }

@@ -42,6 +42,21 @@ public class RoleFunctionPageInfo extends PageInfo<RoleFunction> {
      */
     private Date createDate;
 
+    /**
+     * 功能名称(模糊搜索)
+     */
+    private String functionName;
+
+    /**
+     * 功能路径(模糊搜索)
+     */
+    private String url;
+
+    /**
+     * 权限标识(模糊搜索)
+     */
+    private String permission;
+
 
     //==============================================
 

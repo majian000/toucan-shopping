@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionListVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import org.apache.commons.collections.CollectionUtils;
@@ -222,6 +223,19 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     @Override
     public List<RoleFunction> findListByRoleIdsAndAppCode(String[] roleIdArray, String appCode) {
         return roleFunctionMapper.findListByRoleIdsAndAppCode(roleIdArray, appCode);
+    }
+
+
+    @Override
+    public PageInfo<RoleFunctionListVO> queryRoleFunctionListPage(RoleFunctionPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage() * queryPageInfo.getLimit() - queryPageInfo.getLimit());
+        PageInfo<RoleFunctionListVO> pageInfo = new PageInfo<>();
+        pageInfo.setList(roleFunctionMapper.queryRoleFunctionListPage(queryPageInfo));
+        pageInfo.setTotal(roleFunctionMapper.queryRoleFunctionListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
+        return pageInfo;
     }
 
 

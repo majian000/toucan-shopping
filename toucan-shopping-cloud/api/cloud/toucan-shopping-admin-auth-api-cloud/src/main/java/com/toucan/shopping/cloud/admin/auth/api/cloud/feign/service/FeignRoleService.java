@@ -85,4 +85,7 @@ public interface FeignRoleService extends RoleServiceAPI {
     ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo);
 
 
+    @RequestMapping(value = "/function/list/page", method = RequestMethod.POST)
+    ResultObjectVO queryRoleFunctionListPage(@RequestBody RequestJsonVO requestVo);
+
 }

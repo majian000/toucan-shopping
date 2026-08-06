@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
+import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
@@ -376,6 +377,21 @@ public class RoleController extends UIController {
             resultObjectVO = roleServiceAPI.queryDetail(requestJsonVO);
         } catch(Exception e) {
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:show"})
+    @RequestMapping(value = "/function/list/page", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryRoleFunctionListPage(HttpServletRequest request, @RequestBody RoleFunctionPageInfo pageInfo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pageInfo);
+            resultObjectVO = roleServiceAPI.queryRoleFunctionListPage(requestJsonVO);
+        } catch(Exception e) {
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }

@@ -121,7 +121,7 @@
     </el-dialog>
 
     <!-- 查看弹窗 -->
-    <el-dialog v-model="viewVisible" title="角色详情" width="650px">
+    <el-dialog v-model="viewVisible" title="角色详情" width="900px">
       <el-tabs v-model="viewActiveTab" v-loading="viewLoading">
         <el-tab-pane label="基本信息" name="info">
           <el-descriptions :column="1" border>
@@ -138,6 +138,46 @@
             <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
             <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
           </el-descriptions>
+        </el-tab-pane>
+
+        <el-tab-pane label="权限列表" name="functions" v-loading="funcLoading">
+          <el-form :model="funcSearchForm" inline class="func-search-form">
+            <el-form-item label="功能名称">
+              <el-input v-model="funcSearchForm.functionName" placeholder="请输入" clearable style="width:160px" />
+            </el-form-item>
+            <el-form-item label="功能路径">
+              <el-input v-model="funcSearchForm.url" placeholder="请输入" clearable style="width:160px" />
+            </el-form-item>
+            <el-form-item label="权限标识">
+              <el-input v-model="funcSearchForm.permission" placeholder="请输入" clearable style="width:180px" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :icon="Search" size="small" @click="handleFuncSearch">搜索</el-button>
+              <el-button :icon="Refresh" size="small" @click="handleFuncReset">重置</el-button>
+            </el-form-item>
+          </el-form>
+          <el-table :data="funcTableData" border stripe style="width:100%">
+            <el-table-column type="index" label="序号" width="55" align="center" />
+            <el-table-column prop="functionName" label="功能名称" min-width="140" show-overflow-tooltip />
+            <el-table-column prop="functionUrl" label="功能路径" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="functionPermission" label="权限标识" min-width="180" show-overflow-tooltip />
+            <el-table-column prop="functionType" label="功能类型" width="100" align="center">
+              <template #default="{ row }">
+                <el-tag size="small" :type="funcTypeTag[row.functionType] || 'info'">{{ funcTypeMap[row.functionType] || row.functionType }}</el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="pagination-wrapper">
+            <el-pagination
+              v-model:current-page="funcPagination.page"
+              v-model:page-size="funcPagination.size"
+              :page-sizes="[10, 20, 50]"
+              :total="funcTableTotal"
+              layout="total, sizes, prev, pager, next, jumper"
+              background
+              small
+            />
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -209,7 +249,7 @@ import { ref, reactive, computed, watch, nextTick, onMounted, markRaw } from 'vu
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, View } from '@element-plus/icons-vue'
-import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache, getRoleDetail } from '@/api/system/role'
+import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache, getRoleDetail, listRoleFunctions } from '@/api/system/role'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -281,6 +321,47 @@ const viewVisible = ref(false)
 const viewLoading = ref(false)
 const viewActiveTab = ref('info')
 const viewData = ref({})
+
+// 权限列表
+const funcLoading = ref(false)
+const funcTableData = ref([])
+const funcTableTotal = ref(0)
+const funcSearchForm = reactive({ functionName: '', url: '', permission: '' })
+const funcPagination = reactive({ page: 1, size: 10 })
+const funcTypeMap = { 0: '目录', 1: '菜单', 2: '按钮', 3: '工具条按钮', 4: 'API', 5: '页面控件' }
+const funcTypeTag = { 0: 'warning', 1: '', 2: 'success', 3: 'warning', 4: 'danger', 5: 'info' }
+
+async function fetchRoleFunctions() {
+  funcLoading.value = true
+  try {
+    const params = {
+      page: funcPagination.page,
+      size: funcPagination.size,
+      roleId: viewData.value.roleId,
+      functionName: funcSearchForm.functionName || undefined,
+      url: funcSearchForm.url || undefined,
+      permission: funcSearchForm.permission || undefined
+    }
+    const res = await listRoleFunctions(params)
+    funcTableData.value = res.data?.list || []
+    funcTableTotal.value = res.data?.total || 0
+  } catch { /* ignore */ }
+  finally { funcLoading.value = false }
+}
+
+function handleFuncSearch() { funcPagination.page = 1; fetchRoleFunctions() }
+function handleFuncReset() {
+  funcSearchForm.functionName = ''
+  funcSearchForm.url = ''
+  funcSearchForm.permission = ''
+  funcPagination.page = 1
+  fetchRoleFunctions()
+}
+
+// 权限列表 tab 切换 & 分页
+watch(viewActiveTab, (tab) => { if (tab === 'functions') fetchRoleFunctions() })
+watch(() => funcPagination.page, () => { if (viewActiveTab.value === 'functions') fetchRoleFunctions() })
+watch(() => funcPagination.size, () => { funcPagination.page = 1; if (viewActiveTab.value === 'functions') fetchRoleFunctions() })
 const isEdit = ref(false)
 const editingId = ref(null)
 const submitLoading = ref(false)
@@ -315,6 +396,8 @@ async function handleView(row) {
   viewVisible.value = true
   viewActiveTab.value = 'info'
   viewLoading.value = true
+  funcTableData.value = []
+  funcTableTotal.value = 0
   try {
     const res = await getRoleDetail(row.id)
     if (res.data && res.data.basicInfo) { viewData.value = res.data.basicInfo }
@@ -631,6 +714,10 @@ function handleRefreshCache(row) {
   :deep(.el-table) {
     th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; }
   }
+
+  .pagination-wrapper { margin-top: $gap-md; display: flex; justify-content: flex-end; }
+
+  .func-search-form { margin-bottom: 12px; :deep(.el-form-item) { margin-bottom: 0; } }
 
   .perm-dialog-body {
     .perm-toolbar {

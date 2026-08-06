@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
+import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
@@ -422,10 +423,33 @@ public class RoleController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:show"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value="/queryDetail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo){
-        return roleServiceAPI.queryDetail(requestVo);
+    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Role role){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
+            resultObjectVO = roleServiceAPI.queryDetail(requestJsonVO);
+        } catch(Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:show"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
+    @RequestMapping(value="/function/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryRoleFunctionListPage(HttpServletRequest request, @RequestBody RoleFunctionPageInfo pageInfo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pageInfo);
+            resultObjectVO = roleServiceAPI.queryRoleFunctionListPage(requestJsonVO);
+        } catch(Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
     }
 
 

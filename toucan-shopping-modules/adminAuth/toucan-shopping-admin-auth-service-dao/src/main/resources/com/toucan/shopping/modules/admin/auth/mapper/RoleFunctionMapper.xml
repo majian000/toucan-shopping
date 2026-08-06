@@ -168,6 +168,56 @@
     </select>
 
 
+    <resultMap id="roleFunctionListVOMap" type="com.toucan.shopping.modules.admin.auth.vo.RoleFunctionListVO" extends="roleFunctionMap">
+        <result column="function_name" jdbcType="VARCHAR" property="functionName" />
+        <result column="function_url" jdbcType="VARCHAR" property="functionUrl" />
+        <result column="function_permission" jdbcType="VARCHAR" property="functionPermission" />
+        <result column="function_type" jdbcType="INTEGER" property="functionType" />
+    </resultMap>
+
+
+    <sql id="queryRoleFunctionListPageWhere">
+        <if test="functionName!=null and functionName!=''">
+            and tsf.name like concat('%',#{functionName},'%')
+        </if>
+        <if test="url!=null and url!=''">
+            and tsf.url like concat('%',#{url},'%')
+        </if>
+        <if test="permission!=null and permission!=''">
+            and tsf.permission like concat('%',#{permission},'%')
+        </if>
+    </sql>
+
+
+    <select id="queryRoleFunctionListPage" resultMap="roleFunctionListVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo">
+        select t.id, t.function_id, t.role_id, t.app_code, t.create_date, t.delete_status, t.create_admin_id,
+               tsf.name as function_name, tsf.url as function_url, tsf.permission as function_permission, tsf.type as function_type
+        from t_sa_role_function t
+        left join t_sa_function tsf on t.function_id = tsf.function_id and tsf.delete_status = 0
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+            <include refid="queryRoleFunctionListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryRoleFunctionListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo">
+        select count(*) from (
+            select t.id from t_sa_role_function t
+            left join t_sa_function tsf on t.function_id = tsf.function_id and tsf.delete_status = 0
+            <where>
+                1=1 and t.delete_status = 0
+                <include refid="queryListPageWhere" />
+                <include refid="queryRoleFunctionListPageWhere" />
+            </where>
+        )t
+    </select>
+
+
+
     <select id="findListByRoleIdsAndAppCode" resultMap="roleFunctionMap">
         select * from t_sa_role_function t
         where t.delete_status = 0
@@ -177,6 +227,5 @@
             #{item}
         </foreach>
     </select>
-
 
 </mapper>

@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionListVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
@@ -110,5 +111,13 @@ public interface RoleFunctionService {
      * @return
      */
     List<RoleFunction> findListByRoleIdsAndAppCode(String[] roleIdArray, String appCode);
+
+
+    /**
+     * 查询角色功能列表(关联t_sa_function)
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<RoleFunctionListVO> queryRoleFunctionListPage(RoleFunctionPageInfo queryPageInfo);
 
 }

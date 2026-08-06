@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionListVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -49,4 +50,15 @@ public interface RoleFunctionMapper {
      * 批量查询: 根据角色ID数组和应用编码查询角色-功能关联
      */
     List<RoleFunction> findListByRoleIdsAndAppCode(@Param("roleIdArray") String[] roleIdArray, @Param("appCode") String appCode);
+
+
+    /**
+     * 查询角色功能列表(关联t_sa_function)
+     */
+    List<RoleFunctionListVO> queryRoleFunctionListPage(RoleFunctionPageInfo queryPageInfo);
+
+    /**
+     * 查询角色功能列表总数
+     */
+    Long queryRoleFunctionListPageCount(RoleFunctionPageInfo queryPageInfo);
 }

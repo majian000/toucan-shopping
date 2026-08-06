@@ -140,4 +140,28 @@ public class RoleController {
     }
 
 
+    /**
+     * 角色详情
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryDetail", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo){
+        return roleBusinessService.queryDetail(requestVo);
+    }
+
+
+    /**
+     * 角色功能列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/function/list/page", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryRoleFunctionListPage(@RequestBody RequestJsonVO requestVo){
+        return roleBusinessService.queryRoleFunctionListPage(requestVo);
+    }
+
+
 }

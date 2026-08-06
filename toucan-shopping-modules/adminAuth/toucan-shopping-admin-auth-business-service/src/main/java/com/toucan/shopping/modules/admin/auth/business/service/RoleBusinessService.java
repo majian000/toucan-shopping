@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
@@ -37,7 +38,6 @@ public class RoleBusinessService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-
     @Autowired
     private RoleService roleService;
 
@@ -60,23 +60,23 @@ public class RoleBusinessService {
     private FunctionService functionService;
 
 
-
     /**
      * 添加角色
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO save(RequestJsonVO requestVo){
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Role role = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
+            Role role = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notEmpty(role.getName(), ResultVO.FAILD, "添加失败,请输入角色名称");
 
 
             role.setRoleId(GlobalUUID.uuid());
-            role.setDeleteStatus((short)0);
+            role.setDeleteStatus((short) 0);
             int row = roleService.save(role);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -86,11 +86,10 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(role);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("添加失败,请稍后重试");
@@ -99,30 +98,27 @@ public class RoleBusinessService {
     }
 
 
-
-
-
     /**
      * 編輯角色
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO update(RequestJsonVO requestVo){
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
+            Role entity = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入角色名称");
             Check.notNull(entity.getId(), ResultVO.FAILD, "请传入角色ID");
 
 
-            Role query=new Role();
+            Role query = new Role();
             query.setId(entity.getId());
-            query.setDeleteStatus((short)0);
+            query.setDeleteStatus((short) 0);
             List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
+            if (CollectionUtils.isEmpty(roleList)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("该角色不存在!");
                 return resultObjectVO;
@@ -139,11 +135,10 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -154,48 +149,43 @@ public class RoleBusinessService {
 
     /**
      * 查询所有应用的角色树
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryAdminRoleTree(RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO queryAdminRoleTree(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
             //查询查询指定用户下的应用角色树
             List<AdminApp> adminApps = adminAppService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
-            {
-                List<App> apps=new ArrayList<App>();
-                for(AdminApp adminApp:adminApps)
-                {
-                    App queryApp =new App();
+            if (!CollectionUtils.isEmpty(adminApps)) {
+                List<App> apps = new ArrayList<App>();
+                for (AdminApp adminApp : adminApps) {
+                    App queryApp = new App();
                     queryApp.setCode(adminApp.getAppCode());
                     apps.addAll(appService.findListByEntity(queryApp));
                 }
                 List<RoleTreeVO> roleTreeVOS = new ArrayList<RoleTreeVO>();
-                for(App app:apps)
-                {
+                for (App app : apps) {
                     //查询所有应用
-                    if(!CollectionUtils.isEmpty(apps))
-                    {
+                    if (!CollectionUtils.isEmpty(apps)) {
                         RoleTreeVO roleTreeVO = new RoleTreeVO();
                         roleTreeVO.setId(app.getId());
-                        roleTreeVO.setTitle(app.getCode()+" "+app.getName());
-                        roleTreeVO.setText(app.getCode()+" "+app.getName());
+                        roleTreeVO.setTitle(app.getCode() + " " + app.getName());
+                        roleTreeVO.setText(app.getCode() + " " + app.getName());
                         roleTreeVO.setChildren(new ArrayList<RoleTreeVO>());
                         roleTreeVO.setRoleId("-1");
 
                         Role queryRole = new Role();
                         queryRole.setAppCode(app.getCode());
-                        queryRole.setEnableStatus((short)1);
-                        queryRole.setDeleteStatus((short)0);
+                        queryRole.setEnableStatus((short) 1);
+                        queryRole.setDeleteStatus((short) 0);
                         //查询所有角色
                         List<Role> roles = roleService.findListByEntity(queryRole);
-                        if(!CollectionUtils.isEmpty(roles))
-                        {
-                            for(Role role:roles) {
+                        if (!CollectionUtils.isEmpty(roles)) {
+                            for (Role role : roles) {
                                 RoleTreeVO roleTreeChild = new RoleTreeVO();
                                 roleTreeChild.setId(role.getId());
                                 roleTreeChild.setTitle(role.getName());
@@ -215,11 +205,10 @@ public class RoleBusinessService {
                 resultObjectVO.setData(roleTreeVOS);
             }
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
@@ -229,22 +218,22 @@ public class RoleBusinessService {
 
     /**
      * 查询列表分页
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO listPage(RequestJsonVO requestVo){
+    public ResultObjectVO listPage(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             RolePageInfo rolePageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RolePageInfo.class);
             resultObjectVO.setData(roleService.queryListPage(rolePageInfo));
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -254,34 +243,33 @@ public class RoleBusinessService {
 
     /**
      * 根据ID查询
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO findById(RequestJsonVO requestVo){
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
+            Role entity = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到角色ID");
 
             //查询是否存在该角色
-            Role query=new Role();
+            Role query = new Role();
             query.setId(entity.getId());
             List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
+            if (CollectionUtils.isEmpty(roleList)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("角色不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(roleList);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -292,11 +280,12 @@ public class RoleBusinessService {
 
     /**
      * 根据ID查询所有角色
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO findListByAdminId(RequestJsonVO requestVo){
+    public ResultObjectVO findListByAdminId(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
@@ -305,27 +294,24 @@ public class RoleBusinessService {
 
             List<AdminRole> adminRoles = adminRoleService.findListByAdminId(adminVO.getAdminId());
 
-            if(!CollectionUtils.isEmpty(adminRoles)) {
+            if (!CollectionUtils.isEmpty(adminRoles)) {
                 List<Role> roles = new ArrayList<>();
-                for(AdminRole adminRole:adminRoles)
-                {
+                for (AdminRole adminRole : adminRoles) {
                     //查询是否存在该角色
                     Role query = new Role();
                     query.setRoleId(adminRole.getRoleId());
                     List<Role> roleList = roleService.findListByEntity(query);
-                    if(!CollectionUtils.isEmpty(roleList))
-                    {
+                    if (!CollectionUtils.isEmpty(roleList)) {
                         roles.addAll(roleList);
                     }
                 }
                 resultObjectVO.setData(roles);
             }
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -336,23 +322,23 @@ public class RoleBusinessService {
 
     /**
      * 删除指定角色
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteById(RequestJsonVO requestVo){
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Role entity = JSONObject.parseObject(requestVo.getEntityJson(),Role.class);
+            Role entity = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到角色ID");
 
             //查询是否存在该角色
-            Role query=new Role();
+            Role query = new Role();
             query.setId(entity.getId());
             List<Role> roleList = roleService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(roleList))
-            {
+            if (CollectionUtils.isEmpty(roleList)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("角色不存在!");
                 return resultObjectVO;
@@ -376,11 +362,10 @@ public class RoleBusinessService {
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -391,19 +376,20 @@ public class RoleBusinessService {
 
     /**
      * 批量删除角色
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<Role> roleList = JSON.parseArray(requestVo.getEntityJson(),Role.class);
+            List<Role> roleList = JSON.parseArray(requestVo.getEntityJson(), Role.class);
             Check.notEmpty(roleList, ResultVO.FAILD, "没有找到角色ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Role role:roleList) {
-                if(role.getId()!=null) {
+            for (Role role : roleList) {
+                if (role.getId() != null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(role);
 
@@ -435,18 +421,16 @@ public class RoleBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
-
 
 
     @RequestCheck(requireEntity = true)
@@ -460,6 +444,24 @@ public class RoleBusinessService {
                 detail.setBasicInfo(vo);
             }
             resultObjectVO.setData(detail);
+        } catch (BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询角色功能列表(关联t_sa_function)
+     */
+    public ResultObjectVO queryRoleFunctionListPage(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RoleFunctionPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), RoleFunctionPageInfo.class);
+            resultObjectVO.setData(roleFunctionService.queryRoleFunctionListPage(pageInfo));
         } catch(BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         } catch(Exception e) {
