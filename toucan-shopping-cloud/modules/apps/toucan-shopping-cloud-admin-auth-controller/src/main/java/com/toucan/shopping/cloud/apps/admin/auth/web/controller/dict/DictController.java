@@ -448,7 +448,7 @@ public class DictController extends UIController {
                 return resultObjectVO;
             }
             Dict entity =new Dict();
-            // id from @RequestBody
+            entity.setId(dict.getId());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
 
