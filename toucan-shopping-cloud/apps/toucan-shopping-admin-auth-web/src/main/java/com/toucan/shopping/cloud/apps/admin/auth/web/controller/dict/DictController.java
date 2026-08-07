@@ -68,7 +68,7 @@ public class DictController extends UIController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:tree-list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request,@RequestBody DictPageInfo pageInfo)
