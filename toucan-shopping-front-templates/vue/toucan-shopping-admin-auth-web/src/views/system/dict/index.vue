@@ -224,33 +224,6 @@ function selectCategory(c) {
   fetchData()
 }
 
-// ========== 树构建 ==========
-function buildTree(flatList) {
-  if (!flatList || flatList.length === 0) return []
-  const map = {}
-  const roots = []
-  flatList.forEach(d => { map[d.id] = { ...d, children: [] } })
-  flatList.forEach(d => {
-    const node = map[d.id]
-    const pid = d.pid != null ? d.pid : -1
-    if (pid === -1 || !map[pid]) {
-      roots.push(node)
-    } else {
-      map[pid].children.push(node)
-    }
-  })
-  function cleanEmpty(arr) {
-    arr.forEach(n => { if (n.children.length === 0) delete n.children; else cleanEmpty(n.children) })
-  }
-  cleanEmpty(roots)
-  function sortTree(arr) {
-    arr.sort((a, b) => (a.dictSort || 0) - (b.dictSort || 0))
-    arr.forEach(n => { if (n.children) sortTree(n.children) })
-  }
-  sortTree(roots)
-  return roots
-}
-
 // ========== 右侧字典树 ==========
 const dictTree = ref([])
 const tableKey = ref(0)
@@ -268,9 +241,8 @@ async function fetchData() {
     if (searchForm.code) params.code = searchForm.code
     if (searchForm.enableStatus !== '') params.enableStatus = searchForm.enableStatus
     const res = await queryDictTreeAll(params)
-    const flat = res.data || []
-    dictTree.value = buildTree(flat)
-    treeSelectData.value = buildTree(flat)
+    dictTree.value = res.data || []
+    treeSelectData.value = res.data || []
     treeSelectKey.value++
     tableKey.value++
   } finally {
@@ -376,8 +348,7 @@ async function loadTreeSelectData(categoryId) {
   if (!categoryId) return
   try {
     const res = await queryDictTreeAll({ categoryId })
-    const flat = res.data || []
-    treeSelectData.value = buildTree(flat)
+    treeSelectData.value = res.data || []
     treeSelectKey.value++
   } catch { }
 }
