@@ -211,31 +211,6 @@ public class DictController extends UIController {
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             resultObjectVO = dictServiceAPI.queryTreeAll(requestJsonVO);
-
-            if(resultObjectVO.isSuccess()) {
-                if (resultObjectVO.getData() != null) {
-                    Set<String> adminIdList = new HashSet<String>();
-                    Set<String> appCodes = new HashSet<>();
-                    List<DictVO> dictTreeVOS = resultObjectVO.formatDataList(DictVO.class);
-                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
-                        for (DictVO dictTreeVO : dictTreeVOS) {
-                            if (dictTreeVO.getCreateAdminId() != null) {
-                                adminIdList.add(dictTreeVO.getCreateAdminId());
-                            }
-                            if (dictTreeVO.getUpdateAdminId() != null) {
-                                adminIdList.add(dictTreeVO.getUpdateAdminId());
-                            }
-                            appCodes.add(dictTreeVO.getAppCode());
-                        }
-                        this.setAdminNames(adminIdList, dictTreeVOS);
-                        this.setAppNames(appCodes, dictTreeVOS);
-                        // 服务端拼接树结构
-                        List<DictVO> treeRoots = this.buildTreeOnServer(dictTreeVOS);
-                        resultObjectVO.setData(treeRoots);
-                    }
-                }
-            }
-            return resultObjectVO;
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -336,58 +311,6 @@ public class DictController extends UIController {
         }
     }
 
-
-    /**
-     * 将扁平字典列表拼接为嵌套树结构
-     * @param flatList 扁平字典列表
-     * @return 树根节点列表（含嵌套children）
-     */
-    private List<DictVO> buildTreeOnServer(List<DictVO> flatList) {
-        if (CollectionUtils.isEmpty(flatList)) {
-            return flatList;
-        }
-        Map<Long, DictVO> map = new LinkedHashMap<>();
-        for (DictVO node : flatList) {
-            node.setChildren(new ArrayList<>());
-            map.put(node.getId(), node);
-        }
-        List<DictVO> roots = new ArrayList<>();
-        for (DictVO node : flatList) {
-            Long pid = node.getPid();
-            if (pid == null || pid.longValue() == -1 || !map.containsKey(pid)) {
-                if (pid == null || pid.longValue() == -1) {
-                    node.setParentName("根节点");
-                }
-                roots.add(node);
-            } else {
-                DictVO parent = map.get(pid);
-                parent.getChildren().add(node);
-                node.setParentName(parent.getName());
-            }
-        }
-        sortTreeByDictSort(roots);
-        return roots;
-    }
-
-    /**
-     * 递归按字典排序号排序
-     * @param list 节点列表
-     */
-    private void sortTreeByDictSort(List<DictVO> list) {
-        if (CollectionUtils.isEmpty(list)) {
-            return;
-        }
-        list.sort((a, b) -> {
-            int sortA = a.getDictSort() != null ? a.getDictSort() : 0;
-            int sortB = b.getDictSort() != null ? b.getDictSort() : 0;
-            return Integer.compare(sortA, sortB);
-        });
-        for (DictVO node : list) {
-            if (!CollectionUtils.isEmpty(node.getChildren())) {
-                sortTreeByDictSort(node.getChildren());
-            }
-        }
-    }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/category/list",method = RequestMethod.POST)

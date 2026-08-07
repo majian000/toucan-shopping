@@ -3,9 +3,12 @@ package com.toucan.shopping.modules.admin.auth.business.service;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSON;
+import com.toucan.shopping.modules.admin.auth.entity.Admin;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
+import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.service.DictService;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
@@ -44,6 +47,9 @@ public class DictBusinessService {
 
     @Autowired
     private AppService appService;
+
+    @Autowired
+    private AdminService adminService;
 
     @Autowired
     private AdminAppService adminAppService;
@@ -555,7 +561,7 @@ public class DictBusinessService {
 
 
     /**
-     * 查询全部字典树（非懒加载，返回所有层级）
+     * 查询全部字典树（非懒加载，返回嵌套树结构）
      *
      * @param requestJsonVO
      * @return
@@ -587,7 +593,63 @@ public class DictBusinessService {
             queryDictVO.setCategoryIdList(categoryIdList);
             // 不设置pid → 返回所有层级的字典
             List<DictVO> dictVOS = dictService.queryList(queryDictVO);
-            resultObjectVO.setData(dictVOS);
+
+            if (!CollectionUtils.isEmpty(dictVOS)) {
+                // 收集管理员ID和应用编码
+                Set<String> adminIdSet = new HashSet<>();
+                Set<String> appCodeSet = new HashSet<>();
+                for (DictVO dictVO : dictVOS) {
+                    if (StringUtils.isNotEmpty(dictVO.getCreateAdminId())) {
+                        adminIdSet.add(dictVO.getCreateAdminId());
+                    }
+                    if (StringUtils.isNotEmpty(dictVO.getUpdateAdminId())) {
+                        adminIdSet.add(dictVO.getUpdateAdminId());
+                    }
+                    if (StringUtils.isNotEmpty(dictVO.getAppCode())) {
+                        appCodeSet.add(dictVO.getAppCode());
+                    }
+                }
+
+                // 设置管理员名称
+                if (!CollectionUtils.isEmpty(adminIdSet)) {
+                    Admin adminQuery = new Admin();
+                    adminQuery.setAdminIds(adminIdSet.toArray(new String[0]));
+                    List<Admin> admins = adminService.findListByEntity(adminQuery);
+                    if (!CollectionUtils.isEmpty(admins)) {
+                        for (DictVO dictVO : dictVOS) {
+                            for (Admin admin : admins) {
+                                if (dictVO.getCreateAdminId() != null && dictVO.getCreateAdminId().equals(admin.getAdminId())) {
+                                    dictVO.setCreateAdminName(admin.getUsername());
+                                }
+                                if (dictVO.getUpdateAdminId() != null && dictVO.getUpdateAdminId().equals(admin.getAdminId())) {
+                                    dictVO.setUpdateAdminName(admin.getUsername());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 设置应用名称
+                if (!CollectionUtils.isEmpty(appCodeSet)) {
+                    List<App> apps = appService.queryListByCodesIngoreDelete(new ArrayList<>(appCodeSet));
+                    if (!CollectionUtils.isEmpty(apps)) {
+                        for (DictVO dictVO : dictVOS) {
+                            for (App app : apps) {
+                                if (dictVO.getAppCode() != null && dictVO.getAppCode().equals(app.getCode())) {
+                                    dictVO.setAppName(app.getName());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 服务端拼接嵌套树结构
+                List<DictVO> treeRoots = buildTreeOnServer(dictVOS);
+                resultObjectVO.setData(treeRoots);
+            } else {
+                resultObjectVO.setData(dictVOS);
+            }
 
         } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
@@ -598,6 +660,69 @@ public class DictBusinessService {
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 将扁平字典列表拼接为嵌套树结构
+     */
+    private List<DictVO> buildTreeOnServer(List<DictVO> flatList) {
+        if (CollectionUtils.isEmpty(flatList)) {
+            return flatList;
+        }
+        Map<Long, DictVO> map = new LinkedHashMap<>();
+        for (DictVO node : flatList) {
+            node.setChildren(new ArrayList<>());
+            map.put(node.getId(), node);
+        }
+        List<DictVO> roots = new ArrayList<>();
+        for (DictVO node : flatList) {
+            Long pid = node.getPid();
+            if (pid == null || pid.longValue() == -1 || !map.containsKey(pid)) {
+                if (pid == null || pid.longValue() == -1) {
+                    node.setParentName("根节点");
+                }
+                roots.add(node);
+            } else {
+                DictVO parent = map.get(pid);
+                parent.getChildren().add(node);
+                node.setParentName(parent.getName());
+            }
+        }
+        sortTreeByDictSort(roots);
+        cleanEmptyChildren(roots);
+        return roots;
+    }
+
+    /**
+     * 清理叶子节点的空children
+     */
+    private void cleanEmptyChildren(List<DictVO> list) {
+        if (CollectionUtils.isEmpty(list)) return;
+        for (DictVO node : list) {
+            if (CollectionUtils.isEmpty(node.getChildren())) {
+                node.setChildren(null);
+            } else {
+                cleanEmptyChildren(node.getChildren());
+            }
+        }
+    }
+
+    /**
+     * 递归按字典排序号排序
+     */
+    private void sortTreeByDictSort(List<DictVO> list) {
+        if (CollectionUtils.isEmpty(list)) return;
+        list.sort((a, b) -> {
+            int sortA = a.getDictSort() != null ? a.getDictSort() : 0;
+            int sortB = b.getDictSort() != null ? b.getDictSort() : 0;
+            return Integer.compare(sortA, sortB);
+        });
+        for (DictVO node : list) {
+            if (!CollectionUtils.isEmpty(node.getChildren())) {
+                sortTreeByDictSort(node.getChildren());
+            }
+        }
     }
 
 
