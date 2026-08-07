@@ -17,7 +17,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属应用">
-          <el-input v-model="searchForm.appCode" placeholder="请输入应用编码" clearable style="width:220px" />
+          <el-select v-model="searchForm.appCode" placeholder="请选择" clearable style="width:220px">
+            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :icon="Search" v-permission="'pms:dict:category:list'" @click="handleSearch">搜索</el-button>
@@ -39,7 +41,7 @@
         <el-table-column prop="code" label="编码" width="150" />
         <el-table-column prop="dictCategorySort" label="排序" width="80" align="center" />
         <el-table-column prop="remark" label="备注" min-width="180" show-overflow-tooltip />
-        <el-table-column label="关联应用" width="150">
+        <el-table-column label="所属应用" width="150">
           <template #default="{ row }">
             <el-tag v-if="row.appName" size="small" type="">{{ row.appName }}</el-tag>
             <span v-else style="color:#c0c4cc">--</span>

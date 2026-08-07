@@ -66,6 +66,14 @@
         <if test="enableStatus!=null and enableStatus!=-1">
             and tu.enable_status = #{enableStatus}
         </if>
+        <if test="appCode!=null and appCode!='' ">
+            and exists (
+                select 1 from t_sa_admin_app tsaa2
+                left join t_app ta2 on tsaa2.app_code = ta2.code and ta2.delete_status = 0
+                where tsaa2.admin_id = tu.admin_id and tsaa2.delete_status = 0
+                and ta2.code = #{appCode}
+            )
+        </if>
         <if test="realName!=null and realName!='' ">
             and tu.real_name like concat(#{realName},'%')
         </if>
