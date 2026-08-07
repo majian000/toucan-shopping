@@ -476,8 +476,8 @@ public class FunctionBusinessService {
             {
                 Function queryFunction = new Function();
                 BeanUtils.copyProperties(queryFunction,queryPageInfo);
-                List<Function> functions = functionService.findListByEntityFieldLike(queryFunction);
-                for(Function function:functions)
+                List<FunctionVO> functions = functionService.findVOListByEntityFieldLike(queryFunction);
+                for(FunctionVO function:functions)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     BeanUtils.copyProperties(appFunctionTreeVO,function);
@@ -560,8 +560,8 @@ public class FunctionBusinessService {
                 }else{
                     queryFunction.setPid(queryPageInfo.getPid());
                 }
-                List<Function>  functions = functionService.findListByEntity(queryFunction);
-                for(Function function:functions)
+                List<FunctionVO> functions = functionService.findVOListByEntity(queryFunction);
+                for(FunctionVO function:functions)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     BeanUtils.copyProperties(appFunctionTreeVO,function);

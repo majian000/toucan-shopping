@@ -34,8 +34,18 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
+    public List<FunctionVO> findVOListByEntity(Function entity) {
+        return functionMapper.findVOListByEntity(entity);
+    }
+
+    @Override
     public List<Function> findListByEntityFieldLike(Function entity) {
         return functionMapper.findListByEntityFieldLike(entity);
+    }
+
+    @Override
+    public List<FunctionVO> findVOListByEntityFieldLike(Function entity) {
+        return functionMapper.findVOListByEntityFieldLike(entity);
     }
 
     public void setChildren(List<FunctionVO> functionVOS,FunctionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {

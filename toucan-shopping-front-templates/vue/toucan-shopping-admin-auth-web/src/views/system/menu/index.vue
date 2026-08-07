@@ -237,7 +237,7 @@
       :close-on-click-modal="false" destroy-on-close>
       <div v-loading="viewLoading">
         <el-empty v-if="!viewDetail && !viewLoading" description="暂无数据" />
-        <el-descriptions v-if="viewDetail" :column="2" border>
+        <el-descriptions v-if="viewDetail" :column="2" border class="view-detail-desc">
           <el-descriptions-item label="功能名称" :span="2">{{ viewDetail.name }}</el-descriptions-item>
           <el-descriptions-item label="功能ID">{{ viewDetail.functionId }}</el-descriptions-item>
           <el-descriptions-item label="所属应用">{{ viewDetail.appName || viewDetail.appCode }}</el-descriptions-item>
@@ -530,5 +530,6 @@ async function handleView(row) {
     .app-select-label { font-size: 14px; color: $text-secondary; white-space: nowrap; }
   }
   :deep(.el-table) th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; }
+  .view-detail-desc :deep(.el-descriptions__label) { white-space: nowrap; min-width: 80px; }
 }
 </style>

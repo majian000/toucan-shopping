@@ -35,11 +35,21 @@ public interface FunctionMapper {
     List<Function> findListByEntity(Function function);
 
     /**
+     * 查询列表(含创建人/修改人用户名)
+     */
+    List<FunctionVO> findVOListByEntity(Function function);
+
+    /**
      * 查询列表
      * @param function
      * @return
      */
     List<Function> findListByEntityFieldLike(Function function);
+
+    /**
+     * 模糊查询列表(含创建人/修改人用户名)
+     */
+    List<FunctionVO> findVOListByEntityFieldLike(Function function);
     /**
      * 查询列表页
      * @param FunctionTreeInfo
