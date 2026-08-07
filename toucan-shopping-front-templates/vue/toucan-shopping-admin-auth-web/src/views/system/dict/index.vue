@@ -32,36 +32,12 @@
 
       <!-- 右侧：字典管理 -->
       <div class="right-panel">
-        <!-- 搜索栏 -->
-        <el-card shadow="never" class="search-card">
-          <el-form :model="searchForm" inline>
-            <el-form-item label="名称">
-              <el-input v-model="searchForm.name" placeholder="请输入名称" clearable style="width:200px" />
-            </el-form-item>
-            <el-form-item label="编码">
-              <el-input v-model="searchForm.code" placeholder="请输入编码" clearable style="width:200px" />
-            </el-form-item>
-            <el-form-item label="启用状态">
-              <el-select v-model="searchForm.enableStatus" placeholder="请选择状态" clearable style="width:140px">
-                <el-option label="启用" :value="1" />
-                <el-option label="禁用" :value="0" />
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :icon="Search" v-permission="'pms:dict:item'" @click="handleSearch">搜索</el-button>
-              <el-button :icon="Refresh" v-permission="'pms:dict:item'" @click="handleReset">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
             <span class="current-category" v-if="selectedCategory">
               当前分类：<strong>{{ selectedCategory.name }}</strong>
             </span>
             <div>
-              <el-button v-if="!isSearchMode" :icon="Expand" v-permission="'pms:dict:item'" @click="expandAll">展开全部</el-button>
-              <el-button v-if="!isSearchMode" :icon="Fold" v-permission="'pms:dict:item'" @click="collapseAll">折叠全部</el-button>
               <el-button type="primary" :icon="Plus" v-permission="'pms:dict:item:add'" @click="handleAdd">新增字典</el-button>
               <el-button type="danger" :icon="Delete" v-permission="'pms:dict:item:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
               <el-button :icon="Refresh" @click="fetchData">刷新</el-button>
@@ -69,11 +45,11 @@
           </div>
 
           <el-table
-            :data="displayData"
+            :data="dictTree"
             :key="tableKey"
             border stripe row-key="id"
-            :tree-props="isSearchMode ? undefined : { children: 'children' }"
-            :default-expand-all="expandAllFlag"
+            :tree-props="{ children: 'children' }"
+            :default-expand-all="false"
             v-loading="loading"
             @selection-change="handleSelectionChange"
             style="width:100%"
@@ -174,53 +150,11 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit, Expand, Fold } from '@element-plus/icons-vue'
+import { Plus, Refresh, Delete, Edit } from '@element-plus/icons-vue'
 import { addDict, updateDict, delDict, delBatchDict, queryDictTreeAll } from '@/api/system/dict'
 import { listAllDictCategory } from '@/api/system/dictCategory'
 
 const route = useRoute()
-
-// ========== 搜索 ==========
-const searchForm = reactive({ name: '', code: '', enableStatus: '' })
-
-function handleSearch() {
-  if (!selectedCategoryId.value) { ElMessage.warning('请先选择左侧字典分类'); return }
-  fetchData()
-}
-
-function handleReset() {
-  searchForm.name = ''
-  searchForm.code = ''
-  searchForm.enableStatus = ''
-  if (!selectedCategoryId.value) return
-  fetchData()
-}
-
-// 是否搜索模式（有搜索条件时显示平铺列表）
-const isSearchMode = computed(() => {
-  return searchForm.name !== '' || searchForm.code !== '' || searchForm.enableStatus !== ''
-})
-
-// 递归扁平化树结构
-function flattenTree(tree) {
-  const result = []
-  function walk(nodes) {
-    if (!nodes || nodes.length === 0) return
-    for (const node of nodes) {
-      result.push(node)
-      if (node.children && node.children.length > 0) {
-        walk(node.children)
-      }
-    }
-  }
-  walk(tree)
-  return result
-}
-
-// 根据搜索模式切换显示数据
-const displayData = computed(() => {
-  return isSearchMode.value ? flattenTree(dictTree.value) : dictTree.value
-})
 
 // ========== 左侧分类 ==========
 const categoryList = ref([])
@@ -255,7 +189,6 @@ function selectCategory(c) {
 // ========== 右侧字典树 ==========
 const dictTree = ref([])
 const tableKey = ref(0)
-const expandAllFlag = ref(false)
 const loading = ref(false)
 const treeSelectData = ref([])
 const treeSelectKey = ref(0)
@@ -264,11 +197,7 @@ async function fetchData() {
   if (!selectedCategoryId.value) { dictTree.value = []; return }
   loading.value = true
   try {
-    const params = { categoryId: selectedCategoryId.value }
-    if (searchForm.name) params.name = searchForm.name
-    if (searchForm.code) params.code = searchForm.code
-    if (searchForm.enableStatus !== '') params.enableStatus = searchForm.enableStatus
-    const res = await queryDictTreeAll(params)
+    const res = await queryDictTreeAll({ categoryId: selectedCategoryId.value })
     dictTree.value = res.data || []
     treeSelectData.value = res.data || []
     treeSelectKey.value++
@@ -279,15 +208,6 @@ async function fetchData() {
 }
 
 onMounted(() => { loadCategories() })
-
-function expandAll() {
-  expandAllFlag.value = true
-  tableKey.value++
-}
-function collapseAll() {
-  expandAllFlag.value = false
-  tableKey.value++
-}
 
 // ========== 批量删除 ==========
 const selectedRows = ref([])
@@ -493,8 +413,6 @@ function handleDelete(row) {
   .right-panel {
     flex: 1;
     min-width: 0;
-
-    .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding: 16px 20px 0; } }
 
     .table-card {
       .toolbar {
