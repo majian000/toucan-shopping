@@ -39,7 +39,6 @@
             </span>
             <div>
               <el-button type="primary" :icon="Plus" v-permission="'pms:dict:item:add'" @click="handleAdd">新增字典</el-button>
-              <el-button type="danger" :icon="Delete" v-permission="'pms:dict:item:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
               <el-button :icon="Refresh" @click="fetchData">刷新</el-button>
             </div>
           </div>
@@ -51,10 +50,8 @@
             :tree-props="{ children: 'children' }"
             :default-expand-all="false"
             v-loading="loading"
-            @selection-change="handleSelectionChange"
             style="width:100%"
           >
-            <el-table-column type="selection" width="50" />
             <el-table-column type="index" label="序号" width="60" align="center" />
             <el-table-column prop="name" label="字典名称" width="240" />
             <el-table-column prop="code" label="编码" width="160" />
@@ -66,7 +63,12 @@
               </template>
             </el-table-column>
             <el-table-column prop="dictSort" label="排序" width="80" align="center" />
-            <el-table-column prop="appName" label="关联应用" width="150" show-overflow-tooltip />
+            <el-table-column label="关联应用" width="150">
+              <template #default="{ row }">
+                <el-tag v-if="row.appName" type="info" size="small">{{ row.appName }}</el-tag>
+                <span v-else style="color:#c0c4cc">--</span>
+              </template>
+            </el-table-column>
             <el-table-column label="是否快照" width="90" align="center">
               <template #default="{ row }">
                 <el-tag :type="row.isSnapshot == 1 ? 'warning' : 'info'" size="small">
@@ -105,7 +107,7 @@
       :close-on-click-modal="false"
       destroy-on-close
     >
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="dialogLoading">
         <el-form-item label="上级字典" prop="pid">
           <el-input v-if="isAddChild && parentNodeName" :model-value="parentNodeName" disabled />
           <el-tree-select v-else v-model="formData.pid"
@@ -118,6 +120,11 @@
           <el-select v-else v-model="formData.categoryId" placeholder="请选择字典分类" style="width:100%">
             <el-option v-for="c in categoryList" :key="c.id" :label="c.name" :value="c.id" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="关联应用">
+          <el-tag v-if="selectedCategory?.appName" type="info">{{ selectedCategory.appName }}</el-tag>
+          <el-tag v-else-if="selectedCategory?.appCode" type="info">{{ selectedCategory.appCode }}</el-tag>
+          <span v-else style="color:#c0c4cc">--</span>
         </el-form-item>
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入字典名称" maxlength="20" />
@@ -151,7 +158,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, Delete, Edit } from '@element-plus/icons-vue'
-import { addDict, updateDict, delDict, delBatchDict, queryDictTreeAll } from '@/api/system/dict'
+import { addDict, updateDict, delDict, queryDictTreeAll } from '@/api/system/dict'
 import { listAllDictCategory } from '@/api/system/dictCategory'
 
 const route = useRoute()
@@ -209,38 +216,9 @@ async function fetchData() {
 
 onMounted(() => { loadCategories() })
 
-// ========== 批量删除 ==========
-const selectedRows = ref([])
-
-function handleSelectionChange(rows) {
-  selectedRows.value = rows
-}
-
-async function handleBatchDelete() {
-  if (selectedRows.value.length === 0) {
-    ElMessage.warning('请选择要操作的记录')
-    return
-  }
-  try {
-    await ElMessageBox.confirm('确定删除选中的字典?', '删除确认', {
-      confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning'
-    })
-  } catch {
-    return
-  }
-  loading.value = true
-  try {
-    await delBatchDict(selectedRows.value)
-    ElMessage.success('删除成功')
-    selectedRows.value = []
-    fetchData()
-  } finally {
-    loading.value = false
-  }
-}
-
 // ========== 新增/编辑 ==========
 const dialogVisible = ref(false)
+const dialogLoading = ref(false)
 const isEdit = ref(false)
 const isAddChild = ref(false)
 const editingId = ref(null)
@@ -305,8 +283,13 @@ async function handleAdd() {
   if (!selectedCategoryId.value) { ElMessage.warning('请先选择字典分类'); return }
   isEdit.value = false; isAddChild.value = false; editingId.value = null
   resetForm()
-  await loadTreeSelectData(formData.categoryId)
   dialogVisible.value = true
+  dialogLoading.value = true
+  try {
+    await loadTreeSelectData(formData.categoryId)
+  } finally {
+    dialogLoading.value = false
+  }
 }
 
 function handleAddChild(row) {
@@ -320,13 +303,18 @@ function handleAddChild(row) {
 async function handleEdit(row) {
   isEdit.value = true; isAddChild.value = false; editingId.value = row.id
   formData.pid = row.pid || null
-  formData.categoryId = row.categoryId; formData.name = row.name
-  formData.code = row.code; formData.extendProperty = row.extendProperty || ''
+  formData.categoryId = row.categoryId
+  formData.name = row.name; formData.code = row.code
+  formData.extendProperty = row.extendProperty || ''
   formData.dictSort = row.dictSort || 0; formData.remark = row.remark
   formData.enableStatus = row.enableStatus
-  // 加载当前 dict 所属分类的上级字典树（可能和左侧选中的分类不同）
-  await loadTreeSelectData(formData.categoryId)
   dialogVisible.value = true
+  dialogLoading.value = true
+  try {
+    await loadTreeSelectData(formData.categoryId)
+  } finally {
+    dialogLoading.value = false
+  }
 }
 
 async function handleSubmit() {
@@ -336,7 +324,8 @@ async function handleSubmit() {
   try {
     const data = {
       name: formData.name, code: formData.code,
-      categoryId: formData.categoryId, pid: formData.pid != null ? formData.pid : null,
+      categoryId: formData.categoryId, appCode: selectedCategory.value?.appCode || '',
+      pid: formData.pid != null ? formData.pid : null,
       extendProperty: formData.extendProperty, dictSort: formData.dictSort,
       remark: formData.remark, enableStatus: formData.enableStatus
     }
