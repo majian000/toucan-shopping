@@ -175,7 +175,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Expand, Fold } from '@element-plus/icons-vue'
-import { addDict, updateDict, delDict, delBatchDict, queryDictTree } from '@/api/system/dict'
+import { addDict, updateDict, delDict, delBatchDict, queryDictTreeAll } from '@/api/system/dict'
 import { listAllDictCategory } from '@/api/system/dictCategory'
 
 const route = useRoute()
@@ -239,12 +239,10 @@ function buildTree(flatList) {
       map[pid].children.push(node)
     }
   })
-  // 递归清理空 children
   function cleanEmpty(arr) {
     arr.forEach(n => { if (n.children.length === 0) delete n.children; else cleanEmpty(n.children) })
   }
   cleanEmpty(roots)
-  // 按 sort 排序
   function sortTree(arr) {
     arr.sort((a, b) => (a.dictSort || 0) - (b.dictSort || 0))
     arr.forEach(n => { if (n.children) sortTree(n.children) })
@@ -258,7 +256,6 @@ const dictTree = ref([])
 const tableKey = ref(0)
 const expandAllFlag = ref(true)
 const loading = ref(false)
-// 树选择器数据（用于上级字典选择）
 const treeSelectData = ref([])
 const treeSelectKey = ref(0)
 
@@ -270,7 +267,7 @@ async function fetchData() {
     if (searchForm.name) params.name = searchForm.name
     if (searchForm.code) params.code = searchForm.code
     if (searchForm.enableStatus !== '') params.enableStatus = searchForm.enableStatus
-    const res = await queryDictTree(params)
+    const res = await queryDictTreeAll(params)
     const flat = res.data || []
     dictTree.value = buildTree(flat)
     treeSelectData.value = buildTree(flat)
@@ -283,7 +280,6 @@ async function fetchData() {
 
 onMounted(() => { loadCategories() })
 
-// ========== 展开/折叠 ==========
 function expandAll() {
   expandAllFlag.value = true
   tableKey.value++
@@ -375,11 +371,11 @@ watch(() => formData.categoryId, (newVal) => {
   }
 })
 
-// 按分类ID加载上级字典树选择器数据
+// 加载上级字典树选择器
 async function loadTreeSelectData(categoryId) {
   if (!categoryId) return
   try {
-    const res = await queryDictTree({ categoryId })
+    const res = await queryDictTreeAll({ categoryId })
     const flat = res.data || []
     treeSelectData.value = buildTree(flat)
     treeSelectKey.value++

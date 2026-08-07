@@ -102,4 +102,12 @@ public interface DictServiceAPI {
      */
     ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode( RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询全部字典树（非懒加载，返回所有层级）
+     * @param requestJsonVO
+     * @return
+     */
+    ResultObjectVO queryTreeAll( RequestJsonVO requestJsonVO);
+
 }

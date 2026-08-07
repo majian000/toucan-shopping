@@ -118,4 +118,13 @@ public interface FeignDictService extends DictServiceAPI {
     @RequestMapping(value="query/dict/by/codes/category/code", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询全部字典树（非懒加载，返回所有层级）
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    ResultObjectVO queryTreeAll(@RequestBody RequestJsonVO requestJsonVO);
+
 }

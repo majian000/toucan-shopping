@@ -54,42 +54,43 @@ public class DictBusinessService {
 
     /**
      * 添加字典
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO save(RequestJsonVO requestVo){
+    public ResultObjectVO save(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            DictVO dictVO = JSONObject.parseObject(requestVo.getEntityJson(),DictVO.class);
+            DictVO dictVO = JSONObject.parseObject(requestVo.getEntityJson(), DictVO.class);
             Check.notEmpty(dictVO.getName(), ResultVO.FAILD, "请输入字典名称");
             Check.notEmpty(dictVO.getCode(), ResultVO.FAILD, "请输入字典编码");
             Check.notNull(dictVO.getCategoryId(), ResultVO.FAILD, "请选择字典分类");
             dictVO.setAppCodes(new LinkedList<>());
             dictVO.getAppCodes().add(dictVO.getAppCode());
-            List<DictVO> dicts = dictService.queryListByCodeAndAppCodes(dictVO.getCode(),dictVO.getAppCodes(),dictVO.getPid());
-            if(!CollectionUtils.isEmpty(dicts))
-            {
+            List<DictVO> dicts = dictService.queryListByCodeAndAppCodes(dictVO.getCode(), dictVO.getAppCodes(), dictVO.getPid());
+            if (!CollectionUtils.isEmpty(dicts)) {
                 DictVO dcv = dicts.get(0);
                 AppVO appVO = appService.findByCodeIngoreDelete(dcv.getAppCode());
-                String nodeName="根节点";;
-                if(dictVO.getPid().longValue()!=-1) {
+                String nodeName = "根节点";
+                ;
+                if (dictVO.getPid().longValue() != -1) {
                     DictVO parentNode = dictService.findById(dictVO.getPid());
-                    nodeName =  parentNode.getName();
+                    nodeName = parentNode.getName();
                 }
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中的"+nodeName+"下该编码已存在");
+                resultObjectVO.setMsg("在" + appVO.getName() + ":" + appVO.getCode() + "中的" + nodeName + "下该编码已存在");
                 return resultObjectVO;
             }
 
             dictVO.setId(idGenerator.id());
             dictVO.setCreateDate(new Date());
-            dictVO.setDeleteStatus((short)0);
-            dictVO.setDictSort(dictService.queryMaxSort()+1);
+            dictVO.setDeleteStatus((short) 0);
+            dictVO.setDictSort(dictService.queryMaxSort() + 1);
             dictVO.setDictVersion(1);
-            dictVO.setIsActive((short)1);
-            dictVO.setBatchId(UUID.randomUUID().toString().replaceAll("-",""));
+            dictVO.setIsActive((short) 1);
+            dictVO.setBatchId(UUID.randomUUID().toString().replaceAll("-", ""));
             int row = dictService.save(dictVO);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -99,11 +100,10 @@ public class DictBusinessService {
 
             resultObjectVO.setData(dictVO);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -112,51 +112,49 @@ public class DictBusinessService {
     }
 
 
-
-
-
     /**
      * 編輯字典
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO update(RequestJsonVO requestVo){
+    public ResultObjectVO update(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            DictVO entity = JSONObject.parseObject(requestVo.getEntityJson(),DictVO.class);
+            DictVO entity = JSONObject.parseObject(requestVo.getEntityJson(), DictVO.class);
 
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入字典名称");
             Check.notNull(entity.getId(), ResultVO.FAILD, "请传入字典ID");
 
 
-            Dict query=new Dict();
-            query.setDeleteStatus((short)0);
+            Dict query = new Dict();
+            query.setDeleteStatus((short) 0);
             query.setPid(entity.getPid());
             query.setCode(entity.getCode());
             query.setAppCode(entity.getAppCode());
             List<DictVO> dictList = dictService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(dictList))
-            {
-                if(!dictList.get(0).getId().equals(entity.getId())) {
+            if (!CollectionUtils.isEmpty(dictList)) {
+                if (!dictList.get(0).getId().equals(entity.getId())) {
                     DictVO dcv = dictList.get(0);
                     AppVO appVO = appService.findByCodeIngoreDelete(dcv.getAppCode());
-                    String nodeName="根节点";;
-                    if(entity.getPid().longValue()!=-1) {
+                    String nodeName = "根节点";
+                    ;
+                    if (entity.getPid().longValue() != -1) {
                         DictVO parentNode = dictService.findById(entity.getPid());
-                        nodeName =  parentNode.getName();
+                        nodeName = parentNode.getName();
                     }
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("在"+appVO.getName()+":"+appVO.getCode()+"中的"+nodeName+"下该编码已存在");
+                    resultObjectVO.setMsg("在" + appVO.getName() + ":" + appVO.getCode() + "中的" + nodeName + "下该编码已存在");
                     return resultObjectVO;
                 }
             }
 
-            boolean isSnapshot=false; //是否快照字典
+            boolean isSnapshot = false; //是否快照字典
             DictVO dict = dictService.findById(entity.getId());
             //快照该字典
-            if(entity.getIsSnapshot().intValue()==1) {
+            if (entity.getIsSnapshot().intValue() == 1) {
                 //下面的数据变更,就将字典进行快照
                 if (!dict.getCode().equals(entity.getCode())
                         || !dict.getName().equals(entity.getName())
@@ -167,24 +165,23 @@ public class DictBusinessService {
                 }
             }
 
-            if(isSnapshot)
-            {
+            if (isSnapshot) {
                 //将所有这个批次的字典活动状态为非活动
-                dictService.updateIsActiveByBatchId((short)0,dict.getBatchId());
+                dictService.updateIsActiveByBatchId((short) 0, dict.getBatchId());
                 //逻辑删除这个批次的字典,让上一条数据形成快照
                 dictService.deleteByBatchId(dict.getBatchId());
-                entity.setDictVersion(dictService.queryMaxVersion(dict.getBatchId())+1);
+                entity.setDictVersion(dictService.queryMaxVersion(dict.getBatchId()) + 1);
                 entity.setId(idGenerator.id());
-                entity.setIsActive((short)1);
+                entity.setIsActive((short) 1);
                 entity.setBatchId(dict.getBatchId());
                 entity.setCreateDate(new Date());
                 entity.setCreateAdminId(entity.getUpdateAdminId());
-                entity.setDeleteStatus((short)0);
+                entity.setDeleteStatus((short) 0);
                 dictService.save(entity);
                 //更新子节点的父节点ID为新的ID
-                dictService.updateParentId(dict.getId(),entity.getId());
+                dictService.updateParentId(dict.getId(), entity.getId());
 
-            }else {
+            } else {
                 entity.setUpdateDate(new Date());
                 int row = dictService.update(entity);
                 if (row < 1) {
@@ -197,11 +194,10 @@ public class DictBusinessService {
 
             resultObjectVO.setData(entity);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -210,25 +206,24 @@ public class DictBusinessService {
     }
 
 
-
     /**
      * 查询列表分页
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO listPage(RequestJsonVO requestVo){
+    public ResultObjectVO listPage(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             DictPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), DictPageInfo.class);
             resultObjectVO.setData(dictService.queryListPage(pageInfo));
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -239,41 +234,40 @@ public class DictBusinessService {
 
     /**
      * 根据ID查询
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO findById(RequestJsonVO requestVo){
+    public ResultObjectVO findById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Dict entity = JSONObject.parseObject(requestVo.getEntityJson(),Dict.class);
+            Dict entity = JSONObject.parseObject(requestVo.getEntityJson(), Dict.class);
             Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到字典ID");
 
             //查询是否存在该字典
-            Dict query=new Dict();
+            Dict query = new Dict();
             query.setId(entity.getId());
             List<DictVO> list = dictService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(list))
-            {
+            if (CollectionUtils.isEmpty(list)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("字典不存在!");
                 return resultObjectVO;
             }
             DictVO dictVO = list.get(0);
             DictVO parentDictVO = dictService.findById(dictVO.getPid());
-            if(parentDictVO!=null) {
+            if (parentDictVO != null) {
                 dictVO.setParentName(parentDictVO.getName());
-            }else{
+            } else {
                 dictVO.setParentName("根节点");
             }
             resultObjectVO.setData(list);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -282,28 +276,23 @@ public class DictBusinessService {
     }
 
 
-
-
-
-
-
-
     /**
      * 删除指定字典(仅限中台使用)
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteById(RequestJsonVO requestVo){
+    public ResultObjectVO deleteById(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            DictVO dictVO = JSONObject.parseObject(requestVo.getEntityJson(),DictVO.class);
+            DictVO dictVO = JSONObject.parseObject(requestVo.getEntityJson(), DictVO.class);
             Check.notNull(dictVO.getId(), ResultVO.FAILD, "没有找到字典ID");
 
 
             List<DictVO> chidlren = new ArrayList<DictVO>();
-            dictService.queryChildren(chidlren,dictVO);
+            dictService.queryChildren(chidlren, dictVO);
             //把当前的添加进去
             chidlren.add(dictVO);
 
@@ -313,11 +302,10 @@ public class DictBusinessService {
 
             resultObjectVO.setData(dictVO);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -328,25 +316,26 @@ public class DictBusinessService {
 
     /**
      * 批量删除字典(仅限中台使用)
+     *
      * @param requestVo
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO deleteByIds(RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            List<DictVO> dictVOS = JSON.parseArray(requestVo.getEntityJson(),DictVO.class);
+            List<DictVO> dictVOS = JSON.parseArray(requestVo.getEntityJson(), DictVO.class);
             Check.notEmpty(dictVOS, ResultVO.FAILD, "没有找到字典ID");
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(DictVO dictVO:dictVOS) {
-                if(dictVO.getId()!=null) {
+            for (DictVO dictVO : dictVOS) {
+                if (dictVO.getId() != null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(dictVO);
 
 
                     List<DictVO> chidlren = new ArrayList<DictVO>();
-                    dictService.queryChildren(chidlren,dictVO);
+                    dictService.queryChildren(chidlren, dictVO);
                     //把当前的添加进去
                     chidlren.add(dictVO);
 
@@ -356,11 +345,10 @@ public class DictBusinessService {
             }
             resultObjectVO.setData(resultObjectVOList);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -369,57 +357,51 @@ public class DictBusinessService {
     }
 
 
-
-
-
     /**
      * 查询树表格
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO){
+    public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             DictPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), DictPageInfo.class);
 
             List<DictVO> dictVoList = new ArrayList<DictVO>();
-            boolean queryCriteria=false;
+            boolean queryCriteria = false;
             //按指定条件查询
-            if(StringUtils.isNotEmpty(queryPageInfo.getName())
-                    ||StringUtils.isNotEmpty(queryPageInfo.getCode())
-                    ||(queryPageInfo.getEnableStatus()!=null&&queryPageInfo.getEnableStatus().intValue()!=-1)
-                    ||StringUtils.isNotEmpty(queryPageInfo.getAppCode()))
-            {
+            if (StringUtils.isNotEmpty(queryPageInfo.getName())
+                    || StringUtils.isNotEmpty(queryPageInfo.getCode())
+                    || (queryPageInfo.getEnableStatus() != null && queryPageInfo.getEnableStatus().intValue() != -1)
+                    || StringUtils.isNotEmpty(queryPageInfo.getAppCode())) {
                 queryCriteria = true;
                 DictVO queryDictVO = new DictVO();
-                BeanUtils.copyProperties(queryDictVO,queryPageInfo);
+                BeanUtils.copyProperties(queryDictVO, queryPageInfo);
                 queryDictVO.setPid(null);
                 List<DictVO> dictVOS = dictService.queryList(queryDictVO);
                 for (int i = 0; i < dictVOS.size(); i++) {
                     dictVoList.add(dictVOS.get(i));
                 }
-            }else {
+            } else {
                 //查询当前节点下的所有子节点
                 DictVO queryDict = new DictVO();
-                if(queryPageInfo.getPid()!=null) {
+                if (queryPageInfo.getPid() != null) {
                     queryDict.setPid(queryPageInfo.getPid());
-                }else{
+                } else {
                     queryDict.setPid(-1L);
                 }
                 List<Integer> categoryIdList = new LinkedList<>();
-                if(!CollectionUtils.isEmpty(queryPageInfo.getCategoryIdList()))
-                {
-                    for(Integer categoryId:queryPageInfo.getCategoryIdList())
-                    {
-                        if(categoryId!=null&&categoryId.longValue()!=-1) {
+                if (!CollectionUtils.isEmpty(queryPageInfo.getCategoryIdList())) {
+                    for (Integer categoryId : queryPageInfo.getCategoryIdList()) {
+                        if (categoryId != null && categoryId.longValue() != -1) {
                             categoryIdList.add(categoryId);
                         }
                     }
                 }
-                if(queryPageInfo.getCategoryId()!=null)
-                {
+                if (queryPageInfo.getCategoryId() != null) {
                     categoryIdList.add(queryPageInfo.getCategoryId());
                 }
                 //设置分类
@@ -443,45 +425,37 @@ public class DictBusinessService {
 
 
             //先查询出属性路径相关
-            if(!CollectionUtils.isEmpty(dictVoList))
-            {
-                List<Long> parentIdList =new LinkedList<>();
-                boolean parentIdExists=false;
+            if (!CollectionUtils.isEmpty(dictVoList)) {
+                List<Long> parentIdList = new LinkedList<>();
+                boolean parentIdExists = false;
 
-                for(DictVO dictVO:dictVoList)
-                {
+                for (DictVO dictVO : dictVoList) {
                     //设置上级节点ID
-                    parentIdExists=false;
-                    for(Long parentId:parentIdList)
-                    {
-                        if(dictVO.getPid()!=null&&parentId!=null
-                                &&parentId.longValue()==dictVO.getPid().longValue())
-                        {
-                            parentIdExists=true;
+                    parentIdExists = false;
+                    for (Long parentId : parentIdList) {
+                        if (dictVO.getPid() != null && parentId != null
+                                && parentId.longValue() == dictVO.getPid().longValue()) {
+                            parentIdExists = true;
                             break;
                         }
                     }
-                    if(!parentIdExists&&dictVO.getPid()!=null&&dictVO.getPid().longValue()!=-1)
-                    {
+                    if (!parentIdExists && dictVO.getPid() != null && dictVO.getPid().longValue() != -1) {
                         parentIdList.add(dictVO.getPid());
                     }
                 }
-                for(DictVO dictVO:dictVoList)
-                {
-                    if(dictVO.getPid()!=null&&dictVO.getPid().longValue()==-1)
-                    {
+                for (DictVO dictVO : dictVoList) {
+                    if (dictVO.getPid() != null && dictVO.getPid().longValue() == -1) {
                         dictVO.setParentName("根节点");
                     }
                 }
-                if(!CollectionUtils.isEmpty(parentIdList)) {
+                if (!CollectionUtils.isEmpty(parentIdList)) {
                     DictVO queryParentDictVO = new DictVO();
                     queryParentDictVO.setIdList(parentIdList);
                     List<DictVO> parentList = dictService.queryList(queryParentDictVO);
-                    if(!CollectionUtils.isEmpty(parentList))
-                    {
-                        for(DictVO dictVO:dictVoList) {
-                            if(dictVO.getPid()!=null
-                                    &&dictVO.getPid().longValue()!=-1) {
+                    if (!CollectionUtils.isEmpty(parentList)) {
+                        for (DictVO dictVO : dictVoList) {
+                            if (dictVO.getPid() != null
+                                    && dictVO.getPid().longValue() != -1) {
                                 for (DictVO parent : parentList) {
                                     if (dictVO.getPid() != null
                                             && dictVO.getPid().longValue() == parent.getId().longValue()) {
@@ -489,7 +463,7 @@ public class DictBusinessService {
                                         break;
                                     }
                                 }
-                            }else{
+                            } else {
                                 dictVO.setParentName("根节点");
                             }
                         }
@@ -499,8 +473,8 @@ public class DictBusinessService {
 
 
             //如果做了条件查询 就将查询的这些节点设置为顶级节点
-            if(queryCriteria) {
-                if(!org.apache.commons.collections.CollectionUtils.isEmpty(dictVoList)) {
+            if (queryCriteria) {
+                if (!org.apache.commons.collections.CollectionUtils.isEmpty(dictVoList)) {
                     for (DictVO dictVO : dictVoList) {
                         dictVO.setPid(-1L);
                     }
@@ -509,11 +483,10 @@ public class DictBusinessService {
 
             resultObjectVO.setData(dictVoList);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -522,47 +495,45 @@ public class DictBusinessService {
     }
 
 
-
     /**
      * 查询指定节点下子节点
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO){
+    public ResultObjectVO queryTreeChildByPid(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             DictVO dict = requestJsonVO.formatEntity(DictVO.class);
             List<DictTreeVO> areaVOS = new ArrayList<DictTreeVO>();
-            if(dict.getPid()==null)
-            {
+            if (dict.getPid() == null) {
                 DictTreeVO areaVO = new DictTreeVO();
                 areaVO.setId(-1L);
                 areaVO.setName("根节点");
                 areaVO.setParentId(-1L);
                 areaVO.setCategoryId(dict.getCategoryId());
-                Long childCount = dictService.queryOneChildCountByPid(-1L,dict.getAppCode(),dict.getCategoryId());
-                if(childCount>0){
+                Long childCount = dictService.queryOneChildCountByPid(-1L, dict.getAppCode(), dict.getCategoryId());
+                if (childCount > 0) {
                     areaVO.setIsParent(true);
                 }
                 areaVOS.add(areaVO);
-            }else {
+            } else {
                 List<DictVO> dictVOS = dictService.queryList(dict);
                 for (int i = 0; i < dictVOS.size(); i++) {
                     DictVO dvo = dictVOS.get(i);
                     DictTreeVO dictTreeVO = new DictTreeVO();
                     BeanUtils.copyProperties(dictTreeVO, dvo);
                     Long childCount = 0L;
-                    if(StringUtils.isNotEmpty(dict.getAppCode())) {
-                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), dictTreeVO.getAppCode(),dict.getCategoryId());
-                    }else{
-                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), null,dict.getCategoryId());
+                    if (StringUtils.isNotEmpty(dict.getAppCode())) {
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), dictTreeVO.getAppCode(), dict.getCategoryId());
+                    } else {
+                        childCount = dictService.queryOneChildCountByPid(dictTreeVO.getId(), null, dict.getCategoryId());
                     }
-                    if(childCount>0)
-                    {
+                    if (childCount > 0) {
                         dictTreeVO.setIsParent(true);
-                    }else{
+                    } else {
                         dictTreeVO.setIsParent(false);
                     }
                     areaVOS.add(dictTreeVO);
@@ -571,11 +542,57 @@ public class DictBusinessService {
 
             resultObjectVO.setData(areaVOS);
 
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询全部字典树（非懒加载，返回所有层级）
+     *
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryTreeAll(RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        try {
+            DictPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), DictPageInfo.class);
+
+            DictVO queryDictVO = new DictVO();
+            if (StringUtils.isNotEmpty(queryPageInfo.getName())) {
+                queryDictVO.setName(queryPageInfo.getName());
+            }
+            if (StringUtils.isNotEmpty(queryPageInfo.getCode())) {
+                queryDictVO.setCode(queryPageInfo.getCode());
+            }
+            if (queryPageInfo.getEnableStatus() != null && queryPageInfo.getEnableStatus().intValue() != -1) {
+                queryDictVO.setEnableStatus(queryPageInfo.getEnableStatus());
+            }
+            if (StringUtils.isNotEmpty(queryPageInfo.getAppCode())) {
+                queryDictVO.setAppCode(queryPageInfo.getAppCode());
+            }
+            List<Integer> categoryIdList = new LinkedList<>();
+            if (queryPageInfo.getCategoryId() != null) {
+                categoryIdList.add(queryPageInfo.getCategoryId());
+            }
+            queryDictVO.setCategoryIdList(categoryIdList);
+            // 不设置pid → 返回所有层级的字典
+            List<DictVO> dictVOS = dictService.queryList(queryDictVO);
+            resultObjectVO.setData(dictVOS);
+
+        } catch (BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -586,27 +603,27 @@ public class DictBusinessService {
 
     /**
      * 查询分类下的字典
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultObjectVO queryDictByCodeAndCategoryCode(RequestJsonVO requestJsonVO){
+    public ResultObjectVO queryDictByCodeAndCategoryCode(RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
             DictVO query = requestJsonVO.formatEntity(DictVO.class);
             Check.notEmpty(query.getAppCode(), ResultVO.FAILD, "没有找到应用编码");
-            DictVO dictVO = dictService.findByCodeAndCategoryCode(query.getCode(),query.getCategoryCode(),query.getAppCode());
-            if(dictVO!=null){
+            DictVO dictVO = dictService.findByCodeAndCategoryCode(query.getCode(), query.getCategoryCode(), query.getAppCode());
+            if (dictVO != null) {
                 dictVO.setChildren(new LinkedList<>());
                 dictService.setChildrenByVO(dictVO);
             }
             resultObjectVO.setData(dictVO);
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
@@ -615,32 +632,31 @@ public class DictBusinessService {
     }
 
 
-
     /**
      * 查询分类下的字典
+     *
      * @param requestJsonVO
      * @return
      */
     @RequestCheck(requireEntity = true)
-    public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO){
+    public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO) {
         ResultTypeObjectVO resultObjectVO = new ResultTypeObjectVO();
 
         try {
             DictVO query = requestJsonVO.formatEntity(DictVO.class);
             Check.notEmpty(query.getAppCode(), ResultVO.FAILD, "没有找到应用编码");
-            List<DictVO> dictList = dictService.findByCodesAndCategoryCode(query.getCodes(),query.getCategoryCode(),query.getAppCode());
-            if(!CollectionUtils.isEmpty(dictList)){
-                for(DictVO dictVO:dictList){
+            List<DictVO> dictList = dictService.findByCodesAndCategoryCode(query.getCodes(), query.getCategoryCode(), query.getAppCode());
+            if (!CollectionUtils.isEmpty(dictList)) {
+                for (DictVO dictVO : dictList) {
                     dictVO.setChildren(new LinkedList<>());
                     dictService.setChildrenByVO(dictVO);
                 }
             }
             resultObjectVO.setData(dictList);
-        }catch(BusinessValidationException e){
+        } catch (BusinessValidationException e) {
             return ResultTypeObjectVO.fail(e.getCode(), e.getMessage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");

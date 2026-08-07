@@ -23,3 +23,7 @@ export function delBatchDict(data) {
 export function queryDictTree(data) {
   return request({ url: '/dict/tree/table/by/pid', method: 'post', data })
 }
+
+export function queryDictTreeAll(data) {
+  return request({ url: '/dict/query/tree/all', method: 'post', data })
+}

@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -172,4 +173,16 @@ public class DictController {
         return dictBusinessService.queryDictByCodesAndCategoryCode(requestJsonVO);
     }
 
+
+
+    /**
+     * 查询全部字典树（非懒加载，返回所有层级）
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/all",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeAll(@RequestBody RequestJsonVO requestJsonVO) {
+        return dictBusinessService.queryTreeAll(requestJsonVO);
+    }
 }

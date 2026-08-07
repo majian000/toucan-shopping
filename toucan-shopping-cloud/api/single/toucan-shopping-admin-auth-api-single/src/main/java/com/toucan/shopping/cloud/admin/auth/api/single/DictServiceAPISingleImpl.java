@@ -66,4 +66,9 @@ public class DictServiceAPISingleImpl implements DictServiceAPI {
     public ResultTypeObjectVO<List<DictVO>> queryDictByCodesAndCategoryCode(RequestJsonVO requestJsonVO) {
         return dictBusinessService.queryDictByCodesAndCategoryCode(requestJsonVO);
     }
+
+    @Override
+    public ResultObjectVO queryTreeAll(RequestJsonVO requestJsonVO) {
+        return dictBusinessService.queryTreeAll(requestJsonVO);
+    }
 }

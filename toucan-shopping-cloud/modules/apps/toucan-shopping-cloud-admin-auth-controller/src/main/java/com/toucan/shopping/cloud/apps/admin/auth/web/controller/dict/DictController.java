@@ -193,6 +193,58 @@ public class DictController extends UIController {
 
 
     /**
+     * 查询全部字典树（非懒加载，返回所有层级）
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:tree-list"})
+    @RequestMapping(value = "/query/tree/all",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeAll(HttpServletRequest request, @RequestBody DictPageInfo pageInfo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(pageInfo.getCategoryId()==null||pageInfo.getCategoryId().longValue()==-1) {
+                resultObjectVO.setMsg("字典分类ID不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            resultObjectVO = dictServiceAPI.queryTreeAll(requestJsonVO);
+
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    Set<String> adminIdList = new HashSet<String>();
+                    Set<String> appCodes = new HashSet<>();
+                    List<DictTreeVO> dictTreeVOS = resultObjectVO.formatDataList(DictTreeVO.class);
+                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
+                        for (DictTreeVO dictTreeVO : dictTreeVOS) {
+                            if (dictTreeVO.getCreateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getCreateAdminId());
+                            }
+                            if (dictTreeVO.getUpdateAdminId() != null) {
+                                adminIdList.add(dictTreeVO.getUpdateAdminId());
+                            }
+                            appCodes.add(dictTreeVO.getAppCode());
+                        }
+                        this.setAdminNames(adminIdList, dictTreeVOS);
+                        this.setAppNames(appCodes, dictTreeVOS);
+                        resultObjectVO.setData(dictTreeVOS);
+                    }
+                }
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 修改
      * @param entity
      * @return
