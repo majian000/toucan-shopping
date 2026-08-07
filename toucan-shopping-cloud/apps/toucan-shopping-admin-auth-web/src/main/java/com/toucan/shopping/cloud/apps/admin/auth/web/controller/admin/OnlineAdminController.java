@@ -61,10 +61,14 @@ public class OnlineAdminController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, @RequestBody AdminAppPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody(required = false) AdminAppPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
+            if (pageInfo == null) {
+                pageInfo = new AdminAppPageInfo();
+            }
+            pageInfo.setLoginStatus((short)1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = adminAppServiceAPI.onlineList(requestJsonVO);
             if(resultObjectVO.isSuccess())

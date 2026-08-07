@@ -215,6 +215,30 @@ public class AppController extends UIController {
     }
 
 
+    /**
+     * 查询全部启用应用(无分页)
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
+    @RequestMapping(value = "/list/all",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAllList(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = new RequestJsonVO();
+            requestJsonVO.setAppCode(toucan.getAppCode());
+            resultObjectVO = appServiceAPI.queryAllList(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 }
 

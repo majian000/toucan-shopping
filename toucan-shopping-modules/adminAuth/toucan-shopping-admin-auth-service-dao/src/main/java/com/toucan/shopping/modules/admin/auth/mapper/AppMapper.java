@@ -30,4 +30,6 @@ public interface AppMapper {
     List<App> queryListByCodesIngoreDelete(List<String> appCodes);
 
     AppVO findByCodeIngoreDelete(String code);
+
+    List<AppVO> findAllEnabled();
 }

@@ -15,7 +15,9 @@
 
     <resultMap id="adminAppVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminAppVO" extends="adminAppMap" >
         <result column="name" jdbcType="VARCHAR" property="name" />
-
+        <result column="appName" jdbcType="VARCHAR" property="appName" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="loginDate" jdbcType="TIMESTAMP" property="loginDate" />
     </resultMap>
 
     <resultMap id="appLoginUserVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO">

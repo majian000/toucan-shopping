@@ -94,4 +94,9 @@ public class AppServiceImpl implements AppService {
         return appMapper.findByCodeIngoreDelete(code);
     }
 
+    @Override
+    public List<AppVO> findAllEnabled() {
+        return appMapper.findAllEnabled();
+    }
+
 }

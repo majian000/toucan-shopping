@@ -93,4 +93,12 @@ public interface AppServiceAPI {
      */
     ResultObjectVO queryListByCodes( RequestJsonVO requestVo);
 
+
+    /**
+     * 查询全部启用应用(无分页)
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO queryAllList( RequestJsonVO requestVo);
+
 }

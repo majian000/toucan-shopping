@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -168,5 +169,18 @@ public class AppController {
         return appBusinessService.deleteByIds(requestVo);
     }
 
+
+
+    /**
+     * 查询全部启用应用(无分页)
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/list/all",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestVo)
+    {
+        return appBusinessService.queryAllList(requestVo);
+    }
 
 }

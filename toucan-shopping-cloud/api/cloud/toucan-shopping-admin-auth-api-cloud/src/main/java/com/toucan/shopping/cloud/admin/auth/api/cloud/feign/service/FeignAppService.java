@@ -103,4 +103,13 @@ public interface FeignAppService extends AppServiceAPI {
     @RequestMapping(value="/queryListByCodes", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListByCodes(@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 查询全部启用应用(无分页)
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/all", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestVo);
+
 }

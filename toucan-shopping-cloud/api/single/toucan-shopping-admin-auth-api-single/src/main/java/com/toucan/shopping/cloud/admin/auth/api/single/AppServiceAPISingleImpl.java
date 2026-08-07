@@ -62,4 +62,9 @@ public class AppServiceAPISingleImpl implements AppServiceAPI {
     public ResultObjectVO queryListByCodes(RequestJsonVO requestVo) {
         return appBusinessService.queryListByCodes(requestVo);
     }
+
+    @Override
+    public ResultObjectVO queryAllList(RequestJsonVO requestVo) {
+        return appBusinessService.queryAllList(requestVo);
+    }
 }

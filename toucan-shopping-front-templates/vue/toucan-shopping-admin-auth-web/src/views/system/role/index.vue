@@ -250,7 +250,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, View } from '@element-plus/icons-vue'
 import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache, getRoleDetail, listRoleFunctions } from '@/api/system/role'
-import { listApp } from '@/api/system/app'
+import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -259,7 +259,7 @@ const appOptions = ref([])
 
 async function fetchApps() {
   try {
-    const res = await listApp({ page: 1, size: 1000 })
+    const res = await listAllApps()
     appOptions.value = res.data || []
   } catch { /* ignore */ }
 }

@@ -1,8 +1,13 @@
 import request from '@/utils/request'
 
-// 应用列表
+// 应用列表(分页)
 export function listApp(data) {
   return request({ url: '/app/list', method: 'post', data })
+}
+
+// 全部启用应用列表(无分页,用于下拉框)
+export function listAllApps() {
+  return request({ url: '/app/list/all', method: 'post', data: {} })
 }
 
 // 保存应用

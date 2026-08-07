@@ -375,9 +375,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, Folder, View } from '@element-plus/icons-vue'
 import {
   listAdmin, saveAdmin, updateAdmin, delAdmin, batchDelAdmin, resetAdminPwd,
-  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listApp, listAdminApps, getAdminDetail,
+  connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listAdminApps, getAdminDetail,
   listOrgnazitionTree, queryAdminOrgnazitionTree, roleList
 } from '@/api/system/admin'
+import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -448,7 +449,7 @@ async function fetchData() {
 async function fetchApps() {
   appLoading.value = true
   try {
-    const res = await listApp()
+    const res = await listAllApps()
     appOptions.value = res.data || []
   } catch { /* ignore */ }
   finally { appLoading.value = false }

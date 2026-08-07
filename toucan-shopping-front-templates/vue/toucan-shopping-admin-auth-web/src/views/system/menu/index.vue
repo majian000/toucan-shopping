@@ -276,7 +276,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Refresh, Search, View } from '@element-plus/icons-vue'
 import { listMenuByPid, listMenuSimpleTree, addMenu, updateMenu, delMenu, batchAddMenus, getMenuDetail } from '@/api/system/menu'
-import { listApp } from '@/api/system/app'
+import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -301,7 +301,7 @@ const selectedAppCode = ref('')
 async function loadApps() {
   appLoading.value = true
   try {
-    const res = await listApp({ page: 1, size: 1000 })
+    const res = await listAllApps()
     appOptions.value = res.data || []
     if (appOptions.value.length > 0) {
       selectedAppCode.value = appOptions.value[0].code

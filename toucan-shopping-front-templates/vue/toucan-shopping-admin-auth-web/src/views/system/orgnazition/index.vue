@@ -133,7 +133,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Refresh, Search, View } from '@element-plus/icons-vue'
 import { listOrgnazitionTree, addOrgnazition, updateOrgnazition, delOrgnazition, delBatchOrgnazition } from '@/api/system/orgnazition'
-import { listApp } from '@/api/system/app'
+import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -269,7 +269,7 @@ const appLoading = ref(false)
 async function loadApps() {
   appLoading.value = true
   try {
-    const res = await listApp({})
+    const res = await listAllApps()
     appOptions.value = res.data || []
   } catch { /* ignore */ }
   finally { appLoading.value = false }

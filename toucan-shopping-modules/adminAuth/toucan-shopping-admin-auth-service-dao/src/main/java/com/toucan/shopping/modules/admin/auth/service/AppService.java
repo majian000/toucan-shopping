@@ -31,4 +31,6 @@ public interface AppService {
     int deleteById(Long id,String adminId);
 
     AppVO findByCodeIngoreDelete(String code);
+
+    List<AppVO> findAllEnabled();
 }

@@ -155,4 +155,8 @@
         select * from t_app t where t.code = #{code} limit 0,1
     </select>
 
+    <select id="findAllEnabled" resultMap="appVOMap">
+        select t.id, t.name, t.code from t_app t where t.delete_status = 0 and t.enable_status = 1 order by t.create_date desc
+    </select>
+
 </mapper>

@@ -51,8 +51,8 @@ export function connectOrgs(data) {
 }
 
 // 在线管理员列表
-export function listOnlineAdmins() {
-  return request({ url: '/admin/online/list', method: 'post' })
+export function listOnlineAdmins(data) {
+  return request({ url: '/admin/online/list', method: 'post', data })
 }
 
 // 强制退出(id为AdminApp记录ID)
@@ -68,11 +68,6 @@ export function queryAdminRoleTree(adminId) {
 // 保存/更新管理员详细信息（完善信息）
 export function saveAdminInfo(data) {
   return request({ url: '/adminInfo/saveOrUpdate', method: 'post', data })
-}
-
-// 应用列表
-export function listApp(data) {
-  return request({ url: '/app/list', method: 'post', data: data || {} })
 }
 
 // 获取完整组织树

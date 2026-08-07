@@ -467,4 +467,24 @@ public class AppBusinessService {
     }
 
 
+    /**
+     * 查询全部启用应用(无分页)
+     * @param requestVo
+     * @return
+     */
+    public ResultObjectVO queryAllList(RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        try {
+            resultObjectVO.setData(appService.findAllEnabled());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO = ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 }
