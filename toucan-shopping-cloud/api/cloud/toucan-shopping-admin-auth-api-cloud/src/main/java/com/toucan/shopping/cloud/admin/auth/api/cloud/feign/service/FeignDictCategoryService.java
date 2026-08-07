@@ -83,5 +83,13 @@ public interface FeignDictCategoryService extends DictCategoryServiceAPI {
     ResultObjectVO queryList(@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询详情
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryDetail(@RequestBody RequestJsonVO requestVo);
+
 
 }

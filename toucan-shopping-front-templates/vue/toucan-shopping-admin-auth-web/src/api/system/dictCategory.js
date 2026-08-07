@@ -23,3 +23,7 @@ export function delDictCategory(id) {
 export function delBatchDictCategory(data) {
   return request({ url: '/dictCategory/delete/ids', method: 'post', data })
 }
+
+export function getDictCategoryDetail(id) {
+  return request({ url: '/dictCategory/detail', method: 'post', data: { id } })
+}

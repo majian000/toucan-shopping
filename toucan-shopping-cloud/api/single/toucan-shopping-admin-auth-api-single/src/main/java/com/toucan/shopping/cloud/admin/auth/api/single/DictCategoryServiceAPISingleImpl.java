@@ -47,4 +47,9 @@ public class DictCategoryServiceAPISingleImpl implements DictCategoryServiceAPI 
     public ResultObjectVO queryList(RequestJsonVO requestVo) {
         return dictCategoryBusinessService.queryList(requestVo);
     }
+
+    @Override
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
+        return dictCategoryBusinessService.queryDetail(requestVo);
+    }
 }

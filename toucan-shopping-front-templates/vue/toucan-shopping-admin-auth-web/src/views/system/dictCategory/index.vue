@@ -58,8 +58,9 @@
         <el-table-column prop="createAdminUsername" label="创建人" width="120" />
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column prop="updateAdminUsername" label="修改人" width="120" />
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
+            <el-button type="info" link size="small" :icon="View" v-permission="'pms:dict:category:view'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:category:edit'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:dict:category:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -118,6 +119,29 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看弹窗 -->
+    <el-dialog v-model="viewVisible" title="查看字典分类" width="550px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="viewLoading">
+        <el-empty v-if="!viewDetail && !viewLoading" description="暂无数据" />
+        <el-descriptions v-if="viewDetail" :column="2" border class="view-detail-desc">
+          <el-descriptions-item label="分类名称" :span="2">{{ viewDetail.name }}</el-descriptions-item>
+          <el-descriptions-item label="编码">{{ viewDetail.code }}</el-descriptions-item>
+          <el-descriptions-item label="所属应用">{{ viewDetail.appName || viewDetail.appCode }}</el-descriptions-item>
+          <el-descriptions-item label="排序">{{ viewDetail.dictCategorySort }}</el-descriptions-item>
+          <el-descriptions-item label="状态">
+            <el-tag :type="viewDetail.enableStatus === 1 ? 'success' : 'danger'" size="small">
+              {{ viewDetail.enableStatus === 1 ? '启用' : '禁用' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="备注" :span="2">{{ viewDetail.remark || '--' }}</el-descriptions-item>
+          <el-descriptions-item label="创建人">{{ viewDetail.createAdminUsername || '--' }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ viewDetail.createDate || '--' }}</el-descriptions-item>
+          <el-descriptions-item label="修改人">{{ viewDetail.updateAdminUsername || '--' }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间">{{ viewDetail.updateDate || '--' }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -125,8 +149,8 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete, Edit } from '@element-plus/icons-vue'
-import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory, delBatchDictCategory } from '@/api/system/dictCategory'
+import { Plus, Search, Refresh, Delete, Edit, View } from '@element-plus/icons-vue'
+import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory, delBatchDictCategory, getDictCategoryDetail } from '@/api/system/dictCategory'
 import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
@@ -209,6 +233,22 @@ const submitLoading = ref(false)
 const formRef = ref(null)
 const dialogTitle = computed(() => isEdit.value ? '编辑分类' : '新增分类')
 
+// ========== 查看 ==========
+const viewVisible = ref(false)
+const viewDetail = ref(null)
+const viewLoading = ref(false)
+
+async function handleView(row) {
+  viewVisible.value = true
+  viewDetail.value = null
+  viewLoading.value = true
+  try {
+    const res = await getDictCategoryDetail(row.id)
+    viewDetail.value = res.data?.basicInfo || res.data
+  } catch { /* ignore */ }
+  finally { viewLoading.value = false }
+}
+
 const formData = reactive({ name: '', code: '', appCode: '', dictCategorySort: 0, remark: '', enableStatus: 1 })
 const formRules = {
   name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
@@ -264,5 +304,6 @@ function handleDelete(row) {
     .pagination-wrapper { margin-top: $gap-md; display: flex; justify-content: flex-end; }
   }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
+  .view-detail-desc :deep(.el-descriptions__label) { white-space: nowrap; min-width: 80px; }
 }
 </style>

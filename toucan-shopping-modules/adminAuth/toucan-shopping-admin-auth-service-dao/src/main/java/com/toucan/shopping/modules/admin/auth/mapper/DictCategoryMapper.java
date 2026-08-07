@@ -113,5 +113,12 @@ public interface DictCategoryMapper {
     List<DictCategoryVO> queryAll();
 
 
+    /**
+     * 查询详情(关联管理员和应用的名称)
+     * @param id
+     * @return
+     */
+    DictCategoryVO findDetailById(Long id);
+
 
 }

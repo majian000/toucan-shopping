@@ -86,6 +86,10 @@ public class DictCategoryServiceImpl implements DictCategoryService {
         return dictCategoryMapper.queryListByAppCode(appCode);
     }
 
+    @Override
+    public DictCategoryVO findDetailById(Long id) {
+        return dictCategoryMapper.findDetailById(id);
+    }
 
 
 }

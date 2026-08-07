@@ -69,5 +69,12 @@ public interface DictCategoryServiceAPI {
     ResultObjectVO queryList( RequestJsonVO requestVo);
 
 
+    /**
+     * 查询详情
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO queryDetail( RequestJsonVO requestVo);
+
 
 }

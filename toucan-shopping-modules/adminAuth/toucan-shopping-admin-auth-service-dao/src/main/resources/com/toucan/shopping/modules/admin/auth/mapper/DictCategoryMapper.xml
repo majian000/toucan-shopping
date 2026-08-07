@@ -185,4 +185,16 @@
         select max(t.dict_category_sort) from t_sa_dict_category t where  1=1 and t.delete_status = 0
     </select>
 
+    <select id="findDetailById" resultMap="dictCategoryVOMap" parameterType="java.lang.Long">
+        select t.*,
+            tsa.username as create_admin_username,
+            tsau.username as update_admin_username,
+            ta.name as appName
+        from t_sa_dict_category t
+        left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id and tsa.delete_status=0
+        left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id and tsau.delete_status=0
+        left join t_app ta on t.app_code = ta.code and ta.delete_status=0
+        where t.id = #{id} and t.delete_status = 0
+    </select>
+
 </mapper>

@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.admin.auth.entity.DictCategory;
 import com.toucan.shopping.modules.admin.auth.page.DictCategoryPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictCategoryDetailVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictCategoryVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
@@ -315,6 +316,46 @@ public class DictCategoryBusinessService {
                 }
             }
             resultObjectVO.setData(resultObjectVOList);
+
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询详情
+     * @param requestVo
+     * @return
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        try {
+            DictCategory entity = JSONObject.parseObject(requestVo.getEntityJson(),DictCategory.class);
+            Check.notNull(entity.getId(), ResultVO.FAILD, "没有找到字典分类ID");
+
+            DictCategoryVO dictCategoryVO = dictCategoryService.findDetailById(entity.getId().longValue());
+            if(dictCategoryVO==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("字典分类不存在!");
+                return resultObjectVO;
+            }
+
+            DictCategoryDetailVO detailVO = new DictCategoryDetailVO();
+            detailVO.setBasicInfo(dictCategoryVO);
+            detailVO.setAppName(dictCategoryVO.getAppName());
+
+            resultObjectVO.setData(detailVO);
 
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
