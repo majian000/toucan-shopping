@@ -1122,4 +1122,35 @@ public class FunctionBusinessService {
     }
 
 
+    /**
+     * 查询功能项详情
+     */
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Function query = JSONObject.parseObject(requestVo.getEntityJson(), Function.class);
+            Check.notNull(query.getId(), ResultVO.FAILD, "没有找到功能项ID");
+
+            FunctionVO vo = functionService.findDetailById(query.getId());
+            if (vo == null) {
+                return ResultObjectVO.fail(ResultVO.FAILD, "功能项不存在!");
+            }
+
+            FunctionDetailVO detail = new FunctionDetailVO();
+            detail.setBasicInfo(vo);
+            detail.setAppName(vo.getAppName());
+            resultObjectVO.setData(detail);
+
+        } catch (BusinessValidationException e) {
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 }

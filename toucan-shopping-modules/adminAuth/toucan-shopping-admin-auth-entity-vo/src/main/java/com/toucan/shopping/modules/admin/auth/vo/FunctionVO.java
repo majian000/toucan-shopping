@@ -32,6 +32,11 @@ public class FunctionVO extends Function {
      */
     private String adminId;
 
+    /**
+     * 应用名称
+     */
+    private String appName;
+
 
 
 }

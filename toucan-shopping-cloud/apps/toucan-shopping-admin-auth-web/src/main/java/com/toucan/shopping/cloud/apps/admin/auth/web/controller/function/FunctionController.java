@@ -533,8 +533,27 @@ public class FunctionController extends UIController {
 
 
     /**
-     * 查询角色完整功能树（含嵌套children）
+     * 查询功能项详情
      */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:view"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Function entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = functionServiceAPI.queryDetail(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:role:permission"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
     @RequestMapping(value = "/query/role/function/full/tree",method = RequestMethod.POST)
     @ResponseBody

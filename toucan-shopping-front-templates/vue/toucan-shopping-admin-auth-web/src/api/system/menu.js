@@ -29,3 +29,8 @@ export function delMenu(id, functionId) {
 export function batchAddMenus(data) {
   return request({ url: '/function/saves', method: 'post', data })
 }
+
+// 查看详情
+export function getMenuDetail(data) {
+  return request({ url: '/function/detail', method: 'post', data })
+}

@@ -156,4 +156,12 @@ public interface FunctionServiceAPI {
     ResultObjectVO queryListByAppCode(RequestJsonVO requestVo);
 
 
+    /**
+     * 查询详情
+     * @param requestVo
+     * @return
+     */
+    ResultObjectVO queryDetail(RequestJsonVO requestVo);
+
+
 }

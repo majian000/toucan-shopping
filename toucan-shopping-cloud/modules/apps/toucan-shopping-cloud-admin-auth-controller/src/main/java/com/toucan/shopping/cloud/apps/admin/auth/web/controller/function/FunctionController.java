@@ -463,5 +463,27 @@ public class FunctionController extends UIController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询功能项详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:menu:view"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Function entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = functionServiceAPI.queryDetail(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }
 

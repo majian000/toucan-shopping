@@ -85,8 +85,9 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="updateAdminUsername" label="修改人" width="100" />
         <el-table-column prop="updateDate" label="修改时间" width="170" />
-        <el-table-column label="操作" width="160" fixed="right">
+        <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
+            <el-button type="primary" link size="small" :icon="View" v-permission="'pms:system:menu:view'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:menu:edit-row'" @click="handleEdit(row)">修改</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:menu:delete-row'" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -230,6 +231,41 @@
         <el-button type="primary" @click="handleBatchSubmit" :loading="batchLoading">确认保存</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="viewDialogVisible" title="查看菜单" width="600px"
+      :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="viewLoading">
+        <el-empty v-if="!viewDetail && !viewLoading" description="暂无数据" />
+        <el-descriptions v-if="viewDetail" :column="2" border>
+          <el-descriptions-item label="功能名称" :span="2">{{ viewDetail.name }}</el-descriptions-item>
+          <el-descriptions-item label="功能ID">{{ viewDetail.functionId }}</el-descriptions-item>
+          <el-descriptions-item label="所属应用">{{ viewDetail.appName || viewDetail.appCode }}</el-descriptions-item>
+          <el-descriptions-item label="功能链接" :span="2">{{ viewDetail.url || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="权限标识" :span="2">{{ viewDetail.permission || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="功能类型">
+            <el-tag :type="typeTagMap[viewDetail.type]" size="small">{{ typeLabelMap[viewDetail.type] || '应用' }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="排序号">{{ viewDetail.functionSort }}</el-descriptions-item>
+          <el-descriptions-item label="上级功能">{{ viewDetail.parentName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="图标">{{ viewDetail.icon || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="功能内容" :span="2" v-if="viewDetail.functionText">{{ viewDetail.functionText }}</el-descriptions-item>
+          <el-descriptions-item label="状态">
+            <el-tag :type="viewDetail.enableStatus === 1 ? 'success' : 'danger'" size="small">
+              {{ viewDetail.enableStatus === 1 ? '启用' : '禁用' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="备注">{{ viewDetail.remark || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="创建人">{{ viewDetail.createAdminUsername || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ viewDetail.createDate || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="修改人">{{ viewDetail.updateAdminUsername || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间">{{ viewDetail.updateDate || '-' }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="viewDialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,8 +273,8 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Refresh, Search } from '@element-plus/icons-vue'
-import { listMenuByPid, listMenuSimpleTree, addMenu, updateMenu, delMenu, batchAddMenus } from '@/api/system/menu'
+import { Plus, Delete, Edit, Refresh, Search, View } from '@element-plus/icons-vue'
+import { listMenuByPid, listMenuSimpleTree, addMenu, updateMenu, delMenu, batchAddMenus, getMenuDetail } from '@/api/system/menu'
 import { listApp } from '@/api/system/app'
 
 const route = useRoute()
@@ -461,6 +497,27 @@ async function handleBatchSubmit() {
     batchDialogVisible.value = false
     fetchData(); tableKey.value++
   } finally { batchLoading.value = false }
+}
+
+// ========== 查看详情 ==========
+const viewDialogVisible = ref(false)
+const viewLoading = ref(false)
+const viewDetail = ref(null)
+
+async function handleView(row) {
+  viewDialogVisible.value = true
+  viewLoading.value = true
+  viewDetail.value = null
+  try {
+    const res = await getMenuDetail({ id: row.id })
+    if (res.data && res.data.basicInfo) {
+      viewDetail.value = res.data.basicInfo
+      viewDetail.value.appName = res.data.appName
+    } else {
+      viewDetail.value = res.data
+    }
+  } catch { /* ignore */ }
+  finally { viewLoading.value = false }
 }
 </script>
 

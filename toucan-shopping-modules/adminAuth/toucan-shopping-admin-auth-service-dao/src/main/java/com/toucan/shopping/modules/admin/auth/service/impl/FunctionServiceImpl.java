@@ -264,5 +264,10 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByUrlsAndAppCodes(urls,appCodes);
     }
 
+    @Override
+    public FunctionVO findDetailById(Long id) {
+        return functionMapper.findDetailById(id);
+    }
+
 
 }

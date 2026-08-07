@@ -11,11 +11,13 @@ import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -264,6 +266,17 @@ public class FunctionController {
     @ResponseBody
     public ResultObjectVO queryListByAppCode(@RequestBody RequestJsonVO requestVo){
         return functionBusinessService.queryListByAppCode(requestVo);
+    }
+
+
+    /**
+     * 查询功能项详情
+     */
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody RequestJsonVO requestVo)
+    {
+        return functionBusinessService.queryDetail(requestVo);
     }
 
 

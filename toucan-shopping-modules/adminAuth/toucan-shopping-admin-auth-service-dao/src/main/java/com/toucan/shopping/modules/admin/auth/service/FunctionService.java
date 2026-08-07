@@ -168,5 +168,10 @@ public interface FunctionService {
     List<FunctionVO> queryListByUrlsAndAppCodes(List<String> urls,List<String> appCodes);
 
 
+    /**
+     * 查询功能项详情(含关联的应用名称、父级名称、创建人/修改人用户名)
+     */
+    FunctionVO findDetailById(Long id);
+
 
 }
