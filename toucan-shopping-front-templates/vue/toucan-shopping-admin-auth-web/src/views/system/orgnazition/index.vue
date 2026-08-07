@@ -2,24 +2,6 @@
   <div class="org-management">
     <h2 class="page-title">{{ route.meta.title }}</h2>
 
-    <!-- 搜索栏 -->
-    <el-card shadow="never" class="search-card">
-      <el-form :model="searchForm" inline>
-        <el-form-item label="名称">
-          <el-input v-model="searchForm.name" placeholder="请输入名称" clearable style="width:220px" />
-        </el-form-item>
-        <el-form-item label="所属应用">
-          <el-select v-model="searchForm.appCode" placeholder="请选择" clearable style="width:220px">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'pms:system:org:list'" @click="handleSearch">搜索</el-button>
-          <el-button :icon="Refresh" v-permission="'pms:system:org:list'" @click="handleReset">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-
     <el-card shadow="never" class="table-card">
       <!-- 工具栏 -->
       <div class="toolbar">
@@ -131,24 +113,11 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Refresh, Search, View } from '@element-plus/icons-vue'
+import { Plus, Delete, Edit, Refresh, View } from '@element-plus/icons-vue'
 import { listOrgnazitionTree, addOrgnazition, updateOrgnazition, delOrgnazition, delBatchOrgnazition } from '@/api/system/orgnazition'
 import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
-
-// ========== 搜索 ==========
-const searchForm = reactive({ name: '', appCode: '' })
-
-function handleSearch() {
-  fetchData()
-}
-
-function handleReset() {
-  searchForm.name = ''
-  searchForm.appCode = ''
-  fetchData()
-}
 
 // ========== 树形数据转换 ==========
 function transformTree(tree) {
@@ -167,10 +136,7 @@ const fullOrgTree = ref([])
 async function fetchData() {
   loading.value = true
   try {
-    const params = {}
-    if (searchForm.name) params.name = searchForm.name
-    if (searchForm.appCode) params.code = searchForm.appCode
-    const res = await listOrgnazitionTree(params)
+    const res = await listOrgnazitionTree()
     orgTree.value = transformTree(res.data || [])
   } finally {
     loading.value = false
@@ -362,7 +328,6 @@ function handleDelete(row) {
 
 <style lang="scss" scoped>
 .org-management {
-  .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding: 16px 20px 0; } }
   .table-card {
     .toolbar { margin-bottom: $gap-md; }
   }

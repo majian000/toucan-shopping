@@ -166,7 +166,7 @@ public class DictCategoryController extends UIController {
                 if(CollectionUtils.isNotEmpty(apps)) {
                     for (DictCategoryVO dictCategoryVO : list) {
                         for(AppVO apv:apps){
-                            if(dictCategoryVO.getAppCode().equals(apv.getCode())){
+                            if(dictCategoryVO.getAppCode()!=null&&dictCategoryVO.getAppCode().equals(apv.getCode())){
                                 dictCategoryVO.setAppName(apv.getName());
                                 break;
                             }
