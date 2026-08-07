@@ -275,6 +275,16 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
+    public List<Long> findPidsWithChildren(List<Long> pids) {
+        return functionMapper.findPidsWithChildren(pids);
+    }
+
+    @Override
+    public List<String> findAppCodesWithTopFunctions(List<String> appCodes) {
+        return functionMapper.findAppCodesWithTopFunctions(appCodes);
+    }
+
+    @Override
     public FunctionVO findDetailById(Long id) {
         return functionMapper.findDetailById(id);
     }

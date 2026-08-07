@@ -400,6 +400,24 @@
     </select>
 
 
+    <select id="findPidsWithChildren" resultType="java.lang.Long">
+        select distinct t.pid from t_sa_function t
+        where t.delete_status = 0
+        and t.pid in
+        <foreach item="pid" index="index" collection="pids" open="(" close=")" separator=",">
+            #{pid}
+        </foreach>
+    </select>
+
+    <select id="findAppCodesWithTopFunctions" resultType="java.lang.String">
+        select distinct t.app_code from t_sa_function t
+        where t.delete_status = 0 and t.pid = -1
+        and t.app_code in
+        <foreach item="appCode" index="index" collection="appCodes" open="(" close=")" separator=",">
+            #{appCode}
+        </foreach>
+    </select>
+
     <select id="findDetailById" resultMap="functionDetailVOMap" parameterType="java.lang.Long">
         select <include refid="queryColumns" />,
             tsa.username as create_admin_username,

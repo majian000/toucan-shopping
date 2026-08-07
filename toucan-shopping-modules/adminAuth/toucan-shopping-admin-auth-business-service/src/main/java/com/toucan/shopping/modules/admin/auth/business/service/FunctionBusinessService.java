@@ -29,8 +29,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -476,6 +478,9 @@ public class FunctionBusinessService {
             {
                 Function queryFunction = new Function();
                 BeanUtils.copyProperties(queryFunction,queryPageInfo);
+                if(queryFunction.getPid()!=null&&queryFunction.getPid().intValue()==-1) {
+                    queryFunction.setPid(null);
+                }
                 List<FunctionVO> functions = functionService.findVOListByEntityFieldLike(queryFunction);
                 for(FunctionVO function:functions)
                 {
@@ -492,6 +497,10 @@ public class FunctionBusinessService {
                     query.setEnableStatus((short)1);
                     List<App> apps = appService.findListByEntity(query);
                     if (!CollectionUtils.isEmpty(apps)) {
+                        // 批量查询哪些应用有顶级功能项
+                        List<String> appCodes = apps.stream().map(App::getCode).collect(Collectors.toList());
+                        Set<String> appCodesWithChildren = new HashSet<>(functionService.findAppCodesWithTopFunctions(appCodes));
+
                         List<Object> appFunctionTreeVOS = new ArrayList<Object>();
                         //虚拟一个应用节点的ID
                         long rootNodeId = -1L;
@@ -503,20 +512,12 @@ public class FunctionBusinessService {
                             appFunctionTreeVO.setPid(-1L);
                             appFunctionTreeVO.setEnableStatus((short) 1);
 
-                            //设置是否有子节点
-                            Function queryFunction = new Function();
-                            queryFunction.setAppCode(app.getCode());
-                            queryFunction.setPid(-1L);
-                            List<Function> functions = functionService.findListByEntity(queryFunction);
-                            if(!CollectionUtils.isEmpty(functions))
-                            {
+                            if (appCodesWithChildren.contains(app.getCode())) {
                                 appFunctionTreeVO.setHaveChild(true);
                             }
 
                             appFunctionTreeVOS.add(appFunctionTreeVO);
-
                             rootNodeId -= 1;
-
                         }
                         resultObjectVO.setData(appFunctionTreeVOS);
                     }
@@ -561,16 +562,17 @@ public class FunctionBusinessService {
                     queryFunction.setPid(queryPageInfo.getPid());
                 }
                 List<FunctionVO> functions = functionService.findVOListByEntity(queryFunction);
+                // 批量查询哪些pid存在子节点
+                Set<Long> pidsWithChildren = new HashSet<>();
+                if (!CollectionUtils.isEmpty(functions)) {
+                    List<Long> pids = functions.stream().map(FunctionVO::getId).collect(Collectors.toList());
+                    pidsWithChildren = new HashSet<>(functionService.findPidsWithChildren(pids));
+                }
                 for(FunctionVO function:functions)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     BeanUtils.copyProperties(appFunctionTreeVO,function);
-                    queryFunction = new Function();
-                    queryFunction.setPid(function.getId());
-                    List<Function> functionChilds = functionService.findListByEntity(queryFunction);
-                    //查询该节点是否存在子节点
-                    if(!CollectionUtils.isEmpty(functionChilds))
-                    {
+                    if (pidsWithChildren.contains(function.getId())) {
                         appFunctionTreeVO.setHaveChild(true);
                     }
                     functionTreeVOS.add(appFunctionTreeVO);

@@ -65,6 +65,7 @@
       >
         <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="name" label="功能名称" min-width="200" />
+        <el-table-column prop="functionId" label="功能ID" width="200" show-overflow-tooltip />
         <el-table-column prop="url" label="链接" width="200" show-overflow-tooltip />
         <el-table-column prop="permission" label="权限" width="200" show-overflow-tooltip />
         <el-table-column prop="icon" label="图标" width="270" />

@@ -180,6 +180,16 @@ public interface FunctionService {
 
 
     /**
+     * 批量查询指定pid中哪些存在子节点
+     */
+    List<Long> findPidsWithChildren(List<Long> pids);
+
+    /**
+     * 查询哪些appCode下存在顶级功能项
+     */
+    List<String> findAppCodesWithTopFunctions(List<String> appCodes);
+
+    /**
      * 查询功能项详情(含关联的应用名称、父级名称、创建人/修改人用户名)
      */
     FunctionVO findDetailById(Long id);
