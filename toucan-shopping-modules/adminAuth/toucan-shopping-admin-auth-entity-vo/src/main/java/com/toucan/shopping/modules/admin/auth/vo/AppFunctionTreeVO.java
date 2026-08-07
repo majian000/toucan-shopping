@@ -71,4 +71,16 @@ public class AppFunctionTreeVO extends Function {
     private Boolean isAppNode = false;
 
 
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
+
+
 }
