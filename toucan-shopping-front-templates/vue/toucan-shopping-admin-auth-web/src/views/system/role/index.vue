@@ -94,7 +94,10 @@
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
         <el-form-item label="所属应用" prop="appCode">
-          <el-select v-model="formData.appCode" placeholder="请选择应用" style="width:100%">
+          <template v-if="isEdit">
+            <el-tag type="info">{{ appOptions.find(a => a.code === formData.appCode)?.code }} {{ appOptions.find(a => a.code === formData.appCode)?.name }}</el-tag>
+          </template>
+          <el-select v-else v-model="formData.appCode" placeholder="请选择应用" style="width:100%">
             <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
           </el-select>
         </el-form-item>

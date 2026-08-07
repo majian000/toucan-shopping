@@ -886,7 +886,22 @@ public class FunctionBusinessService {
                     roleIdArray[pos]=adminRole.getRoleId();
                     pos++;
                 }
-                resultObjectVO.setData(functionService.queryListByRoleIdArray(roleIdArray));
+                // 过滤掉已禁用的角色
+                List<Role> roles = roleService.findListByRoleIds(roleIdArray);
+                String[] enableRoleIdArray = roleIdArray;
+                if(!CollectionUtils.isEmpty(roles))
+                {
+                    List<String> enableRoleIds = new ArrayList<>();
+                    for(Role role : roles)
+                    {
+                        if(role.getEnableStatus() != null && role.getEnableStatus().shortValue() == 1)
+                        {
+                            enableRoleIds.add(role.getRoleId());
+                        }
+                    }
+                    enableRoleIdArray = enableRoleIds.toArray(new String[0]);
+                }
+                resultObjectVO.setData(functionService.queryListByRoleIdArray(enableRoleIdArray));
             }
 
 
