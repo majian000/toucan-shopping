@@ -220,7 +220,7 @@ public class AppController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_JSON,responseType=AdminAuth.RESPONSE_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/list/all",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAllList(HttpServletRequest request)

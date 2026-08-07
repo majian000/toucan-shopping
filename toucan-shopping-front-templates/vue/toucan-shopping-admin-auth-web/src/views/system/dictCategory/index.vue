@@ -39,7 +39,12 @@
         <el-table-column prop="code" label="编码" width="150" />
         <el-table-column prop="dictCategorySort" label="排序" width="80" align="center" />
         <el-table-column prop="remark" label="备注" min-width="180" show-overflow-tooltip />
-        <el-table-column prop="appName" label="关联应用" width="150" show-overflow-tooltip />
+        <el-table-column label="关联应用" width="150">
+          <template #default="{ row }">
+            <el-tag v-if="row.appName" size="small" type="">{{ row.appName }}</el-tag>
+            <span v-else style="color:#c0c4cc">--</span>
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.enableStatus === 1 ? 'success' : 'danger'" size="small">
@@ -85,6 +90,11 @@
         <el-form-item label="编码" prop="code">
           <el-input v-model="formData.code" placeholder="请输入编码" maxlength="100" />
         </el-form-item>
+        <el-form-item label="所属应用" prop="appCode">
+          <el-select v-model="formData.appCode" placeholder="请选择所属应用" style="width:100%">
+            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="排序" prop="dictCategorySort">
           <el-input-number v-model="formData.dictCategorySort" :min="0" placeholder="请输入排序" style="width:100%" />
         </el-form-item>
@@ -115,6 +125,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit } from '@element-plus/icons-vue'
 import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory, delBatchDictCategory } from '@/api/system/dictCategory'
+import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -141,11 +152,19 @@ async function fetchData() {
   }
 }
 
-onMounted(() => { fetchData() })
+onMounted(() => { fetchData(); loadApps() })
 
 const searchForm = reactive({ name: '', code: '', enableStatus: '', appCode: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
 function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; searchForm.appCode = ''; pagination.page = 1; fetchData() }
+
+const appOptions = ref([])
+async function loadApps() {
+  try {
+    const res = await listAllApps()
+    appOptions.value = res.data || []
+  } catch { /* ignore */ }
+}
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)
@@ -188,14 +207,15 @@ const submitLoading = ref(false)
 const formRef = ref(null)
 const dialogTitle = computed(() => isEdit.value ? '编辑分类' : '新增分类')
 
-const formData = reactive({ name: '', code: '', dictCategorySort: 0, remark: '', enableStatus: 1 })
+const formData = reactive({ name: '', code: '', appCode: '', dictCategorySort: 0, remark: '', enableStatus: 1 })
 const formRules = {
   name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  code: [{ required: true, message: '请输入编码', trigger: 'blur' }]
+  code: [{ required: true, message: '请输入编码', trigger: 'blur' }],
+  appCode: [{ required: true, message: '请选择所属应用', trigger: 'change' }]
 }
 
 function resetForm() {
-  formData.name = ''; formData.code = ''; formData.dictCategorySort = 0; formData.remark = ''; formData.enableStatus = 1
+  formData.name = ''; formData.code = ''; formData.appCode = ''; formData.dictCategorySort = 0; formData.remark = ''; formData.enableStatus = 1
 }
 
 function handleAdd() {
@@ -205,6 +225,7 @@ function handleAdd() {
 function handleEdit(row) {
   isEdit.value = true; editingId.value = row.id
   formData.name = row.name; formData.code = row.code
+  formData.appCode = row.appCode || ''
   formData.dictCategorySort = row.dictCategorySort || 0; formData.remark = row.remark || ''
   formData.enableStatus = row.enableStatus
   dialogVisible.value = true
@@ -216,10 +237,10 @@ async function handleSubmit() {
   submitLoading.value = true
   try {
     if (isEdit.value) {
-      await updateDictCategory({ id: editingId.value, name: formData.name, code: formData.code, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
+      await updateDictCategory({ id: editingId.value, name: formData.name, code: formData.code, appCode: formData.appCode, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
       ElMessage.success('编辑成功')
     } else {
-      await addDictCategory({ name: formData.name, code: formData.code, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
+      await addDictCategory({ name: formData.name, code: formData.code, appCode: formData.appCode, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
       ElMessage.success('新增成功')
     }
     dialogVisible.value = false; resetForm(); fetchData()
