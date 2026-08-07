@@ -21,5 +21,5 @@ export function delBatchDict(data) {
 }
 
 export function queryDictTree(data) {
-  return request({ url: '/dict/query/tree', method: 'post', data })
+  return request({ url: '/dict/tree/table/by/pid', method: 'post', data })
 }

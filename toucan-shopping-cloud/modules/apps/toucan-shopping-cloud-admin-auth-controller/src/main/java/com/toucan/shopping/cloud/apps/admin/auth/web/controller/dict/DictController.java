@@ -145,7 +145,7 @@ public class DictController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:tree-list"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, DictPageInfo pageInfo)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request,@RequestBody DictPageInfo pageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
