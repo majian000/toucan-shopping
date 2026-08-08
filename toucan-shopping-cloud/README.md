@@ -138,17 +138,23 @@
 
 ##### 应用层  
     
- | 服务名                                        | 端口号                 | 说明                                             |
- | --------------------------------------------- | -------------------- | ---------------------------------------------------|
- | apps/toucan-shopping-web                      | 8083                 | 商城C端界面                                        |
- | apps/toucan-shopping-admin                    | 8088                 | 商城管理界面                                       |
- | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
- | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
- | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
- | apps/toucan-shopping-seller-web               | 8101                 | 商户WEB端                                          |
- | apps/toucan-shopping-admin-auth-scheduler     | 9001                 | 权限中台任务调度                                   |
- | apps/toucan-shopping-message-web              | 8102                 | 消息WEB应用                                        |
- 
+ | 服务名                                        | 端口号                 | 说明       |
+ | --------------------------------------------- | -------------------- |----------|
+ | apps/toucan-shopping-web                      | 8083                 | 商城C端界面   |
+ | apps/toucan-shopping-admin                    | 8088                 | 商城管理界面   |
+ | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台接口   |
+ | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端  |
+ | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度 |
+ | apps/toucan-shopping-seller-web               | 8101                 | 商户WEB端   |
+ | apps/toucan-shopping-admin-auth-scheduler     | 9001                 | 权限中台任务调度 |
+ | apps/toucan-shopping-message-web              | 8102                 | 消息WEB应用  |
+
+
+##### 前端
+
+| 服务名                                                                | 端口号  | 说明                                             |
+|--------------------------------------------------------------------|------| ---------------------------------------------------|
+| toucan-shopping-front-templates/vue/toucan-shopping-admin-auth-web | 8198 | 权限中台界面                                       |
     
 ##### 启动步骤
 
