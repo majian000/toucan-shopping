@@ -30,7 +30,6 @@ export const menuConfig = [
         icon: 'Setting',
         permission: 'pms:system',
         children: [
-          { path: '/system/app/list', name: 'AppList', label: '应用管理', icon: 'Menu', permission: 'pms:system:app', component: () => import('@/views/system/app/index.vue') },
           { path: '/system/admin/list', name: 'AdminList', label: '账号管理', icon: 'User', permission: 'pms:system:user', component: () => import('@/views/system/admin/index.vue') },
           { path: '/system/role/list', name: 'RoleList', label: '角色管理', icon: 'UserFilled', permission: 'pms:system:role', component: () => import('@/views/system/role/index.vue') },
           { path: '/system/menu/list', name: 'MenuList', label: '菜单管理', icon: 'Menu', permission: 'pms:system:menu', component: () => import('@/views/system/menu/index.vue') },
