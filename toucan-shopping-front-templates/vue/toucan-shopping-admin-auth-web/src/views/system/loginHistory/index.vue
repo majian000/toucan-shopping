@@ -18,7 +18,7 @@
       <el-table :data="tableData" border stripe v-loading="loading" style="width:100%">
         <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="adminId" label="管理员ID" width="280" show-overflow-tooltip />
-        <el-table-column prop="loginIp" label="登录IP" width="150" />
+        <el-table-column prop="ip" label="登录IP" width="150" />
         <el-table-column prop="loginSrcType" label="登录来源" width="100" align="center">
           <template #default="{ row }">
             <el-tag size="small">{{ row.loginSrcType === 1 ? 'Web' : row.loginSrcType === 2 ? 'App' : '其他' }}</el-tag>

@@ -68,7 +68,8 @@
 
     <!-- 详情弹窗 -->
     <el-dialog v-model="detailVisible" title="请求详情" width="700px" destroy-on-close>
-      <el-descriptions :column="2" border>
+      <div v-loading="detailLoading">
+        <el-descriptions :column="2" border>
         <el-descriptions-item label="请求方式">{{ detail.method }}</el-descriptions-item>
         <el-descriptions-item label="请求地址">{{ detail.uri }}</el-descriptions-item>
         <el-descriptions-item label="IP">{{ detail.ip }}</el-descriptions-item>
@@ -80,6 +81,7 @@
         </el-descriptions-item>
         <el-descriptions-item label="备注" :span="2">{{ detail.remark || '--' }}</el-descriptions-item>
       </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -92,7 +94,7 @@ import { ref, reactive, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh, Delete, View } from '@element-plus/icons-vue'
-import { listOperateLog, delOperateLog } from '@/api/system/operateLog'
+import { listOperateLog, queryOperateLogDetail, delOperateLog } from '@/api/system/operateLog'
 
 const route = useRoute()
 
@@ -136,11 +138,19 @@ watch(() => pagination.size, () => { pagination.page = 1; fetchData() })
 
 // ========== 详情 ==========
 const detailVisible = ref(false)
+const detailLoading = ref(false)
 const detail = ref({})
 
-function handleView(row) {
-  detail.value = row
+async function handleView(row) {
+  detail.value = {}
   detailVisible.value = true
+  detailLoading.value = true
+  try {
+    const res = await queryOperateLogDetail(row.id)
+    detail.value = res.data || {}
+  } catch { } finally {
+    detailLoading.value = false
+  }
 }
 
 // ========== 删除 ==========
