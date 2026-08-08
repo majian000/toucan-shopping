@@ -4,31 +4,25 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,9 +35,9 @@ import java.util.Map;
 /**
  *  卖家店铺管理
  */
-@Controller
+@RestController
 @RequestMapping("/seller/shop")
-public class ShopController extends UIController {
+public class ShopController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -54,112 +48,24 @@ public class ShopController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private SellerShopServiceAPI sellerShopService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shop/listPage", functionServiceAPI);
-        return "pages/seller/shop/list.html";
-    }
+    @Autowired
+    private AdminServiceAPI adminServiceAPI;
 
 
-    /**
-     * 编辑店铺
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            SellerShop entity = new SellerShop();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<SellerShop> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),SellerShop.class);
-                    if(!CollectionUtils.isEmpty(entitys))
-                    {
-                        SellerShopVO sellerShopVO = new SellerShopVO();
-                        BeanUtils.copyProperties(sellerShopVO,entitys.get(0));
-                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
-                        {
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+"/"+sellerShopVO.getLogo());
-                        }
-                        request.setAttribute("model",sellerShopVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/shop/edit.html";
-    }
-
-    /**
-     * 查看店铺
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            SellerShop entity = new SellerShop();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = sellerShopService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<SellerShop> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),SellerShop.class);
-                    if(!CollectionUtils.isEmpty(entitys))
-                    {
-                        SellerShopVO sellerShopVO = new SellerShopVO();
-                        BeanUtils.copyProperties(sellerShopVO,entitys.get(0));
-                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
-                        {
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+"/"+sellerShopVO.getLogo());
-                        }
-                        request.setAttribute("model",sellerShopVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/shop/detail.html";
-    }
 
     /**
      * 查询列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, SellerShopPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody SellerShopPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -189,15 +95,25 @@ public class ShopController extends UIController {
                                 adminIdList.add(sellerShopVO.getUpdateAdminId());
                             }
                         }
-                        List<AdminVO> adminVOS = this.queryAdminListByAdminId(adminIdList);
-                        if(CollectionUtils.isNotEmpty(adminVOS)) {
-                            for (SellerShopVO sellerShopVO : list) {
-                                for (AdminVO adminVO : adminVOS) {
-                                    if (sellerShopVO.getCreateAdminId() != null && sellerShopVO.getCreateAdminId().equals(adminVO.getAdminId())) {
-                                        sellerShopVO.setCreateAdminName(adminVO.getUsername());
-                                    }
-                                    if (sellerShopVO.getUpdateAdminId() != null && sellerShopVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
-                                        sellerShopVO.setUpdateAdminName(adminVO.getUsername());
+                        if(CollectionUtils.isNotEmpty(adminIdList)) {
+                            String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                            adminIdList.toArray(createOrUpdateAdminIds);
+                            AdminVO queryAdminVO = new AdminVO();
+                            queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                            RequestJsonVO adminRequestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+                            ResultObjectVO adminResultVO = adminServiceAPI.queryListByEntity(adminRequestJsonVO);
+                            if (adminResultVO.isSuccess()) {
+                                List<AdminVO> adminVOS = adminResultVO.formatDataList(AdminVO.class);
+                                if (CollectionUtils.isNotEmpty(adminVOS)) {
+                                    for (SellerShopVO sellerShopVO : list) {
+                                        for (AdminVO adminVO : adminVOS) {
+                                            if (sellerShopVO.getCreateAdminId() != null && sellerShopVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                                sellerShopVO.setCreateAdminName(adminVO.getUsername());
+                                            }
+                                            if (sellerShopVO.getUpdateAdminId() != null && sellerShopVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                                sellerShopVO.setUpdateAdminName(adminVO.getUsername());
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -221,24 +137,20 @@ public class ShopController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody SellerShopVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            SellerShopVO entity =new SellerShopVO();
-            entity.setId(Long.parseLong(id));
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(entity);
@@ -260,14 +172,12 @@ public class ShopController extends UIController {
 
 
     /**
-     * 删除
-     * @param request
+     * 批量删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<SellerShopVO> sellerShopVOS)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:deletes:api"})
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(@RequestBody List<SellerShopVO> sellerShopVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -294,24 +204,20 @@ public class ShopController extends UIController {
 
     /**
      * 商铺 启用/禁用
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/disabled/enabled/{publicShopId}",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO disabledEnabledByPublicShopId(HttpServletRequest request,  @PathVariable String publicShopId)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:api:disabledEnabled"})
+    @RequestMapping(value = "/disabled/enabled",method = RequestMethod.POST)
+    public ResultObjectVO disabledEnabledByPublicShopId(@RequestBody SellerShopVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(publicShopId))
+            if(StringUtils.isEmpty(sellerShopVO.getPublicShopId()))
             {
                 resultObjectVO.setMsg("请传入公开店铺ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            SellerShopVO sellerShopVO =new SellerShopVO();
-            sellerShopVO.setPublicShopId(publicShopId);
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,sellerShopVO);
             resultObjectVO = sellerShopService.disabledEnabled(requestVo);
@@ -327,9 +233,8 @@ public class ShopController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:uploadLog:api"})
     @RequestMapping("/upload/logo")
-    @ResponseBody
     public ResultObjectVO  uploadLogo(@RequestParam("file") MultipartFile file, @RequestParam("publicShopId")String publicShopId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -370,15 +275,15 @@ public class ShopController extends UIController {
 
 
 
+
     /**
      * 修改
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody SellerShopVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody SellerShopVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -398,4 +303,3 @@ public class ShopController extends UIController {
 
 
 }
-

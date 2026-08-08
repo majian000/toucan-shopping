@@ -1,12 +1,10 @@
 package com.toucan.shopping.cloud.apps.admin.controller.colorTable;
 
 
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.ColorTableServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -15,8 +13,6 @@ import com.toucan.shopping.modules.color.table.page.ColorTablePageInfo;
 import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.content.entity.Banner;
@@ -26,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,9 +34,9 @@ import java.util.Map;
 /**
  * 颜色表管理
  */
-@Controller
+@RestController
 @RequestMapping("/colorTable")
-public class ColorTableController extends UIController {
+public class ColorTableController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,58 +47,36 @@ public class ColorTableController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private ColorTableServiceAPI colorTableService;
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/colorTable/listPage", functionServiceAPI);
-        return "pages/colorTable/list.html";
-    }
-
-
 
     /**
      * 查询列表
-     * @param pageInfo
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ColorTablePageInfo pageInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:colorTable:list:api"})
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public TableVO list(HttpServletRequest request, ColorTablePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             ResultObjectVO resultObjectVO = colorTableService.queryListPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
-            {
-                if(resultObjectVO.getData()!=null)
-                {
-                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<ColorTableVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ColorTableVO.class);
+            if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
+                if (resultObjectVO.getData() != null) {
+                    Map<String, Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
+                    List<ColorTableVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ColorTableVO.class);
 
-
-                    //查询创建人和修改人
-                    List<String> adminIdList = new ArrayList<String>();
-                    for(int i=0;i<list.size();i++)
-                    {
+                    // 查询创建人和修改人
+                    List<String> adminIdList = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
                         ColorTableVO colorTableVO = list.get(i);
-                        if(colorTableVO.getCreateAdminId()!=null) {
+                        if (colorTableVO.getCreateAdminId() != null) {
                             adminIdList.add(colorTableVO.getCreateAdminId());
                         }
-                        if(colorTableVO.getUpdateAdminId()!=null)
-                        {
+                        if (colorTableVO.getUpdateAdminId() != null) {
                             adminIdList.add(colorTableVO.getUpdateAdminId());
                         }
                     }
@@ -111,65 +84,91 @@ public class ColorTableController extends UIController {
                     adminIdList.toArray(createOrUpdateAdminIds);
                     AdminVO queryAdminVO = new AdminVO();
                     queryAdminVO.setAdminIds(createOrUpdateAdminIds);
-                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
                     resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
-                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
-                        if(!CollectionUtils.isEmpty(adminVOS))
-                        {
-                            for(ColorTableVO colorTableVO:list)
-                            {
-                                for(AdminVO adminVO:adminVOS)
-                                {
-                                    if(colorTableVO.getCreateAdminId()!=null&&colorTableVO.getCreateAdminId().equals(adminVO.getAdminId()))
-                                    {
+                    if (resultObjectVO.isSuccess()) {
+                        List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+                        if (!CollectionUtils.isEmpty(adminVOS)) {
+                            for (ColorTableVO colorTableVO : list) {
+                                for (AdminVO adminVO : adminVOS) {
+                                    if (colorTableVO.getCreateAdminId() != null && colorTableVO.getCreateAdminId().equals(adminVO.getAdminId())) {
                                         colorTableVO.setCreateAdminName(adminVO.getUsername());
                                     }
-                                    if(colorTableVO.getUpdateAdminId()!=null&&colorTableVO.getUpdateAdminId().equals(adminVO.getAdminId()))
-                                    {
+                                    if (colorTableVO.getUpdateAdminId() != null && colorTableVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
                                         colorTableVO.setUpdateAdminName(adminVO.getUsername());
                                     }
                                 }
                             }
                         }
                     }
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List)list);
+                    if (tableVO.getCount() > 0) {
+                        tableVO.setData((List) list);
                     }
                 }
             }
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return tableVO;
     }
 
 
+    /**
+     * 保存
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:colorTable:save:api"})
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColorTableVO entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = colorTableService.save(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:colorTable:update:api"})
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColorTableVO entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = colorTableService.update(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 删除
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:colorTable:delete:api"})
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Banner banner) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
-            {
+            if (banner.getId() == null) {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Banner banner =new Banner();
-            banner.setId(Long.parseLong(id));
             banner.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(banner);
@@ -177,31 +176,24 @@ public class ColorTableController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
             resultObjectVO = colorTableService.deleteById(requestVo);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-
     /**
-     * 删除
-     * @param request
-     * @return
+     * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ColorTableVO> colorTableVOS)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:colorTable:deletes:api"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ColorTableVO> colorTableVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(CollectionUtils.isEmpty(colorTableVOS))
-            {
+            if (CollectionUtils.isEmpty(colorTableVOS)) {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
@@ -211,112 +203,12 @@ public class ColorTableController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
             resultObjectVO = colorTableService.deleteByIds(requestVo);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
-
-
-
-
-    /**
-     * 保存
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColorTableVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = colorTableService.save(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ColorTableVO colorTableVO = new ColorTableVO();
-            colorTableVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, colorTableVO);
-            ResultObjectVO resultObjectVO = colorTableService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<ColorTableVO> colorTableVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ColorTableVO.class);
-                    if(!CollectionUtils.isEmpty(colorTableVOS))
-                    {
-                        colorTableVO = colorTableVOS.get(0);
-                        request.setAttribute("model",colorTableVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/colorTable/edit.html";
-    }
-
-
-    /**
-     * 修改
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody ColorTableVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-            entity.setUpdateDate(new Date());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = colorTableService.update(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        return "pages/colorTable/add.html";
-    }
-
-
 
 }
-

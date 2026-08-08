@@ -1,31 +1,27 @@
 package com.toucan.shopping.cloud.apps.admin.controller.banner;
 
 
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
-import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.*;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerAreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
-import com.toucan.shopping.modules.admin.auth.vo.*;
-import com.toucan.shopping.modules.common.util.ImageUtils;
-import com.toucan.shopping.modules.content.entity.Banner;
-import com.toucan.shopping.modules.content.entity.BannerArea;
-import com.toucan.shopping.modules.content.page.BannerPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
-import com.toucan.shopping.modules.content.vo.BannerAreaVO;
-import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.DateUtils;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.content.entity.Banner;
+import com.toucan.shopping.modules.content.entity.BannerArea;
+import com.toucan.shopping.modules.content.page.BannerPageInfo;
+import com.toucan.shopping.modules.content.vo.BannerAreaVO;
+import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,9 +41,9 @@ import java.util.stream.Collectors;
 /**
  * 轮播图管理
  */
-@Controller
+@RestController
 @RequestMapping("/banner")
-public class BannerController extends UIController {
+public class BannerController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,9 +52,6 @@ public class BannerController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private BannerAreaServiceAPI bannerAreaService;
@@ -76,26 +68,12 @@ public class BannerController extends UIController {
     @Autowired
     private AdminServiceAPI adminServiceAPI;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/banner/listPage", functionServiceAPI);
-
-        return "pages/banner/list.html";
-    }
-
-
 
     /**
      * 查询列表
-     * @param pageInfo
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:list:api"})
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, BannerPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
@@ -106,12 +84,11 @@ public class BannerController extends UIController {
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<BannerVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BannerVO.class);
 
-
-                    //查询创建人和修改人
+                    // 查询创建人和修改人
                     List<String> adminIdList = new ArrayList<String>();
                     for(int i=0;i<list.size();i++)
                     {
@@ -172,45 +149,85 @@ public class BannerController extends UIController {
     }
 
 
-
     /**
-     * 删除
-     * @param request
-     * @return
+     * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:save"})
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody BannerVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = bannerService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:update:api"})
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody BannerVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = bannerService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:delete:api"})
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Banner banner)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(banner.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Banner banner =new Banner();
-            banner.setId(Long.parseLong(id));
             banner.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
             String entityJson = JSONObject.toJSONString(banner);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            //先查询出实体对象,后面删除文件服务器的资源
+            // 先查询出实体对象,后面删除文件服务器的资源
             resultObjectVO = bannerService.findById(requestVo);
             List<BannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BannerVO.class);
             if(resultObjectVO.isSuccess()) {
                 resultObjectVO = bannerService.deleteById(requestVo);
                 if(!CollectionUtils.isEmpty(bannerVOS))
                 {
-                    banner = bannerVOS.get(0);
-                    int ret = imageUploadService.deleteFile(banner.getImgPath());
+                    Banner b = bannerVOS.get(0);
+                    int ret = imageUploadService.deleteFile(b.getImgPath());
                     if(ret!=0)
                     {
-                        logger.warn("删除服务器中关联图片失败 {} ",banner.getImgPath());
+                        logger.warn("删除服务器中关联图片失败 {} ",b.getImgPath());
                         resultObjectVO.setMsg("删除关联图片资源失败");
                         resultObjectVO.setCode(TableVO.FAILD);
                     }
@@ -226,15 +243,11 @@ public class BannerController extends UIController {
     }
 
 
-
     /**
-     * 删除
-     * @param request
-     * @return
+     * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:deletes:api"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -274,13 +287,10 @@ public class BannerController extends UIController {
 
 
     /**
-     * 刷新redis缓存
-     * @param request
-     * @return
+     * 刷新PC首页缓存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/flush/index/cache",method = RequestMethod.POST)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:flush:cache:api"})
+    @RequestMapping(value = "/flush/index/cache", method = RequestMethod.POST)
     public ResultObjectVO flushIndexCache(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -305,14 +315,12 @@ public class BannerController extends UIController {
         return resultObjectVO;
     }
 
+
     /**
      * 清空PC首页缓存
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/clear/index/cache",method = RequestMethod.POST)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:clear:index:cache:api"})
+    @RequestMapping(value = "/clear/index/cache", method = RequestMethod.POST)
     public ResultObjectVO clearIndexCache(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -330,10 +338,12 @@ public class BannerController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    /**
+     * 上传图片
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:upload:img"})
     @RequestMapping("/upload/img")
-    @ResponseBody
-    public ResultObjectVO  uploadImg(@RequestParam("file") MultipartFile file)
+    public ResultObjectVO uploadImg(@RequestParam("file") MultipartFile file)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
@@ -370,173 +380,15 @@ public class BannerController extends UIController {
     }
 
 
-
-
-    /**
-     * 保存
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody BannerVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = bannerService.save(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-    public void setTreeNodeSelect(AtomicLong id,AreaTreeVO parentTreeVO,List<AreaTreeVO> areaTreeVOList,List<BannerArea> bannerAreas)
-    {
-        for(AreaTreeVO areaTreeVO:areaTreeVOList)
-        {
-            areaTreeVO.setId(id.incrementAndGet());
-            areaTreeVO.setNodeId(areaTreeVO.getId());
-            areaTreeVO.setPid(parentTreeVO.getId());
-            areaTreeVO.setParentId(areaTreeVO.getPid());
-            for(BannerArea bannerArea:bannerAreas) {
-                if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
-                    //设置节点被选中
-                    areaTreeVO.getState().setChecked(true);
-                    break;
-                }
-            }
-            if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
-            {
-                setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(),bannerAreas);
-            }
-        }
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            BannerVO banner = new BannerVO();
-            banner.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = bannerService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<BannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BannerVO.class);
-                    if(!CollectionUtils.isEmpty(bannerVOS))
-                    {
-                        banner = bannerVOS.get(0);
-                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
-                        if(banner.getStartShowDate()!=null) {
-                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        if(banner.getEndShowDate()!=null) {
-                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        if(!CollectionUtils.isEmpty(banner.getBannerAreas())) {
-                            String[] areaCodeArray = new String[banner.getBannerAreas().size()];
-                            for(int i=0;i<banner.getBannerAreas().size();i++)
-                            {
-                                areaCodeArray[i]= banner.getBannerAreas().get(i).getAreaCode();
-                            }
-                            AreaVO queryArea = new AreaVO();
-                            queryArea.setCodeArray(areaCodeArray);
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArea);
-
-                            resultObjectVO = areaService.findByCodes(requestJsonVO);
-                            if(resultObjectVO.isSuccess()) {
-                                List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
-                                //设置这个轮播图下关联的所有地区
-                                if(!CollectionUtils.isEmpty(areaVOS))
-                                {
-                                    int areaVoSize = areaVOS.size();
-                                    StringBuilder areaNamesBuilder= new StringBuilder();
-                                    StringBuilder areaCodesBuilder = new StringBuilder();
-                                    for(int i=0;i<areaVoSize;i++)
-                                    {
-                                        AreaVO areaVO = areaVOS.get(i);
-                                        areaNamesBuilder.append(areaVO.getName());
-                                        areaCodesBuilder.append(areaVO.getCode());
-
-                                        if(i+1<areaVoSize) {
-                                            areaNamesBuilder.append(",");
-                                            areaCodesBuilder.append(",");
-                                        }
-                                    }
-                                    banner.setAreaCodes(areaCodesBuilder.toString());
-                                    banner.setAreaNames(areaNamesBuilder.toString());
-                                }
-                            }
-                        }
-
-                        request.setAttribute("model",banner);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/banner/edit.html";
-    }
-
-
-    /**
-     * 修改
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody BannerVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-            entity.setUpdateDate(new Date());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = bannerService.update(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
     /**
      * 查询地区树
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/area/tree",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryAreaTree(HttpServletRequest request,String bannerId)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:banner:area:tree:api"})
+    @RequestMapping(value = "/query/area/tree", method = RequestMethod.POST)
+    public ResultObjectVO queryAreaTree(HttpServletRequest request, String bannerId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询地区树
             AreaVO query = new AreaVO();
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
@@ -546,7 +398,7 @@ public class BannerController extends UIController {
             {
                 List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
 
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
+                // 重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
                 AtomicLong id = new AtomicLong();
                 BannerAreaVO queryBannerAreaVo = new BannerAreaVO();
                 if(StringUtils.isNotEmpty(bannerId)) {
@@ -558,20 +410,19 @@ public class BannerController extends UIController {
                 List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {
-                    //只保留省市节点
+                    // 只保留省市节点
                     AreaTreeVO rootTree = areaTreeVOList.get(0);
                     if(!CollectionUtils.isEmpty(rootTree.getChildren())) {
                         List<AreaTreeVO> rootChilren = JSONArray.parseArray(JSONObject.toJSONString(rootTree.getChildren()), AreaTreeVO.class);
                         for (AreaTreeVO areaTreeVO : rootChilren) {
-                            //直辖市
+                            // 直辖市
                             if (areaTreeVO.getIsMunicipality().shortValue() == 1) {
                                 areaTreeVO.setChildren(null);
-                            } else { //省
-                                //遍历所有市节点,删除区县节点
+                            } else { // 省
+                                // 遍历所有市节点,删除区县节点
                                 if (!CollectionUtils.isEmpty(areaTreeVO.getChildren())) {
                                     List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()), AreaTreeVO.class);
                                     for (AreaVO cityTreeVO : chilren) {
-                                        //删除区县节点
                                         cityTreeVO.setChildren(null);
                                     }
                                     areaTreeVO.setChildren(chilren);
@@ -589,7 +440,6 @@ public class BannerController extends UIController {
                             areaTreeVO.setText(areaTreeVO.getTitle());
                             for(BannerArea bannerArea:bannerAreas) {
                                 if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
-                                    //设置节点被选中
                                     areaTreeVO.getState().setChecked(true);
                                 }
                             }
@@ -610,15 +460,28 @@ public class BannerController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
+    /**
+     * 递归设置树节点选中状态
+     */
+    private void setTreeNodeSelect(AtomicLong id, AreaTreeVO parentTreeVO, List<AreaTreeVO> areaTreeVOList, List<BannerArea> bannerAreas)
     {
-
-        return "pages/banner/add.html";
+        for(AreaTreeVO areaTreeVO:areaTreeVOList)
+        {
+            areaTreeVO.setId(id.incrementAndGet());
+            areaTreeVO.setNodeId(areaTreeVO.getId());
+            areaTreeVO.setPid(parentTreeVO.getId());
+            areaTreeVO.setParentId(areaTreeVO.getPid());
+            for(BannerArea bannerArea:bannerAreas) {
+                if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
+                    areaTreeVO.getState().setChecked(true);
+                    break;
+                }
+            }
+            if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(),bannerAreas);
+            }
+        }
     }
 
-
-
 }
-

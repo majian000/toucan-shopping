@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.message;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.MessageTypeServiceAPI;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -24,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +31,9 @@ import java.util.*;
 /**
  * 用户消息管理
  */
-@Controller
+@RestController
 @RequestMapping("/message/messageUser")
-public class MessageUserController extends UIController {
+public class MessageUserController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,9 +43,6 @@ public class MessageUserController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private MessageUserServiceAPI messageUserService;
@@ -77,73 +71,13 @@ public class MessageUserController extends UIController {
         }
     }
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/message/messageUser/listPage", functionServiceAPI);
-        initMessageTypes(request);
-        return "pages/message/messageUser/list.html";
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        initMessageTypes(request);
-        return "pages/message/messageUser/add.html";
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/selectUserListPage",method = RequestMethod.GET)
-    public String selectUserListPage(HttpServletRequest request)
-    {
-        return "pages/message/messageUser/user_list.html";
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            MessageUserVO queryEntity = new MessageUserVO();
-            queryEntity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultObjectVO resultObjectVO = messageUserService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<MessageUserVO> messageTypeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),MessageUserVO.class);
-                    if(!CollectionUtils.isEmpty(messageTypeVOS))
-                    {
-                        request.setAttribute("model",messageTypeVOS.get(0));
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        initMessageTypes(request);
-        return "pages/message/messageUser/edit.html";
-    }
-
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:delete:api"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -164,7 +98,7 @@ public class MessageUserController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -177,10 +111,9 @@ public class MessageUserController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody MessageUserVO entity)
+    public ResultObjectVO update(@RequestBody MessageUserVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -202,10 +135,9 @@ public class MessageUserController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:add:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody MessageUserVO entity)
+    public ResultObjectVO save(@RequestBody MessageUserVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -254,10 +186,9 @@ public class MessageUserController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:list:page"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, MessageUserPageInfo pageInfo)
+    public TableVO list(MessageUserPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -288,4 +219,3 @@ public class MessageUserController extends UIController {
 
 
 }
-

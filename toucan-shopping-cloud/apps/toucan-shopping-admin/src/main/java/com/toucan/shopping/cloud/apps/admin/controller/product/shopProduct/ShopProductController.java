@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.shopProduct;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.*;
@@ -36,19 +34,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 店铺商品管理
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/product/shopProduct")
-public class ShopProductController extends UIController {
+public class ShopProductController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,9 +54,6 @@ public class ShopProductController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private CategoryServiceAPI categoryService;
@@ -88,17 +81,6 @@ public class ShopProductController extends UIController {
 
     @Autowired
     private IdGenerator idGenerator;
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/shopProduct/listPage", functionServiceAPI);
-        request.setAttribute("pcProductPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductPreviewPage());
-        return "pages/product/shopProduct/list.html";
-    }
-
 
 
 
@@ -362,10 +344,9 @@ public class ShopProductController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO list(@RequestBody ShopProductPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -507,10 +488,9 @@ public class ShopProductController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTree(HttpServletRequest request)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:api"})
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -528,15 +508,14 @@ public class ShopProductController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:pid:api"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            query.setParentId(id);
+            query.setParentId(categoryVO.getParentId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -568,170 +547,14 @@ public class ShopProductController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ShopProductVO shopProductVO = new ShopProductVO();
-            shopProductVO.setId(id);;
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            ResultObjectVO resultObjectVO = shopProductService.queryByShopProductId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
-                if(CollectionUtils.isNotEmpty(list)) {
-                    Long[] categoryIds = new Long[list.size()];
-                    Long[] shopCategoryIds = new Long[list.size()];
-                    List<Long> brandIdList = new LinkedList<>();
-                    List<Long> shopIdList =new LinkedList<>();
-
-                    boolean brandExists=false;
-                    boolean shopCategoryExists=false;
-                    boolean shopExists=false;
-                    for(int i=0;i<list.size();i++)
-                    {
-                        ShopProductVO shopProductVOTmp = list.get(i);
-                        categoryIds[i] = shopProductVOTmp.getCategoryId();
-
-                        //设置品牌ID
-                        brandExists=false;
-                        for(Long brandId:brandIdList)
-                        {
-                            if(shopProductVOTmp.getBrandId()!=null&&brandId!=null
-                                    &&brandId.longValue()==shopProductVOTmp.getBrandId().longValue())
-                            {
-                                brandExists=true;
-                                break;
-                            }
-
-                        }
-                        if(!brandExists) {
-                            if(shopProductVOTmp.getBrandId()!=null) {
-                                brandIdList.add(shopProductVOTmp.getBrandId());
-                            }
-                        }
-
-
-                        //设置店铺分类ID
-                        shopCategoryExists=false;
-                        for(int sci=0;sci<shopCategoryIds.length;sci++)
-                        {
-                            Long shopCategoryId = shopCategoryIds[sci];
-                            if(shopProductVOTmp.getShopCategoryId()!=null&&shopCategoryId!=null
-                                    &&shopCategoryId.longValue()==shopProductVOTmp.getShopCategoryId().longValue())
-                            {
-                                shopCategoryExists=true;
-                                break;
-                            }
-
-                        }
-                        if(!shopCategoryExists) {
-                            if(shopProductVOTmp.getShopCategoryId()!=null) {
-                                shopCategoryIds[i] = shopProductVOTmp.getShopCategoryId();
-                            }
-                        }
-
-
-
-                        //设置店铺ID
-                        shopExists=false;
-                        for(Long shopId:shopIdList)
-                        {
-                            if(shopProductVOTmp.getShopId()!=null&&shopId!=null
-                                    &&shopId.longValue()==shopProductVOTmp.getShopId().longValue())
-                            {
-                                shopExists=true;
-                                break;
-                            }
-
-                        }
-                        if(!shopExists) {
-                            if(shopProductVOTmp.getShopId()!=null) {
-                                shopIdList.add(shopProductVOTmp.getShopId());
-                            }
-                        }
-
-                    }
-
-
-                    //查询类别名称
-                    this.queryCategory(list,categoryIds);
-
-
-                    //查询店铺类别名称
-                    this.queryShopCategory(list,shopCategoryIds);
-
-                    //查询品牌名称
-                    this.queryBrand(list,brandIdList);
-
-                    //查询店铺名称
-                    this.queryShop(list,shopIdList);
-
-
-
-                    for(ShopProductVO shopProductVOTmp:list)
-                    {
-                        if(shopProductVOTmp.getMainPhotoFilePath()!=null) {
-                            shopProductVOTmp.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVOTmp.getMainPhotoFilePath());
-                        }
-
-                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getPreviewPhotoPaths())) {
-                            shopProductVOTmp.setHttpPreviewPhotoPaths(new LinkedList<>());
-                            for(String previewPhotoPath:shopProductVOTmp.getPreviewPhotoPaths())
-                            {
-                                shopProductVOTmp.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
-                            }
-                        }
-
-                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getProductSkuVOList()))
-                        {
-                            shopProductVOTmp.setHttpSkuPreviewPhotoPaths(new LinkedList<>());
-                            for(ProductSkuVO productSkuVO:shopProductVOTmp.getProductSkuVOList())
-                            {
-                                if(StringUtils.isNotEmpty(productSkuVO.getProductPreviewPath())) {
-                                    shopProductVOTmp.getHttpSkuPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
-                                }
-                            }
-                        }
-                    }
-
-
-                    if(list.get(0).getShopProductDescriptionVO()!=null) {
-                        if(CollectionUtils.isNotEmpty(list.get(0).getShopProductDescriptionVO().getProductDescriptionImgs()))
-                        {
-                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:list.get(0).getShopProductDescriptionVO().getProductDescriptionImgs()) {
-                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
-                            }
-                            list.get(0).setShopProductDescriptionJson(JSONObject.toJSONString(list.get(0).getShopProductDescriptionVO()));
-                        }
-                    }
-
-                    request.setAttribute("model", list.get(0));
-                }else{
-                    request.setAttribute("model", new ShopProductVO());
-                }
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("model", new ShopProductVO());
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/shopProduct/detail.html";
-    }
-
-
-
-
     /**
      * 查询SKU列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shop:product:query:sku:list:api"})
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO queryShopProductSkuList(HttpServletRequest request, ProductSkuPageInfo pageInfo)
+    public TableVO queryShopProductSkuList(@RequestBody ProductSkuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -785,10 +608,9 @@ public class ShopProductController extends UIController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:shelves:api"})
     @RequestMapping(value = "/shelves",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    public ResultObjectVO shelves(@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -824,10 +646,9 @@ public class ShopProductController extends UIController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shopProduct:flushSearch:api"})
     @RequestMapping(value = "/flush/search",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO flushSearch(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    public ResultObjectVO flushSearch(@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -864,4 +685,3 @@ public class ShopProductController extends UIController {
 
 
 }
-

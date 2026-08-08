@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -15,7 +13,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.layui.constant.TableButtons;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -27,19 +24,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/user")
-public class UserController extends UIController {
+public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -59,212 +54,13 @@ public class UserController extends UIController {
     private SkylarkLock skylarkLock;
 
 
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/listPage", functionServiceAPI);
-
-        this.initRowMoreButtons(request, TableButtons.TABLE_MORE_BUTTON);
-
-        return "pages/user/db/list.html";
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/registPage",method = RequestMethod.GET)
-    public String registPage()
-    {
-        return "pages/user/db/regist.html";
-    }
-
-
-    /**
-     * 手机号列表页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/mobilePhoneListPage/{userMainId}",method = RequestMethod.GET)
-    public String mobilePhoneListPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/mobilePhoneListPage", functionServiceAPI);
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/mobile_phone_list.html";
-    }
-
-    /**
-     * 邮箱列表
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/emailListPage/{userMainId}",method = RequestMethod.GET)
-    public String emailListPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/emailListPage", functionServiceAPI);
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/email_list.html";
-    }
-
-    /**
-     * 用户名列表
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/userNameListPage/{userMainId}",method = RequestMethod.GET)
-    public String userNameListPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/userNameListPage", functionServiceAPI);
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/username_list.html";
-    }
-
-    /**
-     * 关联手机号页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/connectMobilePhonePage/{userMainId}",method = RequestMethod.GET)
-    public String connectMobilePhonePage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/connect_mobile_phone.html";
-    }
-
-
-    /**
-     * 关联邮箱页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/connectEmailPage/{userMainId}",method = RequestMethod.GET)
-    public String connectEmailPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/connect_email.html";
-    }
-
-
-    /**
-     * 跳转到修改用户资料页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/update/detail/page/{userMainId}",method = RequestMethod.GET)
-    public String updateDetailPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        UserVO userVO = new UserVO();
-        try {
-            userVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                userVO =   resultObjectVO.formatData(UserVO.class);
-                if(userVO.getHeadSculpture()!=null) {
-                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
-                }
-                if(userVO.getIdcardImg1()!=null)
-                {
-                    userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
-                }
-                if(userVO.getIdcardImg2()!=null)
-                {
-                    userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
-                }
-                request.setAttribute("model", userVO);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("model", userVO);
-        }
-        return "pages/user/db/update_detail.html";
-    }
-
-
-    /**
-     * 查看详情页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detail/page/{userMainId}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        UserVO userVO = new UserVO();
-        try {
-            userVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = userService.findByUserMainId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                userVO =  resultObjectVO.formatData(UserVO.class);
-                if(userVO.getHeadSculpture()!=null) {
-                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
-                }
-
-                if(userVO.getIdcardImg1()!=null)
-                {
-                    userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
-                }
-                if(userVO.getIdcardImg2()!=null)
-                {
-                    userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
-                }
-                request.setAttribute("model", userVO);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("model", userVO);
-        }
-        return "pages/user/db/detail.html";
-    }
-
-
-    /**
-     * 关联用户名页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/connectUserNamePage/{userMainId}",method = RequestMethod.GET)
-    public String connectUserNamePage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/connect_username.html";
-    }
-
-
-    /**
-     * 重置密码页
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/resetPasswordPage/{userMainId}",method = RequestMethod.GET)
-    public String resetPasswordPage(HttpServletRequest request,@PathVariable String userMainId)
-    {
-        request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/reset_password.html";
-    }
-
-
     /**
      * 查询列表
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
     public TableVO list(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
@@ -313,9 +109,8 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:mobile:phone:list"})
     @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
-    @ResponseBody
     public TableVO mobilePhoneList(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
@@ -351,9 +146,8 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:email:list"})
     @RequestMapping(value = "/email/list",method = RequestMethod.POST)
-    @ResponseBody
     public TableVO emailList(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
@@ -388,9 +182,8 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:username:list"})
     @RequestMapping(value = "/username/list",method = RequestMethod.POST)
-    @ResponseBody
     public TableVO usernameList(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
@@ -423,9 +216,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/regist")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:regist"})
+    @RequestMapping(value="/regist", method = RequestMethod.POST)
     public ResultObjectVO regist(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -565,9 +357,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/update/detail")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:update:detail:api"})
+    @RequestMapping(value="/update/detail", method = RequestMethod.POST)
     public ResultObjectVO updateDetail(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -666,9 +457,8 @@ public class UserController extends UIController {
      * @param userMainId
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:flush:cache:api"})
     @RequestMapping(value="/flush/cache/{userMainId}",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO flushCache(@PathVariable String userMainId){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(StringUtils.isEmpty(userMainId))
@@ -703,9 +493,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/reset/password")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:reset:password:api"})
+    @RequestMapping(value="/reset/password", method = RequestMethod.POST)
     public ResultObjectVO resetPassword(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -782,9 +571,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/connect/mobile/phone")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:mobile:phone:api:connectMobilePhone"})
+    @RequestMapping(value="/connect/mobile/phone", method = RequestMethod.POST)
     public ResultObjectVO connectMobilePhone(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -844,9 +632,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/connect/email")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:email:api:email"})
+    @RequestMapping(value="/connect/email", method = RequestMethod.POST)
     public ResultObjectVO connectEmail(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -906,9 +693,8 @@ public class UserController extends UIController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/connect/username")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:username:api:username"})
+    @RequestMapping(value="/connect/username", method = RequestMethod.POST)
     public ResultObjectVO connectUsername(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
@@ -970,10 +756,9 @@ public class UserController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:disabled:enabled"})
     @RequestMapping(value = "/disabled/enabled/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO disabledById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO disabledById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -1005,9 +790,8 @@ public class UserController extends UIController {
      * 手机号 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:mobile:phone:list:disabled:enabled:api"})
     @RequestMapping(value = "/mobile/phone/disabled/enabled",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO disabledEnabledMobilePhone(@RequestBody UserMobilePhoneVO userMobilePhoneVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1037,9 +821,8 @@ public class UserController extends UIController {
      * 邮箱 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:email:list:disabled:enabled:api"})
     @RequestMapping(value = "/email/disabled/enabled",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO disabledEnabledEmail(@RequestBody UserEmailVO userEmailVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1069,9 +852,8 @@ public class UserController extends UIController {
      * 用户名 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:username:list:disabled:enabled:api"})
     @RequestMapping(value = "/username/disabled/enabled",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody UserUserNameVO userUserNameVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1100,10 +882,9 @@ public class UserController extends UIController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:disabled:ids"})
     @RequestMapping(value = "/disabled/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO disabledByIds(HttpServletRequest request, @RequestBody List<UserVO> userVOS)
+    public ResultObjectVO disabledByIds(@RequestBody List<UserVO> userVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -1136,9 +917,8 @@ public class UserController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping("/upload/head/sculpture")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:head:sculpture"})
+    @RequestMapping(value = "/upload/head/sculpture", method = RequestMethod.POST)
     public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1197,9 +977,8 @@ public class UserController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping("/upload/idcardImg1")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:idcardimg1"})
+    @RequestMapping(value = "/upload/idcardImg1", method = RequestMethod.POST)
     public ResultObjectVO  uploadIdcardImg1(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -1255,9 +1034,8 @@ public class UserController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping("/upload/idcardImg2")
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:idcardimg2"})
+    @RequestMapping(value = "/upload/idcardImg2", method = RequestMethod.POST)
     public ResultObjectVO  uploadIdcardImg2(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

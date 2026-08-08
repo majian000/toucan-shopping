@@ -12,16 +12,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.stream.Collectors;
 
 
-@Controller
+@RestController
 @RequestMapping("/common")
 public class ImgUploadController {
 
@@ -31,41 +30,35 @@ public class ImgUploadController {
     private ImageUploadService imageUploadService;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:common:img:upload:api"})
     @RequestMapping("/img/upload")
-    @ResponseBody
-    public ResultObjectVO imgUpload(@RequestParam("file") MultipartFile file)
-    {
+    public ResultObjectVO imgUpload(@RequestParam("file") MultipartFile file) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
-        try{
+        try {
             String fileName = file.getOriginalFilename();
-            if(!ImageUtils.isImage(fileName))
-            {
-                throw new RuntimeException("请上传图片格式("+ImageUtils.imageExtScope.stream().collect(Collectors.joining("、"))+")");
+            if (!ImageUtils.isImage(fileName)) {
+                throw new RuntimeException("请上传图片格式(" + ImageUtils.imageExtScope.stream().collect(Collectors.joining("、")) + ")");
             }
             String fileExt = ".jpg";
-            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
-            {
-                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+            if (StringUtils.isNotEmpty(fileName) && fileName.indexOf(".") != -1) {
+                fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 
             }
-            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+            String groupPath = imageUploadService.uploadFile(file.getBytes(), fileExt);
 
-            if(StringUtils.isEmpty(groupPath))
-            {
+            if (StringUtils.isEmpty(groupPath)) {
                 throw new RuntimeException("图片上传失败");
             }
 
-            ImgUploadVO imgUploadVO = new ImgUploadVO(groupPath,imageUploadService.getImageHttpPrefix()+groupPath);
+            ImgUploadVO imgUploadVO = new ImgUploadVO(groupPath, imageUploadService.getImageHttpPrefix() + groupPath);
 
             resultObjectVO.setData(imgUploadVO);
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setCode(1);
             resultObjectVO.setMsg("图片上传失败");
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
 
         return resultObjectVO;

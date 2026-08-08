@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserHeadSculptureApproveServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
@@ -16,8 +14,6 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -26,16 +22,13 @@ import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserHeadSculptureApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserHeadSculptureApproveVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +37,9 @@ import java.util.UUID;
 /**
  * 用户头像审核管理
  */
-@Controller
+@RestController
 @RequestMapping("/user/head/sculpture/approve")
-public class UserHeadSculptureApproveController extends UIController {
+public class UserHeadSculptureApproveController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,9 +50,6 @@ public class UserHeadSculptureApproveController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private UserHeadSculptureApproveServiceAPI userHeadSculptureApproveService;
@@ -78,26 +68,15 @@ public class UserHeadSculptureApproveController extends UIController {
     private IdGenerator idGenerator;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/head/sculpture/approve/listPage", functionServiceAPI);
-        return "pages/user/headSculptureApprove/list.html";
-    }
-
-
 
     /**
      * 查询列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, UserHeadSculptureApprovePageInfo pageInfo)
+    public TableVO list(UserHeadSculptureApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -136,15 +115,15 @@ public class UserHeadSculptureApproveController extends UIController {
 
 
 
+
+
     /**
      * 审核通过
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:pass:api"})
     @RequestMapping(value = "/pass/{id}",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO passById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -168,41 +147,6 @@ public class UserHeadSculptureApproveController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
-    }
-
-
-    /**
-     * 跳转到驳回页面
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
-    public String rejectPage(HttpServletRequest request,@PathVariable String id)
-    {
-        UserHeadSculptureApproveVO userHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
-        try {
-            userHeadSculptureApproveVO.setId(Long.parseLong(id));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userHeadSculptureApproveVO);
-            ResultObjectVO resultObjectVO = userHeadSculptureApproveService.queryById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<UserHeadSculptureApproveVO> userHeadSculptureApproveVOS = resultObjectVO.formatDataList(UserHeadSculptureApproveVO.class);
-                if(CollectionUtils.isNotEmpty(userHeadSculptureApproveVOS)) {
-                    userHeadSculptureApproveVO = userHeadSculptureApproveVOS.get(0);
-
-                    if(StringUtils.isNotEmpty(userHeadSculptureApproveVO.getHeadSculpture())) {
-                        userHeadSculptureApproveVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userHeadSculptureApproveVO.getHeadSculpture());
-                    }
-                    request.setAttribute("model",userHeadSculptureApproveVO);
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("model", userHeadSculptureApproveVO);
-        }
-        return "pages/user/headSculptureApprove/reject.html";
     }
 
 
@@ -232,10 +176,9 @@ public class UserHeadSculptureApproveController extends UIController {
      * @param userHeadSculptureApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:reject:api"})
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO reject(HttpServletRequest request,@RequestBody UserHeadSculptureApproveVO userHeadSculptureApproveVO)
+    public ResultObjectVO reject(@RequestBody UserHeadSculptureApproveVO userHeadSculptureApproveVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -288,4 +231,3 @@ public class UserHeadSculptureApproveController extends UIController {
 
 
 }
-

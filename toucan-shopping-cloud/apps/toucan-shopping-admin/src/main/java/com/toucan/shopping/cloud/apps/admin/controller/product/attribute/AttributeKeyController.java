@@ -5,8 +5,6 @@ import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.AttributeKeyServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
@@ -16,8 +14,6 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -30,18 +26,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 商品属性管理
  */
-@Controller
+@RestController
 @RequestMapping("/product/attribute/attributeKey")
-public class AttributeKeyController extends UIController {
+public class AttributeKeyController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -50,9 +44,6 @@ public class AttributeKeyController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private AttributeKeyServiceAPI attributeKeyService;
@@ -66,24 +57,13 @@ public class AttributeKeyController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/attribute/attributeKey/listPage", functionServiceAPI);
-        return "pages/product/attribute/attributeKey/list.html";
-    }
-
-
     /**
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attributeKey:tree:list:pid:api"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public ResultObjectVO queryTreeTableByPid(AttributeKeyPageInfo pageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -194,11 +174,12 @@ public class AttributeKeyController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
     }
+
 
 
 
@@ -208,10 +189,9 @@ public class AttributeKeyController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:save:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody AttributeKeyVO entity)
+    public ResultObjectVO save(@RequestBody AttributeKeyVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -229,38 +209,6 @@ public class AttributeKeyController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage/{categoryId}",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@PathVariable Long categoryId)
-    {
-        if(categoryId!=null&&categoryId!=-1)
-        {
-            try {
-                CategoryVO queryCategoryVO = new CategoryVO();
-                queryCategoryVO.setId(categoryId);
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = categoryService.queryById(requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
-                    request.setAttribute("categoryId",categoryTreeVO.getId());
-                    request.setAttribute("categoryName",categoryTreeVO.getPath());
-                }else{
-                    request.setAttribute("categoryId","");
-                    request.setAttribute("categoryName","");
-                }
-                return "pages/product/attribute/attributeKey/add.html";
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-            }
-        }
-        request.setAttribute("categoryId","");
-        request.setAttribute("categoryName","");
-        return "pages/product/attribute/attributeKey/add.html";
-    }
-
-
 
 
     /**
@@ -268,10 +216,9 @@ public class AttributeKeyController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody AttributeKeyVO entity)
+    public ResultObjectVO update(@RequestBody AttributeKeyVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -289,67 +236,14 @@ public class AttributeKeyController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
-            attributeKeyVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeKeyVO);
-            ResultObjectVO resultObjectVO = attributeKeyService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<AttributeKeyVO> attributeKeyVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AttributeKeyVO.class);
-                    if(!CollectionUtils.isEmpty(attributeKeyVOS))
-                    {
-                        attributeKeyVO = attributeKeyVOS.get(0);
-
-                        //查询类别名称
-                        CategoryVO queryCategoryVO = new CategoryVO();
-                        queryCategoryVO.setId(attributeKeyVO.getCategoryId());
-                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
-                        resultObjectVO = categoryService.findById(requestJsonVO);
-                        if(resultObjectVO.isSuccess())
-                        {
-                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
-                            if(CollectionUtils.isNotEmpty(categoryVOS))
-                            {
-                                for(CategoryVO categoryVO:categoryVOS)
-                                {
-                                    if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
-                                    {
-                                        attributeKeyVO.setCategoryName(categoryVO.getName());
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        request.setAttribute("model",attributeKeyVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/attribute/attributeKey/edit.html";
-    }
-
-
-
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:delete:api"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -371,7 +265,7 @@ public class AttributeKeyController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -383,9 +277,8 @@ public class AttributeKeyController extends UIController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:deletes:api"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
     public ResultObjectVO deleteByIds( @RequestBody List<AttributeKeyVO> attributeKeyVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -404,11 +297,12 @@ public class AttributeKeyController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
     }
+
 
 
 
@@ -418,10 +312,9 @@ public class AttributeKeyController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public TableVO list(AttributeKeyPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -543,10 +436,9 @@ public class AttributeKeyController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTree(HttpServletRequest request)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:category:tree:api"})
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTree()
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -565,10 +457,9 @@ public class AttributeKeyController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryTreeByCategoryId(Long categoryId,Short attributeType)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attributeKey:tree:category:id:api"})
+    @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.POST)
+    public ResultObjectVO queryTreeByCategoryId(@RequestParam Long categoryId, @RequestParam Short attributeType)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -590,9 +481,9 @@ public class AttributeKeyController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:tree:list:pid:api"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -629,5 +520,5 @@ public class AttributeKeyController extends UIController {
 
 
 
-}
 
+}

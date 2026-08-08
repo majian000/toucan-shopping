@@ -1,29 +1,22 @@
 package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.ShopCategoryServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
-import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +27,9 @@ import java.util.List;
 /**
  *店铺分类控制器
  */
-@Controller
+@RestController
 @RequestMapping("/seller/shop/category")
-public class ShopCategoryController extends UIController {
+public class ShopCategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,70 +42,6 @@ public class ShopCategoryController extends UIController {
     @Autowired
     private ShopCategoryServiceAPI shopCategoryService;
 
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage/{shopId}",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request,@PathVariable Long shopId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shop/category/listPage", functionServiceAPI);
-
-        request.setAttribute("shopId",shopId);
-
-        return "pages/seller/shopCategory/list.html";
-    }
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage/{shopId}/{parentId}",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@PathVariable Long shopId,@PathVariable Long parentId)
-    {
-        request.setAttribute("shopId",shopId);
-        request.setAttribute("parentId",parentId);
-        return "pages/seller/shopCategory/add.html";
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            Category entity = new Category();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = shopCategoryService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<ShopCategory> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ShopCategory.class);
-                    if(!CollectionUtils.isEmpty(entitys))
-                    {
-                        ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
-                        BeanUtils.copyProperties(shopCategoryVO,entitys.get(0));
-                        request.setAttribute("model",shopCategoryVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/shopCategory/edit.html";
-    }
-
-
 
 
 
@@ -121,9 +50,8 @@ public class ShopCategoryController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:save:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ShopCategoryVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -145,9 +73,8 @@ public class ShopCategoryController extends UIController {
      * 向上
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:move:up:api"})
     @RequestMapping(value="/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO moveUp(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -169,9 +96,8 @@ public class ShopCategoryController extends UIController {
      * 向下
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:move:down:api"})
     @RequestMapping(value="/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO moveDown(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -193,9 +119,8 @@ public class ShopCategoryController extends UIController {
      * 置底
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:move:bottom:api"})
     @RequestMapping(value="/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO moveBottom(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -216,9 +141,8 @@ public class ShopCategoryController extends UIController {
      * 置顶
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:move:top:api"})
     @RequestMapping(value="/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO moveTop(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -242,10 +166,9 @@ public class ShopCategoryController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody ShopCategoryVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ShopCategoryVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -267,15 +190,15 @@ public class ShopCategoryController extends UIController {
 
 
 
+
     /**
      * 查询列表
      * @param queryPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO treeTable(HttpServletRequest request, ShopCategoryTreeInfo queryPageInfo)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:treee:table:api"})
+    @RequestMapping(value = "/tree/table",method = RequestMethod.POST)
+    public ResultObjectVO treeTable(HttpServletRequest request, @RequestBody ShopCategoryTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -295,10 +218,9 @@ public class ShopCategoryController extends UIController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, ShopCategoryTreeInfo ShopCategoryTreeInfo)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:tree:table:by:pid:api"})
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
+    public ResultObjectVO queryListByPid(HttpServletRequest request, @RequestBody ShopCategoryTreeInfo ShopCategoryTreeInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -316,25 +238,20 @@ public class ShopCategoryController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}/{shopId}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id,@PathVariable Long shopId)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody ShopCategoryVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            ShopCategoryVO entity =new ShopCategoryVO();
-            entity.setId(Long.parseLong(id));
-            entity.setShopId(shopId);
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -354,13 +271,11 @@ public class ShopCategoryController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<CategoryVO> categoryVOS)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:category:deletes:api"})
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(@RequestBody List<CategoryVO> categoryVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -387,4 +302,3 @@ public class ShopCategoryController extends UIController {
 
 
 }
-

@@ -4,13 +4,10 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.user.api.UserLoginHistoryServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -20,21 +17,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 /**
  *  用户登录历史
  */
-@Controller
+@RestController
 @RequestMapping("/user/loginHistory")
-public class UserLoginHistoryController extends UIController {
+public class UserLoginHistoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -45,21 +40,8 @@ public class UserLoginHistoryController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private UserLoginHistoryServiceAPI userLoginHistoryService;
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/loginHistory/listPage", functionServiceAPI);
-        return "pages/user/loginHistory/list.html";
-    }
 
 
 
@@ -68,10 +50,9 @@ public class UserLoginHistoryController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:loginHistory:api:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, SellerLoginHistoryPageInfo pageInfo)
+    public TableVO list(SellerLoginHistoryPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -106,6 +87,4 @@ public class UserLoginHistoryController extends UIController {
 
 
 
-
 }
-

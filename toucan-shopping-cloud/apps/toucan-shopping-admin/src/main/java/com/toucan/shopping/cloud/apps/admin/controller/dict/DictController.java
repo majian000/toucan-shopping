@@ -1,8 +1,7 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
+package com.toucan.shopping.cloud.apps.admin.controller.dict;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.*;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;
@@ -10,7 +9,6 @@ import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -20,16 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller
+@RestController
 @RequestMapping("/dict")
-public class DictController extends UIController {
+public class DictController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -43,9 +39,6 @@ public class DictController extends UIController {
     private DictServiceAPI dictServiceAPI;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private AppServiceAPI appServiceAPI;
 
     @Autowired
@@ -55,117 +48,29 @@ public class DictController extends UIController {
     private AdminServiceAPI adminServiceAPI;
 
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-
-        //初始化选择应用控件
-        super.initSelectApp(request,toucan, appServiceAPI);
-
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/dict/listPage", functionServiceAPI);
-        return "pages/dict/dict/list.html";
-    }
-
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@RequestParam Integer dictCategoryId) throws Exception
-    {
-        DictCategoryVO dictCategoryVO = new DictCategoryVO();
-        dictCategoryVO.setId(dictCategoryId);;
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,dictCategoryVO);
-        ResultObjectVO resultObjectVO = dictCategoryServiceAPI.findById(requestJsonVO);
-        if(resultObjectVO.isSuccess())
-        {
-            List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
-            if(CollectionUtils.isNotEmpty(dictCategoryVOS)) {
-                DictCategoryVO dictCategoryModel = dictCategoryVOS.get(0);
-                request.setAttribute("dictCategoryModel", dictCategoryModel);
-            }else {
-                request.setAttribute("dictCategoryModel", new DictCategoryVO());
-            }
-        }
-
-        return "pages/dict/dict/add.html";
-    }
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            super.initSelectApp(request,toucan, appServiceAPI);
-
-            DictVO dictVO = new DictVO();
-            dictVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictVO);
-            ResultObjectVO resultObjectVO = dictServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<DictVO> dictVOS = resultObjectVO.formatDataList(DictVO.class);
-                if(!CollectionUtils.isEmpty(dictVOS))
-                {
-                    dictVO = dictVOS.get(0);
-                    DictCategoryVO dictCategory = new DictCategoryVO();
-                    dictCategory.setId(dictVO.getCategoryId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, dictCategory);
-                    resultObjectVO = dictCategoryServiceAPI.findById(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
-                        List<DictCategoryVO> dictCategoryVOS = resultObjectVO.formatDataList(DictCategoryVO.class);
-                        if(!CollectionUtils.isEmpty(dictCategoryVOS))
-                        {
-                            dictCategory = dictCategoryVOS.get(0);
-                            dictVO.setCategoryName(dictCategory.getName());
-                        }
-                    }
-                    request.setAttribute("model",dictVO);
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/dict/dict/edit.html";
-    }
-
-
-
     /**
-     * 查询列表
-     * @return
+     * 查询树表格（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:tree-list"})
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request,@RequestBody DictPageInfo pageInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:tree:list:api"})
+    @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, @RequestBody DictPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = null;
-            if(pageInfo.getCategoryId()==null||pageInfo.getCategoryId().longValue()==-1) {
+            if (pageInfo.getCategoryId() == null || pageInfo.getCategoryId().longValue() == -1) {
                 resultObjectVO.setMsg("字典分类ID不能为空");
                 resultObjectVO.setCode(TableVO.FAILD);
                 return resultObjectVO;
             }
 
-            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = dictServiceAPI.queryTreeTableByPid(requestJsonVO);
 
-            if(resultObjectVO.isSuccess()) {
+            if (resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
-
-                    Set<String> adminIdList = new HashSet<String>();
+                    Set<String> adminIdList = new HashSet<>();
                     Set<String> appCodes = new HashSet<>();
                     List<DictVO> dictTreeVOS = resultObjectVO.formatDataList(DictVO.class);
-                    if(CollectionUtils.isNotEmpty(dictTreeVOS)) {
+                    if (CollectionUtils.isNotEmpty(dictTreeVOS)) {
                         for (DictVO dictTreeVO : dictTreeVOS) {
                             if (dictTreeVO.getCreateAdminId() != null) {
                                 adminIdList.add(dictTreeVO.getCreateAdminId());
@@ -176,46 +81,40 @@ public class DictController extends UIController {
                             appCodes.add(dictTreeVO.getAppCode());
                         }
                         this.setAdminNames(adminIdList, dictTreeVOS);
-                        this.setAppNames(appCodes,dictTreeVOS);
+                        this.setAppNames(appCodes, dictTreeVOS);
                         resultObjectVO.setData(dictTreeVOS);
                     }
                 }
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
     /**
-     * 查询全部字典树（非懒加载，返回所有层级）
-     * @param pageInfo
-     * @return
+     * 查询全部字典树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:tree-list"})
-    @RequestMapping(value = "/query/tree/all",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeAll(HttpServletRequest request, @RequestBody DictPageInfo pageInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:tree:list:api"})
+    @RequestMapping(value = "/query/tree/all", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeAll(HttpServletRequest request, @RequestBody DictPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(pageInfo.getCategoryId()==null||pageInfo.getCategoryId().longValue()==-1) {
+            if (pageInfo.getCategoryId() == null || pageInfo.getCategoryId().longValue() == -1) {
                 resultObjectVO.setMsg("字典分类ID不能为空");
                 resultObjectVO.setCode(TableVO.FAILD);
                 return resultObjectVO;
             }
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = dictServiceAPI.queryTreeAll(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
@@ -223,129 +122,58 @@ public class DictController extends UIController {
 
     /**
      * 修改
-     * @param entity
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:update"})
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody DictVO entity)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:update"})
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody DictVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.update(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
     /**
-     * 设置关联应用
-     * @param appCodes
-     * @throws Exception
+     * 查询分类列表
      */
-    private void setAppNames(Set<String> appCodes,List<DictVO> list) throws Exception{
-        if(CollectionUtils.isNotEmpty(appCodes)){
-            AppVO appVO=new AppVO();
-            appVO.setCodes(new ArrayList(appCodes));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
-            ResultObjectVO resultObjectVO = appServiceAPI.queryListByCodes(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
-                if(CollectionUtils.isNotEmpty(apps)) {
-                    for (DictVO dictTreeVO : list) {
-                        for(AppVO apv:apps){
-                            if(dictTreeVO.getAppCode().equals(apv.getCode())){
-                                dictTreeVO.setAppName(apv.getName());
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 设置管理员名称
-     * @param adminIdList
-     * @throws Exception
-     */
-    private void setAdminNames(Set<String> adminIdList,List<DictVO> list) throws Exception{
-
-        //查询创建人和修改人
-        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
-        adminIdList.toArray(createOrUpdateAdminIds);
-        AdminVO queryAdminVO = new AdminVO();
-        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
-        if(resultObjectVO.isSuccess())
-        {
-            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
-            if(CollectionUtils.isNotEmpty(adminVOS))
-            {
-                for(DictVO dictVO:list)
-                {
-                    for(AdminVO adminVO:adminVOS)
-                    {
-                        if(dictVO.getCreateAdminId()!=null&&dictVO.getCreateAdminId().equals(adminVO.getAdminId()))
-                        {
-                            dictVO.setCreateAdminName(adminVO.getUsername());
-                        }
-                        if(dictVO.getUpdateAdminId()!=null&&dictVO.getUpdateAdminId().equals(adminVO.getAdminId()))
-                        {
-                            dictVO.setUpdateAdminName(adminVO.getUsername());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/category/list",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestBody DictVO dictVO)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:category:list:api"})
+    @RequestMapping(value = "/query/category/list", method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestBody DictVO dictVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             DictCategoryVO query = new DictCategoryVO();
             query.setAppCode(toucan.getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
             resultObjectVO = dictCategoryServiceAPI.queryList(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                if(resultObjectVO.getData()!=null) {
+            if (resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
                     List<DictCategoryTreeVO> dictCategoryTreeVOS = resultObjectVO.formatDataList(DictCategoryTreeVO.class);
                     Set<String> appCodes = new HashSet<>();
-                    for(DictCategoryTreeVO dictCategoryTreeVO:dictCategoryTreeVOS)
-                    {
+                    for (DictCategoryTreeVO dictCategoryTreeVO : dictCategoryTreeVOS) {
                         dictCategoryTreeVO.setOpen(false);
                         dictCategoryTreeVO.setIcon(null);
                         appCodes.add(dictCategoryTreeVO.getAppCode());
                     }
 
-                    if(CollectionUtils.isNotEmpty(appCodes)){
-                        AppVO appVO=new AppVO();
-                        appVO.setCodes(new ArrayList(appCodes));
-                        requestJsonVO = RequestJsonVOGenerator.generator(appCode,appVO);
+                    if (CollectionUtils.isNotEmpty(appCodes)) {
+                        AppVO appVO = new AppVO();
+                        appVO.setCodes(new ArrayList<>(appCodes));
+                        requestJsonVO = RequestJsonVOGenerator.generator(appCode, appVO);
                         resultObjectVO = appServiceAPI.queryListByCodes(requestJsonVO);
-                        if(resultObjectVO.isSuccess()) {
+                        if (resultObjectVO.isSuccess()) {
                             List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
-                            if(CollectionUtils.isNotEmpty(apps)) {
+                            if (CollectionUtils.isNotEmpty(apps)) {
                                 for (DictCategoryVO dictCategoryVO : dictCategoryTreeVOS) {
-                                    for(AppVO apv:apps){
-                                        if(dictCategoryVO.getAppCode().equals(apv.getCode())){
+                                    for (AppVO apv : apps) {
+                                        if (dictCategoryVO.getAppCode().equals(apv.getCode())) {
                                             dictCategoryVO.setAppName(apv.getName());
                                             break;
                                         }
@@ -359,142 +187,164 @@ public class DictController extends UIController {
                 }
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
 
 
     /**
      * 查询树的子节点列表
-     * @param queryParam
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO queryParam)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:query:tree:child:api"})
+    @RequestMapping(value = "/query/tree/child", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO queryParam) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             DictPageInfo dictTreeVO = new DictPageInfo();
-            dictTreeVO.setAppCode(toucan.getAppCode());  //应用端调用需要传编码
+            dictTreeVO.setAppCode(toucan.getAppCode());
             dictTreeVO.setPid(queryParam.getId());
             dictTreeVO.setCategoryId(queryParam.getCategoryId());
-            dictTreeVO.setIsActive((short)1); //查询活动的版本
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),dictTreeVO);
+            dictTreeVO.setIsActive((short) 1);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), dictTreeVO);
             resultObjectVO = dictServiceAPI.queryTreeChildByPid(requestJsonVO);
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-
-
     /**
      * 保存
-     * @param entity
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:save"})
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody DictVO entity)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:save"})
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody DictVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.save(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
-
 
 
     /**
      * 删除
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:delete"})
-    @RequestMapping(value = "/delete",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Dict dict)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:delete:api"})
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Dict dict) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(dict.getId() == null)
-            {
+            if (dict.getId() == null) {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Dict entity =new Dict();
+            Dict entity = new Dict();
             entity.setId(dict.getId());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
-
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,entity);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.deleteById(requestVo);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
 
 
     /**
      * 批量删除
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:dict:item:batch-delete-api"}, requestType = AdminAuth.REQUEST_JSON, responseType = AdminAuth.RESPONSE_JSON)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Dict> dicts)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:deletes"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Dict> dicts) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(CollectionUtils.isEmpty(dicts))
-            {
+            if (CollectionUtils.isEmpty(dicts)) {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,dicts);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode, dicts);
             resultObjectVO = dictServiceAPI.deleteByIds(requestVo);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-}
+    /**
+     * 设置关联应用
+     */
+    private void setAppNames(Set<String> appCodes, List<DictVO> list) throws Exception {
+        if (CollectionUtils.isNotEmpty(appCodes)) {
+            AppVO appVO = new AppVO();
+            appVO.setCodes(new ArrayList<>(appCodes));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appVO);
+            ResultObjectVO resultObjectVO = appServiceAPI.queryListByCodes(requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<AppVO> apps = resultObjectVO.formatDataList(AppVO.class);
+                if (CollectionUtils.isNotEmpty(apps)) {
+                    for (DictVO dictTreeVO : list) {
+                        for (AppVO apv : apps) {
+                            if (dictTreeVO.getAppCode().equals(apv.getCode())) {
+                                dictTreeVO.setAppName(apv.getName());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+
+    /**
+     * 设置管理员名称
+     */
+    private void setAdminNames(Set<String> adminIdList, List<DictVO> list) throws Exception {
+        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+        adminIdList.toArray(createOrUpdateAdminIds);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+        if (resultObjectVO.isSuccess()) {
+            List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+            if (CollectionUtils.isNotEmpty(adminVOS)) {
+                for (DictVO dictVO : list) {
+                    for (AdminVO adminVO : adminVOS) {
+                        if (dictVO.getCreateAdminId() != null && dictVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                            dictVO.setCreateAdminName(adminVO.getUsername());
+                        }
+                        if (dictVO.getUpdateAdminId() != null && dictVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                            dictVO.setUpdateAdminName(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

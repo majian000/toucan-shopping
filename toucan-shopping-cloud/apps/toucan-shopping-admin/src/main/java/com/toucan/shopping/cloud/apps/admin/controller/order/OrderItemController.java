@@ -4,7 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.order;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.OrderItemServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -21,19 +20,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 订单项列表
  */
-@Controller
+@RestController
 @RequestMapping("/order/orderItem")
-public class OrderItemController extends UIController {
+public class OrderItemController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -54,10 +51,9 @@ public class OrderItemController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:item:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, OrderItemPageInfo pageInfo)
+    public TableVO list(@RequestBody OrderItemPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -99,10 +95,9 @@ public class OrderItemController extends UIController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:modifyOrderItemList:api"})
     @RequestMapping(value = "/all/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO queryListAllByOrderId(HttpServletRequest request,OrderItemPageInfo pageInfo)
+    public TableVO queryListAllByOrderId(@RequestBody OrderItemPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -143,10 +138,9 @@ public class OrderItemController extends UIController {
      * @param itemVOS
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:list:item:updatesFromOrderList:api"})
     @RequestMapping(value = "/updatesFromOrderList",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO updatesFromOrderList(HttpServletRequest request, @RequestBody List<OrderItemVO> itemVOS)
+    public ResultObjectVO updatesFromOrderList(@RequestBody List<OrderItemVO> itemVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -163,4 +157,3 @@ public class OrderItemController extends UIController {
 
 
 }
-

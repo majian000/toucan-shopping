@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.controller.chart;
 
 import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -14,10 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -28,9 +26,9 @@ import java.util.stream.Collectors;
  * 操作统计图标
  */
 
-@Controller
+@RestController
 @RequestMapping("/operate/log/chart")
-public class OperateChartController extends UIController {
+public class OperateChartController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,9 +42,8 @@ public class OperateChartController extends UIController {
      * 查询操作数
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:welcome:operate:chart:query:operate:chart:api"})
     @RequestMapping(value = "/queryOperateChart",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryAppLoginUserCountList()
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

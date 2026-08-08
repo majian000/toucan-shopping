@@ -3,8 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.area;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.*;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -17,31 +16,26 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 地区控制器
  */
-@Controller
+@RestController
 @RequestMapping("/area")
-public class AreaController extends UIController {
+public class AreaController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,160 +49,19 @@ public class AreaController extends UIController {
     private AreaServiceAPI areaServiceAPI;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private AdminServiceAPI adminServiceAPI;
 
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/area/listPage", functionServiceAPI);
-
-        return "pages/area/list.html";
-    }
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        return "pages/area/add.html";
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            Area entity = new Area();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = areaServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<Area> areas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Area.class);
-                    if(!CollectionUtils.isEmpty(areas))
-                    {
-                        AreaVO areaVO = new AreaVO();
-                        BeanUtils.copyProperties(areaVO,areas.get(0));
-                        //如果是顶级节点,上级节点就是根节点
-                        if(areaVO.getPid().longValue()==-1)
-                        {
-                            areaVO.setParentName("根节点");
-                        }else {
-                            Area queryParentArea = new Area();
-                            queryParentArea.setId(areaVO.getPid());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentArea);
-                            resultObjectVO = areaServiceAPI.findById(requestJsonVO);
-                            if (resultObjectVO.isSuccess()) {
-                                List<Area> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Area.class);
-                                if (!CollectionUtils.isEmpty(parentAreaList)) {
-                                    if (parentAreaList.get(0).getType().shortValue() == 1) {
-                                        areaVO.setParentName(parentAreaList.get(0).getProvince());
-                                    } else if (parentAreaList.get(0).getType().shortValue() == 2) {
-                                        areaVO.setParentName(parentAreaList.get(0).getCity());
-                                    } else if (parentAreaList.get(0).getType().shortValue() == 3) {
-                                        areaVO.setParentName(parentAreaList.get(0).getArea());
-                                    }
-                                }
-                            }
-                        }
-                        request.setAttribute("model",areaVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/area/edit.html";
-    }
-
-
-
-
-
     /**
-     * 保存
-     * @param entity
-     * @return
+     * 查询树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody AreaVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
-            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
-            entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = areaServiceAPI.save(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    /**
-     * 修改
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody AreaVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
-            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-            entity.setUpdateDate(new Date());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = areaServiceAPI.update(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:tree:api"})
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     public ResultObjectVO queryTree(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AreaVO query = new AreaVO();
-            //设置为商城的应用编码
             query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return areaServiceAPI.queryTree(requestJsonVO);
@@ -222,15 +75,11 @@ public class AreaController extends UIController {
     }
 
 
-
     /**
-     * 查询列表
-     * @param queryPageInfo
-     * @return
+     * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:tree:api"})
+    @RequestMapping(value = "/tree/table",method = RequestMethod.POST)
     public ResultObjectVO queryTreeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -249,15 +98,11 @@ public class AreaController extends UIController {
     }
 
 
-
     /**
-     * 查询树列表
-     * @param queryPageInfo
-     * @return
+     * 查询树列表（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -270,11 +115,9 @@ public class AreaController extends UIController {
                 if(resultObjectVO.getData()!=null)
                 {
                     List<AreaTreeVO> list = resultObjectVO.formatDataList(AreaTreeVO.class);
-                    //查询创建人和修改人
                     List<String> adminIdList = new ArrayList<String>();
-                    for(int i=0;i<list.size();i++)
+                    for(AreaTreeVO vo : list)
                     {
-                        AreaTreeVO vo = list.get(i);
                         if(vo.getCreateAdminId()!=null) {
                             adminIdList.add(vo.getCreateAdminId());
                         }
@@ -325,20 +168,15 @@ public class AreaController extends UIController {
 
 
     /**
-     * 查询列表
-     * @param pid
-     * @return
+     * 按父ID查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/list/by/pid/{pid}",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, @PathVariable Long pid)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @RequestMapping(value = "/list/by/pid",method = RequestMethod.POST)
+    public ResultObjectVO queryListByPid(HttpServletRequest request, @RequestBody AreaVO areaVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            AreaVO areaVO = new AreaVO();
             areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            areaVO.setPid(pid);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = areaServiceAPI.queryListByPid(requestJsonVO);
             return resultObjectVO;
@@ -354,12 +192,9 @@ public class AreaController extends UIController {
 
     /**
      * 查询树的子节点列表
-     * @param areaTreeVO
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
     @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryTreeChildById(HttpServletRequest request, AreaTreeVO areaTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -380,20 +215,15 @@ public class AreaController extends UIController {
     }
 
     /**
-     * 查询列表
-     * @param parentCode
-     * @return
+     * 按 parentCode 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/list/by/parentCode/{parentCode}",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryListByParentCode(HttpServletRequest request, @PathVariable String parentCode)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @RequestMapping(value = "/list/by/parentCode",method = RequestMethod.POST)
+    public ResultObjectVO queryListByParentCode(HttpServletRequest request, @RequestBody AreaVO areaVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            AreaVO areaVO = new AreaVO();
             areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            areaVO.setCode(parentCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = areaServiceAPI.queryListByParentCode(requestJsonVO);
             return resultObjectVO;
@@ -405,26 +235,75 @@ public class AreaController extends UIController {
         }
         return resultObjectVO;
     }
+
+
     /**
-     * 删除功能项
-     * @param request
-     * @return
+     * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:save"})
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody AreaVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
+            entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = areaServiceAPI.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:update:api"})
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody AreaVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = areaServiceAPI.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Area area)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(area.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             Area entity =new Area();
-            entity.setId(Long.parseLong(id));
+            entity.setId(area.getId());
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
 
@@ -443,15 +322,11 @@ public class AreaController extends UIController {
     }
 
 
-
     /**
-     * 删除应用
-     * @param request
-     * @return
+     * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:deletes:api"})
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AreaVO> areaVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -483,12 +358,9 @@ public class AreaController extends UIController {
 
     /**
      * 刷新全部缓存
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:flush:cache"})
     @RequestMapping(value = "/flush/all/cache",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO flushAllCache(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -505,4 +377,3 @@ public class AreaController extends UIController {
     }
 
 }
-

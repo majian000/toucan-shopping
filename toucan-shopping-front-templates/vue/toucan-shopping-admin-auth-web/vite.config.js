@@ -28,7 +28,7 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       host: env.VITE_DEV_HOST || '0.0.0.0',
-      port: 8181,
+      port: 8198,
       open: true,
       proxy: {
         [baseApi]: {

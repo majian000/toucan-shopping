@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSku;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.util.SearchUtils;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
@@ -36,19 +34,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 商品SKU管理
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/product/productSku")
-public class ProductSkuController extends UIController {
+public class ProductSkuController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,9 +53,6 @@ public class ProductSkuController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private ShopProductServiceAPI shopProductService;
@@ -94,17 +87,6 @@ public class ProductSkuController extends UIController {
 
     @Autowired
     private IdGenerator idGenerator;
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/productSku/listPage", functionServiceAPI);
-        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuPreviewPage());
-        return "pages/product/productSku/list.html";
-    }
-
 
 
 
@@ -306,6 +288,7 @@ public class ProductSkuController extends UIController {
 
 
 
+
     /**
      * 查询类别信息
      * @param list
@@ -367,10 +350,9 @@ public class ProductSkuController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ProductSkuPageInfo pageInfo)
+    public TableVO list(@RequestBody ProductSkuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -420,22 +402,6 @@ public class ProductSkuController extends UIController {
                         for (int i = 0; i < list.size(); i++) {
                             ProductSkuVO shopProductVO = list.get(i);
                             categoryIds[i] = shopProductVO.getCategoryId();
-
-                            //设置品牌ID
-                            brandExists = false;
-//                            for (Long brandId : brandIdList) {
-//                                if (shopProductVO.getBrandId() != null && brandId != null
-//                                        && brandId.longValue() == shopProductVO.getBrandId().longValue()) {
-//                                    brandExists = true;
-//                                    break;
-//                                }
-//
-//                            }
-//                            if (!brandExists) {
-//                                if (shopProductVO.getBrandId() != null) {
-//                                    brandIdList.add(shopProductVO.getBrandId());
-//                                }
-//                            }
 
 
                             //设置店铺分类ID
@@ -514,11 +480,9 @@ public class ProductSkuController extends UIController {
 
 
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTree(HttpServletRequest request)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:api"})
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -537,15 +501,14 @@ public class ProductSkuController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:pid:api"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            query.setParentId(id);
+            query.setParentId(categoryVO.getParentId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -575,89 +538,15 @@ public class ProductSkuController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ProductSkuVO queryProductSkuVO = new ProductSkuVO();
-            queryProductSkuVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryProductSkuVO);
-            ResultObjectVO resultObjectVO = productSkuService.queryById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                ProductSkuVO productSkuVO = resultObjectVO.formatData(ProductSkuVO.class);
-                if(ObjectUtils.isNotEmpty(productSkuVO)) {
-                    Long[] categoryIds = new Long[1];
-                    Long[] shopCategoryIds = new Long[1];
-                    List<Long> brandIdList = new LinkedList<>();
-                    List<Long> shopIdList =new LinkedList<>();
-
-                    categoryIds[0] = productSkuVO.getCategoryId();
-
-                    //设置品牌ID
-                    if(productSkuVO.getBrandId()!=null) {
-                        brandIdList.add(productSkuVO.getBrandId());
-                    }
-
-
-                    //设置店铺分类ID
-                    if(productSkuVO.getShopCategoryId()!=null) {
-                        shopCategoryIds[0] = productSkuVO.getShopCategoryId();
-                    }
-
-
-
-                    //设置店铺ID
-                    if(productSkuVO.getShopId()!=null) {
-                        shopIdList.add(productSkuVO.getShopId());
-                    }
-
-
-                    productSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
-
-                    List<ProductSkuVO> list = new LinkedList<>();
-                    list.add(productSkuVO);
-
-                    //查询类别名称
-                    this.queryCategory(list,categoryIds);
-
-
-                    //查询店铺类别名称
-                    this.queryShopCategory(list,shopCategoryIds);
-
-                    //查询品牌名称
-                    this.queryBrand(list,brandIdList);
-
-                    //查询店铺名称
-                    this.queryShop(list,shopIdList);
-
-
-                    request.setAttribute("model", list.get(0));
-                }else{
-                    request.setAttribute("model", new ProductSkuVO());
-                }
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("model", new ProductSkuVO());
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/productSku/detail.html";
-    }
-
-
-
 
     /**
      * 店铺商品 上架/下架
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:shelves:api"})
     @RequestMapping(value = "/shelves",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    public ResultObjectVO shelves(@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -693,10 +582,9 @@ public class ProductSkuController extends UIController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:flushSearch:api"})
     @RequestMapping(value = "/flush/search",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO flushSearch(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
+    public ResultObjectVO flushSearch(@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -731,4 +619,3 @@ public class ProductSkuController extends UIController {
 
 
 }
-

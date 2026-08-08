@@ -5,17 +5,12 @@ import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.AttributeValueServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -28,10 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,9 +33,9 @@ import java.util.Map;
 /**
  * 商品属性管理
  */
-@Controller
+@RestController
 @RequestMapping("/product/attribute/attributeValue")
-public class AttributeValueController extends UIController {
+public class AttributeValueController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -53,28 +46,10 @@ public class AttributeValueController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private AttributeValueServiceAPI attributeValueService;
 
     @Autowired
-    private CategoryServiceAPI categoryService;
-
-    @Autowired
     private AdminServiceAPI adminServiceAPI;
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage/{attributeKeyId}",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request,@PathVariable Long attributeKeyId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/attribute/attributeValue/listPage", functionServiceAPI);
-        request.setAttribute("attributeKeyId",attributeKeyId);
-        return "pages/product/attribute/attributeValue/list.html";
-    }
 
 
 
@@ -83,10 +58,9 @@ public class AttributeValueController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:attributeValue:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeValuePageInfo pageInfo)
+    public TableVO list(AttributeValuePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -165,10 +139,9 @@ public class AttributeValueController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:value:save:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody AttributeValueVO entity)
+    public ResultObjectVO save(@RequestBody AttributeValueVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -186,15 +159,6 @@ public class AttributeValueController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage/{attributeKeyId}",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@PathVariable Long attributeKeyId)
-    {
-        request.setAttribute("attributeKeyId",attributeKeyId);
-        return "pages/product/attribute/attributeValue/add.html";
-    }
-
-
 
 
     /**
@@ -202,10 +166,9 @@ public class AttributeValueController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody AttributeValueVO entity)
+    public ResultObjectVO update(@RequestBody AttributeValueVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -223,47 +186,15 @@ public class AttributeValueController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            AttributeValueVO attributeValueVO = new AttributeValueVO();
-            attributeValueVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeValueVO);
-            ResultObjectVO resultObjectVO = attributeValueService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<AttributeValueVO> attributeValueVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AttributeValueVO.class);
-                    if(!CollectionUtils.isEmpty(attributeValueVOS))
-                    {
-                        attributeValueVO = attributeValueVOS.get(0);
-
-                        request.setAttribute("model",attributeValueVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/attribute/attributeValue/edit.html";
-    }
-
-
 
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:delete:api"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -285,7 +216,7 @@ public class AttributeValueController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -297,9 +228,8 @@ public class AttributeValueController extends UIController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:deletes:api"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
     public ResultObjectVO deleteByIds( @RequestBody List<AttributeValueVO> attributeValueVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -318,7 +248,7 @@ public class AttributeValueController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -331,6 +261,4 @@ public class AttributeValueController extends UIController {
 
 
 
-
 }
-

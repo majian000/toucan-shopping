@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.statistic.produc
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
@@ -28,13 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +36,9 @@ import java.util.Map;
  * 商品SKU统计
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/productSkuStatistic")
-public class ProductSkuStatisticController extends UIController {
+public class ProductSkuStatisticController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -58,9 +51,6 @@ public class ProductSkuStatisticController extends UIController {
 
     @Autowired
     private SkylarkLock skylarkLock;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private ProductSkuStatisticServiceAPI productSkuStatisticService;
@@ -79,9 +69,8 @@ public class ProductSkuStatisticController extends UIController {
      * 总数 今日新增 本月新增 本年新增
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:productSkuStatisticPanel:api"})
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear()
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -104,9 +93,8 @@ public class ProductSkuStatisticController extends UIController {
      * 总数 今日新增 本月新增 本年新增
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:statistic:product:statistic:api"})
     @RequestMapping(value = "/queryProductSkuStatistic",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryProductSkuStatistic(@RequestBody ProductSkuStatisticVO productSkuStatisticVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -238,48 +226,15 @@ public class ProductSkuStatisticController extends UIController {
     }
 
 
-    /**
-     * 分类SKU统计列表
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/categoryStatisticPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSkuStatistic/categoryStatisticPage", functionServiceAPI);
-        return "pages/product/statistic/productSku/statistic_list.html";
-    }
-
-
-
-
-    /**
-     * 热卖统计
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/hotSellStatisticPage",method = RequestMethod.GET)
-    public String hotSellStatisticPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSkuStatistic/hotSellStatisticPage", functionServiceAPI);
-        return "pages/product/statistic/productSku/hot_sell_statistic_list.html";
-    }
-
-
 
 
     /**
      * 商品热卖列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:statistic:product:hot:sell:statistic:api"})
     @RequestMapping(value = "/queryHotSellListPage",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO queryHotSellListPage(HttpServletRequest request, OrderHotSellPageInfo pageInfo)
+    public TableVO queryHotSellListPage(OrderHotSellPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -332,4 +287,3 @@ public class ProductSkuStatisticController extends UIController {
         return tableVO;
     }
 }
-

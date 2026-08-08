@@ -3,8 +3,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
 import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
@@ -18,24 +16,21 @@ import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,9 +38,9 @@ import java.util.stream.Collectors;
 /**
  * 首页推荐栏目
  */
-@Controller
+@RestController
 @RequestMapping("/column")
-public class ColumnController extends UIController {
+public class ColumnController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -56,9 +51,6 @@ public class ColumnController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private ColumnServiceAPI columnService;
 
     @Autowired
@@ -67,60 +59,86 @@ public class ColumnController extends UIController {
     @Autowired
     private ColumnTypeServiceAPI columnTypeService;
 
-
     @Autowired
     private DictServiceAPI dictServiceAPI;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request) throws NoSuchAlgorithmException {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/listPage", functionServiceAPI);
-        this.setColumnDictList(request);
-        return "pages/column/column/list.html";
+    /**
+     * 获取栏目字典数据
+     */
+    private Map<String, List<DictVO>> getColumnDictMap() throws NoSuchAlgorithmException {
+        Map<String, List<DictVO>> result = new HashMap<>();
+        DictVO queryDict = new DictVO();
+        queryDict.setCategoryCode(ColumnDictConstant.COLUMN_DICT_CATEGORY_CODE);
+        queryDict.setCodes(new LinkedList<>());
+        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_TYPE_CODE);
+        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_POSITION_CODE);
+        queryDict.setAppCode(toucan.getAppCode());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
+        if (resultObjectVO.isSuccess() && !CollectionUtils.isEmpty(resultObjectVO.getData())) {
+            for (DictVO dictVO : resultObjectVO.getData()) {
+                switch (dictVO.getCode()) {
+                    case ColumnDictConstant.COLUMN_DICT_TYPE_CODE:
+                        result.put("columnTypeList", dictVO.getChildren());
+                        break;
+                    case ColumnDictConstant.COLUMN_DICT_POSITION_CODE:
+                        result.put("columnPositionList", dictVO.getChildren());
+                        break;
+                }
+            }
+        }
+        return result;
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@RequestParam String columnTypeCode) throws NoSuchAlgorithmException {
-        this.setColumnDictList(request);
-        request.setAttribute("columnTypeCode",columnTypeCode);
-        request.setAttribute("defaultPosition","1");
-        ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
-        queryColumnTypeVO.setCode(columnTypeCode);
-        ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = columnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
-        if(resultTypeObjectVO.isSuccess()){
-            if(resultTypeObjectVO.getData()!=null){
-                request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
+    /**
+     * 保存
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:add:api"})
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnVO columnVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (StringUtils.isEmpty(columnVO.getColumnTypeCode())) {
+                resultObjectVO.setMsg("栏目类型不能为空");
+                resultObjectVO.setCode(TableVO.FAILD);
+                return resultObjectVO;
             }
+
+            if (!AlphabetNumberUtils.isAlphabetNumber(columnVO.getCode(), 1, 100)) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("保存失败,编码只允许字母、数字、下划线组成,长度1-100位");
+                return resultObjectVO;
+            }
+
+            columnVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            columnVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, columnVO);
+            resultObjectVO = columnService.save(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请稍后重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
         }
-        return "pages/column/column/add.html";
+        return resultObjectVO;
     }
 
 
     /**
      * 修改
-     * @param entity
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:update:api"})
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-
-            if(StringUtils.isEmpty(entity.getCode()))
-            {
+            if (StringUtils.isEmpty(entity.getCode())) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("修改失败,请输入编码");
                 return resultObjectVO;
             }
-            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,100))
-            {
+            if (!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(), 1, 100)) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-100位");
                 return resultObjectVO;
@@ -132,78 +150,82 @@ public class ColumnController extends UIController {
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = columnService.update(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
+    /**
+     * 删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:delete:api"})
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody ColumnVO entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            this.setColumnDictList(request);
-            ColumnVO queryEntity = new ColumnVO();
-            queryEntity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultTypeObjectVO<ColumnVO> resultObjectVO = columnService.findById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                ColumnVO columnVO = resultObjectVO.getData();
-
-                if(columnVO!=null){
-                    request.setAttribute("defaultPosition","1");
-                    ColumnTypeVO queryColumnTypeVO= new ColumnTypeVO();
-                    queryColumnTypeVO.setCode(columnVO.getColumnTypeCode());
-                    ResultTypeObjectVO<ColumnTypeVO> resultTypeObjectVO = columnTypeService.findOneByCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),queryColumnTypeVO));
-                    if(resultTypeObjectVO.isSuccess()){
-                        if(resultTypeObjectVO.getData()!=null){
-                            request.setAttribute("columnTypeName",resultTypeObjectVO.getData().getName());
-                        }
-                    }
-                    if(columnVO.getStartShowDate()!=null) {
-                        columnVO.setStartShowDateString(DateUtils.FORMATTER_SS.get().format(columnVO.getStartShowDate()));
-                    }
-                    if(columnVO.getEndShowDate()!=null) {
-                        columnVO.setEndShowDateString(DateUtils.FORMATTER_SS.get().format(columnVO.getEndShowDate()));
-                    }
-                    List<String> selectTypes = new LinkedList<>();
-                    if(StringUtils.isNotEmpty(columnVO.getType())){
-                        selectTypes.addAll(Arrays.asList(columnVO.getType().split(",")));
-                    }
-                    request.setAttribute("selectTypes",selectTypes);
-                }
-                request.setAttribute("model",columnVO);
+            if (entity.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = columnService.deleteById(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
         }
-        return "pages/column/column/edit.html";
+        return resultObjectVO;
     }
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/type/list",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
-    {
+
+    /**
+     * 批量删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:deletes"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Column> columns) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (CollectionUtils.isEmpty(columns)) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode, columns);
+            resultObjectVO = columnService.deleteByIds(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询栏目类型列表
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:type:list:api"})
+    @RequestMapping(value = "/query/type/list", method = RequestMethod.POST)
+    public ResultObjectVO queryColumnTypeList(@RequestParam(defaultValue = "-1") Long id) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             ColumnTypeVO query = new ColumnTypeVO();
             query.setAppCode(toucan.getShoppingPC().getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
             resultObjectVO = columnTypeService.queryList(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                if(resultObjectVO.getData()!=null) {
+            if (resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
                     List<ColumnTypeTreeVO> columnTypeTreeVOS = resultObjectVO.formatDataList(ColumnTypeTreeVO.class);
-                    for(ColumnTypeTreeVO columnTypeTreeVO:columnTypeTreeVOS)
-                    {
+                    for (ColumnTypeTreeVO columnTypeTreeVO : columnTypeTreeVOS) {
                         columnTypeTreeVO.setOpen(false);
                         columnTypeTreeVO.setIcon(null);
                     }
@@ -211,28 +233,25 @@ public class ColumnController extends UIController {
                 }
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
-    @RequestMapping(value = "/query/column/tree")
-    @ResponseBody
-    public ResultObjectVO queryColumnTree(HttpServletRequest request,ColumnTreeVO queryColumnTreeVO)
-    {
+    /**
+     * 查询栏目树
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:tree:api"})
+    @RequestMapping(value = "/query/column/tree", method = RequestMethod.POST)
+    public ResultObjectVO queryColumnTree(HttpServletRequest request, ColumnTreeVO queryColumnTreeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //默认查询根节点
-            if(queryColumnTreeVO.getId()==null)
-            {
+            // 默认查询根节点
+            if (queryColumnTreeVO.getId() == null) {
                 ColumnTreeVO columnTreeVO = new ColumnTreeVO();
                 columnTreeVO.setId(-1L);
                 columnTreeVO.setPid(-2L);
@@ -245,63 +264,56 @@ public class ColumnController extends UIController {
                 List<ColumnTreeVO> columnTrees = new LinkedList<>();
                 columnTrees.add(columnTreeVO);
                 resultObjectVO.setData(columnTrees);
-            }else{
+            } else {
                 queryColumnTreeVO.setParentId(queryColumnTreeVO.getId());
                 queryColumnTreeVO.setAppCode(toucan.getShoppingPC().getAppCode());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryColumnTreeVO);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryColumnTreeVO);
                 resultObjectVO = columnService.queryColumnTreeByPid(requestJsonVO);
                 return resultObjectVO;
             }
-
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
+
     /**
-     * 查询列表
-     * @return
+     * 查询树表格（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, ColumnPageInfo pageInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:list:api"})
+    @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, ColumnPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = null;
-            if(StringUtils.isEmpty(pageInfo.getColumnTypeCode())){
+            if (StringUtils.isEmpty(pageInfo.getColumnTypeCode())) {
                 resultObjectVO.setMsg("栏目类型编码不能为空");
                 resultObjectVO.setCode(TableVO.FAILD);
                 return resultObjectVO;
             }
 
-            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = columnService.queryTreeTableByPid(requestJsonVO);
 
-            if(resultObjectVO.isSuccess()) {
+            if (resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
-                    Set<String> adminIdList = new HashSet<String>();
-                    Set<String> appCodes = new HashSet<>();
+                    Set<String> adminIdList = new HashSet<>();
                     List<ColumnTreeVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeVO.class);
-                    if(!CollectionUtils.isEmpty(columnTreeVOS)) {
-                        this.setColumnDictList(request);
-                        List<DictVO> columnTypeList = request.getAttribute("columnTypeList")!=null
-                                ?(List<DictVO>)request.getAttribute("columnTypeList"):null;
-                        List<DictVO> columnPositionList = request.getAttribute("columnPositionList")!=null
-                                ?(List<DictVO>)request.getAttribute("columnPositionList"):null;
+                    if (!CollectionUtils.isEmpty(columnTreeVOS)) {
+                        Map<String, List<DictVO>> dictMap = this.getColumnDictMap();
+                        List<DictVO> columnTypeList = dictMap.get("columnTypeList");
+                        List<DictVO> columnPositionList = dictMap.get("columnPositionList");
+
                         Map<String, DictVO> columnTypeMap = null;
-                        if(columnTypeList!=null) {
+                        if (columnTypeList != null) {
                             columnTypeMap = columnTypeList.stream()
                                     .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
                         }
 
                         Map<String, DictVO> columnPositionMap = null;
-                        if(columnPositionList!=null) {
+                        if (columnPositionList != null) {
                             columnPositionMap = columnPositionList.stream()
                                     .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
                         }
@@ -312,37 +324,42 @@ public class ColumnController extends UIController {
                             if (columnTreeVO.getUpdateAdminId() != null) {
                                 adminIdList.add(columnTreeVO.getUpdateAdminId());
                             }
-                            //设置栏目类型名称
-                            if(StringUtils.isNotEmpty(columnTreeVO.getType())){
-                                if(columnTypeMap!=null){
+                            // 设置栏目类型名称
+                            if (StringUtils.isNotEmpty(columnTreeVO.getType())) {
+                                if (columnTypeMap != null) {
                                     String[] types = columnTreeVO.getType().split(",");
                                     String typeNames = "";
-                                    for(int i=0;i<types.length;i++){
+                                    for (int i = 0; i < types.length; i++) {
                                         String type = types[i];
-                                        typeNames+=columnTypeMap.get(type).getName();
-                                        if((i+1)<types.length){
-                                            typeNames+=",";
+                                        DictVO dictVO = columnTypeMap.get(type);
+                                        if (dictVO != null) {
+                                            typeNames += dictVO.getName();
+                                        }
+                                        if ((i + 1) < types.length) {
+                                            typeNames += ",";
                                         }
                                     }
                                     columnTreeVO.setTypeNames(typeNames);
                                 }
                             }
-                            //设置栏目位置
-                            if(StringUtils.isNotEmpty(columnTreeVO.getPosition())) {
+                            // 设置栏目位置
+                            if (StringUtils.isNotEmpty(columnTreeVO.getPosition())) {
                                 if (columnPositionMap != null) {
                                     String[] positions = columnTreeVO.getPosition().split(",");
                                     String positionNames = "";
                                     for (int i = 0; i < positions.length; i++) {
                                         String position = positions[i];
-                                        positionNames += columnPositionMap.get(position).getName();
-                                        if ((i+1) < positions.length) {
+                                        DictVO dictVO = columnPositionMap.get(position);
+                                        if (dictVO != null) {
+                                            positionNames += dictVO.getName();
+                                        }
+                                        if ((i + 1) < positions.length) {
                                             positionNames += ",";
                                         }
                                     }
                                     columnTreeVO.setPositionNames(positionNames);
                                 }
                             }
-                            appCodes.add(columnTreeVO.getAppCode());
                         }
                         this.setAdminNames(adminIdList, columnTreeVOS);
                         resultObjectVO.setData(columnTreeVOS);
@@ -350,86 +367,35 @@ public class ColumnController extends UIController {
                 }
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
-
-
-    /**
-     * 保存
-     * @param columnVO
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request,@RequestBody ColumnVO columnVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(StringUtils.isEmpty(columnVO.getColumnTypeCode())){
-                resultObjectVO.setMsg("栏目类型不能为空");
-                resultObjectVO.setCode(TableVO.FAILD);
-                return resultObjectVO;
-            }
-
-            if(!AlphabetNumberUtils.isAlphabetNumber(columnVO.getCode(),1,100))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-100位");
-                return resultObjectVO;
-            }
-
-            columnVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            columnVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, columnVO);
-            resultObjectVO = columnService.save(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请稍后重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
 
 
     /**
      * 设置管理员名称
-     * @param adminIdList
-     * @throws Exception
      */
-    private void setAdminNames(Set<String> adminIdList, List<ColumnTreeVO> list) throws Exception{
-
-        //查询创建人和修改人
+    private void setAdminNames(Set<String> adminIdList, List<ColumnTreeVO> list) throws Exception {
+        // 查询创建人和修改人
         String[] createOrUpdateAdminIds = new String[adminIdList.size()];
         adminIdList.toArray(createOrUpdateAdminIds);
         AdminVO queryAdminVO = new AdminVO();
         queryAdminVO.setAdminIds(createOrUpdateAdminIds);
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
         ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
-        if(resultObjectVO.isSuccess())
-        {
-            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
-            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(adminVOS))
-            {
-                for(ColumnVO dictVO:list)
-                {
-                    for(AdminVO adminVO:adminVOS)
-                    {
-                        if(dictVO.getCreateAdminId()!=null&&dictVO.getCreateAdminId().equals(adminVO.getAdminId()))
-                        {
+        if (resultObjectVO.isSuccess()) {
+            List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+            if (!CollectionUtils.isEmpty(adminVOS)) {
+                for (ColumnVO dictVO : list) {
+                    for (AdminVO adminVO : adminVOS) {
+                        if (dictVO.getCreateAdminId() != null && dictVO.getCreateAdminId().equals(adminVO.getAdminId())) {
                             dictVO.setCreateAdminName(adminVO.getUsername());
                         }
-                        if(dictVO.getUpdateAdminId()!=null&&dictVO.getUpdateAdminId().equals(adminVO.getAdminId()))
-                        {
+                        if (dictVO.getUpdateAdminId() != null && dictVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
                             dictVO.setUpdateAdminName(adminVO.getUsername());
                         }
                     }
@@ -438,102 +404,4 @@ public class ColumnController extends UIController {
         }
     }
 
-
-    /**
-     * 删除
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(StringUtils.isEmpty(id))
-            {
-                resultObjectVO.setMsg("请传入ID");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            ColumnVO entity =new ColumnVO();
-            entity.setId(Long.parseLong(id));
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-
-
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,entity);
-            resultObjectVO = columnService.deleteById(requestVo);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    /**
-     * 批量删除
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Column> columns)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(CollectionUtils.isEmpty(columns))
-            {
-                resultObjectVO.setMsg("请传入ID");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,columns);
-            resultObjectVO = columnService.deleteByIds(requestVo);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-    private void setColumnDictList(HttpServletRequest request) throws NoSuchAlgorithmException {
-        //栏目字典
-        DictVO queryDict=new DictVO();
-        queryDict.setCategoryCode(ColumnDictConstant.COLUMN_DICT_CATEGORY_CODE);
-        queryDict.setCodes(new LinkedList<>());
-        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_TYPE_CODE);
-        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_POSITION_CODE);
-        queryDict.setAppCode(toucan.getAppCode());
-        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
-        ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
-        if(resultObjectVO.isSuccess()) {
-            if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
-                for(DictVO dictVO:resultObjectVO.getData()){
-                    switch (dictVO.getCode()){
-                        case ColumnDictConstant.COLUMN_DICT_TYPE_CODE:
-                            request.setAttribute("columnTypeList",dictVO.getChildren());
-                            break;
-                        case ColumnDictConstant.COLUMN_DICT_POSITION_CODE:
-                            request.setAttribute("columnPositionList",dictVO.getChildren());
-                            break;
-                    }
-                }
-            }
-        }
-
-    }
-
 }
-

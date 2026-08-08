@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.MessageUserServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserTrueNameApproveServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
@@ -16,8 +14,6 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -26,16 +22,13 @@ import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +37,9 @@ import java.util.UUID;
 /**
  * 用户实名审核管理
  */
-@Controller
+@RestController
 @RequestMapping("/user/true/name/approve")
-public class UserTrueNameApproveController extends UIController {
+public class UserTrueNameApproveController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,9 +50,6 @@ public class UserTrueNameApproveController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private UserTrueNameApproveServiceAPI userTrueNameApproveService;
@@ -77,26 +67,15 @@ public class UserTrueNameApproveController extends UIController {
     private IdGenerator idGenerator;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/true/name/approve/listPage", functionServiceAPI);
-        return "pages/user/trueNameApprove/list.html";
-    }
-
-
 
     /**
      * 查询列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, UserTrueNameApprovePageInfo pageInfo)
+    public TableVO list(UserTrueNameApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -157,13 +136,11 @@ public class UserTrueNameApproveController extends UIController {
 
     /**
      * 审核通过
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:pass:api"})
     @RequestMapping(value = "/pass/{id}/{userMainId}",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id,@PathVariable Long userMainId)
+    public ResultObjectVO passById(@PathVariable String id,@PathVariable Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -212,52 +189,13 @@ public class UserTrueNameApproveController extends UIController {
 
 
     /**
-     * 跳转到驳回页面
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
-    public String rejectPage(HttpServletRequest request,@PathVariable String id)
-    {
-        UserTrueNameApproveVO userTrueNameApproveVO = new UserTrueNameApproveVO();
-        try {
-            userTrueNameApproveVO.setId(Long.parseLong(id));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userTrueNameApproveVO);
-            ResultObjectVO resultObjectVO = userTrueNameApproveService.queryById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataList(UserTrueNameApproveVO.class);
-                if(CollectionUtils.isNotEmpty(userTrueNameApproveVOS)) {
-                    userTrueNameApproveVO = userTrueNameApproveVOS.get(0);
-                    if(userTrueNameApproveVO.getIdcardImg1()!=null) {
-                        userTrueNameApproveVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg1());
-                    }
-                    if(userTrueNameApproveVO.getIdcardImg2()!=null) {
-                        userTrueNameApproveVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg2());
-                    }
-                    request.setAttribute("model",userTrueNameApproveVO);
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("model", userTrueNameApproveVO);
-        }
-        return "pages/user/trueNameApprove/reject.html";
-    }
-
-
-    /**
      * 审核驳回
      * @param userTrueNameApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:reject:api"})
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO reject(HttpServletRequest request,@RequestBody UserTrueNameApproveVO userTrueNameApproveVO)
+    public ResultObjectVO reject(@RequestBody UserTrueNameApproveVO userTrueNameApproveVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -309,4 +247,3 @@ public class UserTrueNameApproveController extends UIController {
 
 
 }
-

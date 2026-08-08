@@ -1,8 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.controller.category;
 
 
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryHotServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -10,25 +8,20 @@ import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryHotVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 热门类别控制器
  */
-@Controller
+@RestController
 @RequestMapping("/category/hot")
-public class CategoryHotController extends UIController {
+public class CategoryHotController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,31 +34,6 @@ public class CategoryHotController extends UIController {
     @Autowired
     private CategoryHotServiceAPI categoryHotServiceAPI;
 
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/category/hot/listPage", functionServiceAPI);
-
-        return "pages/category/hot/list.html";
-    }
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
-    {
-        return "pages/category/hot/add.html";
-    }
-
-
 
 
     /**
@@ -73,10 +41,9 @@ public class CategoryHotController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:hot:save:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody CategoryHotVO entity)
+    public ResultObjectVO save(@RequestBody CategoryHotVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -97,10 +64,9 @@ public class CategoryHotController extends UIController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:hot:tree:list:pid:api"})
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
+    public ResultObjectVO queryListByPid(@RequestBody CategoryTreeInfo categoryTreeInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -110,7 +76,7 @@ public class CategoryHotController extends UIController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -120,4 +86,3 @@ public class CategoryHotController extends UIController {
 
 
 }
-

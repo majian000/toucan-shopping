@@ -2,8 +2,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.SellerDesignerPageModelServiceAPI;
 import com.toucan.shopping.cloud.seller.api.SellerShopServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -22,13 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,9 +29,9 @@ import java.util.stream.Collectors;
 /**
  *  卖家设计器页面模型管理
  */
-@Controller
+@RestController
 @RequestMapping("/seller/designer/page/model")
-public class SellerDesignerPageModelController extends UIController {
+public class SellerDesignerPageModelController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,23 +42,10 @@ public class SellerDesignerPageModelController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private SellerDesignerPageModelServiceAPI sellerDesignerPageModelService;
 
     @Autowired
     private SellerShopServiceAPI sellerShopService;
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/designer/page/model/listPage", functionServiceAPI);
-        return "pages/seller/designer/pageModel/list.html";
-    }
 
 
 
@@ -74,10 +54,9 @@ public class SellerDesignerPageModelController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_JSON)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:pageDecorate:pageModel:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, SellerDesignerPageModelPageInfo pageInfo)
+    public TableVO list(SellerDesignerPageModelPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -142,24 +121,20 @@ public class SellerDesignerPageModelController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:pageDecorate:pageModel:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody SellerDesignerPageModelVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            SellerDesignerPageModelVO entity =new SellerDesignerPageModelVO();
-            entity.setId(Long.parseLong(id));
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -178,4 +153,3 @@ public class SellerDesignerPageModelController extends UIController {
 
 
 }
-

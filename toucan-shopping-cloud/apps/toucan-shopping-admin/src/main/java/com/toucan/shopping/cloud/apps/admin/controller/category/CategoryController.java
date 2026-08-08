@@ -4,8 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
@@ -17,22 +15,20 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,9 +36,9 @@ import java.util.stream.Collectors;
 /**
  * 类别控制器
  */
-@Controller
+@RestController
 @RequestMapping("/category")
-public class CategoryController extends UIController {
+public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -56,163 +52,139 @@ public class CategoryController extends UIController {
     private CategoryServiceAPI categoryServiceAPI;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private DictServiceAPI dictServiceAPI;
 
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request) throws NoSuchAlgorithmException {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/category/listPage", functionServiceAPI);
-
-        this.setCategoryDictList(request);
-
-        return "pages/category/list.html";
-    }
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request) throws NoSuchAlgorithmException {
-        this.setCategoryDictList(request);
-        return "pages/category/add.html";
-    }
-
-
-
-    private void setCategoryDictList(HttpServletRequest request) throws NoSuchAlgorithmException {
-        //栏目字典
-        DictVO queryDict=new DictVO();
+    /**
+     * 获取类别字典列表
+     */
+    private List<DictVO> getCategoryDictList() throws NoSuchAlgorithmException {
+        DictVO queryDict = new DictVO();
         queryDict.setCategoryCode(CategoryDictConstant.CATEGORY_DICT_CATEGORY_CODE);
         queryDict.setCodes(new LinkedList<>());
         queryDict.getCodes().add(CategoryDictConstant.CATEGORY_DICT_TYPE_CODE);
         queryDict.setAppCode(toucan.getAppCode());
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
         ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
-        if(resultObjectVO.isSuccess()) {
-            if(!CollectionUtils.isEmpty(resultObjectVO.getData())){
-                for(DictVO dictVO:resultObjectVO.getData()){
-                    switch (dictVO.getCode()){
-                        case CategoryDictConstant.CATEGORY_DICT_TYPE_CODE:
-                            request.setAttribute("categoryTypeList",dictVO.getChildren());
-                            break;
-                    }
-                }
-            }
+        if (resultObjectVO.isSuccess() && !CollectionUtils.isEmpty(resultObjectVO.getData())) {
+            return resultObjectVO.getData();
         }
+        return null;
     }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-
-            this.setCategoryDictList(request);
-
-            Category entity = new Category();
-            entity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = categoryServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<Category> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Category.class);
-                    if(!CollectionUtils.isEmpty(entitys))
-                    {
-                        CategoryVO categoryVO = new CategoryVO();
-                        BeanUtils.copyProperties(categoryVO,entitys.get(0));
-                        //如果是顶级节点,上级节点就是根节点
-                        if(categoryVO.getParentId().longValue()==-1)
-                        {
-                            categoryVO.setParentName("根节点");
-                        }else {
-                            Category queryParent = new Category();
-                            queryParent.setId(categoryVO.getParentId());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParent);
-                            resultObjectVO = categoryServiceAPI.findById(requestJsonVO);
-                            if (resultObjectVO.isSuccess()) {
-                                List<Category> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Category.class);
-                                if (!CollectionUtils.isEmpty(parentAreaList)) {
-                                    categoryVO.setParentName(parentAreaList.get(0).getName());
-                                }
-                            }
-                        }
-
-                        List<String> selectTypes = new LinkedList<>();
-                        if(StringUtils.isNotEmpty(categoryVO.getType())){
-                            selectTypes.addAll(Arrays.asList(categoryVO.getType().split(",")));
-                        }
-                        request.setAttribute("selectTypes",selectTypes);
-
-                        request.setAttribute("model",categoryVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/category/edit.html";
-    }
-
-
-
 
 
     /**
      * 保存
-     * @param entity
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody CategoryVO entity)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:save"})
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody CategoryVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = categoryServiceAPI.save(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
     /**
-     * 刷新redis缓存
-     * @param request
-     * @return
+     * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/flush/all/cache",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO flushIndexCache(HttpServletRequest request)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:update:api"})
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody CategoryVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestVo =  RequestJsonVOGenerator.generator(appCode, new CategoryVO());
-            resultObjectVO = categoryServiceAPI.flushAllCache(requestVo);
-        }catch(Exception e)
-        {
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = categoryServiceAPI.update(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:delete:api"})
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Category entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (entity.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+
+            String entityJson = JSONObject.toJSONString(entity);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = categoryServiceAPI.deleteById(requestVo);
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 批量删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:deletes:api"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<CategoryVO> categoryVOS) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (CollectionUtils.isEmpty(categoryVOS)) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(categoryVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = categoryServiceAPI.deleteByIds(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 刷新全部缓存
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:flush:cache:api"})
+    @RequestMapping(value = "/flush/all/cache", method = RequestMethod.POST)
+    public ResultObjectVO flushAllCache(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode, new CategoryVO());
+            resultObjectVO = categoryServiceAPI.flushAllCache(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
@@ -220,140 +192,106 @@ public class CategoryController extends UIController {
 
     /**
      * 清空PC首页缓存
-     * @param request
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/clear/index/cache",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO clearIndexCache(HttpServletRequest request)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:clear:index:cache:api"})
+    @RequestMapping(value = "/clear/index/cache", method = RequestMethod.POST)
+    public ResultObjectVO clearIndexCache(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            CategoryVO bannerVO = new CategoryVO();
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
+            CategoryVO categoryVO = new CategoryVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, categoryVO);
             resultObjectVO = categoryServiceAPI.clearWebIndexCache(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
+
 
     /**
-     * 修改
-     * @param entity
-     * @return
+     * 查询树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody CategoryVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-            entity.setUpdateDate(new Date());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = categoryServiceAPI.update(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryTree(HttpServletRequest request)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:query:tree:api"})
+    @RequestMapping(value = "/query/tree", method = RequestMethod.POST)
+    public ResultObjectVO queryTree(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
             return categoryServiceAPI.queryTree(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-
     /**
-     * 查询列表
-     * @param queryPageInfo
-     * @return
+     * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO treeTable(HttpServletRequest request, CategoryTreeInfo queryPageInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:tree:api"})
+    @RequestMapping(value = "/tree/table", method = RequestMethod.POST)
+    public ResultObjectVO treeTable(HttpServletRequest request, CategoryTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
             resultObjectVO = categoryServiceAPI.queryTreeTable(requestJsonVO);
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
+
     /**
-     * 查询列表
-     * @return
+     * 按父ID查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:category:listByPid:API"})
+    @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            this.setCategoryDictList(request);
-
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryTreeInfo);
             resultObjectVO = categoryServiceAPI.queryTreeTableByPid(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
+            if (resultObjectVO.isSuccess()) {
                 List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
-                if(!CollectionUtils.isEmpty(categoryTreeVOS))
-                {
-                    List<DictVO> categoryTypeList = request.getAttribute("categoryTypeList")!=null
-                            ?(List<DictVO>)request.getAttribute("categoryTypeList"):null;
+                if (!CollectionUtils.isEmpty(categoryTreeVOS)) {
+                    List<DictVO> categoryTypeList = null;
+                    List<DictVO> categoryDictList = this.getCategoryDictList();
+                    if (categoryDictList != null) {
+                        for (DictVO dictVO : categoryDictList) {
+                            if (CategoryDictConstant.CATEGORY_DICT_TYPE_CODE.equals(dictVO.getCode())) {
+                                categoryTypeList = dictVO.getChildren();
+                                break;
+                            }
+                        }
+                    }
                     Map<String, DictVO> categoryTypeMap = null;
-                    if(categoryTypeList!=null) {
+                    if (categoryTypeList != null) {
                         categoryTypeMap = categoryTypeList.stream().collect(Collectors.toMap(DictVO::getCode, dict -> dict));
                     }
-                    for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
-                    {
+                    for (CategoryTreeVO categoryTreeVO : categoryTreeVOS) {
                         categoryTreeVO.setOpen(false);
-                        //设置类型名称
-                        if(StringUtils.isNotEmpty(categoryTreeVO.getType())){
-                            if(categoryTreeVO!=null){
+                        // 设置类型名称
+                        if (StringUtils.isNotEmpty(categoryTreeVO.getType())) {
+                            if (categoryTypeMap != null) {
                                 String[] types = categoryTreeVO.getType().split(",");
                                 String typeNames = "";
-                                for(int i=0;i<types.length;i++){
+                                for (int i = 0; i < types.length; i++) {
                                     String type = types[i];
-                                    typeNames+=categoryTypeMap.get(type).getName();
-                                    if((i+1)<types.length){
-                                        typeNames+=",";
+                                    DictVO dictVO = categoryTypeMap.get(type);
+                                    if (dictVO != null) {
+                                        typeNames += dictVO.getName();
+                                    }
+                                    if ((i + 1) < types.length) {
+                                        typeNames += ",";
                                     }
                                 }
                                 categoryTreeVO.setTypeNames(typeNames);
@@ -364,33 +302,31 @@ public class CategoryController extends UIController {
                 resultObjectVO.setData(categoryTreeVOS);
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
-    {
+    /**
+     * 按父ID查询类别树
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:common:category:api"})
+    @RequestMapping(value = "/query/category/tree/pid", method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
             query.setParentId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
             resultObjectVO = categoryServiceAPI.queryListByPid(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                if(resultObjectVO.getData()!=null) {
+            if (resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
                     List<CategoryTreeVO> categoryVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
-                    for(CategoryTreeVO categoryTreeVO:categoryVOS)
-                    {
+                    for (CategoryTreeVO categoryTreeVO : categoryVOS) {
                         categoryTreeVO.setOpen(false);
                         categoryTreeVO.setIcon(null);
                     }
@@ -398,120 +334,39 @@ public class CategoryController extends UIController {
                 }
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
-
-
-
-    /**
-     * 删除
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(StringUtils.isEmpty(id))
-            {
-                resultObjectVO.setMsg("请传入ID");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            Category entity =new Category();
-            entity.setId(Long.parseLong(id));
-            entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
-
-            String entityJson = JSONObject.toJSONString(entity);
-            RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(toucan.getAppCode());
-            requestVo.setEntityJson(entityJson);
-            resultObjectVO = categoryServiceAPI.deleteById(requestVo);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-
-    /**
-     * 删除
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<CategoryVO> categoryVOS)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(CollectionUtils.isEmpty(categoryVOS))
-            {
-                resultObjectVO.setMsg("请传入ID");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String entityJson = JSONObject.toJSONString(categoryVOS);
-            RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(toucan.getAppCode());
-            requestVo.setEntityJson(entityJson);
-            resultObjectVO = categoryServiceAPI.deleteByIds(requestVo);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
 
 
     /**
      * 查询树的子节点列表
-     * @param areaTreeVO
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryTreeChildById(HttpServletRequest request, CategoryTreeVO areaTreeVO)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:treee:api"})
+    @RequestMapping(value = "/query/tree/child", method = RequestMethod.POST)
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, CategoryTreeVO categoryTreeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            CategoryTreeVO areaVO = new CategoryTreeVO();
-            areaVO.setParentId(areaTreeVO.getId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            CategoryTreeVO queryVO = new CategoryTreeVO();
+            queryVO.setParentId(categoryTreeVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryVO);
             resultObjectVO = categoryServiceAPI.queryTreeChildByPid(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
+            if (resultObjectVO.isSuccess()) {
                 List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
-                for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
-                {
-                    categoryTreeVO.setIcon(null);
+                for (CategoryTreeVO ctVO : categoryTreeVOS) {
+                    ctVO.setIcon(null);
                 }
                 resultObjectVO.setData(categoryTreeVOS);
             }
             return resultObjectVO;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }

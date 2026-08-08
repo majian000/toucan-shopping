@@ -3,8 +3,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.ShopBannerServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -25,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +34,9 @@ import java.util.List;
 /**
  * 卖家轮播图
  */
-@Controller
+@RestController
 @RequestMapping("/seller/shopBanner")
-public class ShopBannerController extends UIController {
+public class ShopBannerController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,9 +45,6 @@ public class ShopBannerController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private ShopBannerServiceAPI shopBannerService;
@@ -62,26 +56,15 @@ public class ShopBannerController extends UIController {
     private AdminServiceAPI adminServiceAPI;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/shopBanner/listPage", functionServiceAPI);
-        return "pages/seller/shopBanner/list.html";
-    }
-
-
 
     /**
      * 查询列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:banner:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ShopBannerPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody ShopBannerPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -166,29 +149,22 @@ public class ShopBannerController extends UIController {
 
 
 
-
-
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}/{shopId}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id,  @PathVariable String shopId)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:shopBanner:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody ShopBannerVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            ShopBannerVO entity =new ShopBannerVO();
-            entity.setId(Long.parseLong(id));
-            entity.setShopId(Long.parseLong(shopId));
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -206,98 +182,11 @@ public class ShopBannerController extends UIController {
 
 
     /**
-     * 编辑页
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ShopBannerVO banner = new ShopBannerVO();
-            banner.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = shopBannerService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    banner = resultObjectVO.formatData(ShopBannerVO.class);
-                    if(banner!=null)
-                    {
-                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
-                        if(banner.getStartShowDate()!=null) {
-                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        if(banner.getEndShowDate()!=null) {
-                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        request.setAttribute("model",banner);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/shopBanner/edit.html";
-    }
-
-
-    /**
-     * 查看详情页
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ShopBannerVO banner = new ShopBannerVO();
-            banner.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
-            ResultObjectVO resultObjectVO = shopBannerService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    banner = resultObjectVO.formatData(ShopBannerVO.class);
-                    if(banner!=null)
-                    {
-                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
-                        if(banner.getStartShowDate()!=null) {
-                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        if(banner.getEndShowDate()!=null) {
-                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
-                        }
-
-                        request.setAttribute("model",banner);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/shopBanner/detail.html";
-    }
-
-
-    /**
      * 添加轮播图
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shop:banner:update:api"})
     @RequestMapping(value="/update")
-    @ResponseBody
     public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -381,4 +270,3 @@ public class ShopBannerController extends UIController {
     }
 
 }
-

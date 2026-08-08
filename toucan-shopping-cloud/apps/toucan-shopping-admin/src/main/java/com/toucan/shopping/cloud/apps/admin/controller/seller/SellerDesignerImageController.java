@@ -3,8 +3,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.seller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.seller.api.SellerDesignerImageServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -24,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,9 +33,9 @@ import java.util.List;
 /**
  * 装修图片
  */
-@Controller
+@RestController
 @RequestMapping("/seller/designer/image")
-public class SellerDesignerImageController extends UIController {
+public class SellerDesignerImageController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,9 +44,6 @@ public class SellerDesignerImageController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private SellerDesignerImageServiceAPI sellerDesignerImageService;
@@ -61,26 +55,15 @@ public class SellerDesignerImageController extends UIController {
     private AdminServiceAPI adminServiceAPI;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/seller/designer/image/listPage", functionServiceAPI);
-        return "pages/seller/designer/image/list.html";
-    }
-
-
 
     /**
      * 查询列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:pageDecorate:designerImage:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, SellerDesignerImagePageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody SellerDesignerImagePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -169,25 +152,20 @@ public class SellerDesignerImageController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}/{shopId}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id,  @PathVariable String shopId)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:pageDecorate:designerImage:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody SellerDesignerImageVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            SellerDesignerImageVO entity =new SellerDesignerImageVO();
-            entity.setId(Long.parseLong(id));
-            entity.setShopId(Long.parseLong(shopId));
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -205,82 +183,11 @@ public class SellerDesignerImageController extends UIController {
 
 
     /**
-     * 编辑页
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
-            sellerDesignerImageVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
-            ResultObjectVO resultObjectVO = sellerDesignerImageService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    sellerDesignerImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
-                    if(sellerDesignerImageVO!=null)
-                    {
-                        sellerDesignerImageVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + sellerDesignerImageVO.getImgPath());
-                        request.setAttribute("model",sellerDesignerImageVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/designer/image/edit.html";
-    }
-
-
-    /**
-     * 查看详情页
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            SellerDesignerImageVO sellerDesignerImageVO = new SellerDesignerImageVO();
-            sellerDesignerImageVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
-            ResultObjectVO resultObjectVO = sellerDesignerImageService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    sellerDesignerImageVO = resultObjectVO.formatData(SellerDesignerImageVO.class);
-                    if(sellerDesignerImageVO!=null)
-                    {
-                        sellerDesignerImageVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + sellerDesignerImageVO.getImgPath());
-                        request.setAttribute("model",sellerDesignerImageVO);
-                    }
-                }
-
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/seller/designer/image/detail.html";
-    }
-
-
-    /**
      * 添加轮播图
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:pageDecorate:designerImage:update:api"})
     @RequestMapping(value="/update")
-    @ResponseBody
     public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, SellerDesignerImageVO sellerDesignerImageVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -355,4 +262,3 @@ public class SellerDesignerImageController extends UIController {
     }
 
 }
-

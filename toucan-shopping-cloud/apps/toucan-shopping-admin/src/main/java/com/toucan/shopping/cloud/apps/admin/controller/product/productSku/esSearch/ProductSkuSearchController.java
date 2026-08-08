@@ -1,14 +1,11 @@
 package com.toucan.shopping.cloud.apps.admin.controller.product.productSku.esSearch;
 
 
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
-import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -24,19 +21,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 商品SKU es搜索管理
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/product/productSku/search")
-public class ProductSkuSearchController extends UIController {
+public class ProductSkuSearchController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -45,9 +40,6 @@ public class ProductSkuSearchController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Autowired
     private CategoryServiceAPI categoryService;
@@ -59,29 +51,14 @@ public class ProductSkuSearchController extends UIController {
     private ProductSearchServiceAPI productSearchService;
 
 
-    @Autowired
-    private IdGenerator idGenerator;
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/productSku/search/listPage", functionServiceAPI);
-        request.setAttribute("pcProductSkuPreviewPage",toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getProductSkuDetailPage());
-        return "pages/product/productSku/search/list.html";
-    }
-
-
 
     /**
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:search:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ProductSearchVO productSearchVO)
+    public TableVO list(ProductSearchVO productSearchVO)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -121,9 +98,8 @@ public class ProductSkuSearchController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:category:tree:list:api"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -160,10 +136,9 @@ public class ProductSkuSearchController extends UIController {
      * 根据ID从缓存中删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:search:deleteRowBtn"})
     @RequestMapping(value = "/deleteById",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,@RequestBody ProductSearchResultVO productSearchResultVO)
+    public ResultObjectVO deleteById(@RequestBody ProductSearchResultVO productSearchResultVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -219,69 +194,16 @@ public class ProductSkuSearchController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),id);
-            ResultObjectVO resultObjectVO = productSearchService.queryBySkuId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<ProductSearchResultVO> productSearchResultVOS = resultObjectVO.formatDataList(ProductSearchResultVO.class);
-                if(CollectionUtils.isNotEmpty(productSearchResultVOS)) {
-                    ProductSearchResultVO productSearchResultVO = productSearchResultVOS.get(0);
-                    if (ObjectUtils.isNotEmpty(productSearchResultVO)) {
-                        Long[] categoryIds = new Long[1];
-                        List<Long> brandIdList = new LinkedList<>();
-                        List<Long> shopIdList = new LinkedList<>();
-
-                        categoryIds[0] = productSearchResultVO.getCategoryId();
-
-                        //设置品牌ID
-                        if (productSearchResultVO.getBrandId() != null) {
-                            brandIdList.add(productSearchResultVO.getBrandId());
-                        }
-
-
-                        //设置店铺ID
-                        if (productSearchResultVO.getShopId() != null) {
-                            shopIdList.add(productSearchResultVO.getShopId());
-                        }
-                        productSearchResultVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + productSearchResultVO.getProductPreviewPath());
-
-                        List<ProductSearchResultVO> list = new LinkedList<>();
-                        list.add(productSearchResultVO);
-
-                        //查询类别名称
-                        this.queryCategory(list,categoryIds);
-
-                        request.setAttribute("model", list.get(0));
-                    } else {
-                        request.setAttribute("model", new ProductSearchResultVO());
-                    }
-                }
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("model", new ProductSearchResultVO());
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/productSku/search/detail.html";
-    }
-
-
 
 
     /**
      * 删除
-     * @param request
+     * @param productSearchResultVOS
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:search:delete:ids:api"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ProductSearchResultVO> productSearchResultVOS)
+    public ResultObjectVO deleteByIds(@RequestBody List<ProductSearchResultVO> productSearchResultVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -311,10 +233,9 @@ public class ProductSkuSearchController extends UIController {
      * 清空搜索
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:search:clear:api"})
     @RequestMapping(value = "/clear",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO clear(HttpServletRequest request)
+    public ResultObjectVO clear()
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -330,4 +251,3 @@ public class ProductSkuSearchController extends UIController {
 
 
 }
-

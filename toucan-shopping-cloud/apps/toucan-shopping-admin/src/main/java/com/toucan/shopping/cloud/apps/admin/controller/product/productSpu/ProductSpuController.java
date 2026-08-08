@@ -4,9 +4,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSpu;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSON;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.AttributeKeyValueServiceAPI;
 import com.toucan.shopping.cloud.product.api.BrandServiceAPI;
@@ -17,7 +14,6 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -33,10 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,9 +40,9 @@ import java.util.Map;
  * SPU管理
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/productSpu")
-public class ProductSpuController extends UIController {
+public class ProductSpuController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,10 +51,6 @@ public class ProductSpuController extends UIController {
 
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
 
     @Autowired
     private CategoryServiceAPI categoryServiceAPI;
@@ -79,70 +69,13 @@ public class ProductSpuController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productSpu/listPage", functionServiceAPI);
-        return "pages/product/productSpu/list.html";
-    }
-
-
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/addPage/{categoryId}",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@PathVariable Long categoryId)
-    {
-
-        if(categoryId!=null&&categoryId!=-1)
-        {
-            try {
-                CategoryVO queryCategoryVO = new CategoryVO();
-                queryCategoryVO.setId(categoryId);
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
-                    request.setAttribute("categoryId",categoryTreeVO.getId());
-                    request.setAttribute("categoryName",categoryTreeVO.getName());
-                }else{
-                    request.setAttribute("categoryId","");
-                    request.setAttribute("categoryName","");
-                }
-                return "pages/product/productSpu/add.html";
-            }catch(Exception e)
-            {
-                logger.warn(e.getMessage(),e);
-            }
-        }
-        request.setAttribute("categoryId","");
-        request.setAttribute("categoryName","");
-        return "pages/product/productSpu/add.html";
-    }
-
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/selectBrandPage/{categoryId}",method = RequestMethod.GET)
-    public String selectBrandPage(HttpServletRequest request, @PathVariable Long categoryId)
-    {
-        request.setAttribute("categoryId",categoryId);
-        return "pages/product/productSpu/brand_list.html";
-    }
-
-
     /**
      * 保存
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:save:api"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO save(@RequestBody ProductSpuVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -164,9 +97,8 @@ public class ProductSpuController extends UIController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:update:api"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO update(@RequestBody ProductSpuVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -265,10 +197,9 @@ public class ProductSpuController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ProductSpuPageInfo pageInfo)
+    public TableVO list(@RequestBody ProductSpuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -374,10 +305,9 @@ public class ProductSpuController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTree(HttpServletRequest request)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:category:tree:api"})
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -396,15 +326,14 @@ public class ProductSpuController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:category:tree:pid:api"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            query.setParentId(id);
+            query.setParentId(categoryVO.getParentId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = categoryServiceAPI.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -434,15 +363,15 @@ public class ProductSpuController extends UIController {
 
 
 
+
     /**
      * 查询品牌列表
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:list:api"})
     @RequestMapping(value = "/brand/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO brandList(HttpServletRequest request, BrandPageInfo pageInfo)
+    public TableVO brandList(@RequestBody BrandPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -519,8 +448,8 @@ public class ProductSpuController extends UIController {
 
 
 
+
     @RequestMapping(value = "/query/attribute/tree/page",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryAttributeTreePage(@RequestBody AttributeKeyPageInfo attributeKeyPageInfo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(attributeKeyPageInfo.getCategoryId()==null)
@@ -547,24 +476,20 @@ public class ProductSpuController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:delete:api"})
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody ProductSpuVO productSpuVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(productSpuVO.getId()==null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            ProductSpuVO productSpuVO =new ProductSpuVO();
-            productSpuVO.setId(Long.parseLong(id));
 
             String entityJson = JSONObject.toJSONString(productSpuVO);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -583,12 +508,11 @@ public class ProductSpuController extends UIController {
 
 
     /**
-     * 删除
+     * 批量删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:deletes:api"})
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds( @RequestBody List<ProductSpuVO> productSpuVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -614,140 +538,4 @@ public class ProductSpuController extends UIController {
     }
 
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ProductSpuVO queryProductSpu = new ProductSpuVO();
-            queryProductSpu.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
-            ResultObjectVO resultObjectVO = productSpuServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    ProductSpuVO productSpuVO = resultObjectVO.formatData(ProductSpuVO.class);
-
-                    //查询分类
-                    CategoryVO queryCategory = new CategoryVO();
-                    queryCategory.setId(productSpuVO.getCategoryId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
-                    resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
-                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
-                    {
-                        CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
-                        if(categoryTreeVO!=null) {
-                            productSpuVO.setCategoryName(categoryTreeVO.getName());
-                        }
-                    }
-
-                    //查询品牌
-                    BrandVO queryBrand = new BrandVO();
-                    queryBrand.setId(productSpuVO.getBrandId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
-                    resultObjectVO = brandServiceAPI.findById(requestJsonVO);
-                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
-                    {
-                        List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
-                        BrandVO brandVO = brandVOS.get(0);
-                        String brandName = "";
-                        if(StringUtils.isNotEmpty(brandVO.getChineseName()))
-                        {
-                            brandName+=brandVO.getChineseName();
-                        }
-                        if(StringUtils.isNotEmpty(brandVO.getEnglishName()))
-                        {
-                            brandName+=" "+brandVO.getEnglishName();
-                        }
-                        productSpuVO.setBrandName(brandName);
-
-                    }
-
-                    //将属性名和属性值转换成字符串
-                    productSpuVO.setAttributeKeyValuesJson(JSON.toJSONString(productSpuVO.getAttributeKeyValues()));
-
-                    request.setAttribute("model",productSpuVO);
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/productSpu/edit.html";
-    }
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ProductSpuVO queryProductSpu = new ProductSpuVO();
-            queryProductSpu.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
-            ResultObjectVO resultObjectVO = productSpuServiceAPI.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    ProductSpuVO productSpuVO = resultObjectVO.formatData(ProductSpuVO.class);
-
-                    //查询分类
-                    CategoryVO queryCategory = new CategoryVO();
-                    queryCategory.setId(productSpuVO.getCategoryId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
-                    resultObjectVO = categoryServiceAPI.queryById(requestJsonVO);
-                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
-                    {
-                        CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
-                        if(categoryTreeVO!=null) {
-                            productSpuVO.setCategoryName(categoryTreeVO.getName());
-                            productSpuVO.setCategoryPath(categoryTreeVO.getPath());
-                        }
-                    }
-
-                    //查询品牌
-                    BrandVO queryBrand = new BrandVO();
-                    queryBrand.setId(productSpuVO.getBrandId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
-                    resultObjectVO = brandServiceAPI.findById(requestJsonVO);
-                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
-                    {
-                        List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
-                        BrandVO brandVO = brandVOS.get(0);
-                        String brandName = "";
-                        if(StringUtils.isNotEmpty(brandVO.getChineseName()))
-                        {
-                            brandName+=brandVO.getChineseName();
-                        }
-                        if(StringUtils.isNotEmpty(brandVO.getEnglishName()))
-                        {
-                            brandName+=" "+brandVO.getEnglishName();
-                        }
-                        productSpuVO.setBrandName(brandName);
-                        productSpuVO.setBrandChineseName(brandVO.getChineseName());
-                        productSpuVO.setBrandEnglishName(brandVO.getEnglishName());
-                        productSpuVO.setBrandLogo(brandVO.getLogoPath());
-                        if(brandVO.getLogoPath()!=null) {
-                            productSpuVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
-                        }
-
-                    }
-
-                    //将属性名和属性值转换成字符串
-                    productSpuVO.setAttributeKeyValuesJson(JSON.toJSONString(productSpuVO.getAttributeKeyValues()));
-
-                    request.setAttribute("model",productSpuVO);
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/productSpu/detail.html";
-    }
-
-
 }
-

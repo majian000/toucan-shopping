@@ -2,8 +2,6 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
 import com.alibaba.fastjson2.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -24,24 +22,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 用户收藏商品管理
  */
-@Controller
+@RestController
 @RequestMapping("/user/collect/product")
-public class UserCollectProductController extends UIController {
+public class UserCollectProductController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
 
     @Value("${toucan.app-code}")
     private String appCode;
@@ -59,16 +52,6 @@ public class UserCollectProductController extends UIController {
     private ImageUploadService imageUploadService;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/collect/product/listPage", functionServiceAPI);
-        return "pages/user/userCollectProduct/list.html";
-    }
-
-
 
 
     /**
@@ -76,10 +59,9 @@ public class UserCollectProductController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, UserCollectProductPageInfo pageInfo)
+    public TableVO list(UserCollectProductPageInfo pageInfo)
     {
         TableVO<UserCollectProductVO> tableVO = new TableVO();
         try {
@@ -145,13 +127,11 @@ public class UserCollectProductController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:delete:api"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(@PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -184,13 +164,11 @@ public class UserCollectProductController extends UIController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:deletes:api"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<UserCollectProductVO> userCollectProductVOS)
+    public ResultObjectVO deleteByIds(@RequestBody List<UserCollectProductVO> userCollectProductVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -215,4 +193,3 @@ public class UserCollectProductController extends UIController {
     }
 
 }
-

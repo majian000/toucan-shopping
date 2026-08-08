@@ -5,8 +5,6 @@ import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.stock.api.ProductSkuStockLockServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -23,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +34,9 @@ import java.util.Map;
  * 商品SKU库存锁定
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/stock/productSkuStockLock")
-public class ProductSkuStockLockController extends UIController {
+public class ProductSkuStockLockController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -50,22 +47,10 @@ public class ProductSkuStockLockController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private ProductSkuStockLockServiceAPI productSkuStockLockService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request) throws NoSuchAlgorithmException {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/stock/productSkuStockLock/listPage", functionServiceAPI);
-        this.setProductStockLockDictList(request);
-        return "pages/stock/skuStockLock/list.html";
-    }
 
 
 
@@ -92,34 +77,6 @@ public class ProductSkuStockLockController extends UIController {
     }
 
 
-    /**
-     * 查看
-     * @param request
-     * @param id
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
-    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
-    public String detailPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ProductSkuStockLockVO query = new ProductSkuStockLockVO();
-            query.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = productSkuStockLockService.findById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                ProductSkuStockLockVO productSkuStockLockVO = resultObjectVO.formatData(ProductSkuStockLockVO.class);
-                request.setAttribute("model",productSkuStockLockVO);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/stock/skuStockLock/detail.html";
-    }
-
-
 
 
     /**
@@ -127,10 +84,9 @@ public class ProductSkuStockLockController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:stock:productSkuStockLock:list:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, ProductSkuStockLockPageInfo pageInfo)
+    public TableVO list(ProductSkuStockLockPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -161,4 +117,3 @@ public class ProductSkuStockLockController extends UIController {
 
 
 }
-

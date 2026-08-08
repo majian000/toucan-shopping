@@ -7,7 +7,6 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.apache.commons.lang3.StringUtils;
@@ -16,14 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller
+@RestController
 @RequestMapping("/logout")
 public class LogoutController {
 
@@ -42,37 +39,21 @@ public class LogoutController {
     private StringRedisTemplate stringRedisTemplate;
 
 
-    @RequestMapping(value = "/page",method = RequestMethod.GET)
-    public String loginPage()
-    {
-        return "login.html";
-    }
-
-
-
-
-
     /**
      * 退出登录
-     * @param request
-     * @return
      */
-    @RequestMapping(value = "/out",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO out(HttpServletRequest request,HttpServletResponse response)
-    {
+    @RequestMapping(value = "/out", method = RequestMethod.POST)
+    public ResultObjectVO out(HttpServletRequest request, HttpServletResponse response) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try{
+        try {
             String adminId = AdminLoginHolder.getCurrentAdminId();
-            String loginToken = AuthHeaderUtil.getToken(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
-            if(StringUtils.isEmpty(adminId))
-            {
+            String loginToken = AuthHeaderUtil.getToken(toucan.getAppCode(), request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
+            if (StringUtils.isEmpty(adminId)) {
                 resultObjectVO.setMsg("没有找到adminId");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(loginToken))
-            {
+            if (StringUtils.isEmpty(loginToken)) {
                 resultObjectVO.setMsg("没有找到loginToken");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
@@ -80,19 +61,13 @@ public class LogoutController {
             AdminVO adminVO = new AdminVO();
             adminVO.setAdminId(adminId);
             adminVO.setLoginToken(loginToken);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminVO);
             return adminServiceAPI.logout(requestJsonVO);
-        }catch (Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
         }
 
         return resultObjectVO;
     }
 
-
-
-
-
 }
-

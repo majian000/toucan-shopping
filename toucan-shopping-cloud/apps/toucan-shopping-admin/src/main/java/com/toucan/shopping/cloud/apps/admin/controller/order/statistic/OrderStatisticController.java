@@ -1,32 +1,27 @@
 package com.toucan.shopping.cloud.apps.admin.controller.order.statistic;
 
 
-import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
-import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.order.api.OrderStatisticServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 订单统计
  * @author majian
  */
-@Controller
+@RestController
 @RequestMapping("/orderStatistic")
-public class OrderStatisticController extends UIController {
+public class OrderStatisticController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,24 +33,14 @@ public class OrderStatisticController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private SkylarkLock skylarkLock;
-
-    @Autowired
-    private FunctionServiceAPI functionServiceAPI;
-
-    @Autowired
     private OrderStatisticServiceAPI orderStatisticService;
-
-    @Autowired
-    private CategoryServiceAPI categoryService;
 
     /**
      * 总金额
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:orderStatisticPanel:api"})
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
-    @ResponseBody
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear()
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -74,4 +59,3 @@ public class OrderStatisticController extends UIController {
 
 
 }
-

@@ -1,10 +1,9 @@
 package com.toucan.shopping.cloud.apps.admin.controller.order;
 
 
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.order.api.OrderLogServiceAPI;
-import com.toucan.shopping.cloud.user.api.UserServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -14,7 +13,6 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultPageInfoVO;
-import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.constant.OrderDictConstant;
 import com.toucan.shopping.modules.order.page.OrderLogPageInfo;
@@ -25,12 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +34,9 @@ import java.util.stream.Collectors;
 /**
  * 订单日志
  */
-@Controller
+@RestController
 @RequestMapping("/order/orderLog")
-public class OrderLogController extends UIController {
+public class OrderLogController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -51,16 +47,13 @@ public class OrderLogController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private ImageUploadService imageUploadService;
-
-    @Autowired
     private OrderLogServiceAPI orderLogService;
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
 
     @Autowired
-    private UserServiceAPI userService;
+    private AdminServiceAPI adminServiceAPI;
 
 
     /**
@@ -68,10 +61,9 @@ public class OrderLogController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType=AdminAuth.RESPONSE_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:orderLogList:api"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @ResponseBody
-    public TableVO list(HttpServletRequest request, OrderLogPageInfo pageInfo)
+    public TableVO list(@RequestBody OrderLogPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -118,7 +110,18 @@ public class OrderLogController extends UIController {
                         }
                     }
 
-                    List<AdminVO> admins = this.queryAdminListByAdminId(operateUserIdList);
+                    List<AdminVO> admins = null;
+                    if(!CollectionUtils.isEmpty(operateUserIdList)) {
+                        String[] adminIds = new String[operateUserIdList.size()];
+                        operateUserIdList.toArray(adminIds);
+                        AdminVO queryAdminVO = new AdminVO();
+                        queryAdminVO.setAdminIds(adminIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+                        ResultObjectVO adminResultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+                        if(adminResultObjectVO.isSuccess()) {
+                            admins = adminResultObjectVO.formatDataList(AdminVO.class);
+                        }
+                    }
                     if(CollectionUtils.isNotEmpty(admins)){
                         for (OrderLogVO orderLogVO : orderLogs) {
                             for(AdminVO adminVO:admins){
@@ -147,4 +150,3 @@ public class OrderLogController extends UIController {
 
 
 }
-

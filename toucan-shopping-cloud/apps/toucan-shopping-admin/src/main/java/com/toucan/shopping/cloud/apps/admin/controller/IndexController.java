@@ -14,8 +14,6 @@ import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.HomeInfo;
@@ -56,124 +54,101 @@ public class IndexController {
     private AdminServiceAPI adminServiceAPI;
 
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
-    public void index(HttpServletRequest request, HttpServletResponse response)
-    {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public void index(HttpServletRequest request, HttpServletResponse response) {
         try {
             response.sendRedirect("/index/page");
         } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
     }
 
 
-    @RequestMapping(value = "/403",method = RequestMethod.GET)
-    public String page403(HttpServletRequest request, HttpServletResponse response)
-    {
+    @RequestMapping(value = "/403", method = RequestMethod.GET)
+    public String page403(HttpServletRequest request, HttpServletResponse response) {
         return "403.html";
     }
 
-    @RequestMapping(value = "/404",method = RequestMethod.GET)
-    public String page404(HttpServletRequest request, HttpServletResponse response)
-    {
+    @RequestMapping(value = "/404", method = RequestMethod.GET)
+    public String page404(HttpServletRequest request, HttpServletResponse response) {
         return "404.html";
     }
 
-    @RequestMapping(value = "/500",method = RequestMethod.GET)
-    public String page500(HttpServletRequest request, HttpServletResponse response)
-    {
+    @RequestMapping(value = "/500", method = RequestMethod.GET)
+    public String page500(HttpServletRequest request, HttpServletResponse response) {
         return "500.html";
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
-    @RequestMapping(value = "/index/page",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/index/page", method = RequestMethod.GET)
+    public String page(HttpServletRequest request) {
         try {
             AdminVO adminVO = new AdminVO();
             adminVO.setAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminVO);
             ResultObjectVO resultObjectVO = adminServiceAPI.queryVOByEntity(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
+            if (resultObjectVO.isSuccess()) {
                 adminVO = resultObjectVO.formatData(AdminVO.class);
-                if(adminVO!=null) {
+                if (adminVO != null) {
                     request.setAttribute("model", adminVO);
                 }
             }
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             Admin admin = new Admin();
             admin.setUsername("");
             admin.setId(-1L);
-            request.setAttribute("model",admin);
-            logger.warn(e.getMessage(),e);
+            request.setAttribute("model", admin);
+            logger.warn(e.getMessage(), e);
         }
         return "index.html";
     }
 
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM,responseType =AdminAuth.RESPONSE_FORM )
-    @RequestMapping(value = "/index/welcome",method = RequestMethod.GET)
-    public String welcome(HttpServletRequest request)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, responseType = AdminAuth.RESPONSE_FORM)
+    @RequestMapping(value = "/index/welcome", method = RequestMethod.GET)
+    public String welcome(HttpServletRequest request) {
         try {
             FunctionVO function = new FunctionVO();
             function.setUrl("/index/welcome");
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AdminLoginHolder.getCurrentAdminId());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), function);
             ResultObjectVO resultObjectVO = functionServiceAPI.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
-                if(!CollectionUtils.isEmpty(functions))
-                {
+            if (resultObjectVO.isSuccess()) {
+                List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Function.class);
+                if (!CollectionUtils.isEmpty(functions)) {
                     List<String> welcomeComponent = new ArrayList<String>();
                     StringBuilder welcomeComponentHtml = new StringBuilder();
 
-                    for(Function buttonFunction:functions)
-                    {
-                        if(buttonFunction.getType().shortValue()==5)
-                        {
+                    for (Function buttonFunction : functions) {
+                        if (buttonFunction.getType().shortValue() == 5) {
                             welcomeComponent.add(buttonFunction.getFunctionText());
                             welcomeComponentHtml.append(buttonFunction.getFunctionText());
                         }
                     }
 
-                    request.setAttribute("welcomeComponentHtml",welcomeComponentHtml);
+                    request.setAttribute("welcomeComponentHtml", welcomeComponentHtml);
                 }
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
 
-            request.setAttribute("quickButtons",new ArrayList<String>());
+            request.setAttribute("quickButtons", new ArrayList<String>());
         }
 
         return "welcome.html";
     }
 
 
-    /**
-     * 查询出每个节点的子节点
-     * @param all
-     * @param currentNode
-     */
-    public void queryChild(List<FunctionVO> all,MenuInfo currentNode)
-    {
-        for(FunctionVO functionVO:all)
-        {
-            if(functionVO.getPid().longValue()==currentNode.getId().longValue())
-            {
-                if(CollectionUtils.isEmpty(currentNode.getChild()))
-                {
+    public void queryChild(List<FunctionVO> all, MenuInfo currentNode) {
+        for (FunctionVO functionVO : all) {
+            if (functionVO.getPid().longValue() == currentNode.getId().longValue()) {
+                if (CollectionUtils.isEmpty(currentNode.getChild())) {
                     currentNode.setChild(new ArrayList<MenuInfo>());
                 }
-                //只查询目录和菜单
-                if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
-                    MenuInfo menuInfo=new MenuInfo();
+                if (functionVO.getType().shortValue() == 0 || functionVO.getType().shortValue() == 1) {
+                    MenuInfo menuInfo = new MenuInfo();
                     menuInfo.setId(functionVO.getId());
                     menuInfo.setTitle(functionVO.getName());
                     menuInfo.setHref(functionVO.getUrl());
@@ -181,19 +156,17 @@ public class IndexController {
                     menuInfo.setIcon(functionVO.getIcon());
                     currentNode.getChild().add(menuInfo);
 
-                    //查询子节点
-                    queryChild(all,menuInfo);
+                    queryChild(all, menuInfo);
                 }
             }
         }
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/index/menus",method = RequestMethod.GET)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:menu:api"})
+    @RequestMapping(value = "/index/menus", method = RequestMethod.GET)
     @ResponseBody
-    public IndexInfo menus(HttpServletRequest request)
-    {
+    public IndexInfo menus(HttpServletRequest request) {
         IndexInfo indexInfo = new IndexInfo();
 
         HomeInfo homeInfo = new HomeInfo();
@@ -213,15 +186,13 @@ public class IndexController {
             AdminApp query = new AdminApp();
             query.setAdminId(AdminLoginHolder.getCurrentAdminId());
             query.setAppCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
             ResultObjectVO resultObjectVO = functionServiceAPI.queryAdminAppFunctions(requestJsonVO);
-            if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
-            {
-                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),FunctionVO.class);
-                if(functionVOList!=null) {
+            if (resultObjectVO.getCode().longValue() == ResultObjectVO.SUCCESS.longValue()) {
+                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionVO.class);
+                if (functionVOList != null) {
                     for (FunctionVO functionVO : functionVOList) {
                         if (functionVO.getPid().longValue() == -1) {
-                            //只查询目录和菜单
                             if (functionVO.getType().shortValue() == 0 || functionVO.getType().shortValue() == 1) {
                                 MenuInfo menuInfo = new MenuInfo();
                                 menuInfo.setId(functionVO.getId());
@@ -231,7 +202,6 @@ public class IndexController {
                                 menuInfo.setIcon(functionVO.getIcon());
                                 menuInfos.add(menuInfo);
 
-                                //查询子节点
                                 queryChild(functionVOList, menuInfo);
                             }
                         }
@@ -239,9 +209,8 @@ public class IndexController {
                 }
             }
             indexInfo.setMenuInfo(menuInfos);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
         }
 
         return indexInfo;
@@ -250,40 +219,35 @@ public class IndexController {
 
     /**
      * 查询当前用户的权限标识列表(供Vue前端v-permission使用)
-     * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/index/permissions",method = RequestMethod.GET)
+    @RequestMapping(value = "/index/permissions", method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO permissions(HttpServletRequest request)
-    {
+    public ResultObjectVO permissions(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminApp query = new AdminApp();
             query.setAdminId(AdminLoginHolder.getCurrentAdminId());
             query.setAppCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
             ResultObjectVO functionsResult = functionServiceAPI.queryAdminAppFunctions(requestJsonVO);
-            if(functionsResult.isSuccess())
-            {
+            if (functionsResult.isSuccess()) {
                 List<String> permissionList = new ArrayList<>();
-                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(functionsResult.getData()),FunctionVO.class);
-                if(functionVOList!=null) {
-                    for(FunctionVO f : functionVOList) {
-                        if(f.getPermission()!=null && !f.getPermission().isEmpty()) {
+                List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(functionsResult.getData()), FunctionVO.class);
+                if (functionVOList != null) {
+                    for (FunctionVO f : functionVOList) {
+                        if (f.getPermission() != null && !f.getPermission().isEmpty()) {
                             permissionList.add(f.getPermission());
                         }
                     }
                 }
                 resultObjectVO.setData(permissionList);
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
     }
-
 
 }

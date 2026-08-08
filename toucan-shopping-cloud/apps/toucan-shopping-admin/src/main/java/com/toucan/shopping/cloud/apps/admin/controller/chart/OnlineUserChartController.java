@@ -10,13 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/online/user/chart")
 public class OnlineUserChartController {
 
@@ -25,30 +21,24 @@ public class OnlineUserChartController {
     @Value("${toucan.app-code}")
     private String appCode;
 
-
     @Autowired
     private AdminAppServiceAPI adminAppServiceAPI;
 
     /**
      * 查询登录用户数
-     * @param appLoginUserVO
-     * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/queryAppLoginUserCountList",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO)
-    {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:welcome:online:user:chart:api"})
+    @RequestMapping(value = "/queryAppLoginUserCountList", method = RequestMethod.POST)
+    public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             appLoginUserVO.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appLoginUserVO);
             resultObjectVO = adminAppServiceAPI.queryAppLoginUserCountList(requestJsonVO);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
