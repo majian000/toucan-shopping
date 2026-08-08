@@ -376,6 +376,7 @@ function handleDelete(row) {
     }
 
     .category-list {
+      min-height: 80px;
       max-height: calc(100vh - 200px);
       overflow-y: auto;
     }
