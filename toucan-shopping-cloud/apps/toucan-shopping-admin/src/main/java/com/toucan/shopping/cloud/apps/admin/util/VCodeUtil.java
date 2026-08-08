@@ -1,4 +1,5 @@
-package com.toucan.shopping.cloud.apps.admin.util;
+package com.toucan.shopping.cloud.apps.admin.auth.web.util;
+
 
 import org.apache.commons.lang3.StringUtils;
 

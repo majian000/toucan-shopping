@@ -29,7 +29,7 @@
         <!--商城客户端界面模板 -->
         <module>toucan-shopping-web-templates</module>
         <!--后台管理界面 -->
-        <module>toucan-shopping-admin-templates</module>
+        <module>layui/toucan-shopping-admin-templates</module>
         <!--权限中台界面模板 -->
         <module>layui/toucan-shopping-admin-auth-web-templates</module>
         <!--卖家客户端界面模板 -->
