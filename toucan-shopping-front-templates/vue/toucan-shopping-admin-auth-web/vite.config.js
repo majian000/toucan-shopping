@@ -27,14 +27,12 @@ export default defineConfig(({ command, mode }) => {
       alias: { '@': resolve('src') }
     },
     server: {
-      // host: '192.168.2.59',
-      host: '0.0.0.0',
+      host: env.VITE_DEV_HOST || '0.0.0.0',
       port: 8181,
       open: true,
       proxy: {
         [baseApi]: {
-          target: env.VITE_PROXY_TARGET || 'http://localhost:8098',
-          // target: env.VITE_PROXY_TARGET || 'http://192.168.2.59:8098',
+          target: env.VITE_PROXY_TARGET,
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^' + baseApi), '')
         }
