@@ -44,7 +44,7 @@ public class OperateChartController extends UIController {
      * 查询操作数
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:home:operate-chart"})
     @RequestMapping(value = "/queryOperateChart",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAppLoginUserCountList()

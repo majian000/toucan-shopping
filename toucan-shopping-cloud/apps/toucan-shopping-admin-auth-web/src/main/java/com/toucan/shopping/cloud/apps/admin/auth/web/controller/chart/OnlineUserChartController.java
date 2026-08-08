@@ -34,7 +34,7 @@ public class OnlineUserChartController {
      * @param appLoginUserVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"pms:system:online:chart"})
     @RequestMapping(value = "/queryAppLoginUserCountList",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryAppLoginUserCountList(@RequestBody(required = false) AppLoginUserVO appLoginUserVO)
