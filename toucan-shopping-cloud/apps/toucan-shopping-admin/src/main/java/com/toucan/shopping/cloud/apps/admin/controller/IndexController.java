@@ -218,6 +218,33 @@ public class IndexController {
 
 
     /**
+     * 查询当前登录用户信息(供Vue前端使用)
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/index/getInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO getInfo(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminVO adminVO = new AdminVO();
+            adminVO.setAdminId(AdminLoginHolder.getCurrentAdminId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminVO);
+            resultObjectVO = adminServiceAPI.queryVOByEntity(requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                AdminVO vo = resultObjectVO.formatData(AdminVO.class);
+                if (vo != null) {
+                    vo.setPassword(null);
+                    resultObjectVO.setData(vo);
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询当前用户的权限标识列表(供Vue前端v-permission使用)
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)

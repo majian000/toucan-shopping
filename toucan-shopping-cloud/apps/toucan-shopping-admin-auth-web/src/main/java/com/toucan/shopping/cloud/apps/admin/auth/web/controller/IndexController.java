@@ -305,8 +305,7 @@ public class IndexController {
      * 查询当前用户的权限标识列表(供Vue前端v-permission使用)
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
-            permissions = {"pms:home:welcome","pms"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY)
     @RequestMapping(value = "/index/permissions",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO permissions(HttpServletRequest request)
