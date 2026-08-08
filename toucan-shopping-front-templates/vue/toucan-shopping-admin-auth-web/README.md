@@ -9,8 +9,16 @@ npm install
 npm run dev
 ```
 
-### 编译发布
+
+### 测试编译发布
 ```
-npm run build
+npm run build:test
+```
+
+
+
+### 生产编译发布
+```
+npm run build:prod
 ```
 
