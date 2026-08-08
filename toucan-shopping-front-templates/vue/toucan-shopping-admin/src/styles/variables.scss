@@ -1,0 +1,45 @@
+// ============================
+// 全局 SCSS 变量
+// ============================
+
+// 主题色
+$primary: #409eff;
+$success: #67c23a;
+$warning: #e6a23c;
+$danger: #f56c6c;
+$info: #909399;
+
+// 文字色
+$text-primary: #303133;
+$text-regular: #606266;
+$text-secondary: #909399;
+$text-placeholder: #c0c4cc;
+
+// 边框
+$border-color: #dcdfe6;
+$border-light: #e4e7ed;
+
+// 背景
+$bg-page: #f0f2f5;
+$bg-white: #fff;
+
+// 导航
+$top-nav-height: 50px;
+$top-nav-bg: #fff;
+$top-nav-active: #409eff;
+
+$side-width: 220px;
+$side-bg: #304156;
+$side-text: #bfcbd9;
+$side-active-text: #fff;
+$side-active-bg: #409eff;
+
+// 间距
+$gap-xs: 6px;
+$gap-sm: 10px;
+$gap-md: 16px;
+$gap-lg: 24px;
+
+// 阴影
+$shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+$shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
