@@ -1,12 +1,12 @@
 package com.toucan.shopping.cloud.apps.admin.controller.column;
 
 
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;

@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.productSku.esSea
 
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.search.api.ProductSearchServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;

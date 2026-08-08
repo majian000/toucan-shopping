@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.sellerWebHtmlPage.freeSh
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;

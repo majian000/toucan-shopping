@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.orgnazition;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.*;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.AdminOrgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;

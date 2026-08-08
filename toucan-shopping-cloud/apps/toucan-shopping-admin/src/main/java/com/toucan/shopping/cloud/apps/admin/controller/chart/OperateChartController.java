@@ -1,7 +1,7 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.controller.chart;
+package com.toucan.shopping.cloud.apps.admin.controller.chart;
 
 import com.toucan.shopping.cloud.admin.auth.api.OperateLogServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

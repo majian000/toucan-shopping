@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.controller.chart;
+package com.toucan.shopping.cloud.apps.admin.controller.chart;
 
 import com.toucan.shopping.cloud.admin.auth.api.AdminAppServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;

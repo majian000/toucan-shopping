@@ -5,7 +5,7 @@ import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.BrandCategoryServiceAPI;
 import com.toucan.shopping.cloud.product.api.BrandServiceAPI;

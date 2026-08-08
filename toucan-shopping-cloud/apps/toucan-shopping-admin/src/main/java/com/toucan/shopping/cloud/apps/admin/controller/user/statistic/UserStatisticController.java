@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.user.statistic;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.user.api.UserStatisticServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

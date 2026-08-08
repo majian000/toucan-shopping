@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.auth.web.controller.base;
+package com.toucan.shopping.cloud.apps.admin.controller.base;
 
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;

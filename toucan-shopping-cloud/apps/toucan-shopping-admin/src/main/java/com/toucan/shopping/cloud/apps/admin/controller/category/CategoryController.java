@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;

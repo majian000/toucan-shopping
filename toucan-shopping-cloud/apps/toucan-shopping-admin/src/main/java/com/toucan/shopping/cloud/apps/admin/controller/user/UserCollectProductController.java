@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.product.api.ProductSkuServiceAPI;
 import com.toucan.shopping.cloud.user.api.UserCollectProductServiceAPI;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;

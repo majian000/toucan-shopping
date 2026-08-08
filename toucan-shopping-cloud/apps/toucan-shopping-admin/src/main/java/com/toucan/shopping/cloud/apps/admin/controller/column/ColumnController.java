@@ -4,7 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.column;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.content.api.ColumnServiceAPI;
 import com.toucan.shopping.cloud.content.api.ColumnTypeServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;

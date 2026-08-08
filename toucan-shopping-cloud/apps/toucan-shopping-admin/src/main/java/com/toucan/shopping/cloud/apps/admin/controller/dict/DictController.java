@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.dict;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.*;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Dict;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.page.DictPageInfo;

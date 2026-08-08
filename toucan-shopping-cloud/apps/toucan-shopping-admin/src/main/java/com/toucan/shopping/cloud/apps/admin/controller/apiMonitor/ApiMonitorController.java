@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.apiMonitor;
 
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
 import com.toucan.shopping.cloud.apiMonitor.api.ApiMonitorDashboardServiceAPI;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;

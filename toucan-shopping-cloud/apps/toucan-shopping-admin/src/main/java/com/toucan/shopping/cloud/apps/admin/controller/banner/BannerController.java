@@ -1,11 +1,11 @@
 package com.toucan.shopping.cloud.apps.admin.controller.banner;
 
 
+import com.toucan.shopping.cloud.apps.admin.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.*;
-import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerAreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.BannerServiceAPI;
