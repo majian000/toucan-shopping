@@ -300,6 +300,8 @@ public class FunctionController {
     public ResultObjectVO queryRoleFunctionFullTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            roleFunctionVO.setOperateSourceType(2);
+            roleFunctionVO.setOperateAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), roleFunctionVO);
             resultObjectVO = roleFunctionServiceAPI.queryRoleFunctionFullTree(requestJsonVO);
         } catch (Exception e) {
