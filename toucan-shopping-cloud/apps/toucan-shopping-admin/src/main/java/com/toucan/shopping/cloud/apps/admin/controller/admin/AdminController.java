@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.admin;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.AdminAppServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.AdminOrgnazitionServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.AdminRoleServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
@@ -45,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private AdminServiceAPI adminServiceAPI;
+
+    @Autowired
+    private AdminAppServiceAPI adminAppServiceAPI;
 
     @Autowired
     private AdminRoleServiceAPI adminRoleServiceAPI;
@@ -277,5 +281,27 @@ public class AdminController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 查询详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody AdminVO admin) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            admin.setOperateSourceType(2);
+            admin.setOperateAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), admin);
+            resultObjectVO = adminServiceAPI.queryDetail(requestJsonVO);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 }

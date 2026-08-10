@@ -98,4 +98,9 @@ public class AdminVO extends Admin {
      */
     private Integer operateSourceType = 1;
 
+    /**
+     * 操作应用
+     */
+    private String operateAppCode;
+
 }
