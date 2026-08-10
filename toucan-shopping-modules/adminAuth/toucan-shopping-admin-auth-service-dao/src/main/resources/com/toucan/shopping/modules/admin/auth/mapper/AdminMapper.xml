@@ -171,7 +171,8 @@
             ds2.gender,
             ds2.id_card,
             ds2.birthday,
-            ds2.address
+            ds2.address,
+            ds2.remark
              from t_sa_admin saa left join (
                 select ds.admin_id,
                     group_concat(ds.appName) as appNames,
@@ -179,6 +180,7 @@
                     max(ds.update_admin_user_name) as update_admin_user_name,
                     max(ds.nick_name) as nick_name,
                     max(ds.real_name) as real_name,
+                    max(ds.remark) as remark,
                     max(ds.phone) as phone,
                     max(ds.email) as email,
                     max(ds.gender) as gender,
@@ -238,7 +240,8 @@
                 ds2.gender,
                 ds2.id_card,
                 ds2.birthday,
-                ds2.address
+                ds2.address,
+                ds2.remark
                 from t_sa_admin saa left join (
                     select ds.admin_id,
                     group_concat(ds.appName) as appNames,
@@ -246,6 +249,7 @@
                     max(ds.update_admin_user_name) as update_admin_user_name,
                     max(ds.nick_name) as nick_name,
                     max(ds.real_name) as real_name,
+                    max(ds.remark) as remark,
                     max(ds.phone) as phone,
                     max(ds.email) as email,
                     max(ds.gender) as gender,
