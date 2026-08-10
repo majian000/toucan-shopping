@@ -69,6 +69,7 @@
         <el-table-column prop="url" label="链接" width="200" show-overflow-tooltip />
         <el-table-column prop="permission" label="权限" width="200" show-overflow-tooltip />
         <el-table-column prop="icon" label="图标" width="270" />
+        <el-table-column prop="remark" label="备注" width="150" show-overflow-tooltip />
         <el-table-column prop="functionSort" label="排序" width="70" align="center" sortable />
         <el-table-column label="类型" width="100" align="center">
           <template #default="{ row }">
@@ -132,6 +133,9 @@
         </el-form-item>
         <el-form-item label="图标" prop="icon">
           <el-input v-model="formData.icon" placeholder="请输入功能图标" maxlength="60" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注" maxlength="255" />
         </el-form-item>
         <el-form-item label="排序" prop="functionSort">
           <el-input-number v-model="formData.functionSort" :min="0" :max="9999" style="width:160px" />
@@ -256,11 +260,11 @@
               {{ viewDetail.enableStatus === 1 ? '启用' : '禁用' }}
             </el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="备注">{{ viewDetail.remark || '-' }}</el-descriptions-item>
           <el-descriptions-item label="创建人">{{ viewDetail.createAdminUsername || '-' }}</el-descriptions-item>
           <el-descriptions-item label="创建时间">{{ viewDetail.createDate || '-' }}</el-descriptions-item>
           <el-descriptions-item label="修改人">{{ viewDetail.updateAdminUsername || '-' }}</el-descriptions-item>
           <el-descriptions-item label="修改时间">{{ viewDetail.updateDate || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="备注" :span="2">{{ viewDetail.remark || '-' }}</el-descriptions-item>
         </el-descriptions>
       </div>
       <template #footer>
@@ -383,7 +387,7 @@ const formRef = ref(null)
 
 const dialogTitle = computed(() => isEdit.value ? '编辑菜单' : '添加菜单')
 
-const formData = reactive({ pid: null, type: 1, name: '', url: '', permission: '', icon: '', functionText: '', functionSort: 0, enableStatus: 1 })
+const formData = reactive({ pid: null, type: 1, name: '', url: '', permission: '', icon: '', functionText: '', remark: '', functionSort: 0, enableStatus: 1 })
 const formRules = {
   name: [{ required: true, message: '请输入功能名称', trigger: 'blur' }],
   type: [{ required: true, message: '请选择功能类型', trigger: 'change' }],
@@ -392,7 +396,7 @@ const formRules = {
 
 function resetForm() {
   formData.pid = null; formData.type = 1; formData.name = ''; formData.url = ''
-  formData.permission = ''; formData.icon = ''; formData.functionText = ''
+  formData.permission = ''; formData.icon = ''; formData.functionText = ''; formData.remark = ''
   formData.functionSort = 0; formData.enableStatus = 1
 }
 
@@ -407,7 +411,8 @@ async function handleEdit(row) {
   isEdit.value = true; editingId.value = row.id; editingFunctionId.value = row.functionId
   formData.type = row.type; formData.name = row.name; formData.url = row.url || ''
   formData.permission = row.permission || ''; formData.icon = row.icon || ''
-  formData.functionText = row.functionText || ''; formData.functionSort = row.functionSort
+  formData.functionText = row.functionText || ''; formData.remark = row.remark || ''
+  formData.functionSort = row.functionSort
   formData.enableStatus = row.enableStatus
   dialogLoading.value = true; dialogVisible.value = true
   formData.pid = (row.pid != null && row.pid !== -1) ? row.pid : null
@@ -424,7 +429,7 @@ async function handleSubmit() {
     const apiData = {
       pid: formData.pid != null ? formData.pid : -1, type: formData.type, name: formData.name,
       url: formData.url, permission: formData.permission, icon: formData.icon,
-      functionText: formData.functionText, functionSort: formData.functionSort,
+      functionText: formData.functionText, remark: formData.remark, functionSort: formData.functionSort,
       enableStatus: formData.enableStatus, appCode: selectedAppCode.value
     }
     if (isEdit.value) {

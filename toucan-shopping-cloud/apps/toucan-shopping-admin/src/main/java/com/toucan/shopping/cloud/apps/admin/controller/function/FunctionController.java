@@ -317,7 +317,7 @@ public class FunctionController {
     /**
      * 查询功能项详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:detail"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:row:view"})
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
