@@ -410,11 +410,11 @@ public class OrgnazitionBusinessService {
             List<OrgnazitionTreeVO> tree;
             if (queryApp == null || StringUtils.isEmpty(queryApp.getCode())) {
                 tree = orgnazitionService.queryTree();
+                // 填充关联应用信息
+                fillAppInfo(tree);
             } else {
                 tree = orgnazitionService.queryTree(queryApp.getCode());
             }
-            // 填充关联应用信息
-            fillAppInfo(tree);
             resultObjectVO.setData(tree);
 
         } catch (BusinessValidationException e) {

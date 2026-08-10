@@ -35,14 +35,14 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
 
 
     public void setChildren(List<OrgnazitionVO> orgnazitionVOS,OrgnazitionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
-        for (OrgnazitionVO OrgnazitionVO : orgnazitionVOS) {
+        for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
             //为当前参数的子节点
-            if(OrgnazitionVO.getPid().longValue()==currentNode.getId().longValue())
+            if(orgnazitionVO.getPid().longValue()==currentNode.getId().longValue())
             {
                 OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
-                orgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
-                orgnazitionTreeVO.setText(OrgnazitionVO.getName());
-                BeanUtils.copyProperties(orgnazitionTreeVO, OrgnazitionVO);
+                orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
                 orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
 
                 currentNode.getChildren().add(orgnazitionTreeVO);
@@ -125,14 +125,6 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
 
                     //递归查找子节点
                     setChildren(orgnazitionVOS,orgnazitionTreeVO);
-                }else if(!existsParentForOrgnazitionVOList(orgnazitionVOS,orgnazitionVO)) //如果没有上级节点,那么该节点默认为根级节点
-                {
-                    OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
-                    orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
-                    orgnazitionTreeVO.setText(orgnazitionVO.getName());
-                    BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
-                    orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
-                    orgnazitionTreeVOS.add(orgnazitionTreeVO);
                 }
             }
         }catch (Exception e)
