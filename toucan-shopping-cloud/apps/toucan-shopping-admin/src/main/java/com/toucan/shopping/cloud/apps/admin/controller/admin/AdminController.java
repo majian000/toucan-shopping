@@ -286,7 +286,7 @@ public class AdminController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:detail"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:row:show"})
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO detail(HttpServletRequest request, @RequestBody AdminVO admin) {

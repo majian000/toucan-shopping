@@ -100,6 +100,7 @@
         <el-table-column prop="idCard" label="身份证号" width="175" show-overflow-tooltip />
         <el-table-column prop="birthday" label="出生日期" width="165" />
         <el-table-column prop="address" label="地址" width="200" show-overflow-tooltip />
+        <el-table-column prop="remark" label="备注" width="150" show-overflow-tooltip />
         <el-table-column prop="createDate" label="创建时间" width="165" sortable="custom" />
         <el-table-column prop="createAdminUsername" label="创建人" width="100" />
         <el-table-column prop="updateDate" label="修改时间" width="165" />

@@ -756,8 +756,13 @@ public class AdminBusinessService {
     public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            Admin entity = JSONObject.parseObject(requestVo.getEntityJson(), Admin.class);
+            AdminVO entity = JSONObject.parseObject(requestVo.getEntityJson(), AdminVO.class);
             Check.notNull(entity.getId(), AdminResultVO.FAILD, "账号ID不能为空");
+
+            boolean isAppSource = entity.getOperateSourceType() != null
+                && entity.getOperateSourceType().intValue() == 2
+                && StringUtils.isNotEmpty(entity.getOperateAppCode());
+            String filterAppCode = isAppSource ? entity.getOperateAppCode() : null;
 
             AdminDetailVO detail = new AdminDetailVO();
 
@@ -782,6 +787,10 @@ public class AdminBusinessService {
             queryRole.setAdminId(vo != null ? vo.getAdminId() : entity.getAdminId());
             queryRole.setDeleteStatus((short) 0);
             List<AdminRole> roleList = adminRoleService.findListByEntity(queryRole);
+            // 应用来源时只返回当前应用的数据
+            if (isAppSource && !CollectionUtils.isEmpty(roleList)) {
+                roleList.removeIf(r -> !filterAppCode.equals(r.getAppCode()));
+            }
             if (!CollectionUtils.isEmpty(roleList)) {
                 List<AdminRoleVO> roleVOList = JSONArray.parseArray(JSONObject.toJSONString(roleList), AdminRoleVO.class);
                 List<String> roleIds = new ArrayList<>();
@@ -812,6 +821,10 @@ public class AdminBusinessService {
                 AdminOrgnazition orgQuery = new AdminOrgnazition();
                 orgQuery.setAdminId(aid);
                 List<AdminOrgnazition> orgList = adminOrgnazitionService.findListByEntity(orgQuery);
+                // 应用来源时只返回当前应用的数据
+                if (isAppSource && !CollectionUtils.isEmpty(orgList)) {
+                    orgList.removeIf(o -> !filterAppCode.equals(o.getAppCode()));
+                }
                 if (!CollectionUtils.isEmpty(orgList)) {
                     List<OrgnazitionVO> orgVOList = new ArrayList<>();
                     List<OrgnazitionVO> allOrgs = orgnazitionService.findListByEntity(new Orgnazition());
