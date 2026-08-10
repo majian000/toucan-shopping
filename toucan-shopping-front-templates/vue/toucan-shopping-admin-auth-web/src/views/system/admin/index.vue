@@ -534,11 +534,14 @@ async function handleEdit(row) {
   formData.confirmPwd = ''
   formData.enableStatus = row.enableStatus === 1 || row.enableStatus === '1' ? 1 : 0
   formData.remark = row.remark || ''
-  formData.appCodes = row.appCodes && row.appCodes.length > 0
-    ? (Array.isArray(row.appCodes) ? row.appCodes : String(row.appCodes).split(','))
-    : []
+  formData.appCodes = []
   dialogVisible.value = true
-  await fetchApps()
+  dialogLoading.value = true
+  try {
+    const res = await listAdminApps(row.adminId)
+    formData.appCodes = (res.data || []).map(a => a.appCode || a.code)
+  } catch { formData.appCodes = [] }
+  finally { dialogLoading.value = false }
 }
 
 async function handleSubmit() {
