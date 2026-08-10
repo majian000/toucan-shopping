@@ -34,23 +34,8 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <span class="app-select-label">已选应用：</span>
-          <el-select
-            v-model="selectedAppCode"
-            placeholder="请选择应用"
-            style="width:240px"
-            @change="handleAppChange"
-            :loading="appLoading"
-          >
-            <el-option
-              v-for="a in appOptions"
-              :key="a.code"
-              :label="a.code + ' ' + a.name"
-              :value="a.code"
-            />
-          </el-select>
-          <el-button type="primary" :icon="Plus" v-permission="'pms:system:menu:add'" :disabled="!selectedAppCode" @click="handleAdd">添加</el-button>
-          <el-button type="success" :icon="Plus" v-permission="'pms:system:menu:batch-add'" :disabled="!selectedAppCode" @click="handleBatchAdd">批量添加</el-button>
+          <el-button type="primary" :icon="Plus" v-permission="'toucan:admin:function:toolbar:save'" @click="handleAdd">添加</el-button>
+          <el-button type="success" :icon="Plus" v-permission="'toucan:admin:function:toolbar:batch-add'" @click="handleBatchAdd">批量添加</el-button>
         </div>
       </div>
 
@@ -241,7 +226,6 @@
         <el-descriptions v-if="viewDetail" :column="2" border class="view-detail-desc">
           <el-descriptions-item label="功能名称" :span="2">{{ viewDetail.name }}</el-descriptions-item>
           <el-descriptions-item label="功能ID">{{ viewDetail.functionId }}</el-descriptions-item>
-          <el-descriptions-item label="所属应用">{{ viewDetail.appName || viewDetail.appCode }}</el-descriptions-item>
           <el-descriptions-item label="功能链接" :span="2">{{ viewDetail.url || '-' }}</el-descriptions-item>
           <el-descriptions-item label="权限标识" :span="2">{{ viewDetail.permission || '-' }}</el-descriptions-item>
           <el-descriptions-item label="功能类型">
@@ -276,7 +260,6 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Refresh, Search, View } from '@element-plus/icons-vue'
 import { listMenuByPid, listMenuSimpleTree, addMenu, updateMenu, delMenu, batchAddMenus, getMenuDetail } from '@/api/system/menu'
-import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -293,27 +276,6 @@ function transformTypes(tree) {
   }))
 }
 
-// ========== 应用选择 ==========
-const appOptions = ref([])
-const appLoading = ref(false)
-const selectedAppCode = ref('')
-
-async function loadApps() {
-  appLoading.value = true
-  try {
-    const res = await listAllApps()
-    appOptions.value = res.data || []
-    if (appOptions.value.length > 0) {
-      selectedAppCode.value = appOptions.value[0].code
-    }
-  } catch { /* ignore */ } finally { appLoading.value = false }
-}
-
-function handleAppChange() {
-  fetchData()
-  tableKey.value++
-}
-
 // ========== 树形菜单数据 ==========
 const menuTree = ref([])
 const tableKey = ref(0)
@@ -322,32 +284,29 @@ const fullMenuTree = ref([])
 const treeLoading = ref(false)
 
 async function fetchData(params = {}) {
-  if (!selectedAppCode.value) { menuTree.value = []; return }
   loading.value = true
   try {
-    const base = { pid: -1, appCode: selectedAppCode.value }
-    const res = await listMenuByPid({ ...base, ...params })
+    const res = await listMenuByPid({ pid: -1, ...params })
     menuTree.value = transformTypes(res.data || [])
   } finally { loading.value = false }
 }
 
 async function loadFullTree() {
-  if (!selectedAppCode.value) { fullMenuTree.value = []; return }
   treeLoading.value = true
   try {
-    const res = await listMenuSimpleTree({ appCode: selectedAppCode.value })
+    const res = await listMenuSimpleTree({})
     fullMenuTree.value = res.data || []
   } catch { /* ignore */ }
   finally { treeLoading.value = false }
 }
 
-onMounted(() => { loadApps().then(() => fetchData()) })
+onMounted(() => { fetchData() })
 
 function handleRefresh() { fetchData(); tableKey.value++ }
 
 async function loadChildren(row, _treeNode, resolve) {
   try {
-    const res = await listMenuByPid({ pid: row.id, appCode: selectedAppCode.value })
+    const res = await listMenuByPid({ pid: row.id })
     resolve(transformTypes(res.data || []))
   } catch { resolve([]) }
 }
@@ -425,7 +384,7 @@ async function handleSubmit() {
       pid: formData.pid != null ? formData.pid : -1, type: formData.type, name: formData.name,
       url: formData.url, permission: formData.permission, icon: formData.icon,
       functionText: formData.functionText, functionSort: formData.functionSort,
-      enableStatus: formData.enableStatus, appCode: selectedAppCode.value
+      enableStatus: formData.enableStatus
     }
     if (isEdit.value) {
       apiData.id = editingId.value
@@ -491,7 +450,7 @@ async function handleBatchSubmit() {
       pid: batchForm.pid || -1,
       name: r.name, type: r.type, url: r.url, permission: r.permission,
       functionText: r.functionText, icon: r.icon, functionSort: r.functionSort,
-      enableStatus: r.enableStatus, remark: r.remark, appCode: selectedAppCode.value
+      enableStatus: r.enableStatus, remark: r.remark
     }))
     await batchAddMenus(items)
     ElMessage.success(`批量添加成功，共 ${items.length} 条`)
@@ -528,7 +487,6 @@ async function handleView(row) {
   .table-card {
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: $gap-md; }
     .toolbar-left { display: flex; gap: $gap-sm; align-items: center; }
-    .app-select-label { font-size: 14px; color: $text-secondary; white-space: nowrap; }
   }
   :deep(.el-table) th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; }
   .view-detail-desc :deep(.el-descriptions__label) { white-space: nowrap; min-width: 80px; }

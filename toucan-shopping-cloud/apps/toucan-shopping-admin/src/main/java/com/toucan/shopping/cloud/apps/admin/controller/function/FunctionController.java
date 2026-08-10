@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.function;
 
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AppServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.FunctionServiceAPI;
@@ -28,9 +29,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -66,6 +65,7 @@ public class FunctionController {
     public ResultObjectVO update(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode(toucan.getAppCode());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -87,6 +87,7 @@ public class FunctionController {
     public ResultObjectVO save(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode(toucan.getAppCode());
             entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = functionServiceAPI.save(requestJsonVO);
@@ -329,6 +330,96 @@ public class FunctionController {
             logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 批量保存
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:toolbar:batch-add"})
+    @RequestMapping(value = "/saves", method = RequestMethod.POST)
+    public ResultObjectVO saves(HttpServletRequest request, @RequestBody List<Function> entitys) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (CollectionUtils.isEmpty(entitys)) {
+                resultObjectVO.setMsg("功能项列表不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            for (Function function : entitys) {
+                function.setAppCode(toucan.getAppCode());
+                function.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entitys);
+            resultObjectVO = functionServiceAPI.saves(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询应用功能树(简化版,供上级功能选择器使用)
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:tree"})
+    @RequestMapping(value = "/query/app/function/simple/tree", method = RequestMethod.POST)
+    public ResultObjectVO queryAppFunctionSimpleTree(HttpServletRequest request, @RequestBody FunctionTreeVO functionTreeVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Function query = new Function();
+            query.setAppCode(toucan.getAppCode());
+            query.setDeleteStatus((short) 0);
+            query.setEnableStatus((short) 1);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            resultObjectVO = functionServiceAPI.queryListByAppCode(requestJsonVO);
+
+            if (!resultObjectVO.isSuccess() || resultObjectVO.getData() == null) {
+                resultObjectVO.setData(new ArrayList<>());
+                return resultObjectVO;
+            }
+            List<Function> allFunctions = JSONArray.parseArray(
+                JSONObject.toJSONString(resultObjectVO.getData()), Function.class);
+            if (CollectionUtils.isEmpty(allFunctions)) {
+                resultObjectVO.setData(new ArrayList<>());
+                return resultObjectVO;
+            }
+
+            Map<Long, List<Map<String, Object>>> pidMap = new LinkedHashMap<>();
+            for (Function f : allFunctions) {
+                Long pid = f.getPid() != null ? f.getPid() : -1L;
+                pidMap.computeIfAbsent(pid, k -> new ArrayList<>())
+                    .add(new HashMap<String, Object>() {{
+                        put("id", f.getId());
+                        put("name", f.getName());
+                    }});
+            }
+            resultObjectVO.setData(buildSimpleTree(pidMap, -1L));
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
+    private List<Map<String, Object>> buildSimpleTree(
+            Map<Long, List<Map<String, Object>>> pidMap, Long pid) {
+        List<Map<String, Object>> children = pidMap.getOrDefault(pid, Collections.emptyList());
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> item : children) {
+            Map<String, Object> node = new HashMap<>();
+            Long id = (Long) item.get("id");
+            node.put("id", id);
+            node.put("name", item.get("name"));
+            List<Map<String, Object>> childNodes = buildSimpleTree(pidMap, id);
+            if (!childNodes.isEmpty()) {
+                node.put("children", childNodes);
+            }
+            result.add(node);
+        }
+        return result;
     }
 
 }

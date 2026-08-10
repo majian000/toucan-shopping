@@ -331,7 +331,7 @@ public class RoleFunctionBusinessService {
             Check.notEmpty(query.getRoleId(), ResultVO.FAILD, "roleId为空");
             // 应用来源时强制使用operateAppCode
             if (query.getOperateSourceType() != null && query.getOperateSourceType().intValue() == 2
-                && StringUtils.isNotEmpty(query.getOperateAppCode())) {
+                    && StringUtils.isNotEmpty(query.getOperateAppCode())) {
                 query.setAppCode(query.getOperateAppCode());
             }
             Check.notEmpty(query.getAppCode(), ResultVO.FAILD, "appCode为空");
