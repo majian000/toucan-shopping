@@ -60,7 +60,7 @@ public class HotProductController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:hot:product:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, HotProductPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -129,7 +129,7 @@ public class HotProductController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:hot:product:save:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody HotProductVO hotProductVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -150,7 +150,7 @@ public class HotProductController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:hot:product:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody HotProductVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -171,7 +171,7 @@ public class HotProductController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:hot:product:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody HotProductVO hotProductVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -200,7 +200,7 @@ public class HotProductController {
     /**
      * 上传图片
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:hot:product:upload:img:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:upload:img"})
     @RequestMapping("/upload/img")
     public ResultObjectVO uploadImg(@RequestParam("file") MultipartFile file) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

@@ -84,7 +84,7 @@ public class ProductSkuStockLockController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:stock:productSkuStockLock:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:stock:productSkuStockLock:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(ProductSkuStockLockPageInfo pageInfo)
     {

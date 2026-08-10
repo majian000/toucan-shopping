@@ -14,13 +14,13 @@ public class ApiMonitorController {
     @Autowired
     private ApiMonitorDashboardServiceAPI apiMonitorDashboardServiceAPI;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"system:apiMonitor:dashboard:summary:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:monitor:dashboard:summary"})
     @RequestMapping(value = "/summary", method = RequestMethod.POST)
     public ResultObjectVO summary(@RequestBody DashboardQueryVO query) {
         return apiMonitorDashboardServiceAPI.getSummary(query);
     }
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"system:apiMonitor:dashboard:requestLog:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:monitor:dashboard:requestLog"})
     @RequestMapping(value = "/requestLog", method = RequestMethod.POST)
     public ResultObjectVO requestLog(@RequestBody DashboardQueryVO query) {
         return apiMonitorDashboardServiceAPI.getRequestLog(query);

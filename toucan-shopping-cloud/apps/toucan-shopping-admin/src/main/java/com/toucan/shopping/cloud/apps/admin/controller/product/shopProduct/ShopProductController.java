@@ -344,7 +344,7 @@ public class ShopProductController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody ShopProductPageInfo pageInfo)
     {
@@ -488,7 +488,7 @@ public class ShopProductController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:tree"})
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
@@ -508,7 +508,7 @@ public class ShopProductController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:sku:tree:pid:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:tree:pid"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
@@ -552,7 +552,7 @@ public class ShopProductController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shop:product:query:sku:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:shopProduct:query:sku:list"})
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     public TableVO queryShopProductSkuList(@RequestBody ProductSkuPageInfo pageInfo)
     {
@@ -608,7 +608,7 @@ public class ShopProductController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:shelves:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:shelves"})
     @RequestMapping(value = "/shelves",method = RequestMethod.POST)
     public ResultObjectVO shelves(@RequestBody ShopProductVO shopProductVO)
     {
@@ -646,7 +646,7 @@ public class ShopProductController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shopProduct:flushSearch:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:shopProduct:flushSearch"})
     @RequestMapping(value = "/flush/search",method = RequestMethod.POST)
     public ResultObjectVO flushSearch(@RequestBody ShopProductVO shopProductVO)
     {

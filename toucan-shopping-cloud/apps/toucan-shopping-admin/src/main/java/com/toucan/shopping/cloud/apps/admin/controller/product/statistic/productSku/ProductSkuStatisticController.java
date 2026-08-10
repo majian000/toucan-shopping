@@ -69,7 +69,7 @@ public class ProductSkuStatisticController {
      * 总数 今日新增 本月新增 本年新增
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:productSkuStatisticPanel:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:productSkuStatisticPanel"})
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear()
     {
@@ -93,7 +93,7 @@ public class ProductSkuStatisticController {
      * 总数 今日新增 本月新增 本年新增
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:statistic:product:statistic:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:statistic:product:statistic"})
     @RequestMapping(value = "/queryProductSkuStatistic",method = RequestMethod.POST)
     public ResultObjectVO queryProductSkuStatistic(@RequestBody ProductSkuStatisticVO productSkuStatisticVO)
     {
@@ -232,7 +232,7 @@ public class ProductSkuStatisticController {
      * 商品热卖列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:statistic:product:hot:sell:statistic:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:statistic:product:hot:sell:statistic"})
     @RequestMapping(value = "/queryHotSellListPage",method = RequestMethod.POST)
     public TableVO queryHotSellListPage(OrderHotSellPageInfo pageInfo)
     {

@@ -57,7 +57,7 @@ public class ColumnTypeController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:columnType:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:columnType:add"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnTypeVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -89,7 +89,7 @@ public class ColumnTypeController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:columnType:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:columnType:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnTypeVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -123,7 +123,7 @@ public class ColumnTypeController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:columnType:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:columnType:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, ColumnTypePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -186,7 +186,7 @@ public class ColumnTypeController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:columnType:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:columnType:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody ColumnTypeVO columnTypeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

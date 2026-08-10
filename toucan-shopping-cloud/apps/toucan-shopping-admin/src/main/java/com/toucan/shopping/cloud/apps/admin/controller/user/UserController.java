@@ -59,7 +59,7 @@ public class UserController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(UserPageInfo userPageInfo)
     {
@@ -109,7 +109,7 @@ public class UserController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:mobile:phone:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:mobile:phone:list"})
     @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
     public TableVO mobilePhoneList(UserPageInfo userPageInfo)
     {
@@ -146,7 +146,7 @@ public class UserController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:email:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:email:list"})
     @RequestMapping(value = "/email/list",method = RequestMethod.POST)
     public TableVO emailList(UserPageInfo userPageInfo)
     {
@@ -182,7 +182,7 @@ public class UserController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:username:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:username:list"})
     @RequestMapping(value = "/username/list",method = RequestMethod.POST)
     public TableVO usernameList(UserPageInfo userPageInfo)
     {
@@ -216,7 +216,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:regist"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:regist"})
     @RequestMapping(value="/regist", method = RequestMethod.POST)
     public ResultObjectVO regist(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -357,7 +357,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:update:detail:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:update:detail"})
     @RequestMapping(value="/update/detail", method = RequestMethod.POST)
     public ResultObjectVO updateDetail(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -457,7 +457,7 @@ public class UserController {
      * @param userMainId
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:flush:cache:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:flushCache"})
     @RequestMapping(value="/flush/cache/{userMainId}",method = RequestMethod.POST)
     public ResultObjectVO flushCache(@PathVariable String userMainId){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -493,7 +493,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:reset:password:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:reset:password"})
     @RequestMapping(value="/reset/password", method = RequestMethod.POST)
     public ResultObjectVO resetPassword(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -571,7 +571,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:mobile:phone:api:connectMobilePhone"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:mobile:phone:connectMobilePhone"})
     @RequestMapping(value="/connect/mobile/phone", method = RequestMethod.POST)
     public ResultObjectVO connectMobilePhone(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -632,7 +632,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:email:api:email"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:email:email"})
     @RequestMapping(value="/connect/email", method = RequestMethod.POST)
     public ResultObjectVO connectEmail(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -693,7 +693,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:username:api:username"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:username:username"})
     @RequestMapping(value="/connect/username", method = RequestMethod.POST)
     public ResultObjectVO connectUsername(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -756,7 +756,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:disabled:enabled"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:disabled:enabled"})
     @RequestMapping(value = "/disabled/enabled/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO disabledById(@PathVariable String id)
     {
@@ -790,7 +790,7 @@ public class UserController {
      * 手机号 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:mobile:phone:list:disabled:enabled:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:mobile:phone:list:disabled:enabled"})
     @RequestMapping(value = "/mobile/phone/disabled/enabled",method = RequestMethod.POST)
     public ResultObjectVO disabledEnabledMobilePhone(@RequestBody UserMobilePhoneVO userMobilePhoneVO)
     {
@@ -821,7 +821,7 @@ public class UserController {
      * 邮箱 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:email:list:disabled:enabled:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:email:list:disabled:enabled"})
     @RequestMapping(value = "/email/disabled/enabled",method = RequestMethod.POST)
     public ResultObjectVO disabledEnabledEmail(@RequestBody UserEmailVO userEmailVO)
     {
@@ -852,7 +852,7 @@ public class UserController {
      * 用户名 禁用/启用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:username:list:disabled:enabled:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:username:list:disabled:enabled"})
     @RequestMapping(value = "/username/disabled/enabled",method = RequestMethod.POST)
     public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody UserUserNameVO userUserNameVO)
     {
@@ -882,7 +882,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:api:disabled:ids"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:disabled:ids"})
     @RequestMapping(value = "/disabled/ids",method = RequestMethod.DELETE)
     public ResultObjectVO disabledByIds(@RequestBody List<UserVO> userVOS)
     {
@@ -917,7 +917,7 @@ public class UserController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:head:sculpture"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list:upload:head:sculpture"})
     @RequestMapping(value = "/upload/head/sculpture", method = RequestMethod.POST)
     public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
@@ -977,7 +977,7 @@ public class UserController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:idcardimg1"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list:upload:idcardimg1"})
     @RequestMapping(value = "/upload/idcardImg1", method = RequestMethod.POST)
     public ResultObjectVO  uploadIdcardImg1(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
@@ -1034,7 +1034,7 @@ public class UserController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:user:list:upload:idcardimg2"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list:upload:idcardimg2"})
     @RequestMapping(value = "/upload/idcardImg2", method = RequestMethod.POST)
     public ResultObjectVO  uploadIdcardImg2(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {

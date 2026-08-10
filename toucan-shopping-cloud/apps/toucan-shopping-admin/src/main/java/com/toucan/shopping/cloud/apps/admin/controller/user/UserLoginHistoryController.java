@@ -50,7 +50,7 @@ public class UserLoginHistoryController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:user:loginHistory:api:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:loginHistory:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(SellerLoginHistoryPageInfo pageInfo)
     {

@@ -55,7 +55,7 @@ public class AreaController {
     /**
      * 查询树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:tree"})
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     public ResultObjectVO queryTree(HttpServletRequest request)
     {
@@ -78,7 +78,7 @@ public class AreaController {
     /**
      * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:tree"})
     @RequestMapping(value = "/tree/table",method = RequestMethod.POST)
     public ResultObjectVO queryTreeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
@@ -101,7 +101,7 @@ public class AreaController {
     /**
      * 查询树列表（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
@@ -170,7 +170,7 @@ public class AreaController {
     /**
      * 按父ID查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/list/by/pid",method = RequestMethod.POST)
     public ResultObjectVO queryListByPid(HttpServletRequest request, @RequestBody AreaVO areaVO)
     {
@@ -193,7 +193,7 @@ public class AreaController {
     /**
      * 查询树的子节点列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
     public ResultObjectVO queryTreeChildById(HttpServletRequest request, AreaTreeVO areaTreeVO)
     {
@@ -217,7 +217,7 @@ public class AreaController {
     /**
      * 按 parentCode 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:query:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/list/by/parentCode",method = RequestMethod.POST)
     public ResultObjectVO queryListByParentCode(HttpServletRequest request, @RequestBody AreaVO areaVO)
     {
@@ -240,7 +240,7 @@ public class AreaController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:save"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody AreaVO entity)
     {
@@ -265,7 +265,7 @@ public class AreaController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request,@RequestBody AreaVO entity)
     {
@@ -290,7 +290,7 @@ public class AreaController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Area area)
     {
@@ -325,7 +325,7 @@ public class AreaController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AreaVO> areaVOS)
     {
@@ -359,7 +359,7 @@ public class AreaController {
     /**
      * 刷新全部缓存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:shopping:area:flush:cache"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:flushCache"})
     @RequestMapping(value = "/flush/all/cache",method = RequestMethod.POST)
     public ResultObjectVO flushAllCache(HttpServletRequest request)
     {

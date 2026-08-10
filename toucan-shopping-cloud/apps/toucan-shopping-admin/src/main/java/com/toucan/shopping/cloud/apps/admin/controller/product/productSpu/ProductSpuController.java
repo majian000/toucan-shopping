@@ -74,7 +74,7 @@ public class ProductSpuController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:save:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:save"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody ProductSpuVO entity)
     {
@@ -97,7 +97,7 @@ public class ProductSpuController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody ProductSpuVO entity)
     {
@@ -197,7 +197,7 @@ public class ProductSpuController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody ProductSpuPageInfo pageInfo)
     {
@@ -305,7 +305,7 @@ public class ProductSpuController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:category:tree"})
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
@@ -326,7 +326,7 @@ public class ProductSpuController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:category:tree:pid:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:category:tree:pid"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
@@ -369,7 +369,7 @@ public class ProductSpuController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:list"})
     @RequestMapping(value = "/brand/list",method = RequestMethod.POST)
     public TableVO brandList(@RequestBody BrandPageInfo pageInfo)
     {
@@ -478,7 +478,7 @@ public class ProductSpuController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ResultObjectVO deleteById(@RequestBody ProductSpuVO productSpuVO)
     {
@@ -511,7 +511,7 @@ public class ProductSpuController {
      * 批量删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:spu:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds( @RequestBody List<ProductSpuVO> productSpuVOS)
     {

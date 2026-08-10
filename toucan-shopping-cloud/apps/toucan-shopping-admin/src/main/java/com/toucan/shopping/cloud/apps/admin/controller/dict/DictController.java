@@ -51,7 +51,7 @@ public class DictController {
     /**
      * 查询树表格（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:tree:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:tree:list"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, @RequestBody DictPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -99,7 +99,7 @@ public class DictController {
     /**
      * 查询全部字典树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:tree:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:tree:list"})
     @RequestMapping(value = "/query/tree/all", method = RequestMethod.POST)
     public ResultObjectVO queryTreeAll(HttpServletRequest request, @RequestBody DictPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -123,7 +123,7 @@ public class DictController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody DictVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -144,7 +144,7 @@ public class DictController {
     /**
      * 查询分类列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:category:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:category:list"})
     @RequestMapping(value = "/query/category/list", method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestBody DictVO dictVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -199,7 +199,7 @@ public class DictController {
     /**
      * 查询树的子节点列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:query:tree:child:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:query:tree:child"})
     @RequestMapping(value = "/query/tree/child", method = RequestMethod.POST)
     public ResultObjectVO queryTreeChildById(HttpServletRequest request, DictTreeVO queryParam) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -224,7 +224,7 @@ public class DictController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody DictVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -244,7 +244,7 @@ public class DictController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Dict dict) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -272,7 +272,7 @@ public class DictController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:dict:dict:deletes"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Dict> dicts) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

@@ -61,7 +61,7 @@ public class OrderLogController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:orderLogList:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:orderLogList"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody OrderLogPageInfo pageInfo)
     {

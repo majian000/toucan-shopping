@@ -61,7 +61,7 @@ public class AttributeKeyController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attributeKey:tree:list:pid:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:tree:list:pid"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     public ResultObjectVO queryTreeTableByPid(AttributeKeyPageInfo pageInfo)
     {
@@ -189,7 +189,7 @@ public class AttributeKeyController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:save:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:save"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody AttributeKeyVO entity)
     {
@@ -216,7 +216,7 @@ public class AttributeKeyController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody AttributeKeyVO entity)
     {
@@ -241,7 +241,7 @@ public class AttributeKeyController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:delete"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO deleteById(@PathVariable String id)
     {
@@ -277,7 +277,7 @@ public class AttributeKeyController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     public ResultObjectVO deleteByIds( @RequestBody List<AttributeKeyVO> attributeKeyVOS)
     {
@@ -312,7 +312,7 @@ public class AttributeKeyController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(AttributeKeyPageInfo pageInfo)
     {
@@ -436,7 +436,7 @@ public class AttributeKeyController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:category:tree"})
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree()
     {
@@ -457,7 +457,7 @@ public class AttributeKeyController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attributeKey:tree:category:id:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:tree:category:id"})
     @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.POST)
     public ResultObjectVO queryTreeByCategoryId(@RequestParam Long categoryId, @RequestParam Short attributeType)
     {
@@ -482,7 +482,7 @@ public class AttributeKeyController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:key:tree:list:pid:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:tree:list:pid"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {

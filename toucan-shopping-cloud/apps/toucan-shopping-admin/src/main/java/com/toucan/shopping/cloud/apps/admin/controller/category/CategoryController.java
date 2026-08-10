@@ -76,7 +76,7 @@ public class CategoryController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody CategoryVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -97,7 +97,7 @@ public class CategoryController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody CategoryVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -118,7 +118,7 @@ public class CategoryController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Category entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -147,7 +147,7 @@ public class CategoryController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<CategoryVO> categoryVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -174,7 +174,7 @@ public class CategoryController {
     /**
      * 刷新全部缓存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:flush:cache:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:flushCache"})
     @RequestMapping(value = "/flush/all/cache", method = RequestMethod.POST)
     public ResultObjectVO flushAllCache(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -193,7 +193,7 @@ public class CategoryController {
     /**
      * 清空PC首页缓存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:clear:index:cache:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:clear:index:cache"})
     @RequestMapping(value = "/clear/index/cache", method = RequestMethod.POST)
     public ResultObjectVO clearIndexCache(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -213,7 +213,7 @@ public class CategoryController {
     /**
      * 查询树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:query:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:query:tree"})
     @RequestMapping(value = "/query/tree", method = RequestMethod.POST)
     public ResultObjectVO queryTree(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -233,7 +233,7 @@ public class CategoryController {
     /**
      * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:tree"})
     @RequestMapping(value = "/tree/table", method = RequestMethod.POST)
     public ResultObjectVO treeTable(HttpServletRequest request, CategoryTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -253,7 +253,7 @@ public class CategoryController {
     /**
      * 按父ID查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:category:listByPid:API"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:category:listByPid"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -314,7 +314,7 @@ public class CategoryController {
     /**
      * 按父ID查询类别树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:common:category:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:common:category"})
     @RequestMapping(value = "/query/category/tree/pid", method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -346,7 +346,7 @@ public class CategoryController {
     /**
      * 查询树的子节点列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:category:treee:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:tree"})
     @RequestMapping(value = "/query/tree/child", method = RequestMethod.POST)
     public ResultObjectVO queryTreeChildById(HttpServletRequest request, CategoryTreeVO categoryTreeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

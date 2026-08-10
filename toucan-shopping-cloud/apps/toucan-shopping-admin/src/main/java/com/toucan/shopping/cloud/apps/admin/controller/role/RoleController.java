@@ -59,7 +59,7 @@ public class RoleController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody Role role) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -96,7 +96,7 @@ public class RoleController {
     /**
      * 查询当前账号可管理的所有角色树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:tree:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:tree:list"})
     @RequestMapping(value = "/query/admin/role/tree", method = RequestMethod.POST)
     public ResultObjectVO queryRoleTree(HttpServletRequest request, @RequestBody AdminAppVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -136,7 +136,7 @@ public class RoleController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody Role entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -158,7 +158,7 @@ public class RoleController {
     /**
      * 关联功能项
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:connect:functions"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:connect:functions"})
     @RequestMapping(value = "/connect/functions", method = RequestMethod.POST)
     public ResultObjectVO connectFunctions(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -179,7 +179,7 @@ public class RoleController {
     /**
      * 刷新缓存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:system:role:cache:functions"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:cache:functions"})
     @RequestMapping(value = "/refresh/cache/functions", method = RequestMethod.POST)
     public ResultObjectVO refreshFunctionsCache(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -200,7 +200,7 @@ public class RoleController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(@RequestBody RolePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -229,7 +229,7 @@ public class RoleController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:delete"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Role role) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -258,7 +258,7 @@ public class RoleController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:deletes"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -285,7 +285,7 @@ public class RoleController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:detail:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:detail"})
     @RequestMapping(value = "/queryDetail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Role role) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -302,7 +302,7 @@ public class RoleController {
     /**
      * 查询角色功能列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:role:function:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:function:list"})
     @RequestMapping(value = "/function/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO queryRoleFunctionListPage(HttpServletRequest request, @RequestBody RoleFunctionPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

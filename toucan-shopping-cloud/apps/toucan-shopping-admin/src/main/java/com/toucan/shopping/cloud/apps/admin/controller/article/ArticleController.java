@@ -65,7 +65,7 @@ public class ArticleController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, ArticlePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -131,7 +131,7 @@ public class ArticleController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:add"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ArticleVO articleVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -159,7 +159,7 @@ public class ArticleController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody ArticleVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -182,7 +182,7 @@ public class ArticleController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody ArticleVO article) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -207,7 +207,7 @@ public class ArticleController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<ArticleVO> articleVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -231,7 +231,7 @@ public class ArticleController {
     /**
      * 上传图片
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:image:upload:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:image:upload"})
     @RequestMapping("/upload/img")
     public ResultObjectVO uploadImg(@RequestParam("file") MultipartFile file) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -269,7 +269,7 @@ public class ArticleController {
     /**
      * 查询栏目树（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:article:column:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:column:tree"})
     @RequestMapping(value = "/query/column/tree/pid", method = RequestMethod.POST)
     public ResultObjectVO queryColumnTreeByParentId(@RequestParam(defaultValue = "-1") Long id) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

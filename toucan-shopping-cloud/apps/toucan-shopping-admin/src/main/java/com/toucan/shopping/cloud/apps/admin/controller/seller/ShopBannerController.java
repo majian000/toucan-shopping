@@ -62,7 +62,7 @@ public class ShopBannerController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:banner:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shopBanner:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, @RequestBody ShopBannerPageInfo pageInfo)
     {
@@ -153,7 +153,7 @@ public class ShopBannerController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:shopBanner:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:shopBanner:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ResultObjectVO deleteById(@RequestBody ShopBannerVO entity)
     {
@@ -185,7 +185,7 @@ public class ShopBannerController {
      * 添加轮播图
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:shop:banner:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shopBanner:update"})
     @RequestMapping(value="/update")
     public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
     {

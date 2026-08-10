@@ -73,7 +73,7 @@ public class UserTrueNameApproveController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:trueNameApprove:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(UserTrueNameApprovePageInfo pageInfo)
     {
@@ -138,7 +138,7 @@ public class UserTrueNameApproveController {
      * 审核通过
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:pass:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:trueNameApprove:pass"})
     @RequestMapping(value = "/pass/{id}/{userMainId}",method = RequestMethod.POST)
     public ResultObjectVO passById(@PathVariable String id,@PathVariable Long userMainId)
     {
@@ -193,7 +193,7 @@ public class UserTrueNameApproveController {
      * @param userTrueNameApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userTrueNameApprove:reject:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:trueNameApprove:reject"})
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
     public ResultObjectVO reject(@RequestBody UserTrueNameApproveVO userTrueNameApproveVO)
     {

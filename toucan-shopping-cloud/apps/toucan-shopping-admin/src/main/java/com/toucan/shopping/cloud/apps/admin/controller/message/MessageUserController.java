@@ -75,7 +75,7 @@ public class MessageUserController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:delete"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO deleteById(@PathVariable String id)
     {
@@ -111,7 +111,7 @@ public class MessageUserController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody MessageUserVO entity)
     {
@@ -135,7 +135,7 @@ public class MessageUserController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:add"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody MessageUserVO entity)
     {
@@ -186,7 +186,7 @@ public class MessageUserController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageUser:list:page"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:list:page"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(MessageUserPageInfo pageInfo)
     {

@@ -30,7 +30,7 @@ public class ImgUploadController {
     private ImageUploadService imageUploadService;
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:common:img:upload:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:common:img:upload"})
     @RequestMapping("/img/upload")
     public ResultObjectVO imgUpload(@RequestParam("file") MultipartFile file) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

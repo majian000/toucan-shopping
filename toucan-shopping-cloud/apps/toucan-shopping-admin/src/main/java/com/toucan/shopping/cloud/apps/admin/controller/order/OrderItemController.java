@@ -51,7 +51,7 @@ public class OrderItemController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:item:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:item:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody OrderItemPageInfo pageInfo)
     {
@@ -95,7 +95,7 @@ public class OrderItemController {
      * 查询列表
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:modifyOrderItemList:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:modifyOrderItemList"})
     @RequestMapping(value = "/all/list",method = RequestMethod.POST)
     public TableVO queryListAllByOrderId(@RequestBody OrderItemPageInfo pageInfo)
     {
@@ -138,7 +138,7 @@ public class OrderItemController {
      * @param itemVOS
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:list:item:updatesFromOrderList:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:list:item:updatesFromOrderList"})
     @RequestMapping(value = "/updatesFromOrderList",method = RequestMethod.POST)
     public ResultObjectVO updatesFromOrderList(@RequestBody List<OrderItemVO> itemVOS)
     {

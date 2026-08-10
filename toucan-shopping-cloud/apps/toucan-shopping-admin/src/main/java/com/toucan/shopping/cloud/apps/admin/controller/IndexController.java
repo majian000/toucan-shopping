@@ -163,7 +163,7 @@ public class IndexController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:menu:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:menu"})
     @RequestMapping(value = "/index/menus", method = RequestMethod.GET)
     @ResponseBody
     public IndexInfo menus(HttpServletRequest request) {

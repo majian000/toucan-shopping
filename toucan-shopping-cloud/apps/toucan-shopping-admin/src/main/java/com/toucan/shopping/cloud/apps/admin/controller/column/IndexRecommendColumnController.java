@@ -71,7 +71,7 @@ public class IndexRecommendColumnController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, ColumnPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -138,7 +138,7 @@ public class IndexRecommendColumnController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:column:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:column:add"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody PcIndexColumnVO indexRecommendColumnVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -161,7 +161,7 @@ public class IndexRecommendColumnController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:pc:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:pc:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody PcIndexColumnVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -184,7 +184,7 @@ public class IndexRecommendColumnController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:pc:findById:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:pc:findById"})
     @RequestMapping(value = "/findById", method = RequestMethod.POST)
     public ResultObjectVO findById(HttpServletRequest request, @RequestBody PcIndexColumnVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -235,7 +235,7 @@ public class IndexRecommendColumnController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:pc:index:column:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:pc:index:column:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody ColumnVO columnVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -264,7 +264,7 @@ public class IndexRecommendColumnController {
     /**
      * 查询地区树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:column:area:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:column:area:tree"})
     @RequestMapping(value = "/query/area/tree", method = RequestMethod.POST)
     public ResultObjectVO queryAreaTree(HttpServletRequest request, String columnId) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

@@ -42,7 +42,7 @@ public class OperateChartController {
      * 查询操作数
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:welcome:operate:chart:query:operate:chart:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:welcome:operate:chart:query:operate:chart"})
     @RequestMapping(value = "/queryOperateChart",method = RequestMethod.POST)
     public ResultObjectVO queryAppLoginUserCountList()
     {

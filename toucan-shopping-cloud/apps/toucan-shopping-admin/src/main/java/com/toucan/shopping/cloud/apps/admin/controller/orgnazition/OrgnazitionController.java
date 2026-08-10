@@ -57,7 +57,7 @@ public class OrgnazitionController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody OrgnazitionVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -81,7 +81,7 @@ public class OrgnazitionController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody OrgnazitionVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -104,7 +104,7 @@ public class OrgnazitionController {
     /**
      * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:list"})
     @RequestMapping(value = "/tree/table", method = RequestMethod.POST)
     public ResultObjectVO treeTable(HttpServletRequest request, @RequestBody OrgnazitionTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -126,7 +126,7 @@ public class OrgnazitionController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:delete"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Orgnazition orgnazition) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -153,7 +153,7 @@ public class OrgnazitionController {
     /**
      * 查询组织机构树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:tree"})
     @RequestMapping(value = "/query/tree", method = RequestMethod.POST)
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -191,7 +191,7 @@ public class OrgnazitionController {
     /**
      * 查看账号所关联应用的所有组织机构树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:tree"})
     @RequestMapping(value = "/query/admin/orgnazition/tree", method = RequestMethod.POST)
     public ResultObjectVO queryAdminOrgnazitionTree(HttpServletRequest request, @RequestBody AdminAppVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -237,7 +237,7 @@ public class OrgnazitionController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:orgnazition:deletes"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:orgnazition:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<OrgnazitionVO> OrgnazitionVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

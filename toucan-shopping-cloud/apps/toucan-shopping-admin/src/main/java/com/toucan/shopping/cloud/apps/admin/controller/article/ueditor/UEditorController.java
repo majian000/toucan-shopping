@@ -38,7 +38,7 @@ public class UEditorController {
     @Autowired
     private ArticleImageServiceAPI articleImageService;
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:common:ueditor:config:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:common:ueditor:config"})
     @RequestMapping("/config")
     public Object config(@RequestParam(value = "action", required = false) String action, HttpServletRequest request, HttpServletRequest response) throws Exception {
         if ("config".equals(action)) {

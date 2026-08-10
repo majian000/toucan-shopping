@@ -59,7 +59,7 @@ public class OrderController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody OrderPageInfo pageInfo)
     {
@@ -97,7 +97,7 @@ public class OrderController {
      * 取消
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:cancel:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:cancel"})
     @RequestMapping(value = "/cancel",method = RequestMethod.POST)
     public ResultObjectVO cancel(@RequestBody OrderVO orderVO)
     {
@@ -148,7 +148,7 @@ public class OrderController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:order:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody OrderVO entity)
     {

@@ -59,7 +59,7 @@ public class UserCollectProductController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:collectProduct:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(UserCollectProductPageInfo pageInfo)
     {
@@ -129,7 +129,7 @@ public class UserCollectProductController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:collectProduct:delete"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO deleteById(@PathVariable String id)
     {
@@ -166,7 +166,7 @@ public class UserCollectProductController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userCollectProduct:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:collectProduct:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     public ResultObjectVO deleteByIds(@RequestBody List<UserCollectProductVO> userCollectProductVOS)
     {

@@ -80,7 +80,7 @@ public class SelectShopProductController {
      * @param queryShopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:component:select:shop:product:list:id:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:component:select:shop:product:list:id"})
     @RequestMapping(value = "/list/id",method = RequestMethod.POST)
     public ResultObjectVO listById(@RequestBody ShopProductVO queryShopProductVO)
     {
@@ -204,7 +204,7 @@ public class SelectShopProductController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:component:select:shop:product:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:component:select:shop:product:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody SelectShopProductPageInfo pageInfo)
     {
@@ -359,7 +359,7 @@ public class SelectShopProductController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:component:select:shop:product:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:component:select:shop:product:category:tree"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestParam(defaultValue = "-1") Long id)
     {
@@ -633,7 +633,7 @@ public class SelectShopProductController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:component:select:shop:product:sku:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:component:select:shop:product:sku:tree"})
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     public TableVO queryShopProductSkuList(ProductSkuPageInfo pageInfo)
     {

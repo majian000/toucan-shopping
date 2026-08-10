@@ -27,7 +27,7 @@ public class OnlineUserChartController {
     /**
      * 查询登录用户数
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:welcome:online:user:chart:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:welcome:online:user:chart"})
     @RequestMapping(value = "/queryAppLoginUserCountList", method = RequestMethod.POST)
     public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

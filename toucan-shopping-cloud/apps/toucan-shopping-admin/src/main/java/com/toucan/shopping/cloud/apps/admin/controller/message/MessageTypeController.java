@@ -52,7 +52,7 @@ public class MessageTypeController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageType:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:add"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody MessageTypeVO entity)
     {
@@ -87,7 +87,7 @@ public class MessageTypeController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageType:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody MessageTypeVO entity)
     {
@@ -123,7 +123,7 @@ public class MessageTypeController {
      * 刷新缓存
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageType:flushCache:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:flushCache"})
     @RequestMapping(value = "/flush/cache",method = RequestMethod.POST)
     public ResultObjectVO flushCache()
     {
@@ -146,7 +146,7 @@ public class MessageTypeController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageType:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(MessageTypePageInfo pageInfo)
     {
@@ -182,7 +182,7 @@ public class MessageTypeController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:message:messageType:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:delete"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO deleteById(@PathVariable String id)
     {

@@ -69,7 +69,7 @@ public class BrandController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, BrandPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -135,7 +135,7 @@ public class BrandController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:save:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody BrandVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -154,7 +154,7 @@ public class BrandController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody BrandVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -173,7 +173,7 @@ public class BrandController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Brand brand) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -200,7 +200,7 @@ public class BrandController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:delete"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(@RequestBody List<BrandVO> brandVOS) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -227,7 +227,7 @@ public class BrandController {
     /**
      * 上传LOGO
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:upload:logo:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:upload:logo"})
     @RequestMapping("/upload/logo")
     public ResultObjectVO uploadLogo(@RequestParam("file") MultipartFile file, @RequestParam("id") Long brandId) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -266,7 +266,7 @@ public class BrandController {
     /**
      * 列表页 - 查询分类树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand:category:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:category:list"})
     @RequestMapping(value = "/list/page/query/category/tree", method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeForListPage(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -287,7 +287,7 @@ public class BrandController {
     /**
      * 查询类别树（含品牌关联选中状态）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:brand::category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:brand:category:tree"})
     @RequestMapping(value = "/query/category/tree", method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree(Long brandId) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

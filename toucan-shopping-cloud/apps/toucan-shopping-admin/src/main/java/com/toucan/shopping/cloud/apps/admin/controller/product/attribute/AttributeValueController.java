@@ -58,7 +58,7 @@ public class AttributeValueController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeKey:attributeValue:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:attributeValue:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(AttributeValuePageInfo pageInfo)
     {
@@ -139,7 +139,7 @@ public class AttributeValueController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:attribute:value:save:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeValue:save"})
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public ResultObjectVO save(@RequestBody AttributeValueVO entity)
     {
@@ -166,7 +166,7 @@ public class AttributeValueController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeValue:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(@RequestBody AttributeValueVO entity)
     {
@@ -192,7 +192,7 @@ public class AttributeValueController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeValue:delete"})
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public ResultObjectVO deleteById(@PathVariable String id)
     {
@@ -228,7 +228,7 @@ public class AttributeValueController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:attributeValue:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeValue:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     public ResultObjectVO deleteByIds( @RequestBody List<AttributeValueVO> attributeValueVOS)
     {

@@ -63,7 +63,7 @@ public class ShopController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, @RequestBody SellerShopPageInfo pageInfo)
     {
@@ -139,7 +139,7 @@ public class ShopController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ResultObjectVO deleteById(@RequestBody SellerShopVO entity)
     {
@@ -175,7 +175,7 @@ public class ShopController {
      * 批量删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:deletes:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:deletes"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(@RequestBody List<SellerShopVO> sellerShopVOS)
     {
@@ -206,7 +206,7 @@ public class ShopController {
      * 商铺 启用/禁用
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:api:disabledEnabled"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:disabledEnabled"})
     @RequestMapping(value = "/disabled/enabled",method = RequestMethod.POST)
     public ResultObjectVO disabledEnabledByPublicShopId(@RequestBody SellerShopVO sellerShopVO)
     {
@@ -233,7 +233,7 @@ public class ShopController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:uploadLog:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:uploadLog"})
     @RequestMapping("/upload/logo")
     public ResultObjectVO  uploadLogo(@RequestParam("file") MultipartFile file, @RequestParam("publicShopId")String publicShopId)
     {
@@ -281,7 +281,7 @@ public class ShopController {
      * @param entity
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:update"})
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody SellerShopVO entity)
     {

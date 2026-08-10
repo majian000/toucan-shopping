@@ -95,7 +95,7 @@ public class ColumnController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:add:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:add"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnVO columnVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -128,7 +128,7 @@ public class ColumnController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:update:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -162,7 +162,7 @@ public class ColumnController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody ColumnVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -188,7 +188,7 @@ public class ColumnController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:deletes"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<Column> columns) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -213,7 +213,7 @@ public class ColumnController {
     /**
      * 查询栏目类型列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:type:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:type:list"})
     @RequestMapping(value = "/query/type/list", method = RequestMethod.POST)
     public ResultObjectVO queryColumnTypeList(@RequestParam(defaultValue = "-1") Long id) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -245,7 +245,7 @@ public class ColumnController {
     /**
      * 查询栏目树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:tree"})
     @RequestMapping(value = "/query/column/tree", method = RequestMethod.POST)
     public ResultObjectVO queryColumnTree(HttpServletRequest request, ColumnTreeVO queryColumnTreeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -283,7 +283,7 @@ public class ColumnController {
     /**
      * 查询树表格（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:column:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, ColumnPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

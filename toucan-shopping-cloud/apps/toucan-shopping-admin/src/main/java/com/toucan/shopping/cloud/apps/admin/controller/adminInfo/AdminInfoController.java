@@ -34,7 +34,7 @@ public class AdminInfoController {
     /**
      * 保存/更新（完善他人信息）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:system:admin:adminInfo:saveOrUpdate:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:adminInfo:saveOrUpdate"})
     @RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
     public ResultObjectVO saveOrUpdate(HttpServletRequest request, @RequestBody AdminInfo entity) {
         ResultObjectVO resultObjectVO;
@@ -58,7 +58,7 @@ public class AdminInfoController {
     /**
      * 保存/更新我的信息（强制使用当前登录用户adminId）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:system:myinfo"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:myinfo"})
     @RequestMapping(value = "/saveOrUpdateMyInfo", method = RequestMethod.POST)
     public ResultObjectVO saveOrUpdateMyInfo(HttpServletRequest request, @RequestBody AdminInfo entity) {
         ResultObjectVO resultObjectVO;

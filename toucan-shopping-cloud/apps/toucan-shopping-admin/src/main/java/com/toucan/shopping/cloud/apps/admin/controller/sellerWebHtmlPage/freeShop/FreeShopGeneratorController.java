@@ -36,7 +36,7 @@ public class FreeShopGeneratorController {
      * 生成预览
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:freeShop:html:generator:preview:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:freeShop:html:generator:preview"})
     @RequestMapping(value = "/generate/preview",method = RequestMethod.POST)
     public ResultObjectVO generatePreview()
     {
@@ -104,7 +104,7 @@ public class FreeShopGeneratorController {
      * 生成最终版
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:web:freeShop:html:generator:release:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:web:freeShop:html:generator:release"})
     @RequestMapping(value = "/generate/release",method = RequestMethod.POST)
     public ResultObjectVO generateRelease()
     {

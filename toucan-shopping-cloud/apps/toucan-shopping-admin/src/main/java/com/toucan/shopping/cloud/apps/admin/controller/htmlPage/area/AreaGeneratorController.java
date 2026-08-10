@@ -36,7 +36,7 @@ public class AreaGeneratorController {
      * 生成最终版
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:area:html:generator:release:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:html:generator:release"})
     @RequestMapping(value = "/generate/release",method = RequestMethod.POST)
     public ResultObjectVO generateRelease()
     {

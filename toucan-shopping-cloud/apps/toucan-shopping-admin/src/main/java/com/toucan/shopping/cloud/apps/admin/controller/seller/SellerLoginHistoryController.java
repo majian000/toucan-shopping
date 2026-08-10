@@ -48,7 +48,7 @@ public class SellerLoginHistoryController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:user:login:history:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:loginHistory:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, @RequestBody SellerLoginHistoryPageInfo pageInfo)
     {

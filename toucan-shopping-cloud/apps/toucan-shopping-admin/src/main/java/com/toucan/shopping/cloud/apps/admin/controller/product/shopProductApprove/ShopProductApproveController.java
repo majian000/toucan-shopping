@@ -301,7 +301,7 @@ public class ShopProductApproveController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:spu:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:spu:list"})
     @RequestMapping(value = "/query/product/spu/list",method = RequestMethod.POST)
     public TableVO queryProductSpuList(@RequestBody ProductSpuPageInfo pageInfo)
     {
@@ -471,7 +471,7 @@ public class ShopProductApproveController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(@RequestBody ShopProductApprovePageInfo pageInfo)
     {
@@ -618,7 +618,7 @@ public class ShopProductApproveController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:sku:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:sku:list"})
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     public TableVO queryShopProductApproveSkuList(@RequestBody ShopProductApproveSkuPageInfo pageInfo)
     {
@@ -668,7 +668,7 @@ public class ShopProductApproveController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:category:tree"})
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)
     {
@@ -688,7 +688,7 @@ public class ShopProductApproveController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:query:category:tree:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:query:category:tree"})
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTreeByParentId(@RequestBody CategoryVO categoryVO)
     {
@@ -725,7 +725,7 @@ public class ShopProductApproveController {
      * 删除
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:delete"})
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public ResultObjectVO deleteById(@RequestBody ShopProductApprove shopProductApprove)
     {
@@ -757,7 +757,7 @@ public class ShopProductApproveController {
      * 审核驳回
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:reject:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:reject"})
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
     public ResultObjectVO reject(HttpServletRequest request, @RequestBody ShopProductApproveRecordVO shopProductApproveRecordVO)
     {
@@ -833,7 +833,7 @@ public class ShopProductApproveController {
      * 审核通过
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:product:approve:pass:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:approve:pass"})
     @RequestMapping(value = "/pass",method = RequestMethod.POST)
     public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductApproveVO shopProductApproveVO)
     {

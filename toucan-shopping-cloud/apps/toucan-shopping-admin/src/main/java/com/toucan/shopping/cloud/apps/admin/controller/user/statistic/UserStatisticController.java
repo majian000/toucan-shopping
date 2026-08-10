@@ -38,7 +38,7 @@ public class UserStatisticController {
      * 总数 今日新增 本月新增 本年新增
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:index:userStatisticPanel:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:userStatisticPanel"})
     @RequestMapping(value = "/queryTotalAndTodayAndCurrentMonthAndCurrentYear",method = RequestMethod.POST)
     public ResultObjectVO queryTotalAndTodayAndCurrentMonthAndCurrentYear()
     {

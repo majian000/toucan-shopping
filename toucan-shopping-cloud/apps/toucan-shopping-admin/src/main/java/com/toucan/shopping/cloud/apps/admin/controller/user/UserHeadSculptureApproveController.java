@@ -74,7 +74,7 @@ public class UserHeadSculptureApproveController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:headSculptureApprove:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     public TableVO list(UserHeadSculptureApprovePageInfo pageInfo)
     {
@@ -121,7 +121,7 @@ public class UserHeadSculptureApproveController {
      * 审核通过
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:pass:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:headSculptureApprove:pass"})
     @RequestMapping(value = "/pass/{id}",method = RequestMethod.POST)
     public ResultObjectVO passById(@PathVariable String id)
     {
@@ -176,7 +176,7 @@ public class UserHeadSculptureApproveController {
      * @param userHeadSculptureApproveVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:userHeadSculptureApprove:reject:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:headSculptureApprove:reject"})
     @RequestMapping(value = "/reject",method = RequestMethod.POST)
     public ResultObjectVO reject(@RequestBody UserHeadSculptureApproveVO userHeadSculptureApproveVO)
     {

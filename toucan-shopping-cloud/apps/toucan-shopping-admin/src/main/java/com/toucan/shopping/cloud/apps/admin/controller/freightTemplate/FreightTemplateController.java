@@ -59,7 +59,7 @@ public class FreightTemplateController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:freightTemplate:list:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:freightTemplate:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest httpServletRequest, FreightTemplatePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -91,7 +91,7 @@ public class FreightTemplateController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:freightTemplate:detail:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:freightTemplate:detail"})
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResultObjectVO detail(HttpServletRequest request, @RequestBody FreightTemplateVO freightTemplateVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -115,7 +115,7 @@ public class FreightTemplateController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"shopping:seller:shop:freightTemplate:delete:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:freightTemplate:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody FreightTemplateVO freightTemplateVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

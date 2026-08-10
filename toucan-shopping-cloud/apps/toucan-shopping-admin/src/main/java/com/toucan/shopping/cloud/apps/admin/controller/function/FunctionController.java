@@ -61,7 +61,7 @@ public class FunctionController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -82,7 +82,7 @@ public class FunctionController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -102,7 +102,7 @@ public class FunctionController {
     /**
      * 查询树表格
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:tree"})
     @RequestMapping(value = "/tree/table", method = RequestMethod.POST)
     public ResultObjectVO treeTable(HttpServletRequest request, @RequestBody FunctionTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -124,7 +124,7 @@ public class FunctionController {
     /**
      * 查询树表格（按父ID）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:tree"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
     public ResultObjectVO treeTableByPid(HttpServletRequest request, @RequestBody FunctionTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -146,7 +146,7 @@ public class FunctionController {
     /**
      * 删除功能项
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:delete"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Function function) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -200,7 +200,7 @@ public class FunctionController {
     /**
      * 查询应用功能树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:query:app:function:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:query:app:function:tree"})
     @RequestMapping(value = "/query/app/function/tree", method = RequestMethod.POST)
     public ResultObjectVO queryAppFunctionTree(HttpServletRequest request, @RequestBody FunctionTreeVO functionTreeVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -262,7 +262,7 @@ public class FunctionController {
     /**
      * 返回指定角色下的功能树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:role:function:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:role:function:tree"})
     @RequestMapping(value = "/query/role/function/tree", method = RequestMethod.POST)
     public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -295,7 +295,7 @@ public class FunctionController {
     /**
      * 查询角色完整功能树（含嵌套children）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:role:function:full:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:role:function:full:tree"})
     @RequestMapping(value = "/query/role/function/full/tree", method = RequestMethod.POST)
     public ResultObjectVO queryRoleFunctionFullTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -314,7 +314,7 @@ public class FunctionController {
     /**
      * 查询功能项详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:function:detail:api"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:detail"})
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Function entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

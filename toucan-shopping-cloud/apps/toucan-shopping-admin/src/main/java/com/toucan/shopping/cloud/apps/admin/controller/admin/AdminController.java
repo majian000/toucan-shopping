@@ -56,7 +56,7 @@ public class AdminController {
     /**
      * 保存
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:save"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:save"})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResultObjectVO save(HttpServletRequest request, @RequestBody AdminVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -89,7 +89,7 @@ public class AdminController {
     /**
      * 关联角色
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:connect:roles"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:connect:roles"})
     @RequestMapping(value = "/connect/roles", method = RequestMethod.POST)
     public ResultObjectVO connectRoles(HttpServletRequest request, @RequestBody AdminRoleVO adminRoleVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -110,7 +110,7 @@ public class AdminController {
     /**
      * 关联组织机构
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:connect:orgnazitions"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:connect:orgnazitions"})
     @RequestMapping(value = "/connect/orgnazitions", method = RequestMethod.POST)
     public ResultObjectVO connectOrgnazitions(HttpServletRequest request, @RequestBody AdminOrgnazitionVO adminOrgnazitionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -131,7 +131,7 @@ public class AdminController {
     /**
      * 修改密码
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:update:password"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:update:password"})
     @RequestMapping(value = "/update/password", method = RequestMethod.POST)
     public ResultObjectVO updatePassword(HttpServletRequest request, @RequestBody AdminVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -152,7 +152,7 @@ public class AdminController {
     /**
      * 修改我的密码
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:system:my:update:password"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:my:update:password"})
     @RequestMapping(value = "/update/mypassword", method = RequestMethod.POST)
     public ResultObjectVO updateMyPassword(HttpServletRequest request, @RequestBody AdminVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -175,7 +175,7 @@ public class AdminController {
     /**
      * 修改
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:update"})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultObjectVO update(HttpServletRequest request, @RequestBody AdminVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -207,7 +207,7 @@ public class AdminController {
     /**
      * 查询列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public TableVO list(HttpServletRequest request, @RequestBody AdminPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
@@ -236,7 +236,7 @@ public class AdminController {
     /**
      * 删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:delete"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:delete"})
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultObjectVO deleteById(HttpServletRequest request, @RequestBody Admin admin) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -265,7 +265,7 @@ public class AdminController {
     /**
      * 批量删除
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"usercenter:permission:system:admin:deletes"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:admin:deletes"})
     @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AdminVO> adminVos) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
