@@ -18,11 +18,6 @@
             <el-option label="禁用" :value="0" />
           </el-select>
         </el-form-item>
-        <el-form-item label="所属应用">
-          <el-select v-model="searchForm.appCode" placeholder="请选择" clearable style="width:200px" :loading="appLoading">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="真实姓名">
           <el-input v-model="searchForm.realName" placeholder="请输入真实姓名" clearable style="width:160px" />
         </el-form-item>
@@ -73,14 +68,6 @@
         <el-table-column prop="id" label="主键" width="200" />
         <el-table-column prop="adminId" label="账号ID" width="170" show-overflow-tooltip />
         <el-table-column prop="username" label="账号" width="100" />
-        <el-table-column label="关联应用" width="180">
-          <template #default="{ row }">
-            <div class="app-tags" v-if="row.appNames">
-              <el-tag v-for="(name, i) in row.appNames.split(',')" :key="i" size="small" type="info" style="margin:1px 2px">{{ name }}</el-tag>
-            </div>
-            <span v-else class="text-muted">--</span>
-          </template>
-        </el-table-column>
         <el-table-column label="状态" width="85" align="center">
           <template #default="{ row }">
             <el-tag :type="row.enableStatus === 1 || row.enableStatus === '1' ? 'success' : 'danger'" size="small">
@@ -147,11 +134,6 @@
         <el-form-item v-if="!isEdit" label="确认密码" prop="confirmPwd">
           <el-input v-model="formData.confirmPwd" type="password" placeholder="请再次输入密码" show-password maxlength="25" />
         </el-form-item>
-        <el-form-item label="关联应用" prop="appCodes">
-          <el-select v-model="formData.appCodes" multiple placeholder="请选择关联应用" style="width:100%" :loading="appLoading">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="账号状态" prop="enableStatus">
           <el-switch
             v-model="formData.enableStatus"
@@ -190,7 +172,7 @@
             closable
             @close="handleUncheckRole(r)"
           >
-            {{ r.appName ? r.appName + '（' + r.appCode + '）' : r.appCode }} / {{ r.title }}
+            {{ r.title }}
           </el-tag>
         </div>
         <div class="checked-roles-bar checked-roles-bar--empty" v-else>
@@ -225,9 +207,6 @@
     >
       <div v-loading="orgTreeLoading" element-loading-text="加载中...">
         <div class="org-tree-toolbar">
-          <el-select v-model="orgForm.appCode" placeholder="选择应用" style="width:220px" @change="handleOrgAppChange">
-            <el-option v-for="a in orgAppOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
           <el-input v-model="orgFilterText" placeholder="搜索组织机构..." :prefix-icon="Search" clearable style="width:200px" />
         </div>
         <div v-if="orgForm.appCode" class="org-tree-body">
@@ -347,8 +326,6 @@
         <el-tab-pane label="关联角色" name="role">
           <el-table :data="viewRoles" border size="small" max-height="300" v-if="viewRoles.length > 0">
             <el-table-column type="index" label="序号" width="60" align="center" />
-            <el-table-column prop="appCode" label="应用编码" width="120" />
-            <el-table-column prop="appName" label="应用名称" width="120" />
             <el-table-column prop="roleName" label="角色名" min-width="150" />
           </el-table>
           <div v-else class="view-empty-tab">当前暂无关联角色</div>
@@ -356,8 +333,6 @@
         <el-tab-pane label="组织机构" name="org">
           <el-table :data="viewOrgs" border size="small" max-height="350" v-if="viewOrgs.length > 0" style="width:100%">
             <el-table-column type="index" label="序号" width="60" align="center" />
-            <el-table-column prop="appCode" label="应用编码" width="120" />
-            <el-table-column prop="appName" label="应用名称" width="150" />
             <el-table-column prop="remark" label="机构层级" width="300" show-overflow-tooltip />
             <el-table-column prop="name" label="机构名称" width="150" />
           </el-table>
@@ -376,9 +351,8 @@ import { Plus, Search, Refresh, Delete, Edit, Lock, UserFilled, Share, EditPen, 
 import {
   listAdmin, saveAdmin, updateAdmin, delAdmin, batchDelAdmin, resetAdminPwd,
   connectRoles, connectOrgs, queryAdminRoleTree, saveAdminInfo, listAdminApps, getAdminDetail,
-  listOrgnazitionTree, queryAdminOrgnazitionTree, roleList
+  queryAdminOrgnazitionTree
 } from '@/api/system/admin'
-import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -386,15 +360,12 @@ const route = useRoute()
 const users = ref([])
 const tableTotal = ref(0)
 const loading = ref(false)
-const appOptions = ref([])
-const appLoading = ref(false)
 
 // ========== 搜索 ==========
 const searchForm = reactive({
   adminId: '',
   username: '',
   enableStatus: -1,
-  appCode: '',
   realName: '',
   phone: '',
   email: '',
@@ -429,7 +400,6 @@ async function fetchData() {
       adminId: searchForm.adminId || undefined,
       username: searchForm.username || undefined,
       enableStatus: searchForm.enableStatus != null ? searchForm.enableStatus : undefined,
-      appCode: searchForm.appCode || undefined,
       realName: searchForm.realName || undefined,
       phone: searchForm.phone || undefined,
       email: searchForm.email || undefined,
@@ -446,24 +416,14 @@ async function fetchData() {
   }
 }
 
-async function fetchApps() {
-  appLoading.value = true
-  try {
-    const res = await listAllApps()
-    appOptions.value = res.data || []
-  } catch { /* ignore */ }
-  finally { appLoading.value = false }
-}
-
 onMounted(() => {
-  fetchApps()
   fetchData()
 })
 
 function handleSearch() { pagination.page = 1; fetchData() }
 function handleReset() {
   Object.assign(searchForm, {
-    adminId: '', username: '', enableStatus: -1, appCode: '',
+    adminId: '', username: '', enableStatus: -1,
     realName: '', phone: '', email: '', gender: '', idCard: ''
   })
   pagination.page = 1; fetchData()
@@ -486,7 +446,6 @@ const formData = reactive({
   username: '',
   password: '',
   confirmPwd: '',
-  appCodes: [],
   enableStatus: 1,
   remark: ''
 })
@@ -512,7 +471,6 @@ function resetForm() {
   formData.username = ''
   formData.password = ''
   formData.confirmPwd = ''
-  formData.appCodes = []
   formData.enableStatus = 1
   formData.remark = ''
 }
@@ -522,7 +480,6 @@ async function handleAdd() {
   editingId.value = null
   resetForm()
   dialogVisible.value = true
-  await fetchApps()
 }
 
 async function handleEdit(row) {
@@ -534,11 +491,7 @@ async function handleEdit(row) {
   formData.confirmPwd = ''
   formData.enableStatus = row.enableStatus === 1 || row.enableStatus === '1' ? 1 : 0
   formData.remark = row.remark || ''
-  formData.appCodes = row.appCodes && row.appCodes.length > 0
-    ? (Array.isArray(row.appCodes) ? row.appCodes : String(row.appCodes).split(','))
-    : []
   dialogVisible.value = true
-  await fetchApps()
 }
 
 async function handleSubmit() {
@@ -551,7 +504,6 @@ async function handleSubmit() {
         id: editingId.value,
         adminId: editingAdminId.value,
         username: formData.username,
-        appCodes: formData.appCodes,
         enableStatus: formData.enableStatus,
         remark: formData.remark
       })
@@ -565,7 +517,6 @@ async function handleSubmit() {
       await saveAdmin({
         username: formData.username,
         password: formData.password,
-        appCodes: formData.appCodes,
         enableStatus: formData.enableStatus,
         remark: formData.remark
       })
@@ -616,10 +567,7 @@ const roleCheckedKeys = ref([])
 const currentRoleAdminId = ref(null)
 const checkedRoleInfos = ref([])
 
-// 应用编码 -> 应用名称映射（从根节点 title 解析，格式："appCode appName"）
-const appNameMap = {}
-
-// 从树节点提取角色信息（叶子节点才有 roleId），附带应用名称
+// 从树节点提取角色信息（叶子节点才有 roleId）
 function extractRoleInfo(node) {
   const isLeaf = !node.children || node.children.length === 0
   if (isLeaf && node.roleId) {
@@ -627,7 +575,6 @@ function extractRoleInfo(node) {
       id: node.id,
       roleId: node.roleId,
       appCode: node.appCode,
-      appName: appNameMap[node.appCode] || '',
       title: node.title
     }
   }
@@ -676,20 +623,6 @@ function syncCheckedRoleInfos() {
   checkedRoleInfos.value = infos
 }
 
-// 从根节点 title 解析应用名称映射（title 格式："appCode appName"，如 "10001002 商城后台"）
-function buildAppNameMap(treeData) {
-  for (const node of treeData) {
-    if (node.title) {
-      const idx = node.title.indexOf(' ')
-      if (idx > 0) {
-        const code = node.title.substring(0, idx)
-        const name = node.title.substring(idx + 1)
-        appNameMap[code] = name
-      }
-    }
-  }
-}
-
 // 递归收集已选中节点ID（只收集叶子节点，避免父节点因联动导致全选）
 function collectCheckedKeys(nodes, ids) {
   for (const node of nodes) {
@@ -729,10 +662,6 @@ function collectNodesFromTree(nodes, keySet, result) {
 }
 
 function handleRole(row) {
-  if (!row.appNames) {
-    ElMessage.warning('请先关联应用!')
-    return
-  }
   currentRoleAdminId.value = row.adminId
   // 先清空旧数据再打开对话框，防止树组件用旧数据渲染
   roleTreeData.value = []
@@ -742,7 +671,6 @@ function handleRole(row) {
   queryAdminRoleTree(row.adminId).then(async res => {
     if (res.code === 1 || res.data) {
       roleTreeData.value = res.data || []
-      buildAppNameMap(roleTreeData.value)
       roleCheckedKeys.value = []
       collectCheckedKeys(roleTreeData.value, roleCheckedKeys.value)
       stripChecked(roleTreeData.value)
@@ -786,7 +714,6 @@ const orgTreeRef = ref(null)
 const orgCheckedKeys = ref([])
 const currentOrgAdminId = ref(null)
 const orgFilterText = ref('')
-const orgAppOptions = ref([])
 
 function filterOrgNode(value, data) {
   if (!value) return true
@@ -825,34 +752,38 @@ async function handleOrgnazition(row) {
   orgForm.appCode = ''
   orgTreeData.value = []
   orgCheckedKeys.value = []
-  orgAppOptions.value = []
-  orgTreeLoading.value = true
   orgDialogVisible.value = true
+  orgTreeLoading.value = true
   try {
     const res = await listAdminApps(row.adminId)
-    orgAppOptions.value = (res.data || []).map(a => ({ code: a.appCode || a.code, name: a.appName || a.name }))
-  } catch { orgAppOptions.value = [] }
+    const apps = (res.data || []).map(a => ({ code: a.appCode || a.code, name: a.appName || a.name }))
+    if (apps.length > 0) {
+      orgForm.appCode = apps[0].code
+      await loadOrgTree(apps[0].code)
+    }
+  } catch { /* ignore */ }
   finally { orgTreeLoading.value = false }
 }
 
-function handleOrgAppChange(appCode) {
+async function loadOrgTree(appCode) {
   if (!appCode) {
     orgTreeData.value = []
     orgCheckedKeys.value = []
     return
   }
   orgTreeLoading.value = true
-  queryAdminOrgnazitionTree({ adminId: currentOrgAdminId.value, appCode }).then(res => {
+  try {
+    const res = await queryAdminOrgnazitionTree({ adminId: currentOrgAdminId.value, appCode })
     if (res.code === 1 || res.data) {
       orgTreeData.value = res.data || []
       orgCheckedKeys.value = []
       collectCheckedKeysFromTree(orgTreeData.value, orgCheckedKeys.value)
     }
-  }).catch(() => {
+  } catch {
     orgTreeData.value = []
-  }).finally(() => {
+  } finally {
     orgTreeLoading.value = false
-  })
+  }
 }
 
 async function handleSubmitOrg() {
@@ -1051,7 +982,6 @@ async function handleSubmitInfo() {
   max-height: 380px; overflow-y: auto; background: #fafbfc;
 }
 
-.app-tags { display: flex; flex-wrap: wrap; gap: 2px; }
 .text-muted { color: $text-placeholder; }
 
 .org-tree-node {

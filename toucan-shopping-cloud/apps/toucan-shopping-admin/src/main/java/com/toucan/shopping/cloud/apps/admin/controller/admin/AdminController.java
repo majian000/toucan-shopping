@@ -180,19 +180,9 @@ public class AdminController {
     public ResultObjectVO update(HttpServletRequest request, @RequestBody AdminVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            List<String> appCodes = new ArrayList<String>();
-            appCodes.add(toucan.getAppCode());
-            entity.setAppCodes(appCodes);
+            entity.setOperateSourceType(2);
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
-            if (!CollectionUtils.isEmpty(entity.getAppCodes())) {
-                entity.setAdminApps(new ArrayList<AdminApp>());
-                for (String appCode : entity.getAppCodes()) {
-                    AdminApp adminApp = new AdminApp();
-                    adminApp.setAppCode(appCode);
-                    entity.getAdminApps().add(adminApp);
-                }
-            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = adminServiceAPI.update(requestJsonVO);
         } catch (Exception e) {

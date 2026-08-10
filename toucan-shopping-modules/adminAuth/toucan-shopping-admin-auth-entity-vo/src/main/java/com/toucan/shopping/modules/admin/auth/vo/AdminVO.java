@@ -93,4 +93,9 @@ public class AdminVO extends Admin {
      */
     private String address;
 
+    /**
+     * 操作来源 1:中台 2:应用
+     */
+    private Integer operateSourceType = 1;
+
 }

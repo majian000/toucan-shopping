@@ -491,99 +491,103 @@ public class AdminBusinessService {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            Admin admin = JSONObject.parseObject(requestVo.getEntityJson(), Admin.class);
-            Check.notEmpty(admin.getAdminId(), AdminResultVO.FAILD, "修改失败,adminId为空");
-            Check.notEmpty(admin.getUsername(), AdminResultVO.NOT_FOUND_USERNAME, "修改失败,请输入账号");
 
-            if (admin.getUsername().length() > 20) {
+            AdminVO adminVO = requestVo.formatEntity(AdminVO.class);
+            Check.notEmpty(adminVO.getAdminId(), AdminResultVO.FAILD, "修改失败,adminId为空");
+            Check.notEmpty(adminVO.getUsername(), AdminResultVO.NOT_FOUND_USERNAME, "修改失败,请输入账号");
+
+            if (adminVO.getUsername().length() > 20) {
                 return ResultObjectVO.fail(AdminResultVO.FAILD, "修改失败,账号长度不能大与20位");
             }
 
             Admin query = new Admin();
-            query.setUsername(admin.getUsername());
+            query.setUsername(adminVO.getUsername());
             query.setDeleteStatus((short) 0);
             List<Admin> queryAdmins = adminService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(queryAdmins)) {
-                if (!queryAdmins.get(0).getAdminId().equals(admin.getAdminId())) {
+                if (!queryAdmins.get(0).getAdminId().equals(adminVO.getAdminId())) {
                     return ResultObjectVO.fail(AdminResultVO.FAILD, "账号已存在!");
                 }
             }
-            int row = adminService.update(admin);
+            int row = adminService.update(adminVO);
             if (row < 1) {
 
                 return ResultObjectVO.fail(AdminResultVO.FAILD, "修改失败,请重试!");
             }
 
 
-            AdminApp queryAdminApp = new AdminApp();
-            queryAdminApp.setAdminId(admin.getAdminId());
-            //查询出当前账号数据库中保存的应用关联
-            List<AdminApp> adminAppPersistentList = adminAppService.findListByEntity(queryAdminApp);
+            //中台才涉及到应用关联操作
+            if(adminVO.getOperateSourceType().intValue()==1) {
+                AdminApp queryAdminApp = new AdminApp();
+                queryAdminApp.setAdminId(adminVO.getAdminId());
+                //查询出当前账号数据库中保存的应用关联
+                List<AdminApp> adminAppPersistentList = adminAppService.findListByEntity(queryAdminApp);
 
-            //账号被禁用
-            if (admin.getEnableStatus() != null && admin.getEnableStatus().intValue() == 0) {
-                if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
-                    for (AdminApp adminApp : adminAppPersistentList) {
-                        //删除登录会话
-                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(), adminApp.getAppCode());
+                //账号被禁用
+                if (adminVO.getEnableStatus() != null && adminVO.getEnableStatus().intValue() == 0) {
+                    if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
+                        for (AdminApp adminApp : adminAppPersistentList) {
+                            //删除登录会话
+                            AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(), adminApp.getAppCode());
 
-                        //更新登录状态
-                        adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
-                    }
-                }
-            }
-
-            //如果这次没有勾选任何应用
-            if (CollectionUtils.isEmpty(admin.getAdminApps())) {
-                //清空账号所有应用会话
-                if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
-                    for (AdminApp adminApp : adminAppPersistentList) {
-                        //删除登录会话
-                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(), adminApp.getAppCode());
-
-                        //更新登录状态
-                        adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
-                    }
-                }
-            } else {
-                boolean find = false;
-                //遍历旧的关联,找到这次新操作中 删除旧的那个关联
-                for (AdminApp adminAppPersistent : adminAppPersistentList) {
-                    find = false;
-                    for (AdminApp adminApp : admin.getAdminApps()) {
-                        if (adminAppPersistent.getAppCode().equals(adminApp.getAppCode())) {
-                            find = true;
-                            break;
+                            //更新登录状态
+                            adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
                         }
                     }
-                    //如果旧的关联 不包含在新的操作中,那么就删除旧关联的会话
-                    if (!find) {
-                        //删除登录会话
-                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode());
+                }
 
-                        //更新登录状态
-                        adminAppService.updateLoginStatus(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode(), (short) 0);
+                //如果这次没有勾选任何应用
+                if (CollectionUtils.isEmpty(adminVO.getAdminApps())) {
+                    //清空账号所有应用会话
+                    if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
+                        for (AdminApp adminApp : adminAppPersistentList) {
+                            //删除登录会话
+                            AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(), adminApp.getAppCode());
+
+                            //更新登录状态
+                            adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
+                        }
+                    }
+                } else {
+                    boolean find = false;
+                    //遍历旧的关联,找到这次新操作中 删除旧的那个关联
+                    for (AdminApp adminAppPersistent : adminAppPersistentList) {
+                        find = false;
+                        for (AdminApp adminApp : adminVO.getAdminApps()) {
+                            if (adminAppPersistent.getAppCode().equals(adminApp.getAppCode())) {
+                                find = true;
+                                break;
+                            }
+                        }
+                        //如果旧的关联 不包含在新的操作中,那么就删除旧关联的会话
+                        if (!find) {
+                            //删除登录会话
+                            AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode());
+
+                            //更新登录状态
+                            adminAppService.updateLoginStatus(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode(), (short) 0);
+                        }
                     }
                 }
-            }
 
 
-            //清空现有关联
-            adminAppService.deleteByAdminId(admin.getAdminId());
+                //清空现有关联
+                adminAppService.deleteByAdminId(adminVO.getAdminId());
 
-            if (!CollectionUtils.isEmpty(admin.getAdminApps())) {
-                //重新保存关联
-                for (AdminApp adminApp : admin.getAdminApps()) {
-                    adminApp.setAdminId(admin.getAdminId());
-                    adminApp.setDeleteStatus((short) 0);
-                    adminApp.setCreateDate(new Date());
-                    adminApp.setCreateAdminId(admin.getUpdateAdminId());
-                    adminAppService.save(adminApp);
+                if (!CollectionUtils.isEmpty(adminVO.getAdminApps())) {
+                    //重新保存关联
+                    for (AdminApp adminApp : adminVO.getAdminApps()) {
+                        adminApp.setAdminId(adminVO.getAdminId());
+                        adminApp.setDeleteStatus((short) 0);
+                        adminApp.setCreateDate(new Date());
+                        adminApp.setCreateAdminId(adminVO.getUpdateAdminId());
+                        adminAppService.save(adminApp);
+                    }
                 }
+
             }
 
-
-            resultObjectVO.setData(admin);
+            resultObjectVO.setData(adminVO);
 
 
         } catch (BusinessValidationException e) {
