@@ -101,6 +101,8 @@ public class RoleController {
     public ResultObjectVO queryRoleTree(HttpServletRequest request, @RequestBody AdminAppVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setOperateSourceType(2);
+            entity.setOperateAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), entity);
             resultObjectVO = roleServiceAPI.queryAdminRoleTree(requestJsonVO);
             if (resultObjectVO.isSuccess()) {

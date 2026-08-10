@@ -49,4 +49,14 @@ public class AdminAppVO extends AdminApp {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date loginDate;
 
+    /**
+     * 操作来源 1:中台 2:应用
+     */
+    private Integer operateSourceType = 1;
+
+    /**
+     * 操作应用
+     */
+    private String operateAppCode;
+
 }

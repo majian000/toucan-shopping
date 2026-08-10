@@ -163,6 +163,11 @@ public class RoleBusinessService {
             AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
             //查询查询指定用户下的应用角色树
             List<AdminApp> adminApps = adminAppService.findListByEntity(query);
+            // 应用来源时只查询当前应用的数据
+            if (query.getOperateSourceType() != null && query.getOperateSourceType().intValue() == 2
+                && StringUtils.isNotEmpty(query.getOperateAppCode()) && !CollectionUtils.isEmpty(adminApps)) {
+                adminApps.removeIf(a -> !query.getOperateAppCode().equals(a.getAppCode()));
+            }
             if (!CollectionUtils.isEmpty(adminApps)) {
                 List<App> apps = new ArrayList<App>();
                 for (AdminApp adminApp : adminApps) {
