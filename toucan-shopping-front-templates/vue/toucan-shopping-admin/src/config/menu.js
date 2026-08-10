@@ -11,7 +11,7 @@ export const menuConfig = [
     key: 'dashboard',
     label: '工作台',
     icon: 'HomeFilled',
-    permission: 'pms:home:welcome',
+    permission: 'toucan:dashboard:welcome',
     children: [
       { path: '/dashboard', name: 'Dashboard', label: '工作台', icon: 'Monitor', component: () => import('@/views/dashboard/index.vue') }
     ]
@@ -21,20 +21,19 @@ export const menuConfig = [
     key: 'permission',
     label: '权限管理',
     icon: 'Lock',
-    permission: 'pms',
+    permission: 'toucan:admin:permission',
     children: [
       // ----- 系统管理 -----
       {
         key: 'system',
         label: '系统管理',
         icon: 'Setting',
-        permission: 'pms:system',
+        permission: 'toucan:admin:system',
         children: [
-          { path: '/system/admin/list', name: 'AdminList', label: '账号管理', icon: 'User', permission: 'pms:system:user', component: () => import('@/views/system/admin/index.vue') },
-          { path: '/system/role/list', name: 'RoleList', label: '角色管理', icon: 'UserFilled', permission: 'pms:system:role', component: () => import('@/views/system/role/index.vue') },
-          { path: '/system/menu/list', name: 'MenuList', label: '菜单管理', icon: 'Menu', permission: 'pms:system:menu', component: () => import('@/views/system/menu/index.vue') },
-          { path: '/system/orgnazition/list', name: 'OrgnazitionList', label: '组织机构', icon: 'Share', permission: 'pms:system:org', component: () => import('@/views/system/orgnazition/index.vue') },
-          { path: '/system/onlineAdmin/list', name: 'OnlineAdminList', label: '在线管理', icon: 'Connection', permission: 'pms:system:online', component: () => import('@/views/system/onlineAdmin/index.vue') }
+          { path: '/system/admin/list', name: 'AdminList', label: '账号管理', icon: 'User', permission: 'toucan:admin:admin', component: () => import('@/views/system/admin/index.vue') },
+          { path: '/system/role/list', name: 'RoleList', label: '角色管理', icon: 'UserFilled', permission: 'toucan:admin:role', component: () => import('@/views/system/role/index.vue') },
+          { path: '/system/menu/list', name: 'MenuList', label: '菜单管理', icon: 'Menu', permission: 'toucan:admin:function', component: () => import('@/views/system/menu/index.vue') },
+          { path: '/system/orgnazition/list', name: 'OrgnazitionList', label: '组织机构', icon: 'Share', permission: 'toucan:admin:orgnazition:list', component: () => import('@/views/system/orgnazition/index.vue') }
         ]
       },
       // ----- 字典管理 -----
