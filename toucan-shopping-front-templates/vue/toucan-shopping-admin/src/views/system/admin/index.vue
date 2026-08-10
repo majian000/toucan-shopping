@@ -48,8 +48,8 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-button type="primary" :icon="Plus" v-permission="'pms:system:user:add'" @click="handleAdd">新增用户</el-button>
-          <el-button type="danger" :icon="Delete" v-permission="'pms:system:user:batch-delete'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="primary" :icon="Plus" v-permission="'toucan:admin:admin:toolbar:save'" @click="handleAdd">新增用户</el-button>
+          <el-button type="danger" :icon="Delete" v-permission="'toucan:admin:admin:toolbar:delete'" :disabled="selectedIds.length === 0" @click="handleBatchDelete">批量删除</el-button>
         </div>
       </div>
 
@@ -93,13 +93,13 @@
         <el-table-column prop="updateAdminUsername" label="修改人" width="100" />
         <el-table-column label="操作" width="420" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:user:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:user:delete'" @click="handleDelete(row)">删除</el-button>
-            <el-button type="warning" link size="small" :icon="UserFilled" v-permission="'pms:system:user:role'" @click="handleRole(row)">角色</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:admin:admin:row:update'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:admin:admin:row:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="warning" link size="small" :icon="UserFilled" v-permission="'toucan:admin:admin:row:role'" @click="handleRole(row)">角色</el-button>
             <el-button type="success" link size="small" :icon="Share" v-permission="'pms:system:user:org'" @click="handleOrgnazition(row)">组织机构</el-button>
-            <el-button type="warning" link size="small" :icon="Lock" v-permission="'pms:system:user:password'" @click="handlePassword(row)">修改密码</el-button>
-            <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:user:show'" @click="handleViewAdmin(row)">查看</el-button>
-            <el-button type="info" link size="small" :icon="EditPen" v-permission="'pms:system:user:info'" @click="handleInfo(row)">完善信息</el-button>
+            <el-button type="warning" link size="small" :icon="Lock" v-permission="'toucan:admin:admin:row:password'" @click="handlePassword(row)">修改密码</el-button>
+            <el-button type="info" link size="small" :icon="View" v-permission="'toucan:admin:admin:row:show'" @click="handleViewAdmin(row)">查看</el-button>
+            <el-button type="info" link size="small" :icon="EditPen" v-permission="'toucan:admin:adminInfo:row:update'" @click="handleInfo(row)">完善信息</el-button>
           </template>
         </el-table-column>
       </el-table>
