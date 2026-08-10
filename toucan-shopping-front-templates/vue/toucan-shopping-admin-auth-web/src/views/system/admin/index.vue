@@ -343,6 +343,7 @@
             </el-descriptions-item>
             <el-descriptions-item label="创建人">{{ viewData.createAdminUsername || '--' }}</el-descriptions-item>
             <el-descriptions-item label="创建时间" :span="2">{{ viewData.createDate || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="备注" :span="2">{{ viewData.remark || '--' }}</el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
         <el-tab-pane label="关联角色" name="role">
