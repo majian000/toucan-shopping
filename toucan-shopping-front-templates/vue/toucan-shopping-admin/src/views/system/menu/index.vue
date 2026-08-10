@@ -247,7 +247,7 @@
           <el-descriptions-item label="创建人">{{ viewDetail.createAdminUsername || '-' }}</el-descriptions-item>
           <el-descriptions-item label="创建时间">{{ viewDetail.createDate || '-' }}</el-descriptions-item>
           <el-descriptions-item label="修改人">{{ viewDetail.updateAdminUsername || '-' }}</el-descriptions-item>
-          <el-descriptions-item label="修改时间">{{ viewDetail.updateDate || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间" :span="2">{{ viewDetail.updateDate || '-' }}</el-descriptions-item>
           <el-descriptions-item label="备注" :span="2">{{ viewDetail.remark || '-' }}</el-descriptions-item>
         </el-descriptions>
       </div>
