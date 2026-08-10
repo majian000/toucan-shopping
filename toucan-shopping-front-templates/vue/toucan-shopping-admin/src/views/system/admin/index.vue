@@ -97,7 +97,7 @@
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:admin:admin:row:update'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:admin:admin:row:delete'" @click="handleDelete(row)">删除</el-button>
             <el-button type="warning" link size="small" :icon="UserFilled" v-permission="'toucan:admin:admin:row:role'" @click="handleRole(row)">角色</el-button>
-            <el-button type="success" link size="small" :icon="Share" v-permission="'pms:system:user:org'" @click="handleOrgnazition(row)">组织机构</el-button>
+            <el-button type="success" link size="small" :icon="Share" v-permission="'toucan:admin:admin:row:org'" @click="handleOrgnazition(row)">组织机构</el-button>
             <el-button type="warning" link size="small" :icon="Lock" v-permission="'toucan:admin:admin:row:password'" @click="handlePassword(row)">修改密码</el-button>
             <el-button type="info" link size="small" :icon="View" v-permission="'toucan:admin:admin:row:show'" @click="handleViewAdmin(row)">查看</el-button>
             <el-button type="info" link size="small" :icon="EditPen" v-permission="'toucan:admin:adminInfo:row:update'" @click="handleInfo(row)">完善信息</el-button>
