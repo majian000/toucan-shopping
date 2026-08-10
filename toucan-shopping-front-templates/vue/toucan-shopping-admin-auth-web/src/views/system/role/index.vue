@@ -50,6 +50,7 @@
             <span v-else class="text-muted">--</span>
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="备注" width="150" show-overflow-tooltip />
         <el-table-column prop="createAdminUsername" label="创建人" width="180" />
         <el-table-column prop="createDate" label="创建时间" width="180" sortable />
         <el-table-column prop="updateAdminUsername" label="修改人" width="180" />
@@ -102,7 +103,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入角色名称" maxlength="50" />
+          <el-input v-model="formData.name" placeholder="请输入角色名称" maxlength="20" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注" maxlength="255" />
@@ -130,7 +131,6 @@
           <el-descriptions :column="1" border>
             <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
             <el-descriptions-item label="应用名称">{{ viewData.appName || '--' }}</el-descriptions-item>
-            <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
             <el-descriptions-item label="状态">
               <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
                 {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
@@ -140,6 +140,7 @@
             <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
             <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
             <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
 
@@ -371,7 +372,7 @@ const formData = reactive({ appCode: '', name: '', remark: '', enableStatus: 1 }
 
 const formRules = {
   appCode: [{ required: true, message: '请选择所属应用', trigger: 'change' }],
-  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }, { max: 20, message: '角色名称不能超过20位', trigger: 'blur' }],
   remark: [{ required: false, message: '请输入备注', trigger: 'blur' }]
 }
 

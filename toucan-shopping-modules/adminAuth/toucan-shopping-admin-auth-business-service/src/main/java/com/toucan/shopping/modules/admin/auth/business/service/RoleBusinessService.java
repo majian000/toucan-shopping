@@ -76,7 +76,7 @@ public class RoleBusinessService {
         try {
             Role role = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notEmpty(role.getName(), ResultVO.FAILD, "添加失败,请输入角色名称");
-
+            Check.isTrue(role.getName().length() <= 20, ResultVO.FAILD, "添加失败,角色名称不能超过20位");
 
             role.setRoleId(GlobalUUID.uuid());
             role.setDeleteStatus((short) 0);
@@ -114,6 +114,7 @@ public class RoleBusinessService {
         try {
             Role entity = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入角色名称");
+            Check.isTrue(entity.getName().length() <= 20, ResultVO.FAILD, "角色名称不能超过20位");
             Check.notNull(entity.getId(), ResultVO.FAILD, "请传入角色ID");
 
 
@@ -445,9 +446,18 @@ public class RoleBusinessService {
     public ResultObjectVO queryDetail(RequestJsonVO requestVo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            Role roleQuery = JSONObject.parseObject(requestVo.getEntityJson(), Role.class);
+            RoleVO roleQuery = JSONObject.parseObject(requestVo.getEntityJson(), RoleVO.class);
             RoleDetailVO detail = new RoleDetailVO();
             RoleVO vo = roleService.findVOById(roleQuery.getId());
+            if (vo != null) {
+                // 应用来源时只返回当前应用的数据
+                if (roleQuery.getOperateSourceType() != null && roleQuery.getOperateSourceType().intValue() == 2
+                    && StringUtils.isNotEmpty(roleQuery.getOperateAppCode())) {
+                    if (!roleQuery.getOperateAppCode().equals(vo.getAppCode())) {
+                        vo = null;
+                    }
+                }
+            }
             if (vo != null) {
                 detail.setBasicInfo(vo);
             }

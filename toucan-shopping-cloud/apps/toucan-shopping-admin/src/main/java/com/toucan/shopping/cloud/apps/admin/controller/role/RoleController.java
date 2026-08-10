@@ -287,12 +287,14 @@ public class RoleController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:detail"})
-    @RequestMapping(value = "/queryDetail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody Role role) {
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:row:show"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody RoleVO roleVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
+            roleVO.setOperateSourceType(2);
+            roleVO.setOperateAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), roleVO);
             resultObjectVO = roleServiceAPI.queryDetail(requestJsonVO);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
@@ -304,7 +306,7 @@ public class RoleController {
     /**
      * 查询角色功能列表
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:function:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:row:show","toucan:admin:role:function:list"})
     @RequestMapping(value = "/function/list/page", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO queryRoleFunctionListPage(HttpServletRequest request, @RequestBody RoleFunctionPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -316,5 +318,6 @@ public class RoleController {
         }
         return resultObjectVO;
     }
+
 
 }

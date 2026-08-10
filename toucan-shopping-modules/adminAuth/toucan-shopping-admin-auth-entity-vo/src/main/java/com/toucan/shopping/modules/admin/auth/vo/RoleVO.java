@@ -30,4 +30,14 @@ public class RoleVO extends Role {
      */
     private String appName;
 
+    /**
+     * 操作来源 1:中台 2:应用
+     */
+    private Integer operateSourceType = 1;
+
+    /**
+     * 操作应用
+     */
+    private String operateAppCode;
+
 }

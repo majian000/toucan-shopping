@@ -295,7 +295,7 @@ public class FunctionController {
     /**
      * 查询角色完整功能树（含嵌套children）
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:function:role:function:full:tree"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:role:row:permission","toucan:admin:function:role:function:full:tree"})
     @RequestMapping(value = "/query/role/function/full/tree", method = RequestMethod.POST)
     public ResultObjectVO queryRoleFunctionFullTree(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

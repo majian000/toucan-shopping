@@ -11,11 +11,6 @@
         <el-form-item label="角色名称">
           <el-input v-model="searchForm.name" placeholder="请输入角色名称" clearable style="width:220px" />
         </el-form-item>
-        <el-form-item label="所属应用">
-          <el-select v-model="searchForm.appCode" placeholder="请选择" clearable style="width:220px">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" :icon="Search" v-permission="'pms:system:role:list'" @click="handleSearch">搜 索</el-button>
           <el-button :icon="Refresh" v-permission="'pms:system:role:list'" @click="handleReset">重 置</el-button>
@@ -27,8 +22,8 @@
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-button type="primary" :icon="Plus" v-permission="'pms:system:role:add'" @click="handleAdd">添加角色</el-button>
-          <el-button type="danger" :icon="Delete" v-permission="'pms:system:role:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="primary" :icon="Plus" v-permission="'toucan:admin:role:toolbar:save'" @click="handleAdd">添加角色</el-button>
+          <el-button type="danger" :icon="Delete" v-permission="'toucan:admin:role:toolbar:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
         </div>
       </div>
 
@@ -44,12 +39,7 @@
         <el-table-column type="index" label="序号" width="60" align="center" />
         <el-table-column prop="roleId" label="角色ID" width="180" show-overflow-tooltip />
         <el-table-column prop="name" label="角色名称" width="180" />
-        <el-table-column label="所属应用" width="220">
-          <template #default="{ row }">
-            <el-tag v-if="row.appName" size="small" type="info">{{ row.appName }}</el-tag>
-            <span v-else class="text-muted">--</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="remark" label="备注" width="150" show-overflow-tooltip />
         <el-table-column prop="createAdminUsername" label="创建人" width="180" />
         <el-table-column prop="createDate" label="创建时间" width="180" sortable />
         <el-table-column prop="updateAdminUsername" label="修改人" width="180" />
@@ -63,11 +53,11 @@
         </el-table-column>
         <el-table-column label="操作" min-width="350" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="info" link size="small" :icon="View" v-permission="'pms:system:role:show'" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:system:role:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:system:role:delete'" @click="handleDelete(row)">删除</el-button>
-            <el-button type="warning" link size="small" :icon="Key" v-permission="'pms:system:role:permission'" @click="handleAssignPermission(row)">权限</el-button>
-            <el-button type="success" link size="small" :icon="RefreshRight" v-permission="'pms:system:role:refresh-cache'" @click="handleRefreshCache(row)">刷新权限缓存</el-button>
+            <el-button type="info" link size="small" :icon="View" v-permission="'toucan:admin:role:row:show'" @click="handleView(row)">查看</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:admin:role:row:update'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:admin:role:row:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="warning" link size="small" :icon="Key" v-permission="'toucan:admin:role:row:permission'" @click="handleAssignPermission(row)">权限</el-button>
+            <el-button type="success" link size="small" :icon="RefreshRight" v-permission="'toucan:admin:role:btn:refreshFunctions'" @click="handleRefreshCache(row)">刷新权限缓存</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,16 +83,8 @@
       destroy-on-close
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
-        <el-form-item label="所属应用" prop="appCode">
-          <template v-if="isEdit">
-            <el-tag type="info">{{ appOptions.find(a => a.code === formData.appCode)?.code }} {{ appOptions.find(a => a.code === formData.appCode)?.name }}</el-tag>
-          </template>
-          <el-select v-else v-model="formData.appCode" placeholder="请选择应用" style="width:100%">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入角色名称" maxlength="50" />
+          <el-input v-model="formData.name" placeholder="请输入角色名称" maxlength="20" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注" maxlength="255" />
@@ -129,8 +111,6 @@
         <el-tab-pane label="基本信息" name="info">
           <el-descriptions :column="1" border>
             <el-descriptions-item label="角色名称">{{ viewData.name }}</el-descriptions-item>
-            <el-descriptions-item label="应用名称">{{ viewData.appName || '--' }}</el-descriptions-item>
-            <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
             <el-descriptions-item label="状态">
               <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
                 {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
@@ -140,6 +120,7 @@
             <el-descriptions-item label="创建时间">{{ viewData.createDate || '--' }}</el-descriptions-item>
             <el-descriptions-item label="修改人">{{ viewData.updateAdminUsername || '--' }}</el-descriptions-item>
             <el-descriptions-item label="修改时间">{{ viewData.updateDate || '--' }}</el-descriptions-item>
+            <el-descriptions-item label="备注">{{ viewData.remark || '--' }}</el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
 
@@ -250,19 +231,8 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, Key, RefreshRight, FolderOpened, Document, Pointer, Setting, Link, Grid, CircleCheck, View } from '@element-plus/icons-vue'
 import { listRole, addRole, updateRole, delRole, batchDelRole, getRoleFunctionFullTree, saveRoleFunctions, refreshRoleFunctionCache, getRoleDetail, listRoleFunctions } from '@/api/system/role'
-import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
-
-// ========== 应用列表 ==========
-const appOptions = ref([])
-
-async function fetchApps() {
-  try {
-    const res = await listAllApps()
-    appOptions.value = res.data || []
-  } catch { /* ignore */ }
-}
 
 // ========== 角色列表数据 ==========
 const roles = ref([])
@@ -276,8 +246,7 @@ async function fetchData() {
       page: pagination.page,
       size: pagination.size,
       roleId: searchForm.roleId || undefined,
-      name: searchForm.name || undefined,
-      appCode: searchForm.appCode || undefined
+      name: searchForm.name || undefined
     }
     const res = await listRole(params)
     roles.value = res.data || []
@@ -290,18 +259,16 @@ async function fetchData() {
 }
 
 onMounted(() => {
-  fetchApps()
   fetchData()
 })
 
 // ========== 搜索 ==========
-const searchForm = reactive({ roleId: '', name: '', appCode: '' })
+const searchForm = reactive({ roleId: '', name: '' })
 
 function handleSearch() { pagination.page = 1; fetchData() }
 function handleReset() {
   searchForm.roleId = ''
   searchForm.name = ''
-  searchForm.appCode = ''
   pagination.page = 1
   fetchData()
 }
@@ -367,16 +334,14 @@ const formRef = ref(null)
 
 const dialogTitle = computed(() => isEdit.value ? '编辑角色' : '添加角色')
 
-const formData = reactive({ appCode: '', name: '', remark: '', enableStatus: 1 })
+const formData = reactive({ name: '', remark: '', enableStatus: 1 })
 
 const formRules = {
-  appCode: [{ required: true, message: '请选择所属应用', trigger: 'change' }],
-  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }, { max: 20, message: '角色名称不能超过20位', trigger: 'blur' }],
   remark: [{ required: false, message: '请输入备注', trigger: 'blur' }]
 }
 
 function resetForm() {
-  formData.appCode = ''
   formData.name = ''
   formData.remark = ''
   formData.enableStatus = 1
@@ -406,7 +371,6 @@ async function handleView(row) {
 function handleEdit(row) {
   isEdit.value = true
   editingId.value = row.id
-  formData.appCode = row.appCode || ''
   formData.name = row.name
   formData.remark = row.remark || ''
   formData.enableStatus = row.enableStatus === '1' || row.enableStatus === 1 ? 1 : 0
@@ -421,7 +385,6 @@ async function handleSubmit() {
     if (isEdit.value) {
       await updateRole({
         id: editingId.value,
-        appCode: formData.appCode,
         name: formData.name,
         remark: formData.remark,
         enableStatus: formData.enableStatus
@@ -429,7 +392,6 @@ async function handleSubmit() {
       ElMessage.success('编辑成功')
     } else {
       await addRole({
-        appCode: formData.appCode,
         name: formData.name,
         remark: formData.remark,
         enableStatus: formData.enableStatus
