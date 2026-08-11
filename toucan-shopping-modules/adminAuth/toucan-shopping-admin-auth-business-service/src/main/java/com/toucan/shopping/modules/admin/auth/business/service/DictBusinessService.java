@@ -145,6 +145,7 @@ public class DictBusinessService {
             query.setDeleteStatus((short) 0);
             query.setPid(entity.getPid());
             query.setCode(entity.getCode());
+            query.setCategoryId(entity.getCategoryId());
             query.setAppCode(entity.getAppCode());
             List<DictVO> dictList = dictService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(dictList)) {

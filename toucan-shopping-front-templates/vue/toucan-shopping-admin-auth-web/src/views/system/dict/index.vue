@@ -145,6 +145,12 @@
         <el-form-item label="状态" prop="enableStatus">
           <el-switch v-model="formData.enableStatus" :active-value="1" :inactive-value="0" active-text="启用" inactive-text="禁用" />
         </el-form-item>
+        <el-form-item label="是否快照" prop="isSnapshot">
+          <el-radio-group v-model="formData.isSnapshot">
+            <el-radio :value="0">否</el-radio>
+            <el-radio :value="1">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -174,7 +180,7 @@ async function loadCategories() {
   categoryLoading.value = true
   try {
     const res = await listAllDictCategory()
-    categoryList.value = (res.data || []).map(c => ({ ...c, id: Number(c.id) }))
+    categoryList.value = res.data || []
     if (categoryList.value.length && !selectedCategoryId.value) {
       selectCategory(categoryList.value[0])
     }
@@ -248,7 +254,7 @@ function findNodeById(tree, id) {
 
 const formData = reactive({
   pid: null, categoryId: null, name: '', code: '',
-  extendProperty: '', dictSort: 0, remark: '', enableStatus: 1
+  extendProperty: '', dictSort: 0, remark: '', enableStatus: 1, isSnapshot: 0
 })
 
 const formRules = {
@@ -261,6 +267,7 @@ function resetForm() {
   formData.pid = null; formData.categoryId = selectedCategoryId.value
   formData.name = ''; formData.code = ''; formData.extendProperty = ''
   formData.dictSort = 0; formData.remark = ''; formData.enableStatus = 1
+  formData.isSnapshot = 0
 }
 
 // 弹窗中切换字典分类时，自动刷新上级字典树
@@ -270,23 +277,12 @@ watch(() => formData.categoryId, (newVal) => {
   }
 })
 
-// 递归将树节点id转为数字（后端序列化为字符串）
-function normalizeTreeIds(list) {
-  if (!list) return []
-  return list.map(item => ({
-    ...item,
-    id: Number(item.id),
-    pid: item.pid != null ? Number(item.pid) : item.pid,
-    children: item.children ? normalizeTreeIds(item.children) : null
-  }))
-}
-
 // 加载上级字典树选择器
 async function loadTreeSelectData(categoryId) {
   if (!categoryId) return
   try {
     const res = await queryDictTreeAll({ categoryId })
-    treeSelectData.value = normalizeTreeIds(res.data || [])
+    treeSelectData.value = res.data || []
     treeSelectKey.value++
   } catch { }
 }
@@ -308,7 +304,7 @@ function handleAddChild(row) {
   isEdit.value = false; isAddChild.value = true; editingId.value = null
   resetForm()
   formData.pid = row.id
-  formData.categoryId = row.categoryId
+  formData.categoryId = String(row.categoryId)
   dialogVisible.value = true
 }
 
@@ -322,12 +318,15 @@ async function handleEdit(row) {
     // 加载上级字典树数据
     await loadTreeSelectData(row.categoryId)
     // 组件渲染完成且数据就绪后，设置表单值回显
-    formData.categoryId = row.categoryId
-    formData.pid = row.pid === -1 ? null : (row.pid || null)
+    // id转字符串保持精度(el-select/el-tree-select的option value为字符串)
+    formData.categoryId = String(row.categoryId)
+    // -1代表根节点，回显时设为null不显示，提交时再转回-1
+    formData.pid = (row.pid == -1) ? null : (row.pid != null ? String(row.pid) : null)
     formData.name = row.name; formData.code = row.code
     formData.extendProperty = row.extendProperty || ''
     formData.dictSort = row.dictSort || 0; formData.remark = row.remark
     formData.enableStatus = row.enableStatus
+    formData.isSnapshot = row.isSnapshot != null ? row.isSnapshot : 0
   } finally {
     dialogLoading.value = false
   }
@@ -345,9 +344,10 @@ async function handleSubmit() {
     const data = {
       name: formData.name, code: formData.code,
       categoryId: formData.categoryId, appCode: selectedCategory.value?.appCode || '',
-      pid: formData.pid != null ? formData.pid : null,
+      pid: formData.pid != null ? formData.pid : -1,
       extendProperty: formData.extendProperty, dictSort: formData.dictSort,
-      remark: formData.remark, enableStatus: formData.enableStatus
+      remark: formData.remark, enableStatus: formData.enableStatus,
+      isSnapshot: formData.isSnapshot
     }
     if (isEdit.value) {
       await updateDict({ id: editingId.value, ...data })
