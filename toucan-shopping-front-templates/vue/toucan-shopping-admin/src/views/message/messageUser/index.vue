@@ -92,13 +92,17 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="!isEdit && formData.userScope === 1" label="接收用户" prop="userMainIdListString">
-          <el-input
-            v-model="formData.userMainIdListString"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入用户ID，多个用逗号分隔"
-            maxlength="9500"
-          />
+          <div style="display:flex;gap:8px;width:100%">
+            <el-input
+              v-model="formData.userMainIdListString"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入用户ID，多个用逗号分隔"
+              maxlength="9500"
+              style="flex:1"
+            />
+            <el-button :icon="User" @click="openUserSelectDialog" style="height:auto">选择用户</el-button>
+          </div>
           <div class="form-tip">填写用户ID，多个以英文逗号分隔，最多500个用户</div>
         </el-form-item>
         <el-form-item label="消息标题" prop="title">
@@ -127,14 +131,102 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 用户选择弹窗 -->
+    <el-dialog
+      v-model="userSelectVisible"
+      title="选择用户"
+      width="80%"
+      :close-on-click-modal="false"
+      destroy-on-close
+      @opened="onUserDialogOpened"
+    >
+      <!-- 搜索 -->
+      <el-form :model="userSearchForm" :inline="true">
+        <el-form-item label="用户ID">
+          <el-input v-model="userSearchForm.userMainId" placeholder="请输入用户ID" clearable style="width:180px" />
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="userSearchForm.mobilePhone" placeholder="请输入手机号" clearable style="width:160px" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="userSearchForm.email" placeholder="请输入邮箱" clearable style="width:200px" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="userSearchForm.username" placeholder="请输入用户名" clearable style="width:160px" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="searchUsers">搜索</el-button>
+          <el-button :icon="RefreshRight" @click="resetUserSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
+
+      <!-- 已选提示 -->
+      <div v-if="selectedUsers.length > 0" style="margin-bottom:12px">
+        <span style="color:#999">已选 <b>{{ selectedUsers.length }}</b> 个用户：</span>
+        <el-tag
+          v-for="(uid, idx) in selectedUsers"
+          :key="uid"
+          closable
+          size="small"
+          style="margin:2px 4px"
+          @close="removeSelectedUser(uid)"
+        >{{ uid }}</el-tag>
+      </div>
+
+      <!-- 表格 -->
+      <el-table
+        ref="userTableRef"
+        :data="userTableData"
+        border stripe
+        v-loading="userLoading"
+        row-key="userMainId"
+        @selection-change="onUserSelectionChange"
+        max-height="400"
+      >
+        <el-table-column type="selection" width="50" align="center" :reserve-selection="true" />
+        <el-table-column prop="userMainId" label="用户ID" width="180" show-overflow-tooltip />
+        <el-table-column prop="mobilePhone" label="手机号" width="160" />
+        <el-table-column prop="nickName" label="昵称" width="160" show-overflow-tooltip />
+        <el-table-column prop="email" label="邮箱" width="200" show-overflow-tooltip />
+        <el-table-column prop="username" label="用户名" width="160" show-overflow-tooltip />
+        <el-table-column prop="trueName" label="真实姓名" width="120" />
+        <el-table-column label="状态" width="80" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.enableStatus === 1 || row.enableStatus === '1' ? 'success' : 'danger'" size="small">
+              {{ row.enableStatus === 1 || row.enableStatus === '1' ? '启用' : '禁用' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createDate" label="注册时间" width="170" />
+      </el-table>
+
+      <div class="pagination-wrapper">
+        <el-pagination
+          v-model:current-page="userPagination.page"
+          v-model:page-size="userPagination.size"
+          :page-sizes="[15, 30, 100, 300]"
+          :total="userTableTotal"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="onUserSizeChange"
+          @current-change="onUserPageChange"
+        />
+      </div>
+
+      <template #footer>
+        <el-button @click="userSelectVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUserSelect">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight } from '@element-plus/icons-vue'
+import { Plus, Delete, Edit, Search, RefreshRight, User } from '@element-plus/icons-vue'
 import { listMessageUser, sendMessage, updateMessage, delMessage, listAllMessageType } from '@/api/message/messageUser'
+import { listUser } from '@/api/user'
 
 // ========== 消息类型列表（用于搜索和表单下拉） ==========
 const messageTypeList = ref([])
@@ -289,6 +381,91 @@ function handleBatchDelete() {
       ElMessage.success('批量删除成功'); fetchData()
     } catch { }
   }).catch(() => {})
+}
+
+// ========== 用户选择弹窗 ==========
+const userSelectVisible = ref(false)
+const userLoading = ref(false)
+const userTableRef = ref(null)
+const userTableData = ref([])
+const userTableTotal = ref(0)
+const userSearchForm = reactive({ userMainId: '', mobilePhone: '', email: '', username: '' })
+const userPagination = reactive({ page: 1, size: 15 })
+const selectedUsers = ref([])
+
+function onUserDialogOpened() {
+  if (userTableData.value.length === 0) {
+    fetchUsers()
+  }
+}
+
+async function fetchUsers() {
+  userLoading.value = true
+  try {
+    const params = {
+      page: userPagination.page,
+      limit: userPagination.size,
+      userMainId: userSearchForm.userMainId || undefined,
+      mobilePhone: userSearchForm.mobilePhone || undefined,
+      email: userSearchForm.email || undefined,
+      username: userSearchForm.username || undefined
+    }
+    const res = await listUser(params)
+    userTableData.value = res.data || []
+    userTableTotal.value = res.count || 0
+  } finally {
+    userLoading.value = false
+  }
+}
+
+function searchUsers() {
+  userPagination.page = 1
+  fetchUsers()
+}
+
+function resetUserSearch() {
+  userSearchForm.userMainId = ''
+  userSearchForm.mobilePhone = ''
+  userSearchForm.email = ''
+  userSearchForm.username = ''
+  userPagination.page = 1
+  fetchUsers()
+}
+
+function onUserPageChange(page) { userPagination.page = page; fetchUsers() }
+function onUserSizeChange(size) { userPagination.size = size; userPagination.page = 1; fetchUsers() }
+
+function onUserSelectionChange(rows) {
+  selectedUsers.value = rows.map(r => String(r.userMainId))
+}
+
+function removeSelectedUser(uid) {
+  selectedUsers.value = selectedUsers.value.filter(u => u !== uid)
+}
+
+function openUserSelectDialog() {
+  userSearchForm.userMainId = ''
+  userSearchForm.mobilePhone = ''
+  userSearchForm.email = ''
+  userSearchForm.username = ''
+  userPagination.page = 1
+  selectedUsers.value = []
+  userTableData.value = []
+  userTableTotal.value = 0
+  userSelectVisible.value = true
+}
+
+function confirmUserSelect() {
+  const existing = formData.userMainIdListString
+    ? formData.userMainIdListString.split(',').map(s => s.trim()).filter(Boolean)
+    : []
+  for (const uid of selectedUsers.value) {
+    if (!existing.includes(uid)) {
+      existing.push(uid)
+    }
+  }
+  formData.userMainIdListString = existing.join(',')
+  userSelectVisible.value = false
 }
 </script>
 

@@ -61,7 +61,7 @@ public class UserController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(UserPageInfo userPageInfo)
+    public TableVO list(@RequestBody UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
