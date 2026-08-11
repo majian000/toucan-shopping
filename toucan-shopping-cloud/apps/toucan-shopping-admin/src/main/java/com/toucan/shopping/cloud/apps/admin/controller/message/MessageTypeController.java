@@ -71,6 +71,7 @@ public class MessageTypeController {
                 resultObjectVO.setMsg("添加失败,编码只允许字母、数字、下划线组成,长度1-50位");
                 return resultObjectVO;
             }
+            entity.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = messageTypeService.save(requestJsonVO);
         }catch(Exception e)
@@ -148,10 +149,11 @@ public class MessageTypeController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageType:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(MessageTypePageInfo pageInfo)
+    public TableVO list(@RequestBody MessageTypePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
+            pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = messageTypeService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)

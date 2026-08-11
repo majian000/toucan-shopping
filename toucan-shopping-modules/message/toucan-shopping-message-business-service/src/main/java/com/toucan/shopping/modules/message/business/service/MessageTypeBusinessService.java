@@ -78,6 +78,7 @@ public class MessageTypeBusinessService {
                 messageTypeVO.setId(idGenerator.id());
                 messageTypeVO.setDeleteStatus((short) 0);
                 messageTypeVO.setCreateDate(new Date());
+                messageTypeVO.setCreateAdminId(requestJsonVO.getAdminId());
                 int ret = messageTypeService.save(messageTypeVO);
                 if (ret <= 0) {
                     logger.warn("保存消息类型失败 requestJson{} id{}", requestJsonVO.getEntityJson(), messageTypeVO.getId());
@@ -213,6 +214,7 @@ public class MessageTypeBusinessService {
             }
 
             entity.setUpdateDate(new Date());
+            entity.setUpdateAdminId(requestJsonVO.getAdminId());
             int row = messageTypeService.update(entity);
             if (row < 1) {
                 return ResultObjectVO.fail(ResultObjectVO.FAILD, "请重试!");

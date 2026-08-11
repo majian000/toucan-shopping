@@ -57,6 +57,17 @@ export const menuConfig = [
           { path: '/system/operateLog/list', name: 'OperateLogList', label: '操作日志', icon: 'Menu', permission: 'pms:log:operate', component: () => import('@/views/system/operateLog/index.vue') },
           { path: '/system/loginHistory/list', name: 'LoginHistoryList', label: '登录日志', icon: 'Menu', permission: 'pms:log:login', component: () => import('@/views/system/loginHistory/index.vue') }
         ]
+      },
+      // ----- 消息管理 -----
+      {
+        key: 'message',
+        label: '消息管理',
+        icon: 'ChatDotRound',
+        permission: 'toucan:content:message',
+        children: [
+          { path: '/message/messageType/list', name: 'MessageTypeList', label: '消息类型', icon: 'Menu', permission: 'toucan:content:messageType:list', component: () => import('@/views/message/messageType/index.vue') },
+          { path: '/message/messageUser/list', name: 'MessageUserList', label: '用户消息', icon: 'Menu', permission: 'toucan:content:messageUser:list', component: () => import('@/views/message/messageUser/index.vue') }
+        ]
       }
     ]
   }

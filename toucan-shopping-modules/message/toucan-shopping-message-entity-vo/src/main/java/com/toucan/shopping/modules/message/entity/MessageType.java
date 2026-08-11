@@ -50,6 +50,16 @@ public class MessageType {
 
 
     /**
+     * 创建人ID
+     */
+    private String createAdminId;
+
+    /**
+     * 修改人ID
+     */
+    private String updateAdminId;
+
+    /**
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
