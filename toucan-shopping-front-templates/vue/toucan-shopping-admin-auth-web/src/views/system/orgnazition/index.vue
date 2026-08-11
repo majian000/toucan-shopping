@@ -15,7 +15,7 @@
         :key="tableKey"
         :data="orgTree"
         border stripe row-key="id"
-        :tree-props="{ children: 'children' }"
+        :tree-props="{ children: 'children', checkStrictly: true }"
         v-loading="loading"
         @selection-change="handleSelectionChange"
         style="width:100%"
