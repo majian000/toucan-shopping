@@ -22,6 +22,7 @@ public class MessageUser {
     /**
      * 消息主体ID
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
     private Long messageBodyId;
 
 

@@ -76,19 +76,19 @@ public class MessageUserController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:delete"})
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    public ResultObjectVO deleteById(@PathVariable String id)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public ResultObjectVO deleteById(@RequestBody MessageUserVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(id))
+            if(entity.getId() == null)
             {
                 resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             MessageUserVO messageUserVO =new MessageUserVO();
-            messageUserVO.setId(Long.parseLong(id));
+            messageUserVO.setId(entity.getId());
 
             String entityJson = JSONObject.toJSONString(messageUserVO);
             RequestJsonVO requestVo = new RequestJsonVO();

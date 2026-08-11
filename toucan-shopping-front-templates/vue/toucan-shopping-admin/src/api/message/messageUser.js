@@ -12,8 +12,8 @@ export function updateMessage(data) {
   return request({ url: '/message/messageUser/update', method: 'post', data })
 }
 
-export function delMessage(id) {
-  return request({ url: `/message/messageUser/delete/${id}`, method: 'delete' })
+export function delMessage(data) {
+  return request({ url: '/message/messageUser/delete', method: 'post', data })
 }
 
 // 获取全部消息类型（用于下拉选项）

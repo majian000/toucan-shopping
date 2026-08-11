@@ -319,9 +319,9 @@ function handleAdd() {
 }
 
 function handleEdit(row) {
-  isEdit.value = true; editingId.value = row.id
+  isEdit.value = true; editingId.value = String(row.id)
   formData.userMainId = row.userMainId != null ? String(row.userMainId) : null
-  formData.messageBodyId = row.messageBodyId
+  formData.messageBodyId = row.messageBodyId != null ? String(row.messageBodyId) : null
   formData.title = row.title || ''
   formData.sendDate = row.sendDate || ''
   formData.content = row.content || ''
@@ -365,7 +365,7 @@ function handleDelete(row) {
   ElMessageBox.confirm(`确定删除该消息吗？`, '删除确认', {
     confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning'
   }).then(async () => {
-    try { await delMessage(row.id); ElMessage.success('删除成功'); fetchData() } catch { }
+    try { await delMessage({ id: String(row.id) }); ElMessage.success('删除成功'); fetchData() } catch { }
   }).catch(() => {})
 }
 
@@ -376,7 +376,7 @@ function handleBatchDelete() {
   }).then(async () => {
     try {
       for (const row of selectedRows.value) {
-        await delMessage(row.id)
+        await delMessage({ id: String(row.id) })
       }
       ElMessage.success('批量删除成功'); fetchData()
     } catch { }
