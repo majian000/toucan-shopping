@@ -428,8 +428,6 @@ function resetUserSearch() {
   userSearchForm.mobilePhone = ''
   userSearchForm.email = ''
   userSearchForm.username = ''
-  userPagination.page = 1
-  fetchUsers()
 }
 
 function onUserPageChange(page) { userPagination.page = page; fetchUsers() }
