@@ -269,8 +269,6 @@ function handleSearch() { pagination.page = 1; fetchData() }
 function handleReset() {
   searchForm.roleId = ''
   searchForm.name = ''
-  pagination.page = 1
-  fetchData()
 }
 
 // ========== 分页 ==========

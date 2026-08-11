@@ -130,7 +130,7 @@ onMounted(() => { fetchData() })
 
 const searchForm = reactive({ method: '', ip: '', createAdminId: '', keyword: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.method = ''; searchForm.ip = ''; searchForm.createAdminId = ''; searchForm.keyword = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.method = ''; searchForm.ip = ''; searchForm.createAdminId = ''; searchForm.keyword = '' }
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)

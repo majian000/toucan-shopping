@@ -109,7 +109,6 @@ function handleReset() {
   searchForm.adminId = ''
   searchForm.username = ''
   searchForm.appCode = ''
-  pagination.page = 1; fetchData()
 }
 
 function handleForceLogout(row) {

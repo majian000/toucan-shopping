@@ -86,7 +86,7 @@ onMounted(fetchData)
 
 const searchForm = reactive({ adminId: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.adminId = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.adminId = '' }
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)

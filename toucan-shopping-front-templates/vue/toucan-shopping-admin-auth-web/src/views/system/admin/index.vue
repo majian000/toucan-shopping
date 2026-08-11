@@ -468,7 +468,6 @@ function handleReset() {
     adminId: '', username: '', enableStatus: -1, appCode: '',
     realName: '', phone: '', email: '', gender: '', idCard: ''
   })
-  pagination.page = 1; fetchData()
 }
 
 watch(() => pagination.page, fetchData)

@@ -330,8 +330,6 @@ function handleSearch() {
 function handleReset() {
   searchForm.functionId = ''; searchForm.name = ''; searchForm.url = ''
   searchForm.permission = ''; searchForm.enableStatus = ''
-  fetchData()
-  tableKey.value++
 }
 
 // ========== 新增/编辑 ==========

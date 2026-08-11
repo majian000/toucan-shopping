@@ -127,7 +127,7 @@ onMounted(fetchData)
 
 const searchForm = reactive({ code: '', name: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.code = ''; searchForm.name = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.code = ''; searchForm.name = '' }
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)

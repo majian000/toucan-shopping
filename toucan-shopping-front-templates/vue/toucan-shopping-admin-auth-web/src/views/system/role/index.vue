@@ -303,8 +303,6 @@ function handleReset() {
   searchForm.roleId = ''
   searchForm.name = ''
   searchForm.appCode = ''
-  pagination.page = 1
-  fetchData()
 }
 
 // ========== 分页 ==========

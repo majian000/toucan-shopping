@@ -86,7 +86,7 @@ import { listMessageType, addMessageType, updateMessageType, delMessageType, flu
 const searchForm = reactive({ name: '', code: '' })
 
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.name = ''; searchForm.code = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.name = ''; searchForm.code = '' }
 
 // ========== 分页 ==========
 const pagination = reactive({ page: 1, size: 15 })

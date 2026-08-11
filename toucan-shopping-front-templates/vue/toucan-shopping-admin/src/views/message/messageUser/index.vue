@@ -242,7 +242,7 @@ async function loadMessageTypes() {
 const searchForm = reactive({ userMainId: '', status: '', messageTypeCode: '' })
 
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.userMainId = ''; searchForm.status = ''; searchForm.messageTypeCode = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.userMainId = ''; searchForm.status = ''; searchForm.messageTypeCode = '' }
 
 // ========== 分页 ==========
 const pagination = reactive({ page: 1, size: 15 })

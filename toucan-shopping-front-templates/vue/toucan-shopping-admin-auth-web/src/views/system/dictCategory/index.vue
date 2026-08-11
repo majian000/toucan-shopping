@@ -182,7 +182,7 @@ onMounted(() => { fetchData(); loadApps() })
 
 const searchForm = reactive({ name: '', code: '', enableStatus: '', appCode: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; searchForm.appCode = ''; pagination.page = 1; fetchData() }
+function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; searchForm.appCode = '' }
 
 const appOptions = ref([])
 async function loadApps() {
