@@ -46,7 +46,7 @@
         <el-table-column prop="userMainId" label="用户ID" width="180" show-overflow-tooltip />
         <el-table-column label="状态" width="80" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === '0' ? 'warning' : 'success'" size="small">
+            <el-tag :type="row.status === 0 ? 'info' : 'success'" size="small">
               {{ row.status === 0 ? '未读' : '已读' }}
             </el-tag>
           </template>
