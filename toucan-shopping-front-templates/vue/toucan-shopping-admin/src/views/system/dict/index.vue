@@ -85,8 +85,8 @@
             <el-table-column label="操作" width="220" fixed="right">
               <template #default="{ row }">
                 <el-button type="success" link size="small" :icon="Plus" v-permission="'toucan:admin:dict:toolbar:addChild'" @click="handleAddChild(row)">添加子项</el-button>
-                <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:item:edit'" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:dict:item:delete'" @click="handleDelete(row)">删除</el-button>
+                <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:admin:dict:row:update'" @click="handleEdit(row)">编辑</el-button>
+                <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:admin:dict:row:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
