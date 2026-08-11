@@ -217,6 +217,7 @@ public class MessageUserBusinessService {
                     {
                         messageUserVO.setId(idGenerator.id());
                         messageUserVO.setMessageBodyId(messageBodyVO.getId());
+                        messageUserVO.setStatus(0);
                         messageUserVO.setCreateDate(new Date());
                     }
                     ret = messageUserService.saves(messageUserVOList);
