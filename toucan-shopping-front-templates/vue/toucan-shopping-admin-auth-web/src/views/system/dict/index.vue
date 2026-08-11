@@ -21,6 +21,7 @@
               @click="selectCategory(c)"
             >
               <span class="category-name">{{ c.name }}</span>
+              <el-tag v-if="c.appName" size="small" type="info">{{ c.appName }}</el-tag>
               <el-tag :type="c.enableStatus === 1 ? 'success' : 'danger'" size="small">
                 {{ c.enableStatus === 1 ? '启用' : '禁用' }}
               </el-tag>

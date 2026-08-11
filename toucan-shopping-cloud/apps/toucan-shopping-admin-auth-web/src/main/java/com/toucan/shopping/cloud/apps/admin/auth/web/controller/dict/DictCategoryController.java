@@ -344,6 +344,19 @@ public class DictCategoryController extends UIController {
             DictCategoryVO query = new DictCategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
             resultObjectVO = dictCategoryServiceAPI.queryList(requestJsonVO);
+            if(resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
+                List<DictCategoryVO> list = resultObjectVO.formatDataList(DictCategoryVO.class);
+                if(CollectionUtils.isNotEmpty(list)) {
+                    Set<String> appCodes = new HashSet<>();
+                    for (DictCategoryVO vo : list) {
+                        if(StringUtils.isNotEmpty(vo.getAppCode())) {
+                            appCodes.add(vo.getAppCode());
+                        }
+                    }
+                    this.setAppNames(appCodes, list);
+                    resultObjectVO.setData(list);
+                }
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
