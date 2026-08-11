@@ -134,6 +134,12 @@ public class DictBusinessService {
             Check.notEmpty(entity.getName(), ResultVO.FAILD, "请传入字典名称");
             Check.notNull(entity.getId(), ResultVO.FAILD, "请传入字典ID");
 
+            //上级字典不能选择自己
+            if (entity.getPid() != null && entity.getPid().equals(entity.getId())) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级字典不能选择自己");
+                return resultObjectVO;
+            }
 
             Dict query = new Dict();
             query.setDeleteStatus((short) 0);

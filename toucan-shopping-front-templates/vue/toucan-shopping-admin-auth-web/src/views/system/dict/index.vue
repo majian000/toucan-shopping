@@ -155,7 +155,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, Delete, Edit } from '@element-plus/icons-vue'
@@ -174,7 +174,7 @@ async function loadCategories() {
   categoryLoading.value = true
   try {
     const res = await listAllDictCategory()
-    categoryList.value = res.data || []
+    categoryList.value = (res.data || []).map(c => ({ ...c, id: Number(c.id) }))
     if (categoryList.value.length && !selectedCategoryId.value) {
       selectCategory(categoryList.value[0])
     }
@@ -270,12 +270,23 @@ watch(() => formData.categoryId, (newVal) => {
   }
 })
 
+// 递归将树节点id转为数字（后端序列化为字符串）
+function normalizeTreeIds(list) {
+  if (!list) return []
+  return list.map(item => ({
+    ...item,
+    id: Number(item.id),
+    pid: item.pid != null ? Number(item.pid) : item.pid,
+    children: item.children ? normalizeTreeIds(item.children) : null
+  }))
+}
+
 // 加载上级字典树选择器
 async function loadTreeSelectData(categoryId) {
   if (!categoryId) return
   try {
     const res = await queryDictTreeAll({ categoryId })
-    treeSelectData.value = res.data || []
+    treeSelectData.value = normalizeTreeIds(res.data || [])
     treeSelectKey.value++
   } catch { }
 }
@@ -306,8 +317,12 @@ async function handleEdit(row) {
   dialogVisible.value = true
   dialogLoading.value = true
   try {
+    // 等待弹窗组件渲染完成
+    await nextTick()
+    // 加载上级字典树数据
+    await loadTreeSelectData(row.categoryId)
+    // 组件渲染完成且数据就绪后，设置表单值回显
     formData.categoryId = row.categoryId
-    await loadTreeSelectData(formData.categoryId)
     formData.pid = row.pid === -1 ? null : (row.pid || null)
     formData.name = row.name; formData.code = row.code
     formData.extendProperty = row.extendProperty || ''
@@ -321,6 +336,10 @@ async function handleEdit(row) {
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) return
+  if (isEdit.value && formData.pid != null && String(formData.pid) === String(editingId.value)) {
+    ElMessage.warning('上级字典不能选择自己')
+    return
+  }
   submitLoading.value = true
   try {
     const data = {
