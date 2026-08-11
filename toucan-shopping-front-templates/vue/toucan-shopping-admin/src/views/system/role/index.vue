@@ -12,8 +12,8 @@
           <el-input v-model="searchForm.name" placeholder="请输入角色名称" clearable style="width:220px" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'pms:system:role:list'" @click="handleSearch">搜 索</el-button>
-          <el-button :icon="Refresh" v-permission="'pms:system:role:list'" @click="handleReset">重 置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'toucan:admin:role'" @click="handleSearch">搜 索</el-button>
+          <el-button :icon="Refresh" v-permission="'toucan:admin:role'" @click="handleReset">重 置</el-button>
         </el-form-item>
       </el-form>
     </el-card>

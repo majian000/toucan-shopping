@@ -41,10 +41,10 @@ export const menuConfig = [
         key: 'dict',
         label: '字典管理',
         icon: 'Collection',
-        permission: 'pms:dict',
+        permission: 'toucan:admin:dict',
         children: [
-          { path: '/system/dictCategory/list', name: 'DictCategoryList', label: '字典分类', icon: 'Menu', permission: 'pms:dict:category', component: () => import('@/views/system/dictCategory/index.vue') },
-          { path: '/system/dict/list', name: 'DictList', label: '字典管理', icon: 'Menu', permission: 'pms:dict:item', component: () => import('@/views/system/dict/index.vue') }
+          { path: '/system/dictCategory/list', name: 'DictCategoryList', label: '字典分类', icon: 'Menu', permission: 'toucan:admin:dictCategory', component: () => import('@/views/system/dictCategory/index.vue') },
+          { path: '/system/dict/list', name: 'DictList', label: '字典管理', icon: 'Menu', permission: 'toucan:admin:dict', component: () => import('@/views/system/dict/index.vue') }
         ]
       },
       // ----- 日志管理 -----

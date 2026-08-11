@@ -54,7 +54,7 @@ public class DictCategoryController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dictCategory:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest request, DictCategoryPageInfo pageInfo) {
+    public TableVO list(HttpServletRequest request,@RequestBody DictCategoryPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             pageInfo.setAppCode(toucan.getAppCode());
@@ -211,7 +211,7 @@ public class DictCategoryController {
     /**
      * 查询详情
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dictCategory:detail"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dictCategory:row:view"})
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public ResultObjectVO queryDetail(HttpServletRequest request, @RequestBody DictCategory entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

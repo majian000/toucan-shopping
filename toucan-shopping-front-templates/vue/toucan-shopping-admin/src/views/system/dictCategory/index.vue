@@ -4,7 +4,7 @@
 
     <el-card shadow="never" class="search-card">
       <el-form :model="searchForm" inline>
-        <el-form-item label="分类名称">
+        <el-form-item label="名称">
           <el-input v-model="searchForm.name" placeholder="请输入分类名称" clearable style="width:220px" />
         </el-form-item>
         <el-form-item label="编码">
@@ -16,22 +16,18 @@
             <el-option label="禁用" :value="0" />
           </el-select>
         </el-form-item>
-        <el-form-item label="所属应用">
-          <el-select v-model="searchForm.appCode" placeholder="请选择" clearable style="width:220px">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
+
         <el-form-item>
-          <el-button type="primary" :icon="Search" v-permission="'pms:dict:category:list'" @click="handleSearch">搜索</el-button>
-          <el-button :icon="Refresh" v-permission="'pms:dict:category:list'" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'toucan:admin:dictCategory'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" v-permission="'toucan:admin:dictCategory'" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'pms:dict:category:add'" @click="handleAdd">新增分类</el-button>
-        <el-button type="danger" :icon="Delete" v-permission="'pms:dict:category:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'toucan:admin:dictCategory:toolbar:save'" @click="handleAdd">新增分类</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'toucan:admin:dictCategory:toolbar:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">删除</el-button>
       </div>
 
       <el-table :data="list" border stripe v-loading="loading" @selection-change="handleSelectionChange" style="width:100%">
@@ -41,12 +37,7 @@
         <el-table-column prop="code" label="编码" width="150" />
         <el-table-column prop="dictCategorySort" label="排序" width="80" align="center" />
         <el-table-column prop="remark" label="备注" min-width="180" show-overflow-tooltip />
-        <el-table-column label="所属应用" width="150">
-          <template #default="{ row }">
-            <el-tag v-if="row.appName" size="small" type="">{{ row.appName }}</el-tag>
-            <span v-else style="color:#c0c4cc">--</span>
-          </template>
-        </el-table-column>
+
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.enableStatus === 1 ? 'success' : 'danger'" size="small">
@@ -60,9 +51,9 @@
         <el-table-column prop="updateAdminUsername" label="修改人" width="120" />
         <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
-            <el-button type="info" link size="small" :icon="View" v-permission="'pms:dict:category:view'" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:category:edit'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:dict:category:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="info" link size="small" :icon="View" v-permission="'toucan:admin:dictCategory:row:view'" @click="handleView(row)">查看</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:admin:dictCategory:row:update'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:admin:dictCategory:row:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,11 +84,7 @@
         <el-form-item label="编码" prop="code">
           <el-input v-model="formData.code" placeholder="请输入编码" maxlength="100" />
         </el-form-item>
-        <el-form-item label="所属应用" prop="appCode">
-          <el-select v-model="formData.appCode" placeholder="请选择所属应用" style="width:100%">
-            <el-option v-for="a in appOptions" :key="a.code" :label="a.code + ' ' + a.name" :value="a.code" />
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="排序" prop="dictCategorySort">
           <el-input-number v-model="formData.dictCategorySort" :min="0" placeholder="请输入排序" style="width:100%" />
         </el-form-item>
@@ -127,7 +114,6 @@
         <el-descriptions v-if="viewDetail" :column="2" border class="view-detail-desc">
           <el-descriptions-item label="分类名称" :span="2">{{ viewDetail.name }}</el-descriptions-item>
           <el-descriptions-item label="编码">{{ viewDetail.code }}</el-descriptions-item>
-          <el-descriptions-item label="所属应用">{{ viewDetail.appName || viewDetail.appCode }}</el-descriptions-item>
           <el-descriptions-item label="排序">{{ viewDetail.dictCategorySort }}</el-descriptions-item>
           <el-descriptions-item label="状态">
             <el-tag :type="viewDetail.enableStatus === 1 ? 'success' : 'danger'" size="small">
@@ -151,7 +137,6 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete, Edit, View } from '@element-plus/icons-vue'
 import { listDictCategory, addDictCategory, updateDictCategory, delDictCategory, delBatchDictCategory, getDictCategoryDetail } from '@/api/system/dictCategory'
-import { listAllApps } from '@/api/system/app'
 
 const route = useRoute()
 
@@ -167,8 +152,7 @@ async function fetchData() {
       size: pagination.size,
       name: searchForm.name || undefined,
       code: searchForm.code || undefined,
-      enableStatus: searchForm.enableStatus !== '' ? searchForm.enableStatus : undefined,
-      appCode: searchForm.appCode || undefined
+      enableStatus: searchForm.enableStatus !== '' ? searchForm.enableStatus : undefined
     }
     const res = await listDictCategory(params)
     list.value = res.data || []
@@ -178,19 +162,11 @@ async function fetchData() {
   }
 }
 
-onMounted(() => { fetchData(); loadApps() })
+onMounted(() => { fetchData() })
 
-const searchForm = reactive({ name: '', code: '', enableStatus: '', appCode: '' })
+const searchForm = reactive({ name: '', code: '', enableStatus: '' })
 function handleSearch() { pagination.page = 1; fetchData() }
-function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; searchForm.appCode = ''; pagination.page = 1; fetchData() }
-
-const appOptions = ref([])
-async function loadApps() {
-  try {
-    const res = await listAllApps()
-    appOptions.value = res.data || []
-  } catch { /* ignore */ }
-}
+function handleReset() { searchForm.name = ''; searchForm.code = ''; searchForm.enableStatus = ''; pagination.page = 1; fetchData() }
 
 const pagination = reactive({ page: 1, size: 10 })
 watch(() => pagination.page, fetchData)
@@ -249,15 +225,14 @@ async function handleView(row) {
   finally { viewLoading.value = false }
 }
 
-const formData = reactive({ name: '', code: '', appCode: '', dictCategorySort: 0, remark: '', enableStatus: 1 })
+const formData = reactive({ name: '', code: '', dictCategorySort: 0, remark: '', enableStatus: 1 })
 const formRules = {
   name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  code: [{ required: true, message: '请输入编码', trigger: 'blur' }],
-  appCode: [{ required: true, message: '请选择所属应用', trigger: 'change' }]
+  code: [{ required: true, message: '请输入编码', trigger: 'blur' }]
 }
 
 function resetForm() {
-  formData.name = ''; formData.code = ''; formData.appCode = ''; formData.dictCategorySort = 0; formData.remark = ''; formData.enableStatus = 1
+  formData.name = ''; formData.code = ''; formData.dictCategorySort = 0; formData.remark = ''; formData.enableStatus = 1
 }
 
 function handleAdd() {
@@ -267,7 +242,6 @@ function handleAdd() {
 function handleEdit(row) {
   isEdit.value = true; editingId.value = row.id
   formData.name = row.name; formData.code = row.code
-  formData.appCode = row.appCode || ''
   formData.dictCategorySort = row.dictCategorySort || 0; formData.remark = row.remark || ''
   formData.enableStatus = row.enableStatus
   dialogVisible.value = true
@@ -279,10 +253,10 @@ async function handleSubmit() {
   submitLoading.value = true
   try {
     if (isEdit.value) {
-      await updateDictCategory({ id: editingId.value, name: formData.name, code: formData.code, appCode: formData.appCode, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
+      await updateDictCategory({ id: editingId.value, name: formData.name, code: formData.code, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
       ElMessage.success('编辑成功')
     } else {
-      await addDictCategory({ name: formData.name, code: formData.code, appCode: formData.appCode, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
+      await addDictCategory({ name: formData.name, code: formData.code, dictCategorySort: formData.dictCategorySort, remark: formData.remark, enableStatus: formData.enableStatus })
       ElMessage.success('新增成功')
     }
     dialogVisible.value = false; resetForm(); fetchData()

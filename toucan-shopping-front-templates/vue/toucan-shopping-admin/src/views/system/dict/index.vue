@@ -63,12 +63,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="dictSort" label="排序" width="80" align="center" />
-            <el-table-column label="关联应用" width="150">
-              <template #default="{ row }">
-                <el-tag v-if="row.appName" type="info" size="small">{{ row.appName }}</el-tag>
-                <span v-else style="color:#c0c4cc">--</span>
-              </template>
-            </el-table-column>
+
             <el-table-column label="是否快照" width="90" align="center">
               <template #default="{ row }">
                 <el-tag :type="row.isSnapshot == 1 ? 'warning' : 'info'" size="small">
@@ -121,11 +116,7 @@
             <el-option v-for="c in categoryList" :key="c.id" :label="c.name" :value="c.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="关联应用">
-          <el-tag v-if="selectedCategory?.appName" type="info">{{ selectedCategory.appName }}</el-tag>
-          <el-tag v-else-if="selectedCategory?.appCode" type="info">{{ selectedCategory.appCode }}</el-tag>
-          <span v-else style="color:#c0c4cc">--</span>
-        </el-form-item>
+
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入字典名称" maxlength="20" />
         </el-form-item>
@@ -324,7 +315,7 @@ async function handleSubmit() {
   try {
     const data = {
       name: formData.name, code: formData.code,
-      categoryId: formData.categoryId, appCode: selectedCategory.value?.appCode || '',
+      categoryId: formData.categoryId,
       pid: formData.pid != null ? formData.pid : null,
       extendProperty: formData.extendProperty, dictSort: formData.dictSort,
       remark: formData.remark, enableStatus: formData.enableStatus
