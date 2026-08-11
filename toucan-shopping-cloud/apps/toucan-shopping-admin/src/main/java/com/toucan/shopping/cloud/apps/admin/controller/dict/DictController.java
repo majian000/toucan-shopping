@@ -99,7 +99,7 @@ public class DictController {
     /**
      * 查询全部字典树
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict:tree:list"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dict"})
     @RequestMapping(value = "/query/tree/all", method = RequestMethod.POST)
     public ResultObjectVO queryTreeAll(HttpServletRequest request, @RequestBody DictPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();

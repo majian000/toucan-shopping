@@ -330,6 +330,31 @@ public class DictCategoryController extends UIController {
 
 
     /**
+     * 查询所有分类（字典管理左侧使用）
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,permissions = {"pms:dict"})
+    @RequestMapping(value = "/listAll",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO listAll(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            DictCategoryVO query = new DictCategoryVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            resultObjectVO = dictCategoryServiceAPI.queryList(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询详情
      * @param request
      * @return

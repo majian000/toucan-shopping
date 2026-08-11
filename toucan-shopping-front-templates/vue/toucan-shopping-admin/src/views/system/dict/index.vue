@@ -38,7 +38,7 @@
               当前分类：<strong>{{ selectedCategory.name }}</strong>
             </span>
             <div>
-              <el-button type="primary" :icon="Plus" v-permission="'pms:dict:item:add'" @click="handleAdd">新增字典</el-button>
+              <el-button type="primary" :icon="Plus" v-permission="'toucan:admin:dict:toolbar:save'" @click="handleAdd">新增字典</el-button>
               <el-button :icon="Refresh" @click="fetchData">刷新</el-button>
             </div>
           </div>
@@ -84,7 +84,7 @@
             <el-table-column prop="updateDate" label="修改时间" width="170" />
             <el-table-column label="操作" width="220" fixed="right">
               <template #default="{ row }">
-                <el-button type="success" link size="small" :icon="Plus" @click="handleAddChild(row)">添加子项</el-button>
+                <el-button type="success" link size="small" :icon="Plus" v-permission="'toucan:admin:dict:toolbar:addChild'" @click="handleAddChild(row)">添加子项</el-button>
                 <el-button type="primary" link size="small" :icon="Edit" v-permission="'pms:dict:item:edit'" @click="handleEdit(row)">编辑</el-button>
                 <el-button type="danger" link size="small" :icon="Delete" v-permission="'pms:dict:item:delete'" @click="handleDelete(row)">删除</el-button>
               </template>

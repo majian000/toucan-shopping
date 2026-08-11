@@ -209,6 +209,27 @@ public class DictCategoryController {
 
 
     /**
+     * 查询所有分类（字典管理左侧使用）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dictManage"})
+    @RequestMapping(value = "/listAll", method = RequestMethod.POST)
+    public ResultObjectVO listAll(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            DictCategoryVO query = new DictCategoryVO();
+            query.setAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+            resultObjectVO = dictCategoryServiceAPI.queryList(requestJsonVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询详情
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:admin:dictCategory:row:view"})

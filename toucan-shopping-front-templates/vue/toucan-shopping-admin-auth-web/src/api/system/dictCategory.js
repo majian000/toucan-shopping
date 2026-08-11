@@ -5,7 +5,7 @@ export function listDictCategory(data) {
 }
 
 export function listAllDictCategory() {
-  return request({ url: '/dictCategory/list', method: 'post' })
+  return request({ url: '/dictCategory/listAll', method: 'post' })
 }
 
 export function addDictCategory(data) {
