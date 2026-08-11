@@ -186,6 +186,10 @@ public class DictBusinessService {
                 dictService.save(entity);
                 //更新子节点的父节点ID为新的ID
                 dictService.updateParentId(dict.getId(), entity.getId());
+                //如果修改了字典分类，级联更新所有子节点的分类
+                if (entity.getCategoryId() != null && !entity.getCategoryId().equals(dict.getCategoryId())) {
+                    cascadeUpdateCategoryId(entity.getId(), entity.getCategoryId());
+                }
 
             } else {
                 entity.setUpdateDate(new Date());
@@ -194,6 +198,10 @@ public class DictBusinessService {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请重试!");
                     return resultObjectVO;
+                }
+                //如果修改了字典分类，级联更新所有子节点的分类
+                if (entity.getCategoryId() != null && !entity.getCategoryId().equals(dict.getCategoryId())) {
+                    cascadeUpdateCategoryId(entity.getId(), entity.getCategoryId());
                 }
             }
 
@@ -754,6 +762,23 @@ public class DictBusinessService {
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 级联更新子节点的字典分类
+     * @param parentId 父节点ID
+     * @param categoryId 新的分类ID
+     */
+    private void cascadeUpdateCategoryId(Long parentId, Integer categoryId) {
+        List<DictVO> children = new ArrayList<>();
+        Dict childQuery = new Dict();
+        childQuery.setId(parentId);
+        dictService.queryChildren(children, childQuery);
+        if (!CollectionUtils.isEmpty(children)) {
+            List<Long> childIds = children.stream().map(DictVO::getId).collect(Collectors.toList());
+            dictService.updateCategoryByIdList(childIds, categoryId);
+        }
     }
 
 

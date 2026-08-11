@@ -173,6 +173,14 @@ public interface DictService {
     Long queryOneChildCountByPid(Long pid,String appCode,Integer categoryId);
 
     /**
+     * 批量更新字典分类ID
+     * @param ids
+     * @param categoryId
+     * @return
+     */
+    int updateCategoryByIdList(List<Long> ids, Integer categoryId);
+
+    /**
      * 批量更新应用编码
      * @param categoryId
      * @param appCode

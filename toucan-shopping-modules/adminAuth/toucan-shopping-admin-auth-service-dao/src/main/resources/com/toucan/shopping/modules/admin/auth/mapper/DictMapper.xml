@@ -269,7 +269,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Dict">
-        update t_sa_dict set  name=#{name},code=#{code},app_code=#{appCode},is_snapshot=#{isSnapshot},dict_sort=#{dictSort},enable_status=#{enableStatus},
+        update t_sa_dict set  name=#{name},code=#{code},pid=#{pid},category_id=#{categoryId},app_code=#{appCode},extend_property=#{extendProperty},is_snapshot=#{isSnapshot},dict_sort=#{dictSort},enable_status=#{enableStatus},
         update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
           where id = #{id}
     </update>
@@ -345,6 +345,14 @@
 
     <update id="updateParentId" parameterType="java.lang.Long">
         update t_sa_dict set pid=#{newParentId} where pid = #{oldParentId} and delete_status=0
+    </update>
+
+    <update id="updateCategoryByIdList">
+        update t_sa_dict set category_id=#{categoryId} where delete_status=0
+         and id in
+        <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
     </update>
 
 

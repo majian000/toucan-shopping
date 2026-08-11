@@ -303,16 +303,16 @@ function handleAddChild(row) {
 
 async function handleEdit(row) {
   isEdit.value = true; isAddChild.value = false; editingId.value = row.id
-  formData.pid = row.pid || null
-  formData.categoryId = row.categoryId
-  formData.name = row.name; formData.code = row.code
-  formData.extendProperty = row.extendProperty || ''
-  formData.dictSort = row.dictSort || 0; formData.remark = row.remark
-  formData.enableStatus = row.enableStatus
   dialogVisible.value = true
   dialogLoading.value = true
   try {
+    formData.categoryId = row.categoryId
     await loadTreeSelectData(formData.categoryId)
+    formData.pid = row.pid === -1 ? null : (row.pid || null)
+    formData.name = row.name; formData.code = row.code
+    formData.extendProperty = row.extendProperty || ''
+    formData.dictSort = row.dictSort || 0; formData.remark = row.remark
+    formData.enableStatus = row.enableStatus
   } finally {
     dialogLoading.value = false
   }

@@ -170,6 +170,14 @@ public interface DictMapper {
 
     int updateAppCodeByCategoryId(Integer categoryId, String appCode);
 
+    /**
+     * 批量更新字典分类ID
+     * @param ids
+     * @param categoryId
+     * @return
+     */
+    int updateCategoryByIdList(List<Long> ids, Integer categoryId);
+
     DictVO findByCodeAndCategoryCode(String code,String categoryCode,String appCode);
 
     List<DictVO> findByCodesAndCategoryCode(List<String> codes,String categoryCode,String appCode);

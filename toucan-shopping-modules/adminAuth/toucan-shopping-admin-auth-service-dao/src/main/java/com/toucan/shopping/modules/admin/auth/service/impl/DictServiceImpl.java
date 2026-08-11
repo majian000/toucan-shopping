@@ -168,6 +168,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public int updateCategoryByIdList(List<Long> ids, Integer categoryId) {
+        return dictMapper.updateCategoryByIdList(ids, categoryId);
+    }
+
+    @Override
     public int updateAppCodeByCategoryId(Integer categoryId, String appCode) {
         return dictMapper.updateAppCodeByCategoryId(categoryId,appCode);
     }
