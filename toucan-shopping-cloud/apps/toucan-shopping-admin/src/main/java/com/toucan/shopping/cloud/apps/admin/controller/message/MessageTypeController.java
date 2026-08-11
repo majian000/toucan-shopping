@@ -107,7 +107,7 @@ public class MessageTypeController {
                 resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-50位");
                 return resultObjectVO;
             }
-
+            entity.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = messageTypeService.update(requestJsonVO);
         }catch(Exception e)

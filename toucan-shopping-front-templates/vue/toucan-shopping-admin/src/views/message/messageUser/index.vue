@@ -29,8 +29,7 @@
     <!-- 表格区域 -->
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" v-permission="'toucan:content:message:messageUser:add'" @click="handleAdd">发送消息</el-button>
-        <el-button type="danger" :icon="Delete" v-permission="'toucan:content:message:messageUser:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'toucan:content:messageUser:toolbar:save'" @click="handleAdd">发送消息</el-button>
       </div>
 
       <el-table :data="tableData" border stripe v-loading="loading" @selection-change="onSelectionChange">
@@ -58,8 +57,8 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:content:message:messageUser:update'" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:message:messageUser:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:content:messageUser:btn:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:messageUser:row:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

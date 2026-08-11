@@ -133,9 +133,13 @@ public class ShardingSphereDataSourceConfig {
             String tableShardingColumn = rule.get("table-strategy.standard.sharding-column");
             String tableShardingAlgorithm = rule.get("table-strategy.standard.sharding-algorithm-name");
 
-            // Skip tables without any sharding strategy (non-sharded/single-node tables)
+            // Non-sharded/single-node tables: add with just actual-data-nodes, no strategies
             if ((dbShardingColumn == null || dbShardingColumn.isEmpty() || dbShardingAlgorithm == null || dbShardingAlgorithm.isEmpty()) &&
                 (tableShardingColumn == null || tableShardingColumn.isEmpty() || tableShardingAlgorithm == null || tableShardingAlgorithm.isEmpty())) {
+                String actualDataNodes = rule.getOrDefault("actual-data-nodes", "");
+                if (actualDataNodes != null && !actualDataNodes.isEmpty()) {
+                    config.getTables().add(new ShardingTableRuleConfiguration(tableName, actualDataNodes));
+                }
                 continue;
             }
 

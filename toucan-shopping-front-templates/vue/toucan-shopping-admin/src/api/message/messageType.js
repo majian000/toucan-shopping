@@ -1,23 +1,7 @@
 import request from '@/utils/request'
 
-// 将对象转为 URLSearchParams（用于 form-encoded POST，适配 list 接口）
-function toFormData(obj) {
-  const params = new URLSearchParams()
-  Object.keys(obj).forEach(key => {
-    if (obj[key] != null && obj[key] !== '') {
-      params.append(key, obj[key])
-    }
-  })
-  return params
-}
-
 export function listMessageType(data) {
-  return request({
-    url: '/message/messageType/list',
-    method: 'post',
-    data: toFormData(data),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
+  return request({ url: '/message/messageType/list', method: 'post', data })
 }
 
 export function addMessageType(data) {

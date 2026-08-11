@@ -188,7 +188,7 @@ public class MessageUserController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:message:messageUser:list:page"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(MessageUserPageInfo pageInfo)
+    public TableVO list(@RequestBody MessageUserPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
