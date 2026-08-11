@@ -229,6 +229,7 @@ public class DictController {
     public ResultObjectVO save(HttpServletRequest request, @RequestBody DictVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode(toucan.getAppCode());
             entity.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = dictServiceAPI.save(requestJsonVO);
