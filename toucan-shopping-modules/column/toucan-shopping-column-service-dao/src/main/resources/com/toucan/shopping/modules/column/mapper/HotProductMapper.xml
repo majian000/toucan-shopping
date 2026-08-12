@@ -31,6 +31,10 @@
 
     <sql id="queryListPageWhere">
 
+        <if test="productName!=null and productName!='' ">
+            and t.product_name  like concat(#{productName},'%')
+        </if>
+
         <if test="appCode!=null ">
             and t.app_code =#{appCode}
         </if>

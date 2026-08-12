@@ -26,6 +26,8 @@ public class HotProductPageInfo extends PageInfo<HotProductVO> {
 
     private Integer id;
 
+    private String productName; //名称
+
     private Integer position; //栏目位置 1 PC门户首页
 
     private Short showStatus;  //显示状态 0隐藏 1显示
