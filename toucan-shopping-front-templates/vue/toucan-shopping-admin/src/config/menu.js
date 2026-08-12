@@ -16,10 +16,10 @@ export const menuConfig = [
       { path: '/dashboard', name: 'Dashboard', label: '工作台', icon: 'Monitor', component: () => import('@/views/dashboard/index.vue') }
     ]
   },
-  // ==================== 权限管理 ====================
+  // ==================== 系统管理 ====================
   {
     key: 'permission',
-    label: '权限管理',
+    label: '系统管理',
     icon: 'Lock',
     permission: 'toucan:admin:permission',
     children: [
@@ -67,6 +67,17 @@ export const menuConfig = [
         children: [
           { path: '/message/messageType/list', name: 'MessageTypeList', label: '消息类型', icon: 'Menu', permission: 'toucan:content:messageType:list', component: () => import('@/views/message/messageType/index.vue') },
           { path: '/message/messageUser/list', name: 'MessageUserList', label: '用户消息', icon: 'Menu', permission: 'toucan:content:messageUser:list', component: () => import('@/views/message/messageUser/index.vue') }
+        ]
+      },
+      // ----- 接口监控 -----
+      {
+        key: 'monitor',
+        label: '接口监控',
+        icon: 'Monitor',
+        permission: 'toucan:monitor:apiMonitor',
+        children: [
+          { path: '/monitor/dashboard', name: 'ApiMonitorDashboard', label: '接口监控', icon: 'DataAnalysis', permission: 'toucan:monitor:dashboard', component: () => import('@/views/monitor/dashboard/index.vue') },
+          { path: '/monitor/requestLog', name: 'ApiMonitorRequestLog', label: '请求日志', icon: 'Document', permission: 'toucan:monitor:requestLog', component: () => import('@/views/monitor/requestLog/index.vue') }
         ]
       }
     ]

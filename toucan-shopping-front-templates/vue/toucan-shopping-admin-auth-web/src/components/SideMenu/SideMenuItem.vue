@@ -1,6 +1,6 @@
 <template>
   <!-- 有子菜单：显示 el-sub-menu 带展开箭头 -->
-  <el-sub-menu v-if="hasChildren" :index="item.path || item.label">
+  <el-sub-menu v-if="hasChildren" :index="item.key || item.path || item.label">
     <template #title>
       <el-icon v-if="iconComp"><component :is="iconComp" /></el-icon>
       <span>{{ item.label }}</span>
