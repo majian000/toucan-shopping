@@ -285,7 +285,7 @@ public class ColumnController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, ColumnPageInfo pageInfo) {
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, @RequestBody ColumnPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             if (StringUtils.isEmpty(pageInfo.getColumnTypeCode())) {

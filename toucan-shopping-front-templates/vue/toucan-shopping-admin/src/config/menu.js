@@ -81,5 +81,33 @@ export const menuConfig = [
         ]
       }
     ]
+  },
+  // ==================== 首页管理 ====================
+  {
+    key: 'content',
+    label: '首页管理',
+    icon: 'HomeFilled',
+    permission: 'toucan:index',
+    children: [
+      // ----- 首页管理 -----
+      {
+        key: 'content-index',
+        label: '首页管理',
+        icon: 'House',
+        permission: 'toucan:index:page',
+        children: [
+          { path: '/content/hotProduct', name: 'ContentHotProduct', label: '热门商品', icon: 'Star', permission: 'toucan:dashboard:hotProduct', component: () => import('@/views/content/hotProduct/index.vue') },
+          { path: '/content/area', name: 'ContentArea', label: '地区列表', icon: 'Location', permission: 'toucan:area:area', component: () => import('@/views/content/area/index.vue') },
+          { path: '/content/banner', name: 'ContentBanner', label: '轮播图列表', icon: 'Picture', permission: 'toucan:content:banner:list', component: () => import('@/views/content/banner/index.vue') },
+          { path: '/content/category', name: 'ContentCategory', label: '类别列表', icon: 'Grid', permission: 'toucan:category:categoryList', component: () => import('@/views/content/category/index.vue') }
+        ]
+      },
+      // ----- 栏目管理 -----
+      { path: '/content/column', name: 'ContentColumn', label: '栏目管理', icon: 'Menu', permission: 'toucan:content:columnType:list', component: () => import('@/views/content/column/index.vue') },
+      // ----- 文章管理 -----
+      { path: '/content/article', name: 'ContentArticle', label: '文章管理', icon: 'Notebook', permission: 'toucan:content:article', component: () => import('@/views/content/article/index.vue') },
+      // ----- 静态化管理 -----
+      { path: '/content/htmlPage', name: 'ContentHtmlPage', label: '静态化管理', icon: 'Files', permission: 'toucan:static:manager', component: () => import('@/views/content/htmlPage/index.vue') }
+    ]
   }
 ]

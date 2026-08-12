@@ -74,7 +74,7 @@ public class BannerController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:banner:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest request, BannerPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, @RequestBody BannerPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

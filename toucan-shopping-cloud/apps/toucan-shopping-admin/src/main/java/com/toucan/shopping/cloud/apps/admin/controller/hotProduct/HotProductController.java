@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.content.api.HotProductServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.column.vo.HotProductDetailVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.page.HotProductPageInfo;
 import com.toucan.shopping.modules.column.vo.HotProductVO;
@@ -62,7 +63,7 @@ public class HotProductController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hot:product:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest request, HotProductPageInfo pageInfo) {
+    public TableVO list(HttpServletRequest request,@RequestBody HotProductPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
@@ -188,6 +189,42 @@ public class HotProductController {
             requestVo.setEntityJson(entityJson);
 
             resultObjectVO = hotProductService.deleteById(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hotProduct:row:view"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody HotProductVO hotProductVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (hotProductVO.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
+            ResultObjectVO detailResult = hotProductService.findById(requestJsonVO);
+            if (detailResult.isSuccess()) {
+                HotProductVO vo = detailResult.formatData(HotProductVO.class);
+                if (vo != null && StringUtils.isNotEmpty(vo.getImgPath())) {
+                    vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
+                }
+                HotProductDetailVO detailVO = new HotProductDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            } else {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
         } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);

@@ -235,7 +235,7 @@ public class CategoryController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:tree"})
     @RequestMapping(value = "/tree/table", method = RequestMethod.POST)
-    public ResultObjectVO treeTable(HttpServletRequest request, CategoryTreeInfo queryPageInfo) {
+    public ResultObjectVO treeTable(HttpServletRequest request, @RequestBody CategoryTreeInfo queryPageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
@@ -255,7 +255,7 @@ public class CategoryController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:category:listByPid"})
     @RequestMapping(value = "/tree/table/by/pid", method = RequestMethod.POST)
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo) {
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, @RequestBody CategoryTreeInfo categoryTreeInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryTreeInfo);

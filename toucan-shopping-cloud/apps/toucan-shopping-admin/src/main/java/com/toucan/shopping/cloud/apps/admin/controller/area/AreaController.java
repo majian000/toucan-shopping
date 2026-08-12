@@ -80,7 +80,7 @@ public class AreaController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:tree"})
     @RequestMapping(value = "/tree/table",method = RequestMethod.POST)
-    public ResultObjectVO queryTreeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
+    public ResultObjectVO queryTreeTable(HttpServletRequest request,@RequestBody AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -103,7 +103,7 @@ public class AreaController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
-    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request,@RequestBody AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -195,7 +195,7 @@ public class AreaController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:query:tree"})
     @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
-    public ResultObjectVO queryTreeChildById(HttpServletRequest request, AreaTreeVO areaTreeVO)
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request,@RequestBody AreaTreeVO areaTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
