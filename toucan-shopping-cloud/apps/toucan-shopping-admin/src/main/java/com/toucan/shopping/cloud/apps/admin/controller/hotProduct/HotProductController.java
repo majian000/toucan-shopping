@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -135,6 +136,10 @@ public class HotProductController {
     public ResultObjectVO save(HttpServletRequest request, @RequestBody HotProductVO hotProductVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            // 如果有imgBase64，解码后上传到文件服务
+            if (StringUtils.isNotEmpty(hotProductVO.getImgBase64())) {
+                hotProductVO.setImgPath(imageUploadService.uploadBase64(hotProductVO.getImgBase64()));
+            }
             hotProductVO.setAppCode(toucan.getShoppingPC().getAppCode());
             hotProductVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
@@ -156,6 +161,21 @@ public class HotProductController {
     public ResultObjectVO update(HttpServletRequest request, @RequestBody HotProductVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if (StringUtils.isNotEmpty(entity.getImgBase64())) {
+                // 查询旧图片并删除
+                HotProductVO queryVO = new HotProductVO();
+                queryVO.setId(entity.getId());
+                RequestJsonVO queryRequest = RequestJsonVOGenerator.generator(appCode, queryVO);
+                ResultObjectVO oldResult = hotProductService.findById(queryRequest);
+                if (oldResult.isSuccess()) {
+                    HotProductVO oldVO = oldResult.formatData(HotProductVO.class);
+                    if (oldVO != null && StringUtils.isNotEmpty(oldVO.getImgPath())) {
+                        imageUploadService.deleteFile(oldVO.getImgPath());
+                    }
+                }
+                // 上传新图片
+                entity.setImgPath(imageUploadService.uploadBase64(entity.getImgBase64()));
+            }
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -189,6 +209,59 @@ public class HotProductController {
             requestVo.setEntityJson(entityJson);
 
             resultObjectVO = hotProductService.deleteById(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据ID查询（回显用，含base64图片数据）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hotProduct:row:view"})
+    @RequestMapping(value = "/queryById", method = RequestMethod.POST)
+    public ResultObjectVO queryById(HttpServletRequest request, @RequestBody HotProductVO hotProductVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (hotProductVO.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
+            ResultObjectVO detailResult = hotProductService.findById(requestJsonVO);
+            if (detailResult.isSuccess()) {
+                HotProductVO vo = detailResult.formatData(HotProductVO.class);
+                if (vo != null && StringUtils.isNotEmpty(vo.getImgPath())) {
+                    vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
+                    // 下载文件并转base64
+                    byte[] fileBytes = imageUploadService.downloadFile(vo.getImgPath());
+                    if (fileBytes != null && fileBytes.length > 0) {
+                        String path = vo.getImgPath();
+                        String ext = "jpg";
+                        if (path.contains(".")) {
+                            ext = path.substring(path.lastIndexOf(".") + 1).toLowerCase();
+                        }
+                        String mime;
+                        switch (ext) {
+                            case "png": mime = "image/png"; break;
+                            case "gif": mime = "image/gif"; break;
+                            case "bmp": mime = "image/bmp"; break;
+                            case "jpeg": mime = "image/jpeg"; break;
+                            case "jpg": mime = "image/jpeg"; break;
+                            default: mime = "image/jpeg"; break;
+                        }
+                        vo.setImgBase64("data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes));
+                    }
+                }
+                resultObjectVO.setData(vo);
+            } else {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
         } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
@@ -268,5 +341,6 @@ public class HotProductController {
 
         return resultObjectVO;
     }
+
 
 }

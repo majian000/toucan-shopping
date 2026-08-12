@@ -325,10 +325,10 @@ function onPerpetualChange(val) {
 }
 
 function onUploadSuccess(res) {
-  if (res.code === 1 || res.data) {
+  if (res.code === 0 && res.data) {
     ElMessage.success('上传成功')
-    previewCoverUrl.value = res.data?.httpCoverImgUrl || ''
-    formData.coverImgUrl = res.data?.coverImgUrl || ''
+    previewCoverUrl.value = res.data.httpCoverImgUrl || ''
+    formData.coverImgUrl = res.data.coverImgUrl || ''
   } else { ElMessage.error(res.msg || '上传失败') }
 }
 

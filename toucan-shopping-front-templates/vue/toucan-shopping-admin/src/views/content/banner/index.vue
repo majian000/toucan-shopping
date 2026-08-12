@@ -172,7 +172,7 @@ function resetForm() {
   previewImgUrl.value = ''
 }
 
-function onUploadSuccess(res) { if (res.code === 1 || res.data) { ElMessage.success('上传成功'); previewImgUrl.value = res.data?.httpImgPath || ''; formData.imgPath = res.data?.imgPath || '' } else { ElMessage.error(res.msg || '上传失败') } }
+function onUploadSuccess(res) { if (res.code === 0 && res.data) { ElMessage.success('上传成功'); previewImgUrl.value = res.data.httpImgPath || ''; formData.imgPath = res.data.imgPath || '' } else { ElMessage.error(res.msg || '上传失败') } }
 function onUploadError() { ElMessage.error('上传异常') }
 function beforeUpload(file) { if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }; return true }
 

@@ -15,6 +15,11 @@ export function updateHotProduct(data) {
   return request({ url: '/hotProduct/update', method: 'post', data })
 }
 
+// 根据ID查询（回显用，含base64图片数据）
+export function queryHotProductById(data) {
+  return request({ url: '/hotProduct/queryById', method: 'post', data })
+}
+
 // 查看详情
 export function detailHotProduct(data) {
   return request({ url: '/hotProduct/detail', method: 'post', data })

@@ -49,7 +49,11 @@
         <el-table-column prop="startShowDate" label="开始展示时间" width="170" />
         <el-table-column prop="endShowDate" label="结束展示时间" width="170" />
         <el-table-column prop="type" label="类型" width="100" align="center">
-          <template #default="{ row }">{{ row.type === '1' ? 'PC端' : row.type === '2' ? '移动端' : row.type }}</template>
+          <template #default="{ row }">
+            <el-tag :type="row.type === '1' || row.type === 1 ? '' : 'success'" size="small">
+              {{ row.type === '1' || row.type === 1 ? 'PC端' : row.type === '2' || row.type === 2 ? '移动端' : row.type }}
+            </el-tag>
+          </template>
         </el-table-column>
         <el-table-column prop="hotProductSort" label="排序" width="80" align="center" />
         <el-table-column prop="showStatus" label="显示状态" width="100" align="center">
@@ -60,7 +64,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="position" label="位置" width="100" align="center">
-          <template #default="{ row }">{{ row.position === '1' ? '首页' : row.position }}</template>
+          <template #default="{ row }">
+            <el-tag :type="row.position === '1' || row.position === 1 ? 'primary' : 'info'" size="small">
+              {{ row.position === '1' || row.position === 1 ? '首页' : row.position }}
+            </el-tag>
+          </template>
         </el-table-column>
         <el-table-column prop="createAdminName" label="创建人" width="120" />
         <el-table-column prop="createDate" label="创建时间" width="170" />
@@ -99,7 +107,7 @@
           <el-input v-model="formData.clickPath" placeholder="请输入点击路径" maxlength="255" />
         </el-form-item>
         <el-form-item label="预览图">
-          <el-upload :action="uploadUrl" :show-file-list="false" :on-success="onUploadSuccess" :on-error="onUploadError" :before-upload="beforeUpload" accept="image/*">
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onFileChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传图片</el-button>
           </el-upload>
         </el-form-item>
@@ -144,7 +152,8 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="查看热门商品" width="700px" :close-on-click-modal="false" destroy-on-close>
-      <el-descriptions v-if="detailInfo" :column="2" border>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border>
         <el-descriptions-item label="商品名称" :span="2">{{ detailInfo.productName }}</el-descriptions-item>
         <el-descriptions-item label="商品价格">{{ detailInfo.productPrice }}</el-descriptions-item>
         <el-descriptions-item label="排序">{{ detailInfo.hotProductSort }}</el-descriptions-item>
@@ -171,6 +180,7 @@
         <el-descriptions-item label="修改人">{{ detailInfo.updateAdminName }}</el-descriptions-item>
         <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
       </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -182,7 +192,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Upload, View } from '@element-plus/icons-vue'
-import { listHotProduct, saveHotProduct, updateHotProduct, detailHotProduct, deleteHotProduct, deleteHotProducts, uploadHotProductImg } from '@/api/content/hotProduct'
+import { listHotProduct, saveHotProduct, updateHotProduct, detailHotProduct, deleteHotProduct, deleteHotProducts, queryHotProductById } from '@/api/content/hotProduct'
 
 const searchForm = reactive({ productName: '', showStatus: '', startShowDate: '', endShowDate: '' })
 function handleSearch() { pagination.pageNum = 1; loadTableData() }
@@ -206,10 +216,9 @@ async function loadTableData() {
 const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit = ref(false)
 const submitLoading = ref(false); const formRef = ref(null)
 const previewImgUrl = ref('')
-const uploadUrl = '/hotProduct/upload/img'
 const dialogTitle = computed(() => isEdit.value ? '编辑热门商品' : '添加热门商品')
 
-const formData = reactive({ id: null, productName: '', productPrice: '', productDesc: '', clickPath: '', imgPath: '', startShowDate: '', endShowDate: '', showStatus: '1', type: '1', position: '1', hotProductSort: 0, remark: '' })
+const formData = reactive({ id: null, productName: '', productPrice: '', productDesc: '', clickPath: '', imgPath: '', imgBase64: '', startShowDate: '', endShowDate: '', showStatus: '1', type: '1', position: '1', hotProductSort: 0, remark: '' })
 const formRules = {
   productName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
   startShowDate: [{ required: true, message: '请选择开始展示时间', trigger: 'change' }],
@@ -220,25 +229,40 @@ const formRules = {
 
 function resetForm() {
   formData.id = null; formData.productName = ''; formData.productPrice = ''; formData.productDesc = ''
-  formData.clickPath = ''; formData.imgPath = ''; formData.startShowDate = ''; formData.endShowDate = ''
+  formData.clickPath = ''; formData.imgPath = ''; formData.imgBase64 = ''; formData.startShowDate = ''; formData.endShowDate = ''
   formData.showStatus = '1'; formData.type = '1'; formData.position = '1'; formData.hotProductSort = 0; formData.remark = ''
   previewImgUrl.value = ''
 }
 
-function onUploadSuccess(res) { if (res.code === 1 || res.data) { ElMessage.success('上传成功'); previewImgUrl.value = res.data?.httpImgPath || ''; formData.imgPath = res.data?.imgPath || '' } else { ElMessage.error(res.msg || '上传失败') } }
-function onUploadError() { ElMessage.error('上传异常') }
+function onFileChange(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewImgUrl.value = e.target.result
+    formData.imgBase64 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
+}
 function beforeUpload(file) { if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }; return true }
 
 function handleAdd() { isEdit.value = false; resetForm(); dialogVisible.value = true }
-function handleEdit(row) {
+async function handleEdit(row) {
   isEdit.value = true
   formData.id = row.id; formData.productName = row.productName || ''; formData.productPrice = row.productPrice || ''
   formData.productDesc = row.productDesc || ''; formData.clickPath = row.clickPath || ''
-  formData.imgPath = row.imgPath || ''; previewImgUrl.value = row.httpImgPath || ''
+  formData.imgPath = row.imgPath || ''; formData.imgBase64 = ''; previewImgUrl.value = ''
   formData.startShowDate = row.startShowDate || ''; formData.endShowDate = row.endShowDate || ''
   formData.showStatus = row.showStatus != null ? String(row.showStatus) : '1'; formData.type = row.type || '1'
   formData.position = row.position || '1'; formData.hotProductSort = row.hotProductSort || 0; formData.remark = row.remark || ''
   dialogVisible.value = true
+  dialogLoading.value = true
+  try {
+    const res = await queryHotProductById({ id: row.id })
+    if (res.code === 1 && res.data) {
+      formData.imgBase64 = res.data.imgBase64 || ''
+      formData.imgPath = res.data.imgPath || ''
+      previewImgUrl.value = res.data.imgBase64 || res.data.httpImgPath || ''
+    }
+  } catch { } finally { dialogLoading.value = false }
 }
 
 async function handleSubmit() {
