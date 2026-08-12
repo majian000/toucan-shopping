@@ -39,6 +39,11 @@ public class HotProductServiceAPISingleImpl implements HotProductServiceAPI {
     }
 
     @Override
+    public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
+        return hotProductBusinessService.deleteByIds(requestJsonVO);
+    }
+
+    @Override
     public ResultObjectVO queryPcIndexHotProducts(RequestJsonVO requestVo) {
         return hotProductBusinessService.queryPcIndexHotProducts(requestVo);
     }

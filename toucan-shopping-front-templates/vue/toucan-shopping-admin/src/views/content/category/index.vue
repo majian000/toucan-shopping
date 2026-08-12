@@ -61,9 +61,9 @@
         <el-form-item label="上级类别">
           <el-tree-select
             v-model="formData.parentId" :data="parentCategoryTree"
-            :props="{ children: 'children', label: 'name', value: 'id' }"
+            :props="{ children: 'children', label: 'name', value: 'id', isLeaf: 'leaf' }"
             check-strictly clearable placeholder="请选择上级类别（不选则为根节点）" style="width:100%"
-            :load="loadParentCategoryTree" lazy
+            :load="loadParentCategoryTree" lazy node-key="id"
           />
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -140,19 +140,37 @@ function resetForm() {
   formData.categorySort = 0; formData.showStatus = 1; formData.href = ''; formData.noticeTips = ''; formData.remark = ''
 }
 
+async function loadParentCategoryRoots() {
+  try {
+    const res = await queryCategoryTreeByPid(-1)
+    parentCategoryTree.value = (res.data || []).map(item => ({ ...item, leaf: false }))
+  } catch { }
+}
+
 async function loadParentCategoryTree(node, resolve) {
   try { const res = await queryCategoryTreeByPid(node?.data?.id != null ? node.data.id : -1); resolve((res.data || []).map(item => ({ ...item, leaf: false }))) } catch { resolve([]) }
 }
 
-function handleAdd() { isEdit.value = false; resetForm(); dialogVisible.value = true }
-function handleEdit(row) {
-  isEdit.value = true
-  formData.id = row.id; formData.parentId = row.parentId; formData.name = row.name || ''
-  formData.icon = row.icon || ''; formData.categorySort = row.categorySort || 0
-  formData.showStatus = row.showStatus != null ? row.showStatus : 1; formData.href = row.href || ''
-  formData.noticeTips = row.noticeTips || ''; formData.remark = row.remark || ''
+async function openDialog(row) {
   dialogVisible.value = true
+  dialogLoading.value = true
+  parentCategoryTree.value = []
+  if (row) {
+    isEdit.value = true
+    formData.id = row.id; formData.parentId = row.parentId; formData.name = row.name || ''
+    formData.icon = row.icon || ''; formData.categorySort = row.categorySort || 0
+    formData.showStatus = row.showStatus != null ? row.showStatus : 1; formData.href = row.href || ''
+    formData.noticeTips = row.noticeTips || ''; formData.remark = row.remark || ''
+  } else {
+    isEdit.value = false
+    resetForm()
+  }
+  await loadParentCategoryRoots()
+  dialogLoading.value = false
 }
+
+function handleAdd() { openDialog() }
+function handleEdit(row) { openDialog(row) }
 
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return

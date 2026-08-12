@@ -18,5 +18,7 @@ public interface HotProductServiceAPI {
 
     ResultObjectVO deleteById(RequestJsonVO requestJsonVO);
 
+    ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO);
+
     ResultObjectVO queryPcIndexHotProducts(RequestJsonVO requestVo);
 }

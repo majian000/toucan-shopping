@@ -37,6 +37,11 @@ public class HotProductController {
         return hotProductBusinessService.deleteById(requestJsonVO);
     }
 
+    @RequestMapping(value = "/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestJsonVO) {
+        return hotProductBusinessService.deleteByIds(requestJsonVO);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO) {
         return hotProductBusinessService.update(requestJsonVO);

@@ -61,9 +61,9 @@
         <el-form-item label="上级地区">
           <el-tree-select
             v-model="formData.pid" :data="parentAreaTree"
-            :props="{ children: 'children', label: 'name', value: 'id' }"
+            :props="{ children: 'children', label: 'name', value: 'id', isLeaf: 'leaf' }"
             check-strictly clearable placeholder="请选择上级地区（不选则为根节点）" style="width:100%"
-            :load="loadParentAreaTree" lazy
+            :load="loadParentAreaTree" lazy node-key="id"
           />
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -144,19 +144,37 @@ function resetForm() {
   formData.areaSort = 0; formData.isMunicipality = 0; formData.countryCode = ''; formData.bigAreaCode = ''; formData.parentCode = ''
 }
 
+async function loadParentAreaRoots() {
+  try {
+    const res = await queryAreaTreeTable({ pid: -1 })
+    parentAreaTree.value = (res.data || []).map(item => ({ ...item, leaf: false }))
+  } catch { }
+}
+
 async function loadParentAreaTree(node, resolve) {
   try { const res = await queryAreaTreeTable({ pid: node?.id || -1 }); resolve((res.data || []).map(item => ({ ...item, leaf: false }))) } catch { resolve([]) }
 }
 
-function handleAdd() { isEdit.value = false; resetForm(); dialogVisible.value = true }
-function handleEdit(row) {
-  isEdit.value = true
-  formData.id = row.id; formData.pid = row.pid; formData.name = row.name || ''; formData.code = row.code || ''
-  formData.type = row.type || ''; formData.areaSort = row.areaSort || 0
-  formData.isMunicipality = row.isMunicipality || 0; formData.countryCode = row.countryCode || ''
-  formData.bigAreaCode = row.bigAreaCode || ''; formData.parentCode = row.parentCode || ''
+async function openDialog(title, row) {
   dialogVisible.value = true
+  dialogLoading.value = true
+  parentAreaTree.value = []
+  if (row) {
+    isEdit.value = true
+    formData.id = row.id; formData.pid = row.pid; formData.name = row.name || ''; formData.code = row.code || ''
+    formData.type = row.type || ''; formData.areaSort = row.areaSort || 0
+    formData.isMunicipality = row.isMunicipality || 0; formData.countryCode = row.countryCode || ''
+    formData.bigAreaCode = row.bigAreaCode || ''; formData.parentCode = row.parentCode || ''
+  } else {
+    isEdit.value = false
+    resetForm()
+  }
+  await loadParentAreaRoots()
+  dialogLoading.value = false
 }
+
+function handleAdd() { openDialog() }
+function handleEdit(row) { openDialog(null, row) }
 
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return

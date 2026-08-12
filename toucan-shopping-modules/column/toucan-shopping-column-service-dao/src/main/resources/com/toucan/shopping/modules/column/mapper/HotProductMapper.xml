@@ -147,6 +147,13 @@
         update t_hot_product  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
+    <update id="deleteByIds">
+        update t_hot_product set delete_status=1 where delete_status=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
 
 
 

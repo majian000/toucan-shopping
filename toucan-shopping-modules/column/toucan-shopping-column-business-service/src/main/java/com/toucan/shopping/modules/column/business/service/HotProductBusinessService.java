@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class HotProductBusinessService {
 
     @Autowired
     private HotProductService hotProductService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -163,9 +167,17 @@ public class HotProductBusinessService {
             HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
             Check.notNull(hotProductVO.getId(), ResultVO.FAILD, "ID不能为空!");
 
+            // 查询旧记录获取图片路径
+            HotProduct oldRecord = hotProductService.findById(hotProductVO.getId());
+            String oldImgPath = (oldRecord != null) ? oldRecord.getImgPath() : null;
+
             int ret = hotProductService.deleteById(hotProductVO.getId());
             if (ret <= 0) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "不存在该热门商品!");
+            }
+            // 删除关联的图片文件
+            if (StringUtils.isNotEmpty(oldImgPath)) {
+                imageUploadService.deleteFile(oldImgPath);
             }
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
@@ -175,6 +187,31 @@ public class HotProductBusinessService {
             resultObjectVO.setMsg("请重试!");
         }
         return resultObjectVO;
+    }
+
+    @RequestCheck(requireEntity = true)
+    public ResultObjectVO deleteByIds(RequestJsonVO requestJsonVO) {
+        try {
+            List<HotProductVO> hotProductVOS = requestJsonVO.formatEntityList(HotProductVO.class);
+            Check.notEmpty(hotProductVOS, ResultVO.FAILD, "没有找到ID");
+            List<Long> ids = hotProductVOS.stream().map(HotProductVO::getId).collect(java.util.stream.Collectors.toList());
+            int ret = hotProductService.deleteByIds(ids);
+            if (ret <= 0) {
+                return ResultObjectVO.fail(ResultVO.FAILD, "批量删除失败!");
+            }
+            // 删除关联的图片文件
+            for (HotProductVO vo : hotProductVOS) {
+                if (StringUtils.isNotEmpty(vo.getImgPath())) {
+                    imageUploadService.deleteFile(vo.getImgPath());
+                }
+            }
+            return ResultObjectVO.ok();
+        }catch(BusinessValidationException e){
+            return ResultObjectVO.fail(e.getCode(), e.getMessage());
+        }catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
+        }
     }
 
     @RequestCheck(requireEntity = true)

@@ -43,5 +43,7 @@ public interface HotProductMapper {
 
     int deleteById(Long id);
 
+    int deleteByIds(List<Long> ids);
+
     List<HotProductVO> queryPcIndexHotProducts(HotProductVO hotProductVO);
 }

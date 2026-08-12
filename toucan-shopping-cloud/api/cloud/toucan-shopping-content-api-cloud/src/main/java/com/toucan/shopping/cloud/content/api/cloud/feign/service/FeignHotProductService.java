@@ -33,6 +33,10 @@ public interface FeignHotProductService extends HotProductServiceAPI {
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
     @Override
+    @RequestMapping(value = "/delete/ids", produces = "application/json;charset=UTF-8", method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestJsonVO);
+
+    @Override
     @RequestMapping(value = "/pc/index/hot/products", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     ResultObjectVO queryPcIndexHotProducts(@RequestBody RequestJsonVO requestVo);
 

@@ -48,6 +48,13 @@ public interface HotProductService {
     int deleteById(Long id);
 
     /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Long> ids);
+
+    /**
      * 查询PC端首页热门商品
      * @param hotProductVO
      * @return

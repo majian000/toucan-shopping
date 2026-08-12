@@ -219,6 +219,33 @@ public class HotProductController {
 
 
     /**
+     * 批量删除
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hotProduct:toolbar:delete"})
+    @RequestMapping(value = "/delete/ids", method = RequestMethod.POST)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<HotProductVO> hotProductVOS) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (CollectionUtils.isEmpty(hotProductVOS)) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(hotProductVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = hotProductService.deleteByIds(requestVo);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 根据ID查询（回显用，含base64图片数据）
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:hotProduct:row:view"})
