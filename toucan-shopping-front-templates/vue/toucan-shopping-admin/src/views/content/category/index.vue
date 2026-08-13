@@ -61,7 +61,7 @@
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="110px" v-loading="dialogLoading">
         <el-form-item label="上级类别">
           <el-tree-select
-            v-model="formData.parentId" :data="parentCategoryTree"
+            v-model="formData.parentId"
             :props="{ children: 'children', label: 'name', value: 'id', isLeaf: 'leaf' }"
             check-strictly clearable placeholder="请选择上级类别（不选则为根节点）" style="width:100%"
             :load="loadParentCategoryTree" lazy node-key="id"
@@ -72,6 +72,11 @@
         </el-form-item>
         <el-form-item label="图标">
           <el-input v-model="formData.icon" placeholder="请输入图标CSS类名或URL" maxlength="100" />
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-checkbox-group v-model="formData.type">
+            <el-checkbox v-for="t in categoryTypeList" :key="t.code" :value="t.code">{{ t.name }}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="formData.categorySort" :min="0" style="width:100%" />
@@ -131,7 +136,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Refresh, View } from '@element-plus/icons-vue'
-import { queryCategoryTreeTable, queryCategoryTreeByPid, saveCategory, updateCategory, detailCategory, deleteCategory, deleteCategories, flushAllCategoryCache, clearCategoryIndexCache } from '@/api/content/category'
+import { queryCategoryTreeTable, queryCategoryTreeByPid, queryCategoryTypeList, saveCategory, updateCategory, detailCategory, deleteCategory, deleteCategories, flushAllCategoryCache, clearCategoryIndexCache } from '@/api/content/category'
 
 const searchForm = reactive({ name: '' })
 function handleSearch() { loadRootData() }
@@ -164,23 +169,26 @@ async function loadChildren(row, treeNode, resolve) {
 
 const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit = ref(false)
 const submitLoading = ref(false); const formRef = ref(null)
-const parentCategoryTree = ref([])
 const dialogTitle = computed(() => isEdit.value ? '编辑类别' : '添加类别')
 const detailVisible = ref(false); const detailInfo = ref(null); const detailLoading = ref(false)
 
-const formData = reactive({ id: null, parentId: null, name: '', icon: '', categorySort: 0, showStatus: 1, href: '', noticeTips: '', remark: '' })
-const formRules = { name: [{ required: true, message: '请输入名称', trigger: 'blur' }] }
+const formData = reactive({ id: null, parentId: null, name: '', icon: '', type: [], categorySort: 0, showStatus: 1, href: '', noticeTips: '', remark: '' })
+const formRules = {
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+  type: [{ required: true, type: 'array', message: '请选择类型', trigger: 'change' }]
+}
+
+const categoryTypeList = ref([])
+async function loadCategoryTypeList() {
+  try {
+    const res = await queryCategoryTypeList()
+    if (res.code === 1 && res.data) categoryTypeList.value = res.data || []
+  } catch { }
+}
 
 function resetForm() {
   formData.id = null; formData.parentId = null; formData.name = ''; formData.icon = ''
-  formData.categorySort = 0; formData.showStatus = 1; formData.href = ''; formData.noticeTips = ''; formData.remark = ''
-}
-
-async function loadParentCategoryRoots() {
-  try {
-    const res = await queryCategoryTreeByPid(-1)
-    parentCategoryTree.value = (res.data || []).map(item => ({ ...item, leaf: false }))
-  } catch { }
+  formData.type = []; formData.categorySort = 0; formData.showStatus = 1; formData.href = ''; formData.noticeTips = ''; formData.remark = ''
 }
 
 async function loadParentCategoryTree(node, resolve) {
@@ -190,18 +198,18 @@ async function loadParentCategoryTree(node, resolve) {
 async function openDialog(row) {
   dialogVisible.value = true
   dialogLoading.value = true
-  parentCategoryTree.value = []
   if (row) {
     isEdit.value = true
     formData.id = row.id; formData.parentId = row.parentId != null && Number(row.parentId) !== -1 ? row.parentId : null; formData.name = row.name || ''
     formData.icon = row.icon || ''; formData.categorySort = row.categorySort || 0
     formData.showStatus = row.showStatus != null ? row.showStatus : 1; formData.href = row.href || ''
     formData.noticeTips = row.noticeTips || ''; formData.remark = row.remark || ''
+    formData.type = row.type ? String(row.type).split(',').filter(Boolean) : []
   } else {
     isEdit.value = false
     resetForm()
   }
-  await loadParentCategoryRoots()
+  await loadCategoryTypeList()
   dialogLoading.value = false
 }
 
@@ -223,6 +231,7 @@ async function handleView(row) {
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return
   const params = { ...formData }
+  params.type = Array.isArray(formData.type) ? formData.type.join(',') : formData.type
   // 上级分类ID以字符串传参，避免Long精度丢失
   if (params.parentId === null || params.parentId === undefined || params.parentId === '') {
     params.parentId = -1

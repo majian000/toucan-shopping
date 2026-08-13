@@ -25,6 +25,11 @@ export function detailCategory(data) {
   return request({ url: '/category/detail', method: 'post', data })
 }
 
+// 查询类别类型字典
+export function queryCategoryTypeList() {
+  return request({ url: '/category/query/type/list', method: 'post' })
+}
+
 // 删除
 export function deleteCategory(data) {
   return request({ url: '/category/delete', method: 'post', data })

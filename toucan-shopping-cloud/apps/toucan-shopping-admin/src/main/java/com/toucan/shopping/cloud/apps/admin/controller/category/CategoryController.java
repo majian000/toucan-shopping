@@ -237,6 +237,32 @@ public class CategoryController {
 
 
     /**
+     * 查询类别类型字典列表
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:common:category"})
+    @RequestMapping(value = "/query/type/list", method = RequestMethod.POST)
+    public ResultObjectVO queryTypeList(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            List<DictVO> categoryDictList = this.getCategoryDictList();
+            if (categoryDictList != null) {
+                for (DictVO dictVO : categoryDictList) {
+                    if (CategoryDictConstant.CATEGORY_DICT_TYPE_CODE.equals(dictVO.getCode())) {
+                        resultObjectVO.setData(dictVO.getChildren());
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 删除
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:delete"})
