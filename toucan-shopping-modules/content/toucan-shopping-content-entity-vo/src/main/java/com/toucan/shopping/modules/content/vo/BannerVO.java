@@ -36,4 +36,9 @@ public class BannerVO extends Banner {
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名
 
+    /**
+     * base64图片数据（仅前端传输用，不持久化）
+     */
+    private String imgBase64;
+
 }

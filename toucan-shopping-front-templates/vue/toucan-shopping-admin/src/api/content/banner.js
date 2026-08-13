@@ -25,11 +25,9 @@ export function deleteBanners(data) {
   return request({ url: '/banner/delete/ids', method: 'post', data })
 }
 
-// 上传图片
-export function uploadBannerImg(file) {
-  const formData = new FormData()
-  formData.append('file', file)
-  return request({ url: '/banner/upload/img', method: 'post', data: formData, headers: { 'Content-Type': 'multipart/form-data' } })
+// 根据ID查询（回显用，含base64图片数据）
+export function queryBannerById(data) {
+  return request({ url: '/banner/queryById', method: 'post', data })
 }
 
 // 刷新PC首页缓存

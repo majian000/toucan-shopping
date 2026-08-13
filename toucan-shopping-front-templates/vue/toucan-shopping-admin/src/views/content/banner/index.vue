@@ -89,7 +89,7 @@
           <el-input v-model="formData.clickPath" placeholder="请输入点击跳转地址" maxlength="255" />
         </el-form-item>
         <el-form-item label="预览图">
-          <el-upload :action="uploadUrl" :show-file-list="false" :on-success="onUploadSuccess" :on-error="onUploadError" :before-upload="beforeUpload" accept="image/*">
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onFileChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传图片</el-button>
           </el-upload>
         </el-form-item>
@@ -129,7 +129,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Upload, Refresh } from '@element-plus/icons-vue'
-import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, uploadBannerImg, flushIndexCache, clearIndexCache } from '@/api/content/banner'
+import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, queryBannerById, flushIndexCache, clearIndexCache } from '@/api/content/banner'
 
 const searchForm = reactive({ title: '', startShowDate: '', endShowDate: '', showStatus: '' })
 
@@ -154,10 +154,9 @@ async function loadTableData() {
 const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit = ref(false)
 const submitLoading = ref(false); const formRef = ref(null)
 const previewImgUrl = ref('')
-const uploadUrl = '/banner/upload/img'
 const dialogTitle = computed(() => isEdit.value ? '编辑轮播图' : '添加轮播图')
 
-const formData = reactive({ id: null, title: '', clickPath: '', imgPath: '', startShowDate: '', endShowDate: '', showStatus: '1', position: '0', bannerSort: 0 })
+const formData = reactive({ id: null, title: '', clickPath: '', imgPath: '', imgBase64: '', startShowDate: '', endShowDate: '', showStatus: '1', position: '0', bannerSort: 0 })
 const formRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
   clickPath: [{ required: true, message: '请输入点击跳转地址', trigger: 'blur' }],
@@ -167,24 +166,39 @@ const formRules = {
 }
 
 function resetForm() {
-  formData.id = null; formData.title = ''; formData.clickPath = ''; formData.imgPath = ''
+  formData.id = null; formData.title = ''; formData.clickPath = ''; formData.imgPath = ''; formData.imgBase64 = ''
   formData.startShowDate = ''; formData.endShowDate = ''; formData.showStatus = '1'; formData.position = '0'; formData.bannerSort = 0
   previewImgUrl.value = ''
 }
 
-function onUploadSuccess(res) { if (res.code === 0 && res.data) { ElMessage.success('上传成功'); previewImgUrl.value = res.data.httpImgPath || ''; formData.imgPath = res.data.imgPath || '' } else { ElMessage.error(res.msg || '上传失败') } }
-function onUploadError() { ElMessage.error('上传异常') }
+function onFileChange(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewImgUrl.value = e.target.result
+    formData.imgBase64 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
+}
 function beforeUpload(file) { if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }; return true }
 
 function handleAdd() { isEdit.value = false; resetForm(); dialogVisible.value = true }
-function handleEdit(row) {
+async function handleEdit(row) {
   isEdit.value = true
   formData.id = row.id; formData.title = row.title || ''; formData.clickPath = row.clickPath || ''
-  formData.imgPath = row.imgPath || ''; previewImgUrl.value = row.httpImgPath || ''
+  formData.imgPath = row.imgPath || ''; formData.imgBase64 = ''; previewImgUrl.value = ''
   formData.startShowDate = row.startShowDate || ''; formData.endShowDate = row.endShowDate || ''
   formData.showStatus = row.showStatus != null ? String(row.showStatus) : '1'
   formData.position = row.position || '0'; formData.bannerSort = row.bannerSort || 0
   dialogVisible.value = true
+  dialogLoading.value = true
+  try {
+    const res = await queryBannerById({ id: row.id })
+    if (res.code === 1 && res.data) {
+      formData.imgBase64 = res.data.imgBase64 || ''
+      formData.imgPath = res.data.imgPath || ''
+      previewImgUrl.value = res.data.imgBase64 || res.data.httpImgPath || ''
+    }
+  } catch { } finally { dialogLoading.value = false }
 }
 
 async function handleSubmit() {
