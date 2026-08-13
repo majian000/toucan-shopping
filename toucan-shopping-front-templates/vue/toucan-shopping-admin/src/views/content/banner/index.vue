@@ -113,8 +113,14 @@
             <el-radio value="0">首页顶部</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="关联城市" prop="areaCodeArray">
+          <el-input v-model="areaNames" readonly placeholder="请选择关联城市" style="width:100%" @click="openAreaDialog" />
+        </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="formData.bannerSort" :min="0" style="width:100%" placeholder="请输入排序" />
+        </el-form-item>
+        <el-form-item label="备注信息">
+          <el-input v-model="formData.remark" type="textarea" :rows="2" maxlength="255" placeholder="请输入备注信息" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -122,14 +128,32 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 选择关联城市弹窗 -->
+    <el-dialog v-model="areaDialogVisible" title="选择关联城市" width="500px" :close-on-click-modal="false" append-to-body>
+      <div v-loading="areaTreeLoading" class="area-tree-wrap" style="max-height: 400px; overflow-y: auto;">
+        <el-tree
+          ref="areaTreeRef"
+          :data="areaTreeData"
+          :props="{ label: 'text', children: 'children' }"
+          node-key="code"
+          show-checkbox
+          check-strictly
+        />
+      </div>
+      <template #footer>
+        <el-button @click="areaDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleAreaConfirm">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Upload, Refresh } from '@element-plus/icons-vue'
-import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, queryBannerById, flushIndexCache, clearIndexCache } from '@/api/content/banner'
+import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, queryBannerById, queryAreaTree, flushIndexCache, clearIndexCache } from '@/api/content/banner'
 
 const searchForm = reactive({ title: '', startShowDate: '', endShowDate: '', showStatus: '' })
 
@@ -155,19 +179,24 @@ const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit
 const submitLoading = ref(false); const formRef = ref(null)
 const previewImgUrl = ref('')
 const dialogTitle = computed(() => isEdit.value ? '编辑轮播图' : '添加轮播图')
+const areaDialogVisible = ref(false); const areaTreeLoading = ref(false); const areaTreeRef = ref(null)
+const areaTreeData = ref([]); const areaNames = ref('')
 
-const formData = reactive({ id: null, title: '', clickPath: '', imgPath: '', imgBase64: '', startShowDate: '', endShowDate: '', showStatus: '1', position: '0', bannerSort: 0 })
+const formData = reactive({ id: null, title: '', clickPath: '', imgPath: '', imgBase64: '', startShowDate: '', endShowDate: '', showStatus: '1', position: '0', bannerSort: 0, areaCodeArray: [], remark: '' })
 const formRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
   clickPath: [{ required: true, message: '请输入点击跳转地址', trigger: 'blur' }],
   startShowDate: [{ required: true, message: '请选择开始展示时间', trigger: 'change' }],
   endShowDate: [{ required: true, message: '请选择结束展示时间', trigger: 'change' }],
-  showStatus: [{ required: true, message: '请选择显示状态', trigger: 'change' }]
+  showStatus: [{ required: true, message: '请选择显示状态', trigger: 'change' }],
+  areaCodeArray: [{ required: true, validator: (rule, value, cb) => { if (!value || value.length === 0) cb(new Error('请选择关联城市')); else cb() }, trigger: 'change' }]
 }
 
 function resetForm() {
   formData.id = null; formData.title = ''; formData.clickPath = ''; formData.imgPath = ''; formData.imgBase64 = ''
   formData.startShowDate = ''; formData.endShowDate = ''; formData.showStatus = '1'; formData.position = '0'; formData.bannerSort = 0
+  formData.areaCodeArray = []; formData.remark = ''
+  areaNames.value = ''
   previewImgUrl.value = ''
 }
 
@@ -189,6 +218,7 @@ async function handleEdit(row) {
   formData.startShowDate = row.startShowDate || ''; formData.endShowDate = row.endShowDate || ''
   formData.showStatus = row.showStatus != null ? String(row.showStatus) : '1'
   formData.position = row.position || '0'; formData.bannerSort = row.bannerSort || 0
+  formData.remark = row.remark || ''; formData.areaCodeArray = []; areaNames.value = ''
   dialogVisible.value = true
   dialogLoading.value = true
   try {
@@ -197,8 +227,56 @@ async function handleEdit(row) {
       formData.imgBase64 = res.data.imgBase64 || ''
       formData.imgPath = res.data.imgPath || ''
       previewImgUrl.value = res.data.imgBase64 || res.data.httpImgPath || ''
+      formData.remark = res.data.remark || ''
+      formData.areaCodeArray = (res.data.bannerAreas || []).map(a => a.areaCode)
     }
+    if (!areaTreeData.value.length) await loadAreaTreeData()
+    areaNames.value = computeAreaNames(formData.areaCodeArray)
   } catch { } finally { dialogLoading.value = false }
+}
+
+function computeAreaNames(codes) {
+  const names = []
+  const walk = (nodes) => {
+    for (const n of nodes) {
+      if (codes && codes.includes(n.code)) names.push(n.text)
+      if (n.children && n.children.length) walk(n.children)
+    }
+  }
+  walk(areaTreeData.value)
+  return names.join(' ')
+}
+
+async function loadAreaTreeData() {
+  try {
+    const res = await queryAreaTree()
+    if (res.code === 1 && res.data) {
+      areaTreeData.value = res.data || []
+    }
+  } catch { }
+}
+
+async function openAreaDialog() {
+  areaDialogVisible.value = true
+  areaTreeLoading.value = true
+  try {
+    if (!areaTreeData.value.length) await loadAreaTreeData()
+    await nextTick()
+    await nextTick()
+    if (areaTreeRef.value) areaTreeRef.value.setCheckedKeys(formData.areaCodeArray || [])
+  } finally {
+    areaTreeLoading.value = false
+  }
+}
+
+function handleAreaConfirm() {
+  if (!areaTreeRef.value) return
+  const checkedKeys = areaTreeRef.value.getCheckedKeys()
+  if (!checkedKeys.length) { ElMessage.warning('请选择地区'); return }
+  formData.areaCodeArray = checkedKeys
+  const names = areaTreeRef.value.getCheckedNodes().map(n => n.text).filter(Boolean)
+  areaNames.value = names.join(' ')
+  areaDialogVisible.value = false
 }
 
 async function handleSubmit() {
@@ -237,5 +315,6 @@ loadTableData()
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; } .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
+  .area-tree-wrap { max-height: 400px; overflow-y: auto; }
 }
 </style>
