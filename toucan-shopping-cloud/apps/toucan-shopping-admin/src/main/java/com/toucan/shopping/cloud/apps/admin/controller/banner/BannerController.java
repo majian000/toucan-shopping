@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -314,6 +316,8 @@ public class BannerController {
                 {
                     vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
                 }
+                // 填充创建人/修改人姓名
+                fillAdminName(vo);
                 // 查询关联地区名称
                 if(!CollectionUtils.isEmpty(vo.getBannerAreas()))
                 {
@@ -628,6 +632,48 @@ public class BannerController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 填充创建人/修改人姓名
+     */
+    private void fillAdminName(BannerVO bannerVO) throws NoSuchAlgorithmException {
+        List<String> adminIdList = new ArrayList<String>();
+        if(bannerVO.getCreateAdminId() != null)
+        {
+            adminIdList.add(bannerVO.getCreateAdminId());
+        }
+        if(bannerVO.getUpdateAdminId() != null)
+        {
+            adminIdList.add(bannerVO.getUpdateAdminId());
+        }
+        if(adminIdList.isEmpty())
+        {
+            return;
+        }
+        String[] adminIds = adminIdList.toArray(new String[0]);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(adminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+            if(!CollectionUtils.isEmpty(adminVOS))
+            {
+                for(AdminVO adminVO : adminVOS)
+                {
+                    if(bannerVO.getCreateAdminId() != null && bannerVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                    {
+                        bannerVO.setCreateAdminName(adminVO.getUsername());
+                    }
+                    if(bannerVO.getUpdateAdminId() != null && bannerVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                    {
+                        bannerVO.setUpdateAdminName(adminVO.getUsername());
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 递归设置树节点选中状态
