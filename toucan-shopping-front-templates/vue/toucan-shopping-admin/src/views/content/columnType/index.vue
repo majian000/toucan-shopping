@@ -10,15 +10,15 @@
           <el-input v-model="searchForm.code" placeholder="请输入编码" clearable style="width:160px" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-          <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search"  v-permission="'toucan:content:columnType:list'" @click="handleSearch">搜索</el-button>
+          <el-button :icon="RefreshRight"   v-permission="'toucan:content:columnType:list'"  @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" @click="handleAdd">添加栏目分类</el-button>
+        <el-button type="primary" :icon="Plus"  v-permission="'toucan:content:columnType:toolbar:save'"  @click="handleAdd">添加栏目分类</el-button>
       </div>
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id">
         <el-table-column prop="id" label="ID" width="210" align="center" />
@@ -30,8 +30,8 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:content:columnType:btn:edit'" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:columnType:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

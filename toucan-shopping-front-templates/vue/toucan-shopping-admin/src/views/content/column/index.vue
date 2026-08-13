@@ -50,16 +50,16 @@
               <el-date-picker v-model="searchForm.endShowDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="选择" style="width:200px" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-              <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
+              <el-button type="primary" :icon="Search" v-permission="'toucan:content:column:list'" @click="handleSearch">搜索</el-button>
+              <el-button :icon="RefreshRight" v-permission="'toucan:content:column:list'" @click="handleReset">重置</el-button>
             </el-form-item>
           </el-form>
         </el-card>
 
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
-            <el-button type="primary" :icon="Plus" @click="handleAdd">添加栏目</el-button>
-            <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+            <el-button type="primary" :icon="Plus"  v-permission="'toucan:content:column:toolbar:save'"  @click="handleAdd">添加栏目</el-button>
+            <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0"  v-permission="'toucan:content:column:toolbar:delete'"   @click="handleBatchDelete">批量删除</el-button>
           </div>
           <el-table
             ref="tableRef"
@@ -96,8 +96,8 @@
             <el-table-column prop="updateDate" label="修改时间" width="170" />
             <el-table-column label="操作" width="160" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+                <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:content:column:btn:edit'"  @click="handleEdit(row)">编辑</el-button>
+                <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:column:row:delete'"  @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -177,7 +177,7 @@
 import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight } from '@element-plus/icons-vue'
-import { queryTreeTable, queryColumnTypeList, queryColumnTree, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
+import { queryTreeTable, queryColumnTypeList, queryColumnTree, queryColumnById, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
 
 // ========== 左侧栏目类型树 ==========
 const typeTreeRef = ref(null)
@@ -332,12 +332,12 @@ function resetForm() {
 
 async function loadParentColumnTree(node, resolve) {
   try {
-    const pid = node?.id || -1
-    const res = await queryColumnTree({ id: pid, columnTypeCode: formData.columnTypeCode })
-    const nodes = (res.data || []).map(item => ({
-      ...item,
-      leaf: false
-    }))
+    const params = { columnTypeCode: formData.columnTypeCode }
+    // 首次加载不传 id 让后端返回「根节点」；展开时传当前节点 id
+    const id = node?.data?.id
+    if (id != null) params.id = id
+    const res = await queryColumnTree(params)
+    const nodes = (res.data || []).map(item => ({ ...item, isLeaf: !item.isParent }))
     resolve(nodes)
   } catch {
     resolve([])
@@ -355,24 +355,34 @@ function handleAdd() {
   dialogVisible.value = true
 }
 
-function handleEdit(row) {
-  currentColumnTypeName.value = row.columnTypeName || ''
-  isEdit.value = true; editingId.value = row.id
-  formData.id = row.id
-  formData.columnTypeCode = row.columnTypeCode || selectedColumnTypeCode.value
-  formData.pid = row.pid != null && Number(row.pid) !== -1 ? row.pid : null
-  formData.title = row.title || ''
-  formData.code = row.code || ''
-  formData.clickPath = row.clickPath || ''
-  formData.startShowDate = row.startShowDate || ''
-  formData.endShowDate = row.endShowDate || ''
-  formData.showStatus = row.showStatus != null ? String(row.showStatus) : '1'
-  formData.type = row.type ? row.type.split(',').filter(Boolean) : []
-  formData.position = row.position || '1'
-  formData.columnSort = row.columnSort || 0
-  formData.extendProperty = row.extendProperty || ''
-  formData.remark = row.remark || ''
-  dialogVisible.value = true
+async function handleEdit(row) {
+  try {
+    const res = await queryColumnById({ id: row.id })
+    if (res.code === 1 && res.data) {
+      const d = res.data
+      isEdit.value = true; editingId.value = row.id
+      currentColumnTypeName.value = d.columnTypeName || ''
+      formData.id = d.id
+      formData.columnTypeCode = d.columnTypeCode || selectedColumnTypeCode.value
+      formData.pid = d.pid != null && Number(d.pid) !== -1 ? d.pid : null
+      formData.title = d.title || ''
+      formData.code = d.code || ''
+      formData.clickPath = d.clickPath || ''
+      formData.startShowDate = d.startShowDate || ''
+      formData.endShowDate = d.endShowDate || ''
+      formData.showStatus = d.showStatus != null ? String(d.showStatus) : '1'
+      formData.type = d.type ? String(d.type).split(',').filter(Boolean) : []
+      formData.position = d.position || '1'
+      formData.columnSort = d.columnSort || 0
+      formData.extendProperty = d.extendProperty || ''
+      formData.remark = d.remark || ''
+      dialogVisible.value = true
+    } else {
+      ElMessage.error(res.msg || '查询栏目详情失败')
+    }
+  } catch {
+    // 拦截器已提示错误
+  }
 }
 
 async function handleSubmit() {

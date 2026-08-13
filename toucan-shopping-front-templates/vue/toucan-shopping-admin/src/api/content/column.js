@@ -10,9 +10,14 @@ export function queryColumnTypeList() {
   return request({ url: '/column/query/type/list', method: 'post' })
 }
 
-// 查询栏目树（选择上级栏目用）
-export function queryColumnTree(data) {
-  return request({ url: '/column/query/column/tree', method: 'post', data })
+// 查询栏目树（选择上级栏目用）—— 后端未加 @RequestBody，用 query 参数
+export function queryColumnTree(params) {
+  return request({ url: '/column/query/column/tree', method: 'post', params })
+}
+
+// 查询栏目详情（含栏目类型名称、上级标题）
+export function queryColumnById(data) {
+  return request({ url: '/column/queryById', method: 'post', data })
 }
 
 // 保存

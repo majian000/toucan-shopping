@@ -281,6 +281,48 @@ public class ColumnController {
 
 
     /**
+     * 查询栏目详情(含栏目类型名称、上级栏目标题)
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:content:column:list","toucan:content:column:btn:edit"})
+    @RequestMapping(value = "/queryById", method = RequestMethod.POST)
+    public ResultObjectVO queryById(@RequestBody ColumnVO entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (entity.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            ResultTypeObjectVO<ColumnVO> detailVO = columnService.findById(requestJsonVO);
+            if (!detailVO.isSuccess() || detailVO.getData() == null) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg(detailVO.getMsg());
+                return resultObjectVO;
+            }
+            ColumnVO columnVO = detailVO.getData();
+            // 解析栏目类型名称
+            if (StringUtils.isNotEmpty(columnVO.getColumnTypeCode())) {
+                ColumnTypeVO queryType = new ColumnTypeVO();
+                queryType.setCode(columnVO.getColumnTypeCode());
+                RequestJsonVO typeRequestJsonVO = RequestJsonVOGenerator.generator(appCode, queryType);
+                ResultTypeObjectVO<ColumnTypeVO> typeVO = columnTypeService.findOneByCode(typeRequestJsonVO);
+                if (typeVO.isSuccess() && typeVO.getData() != null) {
+                    columnVO.setColumnTypeName(typeVO.getData().getName());
+                }
+            }
+            resultObjectVO = ResultObjectVO.ok(columnVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("查询失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 查询树表格（按父ID）
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})
