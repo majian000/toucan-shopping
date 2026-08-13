@@ -21,7 +21,7 @@
         <el-button :icon="Delete" @click="handleClearCache">清空首页缓存</el-button>
       </div>
       <el-table
-        ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id"
+        ref="tableRef" :key="tableKey" :data="tableData" border stripe v-loading="loading" row-key="id"
         lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }"
         @selection-change="onSelectionChange"
       >
@@ -46,8 +46,9 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="updateAdminUsername" label="修改人" width="120" />
         <el-table-column prop="updateDate" label="修改时间" width="170" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column label="操作" width="210" fixed="right" align="center">
           <template #default="{ row }">
+            <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:category:detail'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -96,20 +97,49 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="查看类别" width="650px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border label-width="120px">
+          <el-descriptions-item label="名称" :span="2">{{ detailInfo.name }}</el-descriptions-item>
+          <el-descriptions-item label="类型">{{ detailInfo.typeNames }}</el-descriptions-item>
+          <el-descriptions-item label="排序">{{ detailInfo.categorySort }}</el-descriptions-item>
+          <el-descriptions-item label="显示状态">
+            <el-tag :type="detailInfo.showStatus === 1 || detailInfo.showStatus === '1' ? 'success' : 'info'" size="small">
+              {{ detailInfo.showStatus === 1 || detailInfo.showStatus === '1' ? '显示' : '隐藏' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="图标">{{ detailInfo.icon }}</el-descriptions-item>
+          <el-descriptions-item label="跳转路径" :span="2">{{ detailInfo.href }}</el-descriptions-item>
+          <el-descriptions-item label="注意事项" :span="2">{{ detailInfo.noticeTips }}</el-descriptions-item>
+          <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
+          <el-descriptions-item label="创建人">{{ detailInfo.createAdminUsername }}</el-descriptions-item>
+          <el-descriptions-item label="修改人">{{ detailInfo.updateAdminUsername }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight, Refresh } from '@element-plus/icons-vue'
-import { queryCategoryTreeTable, queryCategoryTreeByPid, saveCategory, updateCategory, deleteCategory, deleteCategories, flushAllCategoryCache, clearCategoryIndexCache } from '@/api/content/category'
+import { Plus, Delete, Edit, Search, RefreshRight, Refresh, View } from '@element-plus/icons-vue'
+import { queryCategoryTreeTable, queryCategoryTreeByPid, saveCategory, updateCategory, detailCategory, deleteCategory, deleteCategories, flushAllCategoryCache, clearCategoryIndexCache } from '@/api/content/category'
 
 const searchForm = reactive({ name: '' })
 function handleSearch() { loadRootData() }
 function handleReset() { searchForm.name = '' }
 
 const tableData = ref([]); const loading = ref(false); const selectedRows = ref([])
+const tableRef = ref(null)
+const tableKey = ref(0)
 function onSelectionChange(rows) { selectedRows.value = rows }
 
 function buildSearchParams() {
@@ -120,7 +150,12 @@ function buildSearchParams() {
 
 async function loadRootData() {
   loading.value = true
-  try { const res = await queryCategoryTreeTable(buildSearchParams()); tableData.value = res.data || [] } catch { } finally { loading.value = false }
+  try {
+    const res = await queryCategoryTreeTable(buildSearchParams())
+    tableData.value = res.data || []
+    // 重建表格，清空懒加载缓存和展开状态，避免删除/修改后仍显示旧数据
+    tableKey.value++
+  } catch { } finally { loading.value = false }
 }
 
 async function loadChildren(row, treeNode, resolve) {
@@ -131,6 +166,7 @@ const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit
 const submitLoading = ref(false); const formRef = ref(null)
 const parentCategoryTree = ref([])
 const dialogTitle = computed(() => isEdit.value ? '编辑类别' : '添加类别')
+const detailVisible = ref(false); const detailInfo = ref(null); const detailLoading = ref(false)
 
 const formData = reactive({ id: null, parentId: null, name: '', icon: '', categorySort: 0, showStatus: 1, href: '', noticeTips: '', remark: '' })
 const formRules = { name: [{ required: true, message: '请输入名称', trigger: 'blur' }] }
@@ -172,10 +208,27 @@ async function openDialog(row) {
 function handleAdd() { openDialog() }
 function handleEdit(row) { openDialog(row) }
 
+async function handleView(row) {
+  detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailCategory({ id: row.id })
+    if (res.code === 1 && res.data) {
+      detailInfo.value = res.data.basicInfo || res.data
+    }
+  } catch { } finally { detailLoading.value = false }
+}
+
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return
   const params = { ...formData }
-  if (params.parentId == null || params.parentId === '') params.parentId = -1
+  // 上级分类ID以字符串传参，避免Long精度丢失
+  if (params.parentId === null || params.parentId === undefined || params.parentId === '') {
+    params.parentId = -1
+  } else {
+    params.parentId = String(params.parentId)
+  }
   if (isEdit.value && params.parentId != null && String(params.parentId) === String(params.id)) {
     ElMessage.warning('不能选择自己作为上级类别')
     return
@@ -216,5 +269,8 @@ loadRootData()
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; } }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
+  :deep(.el-descriptions__table) { width: 100%; }
+  :deep(.el-descriptions__label) { word-break: keep-all; }
+  :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
 }
 </style>

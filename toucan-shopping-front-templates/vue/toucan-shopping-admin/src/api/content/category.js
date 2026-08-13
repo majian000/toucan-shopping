@@ -20,6 +20,11 @@ export function updateCategory(data) {
   return request({ url: '/category/update', method: 'post', data })
 }
 
+// 查看详情
+export function detailCategory(data) {
+  return request({ url: '/category/detail', method: 'post', data })
+}
+
 // 删除
 export function deleteCategory(data) {
   return request({ url: '/category/delete', method: 'post', data })

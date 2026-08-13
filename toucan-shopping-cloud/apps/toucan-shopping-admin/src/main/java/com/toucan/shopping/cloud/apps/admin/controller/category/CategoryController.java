@@ -3,15 +3,18 @@ package com.toucan.shopping.cloud.apps.admin.controller.category;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
 import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.CategoryServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.constant.CategoryDictConstant;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
+import com.toucan.shopping.modules.category.vo.CategoryDetailVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -53,6 +56,9 @@ public class CategoryController {
 
     @Autowired
     private DictServiceAPI dictServiceAPI;
+
+    @Autowired
+    private AdminServiceAPI adminServiceAPI;
 
 
     /**
@@ -112,6 +118,121 @@ public class CategoryController {
             logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:category:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody CategoryVO categoryVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (categoryVO.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, categoryVO);
+            ResultObjectVO detailResult = categoryServiceAPI.findById(requestJsonVO);
+            if (detailResult.isSuccess()) {
+                List<CategoryVO> list = detailResult.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isEmpty(list)) {
+                    resultObjectVO.setMsg("类别不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                CategoryVO vo = list.get(0);
+                // 填充类型名称
+                fillTypeNames(vo);
+                // 填充创建人/修改人姓名
+                fillAdminUsername(vo);
+                CategoryDetailVO detailVO = new CategoryDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            } else {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 填充类型名称
+     */
+    private void fillTypeNames(CategoryVO categoryVO) throws NoSuchAlgorithmException {
+        if (StringUtils.isEmpty(categoryVO.getType())) {
+            return;
+        }
+        List<DictVO> categoryDictList = this.getCategoryDictList();
+        if (categoryDictList == null) {
+            return;
+        }
+        List<DictVO> categoryTypeList = null;
+        for (DictVO dictVO : categoryDictList) {
+            if (CategoryDictConstant.CATEGORY_DICT_TYPE_CODE.equals(dictVO.getCode())) {
+                categoryTypeList = dictVO.getChildren();
+                break;
+            }
+        }
+        if (categoryTypeList == null) {
+            return;
+        }
+        Map<String, DictVO> categoryTypeMap = categoryTypeList.stream().collect(Collectors.toMap(DictVO::getCode, dict -> dict));
+        String[] types = categoryVO.getType().split(",");
+        StringBuilder typeNames = new StringBuilder();
+        for (int i = 0; i < types.length; i++) {
+            DictVO dictVO = categoryTypeMap.get(types[i]);
+            if (dictVO != null) {
+                typeNames.append(dictVO.getName());
+            }
+            if ((i + 1) < types.length) {
+                typeNames.append(",");
+            }
+        }
+        categoryVO.setTypeNames(typeNames.toString());
+    }
+
+
+    /**
+     * 填充创建人/修改人姓名
+     */
+    private void fillAdminUsername(CategoryVO categoryVO) throws NoSuchAlgorithmException {
+        List<String> adminIdList = new ArrayList<>();
+        if (categoryVO.getCreateAdminId() != null) {
+            adminIdList.add(categoryVO.getCreateAdminId());
+        }
+        if (categoryVO.getUpdateAdminId() != null) {
+            adminIdList.add(categoryVO.getUpdateAdminId());
+        }
+        if (adminIdList.isEmpty()) {
+            return;
+        }
+        String[] adminIds = adminIdList.toArray(new String[0]);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(adminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+        ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+        if (resultObjectVO.isSuccess()) {
+            List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+            if (!CollectionUtils.isEmpty(adminVOS)) {
+                for (AdminVO adminVO : adminVOS) {
+                    if (categoryVO.getCreateAdminId() != null && categoryVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                        categoryVO.setCreateAdminUsername(adminVO.getUsername());
+                    }
+                    if (categoryVO.getUpdateAdminId() != null && categoryVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                        categoryVO.setUpdateAdminUsername(adminVO.getUsername());
+                    }
+                }
+            }
+        }
     }
 
 

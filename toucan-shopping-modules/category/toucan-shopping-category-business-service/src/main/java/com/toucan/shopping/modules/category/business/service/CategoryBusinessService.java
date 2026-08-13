@@ -181,7 +181,6 @@ public class CategoryBusinessService {
             if (row != 1) {
                 return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
             }
-            categoryRedisService.clearCaches();
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -223,7 +222,6 @@ public class CategoryBusinessService {
             if (row != 1) {
                 return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
             }
-            categoryRedisService.clearCaches();
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -256,7 +254,6 @@ public class CategoryBusinessService {
             if (row <= 0) {
                 return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
             }
-            categoryRedisService.clearCaches();
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -296,7 +293,6 @@ public class CategoryBusinessService {
                     }
                 }
             }
-            categoryRedisService.clearCaches();
             return ResultObjectVO.ok(resultObjectVOList);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
