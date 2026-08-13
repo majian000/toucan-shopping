@@ -1,6 +1,6 @@
 <template>
   <div class="column-management">
-    <h2 class="page-title">栏目管理</h2>
+    <h2 class="page-title">栏目列表</h2>
     <div class="layout-split">
       <!-- 左侧栏目类型树 -->
       <div class="left-tree">

@@ -103,7 +103,17 @@ export const menuConfig = [
         ]
       },
       // ----- 栏目管理 -----
-      { path: '/content/column', name: 'ContentColumn', label: '栏目管理', icon: 'Menu', permission: 'toucan:content:columnType:list', component: () => import('@/views/content/column/index.vue') },
+      {
+        key: 'column',
+        label: '栏目管理',
+        icon: 'Menu',
+        permission: 'toucan:content:column:list',
+        children: [
+          { path: '/content/columnType', name: 'ContentColumnType', label: '栏目分类', icon: 'Collection', permission: 'toucan:content:column:columnType:list', component: () => import('@/views/content/columnType/index.vue') },
+          { path: '/content/column', name: 'ContentColumn', label: '栏目列表', icon: 'Menu', permission: 'toucan:content:column:list', component: () => import('@/views/content/column/index.vue') },
+          { path: '/content/indexRecommendColumn', name: 'ContentIndexRecommendColumn', label: '首页推荐栏目', icon: 'Star', permission: 'toucan:content:column:list', component: () => import('@/views/content/indexRecommendColumn/index.vue') }
+        ]
+      },
       // ----- 文章管理 -----
       { path: '/content/article', name: 'ContentArticle', label: '文章管理', icon: 'Notebook', permission: 'toucan:content:article', component: () => import('@/views/content/article/index.vue') },
       // ----- 静态化管理 -----
