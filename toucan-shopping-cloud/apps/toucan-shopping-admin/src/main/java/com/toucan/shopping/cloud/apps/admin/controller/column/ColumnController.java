@@ -102,12 +102,12 @@ public class ColumnController {
         try {
             if (StringUtils.isEmpty(columnVO.getColumnTypeCode())) {
                 resultObjectVO.setMsg("栏目类型不能为空");
-                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
 
             if (!AlphabetNumberUtils.isAlphabetNumber(columnVO.getCode(), 1, 100)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("保存失败,编码只允许字母、数字、下划线组成,长度1-100位");
                 return resultObjectVO;
             }

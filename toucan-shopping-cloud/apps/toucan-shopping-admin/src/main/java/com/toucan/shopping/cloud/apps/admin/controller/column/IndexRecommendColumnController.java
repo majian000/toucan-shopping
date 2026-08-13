@@ -73,7 +73,7 @@ public class IndexRecommendColumnController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest request, ColumnPageInfo pageInfo) {
+    public TableVO list(HttpServletRequest request, @RequestBody ColumnPageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());

@@ -314,7 +314,7 @@ public class AttributeKeyController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(AttributeKeyPageInfo pageInfo)
+    public TableVO list(@RequestBody AttributeKeyPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

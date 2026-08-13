@@ -58,7 +58,7 @@ public class ColorTableController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:colorTable:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest request, ColorTablePageInfo pageInfo) {
+    public TableVO list(HttpServletRequest request, @RequestBody ColorTablePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);

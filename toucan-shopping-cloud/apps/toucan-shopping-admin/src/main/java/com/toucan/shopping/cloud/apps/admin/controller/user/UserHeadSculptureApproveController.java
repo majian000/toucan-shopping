@@ -76,7 +76,7 @@ public class UserHeadSculptureApproveController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:headSculptureApprove:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(UserHeadSculptureApprovePageInfo pageInfo)
+    public TableVO list(@RequestBody UserHeadSculptureApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

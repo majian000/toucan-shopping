@@ -75,7 +75,7 @@ public class UserTrueNameApproveController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:trueNameApprove:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(UserTrueNameApprovePageInfo pageInfo)
+    public TableVO list(@RequestBody UserTrueNameApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

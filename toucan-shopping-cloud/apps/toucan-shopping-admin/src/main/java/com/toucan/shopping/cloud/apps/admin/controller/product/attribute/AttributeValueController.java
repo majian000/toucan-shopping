@@ -60,7 +60,7 @@ public class AttributeValueController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:attributeKey:attributeValue:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(AttributeValuePageInfo pageInfo)
+    public TableVO list(@RequestBody AttributeValuePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

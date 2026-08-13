@@ -76,8 +76,16 @@
             <el-table-column prop="code" label="编码" width="180" />
             <el-table-column prop="clickPath" label="跳转地址" width="200" show-overflow-tooltip />
             <el-table-column prop="parentTitle" label="上级栏目" width="160" />
-            <el-table-column prop="typeNames" label="栏目类型" width="150" />
-            <el-table-column prop="positionNames" label="栏目位置" width="150" />
+            <el-table-column prop="typeNames" label="栏目类型" width="180">
+              <template #default="{ row }">
+                <el-tag v-for="(t, i) in (row.typeNames || '').split(',').filter(Boolean)" :key="i" size="small" type="info" style="margin-right: 4px">{{ t }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="positionNames" label="栏目位置" width="180">
+              <template #default="{ row }">
+                <el-tag v-for="(p, i) in (row.positionNames || '').split(',').filter(Boolean)" :key="i" size="small" type="warning" style="margin-right: 4px">{{ p }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop="columnSort" label="排序" width="80" align="center" />
             <el-table-column prop="startShowDate" label="开始展示时间" width="170" />
             <el-table-column prop="endShowDate" label="结束展示时间" width="170" />
@@ -296,7 +304,6 @@ const isEdit = ref(false)
 const submitLoading = ref(false)
 const formRef = ref(null)
 const editingId = ref(null)
-const currentColumnTypeCode = ref('')
 const currentColumnTypeName = ref('')
 const parentColumnTree = ref([])
 
@@ -316,7 +323,7 @@ const formRules = {
 }
 
 function resetForm() {
-  formData.id = null; formData.columnTypeCode = currentColumnTypeCode.value
+  formData.id = null; formData.columnTypeCode = selectedColumnTypeCode.value
   formData.pid = null; formData.title = ''; formData.code = ''; formData.clickPath = ''
   formData.startShowDate = ''; formData.endShowDate = ''; formData.showStatus = '1'
   formData.type = []; formData.position = '1'; formData.columnSort = 0
@@ -326,7 +333,7 @@ function resetForm() {
 async function loadParentColumnTree(node, resolve) {
   try {
     const pid = node?.id || -1
-    const res = await queryColumnTree({ id: pid, columnTypeCode: currentColumnTypeCode.value })
+    const res = await queryColumnTree({ id: pid, columnTypeCode: formData.columnTypeCode })
     const nodes = (res.data || []).map(item => ({
       ...item,
       leaf: false
@@ -353,7 +360,7 @@ function handleEdit(row) {
   isEdit.value = true; editingId.value = row.id
   formData.id = row.id
   formData.columnTypeCode = row.columnTypeCode || selectedColumnTypeCode.value
-  formData.pid = row.pid
+  formData.pid = row.pid != null && Number(row.pid) !== -1 ? row.pid : null
   formData.title = row.title || ''
   formData.code = row.code || ''
   formData.clickPath = row.clickPath || ''
@@ -377,6 +384,12 @@ async function handleSubmit() {
       ...formData,
       type: Array.isArray(formData.type) ? formData.type.join(',') : formData.type,
       columnSort: Number(formData.columnSort)
+    }
+    // 上级栏目ID：不传则为-1（根节点）；传参以字符串形式避免Long精度丢失
+    if (data.pid === null || data.pid === undefined || data.pid === '') {
+      data.pid = -1
+    } else {
+      data.pid = String(data.pid)
     }
     if (isEdit.value) {
       await updateColumn(data)

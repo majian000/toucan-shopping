@@ -15,7 +15,7 @@
               </el-tab-pane>
             </el-tabs>
           </div>
-          <el-empty v-else description="请点击"生成最终版"按钮生成首页静态文件" />
+          <el-empty v-else description="请点击“生成最终版”按钮生成首页静态文件" />
         </el-tab-pane>
       </el-tabs>
     </el-card>

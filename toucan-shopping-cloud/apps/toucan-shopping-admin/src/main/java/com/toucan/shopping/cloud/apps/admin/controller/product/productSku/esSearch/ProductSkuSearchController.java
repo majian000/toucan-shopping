@@ -58,7 +58,7 @@ public class ProductSkuSearchController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:search:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(ProductSearchVO productSearchVO)
+    public TableVO list(@RequestBody ProductSearchVO productSearchVO)
     {
         TableVO tableVO = new TableVO();
         try {

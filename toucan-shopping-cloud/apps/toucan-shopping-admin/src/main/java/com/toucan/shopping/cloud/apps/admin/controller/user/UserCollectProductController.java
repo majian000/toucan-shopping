@@ -61,7 +61,7 @@ public class UserCollectProductController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:collectProduct:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(UserCollectProductPageInfo pageInfo)
+    public TableVO list(@RequestBody UserCollectProductPageInfo pageInfo)
     {
         TableVO<UserCollectProductVO> tableVO = new TableVO();
         try {

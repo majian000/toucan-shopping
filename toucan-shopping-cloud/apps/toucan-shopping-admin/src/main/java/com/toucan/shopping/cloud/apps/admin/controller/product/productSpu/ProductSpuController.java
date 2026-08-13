@@ -305,6 +305,36 @@ public class ProductSpuController {
 
 
 
+    /**
+     * 查询详情(含属性名和属性值)
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:spu:list"})
+    @RequestMapping(value = "/findById",method = RequestMethod.POST)
+    public ResultObjectVO findById(@RequestBody ProductSpuVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = productSpuServiceAPI.findById(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("查询失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:category:tree"})
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     public ResultObjectVO queryCategoryTree(@RequestBody CategoryVO categoryVO)

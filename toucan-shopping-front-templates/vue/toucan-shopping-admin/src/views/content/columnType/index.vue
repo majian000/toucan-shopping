@@ -21,7 +21,7 @@
         <el-button type="primary" :icon="Plus" @click="handleAdd">添加栏目分类</el-button>
       </div>
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id">
-        <el-table-column prop="id" label="ID" width="90" align="center" />
+        <el-table-column prop="id" label="ID" width="210" align="center" />
         <el-table-column prop="code" label="编码" width="200" />
         <el-table-column prop="name" label="名称" width="240" />
         <el-table-column prop="createAdminName" label="创建人" width="120" />

@@ -61,7 +61,7 @@ public class FreightTemplateController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:freightTemplate:list"})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public TableVO list(HttpServletRequest httpServletRequest, FreightTemplatePageInfo pageInfo) {
+    public TableVO list(HttpServletRequest httpServletRequest, @RequestBody FreightTemplatePageInfo pageInfo) {
         TableVO tableVO = new TableVO();
         try {
             if (pageInfo == null) {

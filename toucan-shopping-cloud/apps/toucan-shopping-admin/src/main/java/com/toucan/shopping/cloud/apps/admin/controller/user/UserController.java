@@ -111,7 +111,7 @@ public class UserController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:mobile:phone:list"})
     @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
-    public TableVO mobilePhoneList(UserPageInfo userPageInfo)
+    public TableVO mobilePhoneList(@RequestBody UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -148,7 +148,7 @@ public class UserController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:email:list"})
     @RequestMapping(value = "/email/list",method = RequestMethod.POST)
-    public TableVO emailList(UserPageInfo userPageInfo)
+    public TableVO emailList(@RequestBody UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -184,7 +184,7 @@ public class UserController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:username:list"})
     @RequestMapping(value = "/username/list",method = RequestMethod.POST)
-    public TableVO usernameList(UserPageInfo userPageInfo)
+    public TableVO usernameList(@RequestBody UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

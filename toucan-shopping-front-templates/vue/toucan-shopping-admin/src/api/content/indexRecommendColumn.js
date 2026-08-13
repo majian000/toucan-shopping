@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-// 查询列表 (ColumnPageInfo 无 @RequestBody, 使用查询参数)
-export function listIndexRecommendColumn(params) {
-  return request({ url: '/column/indexRecommendColumn/list', method: 'post', params })
+// 查询列表 (ColumnPageInfo @RequestBody, JSON body)
+export function listIndexRecommendColumn(data) {
+  return request({ url: '/column/indexRecommendColumn/list', method: 'post', data })
 }
 
 // 保存

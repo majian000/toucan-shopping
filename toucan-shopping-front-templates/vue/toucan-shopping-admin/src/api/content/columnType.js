@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-// 查询列表 (ColumnTypePageInfo 无 @RequestBody, 使用查询参数)
-export function listColumnType(params) {
-  return request({ url: '/column/columnType/list', method: 'post', params })
+// 查询列表 (ColumnTypePageInfo @RequestBody, JSON body)
+export function listColumnType(data) {
+  return request({ url: '/column/columnType/list', method: 'post', data })
 }
 
 // 保存

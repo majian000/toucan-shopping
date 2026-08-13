@@ -234,7 +234,7 @@ public class ProductSkuStatisticController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:statistic:product:hot:sell:statistic"})
     @RequestMapping(value = "/queryHotSellListPage",method = RequestMethod.POST)
-    public TableVO queryHotSellListPage(OrderHotSellPageInfo pageInfo)
+    public TableVO queryHotSellListPage(@RequestBody OrderHotSellPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

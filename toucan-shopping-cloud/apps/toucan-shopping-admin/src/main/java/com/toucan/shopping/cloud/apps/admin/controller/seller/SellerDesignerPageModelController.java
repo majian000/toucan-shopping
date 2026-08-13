@@ -56,7 +56,7 @@ public class SellerDesignerPageModelController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:pageModel:list"})
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    public TableVO list(SellerDesignerPageModelPageInfo pageInfo)
+    public TableVO list(@RequestBody SellerDesignerPageModelPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
