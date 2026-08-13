@@ -22,7 +22,7 @@
       </div>
       <el-table
         ref="tableRef" :key="tableKey" :data="tableData" border stripe v-loading="loading" row-key="id"
-        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }"
+        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild', checkStrictly: true }"
         @selection-change="onSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
@@ -31,7 +31,11 @@
           <template #default="{ row }"><img v-if="row.httpIconPath" :src="row.httpIconPath" style="width:24px;height:24px" /></template>
         </el-table-column>
         <el-table-column prop="categorySort" label="排序" width="80" align="center" />
-        <el-table-column prop="typeNames" label="类型" width="150" />
+        <el-table-column prop="typeNames" label="类型" width="180">
+          <template #default="{ row }">
+            <el-tag v-for="(t, i) in (row.typeNames || '').split(',').filter(Boolean)" :key="i" size="small" type="info" style="margin-right: 4px">{{ t }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="showStatus" label="显示状态" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="row.showStatus === 1 ? 'success' : 'info'" size="small">
@@ -108,7 +112,9 @@
       <div v-loading="detailLoading">
         <el-descriptions v-if="detailInfo" :column="2" border label-width="120px">
           <el-descriptions-item label="名称" :span="2">{{ detailInfo.name }}</el-descriptions-item>
-          <el-descriptions-item label="类型">{{ detailInfo.typeNames }}</el-descriptions-item>
+          <el-descriptions-item label="类型">
+            <el-tag v-for="(t, i) in (detailInfo.typeNames || '').split(',').filter(Boolean)" :key="i" size="small" type="info" style="margin-right: 4px">{{ t }}</el-tag>
+          </el-descriptions-item>
           <el-descriptions-item label="排序">{{ detailInfo.categorySort }}</el-descriptions-item>
           <el-descriptions-item label="显示状态">
             <el-tag :type="detailInfo.showStatus === 1 || detailInfo.showStatus === '1' ? 'success' : 'info'" size="small">
