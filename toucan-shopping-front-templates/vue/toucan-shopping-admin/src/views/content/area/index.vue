@@ -24,7 +24,7 @@
       </div>
       <el-table
         ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id"
-        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }"
         @selection-change="onSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
@@ -46,8 +46,9 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="updateAdminName" label="修改人" width="120" />
         <el-table-column prop="updateDate" label="修改时间" width="170" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column label="操作" width="210" fixed="right" align="center">
           <template #default="{ row }">
+            <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:area:detail'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -84,7 +85,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类型" prop="type">
-          <el-radio-group v-model="formData.type">
+          <el-radio-group v-model="formData.type" @change="onTypeChange">
             <el-radio :value="1">省</el-radio>
             <el-radio :value="2">市</el-radio>
             <el-radio :value="3">区县</el-radio>
@@ -117,14 +118,43 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="查看地区" width="650px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border>
+          <el-descriptions-item label="名称" :span="2">{{ detailInfo.name }}</el-descriptions-item>
+          <el-descriptions-item label="编码">{{ detailInfo.code }}</el-descriptions-item>
+          <el-descriptions-item label="类型">
+            <el-tag size="small">{{ detailInfo.type === 1 ? '省' : detailInfo.type === 2 ? '市' : detailInfo.type === 3 ? '区县' : detailInfo.type }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="排序">{{ detailInfo.areaSort }}</el-descriptions-item>
+          <el-descriptions-item label="是否直辖市">
+            <el-tag :type="detailInfo.isMunicipality === 1 ? 'warning' : 'info'" size="small">
+              {{ detailInfo.isMunicipality === 1 ? '是' : '否' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="国家">{{ detailInfo.countryName }}</el-descriptions-item>
+          <el-descriptions-item label="大区">{{ detailInfo.bigAreaName }}</el-descriptions-item>
+          <el-descriptions-item label="国家编码">{{ detailInfo.countryCode }}</el-descriptions-item>
+          <el-descriptions-item label="大区编码">{{ detailInfo.bigAreaCode }}</el-descriptions-item>
+          <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight, Refresh } from '@element-plus/icons-vue'
-import { queryAreaTreeTable, queryAreaTree, saveArea, updateArea, deleteArea, deleteAreas, flushAllAreaCache } from '@/api/content/area'
+import { Plus, Delete, Edit, Search, RefreshRight, Refresh, View } from '@element-plus/icons-vue'
+import { queryAreaTreeTable, queryAreaTree, saveArea, updateArea, deleteArea, deleteAreas, flushAllAreaCache, detailArea } from '@/api/content/area'
 
 const searchForm = reactive({ name: '', code: '' })
 function handleSearch() { loadRootData() }
@@ -141,11 +171,11 @@ function buildSearchParams() {
 
 async function loadRootData() {
   loading.value = true
-  try { const res = await queryAreaTreeTable(buildSearchParams()); tableData.value = (res.data || []).map(item => ({ ...item, hasChildren: true })) } catch { } finally { loading.value = false }
+  try { const res = await queryAreaTreeTable(buildSearchParams()); tableData.value = res.data || [] } catch { } finally { loading.value = false }
 }
 
 async function loadChildren(row, treeNode, resolve) {
-  try { const params = { ...searchForm, pid: row.id }; const res = await queryAreaTreeTable(params); resolve((res.data || []).map(item => ({ ...item, hasChildren: true }))) } catch { resolve([]) }
+  try { const params = { ...searchForm, pid: row.id }; const res = await queryAreaTreeTable(params); resolve(res.data || []) } catch { resolve([]) }
 }
 
 const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit = ref(false)
@@ -170,6 +200,14 @@ function resetForm() {
   formData.parentCode = ''; formData.remark = ''
 }
 
+// 切换类型时清空其它类型的名称输入
+function onTypeChange(type) {
+  const t = Number(type)
+  if (t === 1) { formData.city = ''; formData.area = '' }
+  else if (t === 2) { formData.province = ''; formData.area = '' }
+  else if (t === 3) { formData.province = ''; formData.city = '' }
+}
+
 async function loadParentAreaRoots() {
   try {
     const res = await queryAreaTreeTable({ pid: -1 })
@@ -187,7 +225,7 @@ async function openDialog(title, row) {
   parentAreaTree.value = []
   if (row) {
     isEdit.value = true
-    formData.id = row.id; formData.pid = row.pid; formData.name = row.name || ''; formData.code = row.code || ''
+    formData.id = row.id; formData.pid = row.pid != null && Number(row.pid) !== -1 ? row.pid : null; formData.name = row.name || ''; formData.code = row.code || ''
     formData.type = row.type != null ? row.type : 1; formData.province = row.province || ''; formData.city = row.city || ''
     formData.area = row.area || ''; formData.areaSort = row.areaSort || 0
     formData.isMunicipality = row.isMunicipality || 0; formData.countryCode = row.countryCode || 'CHN'
@@ -204,10 +242,36 @@ async function openDialog(title, row) {
 function handleAdd() { openDialog() }
 function handleEdit(row) { openDialog(null, row) }
 
+// ========== 查看详情 ==========
+const detailVisible = ref(false)
+const detailInfo = ref(null)
+const detailLoading = ref(false)
+
+async function handleView(row) {
+  detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailArea({ id: row.id })
+    if (res.code === 1 && res.data) {
+      detailInfo.value = res.data.basicInfo || res.data
+    }
+  } catch { } finally { detailLoading.value = false }
+}
+
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return
+  const params = { ...formData }
+  if (params.pid == null || params.pid === '') params.pid = -1
+  if (isEdit.value && params.pid != null && String(params.pid) === String(params.id)) {
+    ElMessage.warning('不能选择自己作为上级地区')
+    return
+  }
   submitLoading.value = true
-  try { if (isEdit.value) { await updateArea({ ...formData }) } else { await saveArea({ ...formData }) }; ElMessage.success(isEdit.value ? '修改成功' : '添加成功'); dialogVisible.value = false; loadRootData() } catch { } finally { submitLoading.value = false }
+  try {
+    if (isEdit.value) { await updateArea(params) } else { await saveArea(params) }
+    ElMessage.success(isEdit.value ? '修改成功' : '添加成功'); dialogVisible.value = false; loadRootData()
+  } catch { } finally { submitLoading.value = false }
 }
 
 function handleDelete(row) {

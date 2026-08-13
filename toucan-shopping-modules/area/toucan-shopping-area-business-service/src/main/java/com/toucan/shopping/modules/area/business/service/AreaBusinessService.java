@@ -80,9 +80,7 @@ public class AreaBusinessService {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
-            if (!refreshCache(resultObjectVO)) {
-                return resultObjectVO;
-            }
+
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -121,9 +119,6 @@ public class AreaBusinessService {
                 return resultObjectVO;
             }
 
-            if (!refreshCache(resultObjectVO)) {
-                return resultObjectVO;
-            }
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -186,9 +181,6 @@ public class AreaBusinessService {
 
             resultObjectVO.setData(resultObjectVOList);
 
-            if (!refreshCache(resultObjectVO)) {
-                return resultObjectVO;
-            }
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -365,9 +357,6 @@ public class AreaBusinessService {
                 }
             }
 
-            if (!refreshCache(resultObjectVO)) {
-                return resultObjectVO;
-            }
 
             resultObjectVO.setData(entity);
 

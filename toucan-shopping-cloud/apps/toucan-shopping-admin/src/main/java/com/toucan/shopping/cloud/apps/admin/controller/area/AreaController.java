@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.enums.BigAreaCodeEnum;
 import com.toucan.shopping.modules.area.enums.CountryCodeEnum;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
+import com.toucan.shopping.modules.area.vo.AreaDetailVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -281,6 +282,65 @@ public class AreaController {
         {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:detail"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody AreaVO areaVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(areaVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, areaVO);
+            ResultObjectVO detailResult = areaServiceAPI.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                List<AreaVO> list = detailResult.formatDataList(AreaVO.class);
+                if(CollectionUtils.isEmpty(list))
+                {
+                    resultObjectVO.setMsg("地区不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                AreaVO vo = list.get(0);
+                // 根据类型设置名称
+                if(vo.getType() != null)
+                {
+                    if(vo.getType() == 1)
+                    {
+                        vo.setName(vo.getProvince());
+                    }else if(vo.getType() == 2)
+                    {
+                        vo.setName(vo.getCity());
+                    }else if(vo.getType() == 3)
+                    {
+                        vo.setName(vo.getArea());
+                    }
+                }
+                AreaDetailVO detailVO = new AreaDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

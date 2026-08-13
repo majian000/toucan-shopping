@@ -22,7 +22,7 @@
       </div>
       <el-table
         ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id"
-        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        lazy :load="loadChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }"
         @selection-change="onSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
@@ -120,11 +120,11 @@ function buildSearchParams() {
 
 async function loadRootData() {
   loading.value = true
-  try { const res = await queryCategoryTreeTable(buildSearchParams()); tableData.value = (res.data || []).map(item => ({ ...item, hasChildren: true })) } catch { } finally { loading.value = false }
+  try { const res = await queryCategoryTreeTable(buildSearchParams()); tableData.value = res.data || [] } catch { } finally { loading.value = false }
 }
 
 async function loadChildren(row, treeNode, resolve) {
-  try { const params = { ...searchForm, parentId: row.id }; const res = await queryCategoryTreeTable(params); resolve((res.data || []).map(item => ({ ...item, hasChildren: true }))) } catch { resolve([]) }
+  try { const params = { ...searchForm, parentId: row.id }; const res = await queryCategoryTreeTable(params); resolve(res.data || []) } catch { resolve([]) }
 }
 
 const dialogVisible = ref(false); const dialogLoading = ref(false); const isEdit = ref(false)
@@ -157,7 +157,7 @@ async function openDialog(row) {
   parentCategoryTree.value = []
   if (row) {
     isEdit.value = true
-    formData.id = row.id; formData.parentId = row.parentId; formData.name = row.name || ''
+    formData.id = row.id; formData.parentId = row.parentId != null && Number(row.parentId) !== -1 ? row.parentId : null; formData.name = row.name || ''
     formData.icon = row.icon || ''; formData.categorySort = row.categorySort || 0
     formData.showStatus = row.showStatus != null ? row.showStatus : 1; formData.href = row.href || ''
     formData.noticeTips = row.noticeTips || ''; formData.remark = row.remark || ''
@@ -174,8 +174,17 @@ function handleEdit(row) { openDialog(row) }
 
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return
+  const params = { ...formData }
+  if (params.parentId == null || params.parentId === '') params.parentId = -1
+  if (isEdit.value && params.parentId != null && String(params.parentId) === String(params.id)) {
+    ElMessage.warning('不能选择自己作为上级类别')
+    return
+  }
   submitLoading.value = true
-  try { if (isEdit.value) { await updateCategory({ ...formData }) } else { await saveCategory({ ...formData }) }; ElMessage.success(isEdit.value ? '修改成功' : '添加成功'); dialogVisible.value = false; loadRootData() } catch { } finally { submitLoading.value = false }
+  try {
+    if (isEdit.value) { await updateCategory(params) } else { await saveCategory(params) }
+    ElMessage.success(isEdit.value ? '修改成功' : '添加成功'); dialogVisible.value = false; loadRootData()
+  } catch { } finally { submitLoading.value = false }
 }
 
 function handleDelete(row) {

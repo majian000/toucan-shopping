@@ -20,6 +20,11 @@ export function updateArea(data) {
   return request({ url: '/area/update', method: 'post', data })
 }
 
+// 查看详情
+export function detailArea(data) {
+  return request({ url: '/area/detail', method: 'post', data })
+}
+
 // 删除
 export function deleteArea(data) {
   return request({ url: '/area/delete', method: 'post', data })
