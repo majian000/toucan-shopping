@@ -63,8 +63,9 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="updateAdminName" label="修改人" width="120" />
         <el-table-column prop="updateDate" label="修改时间" width="170" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column label="操作" width="210" fixed="right" align="center">
           <template #default="{ row }">
+            <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:content:banner:detail'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -146,14 +147,45 @@
         <el-button type="primary" @click="handleAreaConfirm">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="查看轮播图" width="650px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border label-width="120px">
+          <el-descriptions-item label="标题" :span="2">{{ detailInfo.title }}</el-descriptions-item>
+          <el-descriptions-item label="点击路径" :span="2">{{ detailInfo.clickPath }}</el-descriptions-item>
+          <el-descriptions-item label="预览图" :span="2">
+            <img v-if="detailInfo.httpImgPath" :src="detailInfo.httpImgPath" style="width:180px;height:160px;object-fit:contain;border:1px solid #dcdfe6;border-radius:4px" />
+          </el-descriptions-item>
+          <el-descriptions-item label="显示状态">
+            <el-tag :type="detailInfo.showStatus === 1 || detailInfo.showStatus === '1' ? 'success' : 'info'" size="small">
+              {{ detailInfo.showStatus === 1 || detailInfo.showStatus === '1' ? '显示' : '隐藏' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="位置">{{ detailInfo.position === 0 || detailInfo.position === '0' ? '首页顶部' : detailInfo.position }}</el-descriptions-item>
+          <el-descriptions-item label="排序" :span="2">{{ detailInfo.bannerSort }}</el-descriptions-item>
+          <el-descriptions-item label="开始展示时间">{{ detailInfo.startShowDate }}</el-descriptions-item>
+          <el-descriptions-item label="结束展示时间">{{ detailInfo.endShowDate }}</el-descriptions-item>
+          <el-descriptions-item label="关联城市" :span="2">{{ detailInfo.areaNames }}</el-descriptions-item>
+          <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
+          <el-descriptions-item label="创建人">{{ detailInfo.createAdminName }}</el-descriptions-item>
+          <el-descriptions-item label="修改人">{{ detailInfo.updateAdminName }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
+          <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight, Upload, Refresh } from '@element-plus/icons-vue'
-import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, queryBannerById, queryAreaTree, flushIndexCache, clearIndexCache } from '@/api/content/banner'
+import { Plus, Delete, Edit, Search, RefreshRight, Upload, Refresh, View } from '@element-plus/icons-vue'
+import { listBanner, saveBanner, updateBanner, deleteBanner, deleteBanners, queryBannerById, queryAreaTree, detailBanner, flushIndexCache, clearIndexCache } from '@/api/content/banner'
 
 const searchForm = reactive({ title: '', startShowDate: '', endShowDate: '', showStatus: '' })
 
@@ -181,6 +213,7 @@ const previewImgUrl = ref('')
 const dialogTitle = computed(() => isEdit.value ? '编辑轮播图' : '添加轮播图')
 const areaDialogVisible = ref(false); const areaTreeLoading = ref(false); const areaTreeRef = ref(null)
 const areaTreeData = ref([]); const areaNames = ref('')
+const detailVisible = ref(false); const detailInfo = ref(null); const detailLoading = ref(false)
 
 const formData = reactive({ id: null, title: '', clickPath: '', imgPath: '', imgBase64: '', startShowDate: '', endShowDate: '', showStatus: '1', position: '0', bannerSort: 0, areaCodeArray: [], remark: '' })
 const formRules = {
@@ -279,6 +312,18 @@ function handleAreaConfirm() {
   areaDialogVisible.value = false
 }
 
+async function handleView(row) {
+  detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailBanner({ id: row.id })
+    if (res.code === 1 && res.data) {
+      detailInfo.value = res.data.basicInfo || res.data
+    }
+  } catch { } finally { detailLoading.value = false }
+}
+
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false); if (!valid) return
   submitLoading.value = true
@@ -316,5 +361,8 @@ loadTableData()
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; } .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
   .area-tree-wrap { max-height: 400px; overflow-y: auto; }
+  :deep(.el-descriptions__table) { width: 100%; }
+  :deep(.el-descriptions__label) { word-break: keep-all; }
+  :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
 }
 </style>

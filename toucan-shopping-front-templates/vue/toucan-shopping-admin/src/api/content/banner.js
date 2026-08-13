@@ -30,6 +30,11 @@ export function queryBannerById(data) {
   return request({ url: '/banner/queryById', method: 'post', data })
 }
 
+// 查看详情
+export function detailBanner(data) {
+  return request({ url: '/banner/detail', method: 'post', data })
+}
+
 // 刷新PC首页缓存
 export function flushIndexCache(data) {
   return request({ url: '/banner/flush/index/cache', method: 'post', data })

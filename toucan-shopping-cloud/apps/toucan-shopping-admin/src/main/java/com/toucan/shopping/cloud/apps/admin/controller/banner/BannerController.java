@@ -21,6 +21,7 @@ import com.toucan.shopping.modules.content.entity.Banner;
 import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.content.vo.BannerAreaVO;
+import com.toucan.shopping.modules.content.vo.BannerDetailVO;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -267,6 +268,87 @@ public class BannerController {
                     }
                 }
                 resultObjectVO.setData(vo);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:banner:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody BannerVO bannerVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(bannerVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
+            ResultObjectVO detailResult = bannerService.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                List<BannerVO> list = detailResult.formatDataList(BannerVO.class);
+                if(CollectionUtils.isEmpty(list))
+                {
+                    resultObjectVO.setMsg("轮播图不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                BannerVO vo = list.get(0);
+                if(StringUtils.isNotEmpty(vo.getImgPath()))
+                {
+                    vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
+                }
+                // 查询关联地区名称
+                if(!CollectionUtils.isEmpty(vo.getBannerAreas()))
+                {
+                    String[] areaCodeArray = new String[vo.getBannerAreas().size()];
+                    for (int i = 0; i < vo.getBannerAreas().size(); i++) {
+                        areaCodeArray[i] = vo.getBannerAreas().get(i).getAreaCode();
+                    }
+                    AreaVO queryArea = new AreaVO();
+                    queryArea.setCodeArray(areaCodeArray);
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArea);
+                    ResultObjectVO areaResult = areaService.findByCodes(requestJsonVO);
+                    if(areaResult.isSuccess())
+                    {
+                        List<AreaVO> areaVOS = areaResult.formatDataList(AreaVO.class);
+                        if(!CollectionUtils.isEmpty(areaVOS))
+                        {
+                            StringBuilder areaNamesBuilder = new StringBuilder();
+                            StringBuilder areaCodesBuilder = new StringBuilder();
+                            for (int i = 0; i < areaVOS.size(); i++) {
+                                AreaVO areaVO = areaVOS.get(i);
+                                areaNamesBuilder.append(areaVO.getName());
+                                areaCodesBuilder.append(areaVO.getCode());
+                                if (i + 1 < areaVOS.size()) {
+                                    areaNamesBuilder.append(",");
+                                    areaCodesBuilder.append(",");
+                                }
+                            }
+                            vo.setAreaCodes(areaCodesBuilder.toString());
+                            vo.setAreaNames(areaNamesBuilder.toString());
+                        }
+                    }
+                }
+                BannerDetailVO detailVO = new BannerDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
             }else
             {
                 resultObjectVO.setMsg(detailResult.getMsg());
