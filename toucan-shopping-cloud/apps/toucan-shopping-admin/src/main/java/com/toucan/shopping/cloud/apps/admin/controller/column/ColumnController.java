@@ -342,7 +342,7 @@ public class ColumnController {
             if (resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     Set<String> adminIdList = new HashSet<>();
-                    List<ColumnTreeVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeVO.class);
+                    List<ColumnTreeAdminVO> columnTreeVOS = resultObjectVO.formatDataList(ColumnTreeAdminVO.class);
                     if (!CollectionUtils.isEmpty(columnTreeVOS)) {
                         Map<String, List<DictVO>> dictMap = this.getColumnDictMap();
                         List<DictVO> columnTypeList = dictMap.get("columnTypeList");
@@ -359,47 +359,37 @@ public class ColumnController {
                             columnPositionMap = columnPositionList.stream()
                                     .collect(Collectors.toMap(DictVO::getCode, dict -> dict));
                         }
-                        for (ColumnTreeVO columnTreeVO : columnTreeVOS) {
+                        for (ColumnTreeAdminVO columnTreeVO : columnTreeVOS) {
                             if (columnTreeVO.getCreateAdminId() != null) {
                                 adminIdList.add(columnTreeVO.getCreateAdminId());
                             }
                             if (columnTreeVO.getUpdateAdminId() != null) {
                                 adminIdList.add(columnTreeVO.getUpdateAdminId());
                             }
-                            // 设置栏目类型名称
+                            // 设置栏目类型（匹配到的字典集合）
                             if (StringUtils.isNotEmpty(columnTreeVO.getType())) {
                                 if (columnTypeMap != null) {
-                                    String[] types = columnTreeVO.getType().split(",");
-                                    String typeNames = "";
-                                    for (int i = 0; i < types.length; i++) {
-                                        String type = types[i];
+                                    List<DictVO> typeDictVos = new LinkedList<>();
+                                    for (String type : columnTreeVO.getType().split(",")) {
                                         DictVO dictVO = columnTypeMap.get(type);
                                         if (dictVO != null) {
-                                            typeNames += dictVO.getName();
-                                        }
-                                        if ((i + 1) < types.length) {
-                                            typeNames += ",";
+                                            typeDictVos.add(dictVO);
                                         }
                                     }
-                                    columnTreeVO.setTypeNames(typeNames);
+                                    columnTreeVO.setTypeDictVos(typeDictVos);
                                 }
                             }
-                            // 设置栏目位置
+                            // 设置栏目位置（匹配到的字典集合）
                             if (StringUtils.isNotEmpty(columnTreeVO.getPosition())) {
                                 if (columnPositionMap != null) {
-                                    String[] positions = columnTreeVO.getPosition().split(",");
-                                    String positionNames = "";
-                                    for (int i = 0; i < positions.length; i++) {
-                                        String position = positions[i];
+                                    List<DictVO> positionDictVos = new LinkedList<>();
+                                    for (String position : columnTreeVO.getPosition().split(",")) {
                                         DictVO dictVO = columnPositionMap.get(position);
                                         if (dictVO != null) {
-                                            positionNames += dictVO.getName();
-                                        }
-                                        if ((i + 1) < positions.length) {
-                                            positionNames += ",";
+                                            positionDictVos.add(dictVO);
                                         }
                                     }
-                                    columnTreeVO.setPositionNames(positionNames);
+                                    columnTreeVO.setPositionDictVos(positionDictVos);
                                 }
                             }
                         }
@@ -421,7 +411,7 @@ public class ColumnController {
     /**
      * 设置管理员名称
      */
-    private void setAdminNames(Set<String> adminIdList, List<ColumnTreeVO> list) throws Exception {
+    private void setAdminNames(Set<String> adminIdList, List<ColumnTreeAdminVO> list) throws Exception {
         // 查询创建人和修改人
         String[] createOrUpdateAdminIds = new String[adminIdList.size()];
         adminIdList.toArray(createOrUpdateAdminIds);

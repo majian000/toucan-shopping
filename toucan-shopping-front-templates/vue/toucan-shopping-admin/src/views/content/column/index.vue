@@ -78,12 +78,12 @@
             <el-table-column prop="parentTitle" label="上级栏目" width="160" />
             <el-table-column prop="typeNames" label="栏目类型" width="180">
               <template #default="{ row }">
-                <el-tag v-for="(t, i) in (row.typeNames || '').split(',').filter(Boolean)" :key="i" size="small" type="info" style="margin-right: 4px">{{ t }}</el-tag>
+                <el-tag v-for="(t, i) in (row.typeDictVos || [])" :key="i" size="small" type="info" style="margin-right: 4px">{{ t.name }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="positionNames" label="栏目位置" width="180">
               <template #default="{ row }">
-                <el-tag v-for="(p, i) in (row.positionNames || '').split(',').filter(Boolean)" :key="i" size="small" type="warning" style="margin-right: 4px">{{ p }}</el-tag>
+                <el-tag v-for="(p, i) in (row.positionDictVos || [])" :key="i" size="small" type="warning" style="margin-right: 4px">{{ p.name }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="columnSort" label="排序" width="80" align="center" />
@@ -205,7 +205,6 @@ async function loadColumnTypes() {
   } catch { }
 }
 
-// ========== 字典数据 ==========
 function extractDictFromTree(nodes) {
   const dicts = []
   for (const node of nodes) {
@@ -218,8 +217,6 @@ function onTypeNodeClick(data) {
   selectedColumnTypeCode.value = data.code
   searchForm.columnTypeCode = data.code
   columnTypeDictList.value = extractDictFromTree(typeTreeData.value)
-  // 从栏目类型树中提取栏目位置字典
-  // 栏目位置需要通过后台字典查询，简化处理使用固定值
   columnPositionDictList.value = [{ code: '1', name: '首页' }, { code: '2', name: '列表页' }, { code: '3', name: '详情页' }]
   handleSearch()
 }
