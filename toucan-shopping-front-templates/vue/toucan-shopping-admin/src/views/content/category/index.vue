@@ -26,8 +26,8 @@
         @selection-change="onSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column prop="name" label="名称" width="200" />
-        <el-table-column prop="icon" label="图标" width="100" >
+        <el-table-column prop="name" label="名称" width="260" />
+        <el-table-column prop="icon" label="图标" width="270" >
           <template #default="{ row }"><img v-if="row.httpIconPath" :src="row.httpIconPath" style="width:24px;height:24px" /></template>
         </el-table-column>
         <el-table-column prop="categorySort" label="排序" width="80" align="center" />

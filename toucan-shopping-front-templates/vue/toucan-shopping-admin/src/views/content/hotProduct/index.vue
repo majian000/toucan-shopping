@@ -37,9 +37,14 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="预览" width="80" align="center">
           <template #default="{ row }">
-            <a v-if="row.httpImgPath" :href="row.httpImgPath" target="_blank">
-              <img :src="row.httpImgPath" style="width:30px;height:30px" />
-            </a>
+            <el-image
+              v-if="row.httpImgPath"
+              :src="row.httpImgPath"
+              :preview-src-list="[row.httpImgPath]"
+              preview-teleported
+              fit="cover"
+              style="width:30px;height:30px;cursor:zoom-in"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="productName" label="商品名称" width="200" show-overflow-tooltip />
