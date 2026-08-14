@@ -5,19 +5,26 @@
       <!-- 左侧栏目类型树 -->
       <div class="left-tree">
         <el-card shadow="never" class="tree-card">
-          <template #header><span>栏目类型</span></template>
-          <el-tree
-            ref="typeTreeRef"
-            :data="typeTreeData"
-            :props="{ children: 'children', label: 'name' }"
-            node-key="code"
-            highlight-current
-            @node-click="onTypeNodeClick"
-          >
-            <template #default="{ data }">
-              <span>{{ data.name }}</span>
-            </template>
-          </el-tree>
+          <template #header>
+            <div class="tree-header">
+              <span>栏目类型</span>
+              <el-icon class="tree-refresh" @click="loadColumnTypes"><RefreshRight /></el-icon>
+            </div>
+          </template>
+          <div class="tree-body" v-loading="typeTreeLoading">
+            <el-tree
+              ref="typeTreeRef"
+              :data="typeTreeData"
+              :props="{ children: 'children', label: 'name' }"
+              node-key="code"
+              highlight-current
+              @node-click="onTypeNodeClick"
+            >
+              <template #default="{ data }">
+                <span>{{ data.name }}</span>
+              </template>
+            </el-tree>
+          </div>
         </el-card>
       </div>
       <!-- 右侧表格区 -->
@@ -213,17 +220,21 @@ import { queryTreeTable, queryColumnTypeList, queryColumnDict, queryColumnTree, 
 // ========== 左侧栏目类型树 ==========
 const typeTreeRef = ref(null)
 const typeTreeData = ref([])
+const typeTreeLoading = ref(false)
 const selectedColumnTypeCode = ref('')
 const columnTypeDictList = ref([])
 const columnPositionDictList = ref([])
 
 async function loadColumnTypes() {
+  typeTreeLoading.value = true
   try {
     const res = await queryColumnTypeList()
     if (res.code === 1 && res.data) {
       typeTreeData.value = res.data || []
     }
-  } catch { }
+  } catch { } finally {
+    typeTreeLoading.value = false
+  }
 }
 
 async function loadColumnDict() {
@@ -494,6 +505,11 @@ loadColumnDict()
   .layout-split { display: flex; gap: $gap-md; }
   .left-tree { width: 260px; flex-shrink: 0;
     .tree-card { height: calc(100vh - 130px); :deep(.el-card__body) { overflow-y: auto; height: calc(100% - 50px); } }
+    .tree-header { display: flex; align-items: center; justify-content: space-between; }
+    .tree-refresh { cursor: pointer; font-size: 14px;
+      &:hover { color: $primary; }
+    }
+    .tree-body { height: 100%; }
   }
   .right-table { flex: 1; overflow: auto; }
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }

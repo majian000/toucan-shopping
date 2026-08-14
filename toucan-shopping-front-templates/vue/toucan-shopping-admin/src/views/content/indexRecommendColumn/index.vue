@@ -69,10 +69,11 @@
 
     <!-- 添加/编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="920px" :close-on-click-modal="false" destroy-on-close top="4vh">
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="dialogLoading">
+      <div class="dialog-scroll">
+        <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="dialogLoading">
         <el-divider content-position="left">基本信息</el-divider>
         <el-form-item label="栏目标题" prop="title">
-          <el-input v-model="formData.title" placeholder="请输入栏目标题" maxlength="100" />
+          <el-input v-model="formData.title" placeholder="请输入栏目标题" maxlength="100" show-word-limit />
         </el-form-item>
         <el-form-item label="开始展示时间" prop="startShowDate">
           <el-date-picker v-model="formData.startShowDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择" style="width:100%" />
@@ -198,6 +199,7 @@
           <el-input v-model="item.clickPath" placeholder="点击跳转" style="width:220px" />
         </div>
       </el-form>
+      </div>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
@@ -541,13 +543,29 @@ loadTableData()
 .index-recommend-column-management {
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; } .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
+  .dialog-scroll { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
-  .row-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .banner-upload-inner { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .banner-upload-preview { width: 120px; height: 60px; object-fit: contain; border: 1px solid #dcdfe6; border-radius: 4px; }
-  .banner-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .product-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-    .product-img { width: 60px; height: 50px; border: 1px solid #dcdfe6; border-radius: 4px; }
+
+  // 分隔标题
+  :deep(.el-divider) { margin: 22px 0 16px; }
+  :deep(.el-divider__text) { color: $primary; font-weight: 600; font-size: 14px; }
+
+  // 可增删行（顶部/左侧标签）
+  .row-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    padding: 8px 10px; background: $bg-page; border-radius: 6px;
+  }
+
+  // 图片上传卡片
+  .banner-upload-inner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 12px; background: $bg-page; border: 1px dashed $border-color; border-radius: 8px;
+  }
+  .banner-upload-preview { width: 120px; height: 60px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
+  .banner-row { margin-bottom: 8px; }
+
+  // 商品推荐行
+  .product-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    padding: 10px 12px; background: $bg-page; border-radius: 8px;
+    .product-img { width: 60px; height: 50px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
   }
   .area-tree-wrap { max-height: 400px; overflow-y: auto; }
   :deep(.el-descriptions__table) { width: 100%; }
