@@ -259,9 +259,9 @@ export const menuConfig = [
         icon: 'Menu',
         permission: 'toucan:content:columnType:list',
         children: [
-          { path: '/content/indexRecommendColumn', name: 'ContentIndexRecommendColumn', label: '首页推荐栏目', icon: 'Star', permission: 'toucan:content:column:list', component: () => import('@/views/content/indexRecommendColumn/index.vue') },
+          { path: '/content/columnType', name: 'ContentColumnType', label: '栏目分类', icon: 'Collection', permission: 'toucan:content:columnType:list', component: () => import('@/views/content/columnType/index.vue') },
           { path: '/content/column', name: 'ContentColumn', label: '栏目列表', icon: 'Menu', permission: 'toucan:content:column:list', component: () => import('@/views/content/column/index.vue') },
-          { path: '/content/columnType', name: 'ContentColumnType', label: '栏目分类', icon: 'Collection', permission: 'toucan:content:columnType:list', component: () => import('@/views/content/columnType/index.vue') }
+          { path: '/content/indexRecommendColumn', name: 'ContentIndexRecommendColumn', label: '首页推荐栏目', icon: 'Star', permission: 'toucan:content:column:list', component: () => import('@/views/content/indexRecommendColumn/index.vue') }
         ]
       },
       // ----- 首页管理 -----
