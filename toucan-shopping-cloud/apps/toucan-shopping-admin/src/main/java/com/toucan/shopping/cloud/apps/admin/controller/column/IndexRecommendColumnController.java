@@ -5,14 +5,17 @@ import com.toucan.shopping.cloud.apps.admin.helper.PageHelper;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.AdminServiceAPI;
+import com.toucan.shopping.cloud.admin.auth.api.DictServiceAPI;
 import com.toucan.shopping.cloud.common.data.api.AreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.ColumnAreaServiceAPI;
 import com.toucan.shopping.cloud.content.api.IndexRecommendColumnServiceAPI;
 import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.DictVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.column.constant.ColumnDictConstant;
 import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
@@ -21,6 +24,7 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +38,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -68,6 +74,9 @@ public class IndexRecommendColumnController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private DictServiceAPI dictServiceAPI;
+
 
     /**
      * 查询列表
@@ -87,7 +96,7 @@ public class IndexRecommendColumnController {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = PageHelper.extractPageData(resultObjectVO.getData());
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    List<ColumnVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ColumnVO.class);
+                    List<IndexRecommendColumnAdminVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), IndexRecommendColumnAdminVO.class);
 
                     // 查询创建人和修改人
                     List<String> adminIdList = new ArrayList<>();
@@ -122,6 +131,19 @@ public class IndexRecommendColumnController {
                         }
                     }
 
+                    // 填充栏目类型字典对象（参考栏目列表）
+                    Map<String, DictVO> columnTypeMap = getColumnTypeDictMap();
+                    for (IndexRecommendColumnAdminVO columnVO : list) {
+                        if (StringUtils.isNotEmpty(columnVO.getType())) {
+                            DictVO dictVO = columnTypeMap.get(columnVO.getType());
+                            if (dictVO != null) {
+                                List<DictVO> typeDictVos = new LinkedList<>();
+                                typeDictVos.add(dictVO);
+                                columnVO.setTypeDictVos(typeDictVos);
+                            }
+                        }
+                    }
+
                     if (tableVO.getCount() > 0) {
                         tableVO.setData((List) list);
                     }
@@ -133,6 +155,31 @@ public class IndexRecommendColumnController {
             logger.warn(e.getMessage(), e);
         }
         return tableVO;
+    }
+
+
+    /**
+     * 查询栏目类型字典（code -> DictVO）
+     */
+    private Map<String, DictVO> getColumnTypeDictMap() throws Exception {
+        Map<String, DictVO> result = new HashMap<>();
+        DictVO queryDict = new DictVO();
+        queryDict.setCategoryCode(ColumnDictConstant.COLUMN_DICT_CATEGORY_CODE);
+        queryDict.setCodes(new LinkedList<>());
+        queryDict.getCodes().add(ColumnDictConstant.COLUMN_DICT_TYPE_CODE);
+        queryDict.setAppCode(toucan.getAppCode());
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryDict);
+        ResultTypeObjectVO<List<DictVO>> resultObjectVO = dictServiceAPI.queryDictByCodesAndCategoryCode(requestJsonVO);
+        if (resultObjectVO.isSuccess() && !CollectionUtils.isEmpty(resultObjectVO.getData())) {
+            for (DictVO dictVO : resultObjectVO.getData()) {
+                if (ColumnDictConstant.COLUMN_DICT_TYPE_CODE.equals(dictVO.getCode()) && !CollectionUtils.isEmpty(dictVO.getChildren())) {
+                    for (DictVO child : dictVO.getChildren()) {
+                        result.put(child.getCode(), child);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
 

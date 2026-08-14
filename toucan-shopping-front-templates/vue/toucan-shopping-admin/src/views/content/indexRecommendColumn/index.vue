@@ -30,12 +30,14 @@
         <el-button type="primary" :icon="Plus" @click="handleAdd">添加首页推荐栏目</el-button>
       </div>
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id">
-        <el-table-column prop="id" label="ID" width="90" align="center" />
+        <el-table-column prop="id" label="ID" width="230" align="center" />
         <el-table-column prop="title" label="标题" width="200" show-overflow-tooltip />
         <el-table-column prop="startShowDate" label="开始展示时间" width="170" />
         <el-table-column prop="endShowDate" label="结束展示时间" width="170" />
         <el-table-column prop="type" label="类型" width="90" align="center">
-          <template #default="{ row }">{{ row.type === '1' || row.type === 1 ? 'PC端' : row.type }}</template>
+          <template #default="{ row }">
+            <el-tag v-for="(t, i) in (row.typeDictVos || [])" :key="i" size="small" type="info">{{ t.name }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column prop="columnSort" label="排序" width="80" align="center" />
         <el-table-column prop="showStatus" label="显示状态" width="100" align="center">
