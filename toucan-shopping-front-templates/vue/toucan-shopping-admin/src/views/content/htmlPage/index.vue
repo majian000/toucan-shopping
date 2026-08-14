@@ -3,9 +3,24 @@
     <h2 class="page-title">首页静态化管理</h2>
     <el-card shadow="never">
       <el-tabs v-model="activeTab" type="border-card">
-        <el-tab-pane label="最终效果" name="release">
+        <el-tab-pane label="预览文件" name="preview">
           <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:html:generator:preview'" @click="handleGeneratePreview" :loading="previewLoading">生成预览</el-button>
+            <span class="tip-text">生成预览版首页静态HTML文件，用于预览效果。</span>
+          </div>
+          <div v-if="previewGenerators && previewGenerators.length > 0" style="margin-top:16px">
+            <el-tabs v-model="previewSubTab" type="card">
+              <el-tab-pane v-for="gen in previewGenerators" :key="gen.name" :label="gen.name" :name="gen.name">
+                <div class="iframe-container" v-html="gen.content"></div>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+          <el-empty v-else description="请点击“生成预览”按钮生成首页预览静态文件" />
+        </el-tab-pane>
+
+        <el-tab-pane label="最终文件" name="release">
+          <div class="tab-toolbar">
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:html:generator:release'" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
             <span class="tip-text">生成最终版首页静态HTML文件，发布到正式环境。</span>
           </div>
           <div v-if="releaseGenerators && releaseGenerators.length > 0" style="margin-top:16px">
@@ -23,17 +38,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Upload } from '@element-plus/icons-vue'
-import { generatePreview, generateRelease } from '@/api/content/htmlPage'
+import { generatePreview, generateRelease, queryTab } from '@/api/content/htmlPage'
 
-const activeTab = ref('release')
+const activeTab = ref('preview')
+const previewSubTab = ref('')
 const releaseSubTab = ref('')
-const releaseLoading = ref(false)
 const previewLoading = ref(false)
-const releaseGenerators = ref([])
+const releaseLoading = ref(false)
 const previewGenerators = ref([])
+const releaseGenerators = ref([])
+
+async function loadTabs() {
+  try {
+    const res = await queryTab()
+    if (res.code === 1 && res.data) {
+      previewGenerators.value = res.data.previewHtmlGenerators || []
+      releaseGenerators.value = res.data.releaseHtmlGenerators || []
+    }
+  } catch { }
+}
 
 async function handleGeneratePreview() {
   previewLoading.value = true
@@ -41,8 +67,7 @@ async function handleGeneratePreview() {
     const res = await generatePreview()
     if (res.code === 1) {
       ElMessage.success(res.msg || '预览文件生成成功')
-      // 重新加载页面内容
-      setTimeout(() => window.location.reload(), 1500)
+      await loadTabs()
     } else {
       ElMessage.error(res.msg || '生成预览文件失败')
     }
@@ -55,12 +80,14 @@ async function handleGenerateRelease() {
     const res = await generateRelease()
     if (res.code === 1) {
       ElMessage.success(res.msg || '最终版文件生成成功')
-      setTimeout(() => window.location.reload(), 1500)
+      await loadTabs()
     } else {
       ElMessage.error(res.msg || '生成最终版文件失败')
     }
   } catch { } finally { releaseLoading.value = false }
 }
+
+onMounted(loadTabs)
 </script>
 
 <style lang="scss" scoped>

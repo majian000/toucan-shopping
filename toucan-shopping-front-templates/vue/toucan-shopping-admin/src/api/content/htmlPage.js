@@ -9,3 +9,8 @@ export function generatePreview() {
 export function generateRelease() {
   return request({ url: '/index/html/generate/release', method: 'post' })
 }
+
+// 查询首页静态文件选项卡
+export function queryTab() {
+  return request({ url: '/index/html/query/tab', method: 'post' })
+}
