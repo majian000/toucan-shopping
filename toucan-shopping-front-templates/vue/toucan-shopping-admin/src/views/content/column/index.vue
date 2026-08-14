@@ -194,13 +194,16 @@ async function loadColumnTypes() {
 }
 
 async function loadColumnDict() {
+  dialogLoading.value = true
   try {
     const res = await queryColumnDict()
     if (res.code === 1 && res.data) {
       columnTypeDictList.value = res.data.columnTypeList || []
       columnPositionDictList.value = res.data.columnPositionList || []
     }
-  } catch { }
+  } catch { } finally {
+    dialogLoading.value = false
+  }
 }
 
 function onTypeNodeClick(data) {
@@ -338,6 +341,7 @@ function handleAdd() {
   isEdit.value = false; editingId.value = null
   resetForm()
   dialogVisible.value = true
+  loadColumnDict()
 }
 
 async function handleEdit(row) {
@@ -362,6 +366,7 @@ async function handleEdit(row) {
       formData.extendProperty = d.extendProperty || ''
       formData.remark = d.remark || ''
       dialogVisible.value = true
+      loadColumnDict()
     } else {
       ElMessage.error(res.msg || '查询栏目详情失败')
     }
@@ -417,7 +422,6 @@ function handleBatchDelete() {
 }
 
 loadColumnTypes()
-loadColumnDict()
 </script>
 
 <style lang="scss" scoped>
