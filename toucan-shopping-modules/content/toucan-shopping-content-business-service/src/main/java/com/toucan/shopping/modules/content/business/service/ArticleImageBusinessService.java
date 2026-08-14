@@ -193,9 +193,8 @@ public class ArticleImageBusinessService {
                     int ret = imageUploadService.deleteFile(articleImageEntity.getImgPath());
                     if (ret != 0) {
                         articleImageService.updateFileDeleteStatusById(articleImage.getId(), 0, articleImage.getUpdateAdminId());
+                        articleImageService.deleteById(articleImageEntity.getId(), articleImageEntity.getUpdateAdminId());
                         logger.info("文件中心图片删除失败 {} ", articleImageEntity.getImgPath());
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("图片删除失败!");
                         return resultObjectVO;
                     }
 

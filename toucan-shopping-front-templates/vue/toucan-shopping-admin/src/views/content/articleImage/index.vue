@@ -40,11 +40,11 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="ID" width="100" align="center" />
-        <el-table-column prop="articleId" label="文章ID" width="110" align="center" />
+        <el-table-column prop="id" label="ID" width="230" align="center" />
+        <el-table-column prop="articleId" label="文章ID" width="230" align="center" />
         <el-table-column prop="fileName" label="文件名" min-width="180" show-overflow-tooltip />
         <el-table-column prop="fileExt" label="格式" width="90" align="center" />
-        <el-table-column prop="fileSize" label="大小(字节)" width="120" align="center" />
+        <el-table-column prop="fileSize" label="大小(MB)" width="120" align="center" :formatter="formatFileSize" />
         <el-table-column prop="createAdminName" label="创建人" width="120" />
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="updateAdminName" label="修改人" width="120" />
@@ -84,6 +84,11 @@ const selectedRows = ref([])
 const pagination = reactive({ pageNum: 1, pageSize: 15, total: 0 })
 
 function onSelectionChange(rows) { selectedRows.value = rows }
+
+function formatFileSize(row, column, cellValue) {
+  if (cellValue == null || cellValue === '') return '-'
+  return (Number(cellValue) / 1024 / 1024).toFixed(2)
+}
 
 function buildSearchParams() {
   const p = { ...searchForm, page: pagination.pageNum, limit: pagination.pageSize }
