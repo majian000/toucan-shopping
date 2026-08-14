@@ -93,6 +93,22 @@ public class ColumnController {
 
 
     /**
+     * 查询栏目字典数据（栏目类型、栏目位置）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:content:column:list","toucan:content:column:toolbar:save","toucan:content:column:btn:edit"})
+    @RequestMapping(value = "/query/dict", method = RequestMethod.POST)
+    public ResultObjectVO queryDict(HttpServletRequest request) {
+        try {
+            return ResultObjectVO.ok(this.getColumnDictMap());
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return ResultObjectVO.fail(ResultVO.FAILD, "查询失败");
+        }
+    }
+
+
+    /**
      * 保存
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:add"})

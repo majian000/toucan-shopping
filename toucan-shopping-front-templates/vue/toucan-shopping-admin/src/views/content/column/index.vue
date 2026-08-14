@@ -143,6 +143,11 @@
             <el-radio value="0">隐藏</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="栏目类型" prop="type">
+          <el-checkbox-group v-model="formData.type">
+            <el-checkbox v-for="t in columnTypeDictList" :key="t.code" :value="t.code">{{ t.name }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <el-form-item label="栏目位置" prop="position">
           <el-radio-group v-model="formData.position">
             <el-radio v-for="p in columnPositionDictList" :key="p.code" :value="p.code">{{ p.name }}</el-radio>
@@ -170,7 +175,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight } from '@element-plus/icons-vue'
-import { queryTreeTable, queryColumnTypeList, queryColumnTree, queryColumnById, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
+import { queryTreeTable, queryColumnTypeList, queryColumnDict, queryColumnTree, queryColumnById, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
 
 // ========== 左侧栏目类型树 ==========
 const typeTreeRef = ref(null)
@@ -188,19 +193,19 @@ async function loadColumnTypes() {
   } catch { }
 }
 
-function extractDictFromTree(nodes) {
-  const dicts = []
-  for (const node of nodes) {
-    dicts.push({ code: node.code, name: node.name })
-  }
-  return dicts
+async function loadColumnDict() {
+  try {
+    const res = await queryColumnDict()
+    if (res.code === 1 && res.data) {
+      columnTypeDictList.value = res.data.columnTypeList || []
+      columnPositionDictList.value = res.data.columnPositionList || []
+    }
+  } catch { }
 }
 
 function onTypeNodeClick(data) {
   selectedColumnTypeCode.value = data.code
   searchForm.columnTypeCode = data.code
-  columnTypeDictList.value = extractDictFromTree(typeTreeData.value)
-  columnPositionDictList.value = [{ code: '1', name: '首页' }, { code: '2', name: '列表页' }, { code: '3', name: '详情页' }]
   handleSearch()
 }
 
@@ -412,6 +417,7 @@ function handleBatchDelete() {
 }
 
 loadColumnTypes()
+loadColumnDict()
 </script>
 
 <style lang="scss" scoped>
