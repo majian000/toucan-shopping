@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
+import com.toucan.shopping.modules.content.vo.ArticleDetailVO;
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -337,6 +339,79 @@ public class ArticleController {
             logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody ArticleVO articleVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (articleVO.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
+            ResultTypeObjectVO<ArticleVO> detailResult = articleService.findById(requestJsonVO);
+            if (detailResult.isSuccess() && detailResult.getData() != null) {
+                ArticleVO vo = detailResult.getData();
+                if (StringUtils.isNotEmpty(vo.getCoverImgUrl())) {
+                    vo.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix() + vo.getCoverImgUrl());
+                }
+                // 填充创建人/修改人姓名
+                fillAdminName(vo);
+                ArticleDetailVO detailVO = new ArticleDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            } else {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 填充创建人/修改人姓名
+     */
+    private void fillAdminName(ArticleVO articleVO) throws NoSuchAlgorithmException {
+        List<String> adminIdList = new ArrayList<>();
+        if (articleVO.getCreateAdminId() != null) {
+            adminIdList.add(articleVO.getCreateAdminId());
+        }
+        if (articleVO.getUpdateAdminId() != null) {
+            adminIdList.add(articleVO.getUpdateAdminId());
+        }
+        if (adminIdList.isEmpty()) {
+            return;
+        }
+        String[] adminIds = adminIdList.toArray(new String[0]);
+        AdminVO queryAdminVO = new AdminVO();
+        queryAdminVO.setAdminIds(adminIds);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+        ResultObjectVO adminResultVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+        if (adminResultVO.isSuccess()) {
+            List<AdminVO> adminVOS = adminResultVO.formatDataList(AdminVO.class);
+            if (!CollectionUtils.isEmpty(adminVOS)) {
+                for (AdminVO adminVO : adminVOS) {
+                    if (articleVO.getCreateAdminId() != null && articleVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                        articleVO.setCreateAdminName(adminVO.getUsername());
+                    }
+                    if (articleVO.getUpdateAdminId() != null && articleVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                        articleVO.setUpdateAdminName(adminVO.getUsername());
+                    }
+                }
+            }
+        }
     }
 
 

@@ -27,6 +27,11 @@ export function queryArticleById(data) {
   return request({ url: '/article/queryById', method: 'post', data })
 }
 
+// 查看详情（返回 ArticleDetailVO）
+export function queryArticleDetail(data) {
+  return request({ url: '/article/detail', method: 'post', data })
+}
+
 // 删除 (ArticleVO with id as JSON body)
 export function deleteArticle(data) {
   return request({ url: '/article/delete', method: 'post', data })

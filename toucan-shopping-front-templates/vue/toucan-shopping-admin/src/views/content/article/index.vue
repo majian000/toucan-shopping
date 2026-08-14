@@ -113,8 +113,9 @@
             <el-table-column prop="createDate" label="创建时间" width="170" />
             <el-table-column prop="updateAdminName" label="修改人" width="120" />
             <el-table-column prop="updateDate" label="修改时间" width="170" />
-            <el-table-column label="操作" width="160" fixed="right" align="center">
+            <el-table-column label="操作" width="200" fixed="right" align="center">
               <template #default="{ row }">
+                <el-button type="info" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
                 <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
                 <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
               </template>
@@ -199,14 +200,58 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="文章详情" width="900px" :close-on-click-modal="false" top="5vh">
+      <div class="dialog-scroll" v-loading="detailLoading">
+        <template v-if="detail">
+          <el-descriptions :column="2" border>
+            <el-descriptions-item label="文章标题" :span="2">{{ detail.title || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="所属栏目">{{ detail.columnName || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="作者">{{ detail.author || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="发布时间">{{ detail.publishDate || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="显示状态">
+              <el-tag :type="detail.showStatus === '1' || detail.showStatus === 1 ? 'success' : 'info'" size="small">
+                {{ detail.showStatus === '1' || detail.showStatus === 1 ? '显示' : '隐藏' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="排序">{{ detail.articleSort ?? '-' }}</el-descriptions-item>
+            <el-descriptions-item label="开始展示时间">{{ detail.startShowDate || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="结束展示时间">
+              {{ detail.perpetualStatus === '1' || detail.perpetualStatus === 1 ? '永远' : (detail.endShowDate || '-') }}
+            </el-descriptions-item>
+            <el-descriptions-item label="摘要内容" :span="2">{{ detail.abstractContent || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="SEO标题">{{ detail.seoTitle || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="SEO关键字">{{ detail.seoKeywords || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="SEO简介" :span="2">{{ detail.seoDescription || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="创建人">{{ detail.createAdminName || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="创建时间">{{ detail.createDate || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="修改人">{{ detail.updateAdminName || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="修改时间">{{ detail.updateDate || '-' }}</el-descriptions-item>
+          </el-descriptions>
+          <div class="detail-section" v-if="detail.httpCoverImgUrl">
+            <div class="detail-section__label">封面图片</div>
+            <el-image :src="detail.httpCoverImgUrl" fit="contain" style="width:240px;height:220px" :preview-src-list="[detail.httpCoverImgUrl]" preview-teleported />
+          </div>
+          <div class="detail-section">
+            <div class="detail-section__label">文章内容</div>
+            <div class="detail-content" v-html="detail.content"></div>
+          </div>
+        </template>
+        <el-empty v-else-if="!detailLoading" description="暂无数据" />
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight, Upload } from '@element-plus/icons-vue'
-import { listArticle, queryColumnTreeByPid, saveArticle, updateArticle, deleteArticle, deleteArticles, queryArticleById } from '@/api/content/article'
+import { Plus, Delete, Edit, Search, RefreshRight, Upload, View } from '@element-plus/icons-vue'
+import { listArticle, queryColumnTreeByPid, saveArticle, updateArticle, deleteArticle, deleteArticles, queryArticleById, queryArticleDetail } from '@/api/content/article'
 import Editor from '@/components/Editor/index.vue'
 
 // ========== 左侧栏目树 ==========
@@ -433,6 +478,23 @@ function handleBatchDelete() {
   }).catch(() => {})
 }
 
+// ========== 查看详情 ==========
+const detailVisible = ref(false)
+const detailLoading = ref(false)
+const detail = ref(null)
+
+async function handleView(row) {
+  detailVisible.value = true
+  detail.value = null
+  detailLoading.value = true
+  try {
+    const res = await queryArticleDetail({ id: row.id })
+    if (res.code === 1 && res.data && res.data.basicInfo) {
+      detail.value = res.data.basicInfo
+    }
+  } catch { } finally { detailLoading.value = false }
+}
+
 // 初始加载
 loadTableData()
 </script>
@@ -456,5 +518,16 @@ loadTableData()
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
   .form-tip { color: $text-secondary; font-size: 12px; margin-top: 4px; }
   .dialog-scroll { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+  .detail-section { margin-top: 16px;
+    .detail-section__label { font-weight: 600; color: $text-primary; margin-bottom: 8px; }
+  }
+  .detail-content {
+    border: 1px solid #dcdfe6; border-radius: 4px; padding: 12px;
+    line-height: 1.7; word-break: break-word; overflow-wrap: break-word;
+    :deep(img) { max-width: 100%; height: auto; }
+    :deep(table) { border-collapse: collapse; max-width: 100%; }
+    :deep(td), :deep(th) { border: 1px solid #dcdfe6; padding: 4px 8px; }
+    :deep(video) { max-width: 100%; }
+  }
 }
 </style>
