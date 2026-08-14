@@ -34,8 +34,8 @@
 
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
-            <el-button type="primary" :icon="Plus" @click="handleAdd">添加</el-button>
-            <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+            <el-button type="primary" :icon="Plus" v-permission="'toucan:product:brand:save'" @click="handleAdd">添加</el-button>
+            <el-button type="danger" :icon="Delete" v-permission="'toucan:product:brand:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
           </div>
           <el-table :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
@@ -70,8 +70,8 @@
             <el-table-column prop="createDate" label="创建时间" width="170" />
             <el-table-column label="操作" width="130" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:brand:update'" @click="handleEdit(row)">编辑</el-button>
+                <el-button type="danger" link size="small" v-permission="'toucan:product:brand:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>

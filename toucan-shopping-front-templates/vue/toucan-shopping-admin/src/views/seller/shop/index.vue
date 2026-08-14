@@ -31,7 +31,7 @@
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'toucan:seller:shop:deletes'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
       </div>
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
         <el-table-column type="selection" width="50" align="center" />
@@ -68,10 +68,10 @@
         <el-table-column label="操作" width="270" fixed="right" align="center">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:seller:shop:update'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="primary" link size="small" :icon="FolderOpened" @click="handleCategory(row)">分类</el-button>
-            <el-button type="warning" link size="small" @click="handleToggleEnable(row)">{{ row.enableStatus === 1 ? '禁用' : '启用' }}</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+            <el-button type="warning" link size="small" v-permission="'toucan:seller:shop:disabledEnabled'" @click="handleToggleEnable(row)">{{ row.enableStatus === 1 ? '禁用' : '启用' }}</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:shop:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -165,7 +165,7 @@
     <!-- 分类管理弹窗 -->
     <el-dialog v-model="categoryVisible" :title="'分类管理 - ' + categoryShopName" width="860px" :close-on-click-modal="false" destroy-on-close>
       <div class="toolbar" style="margin-bottom:8px">
-        <el-button type="primary" :icon="Plus" @click="openCategoryAdd(-1)">添加根分类</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'toucan:seller:shopCategory:save'" @click="openCategoryAdd(-1)">添加根分类</el-button>
         <el-button :icon="RefreshRight" @click="loadCategoryRoot">刷新</el-button>
       </div>
       <el-table ref="categoryTableRef" :data="categoryData" border stripe v-loading="categoryLoading" row-key="id" lazy :load="loadCategoryChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }">
@@ -176,13 +176,13 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="300" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Plus" @click="openCategoryAdd(row.id)">添加子分类</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" @click="openCategoryEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" @click="handleCategoryDelete(row)">删除</el-button>
-            <el-button link size="small" @click="handleCategoryMove('up', row)">上移</el-button>
-            <el-button link size="small" @click="handleCategoryMove('down', row)">下移</el-button>
-            <el-button link size="small" @click="handleCategoryMove('top', row)">置顶</el-button>
-            <el-button link size="small" @click="handleCategoryMove('bottom', row)">置底</el-button>
+            <el-button type="primary" link size="small" :icon="Plus" v-permission="'toucan:seller:shopCategory:save'" @click="openCategoryAdd(row.id)">添加子分类</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:seller:shopCategory:update'" @click="openCategoryEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:shopCategory:delete'" @click="handleCategoryDelete(row)">删除</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:up'" @click="handleCategoryMove('up', row)">上移</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:down'" @click="handleCategoryMove('down', row)">下移</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:top'" @click="handleCategoryMove('top', row)">置顶</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:bottom'" @click="handleCategoryMove('bottom', row)">置底</el-button>
           </template>
         </el-table-column>
       </el-table>

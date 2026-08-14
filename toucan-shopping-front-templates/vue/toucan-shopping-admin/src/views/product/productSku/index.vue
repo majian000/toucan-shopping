@@ -53,7 +53,7 @@
 
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
-            <el-button type="primary" :icon="Refresh" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索缓存</el-button>
+            <el-button type="primary" :icon="Refresh" v-permission="'toucan:product:sku:flushSearch'" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索缓存</el-button>
           </div>
           <el-table :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
@@ -75,7 +75,7 @@
             <el-table-column prop="createDate" label="发布时间" width="170" />
             <el-table-column label="操作" width="120" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" @click="handleShelves(row)">
+                <el-button type="primary" link size="small" v-permission="'toucan:product:shelves'" @click="handleShelves(row)">
                   {{ row.status === 1 || row.status === '1' ? '下架' : '上架' }}
                 </el-button>
               </template>

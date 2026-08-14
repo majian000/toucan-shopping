@@ -35,7 +35,7 @@
             <el-form-item>
               <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
               <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
-              <el-button type="danger" :icon="Delete" @click="handleClear">清空搜索</el-button>
+              <el-button type="danger" :icon="Delete" v-permission="'toucan:product:sku:search:clear'" @click="handleClear">清空搜索</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -56,7 +56,7 @@
             <el-table-column prop="updateDate" label="修改时间" width="170" />
             <el-table-column label="操作" width="90" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+                <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:product:sku:search:row:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>

@@ -63,8 +63,8 @@
             <el-table-column prop="createDate" label="发布时间" width="170" />
             <el-table-column label="操作" width="160" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" @click="handleApprove(row)">审核</el-button>
-                <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:approve:sku:list'" @click="handleApprove(row)">审核</el-button>
+                <el-button type="danger" link size="small" v-permission="'toucan:product:approve:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -103,8 +103,8 @@
       </el-form>
       <template #footer>
         <el-button @click="approveDialogVisible = false">关闭</el-button>
-        <el-button type="danger" @click="handleReject">审核驳回</el-button>
-        <el-button type="primary" @click="handlePass">审核通过</el-button>
+        <el-button type="danger" v-permission="'toucan:product:approve:reject'" @click="handleReject">审核驳回</el-button>
+        <el-button type="primary" v-permission="'toucan:product:approve:pass'" @click="handlePass">审核通过</el-button>
       </template>
     </el-dialog>
   </div>

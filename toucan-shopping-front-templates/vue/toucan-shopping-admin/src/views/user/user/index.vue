@@ -33,8 +33,8 @@
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="primary" :icon="Plus" @click="handleRegist">注册</el-button>
-        <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="handleBatchDisable">批量禁用</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'toucan:user:regist'" @click="handleRegist">注册</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'toucan:user:disabled:ids'" :disabled="selectedRows.length === 0" @click="handleBatchDisable">批量禁用</el-button>
       </div>
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="userMainId" @selection-change="onSelectionChange">
         <el-table-column type="selection" width="50" align="center" />
@@ -66,11 +66,11 @@
         <el-table-column label="操作" width="380" fixed="right" align="center">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">修改资料</el-button>
-            <el-button type="warning" link size="small" :icon="Key" @click="handleResetPassword(row)">重置密码</el-button>
-            <el-button v-if="row.enableStatus === 1 || row.enableStatus === '1'" type="danger" link size="small" :icon="CircleClose" @click="handleToggleEnable(row)">停用</el-button>
-            <el-button v-else type="success" link size="small" :icon="CircleCheck" @click="handleToggleEnable(row)">启用</el-button>
-            <el-button type="primary" link size="small" :icon="Refresh" @click="handleFlushCache(row)">刷新缓存</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:user:update:detail'" @click="handleEdit(row)">修改资料</el-button>
+            <el-button type="warning" link size="small" :icon="Key" v-permission="'toucan:user:reset:password'" @click="handleResetPassword(row)">重置密码</el-button>
+            <el-button v-if="row.enableStatus === 1 || row.enableStatus === '1'" type="danger" link size="small" :icon="CircleClose" v-permission="'toucan:user:disabled:enabled'" @click="handleToggleEnable(row)">停用</el-button>
+            <el-button v-else type="success" link size="small" :icon="CircleCheck" v-permission="'toucan:user:disabled:enabled'" @click="handleToggleEnable(row)">启用</el-button>
+            <el-button type="primary" link size="small" :icon="Refresh" v-permission="'toucan:user:flushCache'" @click="handleFlushCache(row)">刷新缓存</el-button>
             <el-dropdown trigger="click" @command="(cmd) => handleMoreCommand(cmd, row)">
               <el-button type="primary" link size="small" :icon="MoreFilled">更多</el-button>
               <template #dropdown>
@@ -236,7 +236,7 @@
     <el-dialog v-model="subDialog.visible" :title="subDialog.title" width="620px" :close-on-click-modal="false" destroy-on-close>
       <div class="sub-toolbar">
         <el-input v-model="subDialog.connectValue" :placeholder="subDialog.placeholder" clearable style="width:240px" />
-        <el-button type="primary" :icon="Plus" @click="handleConnect">关联</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="['toucan:user:mobile:phone:connectMobilePhone', 'toucan:user:email:email', 'toucan:user:username:username']" @click="handleConnect">关联</el-button>
       </div>
       <el-table :data="subDialog.list" border stripe v-loading="subDialog.loading">
         <el-table-column prop="id" label="ID" width="200" show-overflow-tooltip />
@@ -251,8 +251,8 @@
         </el-table-column>
         <el-table-column label="操作" width="100" align="center">
           <template #default="{ row }">
-            <el-button v-if="row.deleteStatus === 1 || row.deleteStatus === '1'" type="success" link size="small" @click="handleToggleSub(row)">启用</el-button>
-            <el-button v-else type="danger" link size="small" @click="handleToggleSub(row)">停用</el-button>
+            <el-button v-if="row.deleteStatus === 1 || row.deleteStatus === '1'" type="success" link size="small" v-permission="['toucan:user:mobile:phone:list:disabled:enabled', 'toucan:user:email:list:disabled:enabled', 'toucan:user:username:list:disabled:enabled']" @click="handleToggleSub(row)">启用</el-button>
+            <el-button v-else type="danger" link size="small" v-permission="['toucan:user:mobile:phone:list:disabled:enabled', 'toucan:user:email:list:disabled:enabled', 'toucan:user:username:list:disabled:enabled']" @click="handleToggleSub(row)">停用</el-button>
           </template>
         </el-table-column>
       </el-table>

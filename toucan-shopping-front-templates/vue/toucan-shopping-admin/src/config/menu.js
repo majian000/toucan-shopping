@@ -248,7 +248,7 @@ export const menuConfig = [
         icon: 'Notebook',
         permission: 'toucan:content:article',
         children: [
-          { path: '/content/articleImage', name: 'ContentArticleImage', label: '文章图片列表', icon: 'Picture', permission: 'toucan:content:article:image:list', component: () => import('@/views/content/articleImage/index.vue') },
+          { path: '/content/articleImage', name: 'ContentArticleImage', label: '文章图片列表', icon: 'Picture', permission: 'toucan:content:articleImage:list', component: () => import('@/views/content/articleImage/index.vue') },
           { path: '/content/article', name: 'ContentArticle', label: '文章列表', icon: 'Document', permission: 'toucan:content:article:list', component: () => import('@/views/content/article/index.vue') }
         ]
       },

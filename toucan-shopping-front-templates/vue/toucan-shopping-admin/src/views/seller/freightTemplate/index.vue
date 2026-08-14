@@ -51,8 +51,8 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="140" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+            <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:seller:freightTemplate:detail'" @click="handleView(row)">查看</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:freightTemplate:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

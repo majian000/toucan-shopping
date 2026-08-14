@@ -228,11 +228,11 @@
             <el-descriptions-item label="创建时间">{{ detail.createDate || '-' }}</el-descriptions-item>
             <el-descriptions-item label="修改人">{{ detail.updateAdminName || '-' }}</el-descriptions-item>
             <el-descriptions-item label="修改时间">{{ detail.updateDate || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="封面图片" :span="2">
+              <el-image v-if="detail.httpCoverImgUrl" :src="detail.httpCoverImgUrl" fit="contain" style="width:240px;height:220px" :preview-src-list="[detail.httpCoverImgUrl]" preview-teleported />
+              <span v-else>-</span>
+            </el-descriptions-item>
           </el-descriptions>
-          <div class="detail-section" v-if="detail.httpCoverImgUrl">
-            <div class="detail-section__label">封面图片</div>
-            <el-image :src="detail.httpCoverImgUrl" fit="contain" style="width:240px;height:220px" :preview-src-list="[detail.httpCoverImgUrl]" preview-teleported />
-          </div>
           <div class="detail-section">
             <div class="detail-section__label">文章内容</div>
             <div class="detail-content" v-html="detail.content"></div>
@@ -517,7 +517,7 @@ loadTableData()
   }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
   .form-tip { color: $text-secondary; font-size: 12px; margin-top: 4px; }
-  .dialog-scroll { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+  .dialog-scroll { max-height: 70vh; overflow-y: auto; padding-right: 4px; min-height: 120px; }
   .detail-section { margin-top: 16px;
     .detail-section__label { font-weight: 600; color: $text-primary; margin-bottom: 8px; }
   }

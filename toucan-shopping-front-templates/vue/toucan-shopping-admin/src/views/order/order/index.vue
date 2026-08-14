@@ -82,12 +82,13 @@
         <el-table-column prop="cancelDate" label="取消时间" width="170" />
         <el-table-column label="操作" width="280" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" @click="handleEdit(row)">修改</el-button>
-            <el-button type="warning" link size="small" :icon="Goods" @click="handleModifyItems(row)">修改订单项</el-button>
-            <el-button type="info" link size="small" :icon="Document" @click="handleOrderLog(row)">订单日志</el-button>
+            <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:order:item:list'" @click="handleView(row)">查看</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:order:update'" @click="handleEdit(row)">修改</el-button>
+            <el-button type="warning" link size="small" :icon="Goods" v-permission="'toucan:order:list:item:updatesFromOrderList'" @click="handleModifyItems(row)">修改订单项</el-button>
+            <el-button type="info" link size="small" :icon="Document" v-permission="'toucan:order:orderLogList'" @click="handleOrderLog(row)">订单日志</el-button>
             <el-button
               type="danger" link size="small" :icon="CircleClose"
+              v-permission="'toucan:order:cancel'"
               :disabled="row.tradeStatus === 2" @click="handleCancel(row)"
             >取消</el-button>
           </template>

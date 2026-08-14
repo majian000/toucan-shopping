@@ -5,13 +5,13 @@
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="预览版" name="preview">
           <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" @click="handleGeneratePreview" :loading="previewLoading">生成预览版</el-button>
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:seller:freeShop:html:generator:preview'" @click="handleGeneratePreview" :loading="previewLoading">生成预览版</el-button>
             <span class="tip-text">生成免费开店页预览静态HTML文件。</span>
           </div>
         </el-tab-pane>
         <el-tab-pane label="最终版" name="release">
           <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:seller:web:freeShop:html:generator:release'" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
             <span class="tip-text">生成免费开店页最终版静态HTML文件，发布到正式环境。</span>
           </div>
         </el-tab-pane>

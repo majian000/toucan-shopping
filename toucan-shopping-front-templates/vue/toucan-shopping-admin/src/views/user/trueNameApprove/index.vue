@@ -53,8 +53,8 @@
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button v-if="row.approveStatus === 1 || row.approveStatus === '1'" type="success" link size="small" :icon="CircleCheck" @click="handlePass(row)">通过</el-button>
-            <el-button v-if="row.approveStatus === 1 || row.approveStatus === '1'" type="danger" link size="small" :icon="CircleClose" @click="handleReject(row)">驳回</el-button>
+            <el-button v-if="row.approveStatus === 1 || row.approveStatus === '1'" type="success" link size="small" :icon="CircleCheck" v-permission="'toucan:user:trueNameApprove:pass'" @click="handlePass(row)">通过</el-button>
+            <el-button v-if="row.approveStatus === 1 || row.approveStatus === '1'" type="danger" link size="small" :icon="CircleClose" v-permission="'toucan:user:trueNameApprove:reject'" @click="handleReject(row)">驳回</el-button>
           </template>
         </el-table-column>
       </el-table>

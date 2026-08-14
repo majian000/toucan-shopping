@@ -21,7 +21,7 @@
 
     <el-card shadow="never" class="table-card">
       <div class="toolbar">
-        <el-button type="danger" :icon="Delete" v-permission="'toucan:content:article:image:deletes'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
+        <el-button type="danger" :icon="Delete" v-permission="'toucan:content:articleImage:toolbar:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
       </div>
       <el-table
         ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id"
@@ -51,7 +51,7 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="100" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:article:image:delete'" @click="handleDelete(row)">删除</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:articleImage:row:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

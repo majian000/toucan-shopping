@@ -364,6 +364,8 @@ public class ArticleController {
                 }
                 // 填充创建人/修改人姓名
                 fillAdminName(vo);
+                // 填充栏目名称
+                fillColumnName(vo);
                 ArticleDetailVO detailVO = new ArticleDetailVO();
                 detailVO.setBasicInfo(vo);
                 resultObjectVO.setData(detailVO);
@@ -411,6 +413,23 @@ public class ArticleController {
                     }
                 }
             }
+        }
+    }
+
+
+    /**
+     * 填充栏目名称
+     */
+    private void fillColumnName(ArticleVO articleVO) throws NoSuchAlgorithmException {
+        if (articleVO.getColumnId() == null) {
+            return;
+        }
+        ColumnVO queryColumnVO = new ColumnVO();
+        queryColumnVO.setId(articleVO.getColumnId());
+        RequestJsonVO columnRequestJsonVO = RequestJsonVOGenerator.generator(appCode, queryColumnVO);
+        ResultTypeObjectVO<ColumnVO> columnResult = columnService.findById(columnRequestJsonVO);
+        if (columnResult.isSuccess() && columnResult.getData() != null) {
+            articleVO.setColumnName(columnResult.getData().getTitle());
         }
     }
 
