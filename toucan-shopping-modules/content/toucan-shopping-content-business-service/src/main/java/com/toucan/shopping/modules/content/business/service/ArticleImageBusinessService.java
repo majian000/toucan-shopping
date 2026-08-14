@@ -142,15 +142,14 @@ public class ArticleImageBusinessService {
             if (articleImage == null) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "图片不存在!");
             }
-
+            int row = articleImageService.deleteById(articleImage.getId(), articleImage.getUpdateAdminId());
             int ret = imageUploadService.deleteFile(articleImage.getImgPath());
             if (ret != 0) {
                 articleImageService.updateFileDeleteStatusById(articleImage.getId(), 0, articleImage.getUpdateAdminId());
                 logger.info("文件中心图片删除失败 {} ", articleImage.getImgPath());
-                return ResultObjectVO.fail(ResultVO.FAILD, "图片删除失败!");
+                return resultObjectVO;
             }
 
-            int row = articleImageService.deleteById(articleImage.getId(), articleImage.getUpdateAdminId());
             if (row != 1) {
                 return ResultObjectVO.fail(ResultVO.FAILD, "删除失败!");
             } else {
@@ -190,15 +189,14 @@ public class ArticleImageBusinessService {
                         appResultObjectVO.setCode(ResultVO.FAILD);
                         appResultObjectVO.setMsg("图片不存在!");
                     }
+                    int row = articleImageService.deleteById(articleImageEntity.getId(), articleImageEntity.getUpdateAdminId());
                     int ret = imageUploadService.deleteFile(articleImageEntity.getImgPath());
                     if (ret != 0) {
-                        articleImageService.updateFileDeleteStatusById(articleImage.getId(), 0, articleImage.getUpdateAdminId());
                         articleImageService.deleteById(articleImageEntity.getId(), articleImageEntity.getUpdateAdminId());
                         logger.info("文件中心图片删除失败 {} ", articleImageEntity.getImgPath());
                         return resultObjectVO;
                     }
 
-                    int row = articleImageService.deleteById(articleImageEntity.getId(), articleImageEntity.getUpdateAdminId());
                     if (row != 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("删除失败!");
