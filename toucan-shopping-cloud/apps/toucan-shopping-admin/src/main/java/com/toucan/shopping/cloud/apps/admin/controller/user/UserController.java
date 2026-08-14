@@ -388,6 +388,18 @@ public class UserController {
 
             //商城应用编码
             user.setAppCode(toucan.getShoppingPC().getAppCode());
+
+            //如果有base64图片，上传到文件服务
+            if (StringUtils.isNotEmpty(user.getHeadSculptureBase64())) {
+                user.setHeadSculpture(imageUploadService.uploadBase64(user.getHeadSculptureBase64()));
+            }
+            if (StringUtils.isNotEmpty(user.getIdcardImg1Base64())) {
+                user.setIdcardImg1(imageUploadService.uploadBase64(user.getIdcardImg1Base64()));
+            }
+            if (StringUtils.isNotEmpty(user.getIdcardImg2Base64())) {
+                user.setIdcardImg2(imageUploadService.uploadBase64(user.getIdcardImg2Base64()));
+            }
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),user);
             logger.info(" 修改详情 {} ", user.getUserMainId());
             UserVO userVO=null;

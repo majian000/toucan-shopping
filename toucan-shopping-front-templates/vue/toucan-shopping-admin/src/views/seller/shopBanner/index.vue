@@ -116,7 +116,7 @@
             <el-option label="H5首页" value="H5_INDEX" />
           </el-select>
         </el-form-item>
-        <el-form-item label="图片" prop="file">
+        <el-form-item label="图片">
           <el-upload :auto-upload="false" :show-file-list="false" :on-change="onFileChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传图片</el-button>
           </el-upload>
@@ -202,21 +202,23 @@ const formRef = ref(null)
 const previewUrl = ref('')
 const formData = reactive({
   id: null, title: '', clickPath: '', position: 'PC_INDEX', showStatus: '1',
-  bannerSort: 0, startShowDateString: '', endShowDateString: '', remark: '', file: null
+  bannerSort: 0, startShowDateString: '', endShowDateString: '', remark: '', imgBase64: ''
 })
 const formRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
   position: [{ required: true, message: '请选择显示位置', trigger: 'change' }],
   startShowDateString: [{ required: true, message: '请选择开始展示时间', trigger: 'change' }],
   endShowDateString: [{ required: true, message: '请选择结束展示时间', trigger: 'change' }],
-  showStatus: [{ required: true, message: '请选择显示状态', trigger: 'change' }],
-  file: [{ required: true, validator: (rule, value, cb) => { if (!value) cb(new Error('请上传图片')); else cb() }, trigger: 'change' }]
+  showStatus: [{ required: true, message: '请选择显示状态', trigger: 'change' }]
 }
 
 function onFileChange(file) {
-  const raw = file.raw
-  formData.file = raw
-  previewUrl.value = URL.createObjectURL(raw)
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewUrl.value = e.target.result
+    formData.imgBase64 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
 function beforeUpload(file) {
   if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
@@ -233,7 +235,7 @@ function handleEdit(row) {
   formData.startShowDateString = row.startShowDate || ''
   formData.endShowDateString = row.endShowDate || ''
   formData.remark = row.remark || ''
-  formData.file = null
+  formData.imgBase64 = ''
   previewUrl.value = row.httpImgPath || ''
   dialogVisible.value = true
 }
@@ -243,18 +245,7 @@ async function handleSubmit() {
   if (!valid) return
   submitLoading.value = true
   try {
-    const fd = new FormData()
-    fd.append('bannerImgFile', formData.file)
-    fd.append('id', formData.id)
-    fd.append('title', formData.title)
-    fd.append('clickPath', formData.clickPath)
-    fd.append('position', formData.position)
-    fd.append('showStatus', formData.showStatus)
-    fd.append('bannerSort', formData.bannerSort)
-    fd.append('remark', formData.remark)
-    fd.append('startShowDateString', formData.startShowDateString)
-    fd.append('endShowDateString', formData.endShowDateString)
-    const res = await updateShopBanner(fd)
+    const res = await updateShopBanner({ ...formData })
     if (res.code === 1) {
       ElMessage.success('修改成功')
       dialogVisible.value = false

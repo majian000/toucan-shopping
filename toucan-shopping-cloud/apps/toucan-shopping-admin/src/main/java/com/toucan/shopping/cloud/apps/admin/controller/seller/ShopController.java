@@ -287,6 +287,21 @@ public class ShopController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if (StringUtils.isNotEmpty(entity.getLogoBase64())) {
+                // 查询旧图标并删除
+                SellerShopVO queryVO = new SellerShopVO();
+                queryVO.setId(entity.getId());
+                RequestJsonVO queryRequest = RequestJsonVOGenerator.generator(appCode, queryVO);
+                ResultObjectVO oldResult = sellerShopService.findById(queryRequest);
+                if (oldResult.isSuccess() && oldResult.getData() != null) {
+                    SellerShopVO oldShop = oldResult.formatData(SellerShopVO.class);
+                    if (oldShop != null && StringUtils.isNotEmpty(oldShop.getLogo())) {
+                        imageUploadService.deleteFile(oldShop.getLogo());
+                    }
+                }
+                // 上传新图标
+                entity.setLogo(imageUploadService.uploadBase64(entity.getLogoBase64()));
+            }
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);

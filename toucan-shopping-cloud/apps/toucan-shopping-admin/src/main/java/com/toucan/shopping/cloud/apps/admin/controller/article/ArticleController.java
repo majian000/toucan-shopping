@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultTypeObjectVO;
 import com.toucan.shopping.modules.content.page.ArticlePageInfo;
 import com.toucan.shopping.modules.content.vo.ArticleVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -142,6 +143,11 @@ public class ArticleController {
                 return resultObjectVO;
             }
 
+            // 如果有imgBase64，解码后上传到文件服务
+            if (StringUtils.isNotEmpty(articleVO.getImgBase64())) {
+                articleVO.setCoverImgUrl(imageUploadService.uploadBase64(articleVO.getImgBase64()));
+            }
+
             articleVO.setAppCode(toucan.getShoppingPC().getAppCode());
             articleVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             articleVO.setImageHttpPrefix(imageUploadService.getImageHttpPrefix());
@@ -164,6 +170,21 @@ public class ArticleController {
     public ResultObjectVO update(HttpServletRequest request, @RequestBody ArticleVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if (StringUtils.isNotEmpty(entity.getImgBase64())) {
+                // 查询旧图片并删除
+                ArticleVO queryVO = new ArticleVO();
+                queryVO.setId(entity.getId());
+                RequestJsonVO queryRequest = RequestJsonVOGenerator.generator(appCode, queryVO);
+                ResultTypeObjectVO<ArticleVO> oldResult = articleService.findById(queryRequest);
+                if (oldResult.isSuccess() && oldResult.getData() != null) {
+                    ArticleVO oldArticle = oldResult.getData();
+                    if (StringUtils.isNotEmpty(oldArticle.getCoverImgUrl())) {
+                        imageUploadService.deleteFile(oldArticle.getCoverImgUrl());
+                    }
+                }
+                // 上传新图片
+                entity.setCoverImgUrl(imageUploadService.uploadBase64(entity.getImgBase64()));
+            }
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
             entity.setUpdateDate(new Date());
@@ -262,6 +283,59 @@ public class ArticleController {
             logger.warn(e.getMessage(), e);
         }
 
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据ID查询（回显用，含base64图片数据）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:article:list"})
+    @RequestMapping(value = "/queryById", method = RequestMethod.POST)
+    public ResultObjectVO queryById(HttpServletRequest request, @RequestBody ArticleVO articleVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (articleVO.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, articleVO);
+            ResultTypeObjectVO<ArticleVO> detailResult = articleService.findById(requestJsonVO);
+            if (detailResult.isSuccess() && detailResult.getData() != null) {
+                ArticleVO vo = detailResult.getData();
+                if (StringUtils.isNotEmpty(vo.getCoverImgUrl())) {
+                    vo.setHttpCoverImgUrl(imageUploadService.getImageHttpPrefix() + vo.getCoverImgUrl());
+                    // 下载文件并转base64
+                    byte[] fileBytes = imageUploadService.downloadFile(vo.getCoverImgUrl());
+                    if (fileBytes != null && fileBytes.length > 0) {
+                        String path = vo.getCoverImgUrl();
+                        String ext = "jpg";
+                        if (path.contains(".")) {
+                            ext = path.substring(path.lastIndexOf(".") + 1).toLowerCase();
+                        }
+                        String mime;
+                        switch (ext) {
+                            case "png": mime = "image/png"; break;
+                            case "gif": mime = "image/gif"; break;
+                            case "bmp": mime = "image/bmp"; break;
+                            case "jpeg": mime = "image/jpeg"; break;
+                            case "jpg": mime = "image/jpeg"; break;
+                            default: mime = "image/jpeg"; break;
+                        }
+                        vo.setImgBase64("data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes));
+                    }
+                }
+                resultObjectVO.setData(vo);
+            } else {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
         return resultObjectVO;
     }
 

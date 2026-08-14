@@ -120,14 +120,11 @@
         </el-form-item>
         <el-form-item label="店铺图标">
           <el-upload
-            :action="uploadAction"
-            :headers="uploadHeaders"
-            :data="{ publicShopId: formData.publicShopId }"
-            name="file"
+            :auto-upload="false"
             :show-file-list="false"
             accept="image/*"
-            :on-success="onLogoSuccess"
-            :on-error="onLogoError"
+            :on-change="onLogoChange"
+            :before-upload="beforeLogoUpload"
           >
             <img v-if="formData.httpLogo" :src="formData.httpLogo" style="width:80px;height:80px;object-fit:contain;border:1px solid #dcdfe6;border-radius:4px" />
             <el-button v-else type="primary" :icon="Upload">上传图标</el-button>
@@ -210,7 +207,6 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, View, Edit, Delete, Plus, Upload, FolderOpened } from '@element-plus/icons-vue'
-import { getToken } from '@/utils/auth'
 import {
   listShop, updateShop, deleteShop, deleteShops, disabledEnabledShop, listAreaByParentCode,
   shopCategoryTreeTableByPid, saveShopCategory, updateShopCategory, deleteShopCategory,
@@ -269,11 +265,9 @@ function handleView(row) {
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
 const formRef = ref(null)
-const uploadAction = import.meta.env.VITE_APP_BASE_API + '/seller/shop/upload/logo'
-const uploadHeaders = computed(() => ({ Authorization: 'Bearer ' + getToken() }))
 
 const formData = reactive({
-  id: null, publicShopId: '', name: '', introduce: '', logo: '', httpLogo: '',
+  id: null, publicShopId: '', name: '', introduce: '', logo: '', httpLogo: '', logoBase64: '',
   provinceCode: '', cityCode: '', areaCode: '', province: '', city: '', area: '',
   detailAddress: '', enableStatus: 1, remark: ''
 })
@@ -318,23 +312,23 @@ function onAreaChange(code) {
   if (a) formData.area = a.name
 }
 
-function onLogoSuccess(res) {
-  if (res.code === 0 && res.data) {
-    formData.logo = res.data.logo || ''
-    formData.httpLogo = res.data.httpLogo || ''
-    ElMessage.success('上传成功')
-  } else {
-    ElMessage.error(res.msg || '上传失败')
+function onLogoChange(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    formData.logoBase64 = e.target.result
+    formData.httpLogo = e.target.result
   }
+  reader.readAsDataURL(file.raw)
 }
-function onLogoError() {
-  ElMessage.error('上传失败')
+function beforeLogoUpload(file) {
+  if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
+  return true
 }
 
 async function handleEdit(row) {
   Object.assign(formData, {
     id: row.id, publicShopId: row.publicShopId, name: row.name || '', introduce: row.introduce || '',
-    logo: row.logo || '', httpLogo: row.httpLogo || '',
+    logo: row.logo || '', httpLogo: row.httpLogo || '', logoBase64: '',
     provinceCode: row.provinceCode || '', cityCode: row.cityCode || '', areaCode: row.areaCode || '',
     province: row.province || '', city: row.city || '', area: row.area || '',
     detailAddress: row.detailAddress || '', enableStatus: row.enableStatus != null ? Number(row.enableStatus) : 1, remark: row.remark || ''

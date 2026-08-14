@@ -185,28 +185,13 @@ public class ShopBannerController {
      * 添加轮播图
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shopBanner:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shopBanner:update"})
     @RequestMapping(value="/update")
-    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, ShopBannerVO shopBannerVO)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ShopBannerVO shopBannerVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
         try {
-
-            if(bannerImgFile==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请上传图片");
-                return resultObjectVO;
-            }
-
-            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
-                if (!ImageUtils.isImage(bannerImgFile.getOriginalFilename())) {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
-                    resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
-                    return resultObjectVO;
-                }
-            }
 
             if(StringUtils.isEmpty(shopBannerVO.getTitle()))
             {
@@ -226,7 +211,8 @@ public class ShopBannerController {
             shopBannerVO.setEndShowDate(DateUtils.FORMATTER_SS.get().parse(shopBannerVO.getEndShowDateString()));
 
 
-            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
+            if(StringUtils.isNotEmpty(shopBannerVO.getImgBase64())) {
+                // 查询旧图片并删除
                 ShopBannerVO banner = new ShopBannerVO();
                 banner.setId(shopBannerVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
@@ -234,26 +220,13 @@ public class ShopBannerController {
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     if (resultObjectVO.getData() != null) {
                         banner = resultObjectVO.formatData(ShopBannerVO.class);
-
-                        if(banner==null)
-                        {
-                            resultObjectVO.setCode(ResultObjectVO.FAILD);
-                            resultObjectVO.setMsg("没有找到该轮播图");
-                            return resultObjectVO;
+                        if (banner != null && StringUtils.isNotEmpty(banner.getImgPath())) {
+                            imageUploadService.deleteFile(banner.getImgPath());
                         }
-                        //LOGO上传
-                        imageUploadService.deleteFile(banner.getImgPath());
-
-                        String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
-                        if (logoImgExt.indexOf(".") != -1) {
-                            logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
-                        }
-                        String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
-                        shopBannerVO.setImgPath(logoImgFilePath);
-
                     }
-
                 }
+                // 上传新图片
+                shopBannerVO.setImgPath(imageUploadService.uploadBase64(shopBannerVO.getImgBase64()));
             }
 
             shopBannerVO.setUpdateDate(new Date());

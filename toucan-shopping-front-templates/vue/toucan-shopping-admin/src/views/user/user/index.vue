@@ -189,19 +189,19 @@
           <el-input v-model="editForm.personalizedSignature" type="textarea" :rows="2" maxlength="200" placeholder="请输入个性签名" />
         </el-form-item>
         <el-form-item label="头像">
-          <el-upload :action="headSculptureUploadUrl" :headers="uploadHeaders" :data="{ userMainId: editForm.userMainId }" :show-file-list="false" :on-success="onHeadSculptureSuccess" :on-error="onUploadError" :before-upload="beforeUpload" accept="image/*">
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onHeadSculptureChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传头像</el-button>
           </el-upload>
           <el-image v-if="editForm.httpHeadSculpture" :src="editForm.httpHeadSculpture" :preview-src-list="[editForm.httpHeadSculpture]" preview-teleported fit="cover" style="width:60px;height:60px;border-radius:50%;margin-top:8px" />
         </el-form-item>
         <el-form-item label="证件照正面">
-          <el-upload :action="idcardImg1UploadUrl" :headers="uploadHeaders" :data="{ userMainId: editForm.userMainId }" :show-file-list="false" :on-success="onIdcardImg1Success" :on-error="onUploadError" :before-upload="beforeUpload" accept="image/*">
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onIdcardImg1Change" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传正面</el-button>
           </el-upload>
           <el-image v-if="editForm.httpIdcardImg1" :src="editForm.httpIdcardImg1" :preview-src-list="[editForm.httpIdcardImg1]" preview-teleported fit="cover" style="width:120px;height:80px;margin-top:8px" />
         </el-form-item>
         <el-form-item label="证件照背面">
-          <el-upload :action="idcardImg2UploadUrl" :headers="uploadHeaders" :data="{ userMainId: editForm.userMainId }" :show-file-list="false" :on-success="onIdcardImg2Success" :on-error="onUploadError" :before-upload="beforeUpload" accept="image/*">
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onIdcardImg2Change" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传背面</el-button>
           </el-upload>
           <el-image v-if="editForm.httpIdcardImg2" :src="editForm.httpIdcardImg2" :preview-src-list="[editForm.httpIdcardImg2]" preview-teleported fit="cover" style="width:120px;height:80px;margin-top:8px" />
@@ -264,21 +264,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, View, Key, Refresh, Upload, CircleCheck, CircleClose, MoreFilled } from '@element-plus/icons-vue'
-import { getToken } from '@/utils/auth'
 import {
   listUser, regist, updateDetail, resetPassword, connectMobilePhone, connectEmail, connectUsername,
   disabledEnabled, disabledByIds, flushCache, listMobilePhone, listEmail, listUsername,
   disabledEnabledMobilePhone, disabledEnabledEmail, disabledEnabledUsername
 } from '@/api/user/user'
-
-const baseApi = import.meta.env.VITE_APP_BASE_API
-const uploadHeaders = computed(() => ({ Authorization: 'Bearer ' + getToken() }))
-const headSculptureUploadUrl = `${baseApi}/user/upload/head/sculpture`
-const idcardImg1UploadUrl = `${baseApi}/user/upload/idcardImg1`
-const idcardImg2UploadUrl = `${baseApi}/user/upload/idcardImg2`
 
 // ========== 搜索 ==========
 const searchForm = reactive({ keyword: '', mobilePhone: '', username: '', nickName: '', email: '', enableStatus: '' })
@@ -358,7 +351,7 @@ async function handleRegistSubmit() {
 const editVisible = ref(false)
 const editLoading = ref(false)
 const editFormRef = ref(null)
-const editForm = reactive({ userMainId: null, nickName: '', trueName: '', idCard: '', idcardType: 1, sex: 1, personalizedSignature: '', headSculpture: '', idcardImg1: '', idcardImg2: '', httpHeadSculpture: '', httpIdcardImg1: '', httpIdcardImg2: '' })
+const editForm = reactive({ userMainId: null, nickName: '', trueName: '', idCard: '', idcardType: 1, sex: 1, personalizedSignature: '', headSculpture: '', idcardImg1: '', idcardImg2: '', httpHeadSculpture: '', httpIdcardImg1: '', httpIdcardImg2: '', headSculptureBase64: '', idcardImg1Base64: '', idcardImg2Base64: '' })
 
 function handleEdit(row) {
   editForm.userMainId = row.userMainId
@@ -374,6 +367,9 @@ function handleEdit(row) {
   editForm.httpHeadSculpture = row.httpHeadSculpture || ''
   editForm.httpIdcardImg1 = row.httpIdcardImg1 || ''
   editForm.httpIdcardImg2 = row.httpIdcardImg2 || ''
+  editForm.headSculptureBase64 = ''
+  editForm.idcardImg1Base64 = ''
+  editForm.idcardImg2Base64 = ''
   editVisible.value = true
 }
 
@@ -391,27 +387,29 @@ function beforeUpload(file) {
   if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
   return true
 }
-function onUploadError() { ElMessage.error('上传异常') }
-function onHeadSculptureSuccess(res) {
-  if (res.code === 0 && res.data) {
-    editForm.headSculpture = res.data.headSculpture || ''
-    editForm.httpHeadSculpture = res.data.httpHeadSculpture || ''
-    ElMessage.success('头像上传成功')
-  } else { ElMessage.error(res.msg || '头像上传失败') }
+function onHeadSculptureChange(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    editForm.headSculptureBase64 = e.target.result
+    editForm.httpHeadSculpture = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
-function onIdcardImg1Success(res) {
-  if (res.code === 0 && res.data) {
-    editForm.idcardImg1 = res.data.idcardImg1 || ''
-    editForm.httpIdcardImg1 = res.data.httpIdcardImg1 || ''
-    ElMessage.success('证件照正面上传成功')
-  } else { ElMessage.error(res.msg || '证件照正面上传失败') }
+function onIdcardImg1Change(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    editForm.idcardImg1Base64 = e.target.result
+    editForm.httpIdcardImg1 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
-function onIdcardImg2Success(res) {
-  if (res.code === 0 && res.data) {
-    editForm.idcardImg2 = res.data.idcardImg2 || ''
-    editForm.httpIdcardImg2 = res.data.httpIdcardImg2 || ''
-    ElMessage.success('证件照背面上传成功')
-  } else { ElMessage.error(res.msg || '证件照背面上传失败') }
+function onIdcardImg2Change(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    editForm.idcardImg2Base64 = e.target.result
+    editForm.httpIdcardImg2 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
 
 // ========== 重置密码 ==========

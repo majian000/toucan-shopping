@@ -140,6 +140,9 @@ public class BrandController {
     public ResultObjectVO save(@RequestBody BrandVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if (StringUtils.isNotEmpty(entity.getLogoBase64())) {
+                entity.setLogoPath(imageUploadService.uploadBase64(entity.getLogoBase64()));
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = brandService.save(requestJsonVO);
         } catch (Exception e) {
@@ -159,6 +162,21 @@ public class BrandController {
     public ResultObjectVO update(@RequestBody BrandVO entity) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if (StringUtils.isNotEmpty(entity.getLogoBase64())) {
+                // 查询旧LOGO并删除
+                BrandVO queryVO = new BrandVO();
+                queryVO.setId(entity.getId());
+                RequestJsonVO queryRequest = RequestJsonVOGenerator.generator(appCode, queryVO);
+                ResultObjectVO oldResult = brandService.findById(queryRequest);
+                if (oldResult.isSuccess() && oldResult.getData() != null) {
+                    BrandVO oldBrand = oldResult.formatData(BrandVO.class);
+                    if (oldBrand != null && StringUtils.isNotEmpty(oldBrand.getLogoPath())) {
+                        imageUploadService.deleteFile(oldBrand.getLogoPath());
+                    }
+                }
+                // 上传新LOGO
+                entity.setLogoPath(imageUploadService.uploadBase64(entity.getLogoBase64()));
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = brandService.update(requestJsonVO);
         } catch (Exception e) {

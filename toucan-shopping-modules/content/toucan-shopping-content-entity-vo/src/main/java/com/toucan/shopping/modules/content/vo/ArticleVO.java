@@ -18,6 +18,8 @@ public class ArticleVO extends Article {
 
     private String httpCoverImgUrl; //封面图片地址
 
+    private String imgBase64; //封面图片base64数据
+
     private String createAdminName; //创建人姓名
 
     private String updateAdminName; //修改人姓名

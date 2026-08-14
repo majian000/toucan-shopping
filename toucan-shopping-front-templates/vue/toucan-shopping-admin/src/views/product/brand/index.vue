@@ -103,13 +103,11 @@
         </el-form-item>
         <el-form-item label="LOGO">
           <el-upload
-            :action="uploadAction"
-            :headers="uploadHeaders"
-            :data="{ id: form.id || -1 }"
-            name="file"
+            :auto-upload="false"
             :show-file-list="false"
-            :on-success="onLogoUploadSuccess"
-            :on-error="onLogoUploadError"
+            :on-change="onLogoChange"
+            :before-upload="beforeLogoUpload"
+            accept="image/*"
           >
             <el-button :icon="Upload">上传图片</el-button>
           </el-upload>
@@ -168,16 +166,12 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Plus, Delete, Upload } from '@element-plus/icons-vue'
-import { getToken } from '@/utils/auth'
 import {
   listBrand, queryCategoryTreeForListPage, queryCategoryTree,
   saveBrand, updateBrand, deleteBrand, deleteBrandByIds
 } from '@/api/product/brand'
 
 const searchForm = reactive({ categoryId: null, id: '', name: '' })
-
-const uploadAction = import.meta.env.VITE_APP_BASE_API + '/product/brand/upload/logo'
-const uploadHeaders = { Authorization: 'Bearer ' + getToken() }
 
 // ===== 左侧分类树 (列表过滤) =====
 const categoryTreeRef = ref(null)
@@ -251,25 +245,30 @@ const dialogVisible = ref(false)
 const dialogMode = ref('add')
 const saving = ref(false)
 const form = reactive({
-  id: null, trademarkAreaType: 1, chineseName: '', englishName: '', logoPath: '', httpLogoPath: '',
+  id: null, trademarkAreaType: 1, chineseName: '', englishName: '', logoPath: '', httpLogoPath: '', logoBase64: '',
   registNumber1: '', registNumber2: '', seminary: '', ownerName: '', categoryIdCache: '', categoryNameDisplay: '', enabledStatus: 1
 })
 
-function onLogoUploadSuccess(res) {
-  if (res.code === 0) {
-    form.logoPath = res.data.logoPath
-    form.httpLogoPath = res.data.httpLogoPath
-    ElMessage.success('LOGO上传成功')
-  } else {
-    ElMessage.error(res.msg || 'LOGO上传失败')
+function onLogoChange(file) {
+  const raw = file.raw
+  if (!raw) return
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    form.logoBase64 = e.target.result
+    form.httpLogoPath = e.target.result
   }
+  reader.readAsDataURL(raw)
 }
-function onLogoUploadError() { ElMessage.error('LOGO上传异常') }
+function beforeLogoUpload(file) {
+  if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
+  if (file.size / 1024 / 1024 > 5) { ElMessage.error('图片大小不能超过5MB'); return false }
+  return true
+}
 
 function handleAdd() {
   dialogMode.value = 'add'
   Object.assign(form, {
-    id: null, trademarkAreaType: 1, chineseName: '', englishName: '', logoPath: '', httpLogoPath: '',
+    id: null, trademarkAreaType: 1, chineseName: '', englishName: '', logoPath: '', httpLogoPath: '', logoBase64: '',
     registNumber1: '', registNumber2: '', seminary: '', ownerName: '', categoryIdCache: '', categoryNameDisplay: '', enabledStatus: 1
   })
   dialogVisible.value = true
@@ -279,7 +278,7 @@ function handleEdit(row) {
   dialogMode.value = 'edit'
   Object.assign(form, {
     id: row.id, trademarkAreaType: row.trademarkAreaType, chineseName: row.chineseName, englishName: row.englishName || '',
-    logoPath: row.logoPath || '', httpLogoPath: row.httpLogoPath || '',
+    logoPath: row.logoPath || '', httpLogoPath: row.httpLogoPath || '', logoBase64: '',
     registNumber1: row.registNumber1 || '', registNumber2: row.registNumber2 || '', seminary: row.seminary || '',
     ownerName: row.ownerName || '', categoryIdCache: (row.categoryIdCacheArray || []).join(','),
     categoryNameDisplay: (row.categoryNamePathList || []).join('、'), enabledStatus: row.enabledStatus
@@ -292,7 +291,7 @@ async function handleSave() {
   if (!form.categoryIdCache) { ElMessage.warning('请选择所属分类'); return }
   const payload = {
     trademarkAreaType: form.trademarkAreaType, chineseName: form.chineseName, englishName: form.englishName,
-    logoPath: form.logoPath, registNumber1: form.registNumber1, registNumber2: form.registNumber2,
+    logoPath: form.logoPath, logoBase64: form.logoBase64, registNumber1: form.registNumber1, registNumber2: form.registNumber2,
     seminary: form.seminary, ownerName: form.ownerName, categoryIdCache: form.categoryIdCache, enabledStatus: form.enabledStatus
   }
   if (dialogMode.value === 'edit') payload.id = form.id

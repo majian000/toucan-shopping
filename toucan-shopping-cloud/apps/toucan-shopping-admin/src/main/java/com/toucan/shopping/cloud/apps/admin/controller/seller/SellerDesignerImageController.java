@@ -186,28 +186,13 @@ public class SellerDesignerImageController {
      * 添加轮播图
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, requestType = AdminAuth.REQUEST_FORM, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:designerImage:update"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:designerImage:update"})
     @RequestMapping(value="/update")
-    public ResultObjectVO update(HttpServletRequest request, @RequestParam(value="bannerImgFile",required=false) MultipartFile bannerImgFile, SellerDesignerImageVO sellerDesignerImageVO)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody SellerDesignerImageVO sellerDesignerImageVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
         try {
-
-            if(bannerImgFile==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请上传图片");
-                return resultObjectVO;
-            }
-
-            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
-                if (!ImageUtils.isImage(bannerImgFile.getOriginalFilename())) {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
-                    resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
-                    return resultObjectVO;
-                }
-            }
 
             if(StringUtils.isEmpty(sellerDesignerImageVO.getTitle()))
             {
@@ -218,7 +203,8 @@ public class SellerDesignerImageController {
 
 
 
-            if(bannerImgFile!=null&&bannerImgFile.getBytes()!=null&&bannerImgFile.getBytes().length>0) {
+            if(StringUtils.isNotEmpty(sellerDesignerImageVO.getImgBase64())) {
+                // 查询旧图片并删除
                 SellerDesignerImageVO banner = new SellerDesignerImageVO();
                 banner.setId(sellerDesignerImageVO.getId());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
@@ -226,26 +212,13 @@ public class SellerDesignerImageController {
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     if (resultObjectVO.getData() != null) {
                         banner = resultObjectVO.formatData(SellerDesignerImageVO.class);
-
-                        if(banner==null)
-                        {
-                            resultObjectVO.setCode(ResultObjectVO.FAILD);
-                            resultObjectVO.setMsg("没有找到该轮播图");
-                            return resultObjectVO;
+                        if (banner != null && StringUtils.isNotEmpty(banner.getImgPath())) {
+                            imageUploadService.deleteFile(banner.getImgPath());
                         }
-                        //LOGO上传
-                        imageUploadService.deleteFile(banner.getImgPath());
-
-                        String logoImgExt = ImageUtils.getImageExt(bannerImgFile.getOriginalFilename());
-                        if (logoImgExt.indexOf(".") != -1) {
-                            logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
-                        }
-                        String logoImgFilePath = imageUploadService.uploadFile(bannerImgFile.getBytes(), logoImgExt);
-                        sellerDesignerImageVO.setImgPath(logoImgFilePath);
-
                     }
-
                 }
+                // 上传新图片
+                sellerDesignerImageVO.setImgPath(imageUploadService.uploadBase64(sellerDesignerImageVO.getImgBase64()));
             }
 
             sellerDesignerImageVO.setUpdateDate(new Date());

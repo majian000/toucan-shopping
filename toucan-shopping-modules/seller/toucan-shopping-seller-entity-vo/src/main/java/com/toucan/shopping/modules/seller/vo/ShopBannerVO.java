@@ -17,4 +17,6 @@ public class ShopBannerVO extends ShopBanner {
 
     private String updaterName; //修改人名称 店铺所属人ID或者管理员名称
 
+    private String imgBase64; //图片base64数据
+
 }

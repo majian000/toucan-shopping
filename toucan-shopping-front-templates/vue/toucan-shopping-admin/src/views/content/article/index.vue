@@ -19,6 +19,7 @@
               :props="{ children: 'children', label: 'name' }"
               node-key="id"
               highlight-current
+              :expand-on-click-node="false"
               :load="loadColumnTreeNode"
               lazy
               @node-click="onColumnNodeClick"
@@ -136,7 +137,8 @@
 
     <!-- 添加/编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="900px" :close-on-click-modal="false" destroy-on-close top="5vh">
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="110px" v-loading="dialogLoading">
+      <div class="dialog-scroll" v-loading="dialogLoading">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="110px">
         <el-form-item label="所属栏目">
           <el-input :model-value="currentColumnName" disabled />
         </el-form-item>
@@ -144,15 +146,7 @@
           <el-input v-model="formData.title" placeholder="请输入文章标题" maxlength="100" />
         </el-form-item>
         <el-form-item label="封面图片">
-          <el-upload
-            :action="uploadUrl"
-            :headers="uploadHeaders"
-            :show-file-list="false"
-            :on-success="onUploadSuccess"
-            :on-error="onUploadError"
-            :before-upload="beforeUpload"
-            accept="image/*"
-          >
+          <el-upload :auto-upload="false" :show-file-list="false" :on-change="onFileChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传图片</el-button>
           </el-upload>
         </el-form-item>
@@ -196,10 +190,10 @@
           <el-input v-model="formData.publishDate" maxlength="80" placeholder="请输入发布时间" />
         </el-form-item>
         <el-form-item label="文章内容">
-          <el-input v-model="formData.content" type="textarea" :rows="12" placeholder="文章内容（支持HTML）" />
-          <div class="form-tip">文章内容支持HTML格式，可使用UEditor等富文本编辑器编辑后粘贴</div>
+          <Editor v-model="formData.content" :height="400" placeholder="请输入文章内容..." />
         </el-form-item>
       </el-form>
+      </div>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
@@ -212,8 +206,8 @@
 import { ref, reactive, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Upload } from '@element-plus/icons-vue'
-import { listArticle, queryColumnTreeByPid, saveArticle, updateArticle, deleteArticle, deleteArticles } from '@/api/content/article'
-import { getToken } from '@/utils/auth'
+import { listArticle, queryColumnTreeByPid, saveArticle, updateArticle, deleteArticle, deleteArticles, queryArticleById } from '@/api/content/article'
+import Editor from '@/components/Editor/index.vue'
 
 // ========== 左侧栏目树 ==========
 const columnTreeRef = ref(null)
@@ -311,13 +305,11 @@ const formRef = ref(null)
 const editingId = ref(null)
 const currentColumnName = ref('')
 const previewCoverUrl = ref('')
-const uploadUrl = '/article/upload/img'
-const uploadHeaders = computed(() => ({ Authorization: getToken() || '' }))
 
 const dialogTitle = computed(() => isEdit.value ? '编辑文章' : '添加文章')
 
 const formData = reactive({
-  id: null, columnId: null, title: '', coverImgUrl: '', startShowDate: '',
+  id: null, columnId: null, title: '', coverImgUrl: '', imgBase64: '', startShowDate: '',
   endShowDate: '', perpetualStatus: 1, showStatus: '1', articleSort: 0,
   abstractContent: '', seoTitle: '', seoKeywords: '', seoDescription: '',
   author: '', publishDate: '', content: ''
@@ -333,7 +325,7 @@ const formRules = {
 
 function resetForm() {
   formData.id = null; formData.columnId = selectedColumnId.value != null ? selectedColumnId.value : null
-  formData.title = ''; formData.coverImgUrl = ''; formData.startShowDate = ''
+  formData.title = ''; formData.coverImgUrl = ''; formData.imgBase64 = ''; formData.startShowDate = ''
   formData.endShowDate = ''; formData.perpetualStatus = 1; formData.showStatus = '1'
   formData.articleSort = 0; formData.abstractContent = ''; formData.seoTitle = ''
   formData.seoKeywords = ''; formData.seoDescription = ''; formData.author = ''
@@ -345,15 +337,14 @@ function onPerpetualChange(val) {
   if (val === 1) formData.endShowDate = ''
 }
 
-function onUploadSuccess(res) {
-  if (res.code === 0 && res.data) {
-    ElMessage.success('上传成功')
-    previewCoverUrl.value = res.data.httpCoverImgUrl || ''
-    formData.coverImgUrl = res.data.coverImgUrl || ''
-  } else { ElMessage.error(res.msg || '上传失败') }
+function onFileChange(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewCoverUrl.value = e.target.result
+    formData.imgBase64 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
-
-function onUploadError() { ElMessage.error('上传异常') }
 
 function beforeUpload(file) {
   const isImage = file.type.startsWith('image/')
@@ -372,13 +363,14 @@ function handleAdd() {
   dialogVisible.value = true
 }
 
-function handleEdit(row) {
+async function handleEdit(row) {
   currentColumnName.value = row.columnName || ''
   isEdit.value = true; editingId.value = row.id
   formData.id = row.id
   formData.columnId = row.columnId
   formData.title = row.title || ''
   formData.coverImgUrl = row.coverImgUrl || ''
+  formData.imgBase64 = ''
   previewCoverUrl.value = row.httpCoverImgUrl || ''
   formData.startShowDate = row.startShowDate || ''
   formData.endShowDate = row.endShowDate || ''
@@ -393,6 +385,16 @@ function handleEdit(row) {
   formData.publishDate = row.publishDate || ''
   formData.content = row.content || ''
   dialogVisible.value = true
+  dialogLoading.value = true
+  try {
+    const res = await queryArticleById({ id: row.id })
+    if (res.code === 1 && res.data) {
+      formData.imgBase64 = res.data.imgBase64 || ''
+      formData.coverImgUrl = res.data.coverImgUrl || ''
+      previewCoverUrl.value = res.data.imgBase64 || res.data.httpCoverImgUrl || ''
+      if (res.data.content) formData.content = res.data.content
+    }
+  } catch { } finally { dialogLoading.value = false }
 }
 
 async function handleSubmit() {
@@ -453,5 +455,6 @@ loadTableData()
   }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
   .form-tip { color: $text-secondary; font-size: 12px; margin-top: 4px; }
+  .dialog-scroll { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
 }
 </style>

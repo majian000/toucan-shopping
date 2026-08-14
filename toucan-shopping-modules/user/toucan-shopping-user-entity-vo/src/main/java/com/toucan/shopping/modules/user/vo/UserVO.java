@@ -90,6 +90,11 @@ public class UserVO extends User {
     private String httpHeadSculpture;
 
     /**
+     * 头像base64数据
+     */
+    private String headSculptureBase64;
+
+    /**
      * 身份证照片正面
      */
     private String idcardImg1;
@@ -97,6 +102,11 @@ public class UserVO extends User {
      * 身份证照片正面
      */
     private String httpIdcardImg1;
+
+    /**
+     * 身份证照片正面base64数据
+     */
+    private String idcardImg1Base64;
 
 
     /**
@@ -108,6 +118,11 @@ public class UserVO extends User {
      * 身份证照片背面
      */
     private String httpIdcardImg2;
+
+    /**
+     * 身份证照片背面base64数据
+     */
+    private String idcardImg2Base64;
 
     /**
      * 身份证

@@ -43,6 +43,11 @@ public class BrandVO extends Brand {
     private String httpLogoPath;
 
     /**
+     * logo图片base64数据
+     */
+    private String logoBase64;
+
+    /**
      * 分类ID
      */
     private String categoryId;

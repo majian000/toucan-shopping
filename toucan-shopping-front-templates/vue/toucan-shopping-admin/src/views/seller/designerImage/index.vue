@@ -82,7 +82,7 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="formData.title" placeholder="请输入标题" maxlength="100" />
         </el-form-item>
-        <el-form-item label="图片" prop="file">
+        <el-form-item label="图片">
           <el-upload :auto-upload="false" :show-file-list="false" :on-change="onFileChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传图片</el-button>
           </el-upload>
@@ -142,16 +142,18 @@ const dialogVisible = ref(false)
 const submitLoading = ref(false)
 const formRef = ref(null)
 const previewUrl = ref('')
-const formData = reactive({ id: null, title: '', file: null })
+const formData = reactive({ id: null, title: '', imgBase64: '' })
 const formRules = {
-  title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-  file: [{ required: true, validator: (rule, value, cb) => { if (!value) cb(new Error('请上传图片')); else cb() }, trigger: 'change' }]
+  title: [{ required: true, message: '请输入标题', trigger: 'blur' }]
 }
 
 function onFileChange(file) {
-  const raw = file.raw
-  formData.file = raw
-  previewUrl.value = URL.createObjectURL(raw)
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewUrl.value = e.target.result
+    formData.imgBase64 = e.target.result
+  }
+  reader.readAsDataURL(file.raw)
 }
 function beforeUpload(file) {
   if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
@@ -161,7 +163,7 @@ function beforeUpload(file) {
 function handleEdit(row) {
   formData.id = row.id
   formData.title = row.title || ''
-  formData.file = null
+  formData.imgBase64 = ''
   previewUrl.value = row.httpImgPath || ''
   dialogVisible.value = true
 }
@@ -171,11 +173,7 @@ async function handleSubmit() {
   if (!valid) return
   submitLoading.value = true
   try {
-    const fd = new FormData()
-    fd.append('bannerImgFile', formData.file)
-    fd.append('id', formData.id)
-    fd.append('title', formData.title)
-    const res = await updateDesignerImage(fd)
+    const res = await updateDesignerImage({ ...formData })
     if (res.code === 1) {
       ElMessage.success('修改成功')
       dialogVisible.value = false
