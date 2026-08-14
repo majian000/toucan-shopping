@@ -176,7 +176,8 @@ public class IndexGeneratorController {
      * 对应layui版本 /htmlPage/indexGenerator/indexGeneratorPage 的界面填充逻辑
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:dashboard:html:generator:preview","toucan:dashboard:html:generator:release"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:dashboard:htmlGenerator:release","toucan:dashboard:htmlGenerator:preview"})
     @RequestMapping(value = "/query/tab",method = RequestMethod.POST)
     public ResultObjectVO queryTab()
     {

@@ -5,7 +5,7 @@
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="预览文件" name="preview">
           <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:html:generator:preview'" @click="handleGeneratePreview" :loading="previewLoading">生成预览</el-button>
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:preview'" @click="handleGeneratePreview" :loading="previewLoading">生成预览</el-button>
             <span class="tip-text">生成预览版首页静态HTML文件，用于预览效果。</span>
           </div>
           <div v-if="previewGenerators && previewGenerators.length > 0" style="margin-top:16px">
@@ -20,7 +20,7 @@
 
         <el-tab-pane label="最终文件" name="release">
           <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:html:generator:release'" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
+            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:release'" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
             <span class="tip-text">生成最终版首页静态HTML文件，发布到正式环境。</span>
           </div>
           <div v-if="releaseGenerators && releaseGenerators.length > 0" style="margin-top:16px">
