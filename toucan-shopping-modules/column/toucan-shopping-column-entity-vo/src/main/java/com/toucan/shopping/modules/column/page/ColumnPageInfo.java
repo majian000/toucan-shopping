@@ -33,7 +33,7 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
     private String title; //标题
 
-    private Short showStatus;  //显示状态 0隐藏 1显示 -1全部
+    private Integer showStatus;  //显示状态 0隐藏 1显示 -1全部
 
     private Long pid; //上级节点
 

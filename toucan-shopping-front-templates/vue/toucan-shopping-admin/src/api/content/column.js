@@ -25,6 +25,11 @@ export function queryColumnById(data) {
   return request({ url: '/column/queryById', method: 'post', data })
 }
 
+// 查看栏目详情
+export function queryColumnDetail(data) {
+  return request({ url: '/column/detail', method: 'post', data })
+}
+
 // 保存
 export function saveColumn(data) {
   return request({ url: '/column/save', method: 'post', data })

@@ -339,6 +339,116 @@ public class ColumnController {
 
 
     /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:content:column:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody ColumnVO entity) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if (entity.getId() == null) {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            ResultTypeObjectVO<ColumnVO> detailResult = columnService.findById(requestJsonVO);
+            if (!detailResult.isSuccess() || detailResult.getData() == null) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg(detailResult.getMsg());
+                return resultObjectVO;
+            }
+            ColumnVO columnVO = detailResult.getData();
+
+            // 栏目类型名称
+            if (StringUtils.isNotEmpty(columnVO.getColumnTypeCode())) {
+                ColumnTypeVO queryType = new ColumnTypeVO();
+                queryType.setCode(columnVO.getColumnTypeCode());
+                ResultTypeObjectVO<ColumnTypeVO> typeVO = columnTypeService.findOneByCode(RequestJsonVOGenerator.generator(appCode, queryType));
+                if (typeVO.isSuccess() && typeVO.getData() != null) {
+                    columnVO.setColumnTypeName(typeVO.getData().getName());
+                }
+            }
+
+            // 上级栏目标题
+            if (columnVO.getPid() != null && columnVO.getPid().longValue() != -1) {
+                ColumnVO queryParent = new ColumnVO();
+                queryParent.setId(columnVO.getPid());
+                ResultTypeObjectVO<ColumnVO> parentResult = columnService.findById(RequestJsonVOGenerator.generator(appCode, queryParent));
+                if (parentResult.isSuccess() && parentResult.getData() != null) {
+                    columnVO.setParentTitle(parentResult.getData().getTitle());
+                }
+            }
+
+            // 栏目类型/位置 字典名称
+            Map<String, List<DictVO>> dictMap = this.getColumnDictMap();
+            columnVO.setTypeNames(this.buildDictNames(columnVO.getType(), dictMap.get("columnTypeList")));
+            columnVO.setPositionNames(this.buildDictNames(columnVO.getPosition(), dictMap.get("columnPositionList")));
+
+            // 创建人/修改人姓名
+            List<String> adminIds = new ArrayList<>();
+            if (columnVO.getCreateAdminId() != null) {
+                adminIds.add(columnVO.getCreateAdminId());
+            }
+            if (columnVO.getUpdateAdminId() != null) {
+                adminIds.add(columnVO.getUpdateAdminId());
+            }
+            if (!CollectionUtils.isEmpty(adminIds)) {
+                AdminVO queryAdminVO = new AdminVO();
+                queryAdminVO.setAdminIds(adminIds.toArray(new String[0]));
+                ResultObjectVO adminResult = adminServiceAPI.queryListByEntity(RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO));
+                if (adminResult.isSuccess()) {
+                    List<AdminVO> adminVOS = adminResult.formatDataList(AdminVO.class);
+                    if (!CollectionUtils.isEmpty(adminVOS)) {
+                        for (AdminVO adminVO : adminVOS) {
+                            if (columnVO.getCreateAdminId() != null && columnVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                columnVO.setCreateAdminName(adminVO.getUsername());
+                            }
+                            if (columnVO.getUpdateAdminId() != null && columnVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                columnVO.setUpdateAdminName(adminVO.getUsername());
+                            }
+                        }
+                    }
+                }
+            }
+
+            ColumnDetailVO detailVO = new ColumnDetailVO();
+            detailVO.setBasicInfo(columnVO);
+            resultObjectVO = ResultObjectVO.ok(detailVO);
+        } catch (Exception e) {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据字典编码拼接字典名称（多个用,分割）
+     */
+    private String buildDictNames(String codes, List<DictVO> dictList) {
+        if (StringUtils.isEmpty(codes) || CollectionUtils.isEmpty(dictList)) {
+            return null;
+        }
+        Map<String, DictVO> dictMap = dictList.stream()
+                .collect(Collectors.toMap(DictVO::getCode, dict -> dict, (a, b) -> a));
+        StringBuilder names = new StringBuilder();
+        for (String code : codes.split(",")) {
+            DictVO dictVO = dictMap.get(code);
+            if (dictVO != null) {
+                if (names.length() > 0) {
+                    names.append(",");
+                }
+                names.append(dictVO.getName());
+            }
+        }
+        return names.toString();
+    }
+
+
+    /**
      * 查询树表格（按父ID）
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:content:column:list"})

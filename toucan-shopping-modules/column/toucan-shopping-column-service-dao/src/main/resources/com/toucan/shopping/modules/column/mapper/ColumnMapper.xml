@@ -102,6 +102,25 @@
             and t.code = #{code}
         </if>
 
+        <if test="type!=null and type!=''">
+            and t.type  like concat(#{type},'%')
+        </if>
+
+        <if test="position!=null and position!=''">
+            and t.position =#{position}
+        </if>
+
+        <if test="showStatus!=null and showStatus!=-1 ">
+            and t.show_status =#{showStatus}
+        </if>
+
+        <if test="startShowDate!=null">
+            <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+        </if>
+        <if test="endShowDate!=null">
+            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+        </if>
+
         <if test="idArray!=null and idArray.length>0 ">
             and t.id in
             <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">

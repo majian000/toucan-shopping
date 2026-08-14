@@ -41,6 +41,11 @@
                 <el-option v-for="t in columnTypeDictList" :key="t.code" :label="t.name" :value="t.code" />
               </el-select>
             </el-form-item>
+            <el-form-item label="栏目位置">
+              <el-select v-model="searchForm.position" placeholder="全部" clearable style="width:140px">
+                <el-option v-for="p in columnPositionDictList" :key="p.code" :label="p.name" :value="p.code" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="开始时间">
               <el-date-picker v-model="searchForm.startShowDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="选择" style="width:200px" />
             </el-form-item>
@@ -61,6 +66,7 @@
           </div>
           <el-table
             ref="tableRef"
+            :key="searchMode ? 'search' : 'tree'"
             :data="tableData"
             border stripe v-loading="loading"
             row-key="id"
@@ -92,8 +98,9 @@
             <el-table-column prop="createDate" label="创建时间" width="170" />
             <el-table-column prop="updateAdminName" label="修改人" width="120" />
             <el-table-column prop="updateDate" label="修改时间" width="170" />
-            <el-table-column label="操作" width="160" fixed="right" align="center">
+            <el-table-column label="操作" width="220" fixed="right" align="center">
               <template #default="{ row }">
+                <el-button type="info" link size="small" :icon="View" v-permission="'toucan:content:column:detail'" @click="handleDetail(row)">查看</el-button>
                 <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:content:column:btn:edit'"  @click="handleEdit(row)">编辑</el-button>
                 <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:content:column:row:delete'"  @click="handleDelete(row)">删除</el-button>
               </template>
@@ -168,14 +175,40 @@
         <el-button type="primary" @click="handleSubmit" :loading="submitLoading">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="栏目详情" width="720px" :close-on-click-modal="false" destroy-on-close>
+      <el-descriptions :column="2" border v-loading="detailLoading">
+        <el-descriptions-item label="栏目类型">{{ detailData?.columnTypeName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="上级栏目">{{ detailData?.parentTitle || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="栏目标题">{{ detailData?.title || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="栏目编码">{{ detailData?.code || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="跳转地址">{{ detailData?.clickPath || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="展示类型">{{ detailData?.typeNames || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="栏目位置">{{ detailData?.positionNames || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="显示状态">{{ detailData?.showStatus == 1 ? '显示' : '隐藏' }}</el-descriptions-item>
+        <el-descriptions-item label="排序">{{ detailData?.columnSort ?? '-' }}</el-descriptions-item>
+        <el-descriptions-item label="开始展示时间">{{ detailData?.startShowDate || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="结束展示时间">{{ detailData?.endShowDate || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="扩展属性">{{ detailData?.extendProperty || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="备注">{{ detailData?.remark || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="创建人">{{ detailData?.createAdminName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="创建时间">{{ detailData?.createDate || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="修改人">{{ detailData?.updateAdminName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="修改时间">{{ detailData?.updateDate || '-' }}</el-descriptions-item>
+      </el-descriptions>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Delete, Edit, Search, RefreshRight } from '@element-plus/icons-vue'
-import { queryTreeTable, queryColumnTypeList, queryColumnDict, queryColumnTree, queryColumnById, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
+import { Plus, Delete, Edit, Search, RefreshRight, View } from '@element-plus/icons-vue'
+import { queryTreeTable, queryColumnTypeList, queryColumnDict, queryColumnTree, queryColumnById, queryColumnDetail, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
 
 // ========== 左侧栏目类型树 ==========
 const typeTreeRef = ref(null)
@@ -218,10 +251,20 @@ const searchForm = reactive({
   type: '', startShowDate: '', endShowDate: '', position: ''
 })
 
+// 是否为搜索模式（有查询条件时结果为平铺列表，不展示树形结构）
+const searchMode = ref(false)
+
+function hasSearchCriteria() {
+  return !!(searchForm.title || searchForm.code || searchForm.showStatus ||
+    searchForm.type || searchForm.position ||
+    searchForm.startShowDate || searchForm.endShowDate)
+}
+
 function handleSearch() {
   if (selectedColumnTypeCode.value) {
     searchForm.columnTypeCode = selectedColumnTypeCode.value
   }
+  searchMode.value = hasSearchCriteria()
   loadRootData()
 }
 
@@ -233,6 +276,8 @@ function handleReset() {
   searchForm.startShowDate = ''
   searchForm.endShowDate = ''
   searchForm.position = ''
+  searchMode.value = false
+  loadRootData()
 }
 
 // ========== 树表格 ==========
@@ -263,7 +308,7 @@ async function loadRootData() {
     const res = await queryTreeTable(buildSearchParams())
     tableData.value = (res.data || []).map(item => ({
       ...item,
-      hasChildren: true
+      hasChildren: !searchMode.value
     }))
   } finally {
     loading.value = false
@@ -294,6 +339,9 @@ const formRef = ref(null)
 const editingId = ref(null)
 const currentColumnTypeName = ref('')
 const parentColumnTree = ref([])
+const detailVisible = ref(false)
+const detailLoading = ref(false)
+const detailData = ref(null)
 
 const dialogTitle = computed(() => isEdit.value ? '编辑栏目' : '添加栏目')
 
@@ -306,6 +354,8 @@ const formData = reactive({
 const formRules = {
   title: [{ required: true, message: '请输入栏目标题', trigger: 'blur' }],
   code: [{ required: true, message: '请输入栏目编码', trigger: 'blur' }],
+  type: [{ type: 'array', required: true, message: '请选择栏目类型', trigger: 'change' }],
+  position: [{ required: true, message: '请选择栏目位置', trigger: 'change' }],
   startShowDate: [{ required: true, message: '请选择开始展示时间', trigger: 'change' }],
   endShowDate: [{ required: true, message: '请选择结束展示时间', trigger: 'change' }]
 }
@@ -375,6 +425,20 @@ async function handleEdit(row) {
   }
 }
 
+async function handleDetail(row) {
+  detailVisible.value = true
+  detailLoading.value = true
+  detailData.value = null
+  try {
+    const res = await queryColumnDetail({ id: row.id })
+    if (res.code === 1 && res.data) {
+      detailData.value = res.data.basicInfo || res.data
+    }
+  } catch { } finally {
+    detailLoading.value = false
+  }
+}
+
 async function handleSubmit() {
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) return
@@ -422,6 +486,7 @@ function handleBatchDelete() {
 }
 
 loadColumnTypes()
+loadColumnDict()
 </script>
 
 <style lang="scss" scoped>

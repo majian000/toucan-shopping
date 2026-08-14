@@ -146,6 +146,12 @@ public class ColumnBusinessService {
         try {
             ColumnPageInfo queryPageInfo = requestJsonVO.formatEntity(ColumnPageInfo.class);
             boolean queryCriteria = StringUtils.isNotEmpty(queryPageInfo.getTitle())
+                    || StringUtils.isNotEmpty(queryPageInfo.getCode())
+                    || StringUtils.isNotEmpty(queryPageInfo.getType())
+                    || StringUtils.isNotEmpty(queryPageInfo.getPosition())
+                    || (queryPageInfo.getShowStatus() != null && queryPageInfo.getShowStatus() != -1)
+                    || queryPageInfo.getStartShowDate() != null
+                    || queryPageInfo.getEndShowDate() != null
                     || StringUtils.isNotEmpty(queryPageInfo.getAppCode());
 
             List<ColumnVO> columnVoList;
