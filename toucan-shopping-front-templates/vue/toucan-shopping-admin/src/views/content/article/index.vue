@@ -5,21 +5,29 @@
       <!-- 左侧栏目树 -->
       <div class="left-tree">
         <el-card shadow="never" class="tree-card">
-          <template #header><span>所属栏目</span></template>
-          <el-tree
-            ref="columnTreeRef"
-            :data="columnTreeData"
-            :props="{ children: 'children', label: 'name' }"
-            node-key="id"
-            highlight-current
-            :load="loadColumnTreeNode"
-            lazy
-            @node-click="onColumnNodeClick"
-          >
-            <template #default="{ data }">
-              <span>{{ data.name }}</span>
-            </template>
-          </el-tree>
+          <template #header>
+            <div class="tree-header">
+              <span>所属栏目</span>
+              <el-icon class="tree-refresh" @click="refreshColumnTree"><RefreshRight /></el-icon>
+            </div>
+          </template>
+          <div class="tree-body" v-loading="columnTreeLoading">
+            <el-tree
+              ref="columnTreeRef"
+              :key="treeKey"
+              :data="columnTreeData"
+              :props="{ children: 'children', label: 'name' }"
+              node-key="id"
+              highlight-current
+              :load="loadColumnTreeNode"
+              lazy
+              @node-click="onColumnNodeClick"
+            >
+              <template #default="{ data }">
+                <span>{{ data.name }}</span>
+              </template>
+            </el-tree>
+          </div>
         </el-card>
       </div>
       <!-- 右侧表格区 -->
@@ -211,19 +219,32 @@ import { getToken } from '@/utils/auth'
 const columnTreeRef = ref(null)
 const columnTreeData = ref([])
 const selectedColumnId = ref(-1)
+const treeKey = ref(0)
+const columnTreeLoading = ref(false)
 
 async function loadColumnTreeNode(node, resolve) {
+  const isRoot = !node || node.level === 0
+  if (isRoot) columnTreeLoading.value = true
   try {
     const pid = node?.data?.id != null ? node.data.id : -1
     const res = await queryColumnTreeByPid(pid)
     const nodes = (res?.data || []).map(item => ({ ...item, leaf: false }))
     resolve(nodes)
-  } catch { resolve([]) }
+  } catch { resolve([]) } finally {
+    if (isRoot) columnTreeLoading.value = false
+  }
 }
 
 function onColumnNodeClick(data) {
   selectedColumnId.value = data.id
   searchForm.columnId = data.id
+  handleSearch()
+}
+
+function refreshColumnTree() {
+  treeKey.value++
+  selectedColumnId.value = -1
+  searchForm.columnId = -1
   handleSearch()
 }
 
@@ -418,7 +439,11 @@ loadTableData()
 .article-management {
   .layout-split { display: flex; gap: $gap-md; }
   .left-tree { width: 260px; flex-shrink: 0;
+    .tree-header { display: flex; align-items: center; justify-content: space-between;
+      .tree-refresh { cursor: pointer; color: $text-secondary; &:hover { color: $primary; } }
+    }
     .tree-card { height: calc(100vh - 130px); :deep(.el-card__body) { overflow-y: auto; height: calc(100% - 50px); } }
+    .tree-body { height: 100%; }
   }
   .right-table { flex: 1; overflow: auto; }
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
