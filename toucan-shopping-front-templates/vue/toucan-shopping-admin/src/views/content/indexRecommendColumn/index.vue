@@ -91,7 +91,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="栏目类型">
-          <span>PC端</span>
+          <el-radio-group v-model="formData.type">
+            <el-radio v-for="t in columnTypeDictList" :key="t.code" :value="t.code">{{ t.name }}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="formData.columnSort" :min="0" style="width:100%" placeholder="值越大越靠前" />
@@ -127,8 +129,8 @@
         <el-divider content-position="left">顶部图片</el-divider>
         <el-form-item label="顶部图片">
           <div class="banner-upload-inner">
-            <img v-if="formData.topBanner.httpImgPath" :src="formData.topBanner.httpImgPath" class="banner-upload-preview" />
-            <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(formData.topBanner)">
+            <img v-if="formData.topBanner.imgBase64 || formData.topBanner.httpImgPath" :src="formData.topBanner.imgBase64 || formData.topBanner.httpImgPath" class="banner-upload-preview" />
+            <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(formData.topBanner)" accept="image/*">
               <el-button size="small" :icon="Upload">上传图片</el-button>
             </el-upload>
             <el-input v-model="formData.topBanner.title" placeholder="标题" style="width:180px" />
@@ -140,8 +142,8 @@
         <el-form-item label="左侧轮播图">
           <div style="width:100%">
             <div v-for="(item, index) in formData.columnLeftBannerVOS" :key="index" class="banner-upload-inner banner-row">
-              <img v-if="item.httpImgPath" :src="item.httpImgPath" class="banner-upload-preview" />
-              <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(item)">
+              <img v-if="item.imgBase64 || item.httpImgPath" :src="item.imgBase64 || item.httpImgPath" class="banner-upload-preview" />
+              <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(item)" accept="image/*">
                 <el-button size="small" :icon="Upload">上传图片</el-button>
               </el-upload>
               <el-input v-model="item.title" placeholder="标题" style="width:180px" />
@@ -155,8 +157,8 @@
         <el-divider content-position="left">右侧顶部图片</el-divider>
         <el-form-item label="右侧顶部图片">
           <div class="banner-upload-inner">
-            <img v-if="formData.rightTopBanner.httpImgPath" :src="formData.rightTopBanner.httpImgPath" class="banner-upload-preview" />
-            <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(formData.rightTopBanner)">
+            <img v-if="formData.rightTopBanner.imgBase64 || formData.rightTopBanner.httpImgPath" :src="formData.rightTopBanner.imgBase64 || formData.rightTopBanner.httpImgPath" class="banner-upload-preview" />
+            <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(formData.rightTopBanner)" accept="image/*">
               <el-button size="small" :icon="Upload">上传图片</el-button>
             </el-upload>
             <el-input v-model="formData.rightTopBanner.title" placeholder="标题" style="width:180px" />
@@ -167,8 +169,8 @@
         <el-divider content-position="left">右侧底部图片</el-divider>
         <el-form-item label="右侧底部图片">
           <div class="banner-upload-inner">
-            <img v-if="formData.rightBottomBanner.httpImgPath" :src="formData.rightBottomBanner.httpImgPath" class="banner-upload-preview" />
-            <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(formData.rightBottomBanner)">
+            <img v-if="formData.rightBottomBanner.imgBase64 || formData.rightBottomBanner.httpImgPath" :src="formData.rightBottomBanner.imgBase64 || formData.rightBottomBanner.httpImgPath" class="banner-upload-preview" />
+            <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(formData.rightBottomBanner)" accept="image/*">
               <el-button size="small" :icon="Upload">上传图片</el-button>
             </el-upload>
             <el-input v-model="formData.rightBottomBanner.title" placeholder="标题" style="width:180px" />
@@ -179,8 +181,8 @@
         <el-divider content-position="left">底部图片</el-divider>
         <el-form-item label="底部图片">
           <div class="banner-upload-inner">
-            <img v-if="formData.bottomBanner.httpImgPath" :src="formData.bottomBanner.httpImgPath" class="banner-upload-preview" />
-            <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(formData.bottomBanner)">
+            <img v-if="formData.bottomBanner.imgBase64 || formData.bottomBanner.httpImgPath" :src="formData.bottomBanner.imgBase64 || formData.bottomBanner.httpImgPath" class="banner-upload-preview" />
+            <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(formData.bottomBanner)" accept="image/*">
               <el-button size="small" :icon="Upload">上传图片</el-button>
             </el-upload>
             <el-input v-model="formData.bottomBanner.title" placeholder="标题" style="width:180px" />
@@ -190,13 +192,22 @@
 
         <el-divider content-position="left">商品推荐（需配置6个）</el-divider>
         <div v-for="(item, index) in formData.columnRecommendProducts" :key="index" class="product-row">
-          <el-image :src="item.httpImgPath" fit="cover" class="product-img" />
-          <el-upload :action="uploadAction" :headers="uploadHeaders" :show-file-list="false" :before-upload="beforeImgUpload" :on-success="makeImgUploadHandler(item)">
+          <el-image :src="item.imgBase64 || item.httpImgPath" fit="cover" class="product-img" />
+          <el-upload :auto-upload="false" :show-file-list="false" :before-upload="beforeImgUpload" :on-change="makeImgChangeHandler(item)" accept="image/*">
             <el-button size="small" :icon="Upload">上传图片</el-button>
           </el-upload>
-          <el-input v-model="item.productName" placeholder="商品名称" style="width:220px" />
-          <el-input v-model="item.productPrice" placeholder="商品价格" style="width:120px" />
-          <el-input v-model="item.clickPath" placeholder="点击跳转" style="width:220px" />
+          <div class="product-field">
+            <el-input v-model="item.productName" placeholder="商品名称" style="width:220px" />
+            <span class="required-star">*</span>
+          </div>
+          <div class="product-field">
+            <el-input v-model="item.productPrice" placeholder="商品价格" style="width:120px" />
+            <span class="required-star">*</span>
+          </div>
+          <div class="product-field">
+            <el-input v-model="item.clickPath" placeholder="点击跳转" style="width:220px" />
+            <span class="required-star">*</span>
+          </div>
         </div>
       </el-form>
       </div>
@@ -287,7 +298,7 @@ import { ref, reactive, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, Upload, View } from '@element-plus/icons-vue'
 import { listIndexRecommendColumn, saveIndexRecommendColumn, updateIndexRecommendColumn, findIndexRecommendColumn, deleteIndexRecommendColumn, queryAreaTree } from '@/api/content/indexRecommendColumn'
-import { getToken } from '@/utils/auth'
+import { queryColumnDict } from '@/api/content/column'
 
 // ========== 列表 ==========
 const searchForm = reactive({ title: '', showStatus: '', startShowDate: '', endShowDate: '' })
@@ -314,23 +325,31 @@ async function loadTableData() {
   } catch { } finally { loading.value = false }
 }
 
-// ========== 图片上传 ==========
-const uploadAction = import.meta.env.VITE_APP_BASE_API + '/common/img/upload'
-const uploadHeaders = computed(() => ({ Authorization: 'Bearer ' + getToken() }))
+// ========== 栏目类型字典 ==========
+const columnTypeDictList = ref([])
+async function loadColumnDict() {
+  try {
+    const res = await queryColumnDict()
+    if (res.code === 1 && res.data) {
+      columnTypeDictList.value = res.data.columnTypeList || []
+    }
+  } catch { }
+}
 
+// ========== 图片上传（base64，后端统一处理） ==========
 function beforeImgUpload(file) {
   if (!file.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return false }
   return true
 }
 
-function makeImgUploadHandler(target) {
-  return (res) => {
-    if (res.code === 0 && res.data) {
-      target.imgPath = res.data.path
-      target.httpImgPath = res.data.httpPath
-    } else {
-      ElMessage.error(res.msg || '上传失败')
-    }
+function makeImgChangeHandler(target) {
+  return (file) => {
+    const raw = file.raw
+    if (!raw) return
+    if (!raw.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return }
+    const reader = new FileReader()
+    reader.onload = (e) => { target.imgBase64 = e.target.result }
+    reader.readAsDataURL(raw)
   }
 }
 
@@ -342,8 +361,8 @@ const submitLoading = ref(false)
 const formRef = ref(null)
 const dialogTitle = computed(() => isEdit.value ? '编辑首页推荐栏目' : '添加首页推荐栏目')
 
-function emptyBanner() { return { title: '', imgPath: '', httpImgPath: '', clickPath: '' } }
-function emptyProduct() { return { productName: '', productPrice: '', clickPath: '', imgPath: '', httpImgPath: '' } }
+function emptyBanner() { return { title: '', imgPath: '', httpImgPath: '', imgBase64: '', clickPath: '' } }
+function emptyProduct() { return { productName: '', productPrice: '', clickPath: '', imgPath: '', httpImgPath: '', imgBase64: '' } }
 
 const formData = reactive({
   id: null, title: '', startShowDate: '', endShowDate: '', showStatus: '1', type: '1', columnSort: 0, remark: '',
@@ -418,18 +437,20 @@ function fillForm(entity) {
   areaNames.value = formData.areaNameList.join(' ')
 }
 
+function hasImg(item) { return !!(item && (item.imgBase64 || item.imgPath)) }
+
 function validateBeforeSubmit() {
-  if (!formData.columnLeftBannerVOS.length || formData.columnLeftBannerVOS.some(b => !b.imgPath)) {
+  if (!formData.columnLeftBannerVOS.length || formData.columnLeftBannerVOS.some(b => !hasImg(b))) {
     ElMessage.warning('请上传左侧轮播图')
     return false
   }
-  if (!formData.rightTopBanner.imgPath) { ElMessage.warning('请上传右侧顶部图片'); return false }
-  if (!formData.rightBottomBanner.imgPath) { ElMessage.warning('请上传右侧底部图片'); return false }
+  if (!hasImg(formData.rightTopBanner)) { ElMessage.warning('请上传右侧顶部图片'); return false }
+  if (!hasImg(formData.rightBottomBanner)) { ElMessage.warning('请上传右侧底部图片'); return false }
   const products = formData.columnRecommendProducts
   if (!products.length || products.length < 6) { ElMessage.warning('请配置商品推荐,数量至少6个'); return false }
   for (let i = 0; i < products.length; i++) {
     const p = products[i]
-    if (!p.imgPath) { ElMessage.warning('请上传商品图片'); return false }
+    if (!hasImg(p)) { ElMessage.warning('请上传商品图片'); return false }
     if (!p.productName) { ElMessage.warning('商品名称不能为空'); return false }
     if (!p.productPrice) { ElMessage.warning('商品价格不能为空'); return false }
     if (!p.clickPath) { ElMessage.warning('商品点击跳转不能为空'); return false }
@@ -537,6 +558,7 @@ function handleView(row) {
 }
 
 loadTableData()
+loadColumnDict()
 </script>
 
 <style lang="scss" scoped>
@@ -567,7 +589,9 @@ loadTableData()
     padding: 10px 12px; background: $bg-page; border-radius: 8px;
     .product-img { width: 60px; height: 50px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
   }
-  .area-tree-wrap { max-height: 400px; overflow-y: auto; }
+  .product-field { display: inline-flex; align-items: center;
+    .required-star { color: #f56c6c; margin-left: 4px; font-weight: 600; }
+  }
   :deep(.el-descriptions__table) { width: 100%; }
   :deep(.el-descriptions__label) { word-break: keep-all; }
   :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
@@ -581,4 +605,7 @@ loadTableData()
     .detail-product { text-align: center; font-size: 12px; }
   }
 }
+
+// 关联城市弹窗使用 append-to-body，需独立作用域规则才能生效
+.area-tree-wrap { max-height: 400px; overflow-y: auto; }
 </style>

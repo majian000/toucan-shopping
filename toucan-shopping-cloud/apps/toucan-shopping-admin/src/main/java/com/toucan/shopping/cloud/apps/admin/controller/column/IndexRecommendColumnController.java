@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -147,6 +148,9 @@ public class IndexRecommendColumnController {
             indexRecommendColumnVO.setCreateAdminId(AdminLoginHolder.getCurrentAdminId());
             indexRecommendColumnVO.setPosition("1");
             indexRecommendColumnVO.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            // 图片base64统一上传到文件服务
+            uploadBannerImages(indexRecommendColumnVO);
+            uploadProductImages(indexRecommendColumnVO);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, indexRecommendColumnVO);
             resultObjectVO = indexRecommendColumnService.save(requestJsonVO);
         } catch (Exception e) {
@@ -170,6 +174,9 @@ public class IndexRecommendColumnController {
             entity.setColumnTypeCode(PcIndexColumnConstant.INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             entity.setPosition("1");
             entity.setUpdateAdminId(AdminLoginHolder.getCurrentAdminId());
+            // 图片base64统一上传到文件服务
+            uploadBannerImages(entity);
+            uploadProductImages(entity);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = indexRecommendColumnService.update(requestJsonVO);
         } catch (Exception e) {
@@ -195,29 +202,24 @@ public class IndexRecommendColumnController {
             if (resultObjectVO.isSuccess()) {
                 PcIndexColumnVO indexRecommendColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
 
-                // 右侧顶部预览图
-                indexRecommendColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix() + indexRecommendColumnVO.getRightTopBanner().getImgPath());
-                // 右侧底部预览图
-                indexRecommendColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix() + indexRecommendColumnVO.getRightBottomBanner().getImgPath());
-                // 左侧轮播图
-                for (ColumnBannerVO columnBannerVO : indexRecommendColumnVO.getColumnLeftBannerVOS()) {
-                    columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + columnBannerVO.getImgPath());
-                }
-
                 // 顶部预览图
-                if (indexRecommendColumnVO.getTopBanner() != null && indexRecommendColumnVO.getTopBanner().getImgPath() != null) {
-                    indexRecommendColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix() + indexRecommendColumnVO.getTopBanner().getImgPath());
-                }
-
+                fillBannerImage(indexRecommendColumnVO.getTopBanner());
+                // 右侧顶部预览图
+                fillBannerImage(indexRecommendColumnVO.getRightTopBanner());
+                // 右侧底部预览图
+                fillBannerImage(indexRecommendColumnVO.getRightBottomBanner());
                 // 底部预览图
-                if (indexRecommendColumnVO.getBottomBanner() != null && indexRecommendColumnVO.getBottomBanner().getImgPath() != null) {
-                    indexRecommendColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix() + indexRecommendColumnVO.getBottomBanner().getImgPath());
+                fillBannerImage(indexRecommendColumnVO.getBottomBanner());
+                // 左侧轮播图
+                if (!CollectionUtils.isEmpty(indexRecommendColumnVO.getColumnLeftBannerVOS())) {
+                    for (ColumnBannerVO columnBannerVO : indexRecommendColumnVO.getColumnLeftBannerVOS()) {
+                        fillBannerImage(columnBannerVO);
+                    }
                 }
-
                 // 商品推荐图
                 if (!CollectionUtils.isEmpty(indexRecommendColumnVO.getColumnRecommendProducts())) {
                     for (ColumnRecommendProductVO columnRecommendProductVO : indexRecommendColumnVO.getColumnRecommendProducts()) {
-                        columnRecommendProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + columnRecommendProductVO.getImgPath());
+                        fillProductImage(columnRecommendProductVO);
                     }
                 }
 
@@ -337,6 +339,89 @@ public class IndexRecommendColumnController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 将栏目VO中所有轮播图/图片的base64数据统一上传到文件服务，写入imgPath
+     */
+    private void uploadBannerImages(PcIndexColumnVO vo) throws Exception {
+        uploadBannerBase64(vo.getTopBanner());
+        uploadBannerBase64(vo.getRightTopBanner());
+        uploadBannerBase64(vo.getRightBottomBanner());
+        uploadBannerBase64(vo.getBottomBanner());
+        if (!CollectionUtils.isEmpty(vo.getColumnLeftBannerVOS())) {
+            for (ColumnBannerVO banner : vo.getColumnLeftBannerVOS()) {
+                uploadBannerBase64(banner);
+            }
+        }
+    }
+
+    private void uploadBannerBase64(ColumnBannerVO banner) throws Exception {
+        if (banner != null && StringUtils.isNotEmpty(banner.getImgBase64())) {
+            banner.setImgPath(imageUploadService.uploadBase64(banner.getImgBase64()));
+        }
+    }
+
+    /**
+     * 将栏目VO中所有推荐商品图片的base64数据统一上传到文件服务，写入imgPath
+     */
+    private void uploadProductImages(PcIndexColumnVO vo) throws Exception {
+        if (!CollectionUtils.isEmpty(vo.getColumnRecommendProducts())) {
+            for (ColumnRecommendProductVO product : vo.getColumnRecommendProducts()) {
+                if (product != null && StringUtils.isNotEmpty(product.getImgBase64())) {
+                    product.setImgPath(imageUploadService.uploadBase64(product.getImgBase64()));
+                }
+            }
+        }
+    }
+
+    /**
+     * 为轮播图填充外网访问地址与base64数据（编辑回显用）
+     */
+    private void fillBannerImage(ColumnBannerVO banner) {
+        if (banner != null && StringUtils.isNotEmpty(banner.getImgPath())) {
+            banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
+            banner.setImgBase64(imgPathToBase64(banner.getImgPath()));
+        }
+    }
+
+    /**
+     * 为推荐商品填充外网访问地址与base64数据（编辑回显用）
+     */
+    private void fillProductImage(ColumnRecommendProductVO product) {
+        if (product != null && StringUtils.isNotEmpty(product.getImgPath())) {
+            product.setHttpImgPath(imageUploadService.getImageHttpPrefix() + product.getImgPath());
+            product.setImgBase64(imgPathToBase64(product.getImgPath()));
+        }
+    }
+
+    /**
+     * 下载文件服务图片并转成base64数据地址
+     */
+    private String imgPathToBase64(String imgPath) {
+        try {
+            byte[] fileBytes = imageUploadService.downloadFile(imgPath);
+            if (fileBytes == null || fileBytes.length == 0) {
+                return null;
+            }
+            String ext = "jpg";
+            if (imgPath.contains(".")) {
+                ext = imgPath.substring(imgPath.lastIndexOf(".") + 1).toLowerCase();
+            }
+            String mime;
+            switch (ext) {
+                case "png": mime = "image/png"; break;
+                case "gif": mime = "image/gif"; break;
+                case "bmp": mime = "image/bmp"; break;
+                case "jpeg": mime = "image/jpeg"; break;
+                case "jpg": mime = "image/jpeg"; break;
+                default: mime = "image/jpeg"; break;
+            }
+            return "data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes);
+        } catch (Exception e) {
+            logger.warn("下载图片转base64失败 {}", imgPath, e);
+            return null;
+        }
+    }
 
     /**
      * 递归设置树节点选中状态
