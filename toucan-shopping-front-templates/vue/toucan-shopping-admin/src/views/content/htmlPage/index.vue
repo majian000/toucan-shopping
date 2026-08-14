@@ -2,63 +2,78 @@
   <div class="html-page-management">
     <h2 class="page-title">首页静态化管理</h2>
     <el-card shadow="never">
-      <el-tabs v-model="activeTab" type="border-card">
-        <el-tab-pane label="预览文件" name="preview">
-          <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:preview'" @click="handleGeneratePreview" :loading="previewLoading">生成预览</el-button>
-            <span class="tip-text">生成预览版首页静态HTML文件，用于预览效果。</span>
-          </div>
-          <div v-if="previewGenerators && previewGenerators.length > 0" style="margin-top:16px">
-            <el-tabs v-model="previewSubTab" type="card">
-              <el-tab-pane v-for="gen in previewGenerators" :key="gen.name" :label="gen.name" :name="gen.name">
-                <div class="iframe-container" v-html="gen.content"></div>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-          <el-empty v-else description="请点击“生成预览”按钮生成首页预览静态文件" />
-        </el-tab-pane>
+      <div class="toolbar">
+        <el-radio-group v-model="env" @change="switchEnv">
+          <el-radio-button value="preview">预览版</el-radio-button>
+          <el-radio-button value="release">正式版</el-radio-button>
+        </el-radio-group>
+        <el-button v-if="env === 'preview'" type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:preview'" :loading="previewLoading" @click="handleGeneratePreview">生成预览</el-button>
+        <el-button v-else type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:release'" :loading="releaseLoading" @click="handleGenerateRelease">生成最终版</el-button>
+      </div>
+      <p class="tip-text">预览版仅用于内网预览，不影响线上；正式版生成后即对外发布，请确认后操作。</p>
 
-        <el-tab-pane label="最终文件" name="release">
-          <div class="tab-toolbar">
-            <el-button type="primary" :icon="Upload" v-permission="'toucan:dashboard:htmlGenerator:release'" @click="handleGenerateRelease" :loading="releaseLoading">生成最终版</el-button>
-            <span class="tip-text">生成最终版首页静态HTML文件，发布到正式环境。</span>
+      <el-collapse v-if="currentNodes.length" v-model="activeNode" accordion>
+        <el-collapse-item v-for="node in currentNodes" :key="node.name" :name="node.name">
+          <template #title>
+            <div class="node-title">
+              <span class="node-ip">{{ node.name }}</span>
+              <el-link class="open-link" type="primary" :icon="Link" @click.stop="openNewWindow(node)">新窗口打开</el-link>
+            </div>
+          </template>
+          <div class="iframe-wrap" v-loading="frameLoading">
+            <iframe :src="node.src" class="preview-frame" frameborder="0" @load="frameLoading = false"></iframe>
           </div>
-          <div v-if="releaseGenerators && releaseGenerators.length > 0" style="margin-top:16px">
-            <el-tabs v-model="releaseSubTab" type="card">
-              <el-tab-pane v-for="gen in releaseGenerators" :key="gen.name" :label="gen.name" :name="gen.name">
-                <div class="iframe-container" v-html="gen.content"></div>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-          <el-empty v-else description="请点击“生成最终版”按钮生成首页静态文件" />
-        </el-tab-pane>
-      </el-tabs>
+        </el-collapse-item>
+      </el-collapse>
+      <el-empty v-else description="请点击上方「生成」按钮生成首页静态文件" />
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Upload } from '@element-plus/icons-vue'
+import { ref, computed, onMounted } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Upload, Link } from '@element-plus/icons-vue'
 import { generatePreview, generateRelease, queryTab } from '@/api/content/htmlPage'
 
-const activeTab = ref('preview')
-const previewSubTab = ref('')
-const releaseSubTab = ref('')
+const env = ref('preview')
 const previewLoading = ref(false)
 const releaseLoading = ref(false)
-const previewGenerators = ref([])
-const releaseGenerators = ref([])
+const frameLoading = ref(false)
+const previewNodes = ref([])
+const releaseNodes = ref([])
+const activeNode = ref('')
+
+const currentNodes = computed(() => (env.value === 'preview' ? previewNodes.value : releaseNodes.value))
+
+function extractSrc(content) {
+  const m = /src=['"]([^'"]+)['"]/.exec(content || '')
+  return m ? m[1] : ''
+}
+
+function mapNodes(list) {
+  return (list || []).map(g => ({ name: g.name, src: extractSrc(g.content) }))
+}
+
+function setActiveNode() {
+  const nodes = currentNodes.value
+  activeNode.value = nodes.length ? nodes[0].name : ''
+  frameLoading.value = true
+}
 
 async function loadTabs() {
   try {
     const res = await queryTab()
     if (res.code === 1 && res.data) {
-      previewGenerators.value = res.data.previewHtmlGenerators || []
-      releaseGenerators.value = res.data.releaseHtmlGenerators || []
+      previewNodes.value = mapNodes(res.data.previewHtmlGenerators)
+      releaseNodes.value = mapNodes(res.data.releaseHtmlGenerators)
+      setActiveNode()
     }
   } catch { }
+}
+
+function switchEnv() {
+  setActiveNode()
 }
 
 async function handleGeneratePreview() {
@@ -75,6 +90,9 @@ async function handleGeneratePreview() {
 }
 
 async function handleGenerateRelease() {
+  try {
+    await ElMessageBox.confirm('正式版生成后即对外发布，确定继续吗？', '生成确认', { confirmButtonText: '确定生成', cancelButtonText: '取消', type: 'warning' })
+  } catch { return }
   releaseLoading.value = true
   try {
     const res = await generateRelease()
@@ -87,14 +105,22 @@ async function handleGenerateRelease() {
   } catch { } finally { releaseLoading.value = false }
 }
 
+function openNewWindow(node) {
+  if (node && node.src) window.open(node.src, '_blank')
+}
+
 onMounted(loadTabs)
 </script>
 
 <style lang="scss" scoped>
 .html-page-management {
-  .tab-toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 0;
-    .tip-text { color: $text-secondary; font-size: 13px; }
+  .toolbar { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .tip-text { color: $text-secondary; font-size: 13px; margin: 0 0 16px; }
+  .node-title { display: flex; align-items: center; gap: 12px; width: 100%;
+    .node-ip { font-weight: 600; }
+    .open-link { margin-left: auto; }
   }
-  .iframe-container { width: 100%; min-height: 600px; border: 1px solid #ebeef5; border-radius: 4px; padding: 8px; }
+  .iframe-wrap { width: 100%; }
+  .preview-frame { width: 100%; height: calc(100vh - 320px); min-height: 480px; border: none; background: #fff; }
 }
 </style>
