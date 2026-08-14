@@ -6,13 +6,11 @@
       <div class="left-tree">
         <el-card shadow="never" class="tree-card">
           <template #header><span>栏目类型</span></template>
-          <el-input v-model="treeFilterText" placeholder="输入关键字过滤" size="small" clearable style="margin-bottom:8px" />
           <el-tree
             ref="typeTreeRef"
             :data="typeTreeData"
             :props="{ children: 'children', label: 'name' }"
             node-key="code"
-            :filter-node-method="filterTypeNode"
             highlight-current
             @node-click="onTypeNodeClick"
           >
@@ -145,11 +143,6 @@
             <el-radio value="0">隐藏</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="栏目类型" prop="type">
-          <el-checkbox-group v-model="formData.type">
-            <el-checkbox v-for="t in columnTypeDictList" :key="t.code" :label="t.code" :value="t.code">{{ t.name }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
         <el-form-item label="栏目位置" prop="position">
           <el-radio-group v-model="formData.position">
             <el-radio v-for="p in columnPositionDictList" :key="p.code" :value="p.code">{{ p.name }}</el-radio>
@@ -174,27 +167,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, nextTick } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight } from '@element-plus/icons-vue'
 import { queryTreeTable, queryColumnTypeList, queryColumnTree, queryColumnById, saveColumn, updateColumn, deleteColumn, deleteColumns } from '@/api/content/column'
 
 // ========== 左侧栏目类型树 ==========
 const typeTreeRef = ref(null)
-const treeFilterText = ref('')
 const typeTreeData = ref([])
 const selectedColumnTypeCode = ref('')
 const columnTypeDictList = ref([])
 const columnPositionDictList = ref([])
-
-watch(treeFilterText, (val) => {
-  typeTreeRef.value?.filter(val)
-})
-
-function filterTypeNode(value, data) {
-  if (!value) return true
-  return data.name?.toLowerCase().includes(value.toLowerCase())
-}
 
 async function loadColumnTypes() {
   try {

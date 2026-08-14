@@ -10,6 +10,11 @@ export function queryColumnTypeList() {
   return request({ url: '/column/query/type/list', method: 'post' })
 }
 
+// 查询栏目字典（栏目类型、栏目位置）
+export function queryColumnDict() {
+  return request({ url: '/column/query/dict', method: 'post' })
+}
+
 // 查询栏目树（选择上级栏目用）—— 后端未加 @RequestBody，用 query 参数
 export function queryColumnTree(params) {
   return request({ url: '/column/query/column/tree', method: 'post', params })
