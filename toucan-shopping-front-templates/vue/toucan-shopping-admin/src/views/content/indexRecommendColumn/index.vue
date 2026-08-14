@@ -69,8 +69,8 @@
 
     <!-- 添加/编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="920px" :close-on-click-modal="false" destroy-on-close top="4vh">
-      <div class="dialog-scroll">
-        <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="dialogLoading">
+      <div class="dialog-scroll" v-loading="dialogLoading">
+        <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px">
         <el-divider content-position="left">基本信息</el-divider>
         <el-form-item label="栏目标题" prop="title">
           <el-input v-model="formData.title" placeholder="请输入栏目标题" maxlength="100" show-word-limit />
@@ -252,37 +252,45 @@
           <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
         </el-descriptions>
 
-        <div v-if="detailInfo" class="detail-imgs">
-          <div class="detail-block" v-if="detailInfo.topBanner && detailInfo.topBanner.httpImgPath">
-            <div class="detail-block-title">顶部图片</div>
-            <img :src="detailInfo.topBanner.httpImgPath" class="detail-img-lg" />
+        <div v-if="detailInfo" class="detail-tables">
+          <div class="detail-table-block" v-if="detailInfo.topLabels && detailInfo.topLabels.length">
+            <div class="detail-block-title">顶部推荐标签</div>
+            <el-table :data="detailInfo.topLabels" border size="small">
+              <el-table-column prop="labelName" label="标签名称" min-width="220" show-overflow-tooltip />
+              <el-table-column prop="clickPath" label="点击跳转" min-width="260" show-overflow-tooltip />
+            </el-table>
           </div>
-          <div class="detail-block" v-if="detailInfo.columnLeftBannerVOS && detailInfo.columnLeftBannerVOS.length">
-            <div class="detail-block-title">左侧轮播图</div>
-            <div class="detail-img-row">
-              <img v-for="(b, i) in detailInfo.columnLeftBannerVOS" :key="i" :src="b.httpImgPath" class="detail-img-md" />
-            </div>
+          <div class="detail-table-block" v-if="detailInfo.leftLabels && detailInfo.leftLabels.length">
+            <div class="detail-block-title">左侧推荐标签</div>
+            <el-table :data="detailInfo.leftLabels" border size="small">
+              <el-table-column prop="labelName" label="标签名称" min-width="220" show-overflow-tooltip />
+              <el-table-column prop="clickPath" label="点击跳转" min-width="260" show-overflow-tooltip />
+            </el-table>
           </div>
-          <div class="detail-block" v-if="detailInfo.rightTopBanner && detailInfo.rightTopBanner.httpImgPath">
-            <div class="detail-block-title">右侧顶部图片</div>
-            <img :src="detailInfo.rightTopBanner.httpImgPath" class="detail-img-md" />
+          <div v-for="sec in bannerSections" :key="sec.label" class="detail-table-block">
+            <div class="detail-block-title">{{ sec.label }}</div>
+            <el-table :data="sec.data" border size="small">
+              <el-table-column label="图片预览" width="200" align="center">
+                <template #default="{ row }">
+                  <el-image v-if="row.httpImgPath" :src="row.httpImgPath" fit="cover" style="width:120px;height:100px" :preview-src-list="[row.httpImgPath]" preview-teleported />
+                </template>
+              </el-table-column>
+              <el-table-column prop="title" label="标题" min-width="160" show-overflow-tooltip />
+              <el-table-column prop="clickPath" label="点击跳转" min-width="220" show-overflow-tooltip />
+            </el-table>
           </div>
-          <div class="detail-block" v-if="detailInfo.rightBottomBanner && detailInfo.rightBottomBanner.httpImgPath">
-            <div class="detail-block-title">右侧底部图片</div>
-            <img :src="detailInfo.rightBottomBanner.httpImgPath" class="detail-img-md" />
-          </div>
-          <div class="detail-block" v-if="detailInfo.bottomBanner && detailInfo.bottomBanner.httpImgPath">
-            <div class="detail-block-title">底部图片</div>
-            <img :src="detailInfo.bottomBanner.httpImgPath" class="detail-img-lg" />
-          </div>
-          <div class="detail-block" v-if="detailInfo.columnRecommendProducts && detailInfo.columnRecommendProducts.length">
+          <div class="detail-table-block" v-if="detailInfo.columnRecommendProducts && detailInfo.columnRecommendProducts.length">
             <div class="detail-block-title">推荐商品</div>
-            <div class="detail-img-row">
-              <div v-for="(p, i) in detailInfo.columnRecommendProducts" :key="i" class="detail-product">
-                <img :src="p.httpImgPath" class="detail-img-md" />
-                <div>{{ p.productName }}</div>
-              </div>
-            </div>
+            <el-table :data="detailInfo.columnRecommendProducts" border size="small">
+              <el-table-column label="商品图片" width="200" align="center">
+                <template #default="{ row }">
+                  <el-image v-if="row.httpImgPath" :src="row.httpImgPath" fit="cover" style="width:120px;height:100px" :preview-src-list="[row.httpImgPath]" preview-teleported />
+                </template>
+              </el-table-column>
+              <el-table-column prop="productName" label="商品名称" min-width="180" show-overflow-tooltip />
+              <el-table-column prop="productPrice" label="商品价格" width="120" />
+              <el-table-column prop="clickPath" label="点击跳转" min-width="220" show-overflow-tooltip />
+            </el-table>
           </div>
         </div>
       </div>
@@ -548,6 +556,22 @@ const detailInfo = ref(null)
 const detailLoading = ref(false)
 const detailAreaNames = computed(() => (detailInfo.value?.columnAreas || []).map(a => a.areaName).join(' '))
 
+// 各位置图片分区（参考 layui 查看界面：每个位置独立表格展示 图片/标题/点击跳转）
+const bannerSections = computed(() => {
+  const d = detailInfo.value
+  if (!d) return []
+  const sections = []
+  const push = (label, item) => {
+    if (item && (item.httpImgPath || item.title || item.clickPath)) sections.push({ label, data: [item] })
+  }
+  push('顶部图片', d.topBanner)
+  if (d.columnLeftBannerVOS && d.columnLeftBannerVOS.length) sections.push({ label: '左侧轮播图', data: d.columnLeftBannerVOS })
+  push('右侧顶部图片', d.rightTopBanner)
+  push('右侧底部图片', d.rightBottomBanner)
+  push('底部图片', d.bottomBanner)
+  return sections
+})
+
 function handleView(row) {
   detailVisible.value = true
   detailInfo.value = null
@@ -581,13 +605,13 @@ loadColumnDict()
   .banner-upload-inner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     padding: 12px; background: $bg-page; border: 1px dashed $border-color; border-radius: 8px;
   }
-  .banner-upload-preview { width: 120px; height: 60px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
+  .banner-upload-preview { width: 120px; height: 100px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
   .banner-row { margin-bottom: 8px; }
 
   // 商品推荐行
   .product-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
     padding: 10px 12px; background: $bg-page; border-radius: 8px;
-    .product-img { width: 60px; height: 50px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
+    .product-img { width: 120px; height: 100px; object-fit: cover; border: 1px solid $border-light; border-radius: 6px; background: #fff; }
   }
   .product-field { display: inline-flex; align-items: center;
     .required-star { color: #f56c6c; margin-left: 4px; font-weight: 600; }
@@ -595,14 +619,10 @@ loadColumnDict()
   :deep(.el-descriptions__table) { width: 100%; }
   :deep(.el-descriptions__label) { word-break: keep-all; }
   :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
-  .detail-imgs {
+  .detail-tables {
     margin-top: 16px;
-    .detail-block { margin-bottom: 16px; }
+    .detail-table-block { margin-bottom: 16px; }
     .detail-block-title { font-weight: 600; margin-bottom: 8px; color: $text-primary; }
-    .detail-img-row { display: flex; flex-wrap: wrap; gap: 8px; }
-    .detail-img-lg { max-width: 480px; max-height: 110px; border: 1px solid #dcdfe6; border-radius: 4px; }
-    .detail-img-md { width: 180px; height: 140px; object-fit: contain; border: 1px solid #dcdfe6; border-radius: 4px; }
-    .detail-product { text-align: center; font-size: 12px; }
   }
 }
 
