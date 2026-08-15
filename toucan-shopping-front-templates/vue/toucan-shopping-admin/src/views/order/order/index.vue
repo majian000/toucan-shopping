@@ -229,17 +229,17 @@
         <el-form-item label="收货人"><el-input v-model="editForm.orderConsigneeAddress.name" /></el-form-item>
         <el-form-item label="收货人电话"><el-input v-model="editForm.orderConsigneeAddress.phone" /></el-form-item>
         <el-form-item label="省份/直辖市">
-          <el-select v-model="editForm.orderConsigneeAddress.provinceCode" style="width:100%" @change="onProvinceChange">
+          <el-select v-model="editForm.orderConsigneeAddress.provinceCode" :loading="provinceLoading" style="width:100%" @change="onProvinceChange">
             <el-option v-for="p in provinceOptions" :key="p.code" :label="p.label" :value="p.code" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="!isMunicipality" label="地市">
-          <el-select v-model="editForm.orderConsigneeAddress.cityCode" style="width:100%" @change="onCityChange">
+          <el-select v-model="editForm.orderConsigneeAddress.cityCode" :loading="cityLoading" style="width:100%" @change="onCityChange">
             <el-option v-for="c in cityOptions" :key="c.code" :label="c.label" :value="c.code" />
           </el-select>
         </el-form-item>
         <el-form-item label="区县">
-          <el-select v-model="editForm.orderConsigneeAddress.areaCode" style="width:100%" @change="onAreaChange">
+          <el-select v-model="editForm.orderConsigneeAddress.areaCode" :loading="areaLoading" style="width:100%" @change="onAreaChange">
             <el-option v-for="a in areaOptions" :key="a.code" :label="a.label" :value="a.code" />
           </el-select>
         </el-form-item>
@@ -502,13 +502,21 @@ const provinceOptions = ref([])
 const cityOptions = ref([])
 const areaOptions = ref([])
 const isMunicipality = ref(false)
+const provinceLoading = ref(false)
+const cityLoading = ref(false)
+const areaLoading = ref(false)
 
 function areaLabelForProvince(a) { return a.isMunicipality === 1 || a.isMunicipality === '1' ? (a.city || a.province) : a.province }
 
 async function loadProvinces() {
-  const res = await listAreaByParentCode({ parentCode: '-1' })
-  if (res.code === 1 && res.data) {
-    provinceOptions.value = (res.data || []).map(a => ({ code: a.code, label: areaLabelForProvince(a), isMunicipality: a.isMunicipality }))
+  provinceLoading.value = true
+  try {
+    const res = await listAreaByParentCode({ code: '-1' })
+    if (res.code === 1 && res.data) {
+      provinceOptions.value = (res.data || []).map(a => ({ code: a.code, label: areaLabelForProvince(a), isMunicipality: a.isMunicipality }))
+    }
+  } finally {
+    provinceLoading.value = false
   }
 }
 
@@ -529,8 +537,13 @@ async function onProvinceChange(code) {
     await onCityChange(prov.code)
   } else {
     cityOptions.value = []
-    const res = await listAreaByParentCode({ parentCode: code })
-    if (res.code === 1 && res.data) cityOptions.value = (res.data || []).map(c => ({ code: c.code, label: c.city }))
+    cityLoading.value = true
+    try {
+      const res = await listAreaByParentCode({ code: code })
+      if (res.code === 1 && res.data) cityOptions.value = (res.data || []).map(c => ({ code: c.code, label: c.city }))
+    } finally {
+      cityLoading.value = false
+    }
   }
 }
 
@@ -541,8 +554,13 @@ async function onCityChange(code) {
   editForm.orderConsigneeAddress.areaCode = ''
   editForm.orderConsigneeAddress.areaName = ''
   areaOptions.value = []
-  const res = await listAreaByParentCode({ parentCode: code })
-  if (res.code === 1 && res.data) areaOptions.value = (res.data || []).map(a => ({ code: a.code, label: a.area }))
+  areaLoading.value = true
+  try {
+    const res = await listAreaByParentCode({ code: code })
+    if (res.code === 1 && res.data) areaOptions.value = (res.data || []).map(a => ({ code: a.code, label: a.area }))
+  } finally {
+    areaLoading.value = false
+  }
 }
 
 function onAreaChange(code) {

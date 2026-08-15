@@ -280,7 +280,7 @@ const cityList = ref([])
 const areaList = ref([])
 
 async function loadProvinceList() {
-  const res = await listAreaByParentCode({ parentCode: '-1' })
+  const res = await listAreaByParentCode({ code: '-1' })
   if (res.code === 1) provinceList.value = res.data || []
 }
 
@@ -289,7 +289,7 @@ async function onProvinceChange(code) {
   formData.cityCode = ''; formData.city = ''; formData.areaCode = ''; formData.area = ''
   const p = provinceList.value.find(x => x.code === code)
   if (p) formData.province = p.name
-  const res = await listAreaByParentCode({ parentCode: code })
+  const res = await listAreaByParentCode({ code: code })
   if (res.code !== 1) return
   if (p && (p.isMunicipality === 1 || p.isMunicipality === '1')) {
     areaList.value = res.data || []
@@ -303,7 +303,7 @@ async function onCityChange(code) {
   formData.areaCode = ''; formData.area = ''
   const c = cityList.value.find(x => x.code === code)
   if (c) formData.city = c.name
-  const res = await listAreaByParentCode({ parentCode: code })
+  const res = await listAreaByParentCode({ code: code })
   if (res.code === 1) areaList.value = res.data || []
 }
 

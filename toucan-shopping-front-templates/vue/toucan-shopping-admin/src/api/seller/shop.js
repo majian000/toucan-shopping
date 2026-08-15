@@ -30,7 +30,7 @@ export function uploadShopLogo(data) {
   return request({ url: '/seller/shop/upload/logo', method: 'post', data })
 }
 
-// 按 parentCode 查询地区列表
+// 按 code 查询地区列表 (AreaVO JSON body: code = 父节点编码)
 export function listAreaByParentCode(data) {
   return request({ url: '/area/list/by/parentCode', method: 'post', data })
 }
