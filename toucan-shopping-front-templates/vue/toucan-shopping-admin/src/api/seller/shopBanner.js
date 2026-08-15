@@ -14,3 +14,13 @@ export function updateShopBanner(data) {
 export function deleteShopBanner(data) {
   return request({ url: '/seller/shopBanner/delete', method: 'post', data })
 }
+
+// 根据ID查询（编辑回显用，含 base64 图片数据）
+export function queryShopBannerById(data) {
+  return request({ url: '/seller/shopBanner/queryById', method: 'post', data })
+}
+
+// 查看详情 (返回 ShopBannerDetailVO: { basicInfo })
+export function detailShopBanner(data) {
+  return request({ url: '/seller/shopBanner/detail', method: 'post', data })
+}

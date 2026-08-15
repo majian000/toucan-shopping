@@ -16,8 +16,8 @@
           <el-date-picker v-model="searchForm.endShowDate" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="选择" style="width:200px" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-          <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search" v-permission="'toucan:seller:shopBanner:list'"  @click="handleSearch">搜索</el-button>
+          <el-button :icon="RefreshRight" v-permission="'toucan:seller:shopBanner:list'" @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -59,7 +59,7 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="View" @click="handleView(row)">查看</el-button>
+            <el-button type="primary" link size="small" :icon="View"   v-permission="'toucan:seller:shopBanner:btn:detail'" @click="handleView(row)">查看</el-button>
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:seller:shopBanner:update'" @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:shop:shopBanner:delete'" @click="handleDelete(row)">删除</el-button>
           </template>
@@ -76,6 +76,7 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="查看轮播图" width="650px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading" style="min-height:120px">
       <el-descriptions v-if="detailInfo" :column="2" border label-width="110px">
         <el-descriptions-item label="标题" :span="2">{{ detailInfo.title }}</el-descriptions-item>
         <el-descriptions-item label="店铺ID">{{ detailInfo.shopId }}</el-descriptions-item>
@@ -96,6 +97,7 @@
         <el-descriptions-item label="修改人">{{ detailInfo.updaterName }}</el-descriptions-item>
         <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
       </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -103,7 +105,7 @@
 
     <!-- 编辑弹窗 -->
     <el-dialog v-model="dialogVisible" title="编辑轮播图" width="620px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="110px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="110px" v-loading="editLoading">
         <el-form-item label="标题" prop="title">
           <el-input v-model="formData.title" placeholder="请输入标题" maxlength="100" />
         </el-form-item>
@@ -155,7 +157,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, View, Edit, Delete, Upload } from '@element-plus/icons-vue'
-import { listShopBanner, updateShopBanner, deleteShopBanner } from '@/api/seller/shopBanner'
+import { listShopBanner, updateShopBanner, deleteShopBanner, queryShopBannerById, detailShopBanner } from '@/api/seller/shopBanner'
 
 const searchForm = reactive({ title: '', shopId: '', startShowDate: '', endShowDate: '' })
 
@@ -190,14 +192,21 @@ function formatPosition(position) {
 // ============ 查看 ============
 const detailVisible = ref(false)
 const detailInfo = ref(null)
-function handleView(row) {
-  detailInfo.value = row
+const detailLoading = ref(false)
+async function handleView(row) {
   detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailShopBanner({ id: row.id })
+    detailInfo.value = (res && res.data && res.data.basicInfo) || row
+  } catch { } finally { detailLoading.value = false }
 }
 
 // ============ 编辑 ============
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const editLoading = ref(false)
 const formRef = ref(null)
 const previewUrl = ref('')
 const formData = reactive({
@@ -225,19 +234,27 @@ function beforeUpload(file) {
   return true
 }
 
-function handleEdit(row) {
-  formData.id = row.id
-  formData.title = row.title || ''
-  formData.clickPath = row.clickPath || ''
-  formData.position = row.position || 'PC_INDEX'
-  formData.showStatus = row.showStatus != null ? String(row.showStatus) : '1'
-  formData.bannerSort = row.bannerSort || 0
-  formData.startShowDateString = row.startShowDate || ''
-  formData.endShowDateString = row.endShowDate || ''
-  formData.remark = row.remark || ''
-  formData.imgBase64 = ''
-  previewUrl.value = row.httpImgPath || ''
+async function handleEdit(row) {
   dialogVisible.value = true
+  editLoading.value = true
+  // 先重置，避免残留上一次打开的数据
+  Object.assign(formData, { id: null, title: '', clickPath: '', position: 'PC_INDEX', showStatus: '1', bannerSort: 0, startShowDateString: '', endShowDateString: '', remark: '', imgBase64: '' })
+  previewUrl.value = ''
+  try {
+    const res = await queryShopBannerById({ id: row.id })
+    const vo = (res && res.data) || row
+    formData.id = vo.id
+    formData.title = vo.title || ''
+    formData.clickPath = vo.clickPath || ''
+    formData.position = vo.position || 'PC_INDEX'
+    formData.showStatus = vo.showStatus != null ? String(vo.showStatus) : '1'
+    formData.bannerSort = vo.bannerSort != null ? vo.bannerSort : 0
+    formData.startShowDateString = vo.startShowDateString || vo.startShowDate || ''
+    formData.endShowDateString = vo.endShowDateString || vo.endShowDate || ''
+    formData.remark = vo.remark || ''
+    formData.imgBase64 = vo.imgBase64 || ''
+    previewUrl.value = vo.imgBase64 || vo.httpImgPath || ''
+  } catch { } finally { editLoading.value = false }
 }
 
 async function handleSubmit() {
@@ -261,7 +278,7 @@ function handleDelete(row) {
   ElMessageBox.confirm('确定删除该轮播图吗？', '删除确认', { confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning' })
     .then(async () => {
       try {
-        const res = await deleteShopBanner({ id: row.id })
+        const res = await deleteShopBanner({ id: row.id, shopId: row.shopId })
         if (res.code === 1) { ElMessage.success('删除成功'); loadTableData() } else { ElMessage.error(res.msg || '删除失败') }
       } catch { }
     }).catch(() => {})
