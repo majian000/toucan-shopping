@@ -52,6 +52,11 @@ export function shopCategoryTreeTableByPid(data) {
   return request({ url: '/seller/shop/category/tree/table/by/pid', method: 'post', data })
 }
 
+// 查询店铺全部分类 (一次性返回店铺下所有分类, 前端构建树)
+export function shopCategoryTreeTable(data) {
+  return request({ url: '/seller/shop/category/tree/table', method: 'post', data })
+}
+
 // 保存分类
 export function saveShopCategory(data) {
   return request({ url: '/seller/shop/category/save', method: 'post', data })

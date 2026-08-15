@@ -196,6 +196,9 @@
         <el-form-item label="分类名称" prop="name">
           <el-input v-model="categoryForm.name" placeholder="请输入分类名称" maxlength="25" />
         </el-form-item>
+        <el-form-item label="跳转路径">
+          <el-input v-model="categoryForm.href" placeholder="请输入跳转路径" maxlength="200" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="categoryDialogVisible = false">取消</el-button>
@@ -212,7 +215,7 @@ import { Search, RefreshRight, View, Edit, Delete, Plus, Upload, FolderOpened } 
 import {
   listShop, updateShop, deleteShop, deleteShops, disabledEnabledShop, listAreaByParentCode,
   queryShopById, detailShop,
-  shopCategoryTreeTableByPid, saveShopCategory, updateShopCategory, deleteShopCategory,
+  shopCategoryTreeTable, saveShopCategory, updateShopCategory, deleteShopCategory,
   moveShopCategoryUp, moveShopCategoryDown, moveShopCategoryTop, moveShopCategoryBottom
 } from '@/api/seller/shop'
 
@@ -478,13 +481,24 @@ function handleCategory(row) {
 async function loadCategoryRoot() {
   categoryLoading.value = true
   try {
-    const res = await shopCategoryTreeTableByPid({ shopId: categoryShopId.value, parentId: -1 })
-    const roots = res.code === 1 ? (res.data || []) : []
-    // 店铺分类最多两级，一次性加载所有子分类，前端构建树，避免懒加载缓存导致列表不刷新
-    await Promise.all(roots.map(async (root) => {
-      const childRes = await shopCategoryTreeTableByPid({ shopId: categoryShopId.value, parentId: root.id })
-      root.children = childRes.code === 1 ? (childRes.data || []) : []
-    }))
+    const res = await shopCategoryTreeTable({ shopId: categoryShopId.value })
+    const all = res.code === 1 ? (res.data || []) : []
+    // 店铺分类最多两级，一次性查询全部分类，前端构建树
+    const rootMap = {}
+    const roots = []
+    all.forEach(item => {
+      if (String(item.parentId) === '-1') {
+        item.children = []
+        roots.push(item)
+        rootMap[String(item.id)] = item
+      }
+    })
+    all.forEach(item => {
+      const parent = rootMap[String(item.parentId)]
+      if (parent) parent.children.push(item)
+    })
+    roots.forEach(r => (r.children || []).sort((a, b) => (a.categorySort || 0) - (b.categorySort || 0)))
+    roots.sort((a, b) => (a.categorySort || 0) - (b.categorySort || 0))
     categoryData.value = roots
     // 重建表格，清空展开状态，确保新增/删除子分类后重新展开显示最新数据
     categoryTableKey.value++
@@ -494,7 +508,7 @@ async function loadCategoryRoot() {
 const categoryDialogVisible = ref(false)
 const categorySubmitLoading = ref(false)
 const categoryFormRef = ref(null)
-const categoryForm = reactive({ id: null, parentId: -1, name: '' })
+const categoryForm = reactive({ id: null, parentId: -1, name: '', href: '' })
 const categoryFormRules = { name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }] }
 const categoryDialogTitle = computed(() => categoryForm.id ? '编辑分类' : '添加分类')
 
@@ -502,6 +516,7 @@ function openCategoryAdd(parentId) {
   categoryForm.id = null
   categoryForm.parentId = parentId
   categoryForm.name = ''
+  categoryForm.href = ''
   categoryDialogVisible.value = true
 }
 
@@ -509,6 +524,7 @@ function openCategoryEdit(row) {
   categoryForm.id = row.id
   categoryForm.parentId = row.parentId
   categoryForm.name = row.name || ''
+  categoryForm.href = row.href || ''
   categoryDialogVisible.value = true
 }
 
@@ -517,7 +533,7 @@ async function handleCategorySubmit() {
   if (!valid) return
   categorySubmitLoading.value = true
   try {
-    const payload = { shopId: categoryShopId.value, parentId: categoryForm.parentId, name: categoryForm.name }
+    const payload = { shopId: categoryShopId.value, parentId: categoryForm.parentId, name: categoryForm.name, href: categoryForm.href }
     let res
     if (categoryForm.id) {
       res = await updateShopCategory({ ...payload, id: categoryForm.id })
