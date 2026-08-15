@@ -367,7 +367,7 @@ public class SellerShopBusinessService {
 
             int row = sellerShopService.update(sellerShop);
             if (row != 1) {
-                return ResultObjectVO.fail(ResultVO.FAILD, "请重试!");
+                return ResultObjectVO.fail(ResultVO.FAILD, "修改失败,请重试!");
             }
 
             refershRedisCache(sellerShop.getId());

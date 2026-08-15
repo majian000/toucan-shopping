@@ -10,6 +10,16 @@ export function updateShop(data) {
   return request({ url: '/seller/shop/update', method: 'post', data })
 }
 
+// 根据ID查询（编辑回显用，含 base64 图标数据）
+export function queryShopById(data) {
+  return request({ url: '/seller/shop/queryById', method: 'post', data })
+}
+
+// 查看详情 (返回 SellerShopDetailVO: { basicInfo })
+export function detailShop(data) {
+  return request({ url: '/seller/shop/detail', method: 'post', data })
+}
+
 // 删除
 export function deleteShop(data) {
   return request({ url: '/seller/shop/delete', method: 'post', data })

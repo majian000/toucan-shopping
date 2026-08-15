@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerShopDetailVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -316,5 +318,178 @@ public class ShopController {
     }
 
 
+    /**
+     * 根据ID查询（编辑回显用，含base64图标数据）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:list"})
+    @RequestMapping(value = "/queryById", method = RequestMethod.POST)
+    public ResultObjectVO queryById(HttpServletRequest request, @RequestBody SellerShopVO sellerShopVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(sellerShopVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerShopVO);
+            ResultObjectVO detailResult = sellerShopService.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                if(detailResult.getData() == null)
+                {
+                    resultObjectVO.setMsg("店铺不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                List<SellerShopVO> sellerShopVOS = detailResult.formatDataList(SellerShopVO.class);
+                if(CollectionUtils.isEmpty(sellerShopVOS)){
+                    resultObjectVO.setMsg("请重试");
+                    resultObjectVO.setCode(TableVO.FAILD);
+                    return resultObjectVO;
+                }
+                SellerShopVO vo = sellerShopVOS.get(0);
+                if(StringUtils.isNotEmpty(vo.getLogo()))
+                {
+                    vo.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + vo.getLogo());
+                    // 下载文件并转base64
+                    byte[] fileBytes = imageUploadService.downloadFile(vo.getLogo());
+                    if(fileBytes != null && fileBytes.length > 0)
+                    {
+                        String path = vo.getLogo();
+                        String ext = "jpg";
+                        if(path.contains("."))
+                        {
+                            ext = path.substring(path.lastIndexOf(".") + 1).toLowerCase();
+                        }
+                        String mime;
+                        switch (ext) {
+                            case "png": mime = "image/png"; break;
+                            case "gif": mime = "image/gif"; break;
+                            case "bmp": mime = "image/bmp"; break;
+                            case "jpeg": mime = "image/jpeg"; break;
+                            case "jpg": mime = "image/jpeg"; break;
+                            default: mime = "image/jpeg"; break;
+                        }
+                        vo.setLogoBase64("data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes));
+                    }
+                }
+                resultObjectVO.setData(vo);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:shop:list"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody SellerShopVO sellerShopVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(sellerShopVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerShopVO);
+            ResultObjectVO detailResult = sellerShopService.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                if(detailResult.getData() == null)
+                {
+                    resultObjectVO.setMsg("店铺不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                SellerShopVO vo = detailResult.formatData(SellerShopVO.class);
+                if(StringUtils.isNotEmpty(vo.getLogo()))
+                {
+                    vo.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + vo.getLogo());
+                }
+                fillAdminName(vo);
+                SellerShopDetailVO detailVO = new SellerShopDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 填充创建人/修改人姓名
+     */
+    private void fillAdminName(SellerShopVO sellerShopVO)
+    {
+        if(sellerShopVO == null)
+        {
+            return;
+        }
+        List<String> adminIdList = new ArrayList<String>();
+        if(sellerShopVO.getCreateAdminId() != null)
+        {
+            adminIdList.add(sellerShopVO.getCreateAdminId());
+        }
+        if(sellerShopVO.getUpdateAdminId() != null)
+        {
+            adminIdList.add(sellerShopVO.getUpdateAdminId());
+        }
+        if(adminIdList.isEmpty())
+        {
+            return;
+        }
+        try {
+            String[] adminIds = adminIdList.toArray(new String[0]);
+            AdminVO queryAdminVO = new AdminVO();
+            queryAdminVO.setAdminIds(adminIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+                if(adminVOS != null)
+                {
+                    for(AdminVO adminVO : adminVOS)
+                    {
+                        if(sellerShopVO.getCreateAdminId() != null && sellerShopVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            sellerShopVO.setCreateAdminName(adminVO.getUsername());
+                        }
+                        if(sellerShopVO.getUpdateAdminId() != null && sellerShopVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                        {
+                            sellerShopVO.setUpdateAdminName(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
 
 }

@@ -31,9 +31,9 @@
 
     <el-card shadow="never" class="table-card">
       <el-table :data="tableData" border stripe v-loading="loading" row-key="id">
-        <el-table-column prop="id" label="ID" width="180" />
+        <el-table-column prop="id" label="ID" width="230" />
         <el-table-column prop="name" label="模板名称" width="200" show-overflow-tooltip />
-        <el-table-column prop="shopId" label="店铺ID" width="180" />
+        <el-table-column prop="shopId" label="店铺ID" width="230" />
         <el-table-column prop="freightStatus" label="运费状态" width="110" align="center">
           <template #default="{ row }">
             <el-tag :type="row.freightStatus === 1 ? 'primary' : 'success'" size="small">
@@ -76,8 +76,14 @@
               {{ detailInfo.freightStatus === 1 ? '自定义运费' : detailInfo.freightStatus === 2 ? '包邮' : detailInfo.freightStatus }}
             </el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="计价方式">{{ formatValuationMethod(detailInfo.valuationMethod) }}</el-descriptions-item>
-          <el-descriptions-item label="运送方式">{{ formatTransportModel(detailInfo.transportModel) }}</el-descriptions-item>
+          <el-descriptions-item label="计价方式">
+            <el-tag type="warning" size="small">{{ formatValuationMethod(detailInfo.valuationMethod) }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="运送方式">
+            <template v-if="detailInfo.transportModel">
+              <el-tag v-for="(item, idx) in transportModelList(detailInfo.transportModel)" :key="idx" type="success" size="small" style="margin-right:4px">{{ item }}</el-tag>
+            </template>
+          </el-descriptions-item>
           <el-descriptions-item label="发货地" :span="2">{{ [detailInfo.deliverProvinceName, detailInfo.deliverCityName, detailInfo.deliverAreaName].filter(Boolean).join(' ') }}</el-descriptions-item>
           <el-descriptions-item label="模板排序">{{ detailInfo.templateSort }}</el-descriptions-item>
           <el-descriptions-item label="备注" :span="2">{{ detailInfo.remark }}</el-descriptions-item>
@@ -128,10 +134,10 @@ function formatValuationMethod(v) {
   if (v === 3) return '按体积'
   return v
 }
-function formatTransportModel(v) {
-  if (!v) return ''
+function transportModelList(v) {
+  if (!v) return []
   const map = { 1: '快递', 2: 'EMS', 3: '平邮' }
-  return String(v).split(',').map(i => map[i] || i).join(',')
+  return String(v).split(',').map(i => map[i] || i).filter(Boolean)
 }
 
 const detailVisible = ref(false)

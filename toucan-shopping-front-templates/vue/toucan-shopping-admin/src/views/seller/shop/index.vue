@@ -86,6 +86,7 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="查看店铺" width="700px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading" style="min-height:120px">
       <el-descriptions v-if="detailInfo" :column="2" border label-width="110px">
         <el-descriptions-item label="店铺名称" :span="2">{{ detailInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="公开店铺ID">{{ detailInfo.publicShopId }}</el-descriptions-item>
@@ -104,6 +105,7 @@
         <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
         <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
       </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -111,7 +113,7 @@
 
     <!-- 编辑弹窗 -->
     <el-dialog v-model="dialogVisible" title="编辑店铺" width="640px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="editLoading">
         <el-form-item label="店铺名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入店铺名称" maxlength="50" />
         </el-form-item>
@@ -132,13 +134,13 @@
         </el-form-item>
         <el-form-item label="所在地区">
           <div style="display:flex;gap:8px;width:100%">
-            <el-select v-model="formData.provinceCode" placeholder="省份" style="flex:1" @change="onProvinceChange">
+            <el-select v-model="formData.provinceCode" placeholder="省份/直辖市" style="flex:1" :loading="provinceLoading" @change="onProvinceChange">
               <el-option v-for="p in provinceList" :key="p.code" :label="p.name" :value="p.code" />
             </el-select>
-            <el-select v-model="formData.cityCode" placeholder="地市" style="flex:1" @change="onCityChange">
+            <el-select v-if="!isMunicipality" v-model="formData.cityCode" placeholder="地市" style="flex:1" :loading="cityLoading" @change="onCityChange">
               <el-option v-for="c in cityList" :key="c.code" :label="c.name" :value="c.code" />
             </el-select>
-            <el-select v-model="formData.areaCode" placeholder="区县" style="flex:1" @change="onAreaChange">
+            <el-select v-model="formData.areaCode" placeholder="区县" style="flex:1" :loading="areaLoading" @change="onAreaChange">
               <el-option v-for="a in areaList" :key="a.code" :label="a.name" :value="a.code" />
             </el-select>
           </div>
@@ -209,6 +211,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, View, Edit, Delete, Plus, Upload, FolderOpened } from '@element-plus/icons-vue'
 import {
   listShop, updateShop, deleteShop, deleteShops, disabledEnabledShop, listAreaByParentCode,
+  queryShopById, detailShop,
   shopCategoryTreeTableByPid, saveShopCategory, updateShopCategory, deleteShopCategory,
   moveShopCategoryUp, moveShopCategoryDown, moveShopCategoryTop, moveShopCategoryBottom
 } from '@/api/seller/shop'
@@ -256,20 +259,28 @@ function approveTagType(v) {
 // ============ 查看 ============
 const detailVisible = ref(false)
 const detailInfo = ref(null)
-function handleView(row) {
-  detailInfo.value = row
+const detailLoading = ref(false)
+async function handleView(row) {
   detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailShop({ id: row.id })
+    detailInfo.value = (res && res.data && res.data.basicInfo) || row
+  } catch { } finally { detailLoading.value = false }
 }
 
 // ============ 编辑 ============
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const editLoading = ref(false)
 const formRef = ref(null)
 
 const formData = reactive({
   id: null, publicShopId: '', name: '', introduce: '', logo: '', httpLogo: '', logoBase64: '',
   provinceCode: '', cityCode: '', areaCode: '', province: '', city: '', area: '',
-  detailAddress: '', enableStatus: 1, remark: ''
+  detailAddress: '', enableStatus: 1, remark: '',
+  userMainId: null, approveStatus: null, shopRank: null, categoryMaxCount: null, type: null
 })
 const formRules = {
   name: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }]
@@ -278,10 +289,17 @@ const formRules = {
 const provinceList = ref([])
 const cityList = ref([])
 const areaList = ref([])
+const isMunicipality = ref(false)
+const provinceLoading = ref(false)
+const cityLoading = ref(false)
+const areaLoading = ref(false)
 
 async function loadProvinceList() {
-  const res = await listAreaByParentCode({ code: '-1' })
-  if (res.code === 1) provinceList.value = res.data || []
+  provinceLoading.value = true
+  try {
+    const res = await listAreaByParentCode({ code: '-1' })
+    if (res.code === 1) provinceList.value = res.data || []
+  } finally { provinceLoading.value = false }
 }
 
 async function onProvinceChange(code) {
@@ -289,12 +307,19 @@ async function onProvinceChange(code) {
   formData.cityCode = ''; formData.city = ''; formData.areaCode = ''; formData.area = ''
   const p = provinceList.value.find(x => x.code === code)
   if (p) formData.province = p.name
-  const res = await listAreaByParentCode({ code: code })
-  if (res.code !== 1) return
-  if (p && (p.isMunicipality === 1 || p.isMunicipality === '1')) {
-    areaList.value = res.data || []
+  isMunicipality.value = !!(p && (p.isMunicipality === 1 || p.isMunicipality === '1'))
+  if (isMunicipality.value) {
+    areaLoading.value = true
+    try {
+      const res = await listAreaByParentCode({ code: code })
+      if (res.code === 1) areaList.value = res.data || []
+    } finally { areaLoading.value = false }
   } else {
-    cityList.value = res.data || []
+    cityLoading.value = true
+    try {
+      const res = await listAreaByParentCode({ code: code })
+      if (res.code === 1) cityList.value = res.data || []
+    } finally { cityLoading.value = false }
   }
 }
 
@@ -303,8 +328,11 @@ async function onCityChange(code) {
   formData.areaCode = ''; formData.area = ''
   const c = cityList.value.find(x => x.code === code)
   if (c) formData.city = c.name
-  const res = await listAreaByParentCode({ code: code })
-  if (res.code === 1) areaList.value = res.data || []
+  areaLoading.value = true
+  try {
+    const res = await listAreaByParentCode({ code: code })
+    if (res.code === 1) areaList.value = res.data || []
+  } finally { areaLoading.value = false }
 }
 
 function onAreaChange(code) {
@@ -326,31 +354,58 @@ function beforeLogoUpload(file) {
 }
 
 async function handleEdit(row) {
-  Object.assign(formData, {
-    id: row.id, publicShopId: row.publicShopId, name: row.name || '', introduce: row.introduce || '',
-    logo: row.logo || '', httpLogo: row.httpLogo || '', logoBase64: '',
-    provinceCode: row.provinceCode || '', cityCode: row.cityCode || '', areaCode: row.areaCode || '',
-    province: row.province || '', city: row.city || '', area: row.area || '',
-    detailAddress: row.detailAddress || '', enableStatus: row.enableStatus != null ? Number(row.enableStatus) : 1, remark: row.remark || ''
-  })
   dialogVisible.value = true
-  await loadProvinceList()
-  const pCode = formData.provinceCode
-  const cCode = row.cityCode || ''
-  const aCode = row.areaCode || ''
-  if (pCode) {
-    await onProvinceChange(pCode)
-    if (cCode) {
-      formData.cityCode = cCode
-      formData.city = row.city || ''
-      await onCityChange(cCode)
-      formData.areaCode = aCode
-      formData.area = row.area || ''
-    } else {
-      // 直辖市：省份变更时已直接加载区县
-      formData.areaCode = aCode
-      formData.area = row.area || ''
+  editLoading.value = true
+  // 先重置，避免残留上一次打开的数据
+  Object.assign(formData, {
+    id: null, publicShopId: '', name: '', introduce: '', logo: '', httpLogo: '', logoBase64: '',
+    provinceCode: '', cityCode: '', areaCode: '', province: '', city: '', area: '',
+    detailAddress: '', enableStatus: 1, remark: '',
+    userMainId: null, approveStatus: null, shopRank: null, categoryMaxCount: null, type: null
+  })
+  isMunicipality.value = false
+  try {
+    const res = await queryShopById({ id: row.id })
+    const vo = res && res.data
+    if (!vo) {
+      dialogVisible.value = false
+      return
     }
+    Object.assign(formData, {
+      id: vo.id, publicShopId: vo.publicShopId, name: vo.name || '', introduce: vo.introduce || '',
+      logo: vo.logo || '', httpLogo: vo.logoBase64 || vo.httpLogo || '', logoBase64: vo.logoBase64 || '',
+      provinceCode: vo.provinceCode || '', cityCode: vo.cityCode || '', areaCode: vo.areaCode || '',
+      province: vo.province || '', city: vo.city || '', area: vo.area || '',
+      detailAddress: vo.detailAddress || '', enableStatus: vo.enableStatus != null ? Number(vo.enableStatus) : 1, remark: vo.remark || '',
+      userMainId: vo.userMainId != null ? vo.userMainId : null,
+      approveStatus: vo.approveStatus != null ? vo.approveStatus : null,
+      shopRank: vo.shopRank != null ? vo.shopRank : null,
+      categoryMaxCount: vo.categoryMaxCount != null ? vo.categoryMaxCount : null,
+      type: vo.type != null ? vo.type : null
+    })
+    // 级联加载地区并回显
+    await loadProvinceList()
+    const pCode = formData.provinceCode
+    const cCode = vo.cityCode || ''
+    const aCode = vo.areaCode || ''
+    if (pCode) {
+      await onProvinceChange(pCode)
+      if (cCode) {
+        formData.cityCode = cCode
+        formData.city = vo.city || ''
+        await onCityChange(cCode)
+        formData.areaCode = aCode
+        formData.area = vo.area || ''
+      } else {
+        // 直辖市：省份变更时已直接加载区县
+        formData.areaCode = aCode
+        formData.area = vo.area || ''
+      }
+    }
+  } catch {
+    dialogVisible.value = false
+  } finally {
+    editLoading.value = false
   }
 }
 
