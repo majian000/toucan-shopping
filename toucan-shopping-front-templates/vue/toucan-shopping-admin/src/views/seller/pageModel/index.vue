@@ -68,33 +68,19 @@
       </div>
     </el-card>
 
-    <!-- 查看详情弹窗 -->
-    <el-dialog v-model="detailVisible" title="查看页面" width="650px" :close-on-click-modal="false" destroy-on-close>
-      <el-descriptions v-if="detailInfo" :column="2" border label-width="110px">
-        <el-descriptions-item label="店铺名称" :span="2">{{ detailInfo.shopName }}</el-descriptions-item>
-        <el-descriptions-item label="店铺ID">{{ detailInfo.shopId }}</el-descriptions-item>
-        <el-descriptions-item label="类型">
-          <el-tag :type="detailInfo.type === 2 ? 'success' : 'info'" size="small">
-            {{ detailInfo.type === 1 ? '预览页' : detailInfo.type === 2 ? '正式页' : detailInfo.type }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="位置">{{ detailInfo.position === 1 ? 'PC首页' : detailInfo.position }}</el-descriptions-item>
-        <el-descriptions-item label="设计器版本">{{ detailInfo.designerVersion }}</el-descriptions-item>
-        <el-descriptions-item label="启用状态">
-          <el-tag :type="detailInfo.enableStatus === 1 ? 'success' : 'info'" size="small">
-            {{ detailInfo.enableStatus === 1 ? '启用' : '禁用' }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="PC首页正式页" :span="2">
-          <a v-if="detailInfo.pcIndexPage" :href="detailInfo.pcIndexPage" target="_blank" rel="noopener">{{ detailInfo.pcIndexPage }}</a>
-        </el-descriptions-item>
-        <el-descriptions-item label="创建人">{{ detailInfo.createrName }}</el-descriptions-item>
-        <el-descriptions-item label="修改人">{{ detailInfo.updaterName }}</el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
-        <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
-      </el-descriptions>
+    <!-- 查看店铺页面 -->
+    <el-dialog v-model="previewVisible" title="查看店铺页面" width="80%" top="5vh" :close-on-click-modal="false" destroy-on-close>
+      <div class="preview-toolbar">
+        <span class="shop-name" v-if="previewShopName">店铺：{{ previewShopName }}</span>
+        <span v-else></span>
+        <el-link type="primary" :icon="Link" :disabled="!previewUrl" @click="openNewWindow">新窗口打开</el-link>
+      </div>
+      <div class="iframe-wrap" v-loading="previewLoading">
+        <iframe v-if="previewUrl" :src="previewUrl" class="preview-frame" frameborder="0" @load="previewLoading = false"></iframe>
+        <el-empty v-else description="暂无页面地址" />
+      </div>
       <template #footer>
-        <el-button @click="detailVisible = false">关闭</el-button>
+        <el-button @click="previewVisible = false">关闭</el-button>
       </template>
     </el-dialog>
   </div>
@@ -103,7 +89,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, RefreshRight, View, Delete } from '@element-plus/icons-vue'
+import { Search, RefreshRight, View, Delete, Link } from '@element-plus/icons-vue'
 import { listPageModel, deletePageModel } from '@/api/seller/pageModel'
 
 const searchForm = reactive({ shopId: '', type: '', position: '' })
@@ -130,11 +116,18 @@ async function loadTableData() {
   } catch { } finally { loading.value = false }
 }
 
-const detailVisible = ref(false)
-const detailInfo = ref(null)
+const previewVisible = ref(false)
+const previewUrl = ref('')
+const previewShopName = ref('')
+const previewLoading = ref(false)
 function handleView(row) {
-  detailInfo.value = row
-  detailVisible.value = true
+  previewUrl.value = row.pcIndexPage || ''
+  previewShopName.value = row.shopName || ''
+  previewLoading.value = true
+  previewVisible.value = true
+}
+function openNewWindow() {
+  if (previewUrl.value) window.open(previewUrl.value, '_blank')
 }
 
 function handleDelete(row) {
@@ -155,5 +148,10 @@ loadTableData()
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
+  .preview-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    .shop-name { color: $text-secondary; font-size: 13px; }
+  }
+  .iframe-wrap { width: 100%; }
+  .preview-frame { width: 100%; height: calc(100vh - 260px); min-height: 480px; border: none; background: #fff; }
 }
 </style>
