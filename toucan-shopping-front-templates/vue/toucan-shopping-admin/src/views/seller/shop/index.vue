@@ -167,8 +167,8 @@
     <!-- 分类管理弹窗 -->
     <el-dialog v-model="categoryVisible" :title="'分类管理 - ' + categoryShopName" width="860px" :close-on-click-modal="false" destroy-on-close>
       <div class="toolbar" style="margin-bottom:8px">
-        <el-button type="primary" :icon="Plus" v-permission="'toucan:seller:shopCategory:save'" @click="openCategoryAdd(-1)">添加根分类</el-button>
-        <el-button :icon="RefreshRight" @click="loadCategoryRoot">刷新</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="'toucan:seller:shopCategory:list:add:toolbarbtn'" @click="openCategoryAdd(-1)">添加根分类</el-button>
+        <el-button :icon="RefreshRight"    v-permission="'toucan:seller:shopCategory:tree:table'"  @click="loadCategoryRoot">刷新</el-button>
       </div>
       <el-table ref="categoryTableRef" :data="categoryData" border stripe v-loading="categoryLoading" row-key="id" lazy :load="loadCategoryChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }">
         <el-table-column prop="name" label="名称" width="240" />
@@ -178,13 +178,13 @@
         <el-table-column prop="updateDate" label="修改时间" width="170" />
         <el-table-column label="操作" width="300" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" :icon="Plus" v-permission="'toucan:seller:shopCategory:save'" @click="openCategoryAdd(row.id)">添加子分类</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:seller:shopCategory:update'" @click="openCategoryEdit(row)">编辑</el-button>
-            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:shopCategory:delete'" @click="handleCategoryDelete(row)">删除</el-button>
-            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:up'" @click="handleCategoryMove('up', row)">上移</el-button>
-            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:down'" @click="handleCategoryMove('down', row)">下移</el-button>
-            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:top'" @click="handleCategoryMove('top', row)">置顶</el-button>
-            <el-button link size="small" v-permission="'toucan:seller:shopCategory:move:bottom'" @click="handleCategoryMove('bottom', row)">置底</el-button>
+            <el-button type="primary" link size="small" :icon="Plus" v-permission="'toucan:seller:shopCategory:list:addChildCategory:btn'" @click="openCategoryAdd(row.id)">添加子分类</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:seller:shopCategory:list:btn:edit'" @click="openCategoryEdit(row)">编辑</el-button>
+            <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:seller:shopCategory:list:btn:delete'" @click="handleCategoryDelete(row)">删除</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:list:move:up:btn'" @click="handleCategoryMove('up', row)">上移</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:list:move:down:btn'" @click="handleCategoryMove('down', row)">下移</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:list:move:top:btn'" @click="handleCategoryMove('top', row)">置顶</el-button>
+            <el-button link size="small" v-permission="'toucan:seller:shopCategory:list:move:bottom:btn'" @click="handleCategoryMove('bottom', row)">置底</el-button>
           </template>
         </el-table-column>
       </el-table>
