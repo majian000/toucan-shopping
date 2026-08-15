@@ -37,8 +37,8 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-          <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
+          <el-button type="primary" :icon="Search"  v-permission="'toucan:order:order:menu'"   @click="handleSearch">搜索</el-button>
+          <el-button :icon="RefreshRight"  v-permission="'toucan:order:order:menu'"   @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -83,8 +83,8 @@
         <el-table-column label="操作" width="280" fixed="right" align="center">
           <template #default="{ row }">
             <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:order:item:list'" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:order:update'" @click="handleEdit(row)">修改</el-button>
-            <el-button type="warning" link size="small" :icon="Goods" v-permission="'toucan:order:list:item:updatesFromOrderList'" @click="handleModifyItems(row)">修改订单项</el-button>
+            <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:order:order:btn:update'" @click="handleEdit(row)">修改</el-button>
+            <el-button type="warning" link size="small" :icon="Goods" v-permission="'toucan:order:item:modifyBtn'" @click="handleModifyItems(row)">修改订单项</el-button>
             <el-button type="info" link size="small" :icon="Document" v-permission="'toucan:order:orderLogList'" @click="handleOrderLog(row)">订单日志</el-button>
             <el-button
               type="danger" link size="small" :icon="CircleClose"
