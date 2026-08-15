@@ -102,8 +102,9 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="订单详情" width="1000px" :close-on-click-modal="false" destroy-on-close>
-      <div v-loading="detailLoading" class="dialog-body-scroll">
-        <template v-if="detailRow">
+      <div v-loading="detailLoading" class="dialog-body">
+        <div class="dialog-body-scroll">
+          <template v-if="detailRow">
           <el-descriptions title="订单信息" :column="3" border>
             <el-descriptions-item label="主订单编号">{{ detailRow.mainOrderNo }}</el-descriptions-item>
             <el-descriptions-item label="订单编号">{{ detailRow.orderNo }}</el-descriptions-item>
@@ -169,7 +170,8 @@
             <el-table-column prop="orderItemAmount" label="总金额" width="110" align="right" />
             <el-table-column prop="deliveryReceiveTime" label="收货时间" width="170" />
           </el-table>
-        </template>
+          </template>
+        </div>
       </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
@@ -178,7 +180,8 @@
 
     <!-- 修改订单弹窗 -->
     <el-dialog v-model="editVisible" title="修改订单" width="760px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="editFormRef" :model="editForm" label-width="130px" v-loading="editLoading" class="dialog-body-scroll">
+      <div v-loading="editLoading" class="dialog-body">
+      <el-form ref="editFormRef" :model="editForm" label-width="130px" class="dialog-body-scroll">
         <el-divider content-position="left">订单信息</el-divider>
         <el-form-item label="主订单编号"><el-input :model-value="editForm.mainOrderNo" disabled /></el-form-item>
         <el-form-item label="订单编号"><el-input :model-value="editForm.orderNo" disabled /></el-form-item>
@@ -244,6 +247,7 @@
         </el-form-item>
         <el-form-item label="收货地址"><el-input v-model="editForm.orderConsigneeAddress.address" type="textarea" :rows="2" /></el-form-item>
       </el-form>
+      </div>
       <template #footer>
         <el-button @click="editVisible = false">取消</el-button>
         <el-button type="primary" @click="handleEditSubmit" :loading="editSubmitLoading">确定</el-button>
@@ -466,13 +470,16 @@ const detailItems = ref([])
 async function handleView(row) {
   detailVisible.value = true
   detailLoading.value = true
-  detailRow.value = row
+  detailRow.value = null
   detailItems.value = []
   try {
     const res = await detailOrder({ id: row.id })
-    detailRow.value = res.data || row
+    detailRow.value = res.data || null
     detailItems.value = (res.data && res.data.orderItems) || []
-  } catch { } finally { detailLoading.value = false }
+  } catch {
+    detailRow.value = null
+    detailItems.value = []
+  } finally { detailLoading.value = false }
 }
 
 // ===================== 修改订单 =====================
@@ -680,6 +687,11 @@ loadTableData()
   :deep(.el-descriptions__table) { width: 100%; }
   :deep(.el-descriptions__label) { word-break: keep-all; }
   :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
+}
+
+.dialog-body {
+  position: relative;
+  min-height: 320px;
 }
 
 .dialog-body-scroll {
