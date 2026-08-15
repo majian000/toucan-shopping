@@ -32,6 +32,9 @@
             and t.title  like concat('%',#{title},'%')
         </if>
 
+        <if test="shopId!=null">
+            and t.shop_id = #{shopId}
+        </if>
 
         <if test="startShowDate!=null">
             <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
