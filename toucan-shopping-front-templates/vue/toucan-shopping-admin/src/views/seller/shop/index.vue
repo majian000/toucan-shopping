@@ -170,7 +170,7 @@
         <el-button type="primary" :icon="Plus" v-permission="'toucan:seller:shopCategory:list:add:toolbarbtn'" @click="openCategoryAdd(-1)">添加根分类</el-button>
         <el-button :icon="RefreshRight"    v-permission="'toucan:seller:shopCategory:tree:table'"  @click="loadCategoryRoot">刷新</el-button>
       </div>
-      <el-table ref="categoryTableRef" :data="categoryData" border stripe v-loading="categoryLoading" row-key="id" lazy :load="loadCategoryChildren" :tree-props="{ children: 'children', hasChildren: 'haveChild' }">
+      <el-table ref="categoryTableRef" :key="categoryTableKey" :data="categoryData" border stripe v-loading="categoryLoading" row-key="id" :tree-props="{ children: 'children' }" max-height="500">
         <el-table-column prop="name" label="名称" width="240" />
         <el-table-column prop="categorySort" label="排序" width="90" align="center" />
         <el-table-column prop="href" label="跳转路径" min-width="180" show-overflow-tooltip />
@@ -466,6 +466,7 @@ const categoryData = ref([])
 const categoryShopId = ref(null)
 const categoryShopName = ref('')
 const categoryTableRef = ref(null)
+const categoryTableKey = ref(0)
 
 function handleCategory(row) {
   categoryShopId.value = row.id
@@ -478,22 +479,16 @@ async function loadCategoryRoot() {
   categoryLoading.value = true
   try {
     const res = await shopCategoryTreeTableByPid({ shopId: categoryShopId.value, parentId: -1 })
-    if (res.code === 1) {
-      categoryData.value = (res.data || []).map(item => ({ ...item, haveChild: !!item.haveChild }))
-    } else {
-      categoryData.value = []
-    }
+    const roots = res.code === 1 ? (res.data || []) : []
+    // 店铺分类最多两级，一次性加载所有子分类，前端构建树，避免懒加载缓存导致列表不刷新
+    await Promise.all(roots.map(async (root) => {
+      const childRes = await shopCategoryTreeTableByPid({ shopId: categoryShopId.value, parentId: root.id })
+      root.children = childRes.code === 1 ? (childRes.data || []) : []
+    }))
+    categoryData.value = roots
+    // 重建表格，清空展开状态，确保新增/删除子分类后重新展开显示最新数据
+    categoryTableKey.value++
   } catch { } finally { categoryLoading.value = false }
-}
-
-async function loadCategoryChildren(row, treeNode, resolve) {
-  try {
-    const res = await shopCategoryTreeTableByPid({ shopId: categoryShopId.value, parentId: row.id })
-    const children = (res.code === 1 ? (res.data || []) : []).map(item => ({ ...item, haveChild: !!item.haveChild }))
-    resolve(children)
-  } catch {
-    resolve([])
-  }
 }
 
 const categoryDialogVisible = ref(false)
