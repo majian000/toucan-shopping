@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.sellerWebHtmlPage.freeSh
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.HttpUtils;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/seller/web/freeShop/html")
@@ -165,6 +168,61 @@ public class FreeShopGeneratorController {
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
+        return resultObjectVO;
+    }
+
+    /**
+     * 查询免费开店页静态文件选项卡
+     * 对应layui版本 /sellerWebHtmlPage/freeShopGenerator/freeShopGeneratorPage 的界面填充逻辑
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:seller:freeShop:html:generator:preview","toucan:seller:web:freeShop:html:generator:release"})
+    @RequestMapping(value = "/query/tab",method = RequestMethod.POST)
+    public ResultObjectVO queryTab()
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        List<HtmlGeneratorTab> releaseHtmlGeneratorTabList = new ArrayList<HtmlGeneratorTab>();
+        List<HtmlGeneratorTab> previewHtmlGeneratorTabList = new ArrayList<HtmlGeneratorTab>();
+        if(toucan.getShoppingSellerWebPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingSellerWebPC().getIpList()))
+        {
+            String ipList = toucan.getShoppingSellerWebPC().getIpList();
+            if(ipList.indexOf(",")!=-1)
+            {
+                String[] ips = ipList.split(",");
+                if(ips!=null&&ips.length>0)
+                {
+                    for(String ip:ips)
+                    {
+                        HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
+                        releaseHtmlGeneratorTable.setName(ip);
+                        releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/freeShop' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                        releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
+
+                        HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
+                        previewHtmlGeneratorTable.setName(ip);
+                        previewHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/preview/freeShop.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                        previewHtmlGeneratorTabList.add(previewHtmlGeneratorTable);
+                    }
+                }
+            }else{
+
+                HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
+                releaseHtmlGeneratorTable.setName(ipList);
+                releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/freeShop' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
+
+                HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
+                previewHtmlGeneratorTable.setName(ipList);
+                previewHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/htmls/preview/freeShop.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                previewHtmlGeneratorTabList.add(previewHtmlGeneratorTable);
+            }
+        }
+
+        Map<String,Object> data = new HashMap<String,Object>();
+        data.put("releaseHtmlGenerators",releaseHtmlGeneratorTabList);
+        data.put("previewHtmlGenerators",previewHtmlGeneratorTabList);
+        resultObjectVO.setData(data);
         return resultObjectVO;
     }
 

@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.page.SellerDesignerImagePageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerDesignerImageDetailVO;
 import com.toucan.shopping.modules.seller.vo.SellerDesignerImageVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -232,6 +234,185 @@ public class SellerDesignerImageController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+
+    /**
+     * 根据ID查询（编辑回显用，含base64图片数据）
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:designerImage:list"})
+    @RequestMapping(value = "/queryById", method = RequestMethod.POST)
+    public ResultObjectVO queryById(HttpServletRequest request, @RequestBody SellerDesignerImageVO sellerDesignerImageVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(sellerDesignerImageVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
+            ResultObjectVO detailResult = sellerDesignerImageService.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                if(detailResult.getData() == null)
+                {
+                    resultObjectVO.setMsg("装修图片不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                SellerDesignerImageVO vo = detailResult.formatData(SellerDesignerImageVO.class);
+                if(StringUtils.isNotEmpty(vo.getImgPath()))
+                {
+                    vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
+                    // 下载文件并转base64
+                    byte[] fileBytes = imageUploadService.downloadFile(vo.getImgPath());
+                    if(fileBytes != null && fileBytes.length > 0)
+                    {
+                        String path = vo.getImgPath();
+                        String ext = "jpg";
+                        if(path.contains("."))
+                        {
+                            ext = path.substring(path.lastIndexOf(".") + 1).toLowerCase();
+                        }
+                        String mime;
+                        switch (ext) {
+                            case "png": mime = "image/png"; break;
+                            case "gif": mime = "image/gif"; break;
+                            case "bmp": mime = "image/bmp"; break;
+                            case "jpeg": mime = "image/jpeg"; break;
+                            case "jpg": mime = "image/jpeg"; break;
+                            default: mime = "image/jpeg"; break;
+                        }
+                        vo.setImgBase64("data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes));
+                    }
+                }
+                resultObjectVO.setData(vo);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看详情
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:seller:designerImage:list"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(HttpServletRequest request, @RequestBody SellerDesignerImageVO sellerDesignerImageVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(sellerDesignerImageVO.getId() == null)
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, sellerDesignerImageVO);
+            ResultObjectVO detailResult = sellerDesignerImageService.findById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                if(detailResult.getData() == null)
+                {
+                    resultObjectVO.setMsg("装修图片不存在");
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    return resultObjectVO;
+                }
+                SellerDesignerImageVO vo = detailResult.formatData(SellerDesignerImageVO.class);
+                if(StringUtils.isNotEmpty(vo.getImgPath()))
+                {
+                    vo.setHttpImgPath(imageUploadService.getImageHttpPrefix() + vo.getImgPath());
+                }
+                fillCreaterAndUpdaterName(vo);
+                SellerDesignerImageDetailVO detailVO = new SellerDesignerImageDetailVO();
+                detailVO.setBasicInfo(vo);
+                resultObjectVO.setData(detailVO);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 填充创建人/修改人名称
+     */
+    private void fillCreaterAndUpdaterName(SellerDesignerImageVO imageVO)
+    {
+        if(imageVO == null)
+        {
+            return;
+        }
+        // 非管理员(掌柜ID)直接显示ID前缀
+        if(imageVO.getCreaterId() != null && !imageVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix()))
+        {
+            imageVO.setCreaterName("掌柜ID:"+imageVO.getCreaterId());
+        }
+        if(imageVO.getUpdaterId() != null && !imageVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix()))
+        {
+            imageVO.setUpdaterName("掌柜ID:"+imageVO.getUpdaterId());
+        }
+        // 管理员ID查询用户名
+        List<String> adminIdList = new ArrayList<String>();
+        if(imageVO.getCreaterId() != null && imageVO.getCreaterId().startsWith(AuthHeaderUtil.getAdminPrefix()))
+        {
+            adminIdList.add(imageVO.getCreaterId().substring(AuthHeaderUtil.getAdminPrefix().length()));
+        }
+        if(imageVO.getUpdaterId() != null && imageVO.getUpdaterId().startsWith(AuthHeaderUtil.getAdminPrefix()))
+        {
+            adminIdList.add(imageVO.getUpdaterId().substring(AuthHeaderUtil.getAdminPrefix().length()));
+        }
+        if(adminIdList.isEmpty())
+        {
+            return;
+        }
+        try {
+            String[] adminIds = adminIdList.toArray(new String[0]);
+            AdminVO queryAdminVO = new AdminVO();
+            queryAdminVO.setAdminIds(adminIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAdminVO);
+            ResultObjectVO resultObjectVO = adminServiceAPI.queryListByEntity(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<AdminVO> adminVOS = resultObjectVO.formatDataList(AdminVO.class);
+                if(adminVOS != null)
+                {
+                    for(AdminVO adminVO : adminVOS)
+                    {
+                        if(imageVO.getCreaterId() != null && imageVO.getCreaterId().equals(AuthHeaderUtil.getAdminPrefix()+adminVO.getAdminId()))
+                        {
+                            imageVO.setCreaterName(adminVO.getUsername());
+                        }
+                        if(imageVO.getUpdaterId() != null && imageVO.getUpdaterId().equals(AuthHeaderUtil.getAdminPrefix()+adminVO.getAdminId()))
+                        {
+                            imageVO.setUpdaterName(adminVO.getUsername());
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
     }
 
 }

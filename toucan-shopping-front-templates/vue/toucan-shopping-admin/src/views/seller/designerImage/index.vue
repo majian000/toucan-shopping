@@ -58,6 +58,7 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="查看装修图片" width="600px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading" style="min-height:120px">
       <el-descriptions v-if="detailInfo" :column="2" border label-width="100px">
         <el-descriptions-item label="标题" :span="2">{{ detailInfo.title }}</el-descriptions-item>
         <el-descriptions-item label="店铺ID">{{ detailInfo.shopId }}</el-descriptions-item>
@@ -71,6 +72,7 @@
         <el-descriptions-item label="创建时间">{{ detailInfo.createDate }}</el-descriptions-item>
         <el-descriptions-item label="修改时间">{{ detailInfo.updateDate }}</el-descriptions-item>
       </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -78,7 +80,7 @@
 
     <!-- 编辑弹窗 -->
     <el-dialog v-model="dialogVisible" title="编辑装修图片" width="520px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px" v-loading="editLoading">
         <el-form-item label="标题" prop="title">
           <el-input v-model="formData.title" placeholder="请输入标题" maxlength="100" />
         </el-form-item>
@@ -103,7 +105,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, View, Edit, Delete, Upload } from '@element-plus/icons-vue'
-import { listDesignerImage, updateDesignerImage, deleteDesignerImage } from '@/api/seller/designerImage'
+import { listDesignerImage, updateDesignerImage, deleteDesignerImage, queryDesignerImageById, detailDesignerImage } from '@/api/seller/designerImage'
 
 const searchForm = reactive({ title: '', shopId: '' })
 
@@ -132,14 +134,21 @@ async function loadTableData() {
 // ============ 查看 ============
 const detailVisible = ref(false)
 const detailInfo = ref(null)
-function handleView(row) {
-  detailInfo.value = row
+const detailLoading = ref(false)
+async function handleView(row) {
   detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailDesignerImage({ id: row.id })
+    detailInfo.value = (res && res.data && res.data.basicInfo) || row
+  } catch { } finally { detailLoading.value = false }
 }
 
 // ============ 编辑 ============
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const editLoading = ref(false)
 const formRef = ref(null)
 const previewUrl = ref('')
 const formData = reactive({ id: null, title: '', imgBase64: '' })
@@ -160,12 +169,20 @@ function beforeUpload(file) {
   return true
 }
 
-function handleEdit(row) {
-  formData.id = row.id
-  formData.title = row.title || ''
-  formData.imgBase64 = ''
-  previewUrl.value = row.httpImgPath || ''
+async function handleEdit(row) {
   dialogVisible.value = true
+  editLoading.value = true
+  // 先重置，避免残留上一次打开的数据
+  Object.assign(formData, { id: null, title: '', imgBase64: '' })
+  previewUrl.value = ''
+  try {
+    const res = await queryDesignerImageById({ id: row.id })
+    const vo = (res && res.data) || row
+    formData.id = vo.id
+    formData.title = vo.title || ''
+    formData.imgBase64 = vo.imgBase64 || ''
+    previewUrl.value = vo.imgBase64 || vo.httpImgPath || ''
+  } catch { } finally { editLoading.value = false }
 }
 
 async function handleSubmit() {

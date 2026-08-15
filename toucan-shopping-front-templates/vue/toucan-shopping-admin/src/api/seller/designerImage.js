@@ -14,3 +14,13 @@ export function updateDesignerImage(data) {
 export function deleteDesignerImage(data) {
   return request({ url: '/seller/designer/image/delete', method: 'post', data })
 }
+
+// 根据ID查询（编辑回显用，含 base64 图片数据）
+export function queryDesignerImageById(data) {
+  return request({ url: '/seller/designer/image/queryById', method: 'post', data })
+}
+
+// 查看详情 (返回 SellerDesignerImageDetailVO: { basicInfo })
+export function detailDesignerImage(data) {
+  return request({ url: '/seller/designer/image/detail', method: 'post', data })
+}
