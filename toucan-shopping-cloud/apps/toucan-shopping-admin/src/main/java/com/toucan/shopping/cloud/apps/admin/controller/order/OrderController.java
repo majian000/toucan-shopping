@@ -11,14 +11,18 @@ import com.toucan.shopping.modules.admin.auth.holder.AdminLoginHolder;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.PhoneUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.order.constant.OrderConstant;
 import com.toucan.shopping.modules.order.page.OrderPageInfo;
+import com.toucan.shopping.modules.order.vo.OrderItemVO;
 import com.toucan.shopping.modules.order.vo.OrderVO;
 import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +55,9 @@ public class OrderController {
 
     @Autowired
     private ProductSkuStockLockServiceAPI productSkuStockLockService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
 
@@ -196,6 +203,47 @@ public class OrderController {
         }catch(Exception e)
         {
             resultObjectVO.setMsg("修改失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询订单详情(订单信息+收货人+订单项)
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:order:item:list"})
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    public ResultObjectVO detail(@RequestBody OrderVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = orderService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                OrderVO orderVO = resultObjectVO.formatData(OrderVO.class);
+                if(orderVO!=null) {
+                    //收货人电话脱敏
+                    if(orderVO.getOrderConsigneeAddress()!=null) {
+                        orderVO.getOrderConsigneeAddress().setPhone(PhoneUtils.desensitization(orderVO.getOrderConsigneeAddress().getPhone()));
+                    }
+                    //订单项商品预览图
+                    if(!CollectionUtils.isEmpty(orderVO.getOrderItems())) {
+                        for(OrderItemVO orderItemVO:orderVO.getOrderItems()) {
+                            if(StringUtils.isNotEmpty(orderItemVO.getProductPreviewPath())) {
+                                orderItemVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+orderItemVO.getProductPreviewPath());
+                            }
+                        }
+                    }
+                    resultObjectVO.setData(orderVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("查询失败,请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

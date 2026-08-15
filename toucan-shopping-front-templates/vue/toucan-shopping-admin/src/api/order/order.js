@@ -15,6 +15,11 @@ export function cancelOrder(data) {
   return request({ url: '/order/cancel', method: 'post', data })
 }
 
+// 查询订单详情 (OrderVO JSON body: id; 返回订单信息+收货人+全部订单项)
+export function detailOrder(data) {
+  return request({ url: '/order/detail', method: 'post', data })
+}
+
 // 查询订单项分页列表 (OrderItemPageInfo JSON body)
 export function listOrderItem(data) {
   return request({ url: '/order/orderItem/list', method: 'post', data })

@@ -141,7 +141,7 @@
           </el-descriptions>
 
           <div class="sub-table-title">订单项列表</div>
-          <el-table :data="detailItems" border stripe size="small" v-loading="detailItemLoading">
+          <el-table :data="detailItems" border stripe size="small">
             <el-table-column prop="skuId" label="商品SKUID" width="160" show-overflow-tooltip />
             <el-table-column prop="productSkuName" label="商品名称" min-width="200" show-overflow-tooltip />
             <el-table-column label="商品预览" width="120" align="center">
@@ -169,13 +169,6 @@
             <el-table-column prop="orderItemAmount" label="总金额" width="110" align="right" />
             <el-table-column prop="deliveryReceiveTime" label="收货时间" width="170" />
           </el-table>
-          <div class="pagination-wrap">
-            <el-pagination
-              v-model:current-page="detailItemPage" v-model:page-size="detailItemLimit"
-              :page-sizes="[15, 30, 100]" layout="total, sizes, prev, pager, next"
-              :total="detailItemTotal" @size-change="loadDetailItems" @current-change="loadDetailItems"
-            />
-          </div>
         </template>
       </div>
       <template #footer>
@@ -368,7 +361,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, View, Edit, Goods, Document, CircleClose } from '@element-plus/icons-vue'
 import {
-  listOrder, updateOrder, cancelOrder, listOrderItem, listOrderItemAll,
+  listOrder, updateOrder, cancelOrder, detailOrder, listOrderItemAll,
   updatesOrderItems, listOrderLog, listAreaByParentCode
 } from '@/api/order/order'
 
@@ -469,25 +462,17 @@ const detailVisible = ref(false)
 const detailLoading = ref(false)
 const detailRow = ref(null)
 const detailItems = ref([])
-const detailItemLoading = ref(false)
-const detailItemPage = ref(1)
-const detailItemLimit = ref(15)
-const detailItemTotal = ref(0)
 
-async function loadDetailItems() {
-  detailItemLoading.value = true
-  try {
-    const res = await listOrderItem({ orderId: detailRow.value.id, page: detailItemPage.value, limit: detailItemLimit.value })
-    detailItems.value = res.data || []
-    detailItemTotal.value = res.count || 0
-  } catch { } finally { detailItemLoading.value = false }
-}
-
-function handleView(row) {
+async function handleView(row) {
   detailVisible.value = true
+  detailLoading.value = true
   detailRow.value = row
-  detailItemPage.value = 1
-  loadDetailItems()
+  detailItems.value = []
+  try {
+    const res = await detailOrder({ id: row.id })
+    detailRow.value = res.data || row
+    detailItems.value = (res.data && res.data.orderItems) || []
+  } catch { } finally { detailLoading.value = false }
 }
 
 // ===================== 修改订单 =====================

@@ -400,6 +400,7 @@ public class OrderBusinessService {
             OrderVO orderVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),OrderVO.class);
             orderVO = orderService.queryOneVOByVO(orderVO);
             orderVO.setOrderConsigneeAddress(orderConsigneeAddressService.queryOneByOrderNo(orderVO.getOrderNo()));
+            orderVO.setOrderItems(orderItemService.findByOrderId(orderVO.getId()));
             resultObjectVO.setData(orderVO);
         }catch(Exception e)
         {
