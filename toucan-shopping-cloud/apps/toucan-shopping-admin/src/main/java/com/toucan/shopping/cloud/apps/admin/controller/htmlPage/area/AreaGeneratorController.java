@@ -153,7 +153,8 @@ public class AreaGeneratorController {
      * 对应layui版本 /htmlPage/areaGenerator/areaGeneratorPage 的界面填充逻辑
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:area:html:generator:release"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY,
+            permissions = {"toucan:area:htmlGenerator:release"})
     @RequestMapping(value = "/query/tab",method = RequestMethod.POST)
     public ResultObjectVO queryTab()
     {
