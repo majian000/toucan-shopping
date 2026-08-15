@@ -218,7 +218,9 @@ export const menuConfig = [
         icon: 'Tickets',
         permission: 'toucan:order:order',
         children: [
-          { path: '/order/order', name: 'OrderOrder', label: '订单列表', icon: 'List', permission: 'toucan:order:order:menu', component: () => import('@/views/order/order/index.vue') }
+          { path: '/order/order', name: 'OrderOrder', label: '订单列表', icon: 'List', permission: 'toucan:order:order:menu', component: () => import('@/views/order/order/index.vue') },
+          { path: '/order/pay', name: 'OrderPay', label: '交易流水', icon: 'Money', permission: 'toucan:order:pay:list', component: () => import('@/views/order/pay/index.vue') },
+          { path: '/order/refund', name: 'OrderRefund', label: '退款流水', icon: 'RefreshLeft', permission: 'toucan:order:refund:list', component: () => import('@/views/order/refund/index.vue') }
         ]
       }
     ]

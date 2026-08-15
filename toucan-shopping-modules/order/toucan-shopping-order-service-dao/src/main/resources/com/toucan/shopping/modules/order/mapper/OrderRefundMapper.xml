@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.order.mapper.OrderRefundMapper">
+
+    <resultMap id="orderRefundMap" type="com.toucan.shopping.modules.order.entity.OrderRefund" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="refund_no" jdbcType="VARCHAR" property="refundNo" />
+        <result column="pay_no" jdbcType="VARCHAR" property="payNo" />
+        <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="refund_type" jdbcType="SMALLINT" property="refundType" />
+        <result column="refund_amount" jdbcType="DECIMAL" property="refundAmount" />
+        <result column="refund_status" jdbcType="SMALLINT" property="refundStatus" />
+        <result column="outer_refund_no" jdbcType="VARCHAR" property="outerRefundNo" />
+        <result column="notify_content" jdbcType="VARCHAR" property="notifyContent" />
+        <result column="refund_date" jdbcType="TIMESTAMP" property="refundDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
+    </resultMap>
+
+
+    <resultMap id="orderRefundVOMap" type="com.toucan.shopping.modules.order.vo.OrderRefundVO" extends="orderRefundMap">
+
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="refundNo!=null and refundNo!='' ">
+            and t.refund_no = #{refundNo}
+        </if>
+
+        <if test="payNo!=null and payNo!='' ">
+            and t.pay_no = #{payNo}
+        </if>
+
+        <if test="mainOrderNo!=null and mainOrderNo!='' ">
+            and t.main_order_no = #{mainOrderNo}
+        </if>
+
+        <if test="orderNo!=null and orderNo!='' ">
+            and t.order_no = #{orderNo}
+        </if>
+
+        <if test="userId!=null and userId!='' ">
+            and t.user_id = #{userId}
+        </if>
+
+        <if test="refundStatus!=null">
+            and t.refund_status = #{refundStatus}
+        </if>
+
+        <if test="startCreateDate!=null">
+            <![CDATA[
+                and t.create_date>= #{startCreateDate}
+            ]]>
+        </if>
+
+        <if test="endCreateDate!=null">
+            <![CDATA[
+                and t.create_date<= #{endCreateDate}
+            ]]>
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderRefund" >
+        insert into t_order_refund(id,refund_no,pay_no,main_order_no,order_no,user_id,refund_type,refund_amount,refund_status,outer_refund_no,notify_content,refund_date,app_code,create_date,delete_status,sharding_date)
+        values(#{id},#{refundNo},#{payNo},#{mainOrderNo},#{orderNo},#{userId},#{refundType},#{refundAmount},#{refundStatus},#{outerRefundNo},#{notifyContent},#{refundDate},#{appCode},#{createDate},0,#{shardingDate})
+    </insert>
+
+
+
+
+    <select id="queryListPage" resultMap="orderRefundVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderRefundPageInfo">
+        select t.* from t_order_refund t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderRefundPageInfo">
+        select count(*) from t_order_refund t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
+
+
+</mapper>

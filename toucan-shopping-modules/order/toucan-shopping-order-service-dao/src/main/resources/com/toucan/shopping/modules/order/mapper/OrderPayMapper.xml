@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.order.mapper.OrderPayMapper">
+
+    <resultMap id="orderPayMap" type="com.toucan.shopping.modules.order.entity.OrderPay" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="pay_no" jdbcType="VARCHAR" property="payNo" />
+        <result column="main_order_no" jdbcType="VARCHAR" property="mainOrderNo" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="pay_type" jdbcType="SMALLINT" property="payType" />
+        <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+        <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
+        <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+        <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
+        <result column="payer_id" jdbcType="VARCHAR" property="payerId" />
+        <result column="prepay_id" jdbcType="VARCHAR" property="prepayId" />
+        <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
+        <result column="notify_id" jdbcType="VARCHAR" property="notifyId" />
+        <result column="verify_status" jdbcType="INTEGER" property="verifyStatus" />
+        <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime" />
+        <result column="notify_content" jdbcType="VARCHAR" property="notifyContent" />
+        <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="sharding_date" jdbcType="TIMESTAMP" property="shardingDate" />
+    </resultMap>
+
+
+    <resultMap id="orderPayVOMap" type="com.toucan.shopping.modules.order.vo.OrderPayVO" extends="orderPayMap">
+
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="payNo!=null and payNo!='' ">
+            and t.pay_no = #{payNo}
+        </if>
+
+        <if test="mainOrderNo!=null and mainOrderNo!='' ">
+            and t.main_order_no = #{mainOrderNo}
+        </if>
+
+        <if test="userId!=null and userId!='' ">
+            and t.user_id = #{userId}
+        </if>
+
+        <if test="payType!=null">
+            and t.pay_type = #{payType}
+        </if>
+
+        <if test="tradeStatus!=null">
+            and t.trade_status = #{tradeStatus}
+        </if>
+
+        <if test="outerTradeNo!=null and outerTradeNo!='' ">
+            and t.outer_trade_no = #{outerTradeNo}
+        </if>
+
+        <if test="startCreateDate!=null">
+            <![CDATA[
+                and t.create_date>= #{startCreateDate}
+            ]]>
+        </if>
+
+        <if test="endCreateDate!=null">
+            <![CDATA[
+                and t.create_date<= #{endCreateDate}
+            ]]>
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderPay" >
+        insert into t_order_pay(id,pay_no,main_order_no,user_id,pay_type,trade_type,pay_method,pay_amount,trade_status,payer_id,prepay_id,outer_trade_no,notify_id,verify_status,notify_time,notify_content,pay_date,expire_time,app_code,create_date,delete_status,sharding_date)
+        values(#{id},#{payNo},#{mainOrderNo},#{userId},#{payType},#{tradeType},#{payMethod},#{payAmount},#{tradeStatus},#{payerId},#{prepayId},#{outerTradeNo},#{notifyId},#{verifyStatus},#{notifyTime},#{notifyContent},#{payDate},#{expireTime},#{appCode},#{createDate},0,#{shardingDate})
+    </insert>
+
+
+
+
+    <select id="queryListPage" resultMap="orderPayVOMap" parameterType="com.toucan.shopping.modules.order.page.OrderPayPageInfo">
+        select t.* from t_order_pay t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.order.page.OrderPayPageInfo">
+        select count(*) from t_order_pay t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+
+        </where>
+
+    </select>
+
+
+</mapper>
