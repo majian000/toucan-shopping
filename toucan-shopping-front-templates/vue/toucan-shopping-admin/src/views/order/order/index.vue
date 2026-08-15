@@ -135,9 +135,7 @@
           <el-descriptions title="收货人信息" :column="3" border style="margin-top: 16px">
             <el-descriptions-item label="收货人">{{ detailRow.orderConsigneeAddress?.name }}</el-descriptions-item>
             <el-descriptions-item label="收货人电话">{{ detailRow.orderConsigneeAddress?.phone }}</el-descriptions-item>
-            <el-descriptions-item label="省份">{{ detailRow.orderConsigneeAddress?.provinceName }}</el-descriptions-item>
-            <el-descriptions-item label="地市">{{ detailRow.orderConsigneeAddress?.cityName }}</el-descriptions-item>
-            <el-descriptions-item label="区县">{{ detailRow.orderConsigneeAddress?.areaName }}</el-descriptions-item>
+            <el-descriptions-item label="所在地区">{{ consigneeRegion(detailRow.orderConsigneeAddress) }}</el-descriptions-item>
             <el-descriptions-item label="收货地址" :span="3">{{ detailRow.orderConsigneeAddress?.address }}</el-descriptions-item>
           </el-descriptions>
 
@@ -423,6 +421,11 @@ function buyerStatusText(v) {
 function operateUserTypeText(v) {
   return v === 1 ? '管理员' : v === 2 ? '普通用户' : v
 }
+// 收货地区：省/市/区合并显示，直辖市(省名=市名)去重
+function consigneeRegion(addr) {
+  if (!addr) return ''
+  return [...new Set([addr.provinceName, addr.cityName, addr.areaName].filter(Boolean))].join(' ')
+}
 
 // ===================== 列表 =====================
 const searchForm = reactive({ mainOrderNo: '', orderNo: '', userId: '', shopId: '', payStatus: '', startCreateDate: '', endCreateDate: '' })
@@ -563,31 +566,30 @@ async function handleEdit(row) {
     payMethod: row.payMethod, payType: row.payType,
     payDate: row.payDate || '', remark: row.remark || ''
   })
+  // 收货人：先清空省市区，级联加载完成后再回显，避免直接显示编码
   Object.assign(editForm.orderConsigneeAddress, {
     name: addr.name || '', phone: addr.phone || '',
-    provinceCode: addr.provinceCode || '', provinceName: addr.provinceName || '',
-    cityCode: addr.cityCode || '', cityName: addr.cityName || '',
-    areaCode: addr.areaCode || '', areaName: addr.areaName || '',
+    provinceCode: '', provinceName: '', cityCode: '', cityName: '', areaCode: '', areaName: '',
     address: addr.address || ''
   })
   cityOptions.value = []
   areaOptions.value = []
   try {
     await loadProvinces()
-    const pCode = editForm.orderConsigneeAddress.provinceCode
-    if (pCode) {
-      const prov = provinceOptions.value.find(p => p.code === pCode)
-      if (prov && (prov.isMunicipality === 1 || prov.isMunicipality === '1')) {
-        cityOptions.value = [{ code: prov.code, label: prov.label }]
-      } else if (pCode) {
-        const res = await listAreaByParentCode({ parentCode: pCode })
-        if (res.code === 1 && res.data) cityOptions.value = (res.data || []).map(c => ({ code: c.code, label: c.city }))
-      }
-      const cCode = editForm.orderConsigneeAddress.cityCode
-      if (cCode) {
-        const res = await listAreaByParentCode({ parentCode: cCode })
-        if (res.code === 1 && res.data) areaOptions.value = (res.data || []).map(a => ({ code: a.code, label: a.area }))
-      }
+    const pCode = addr.provinceCode || ''
+    if (!pCode) return
+    // 回显省份(内部会级联加载地市/区县)
+    await onProvinceChange(pCode)
+    // 回显地市(直辖市时 onProvinceChange 已把地市设为省份编码并加载区县)
+    const cCode = addr.cityCode || ''
+    if (cCode && cityOptions.value.some(c => c.code === cCode)) {
+      await onCityChange(cCode)
+    }
+    // 回显区县
+    const aCode = addr.areaCode || ''
+    if (aCode && areaOptions.value.some(a => a.code === aCode)) {
+      editForm.orderConsigneeAddress.areaCode = aCode
+      onAreaChange(aCode)
     }
   } catch { } finally { editLoading.value = false }
 }

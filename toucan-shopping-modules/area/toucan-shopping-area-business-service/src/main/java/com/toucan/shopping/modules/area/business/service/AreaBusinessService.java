@@ -550,7 +550,7 @@ public class AreaBusinessService {
         try {
             Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
             List<AreaVO> areaVOS = null;
-            if ("-1".equals(queryArea.getCode())) {
+            if ("-1".equals(queryArea.getCode())||StringUtils.isEmpty(queryArea.getCode())) {
                 areaVOS = areaRedisService.queryProvinceList();
             } else {
                 // 先查地市，再查区县（不确定该节点是省还是地市）
