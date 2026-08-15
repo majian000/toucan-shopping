@@ -228,12 +228,12 @@
         <el-divider content-position="left">收货人信息</el-divider>
         <el-form-item label="收货人"><el-input v-model="editForm.orderConsigneeAddress.name" /></el-form-item>
         <el-form-item label="收货人电话"><el-input v-model="editForm.orderConsigneeAddress.phone" /></el-form-item>
-        <el-form-item label="省份">
+        <el-form-item label="省份/直辖市">
           <el-select v-model="editForm.orderConsigneeAddress.provinceCode" style="width:100%" @change="onProvinceChange">
             <el-option v-for="p in provinceOptions" :key="p.code" :label="p.label" :value="p.code" />
           </el-select>
         </el-form-item>
-        <el-form-item label="地市">
+        <el-form-item v-if="!isMunicipality" label="地市">
           <el-select v-model="editForm.orderConsigneeAddress.cityCode" style="width:100%" @change="onCityChange">
             <el-option v-for="c in cityOptions" :key="c.code" :label="c.label" :value="c.code" />
           </el-select>
@@ -501,6 +501,7 @@ const editForm = reactive({
 const provinceOptions = ref([])
 const cityOptions = ref([])
 const areaOptions = ref([])
+const isMunicipality = ref(false)
 
 function areaLabelForProvince(a) { return a.isMunicipality === 1 || a.isMunicipality === '1' ? (a.city || a.province) : a.province }
 
@@ -520,7 +521,8 @@ async function onProvinceChange(code) {
   areaOptions.value = []
   const prov = provinceOptions.value.find(p => p.code === code)
   editForm.orderConsigneeAddress.provinceName = prov ? prov.label : ''
-  if (prov && (prov.isMunicipality === 1 || prov.isMunicipality === '1')) {
+  isMunicipality.value = !!(prov && (prov.isMunicipality === 1 || prov.isMunicipality === '1'))
+  if (isMunicipality.value) {
     cityOptions.value = [{ code: prov.code, label: prov.label }]
     editForm.orderConsigneeAddress.cityCode = prov.code
     editForm.orderConsigneeAddress.cityName = prov.label
@@ -574,6 +576,7 @@ async function handleEdit(row) {
   })
   cityOptions.value = []
   areaOptions.value = []
+  isMunicipality.value = false
   try {
     await loadProvinces()
     const pCode = addr.provinceCode || ''
