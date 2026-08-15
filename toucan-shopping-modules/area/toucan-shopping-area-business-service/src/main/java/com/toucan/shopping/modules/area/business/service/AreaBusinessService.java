@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.toucan.shopping.modules.common.annotation.RequestCheck;
 import com.toucan.shopping.modules.common.exception.BusinessValidationException;
@@ -551,12 +552,12 @@ public class AreaBusinessService {
             Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
             List<AreaVO> areaVOS = null;
             if ("-1".equals(queryArea.getCode())||StringUtils.isEmpty(queryArea.getCode())) {
-                areaVOS = areaRedisService.queryProvinceList();
+                areaVOS = readAreaListFromCache(() -> areaRedisService.queryProvinceList());
             } else {
                 // 先查地市，再查区县（不确定该节点是省还是地市）
-                areaVOS = areaRedisService.queryCityListByProvinceCode(queryArea.getCode());
+                areaVOS = readAreaListFromCache(() -> areaRedisService.queryCityListByProvinceCode(queryArea.getCode()));
                 if (CollectionUtils.isEmpty(areaVOS)) {
-                    areaVOS = areaRedisService.queryAreaListByCityCode(queryArea.getCode());
+                    areaVOS = readAreaListFromCache(() -> areaRedisService.queryAreaListByCityCode(queryArea.getCode()));
                 }
             }
             // 缓存不存在则查询数据库并同步缓存
@@ -577,6 +578,19 @@ public class AreaBusinessService {
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
+    }
+
+    /**
+     * 读取地区缓存。Redis 异常（超时、连接重置等）时降级返回 null，
+     * 由调用方回退到数据库查询，避免缓存故障导致接口不可用。
+     */
+    private List<AreaVO> readAreaListFromCache(Supplier<List<AreaVO>> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            logger.warn("读取地区缓存失败，降级到数据库查询: {}", e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -612,8 +626,7 @@ public class AreaBusinessService {
         try {
             initAllAreaCache();
         } catch (Exception e) {
-            logger.warn("同步地区缓存失败 {}", e.getMessage());
-            logger.warn(e.getMessage(), e);
+            logger.warn("同步地区缓存失败", e);
         }
         return areaVOS;
     }

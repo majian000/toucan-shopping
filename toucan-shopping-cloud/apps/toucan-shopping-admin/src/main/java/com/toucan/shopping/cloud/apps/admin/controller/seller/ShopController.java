@@ -296,9 +296,12 @@ public class ShopController {
                 RequestJsonVO queryRequest = RequestJsonVOGenerator.generator(appCode, queryVO);
                 ResultObjectVO oldResult = sellerShopService.findById(queryRequest);
                 if (oldResult.isSuccess() && oldResult.getData() != null) {
-                    SellerShopVO oldShop = oldResult.formatData(SellerShopVO.class);
-                    if (oldShop != null && StringUtils.isNotEmpty(oldShop.getLogo())) {
-                        imageUploadService.deleteFile(oldShop.getLogo());
+                    List<SellerShopVO> sellerShopVOS = oldResult.formatDataList(SellerShopVO.class);
+                    if(CollectionUtils.isNotEmpty(sellerShopVOS)) {
+                        SellerShopVO oldShop = sellerShopVOS.get(0);
+                        if (oldShop != null && StringUtils.isNotEmpty(oldShop.getLogo())) {
+                            imageUploadService.deleteFile(oldShop.getLogo());
+                        }
                     }
                 }
                 // 上传新图标
