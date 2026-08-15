@@ -24,7 +24,7 @@ public class OrderPay {
     private String tradeType; //支付场景 JSAPI/NATIVE/APP/H5
     private Integer payMethod; //支付方式 1线上 2线下
     private BigDecimal payAmount = new BigDecimal(0); //交易金额
-    private Integer tradeStatus; //流水状态 0待支付 1支付成功 2支付失败 3已关闭
+    private Integer payStatus; //支付状态 0未支付 1已支付 4取消支付 5已退款
     private String payerId; //第三方付款人标识(openid/buyer_id)
     private String prepayId; //第三方预支付单号
     private String outerTradeNo; //第三方交易流水号

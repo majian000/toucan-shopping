@@ -11,7 +11,7 @@
         <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
         <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
         <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
-        <result column="trade_status" jdbcType="SMALLINT" property="tradeStatus" />
+        <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
         <result column="payer_id" jdbcType="VARCHAR" property="payerId" />
         <result column="prepay_id" jdbcType="VARCHAR" property="prepayId" />
         <result column="outer_trade_no" jdbcType="VARCHAR" property="outerTradeNo" />
@@ -50,8 +50,8 @@
             and t.pay_type = #{payType}
         </if>
 
-        <if test="tradeStatus!=null">
-            and t.trade_status = #{tradeStatus}
+        <if test="payStatus!=null">
+            and t.pay_status = #{payStatus}
         </if>
 
         <if test="outerTradeNo!=null and outerTradeNo!='' ">
@@ -77,8 +77,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.order.entity.OrderPay" >
-        insert into t_order_pay(id,pay_no,main_order_no,user_id,pay_type,trade_type,pay_method,pay_amount,trade_status,payer_id,prepay_id,outer_trade_no,notify_id,verify_status,notify_time,notify_content,pay_date,expire_time,app_code,create_date,delete_status,sharding_date)
-        values(#{id},#{payNo},#{mainOrderNo},#{userId},#{payType},#{tradeType},#{payMethod},#{payAmount},#{tradeStatus},#{payerId},#{prepayId},#{outerTradeNo},#{notifyId},#{verifyStatus},#{notifyTime},#{notifyContent},#{payDate},#{expireTime},#{appCode},#{createDate},0,#{shardingDate})
+        insert into t_order_pay(id,pay_no,main_order_no,user_id,pay_type,trade_type,pay_method,pay_amount,pay_status,payer_id,prepay_id,outer_trade_no,notify_id,verify_status,notify_time,notify_content,pay_date,expire_time,app_code,create_date,delete_status,sharding_date)
+        values(#{id},#{payNo},#{mainOrderNo},#{userId},#{payType},#{tradeType},#{payMethod},#{payAmount},#{payStatus},#{payerId},#{prepayId},#{outerTradeNo},#{notifyId},#{verifyStatus},#{notifyTime},#{notifyContent},#{payDate},#{expireTime},#{appCode},#{createDate},0,#{shardingDate})
     </insert>
 
 

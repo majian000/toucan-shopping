@@ -40,7 +40,7 @@ public class OrderPageInfo extends PageInfo<OrderVO> {
     private String orderNo; //订单编号
     private String mainOrderNo; //主订单编号
 
-    private Integer payStatus; //支付状态 -1全部 0未支付 1已支付 4取消支付
+    private Integer payStatus; //支付状态 -1全部 0未支付 1已支付 4取消支付 5已退款
     private Integer tradeStatus; //交易状态 0:待付款 4:待发货 1:待收货 2:已取消 3:已完成
 
 

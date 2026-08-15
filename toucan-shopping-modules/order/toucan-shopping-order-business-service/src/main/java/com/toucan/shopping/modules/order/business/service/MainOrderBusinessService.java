@@ -80,7 +80,7 @@ public class MainOrderBusinessService {
                 order.setUserId("-1");
                 order.setOrderAmount(new BigDecimal(0.0D));
                 order.setPayAmount(new BigDecimal(0.0D));
-                order.setPayStatus(0);
+                order.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT);
                 order.setTradeStatus(0);
                 order.setTotalAmount(new BigDecimal(0.0D));
                 order.setPayType(0);

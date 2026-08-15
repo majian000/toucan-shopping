@@ -34,7 +34,7 @@ public class OrderPayPageInfo extends PageInfo<OrderPayVO> {
     private String mainOrderNo; //主订单编号
     private String userId; //用户ID
     private Integer payType; //交易类型 -1未确定 0微信 1支付宝
-    private Integer tradeStatus; //流水状态 0待支付 1支付成功 2支付失败 3已关闭
+    private Integer payStatus; //支付状态 0未支付 1已支付 4取消支付 5已退款
     private String outerTradeNo; //第三方交易流水号
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

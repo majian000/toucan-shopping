@@ -20,12 +20,12 @@
             <el-option label="支付宝" :value="1" />
           </el-select>
         </el-form-item>
-        <el-form-item label="流水状态">
-          <el-select v-model="searchForm.tradeStatus" placeholder="全部" clearable style="width:120px">
-            <el-option label="待支付" :value="0" />
-            <el-option label="支付成功" :value="1" />
-            <el-option label="支付失败" :value="2" />
-            <el-option label="已关闭" :value="3" />
+        <el-form-item label="支付状态">
+          <el-select v-model="searchForm.payStatus" placeholder="全部" clearable style="width:120px">
+            <el-option label="未支付" :value="0" />
+            <el-option label="已支付" :value="1" />
+            <el-option label="取消支付" :value="4" />
+            <el-option label="已退款" :value="5" />
           </el-select>
         </el-form-item>
         <el-form-item label="第三方流水号">
@@ -66,9 +66,9 @@
           <template #default="{ row }">{{ payMethodText(row.payMethod) }}</template>
         </el-table-column>
         <el-table-column prop="payAmount" label="交易金额" width="110" align="right" />
-        <el-table-column prop="tradeStatus" label="流水状态" width="100" align="center">
+        <el-table-column prop="payStatus" label="支付状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="tradeStatusTag(row.tradeStatus)" size="small">{{ tradeStatusText(row.tradeStatus) }}</el-tag>
+            <el-tag :type="payStatusTag(row.payStatus)" size="small">{{ payStatusText(row.payStatus) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="payerId" label="付款人标识" width="180" show-overflow-tooltip />
@@ -110,12 +110,12 @@ function payTypeTag(v) {
   const map = { 0: 'success', 1: 'primary' }
   return map[v] || 'info'
 }
-function tradeStatusText(v) {
-  const map = { 0: '待支付', 1: '支付成功', 2: '支付失败', 3: '已关闭' }
+function payStatusText(v) {
+  const map = { 0: '未支付', 1: '已支付', 4: '取消支付', 5: '已退款' }
   return map[v] != null ? map[v] : v
 }
-function tradeStatusTag(v) {
-  const map = { 0: 'info', 1: 'success', 2: 'danger', 3: 'warning' }
+function payStatusTag(v) {
+  const map = { 0: 'info', 1: 'success', 4: 'warning', 5: 'danger' }
   return map[v] || 'info'
 }
 function payMethodText(v) {
@@ -128,7 +128,7 @@ function verifyStatusText(v) {
 }
 
 // ===================== 列表 =====================
-const searchForm = reactive({ payNo: '', mainOrderNo: '', userId: '', payType: '', tradeStatus: '', outerTradeNo: '', startCreateDate: '', endCreateDate: '' })
+const searchForm = reactive({ payNo: '', mainOrderNo: '', userId: '', payType: '', payStatus: '', outerTradeNo: '', startCreateDate: '', endCreateDate: '' })
 const tableData = ref([])
 const loading = ref(false)
 const pagination = reactive({ page: 1, limit: 15, total: 0 })
@@ -136,7 +136,7 @@ const pagination = reactive({ page: 1, limit: 15, total: 0 })
 function handleSearch() { pagination.page = 1; loadTableData() }
 function handleReset() {
   searchForm.payNo = ''; searchForm.mainOrderNo = ''; searchForm.userId = ''
-  searchForm.payType = ''; searchForm.tradeStatus = ''; searchForm.outerTradeNo = ''
+  searchForm.payType = ''; searchForm.payStatus = ''; searchForm.outerTradeNo = ''
   searchForm.startCreateDate = ''; searchForm.endCreateDate = ''
   handleSearch()
 }

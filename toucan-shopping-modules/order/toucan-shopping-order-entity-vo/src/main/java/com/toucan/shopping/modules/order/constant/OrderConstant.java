@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.order.constant;
 
+import com.toucan.shopping.modules.order.enums.PayStatusEnum;
+
 /**
  * 订单常量
  * @author majian
@@ -10,8 +12,12 @@ public class OrderConstant {
 
     /**
      * 支付状态
+     * @see PayStatusEnum
      */
-    public static final int PAY_STATUS_NON_PAYMENT=0; // 未支付
+    public static final int PAY_STATUS_NON_PAYMENT=PayStatusEnum.NON_PAYMENT.getCode(); // 未支付
+    public static final int PAY_STATUS_PAID=PayStatusEnum.PAID.getCode(); // 已支付
+    public static final int PAY_STATUS_CANCEL_PAYMENT=PayStatusEnum.CANCEL_PAYMENT.getCode(); // 取消支付
+    public static final int PAY_STATUS_REFUNDED=PayStatusEnum.REFUNDED.getCode(); // 已退款
 
 
     //====================交易状态=========================

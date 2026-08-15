@@ -888,7 +888,7 @@ public class OrderApiController {
             ovo.setRedPackageAmount(new BigDecimal(0)); //红包金额
             ovo.setCouponAmount(new BigDecimal(0)); //优惠券金额
             ovo.setTradeStatus(0); //交易进行中
-            ovo.setPayStatus(0); //待支付
+            ovo.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT); //待支付
             ovo.setPayMethod(1); //线上支付
             ovo.setCreateDate(new Date());
             ovo.setAppCode(toucan.getAppCode());
@@ -918,7 +918,7 @@ public class OrderApiController {
         mainOrder.setRedPackageAmount(new BigDecimal(0)); //红包金额
         mainOrder.setCouponAmount(new BigDecimal(0)); //优惠券金额
         mainOrder.setTradeStatus(0); //交易进行中
-        mainOrder.setPayStatus(0); //待支付
+        mainOrder.setPayStatus(OrderConstant.PAY_STATUS_NON_PAYMENT); //待支付
         mainOrder.setPayMethod(1); //线上支付
         mainOrder.setCreateDate(new Date());
         mainOrder.setAppCode(toucan.getAppCode());
