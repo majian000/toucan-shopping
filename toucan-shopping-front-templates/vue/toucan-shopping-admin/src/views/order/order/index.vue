@@ -86,11 +86,7 @@
             <el-button type="primary" link size="small" :icon="Edit" v-permission="'toucan:order:order:btn:update'" @click="handleEdit(row)">修改</el-button>
             <el-button type="warning" link size="small" :icon="Goods" v-permission="'toucan:order:item:modifyBtn'" @click="handleModifyItems(row)">修改订单项</el-button>
             <el-button type="info" link size="small" :icon="Document" v-permission="'toucan:order:orderLogList'" @click="handleOrderLog(row)">订单日志</el-button>
-            <el-button
-              type="danger" link size="small" :icon="CircleClose"
-              v-permission="'toucan:order:cancel'"
-              :disabled="row.tradeStatus === 2" @click="handleCancel(row)"
-            >取消</el-button>
+            <el-button type="danger" link size="small" :icon="CircleClose"   v-permission="'toucan:order:cancel'"  :disabled="row.tradeStatus === 2" @click="handleCancel(row)">取消</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -106,7 +102,7 @@
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="detailVisible" title="订单详情" width="1000px" :close-on-click-modal="false" destroy-on-close>
-      <div v-loading="detailLoading">
+      <div v-loading="detailLoading" class="dialog-body-scroll">
         <template v-if="detailRow">
           <el-descriptions title="订单信息" :column="3" border>
             <el-descriptions-item label="主订单编号">{{ detailRow.mainOrderNo }}</el-descriptions-item>
@@ -189,7 +185,7 @@
 
     <!-- 修改订单弹窗 -->
     <el-dialog v-model="editVisible" title="修改订单" width="760px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="editFormRef" :model="editForm" label-width="130px" v-loading="editLoading">
+      <el-form ref="editFormRef" :model="editForm" label-width="130px" v-loading="editLoading" class="dialog-body-scroll">
         <el-divider content-position="left">订单信息</el-divider>
         <el-form-item label="主订单编号"><el-input :model-value="editForm.mainOrderNo" disabled /></el-form-item>
         <el-form-item label="订单编号"><el-input :model-value="editForm.orderNo" disabled /></el-form-item>
@@ -699,5 +695,10 @@ loadTableData()
   :deep(.el-descriptions__table) { width: 100%; }
   :deep(.el-descriptions__label) { word-break: keep-all; }
   :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }
+}
+
+.dialog-body-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 </style>
