@@ -3,9 +3,6 @@
     <h2 class="page-title">用户列表</h2>
     <el-card shadow="never" class="search-card">
       <el-form :model="searchForm" :inline="true">
-        <el-form-item label="关键字">
-          <el-input v-model="searchForm.keyword" placeholder="手机号/昵称/用户名/用户ID/邮箱/身份证" clearable style="width:260px" />
-        </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="searchForm.mobilePhone" placeholder="请输入手机号" clearable style="width:160px" />
         </el-form-item>
@@ -88,45 +85,47 @@
         <el-pagination
           v-model:current-page="pagination.page" v-model:page-size="pagination.limit"
           :page-sizes="[15, 30, 100, 200]" layout="total, sizes, prev, pager, next"
-          :total="pagination.total" @size-change="handleSearch" @current-change="handleSearch"
+          :total="pagination.total" @size-change="handleSearch" @current-change="loadTableData"
         />
       </div>
     </el-card>
 
     <!-- 查看详情弹窗 -->
     <el-dialog v-model="viewVisible" title="查看用户" width="760px" :close-on-click-modal="false" destroy-on-close>
-      <el-descriptions v-if="viewData" :column="2" border label-width="110px">
-        <el-descriptions-item label="用户ID">{{ viewData.userMainId }}</el-descriptions-item>
-        <el-descriptions-item label="启用状态">
-          <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
-            {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="手机号">{{ viewData.mobilePhone || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="用户名">{{ viewData.username || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="昵称">{{ viewData.nickName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="邮箱">{{ viewData.email || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="真实姓名">{{ viewData.trueName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="身份证号">{{ viewData.idCard || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="实名状态">
-          <el-tag :type="viewData.trueNameStatus === 1 || viewData.trueNameStatus === '1' ? 'success' : 'info'" size="small">
-            {{ viewData.trueNameStatus === 1 || viewData.trueNameStatus === '1' ? '已实名' : '未实名' }}
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="性别">{{ sexText(viewData.sex) }}</el-descriptions-item>
-        <el-descriptions-item label="个性签名" :span="2">{{ viewData.personalizedSignature || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="头像" :span="2">
-          <el-image v-if="viewData.httpHeadSculpture" :src="viewData.httpHeadSculpture" :preview-src-list="[viewData.httpHeadSculpture]" preview-teleported fit="cover" style="width:80px;height:80px;border-radius:50%" />
-        </el-descriptions-item>
-        <el-descriptions-item label="证件照正面" :span="2">
-          <el-image v-if="viewData.httpIdcardImg1" :src="viewData.httpIdcardImg1" :preview-src-list="[viewData.httpIdcardImg1]" preview-teleported fit="cover" style="width:140px;height:90px" />
-        </el-descriptions-item>
-        <el-descriptions-item label="证件照背面" :span="2">
-          <el-image v-if="viewData.httpIdcardImg2" :src="viewData.httpIdcardImg2" :preview-src-list="[viewData.httpIdcardImg2]" preview-teleported fit="cover" style="width:140px;height:90px" />
-        </el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ viewData.createDate || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="删除状态">{{ viewData.deleteStatus === 1 || viewData.deleteStatus === '1' ? '已删除' : '正常' }}</el-descriptions-item>
-      </el-descriptions>
+      <div v-loading="viewLoading">
+        <el-descriptions v-if="viewData" :column="2" border label-width="110px">
+          <el-descriptions-item label="用户ID">{{ viewData.userMainId }}</el-descriptions-item>
+          <el-descriptions-item label="启用状态">
+            <el-tag :type="viewData.enableStatus === 1 || viewData.enableStatus === '1' ? 'success' : 'danger'" size="small">
+              {{ viewData.enableStatus === 1 || viewData.enableStatus === '1' ? '启用' : '禁用' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="手机号">{{ viewData.mobilePhone || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="用户名">{{ viewData.username || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="昵称">{{ viewData.nickName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="邮箱">{{ viewData.email || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="真实姓名">{{ viewData.trueName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="身份证号">{{ viewData.idCard || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="实名状态">
+            <el-tag :type="viewData.trueNameStatus === 1 || viewData.trueNameStatus === '1' ? 'success' : 'info'" size="small">
+              {{ viewData.trueNameStatus === 1 || viewData.trueNameStatus === '1' ? '已实名' : '未实名' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="性别">{{ sexText(viewData.sex) }}</el-descriptions-item>
+          <el-descriptions-item label="个性签名" :span="2">{{ viewData.personalizedSignature || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="头像" :span="2">
+            <el-image v-if="viewData.headSculptureBase64 || viewData.httpHeadSculpture" :src="viewData.headSculptureBase64 || viewData.httpHeadSculpture" :preview-src-list="[viewData.headSculptureBase64 || viewData.httpHeadSculpture]" preview-teleported fit="cover" style="width:80px;height:80px;border-radius:50%" />
+          </el-descriptions-item>
+          <el-descriptions-item label="证件照正面" :span="2">
+            <el-image v-if="viewData.idcardImg1Base64 || viewData.httpIdcardImg1" :src="viewData.idcardImg1Base64 || viewData.httpIdcardImg1" :preview-src-list="[viewData.idcardImg1Base64 || viewData.httpIdcardImg1]" preview-teleported fit="cover" style="width:140px;height:90px" />
+          </el-descriptions-item>
+          <el-descriptions-item label="证件照背面" :span="2">
+            <el-image v-if="viewData.idcardImg2Base64 || viewData.httpIdcardImg2" :src="viewData.idcardImg2Base64 || viewData.httpIdcardImg2" :preview-src-list="[viewData.idcardImg2Base64 || viewData.httpIdcardImg2]" preview-teleported fit="cover" style="width:140px;height:90px" />
+          </el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ viewData.createDate || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="删除状态">{{ viewData.deleteStatus === 1 || viewData.deleteStatus === '1' ? '已删除' : '正常' }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
       <template #footer>
         <el-button @click="viewVisible = false">关闭</el-button>
       </template>
@@ -159,7 +158,7 @@
 
     <!-- 修改资料弹窗 -->
     <el-dialog v-model="editVisible" title="修改资料" width="680px" :close-on-click-modal="false" destroy-on-close>
-      <el-form ref="editFormRef" :model="editForm" label-width="110px">
+      <el-form ref="editFormRef" :model="editForm" label-width="110px" v-loading="editDetailLoading">
         <el-form-item label="用户ID">
           <el-input :model-value="editForm.userMainId" disabled />
         </el-form-item>
@@ -188,23 +187,29 @@
         <el-form-item label="个性签名">
           <el-input v-model="editForm.personalizedSignature" type="textarea" :rows="2" maxlength="200" placeholder="请输入个性签名" />
         </el-form-item>
+        <el-form-item label="头像预览">
+          <el-image v-if="editForm.httpHeadSculpture" :src="editForm.httpHeadSculpture" :preview-src-list="[editForm.httpHeadSculpture]" preview-teleported fit="cover" style="width:60px;height:60px;border-radius:50%" />
+        </el-form-item>
         <el-form-item label="头像">
           <el-upload :auto-upload="false" :show-file-list="false" :on-change="onHeadSculptureChange" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传头像</el-button>
           </el-upload>
-          <el-image v-if="editForm.httpHeadSculpture" :src="editForm.httpHeadSculpture" :preview-src-list="[editForm.httpHeadSculpture]" preview-teleported fit="cover" style="width:60px;height:60px;border-radius:50%;margin-top:8px" />
+        </el-form-item>
+        <el-form-item label="证件照正面预览">
+          <el-image v-if="editForm.httpIdcardImg1" :src="editForm.httpIdcardImg1" :preview-src-list="[editForm.httpIdcardImg1]" preview-teleported fit="cover" style="width:120px;height:80px" />
         </el-form-item>
         <el-form-item label="证件照正面">
           <el-upload :auto-upload="false" :show-file-list="false" :on-change="onIdcardImg1Change" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传正面</el-button>
           </el-upload>
-          <el-image v-if="editForm.httpIdcardImg1" :src="editForm.httpIdcardImg1" :preview-src-list="[editForm.httpIdcardImg1]" preview-teleported fit="cover" style="width:120px;height:80px;margin-top:8px" />
+        </el-form-item>
+        <el-form-item label="证件照背面预览">
+          <el-image v-if="editForm.httpIdcardImg2" :src="editForm.httpIdcardImg2" :preview-src-list="[editForm.httpIdcardImg2]" preview-teleported fit="cover" style="width:120px;height:80px" />
         </el-form-item>
         <el-form-item label="证件照背面">
           <el-upload :auto-upload="false" :show-file-list="false" :on-change="onIdcardImg2Change" :before-upload="beforeUpload" accept="image/*">
             <el-button type="primary" :icon="Upload">上传背面</el-button>
           </el-upload>
-          <el-image v-if="editForm.httpIdcardImg2" :src="editForm.httpIdcardImg2" :preview-src-list="[editForm.httpIdcardImg2]" preview-teleported fit="cover" style="width:120px;height:80px;margin-top:8px" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -233,51 +238,75 @@
     </el-dialog>
 
     <!-- 手机号/邮箱/用户名 子表弹窗 -->
-    <el-dialog v-model="subDialog.visible" :title="subDialog.title" width="620px" :close-on-click-modal="false" destroy-on-close>
+    <el-dialog v-model="subDialog.visible" :title="subDialog.title" width="760px" :close-on-click-modal="false" destroy-on-close>
       <div class="sub-toolbar">
-        <el-input v-model="subDialog.connectValue" :placeholder="subDialog.placeholder" clearable style="width:240px" />
-        <el-button type="primary" :icon="Plus" v-permission="['toucan:user:mobile:phone:connectMobilePhone', 'toucan:user:email:email', 'toucan:user:username:username']" @click="handleConnect">关联</el-button>
+        <el-button type="primary" :icon="Plus" v-permission="subDialog.connectPermission" @click="openConnectDialog">关联{{ subDialog.valueLabel }}</el-button>
       </div>
       <el-table :data="subDialog.list" border stripe v-loading="subDialog.loading">
-        <el-table-column prop="id" label="ID" width="200" show-overflow-tooltip />
-        <el-table-column :prop="subDialog.valueProp" :label="subDialog.valueLabel" min-width="160" show-overflow-tooltip />
+        <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip />
+        <el-table-column prop="userMainId" label="用户ID" width="180" show-overflow-tooltip />
+        <el-table-column :prop="subDialog.valueProp" :label="subDialog.valueLabel" width="200" show-overflow-tooltip />
         <el-table-column prop="createDate" label="创建时间" width="170" />
         <el-table-column prop="deleteStatus" label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.deleteStatus === 1 || row.deleteStatus === '1' ? 'danger' : 'success'" size="small">
-              {{ row.deleteStatus === 1 || row.deleteStatus === '1' ? '停用' : '启用' }}
+              {{ row.deleteStatus === 1 || row.deleteStatus === '1' ? '已禁用' : '使用中' }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100" align="center">
           <template #default="{ row }">
-            <el-button v-if="row.deleteStatus === 1 || row.deleteStatus === '1'" type="success" link size="small" v-permission="['toucan:user:mobile:phone:list:disabled:enabled', 'toucan:user:email:list:disabled:enabled', 'toucan:user:username:list:disabled:enabled']" @click="handleToggleSub(row)">启用</el-button>
-            <el-button v-else type="danger" link size="small" v-permission="['toucan:user:mobile:phone:list:disabled:enabled', 'toucan:user:email:list:disabled:enabled', 'toucan:user:username:list:disabled:enabled']" @click="handleToggleSub(row)">停用</el-button>
+            <el-button v-if="row.deleteStatus === 1 || row.deleteStatus === '1'" type="success" link size="small" v-permission="subDialog.togglePermission" @click="handleToggleSub(row)">启用</el-button>
+            <el-button v-else type="danger" link size="small" v-permission="subDialog.togglePermission" @click="handleToggleSub(row)">禁用</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="sub-pagination">
+        <el-pagination
+          v-model:current-page="subDialog.pagination.page"
+          v-model:page-size="subDialog.pagination.limit"
+          :page-sizes="[15, 50, 100, 300]"
+          layout="total, sizes, prev, pager, next"
+          :total="subDialog.pagination.total"
+          @current-change="loadSubList"
+          @size-change="handleSubSizeChange"
+        />
+      </div>
       <template #footer>
         <el-button @click="subDialog.visible = false">关闭</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 关联手机号/邮箱/用户名 弹窗 -->
+    <el-dialog v-model="connectDialog.visible" :title="connectDialog.title" width="460px" :close-on-click-modal="false" destroy-on-close>
+      <el-form ref="connectFormRef" :model="connectForm" :rules="connectRules" label-width="90px">
+        <el-form-item :label="subDialog.valueLabel" prop="value">
+          <el-input v-model="connectForm.value" :placeholder="connectDialog.placeholder" :maxlength="subDialog.maxlength" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="connectDialog.visible = false">取消</el-button>
+        <el-button type="primary" :loading="connectDialog.loading" @click="handleConnectSubmit">确认保存</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Delete, Edit, Search, RefreshRight, View, Key, Refresh, Upload, CircleCheck, CircleClose, MoreFilled } from '@element-plus/icons-vue'
 import {
-  listUser, regist, updateDetail, resetPassword, connectMobilePhone, connectEmail, connectUsername,
+  listUser, detailUser, regist, updateDetail, resetPassword, connectMobilePhone, connectEmail, connectUsername,
   disabledEnabled, disabledByIds, flushCache, listMobilePhone, listEmail, listUsername,
   disabledEnabledMobilePhone, disabledEnabledEmail, disabledEnabledUsername
 } from '@/api/user/user'
 
 // ========== 搜索 ==========
-const searchForm = reactive({ keyword: '', mobilePhone: '', username: '', nickName: '', email: '', enableStatus: '' })
+const searchForm = reactive({ mobilePhone: '', username: '', nickName: '', email: '', enableStatus: '' })
 
 function handleSearch() { pagination.page = 1; loadTableData() }
-function handleReset() { searchForm.keyword = ''; searchForm.mobilePhone = ''; searchForm.username = ''; searchForm.nickName = ''; searchForm.email = ''; searchForm.enableStatus = '' }
+function handleReset() { searchForm.mobilePhone = ''; searchForm.username = ''; searchForm.nickName = ''; searchForm.email = ''; searchForm.enableStatus = '' }
 
 // ========== 表格 ==========
 const tableRef = ref(null)
@@ -312,7 +341,21 @@ function sexText(sex) {
 // ========== 查看 ==========
 const viewVisible = ref(false)
 const viewData = ref(null)
-function handleView(row) { viewData.value = row; viewVisible.value = true }
+const viewLoading = ref(false)
+async function handleView(row) {
+  viewVisible.value = true
+  viewData.value = null
+  viewLoading.value = true
+  try {
+    const res = await detailUser({ userMainId: row.userMainId })
+    viewData.value = (res && res.data) || row
+  } catch {
+    // 详情请求失败时退化为列表行数据
+    viewData.value = row
+  } finally {
+    viewLoading.value = false
+  }
+}
 
 // ========== 注册 ==========
 const registVisible = ref(false)
@@ -350,10 +393,11 @@ async function handleRegistSubmit() {
 // ========== 修改资料 ==========
 const editVisible = ref(false)
 const editLoading = ref(false)
+const editDetailLoading = ref(false)
 const editFormRef = ref(null)
 const editForm = reactive({ userMainId: null, nickName: '', trueName: '', idCard: '', idcardType: 1, sex: 1, personalizedSignature: '', headSculpture: '', idcardImg1: '', idcardImg2: '', httpHeadSculpture: '', httpIdcardImg1: '', httpIdcardImg2: '', headSculptureBase64: '', idcardImg1Base64: '', idcardImg2Base64: '' })
 
-function handleEdit(row) {
+async function handleEdit(row) {
   editForm.userMainId = row.userMainId
   editForm.nickName = row.nickName || ''
   editForm.trueName = row.trueName || ''
@@ -364,13 +408,36 @@ function handleEdit(row) {
   editForm.headSculpture = row.headSculpture || ''
   editForm.idcardImg1 = row.idcardImg1 || ''
   editForm.idcardImg2 = row.idcardImg2 || ''
+  // 预览字段先用列表http图兜底
   editForm.httpHeadSculpture = row.httpHeadSculpture || ''
   editForm.httpIdcardImg1 = row.httpIdcardImg1 || ''
   editForm.httpIdcardImg2 = row.httpIdcardImg2 || ''
+  // 提交字段:只有用户重新选择图片时才填base64,这里保持为空避免重复上传
   editForm.headSculptureBase64 = ''
   editForm.idcardImg1Base64 = ''
   editForm.idcardImg2Base64 = ''
   editVisible.value = true
+  // 请求详情拿base64回显
+  editDetailLoading.value = true
+  try {
+    const res = await detailUser({ userMainId: row.userMainId })
+    if (res && res.data) {
+      const d = res.data
+      // base64优先回显,便于预览
+      editForm.httpHeadSculpture = d.headSculptureBase64 || d.httpHeadSculpture || editForm.httpHeadSculpture
+      editForm.httpIdcardImg1 = d.idcardImg1Base64 || d.httpIdcardImg1 || editForm.httpIdcardImg1
+      editForm.httpIdcardImg2 = d.idcardImg2Base64 || d.httpIdcardImg2 || editForm.httpIdcardImg2
+      // 同步详情里可能更全的基础字段
+      editForm.nickName = d.nickName || editForm.nickName
+      editForm.trueName = d.trueName || editForm.trueName
+      editForm.idCard = d.idCard || editForm.idCard
+      editForm.idcardType = d.idcardType != null ? d.idcardType : editForm.idcardType
+      editForm.sex = d.sex != null ? d.sex : editForm.sex
+      editForm.personalizedSignature = d.personalizedSignature || editForm.personalizedSignature
+    }
+  } catch { } finally {
+    editDetailLoading.value = false
+  }
 }
 
 async function handleEditSubmit() {
@@ -467,8 +534,10 @@ function handleBatchDisable() {
 
 // ========== 手机号/邮箱/用户名 子表 ==========
 const subDialog = reactive({
-  visible: false, loading: false, type: '', title: '', valueProp: '', valueLabel: '', placeholder: '',
-  userMainId: null, list: [], connectValue: ''
+  visible: false, loading: false, type: '', title: '', valueProp: '', valueLabel: '',
+  userMainId: null, list: [],
+  connectPermission: '', togglePermission: '', maxlength: 15,
+  pagination: { page: 1, limit: 15, total: 0 }
 })
 
 function handleMoreCommand(cmd, row) {
@@ -478,9 +547,27 @@ function handleMoreCommand(cmd, row) {
 }
 
 const subConfig = {
-  mobilePhone: { title: '手机号列表', valueProp: 'mobilePhone', valueLabel: '手机号', placeholder: '请输入要关联的手机号' },
-  email: { title: '邮箱列表', valueProp: 'email', valueLabel: '邮箱', placeholder: '请输入要关联的邮箱' },
-  username: { title: '用户名列表', valueProp: 'username', valueLabel: '用户名', placeholder: '请输入要关联的用户名' }
+  mobilePhone: {
+    title: '手机号列表', valueProp: 'mobilePhone', valueLabel: '手机号', placeholder: '请输入手机号',
+    connectPermission: 'toucan:user:mobile:phone:connectMobilePhone',
+    togglePermission: 'toucan:user:mobile:phone:connectMobilePhone',
+    maxlength: 11,
+    pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/
+  },
+  email: {
+    title: '邮箱列表', valueProp: 'email', valueLabel: '邮箱', placeholder: '请输入邮箱',
+    connectPermission: 'toucan:user:email:email',
+    togglePermission: 'toucan:user:email:email',
+    maxlength: 40,
+    pattern: /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+  },
+  username: {
+    title: '用户名列表', valueProp: 'username', valueLabel: '用户名', placeholder: '请输入用户名',
+    connectPermission: 'toucan:user:username:username',
+    togglePermission: 'toucan:user:username:username',
+    maxlength: 15,
+    pattern: /^[a-zA-Z][a-zA-Z0-9]{4,16}$/
+  }
 }
 
 function openSubDialog(type, row) {
@@ -489,10 +576,14 @@ function openSubDialog(type, row) {
   subDialog.title = cfg.title
   subDialog.valueProp = cfg.valueProp
   subDialog.valueLabel = cfg.valueLabel
-  subDialog.placeholder = cfg.placeholder
+  subDialog.connectPermission = cfg.connectPermission
+  subDialog.togglePermission = cfg.togglePermission
+  subDialog.maxlength = cfg.maxlength
   subDialog.userMainId = row.userMainId
   subDialog.list = []
-  subDialog.connectValue = ''
+  subDialog.pagination.page = 1
+  subDialog.pagination.limit = 15
+  subDialog.pagination.total = 0
   subDialog.visible = true
   loadSubList()
 }
@@ -500,34 +591,88 @@ function openSubDialog(type, row) {
 async function loadSubList() {
   subDialog.loading = true
   try {
-    const params = { userMainId: subDialog.userMainId, page: 1, limit: 1000 }
+    const params = {
+      userMainId: subDialog.userMainId,
+      page: subDialog.pagination.page,
+      limit: subDialog.pagination.limit
+    }
     let res
     if (subDialog.type === 'mobilePhone') res = await listMobilePhone(params)
     else if (subDialog.type === 'email') res = await listEmail(params)
     else res = await listUsername(params)
     subDialog.list = res.data || []
+    subDialog.pagination.total = res.count || 0
   } catch { } finally { subDialog.loading = false }
 }
 
-async function handleConnect() {
-  if (!subDialog.connectValue) { ElMessage.warning('请输入要关联的内容'); return }
+function handleSubSizeChange() {
+  subDialog.pagination.page = 1
+  loadSubList()
+}
+
+// ========== 关联手机号/邮箱/用户名 ==========
+const connectDialog = reactive({ visible: false, loading: false, title: '', placeholder: '' })
+const connectFormRef = ref(null)
+const connectForm = reactive({ value: '' })
+
+const connectRules = computed(() => {
+  const cfg = subConfig[subDialog.type] || {}
+  const rules = [{ required: true, message: `请输入${subDialog.valueLabel}`, trigger: 'blur' }]
+  if (cfg.pattern) rules.push({ pattern: cfg.pattern, message: `${subDialog.valueLabel}格式错误`, trigger: 'blur' })
+  return { value: rules }
+})
+
+function openConnectDialog() {
+  connectForm.value = ''
+  connectDialog.title = `关联${subDialog.valueLabel}`
+  connectDialog.placeholder = `请输入${subDialog.valueLabel}`
+  connectDialog.visible = true
+}
+
+async function handleConnectSubmit() {
+  const valid = await connectFormRef.value.validate().catch(() => false)
+  if (!valid) return
+  connectDialog.loading = true
   const data = { userMainId: subDialog.userMainId }
-  if (subDialog.type === 'mobilePhone') {
-    data.mobilePhone = subDialog.connectValue
-    try { await connectMobilePhone(data); ElMessage.success('关联成功'); subDialog.connectValue = ''; loadSubList() } catch { }
-  } else if (subDialog.type === 'email') {
-    data.email = subDialog.connectValue
-    try { await connectEmail(data); ElMessage.success('关联成功'); subDialog.connectValue = ''; loadSubList() } catch { }
-  } else {
-    data.username = subDialog.connectValue
-    try { await connectUsername(data); ElMessage.success('关联成功'); subDialog.connectValue = ''; loadSubList() } catch { }
-  }
+  try {
+    if (subDialog.type === 'mobilePhone') {
+      data.mobilePhone = connectForm.value
+      await connectMobilePhone(data)
+    } else if (subDialog.type === 'email') {
+      data.email = connectForm.value
+      await connectEmail(data)
+    } else {
+      data.username = connectForm.value
+      await connectUsername(data)
+    }
+    ElMessage.success('关联成功')
+    connectDialog.visible = false
+    loadSubList()
+  } catch { } finally { connectDialog.loading = false }
 }
 
 function handleToggleSub(row) {
-  const data = { id: row.id }
-  const fn = subDialog.type === 'mobilePhone' ? disabledEnabledMobilePhone : subDialog.type === 'email' ? disabledEnabledEmail : disabledEnabledUsername
-  fn(data).then(() => { ElMessage.success('操作成功'); loadSubList() }).catch(() => {})
+  const disabled = row.deleteStatus === 1 || row.deleteStatus === '1'
+  const action = disabled ? '启用' : '禁用'
+  ElMessageBox.confirm(`确定${action}该${subDialog.valueLabel}?`, '确认', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+    .then(async () => {
+      const data = {
+        id: row.id,
+        userMainId: row.userMainId
+      }
+      let fn
+      if (subDialog.type === 'mobilePhone') {
+        data.mobilePhone = row.mobilePhone
+        fn = disabledEnabledMobilePhone
+      } else if (subDialog.type === 'email') {
+        data.email = row.email
+        fn = disabledEnabledEmail
+      } else {
+        data.username = row.username
+        fn = disabledEnabledUsername
+      }
+      try { await fn(data); ElMessage.success('操作成功'); loadSubList() } catch { }
+    }).catch(() => {})
 }
 
 loadTableData()
@@ -539,6 +684,7 @@ loadTableData()
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; } .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
   .sub-toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; }
+  .sub-pagination { margin-top: $gap-md; display: flex; justify-content: flex-end; }
   :deep(.el-descriptions__table) { width: 100%; }
   :deep(.el-descriptions__label) { word-break: keep-all; }
   :deep(.el-descriptions__content) { word-break: break-all; overflow-wrap: anywhere; min-width: 0; }

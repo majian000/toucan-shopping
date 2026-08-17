@@ -129,7 +129,7 @@
               layout="total, sizes, prev, pager, next"
               :total="pagination.total"
               @size-change="handleSearch"
-              @current-change="handleSearch"
+              @current-change="loadTableData"
             />
           </div>
         </el-card>

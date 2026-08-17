@@ -1,8 +1,14 @@
 import request from '@/utils/request'
 
 // 查询用户列表 (UserPageInfo @RequestBody -> JSON body)
+// 该接口查询量大、后端响应较慢，单独调大超时时间(5分钟)，避免走全局默认的30秒超时
 export function listUser(data) {
-  return request({ url: '/user/list', method: 'post', data })
+  return request({ url: '/user/list', method: 'post', data, timeout: 300000 })
+}
+
+// 查看用户详情 (含base64头像/证件照,用于查看与编辑回显)
+export function detailUser(data) {
+  return request({ url: '/user/detail', method: 'post', data })
 }
 
 // 注册用户 (UserRegistVO @RequestBody -> JSON body)

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -102,6 +103,110 @@ public class UserController {
     }
 
 
+
+
+    /**
+     * 查看用户详情(含http地址与base64头像/证件照,用于前端查看与编辑回显)
+     * @param userVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:user:list"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(@RequestBody UserVO userVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(userVO == null || userVO.getUserMainId() == null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户ID");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getShoppingPC().getAppCode(), userVO);
+            ResultObjectVO detailResult = userService.findByUserMainId(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                UserVO vo = detailResult.formatData(UserVO.class);
+                if(vo == null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("用户不存在");
+                    return resultObjectVO;
+                }
+                fillUserImage(vo);
+                resultObjectVO.setData(vo);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 填充用户图片的http地址与base64数据
+     * @param vo
+     */
+    private void fillUserImage(UserVO vo)
+    {
+        if(StringUtils.isNotEmpty(vo.getHeadSculpture()))
+        {
+            vo.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + vo.getHeadSculpture());
+            vo.setHeadSculptureBase64(toBase64(vo.getHeadSculpture()));
+        }
+        if(StringUtils.isNotEmpty(vo.getIdcardImg1()))
+        {
+            vo.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + vo.getIdcardImg1());
+            vo.setIdcardImg1Base64(toBase64(vo.getIdcardImg1()));
+        }
+        if(StringUtils.isNotEmpty(vo.getIdcardImg2()))
+        {
+            vo.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + vo.getIdcardImg2());
+            vo.setIdcardImg2Base64(toBase64(vo.getIdcardImg2()));
+        }
+    }
+
+
+    /**
+     * 读取图片文件并转成base64 data url
+     * @param storagePath
+     * @return
+     */
+    private String toBase64(String storagePath)
+    {
+        try {
+            byte[] fileBytes = imageUploadService.downloadFile(storagePath);
+            if(fileBytes != null && fileBytes.length > 0)
+            {
+                String ext = "jpg";
+                if(storagePath.contains("."))
+                {
+                    ext = storagePath.substring(storagePath.lastIndexOf(".") + 1).toLowerCase();
+                }
+                String mime;
+                switch (ext) {
+                    case "png": mime = "image/png"; break;
+                    case "gif": mime = "image/gif"; break;
+                    case "bmp": mime = "image/bmp"; break;
+                    case "jpeg": mime = "image/jpeg"; break;
+                    case "jpg": mime = "image/jpeg"; break;
+                    default: mime = "image/jpeg"; break;
+                }
+                return "data:" + mime + ";base64," + Base64.getEncoder().encodeToString(fileBytes);
+            }
+        }catch(Exception e)
+        {
+            logger.warn("读取图片失败 {} {}", storagePath, e.getMessage());
+        }
+        return null;
+    }
 
 
     /**

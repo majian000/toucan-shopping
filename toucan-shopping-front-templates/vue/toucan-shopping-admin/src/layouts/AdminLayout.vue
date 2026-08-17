@@ -5,8 +5,8 @@
       <div class="topbar-left" :class="{ 'topbar-left--side': appStore.layoutMode === 'side' }">
         <div class="logo" @click="goHome">
           <el-icon :size="22" color="#409eff"><Stamp /></el-icon>
-          <span class="logo-text" v-if="appStore.layoutMode === 'top'">权限中台</span>
-          <span class="logo-text logo-text--side" v-if="appStore.layoutMode === 'side'">权限中台</span>
+          <span class="logo-text" v-if="appStore.layoutMode === 'top'">犀鸟商城</span>
+          <span class="logo-text logo-text--side" v-if="appStore.layoutMode === 'side'">犀鸟商城</span>
         </div>
         <TopMenu
           v-if="appStore.layoutMode === 'top'"
@@ -81,7 +81,7 @@
 
     <!-- ========== 底部 ========== -->
     <footer class="al-footer">
-      <span>Copyright &copy; {{ new Date().getFullYear() }} 权限中台. All Rights Reserved.</span>
+      <span>Copyright &copy; {{ new Date().getFullYear() }} 犀鸟商城. All Rights Reserved.</span>
     </footer>
   </div>
 </template>

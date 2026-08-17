@@ -59,7 +59,7 @@
         <el-pagination
           v-model:current-page="pagination.pageNum" v-model:page-size="pagination.pageSize"
           :page-sizes="[15, 30, 100, 200]" layout="total, sizes, prev, pager, next"
-          :total="pagination.total" @size-change="handleSearch" @current-change="handleSearch"
+          :total="pagination.total" @size-change="handleSearch" @current-change="loadTableData"
         />
       </div>
     </el-card>
