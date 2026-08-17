@@ -36,9 +36,9 @@
 
     <el-card shadow="never" class="table-card">
       <el-table ref="tableRef" :data="tableData" border stripe v-loading="loading" row-key="id">
-        <el-table-column prop="id" label="ID" width="90" align="center" />
-        <el-table-column prop="productSkuId" label="SKU ID" width="120" />
-        <el-table-column prop="userMainId" label="用户ID" width="120" />
+        <el-table-column prop="id" label="ID" width="220" align="center" />
+        <el-table-column prop="productSkuId" label="SKU ID" width="220" />
+        <el-table-column prop="userMainId" label="用户ID" width="220" />
         <el-table-column prop="mainOrderNo" label="主订单编号" width="180" show-overflow-tooltip />
         <el-table-column prop="orderNo" label="子订单编号" width="180" show-overflow-tooltip />
         <el-table-column prop="stockNum" label="锁定数量" width="90" align="center" />
