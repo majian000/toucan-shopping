@@ -4,14 +4,22 @@
     <div class="layout-split">
       <div class="left-tree">
         <el-card shadow="never" class="tree-card">
-          <template #header><span>分类树</span></template>
+          <template #header>
+            <div class="tree-header">
+              <span>分类树</span>
+              <el-icon class="tree-refresh" title="刷新分类树" @click="handleRefreshTree"><Refresh /></el-icon>
+            </div>
+          </template>
           <el-tree
+            v-loading="treeLoading"
+            :key="treeKey"
             ref="categoryTreeRef"
             :data="treeData"
             :props="{ children: 'children', label: 'name' }"
             node-key="id"
             lazy
             :load="loadTreeNodes"
+            :expand-on-click-node="false"
             highlight-current
             @node-click="onNodeClick"
           />
@@ -53,7 +61,7 @@
 
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
-            <el-button type="primary" :icon="Refresh" v-permission="'toucan:product:sku:flushSearch'" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索缓存</el-button>
+            <el-button type="primary" :icon="Refresh" v-permission="'toucan:product:sku:toolbar:flushSearch'" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索缓存</el-button>
           </div>
           <el-table :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
@@ -73,11 +81,13 @@
               </template>
             </el-table-column>
             <el-table-column prop="createDate" label="发布时间" width="170" />
-            <el-table-column label="操作" width="120" fixed="right" align="center">
+            <el-table-column label="操作" width="220" fixed="right" align="center">
               <template #default="{ row }">
                 <el-button type="primary" link size="small" v-permission="'toucan:product:shelves'" @click="handleShelves(row)">
                   {{ row.status === 1 || row.status === '1' ? '下架' : '上架' }}
                 </el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:shopProduct:sku:btn:previewPc'" @click="handlePreviewPc(row)">PC预览</el-button>
+                <el-button type="info" link size="small" v-permission="'toucan:product:sku:btn:detail'" @click="handleDetail(row)">商品详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -91,6 +101,44 @@
         </el-card>
       </div>
     </div>
+
+    <!-- 商品详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="商品详情" width="820px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border label-width="110px">
+          <el-descriptions-item label="上架状态">
+            <el-tag :type="detailInfo.status === 1 || detailInfo.status === '1' ? 'success' : 'danger'" size="small">
+              {{ detailInfo.status === 1 || detailInfo.status === '1' ? '已上架' : '未上架' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="SKU ID">{{ detailInfo.id }}</el-descriptions-item>
+          <el-descriptions-item label="SKU UUID">{{ detailInfo.uuid || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺商品ID">{{ detailInfo.shopProductId || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺商品UUID">{{ detailInfo.shopProductUuid || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="商品名称">{{ detailInfo.name || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="商品主图" :span="2">
+            <el-image v-if="detailInfo.httpMainPhotoFilePath" :src="detailInfo.httpMainPhotoFilePath" :preview-src-list="[detailInfo.httpMainPhotoFilePath]" preview-teleported fit="contain" style="width:200px;height:200px" />
+          </el-descriptions-item>
+          <el-descriptions-item label="分类名称">{{ detailInfo.categoryName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="分类路径">{{ detailInfo.categoryPath || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="单价">{{ detailInfo.price }}</el-descriptions-item>
+          <el-descriptions-item label="库存数量">{{ detailInfo.stockNum }}</el-descriptions-item>
+          <el-descriptions-item label="商品编号">{{ detailInfo.productNo || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="属性">{{ detailInfo.attributes || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="毛重(kg)">{{ detailInfo.roughWeight }}</el-descriptions-item>
+          <el-descriptions-item label="净重(kg)">{{ detailInfo.suttle }}</el-descriptions-item>
+          <el-descriptions-item label="品牌中文名称">{{ detailInfo.brandChineseName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="品牌英文名称">{{ detailInfo.brandEnglishName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺内分类名称">{{ detailInfo.shopCategoryName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺内分类路径">{{ detailInfo.shopCategoryPath || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺ID">{{ detailInfo.shopId }}</el-descriptions-item>
+          <el-descriptions-item label="店铺名称">{{ detailInfo.shopName || '-' }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -98,7 +146,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Refresh } from '@element-plus/icons-vue'
-import { listProductSku, queryCategoryTreeByPid, shelves, flushSearch } from '@/api/product/productSku'
+import { listProductSku, queryCategoryTreeByPid, shelves, flushSearch, detailProductSku } from '@/api/product/productSku'
 
 const searchForm = reactive({
   categoryId: null, id: '', uuid: '', shopId: '', status: '', shopProductId: '', shopProductUuid: '', name: ''
@@ -107,6 +155,12 @@ const searchForm = reactive({
 // ===== 左侧分类树 =====
 const categoryTreeRef = ref(null)
 const treeData = ref([])
+const treeKey = ref(0)
+const treeLoading = ref(false)
+
+function handleRefreshTree() {
+  treeKey.value++
+}
 
 function resolveTreeNodes(children) {
   return (children || []).map(item => ({ ...item, leaf: !item.haveChild }))
@@ -114,11 +168,14 @@ function resolveTreeNodes(children) {
 
 async function loadTreeNodes(node, resolve) {
   const parentId = node && node.data ? node.data.id : -1
+  treeLoading.value = true
   try {
     const res = await queryCategoryTreeByPid({ parentId })
     resolve(resolveTreeNodes(res.data))
   } catch {
     resolve([])
+  } finally {
+    treeLoading.value = false
   }
 }
 
@@ -181,6 +238,29 @@ function handleFlushSearch() {
   }).catch(() => {})
 }
 
+// ===== PC预览 / 商品详情 =====
+const pcBasePath = import.meta.env.VITE_PC_BASE_PATH || ''
+
+function handlePreviewPc(row) {
+  window.open(pcBasePath + '/page/product/preview/' + row.id)
+}
+
+const detailVisible = ref(false)
+const detailInfo = ref(null)
+const detailLoading = ref(false)
+
+async function handleDetail(row) {
+  detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailProductSku({ id: row.id })
+    detailInfo.value = (res && res.data) || null
+  } catch { } finally {
+    detailLoading.value = false
+  }
+}
+
 loadTableData()
 </script>
 
@@ -190,6 +270,8 @@ loadTableData()
   .left-tree { width: 260px; flex-shrink: 0;
     .tree-card { height: calc(100vh - 130px); :deep(.el-card__body) { overflow-y: auto; height: calc(100% - 50px); } }
   }
+  .tree-header { display: flex; justify-content: space-between; align-items: center; }
+  .tree-refresh { cursor: pointer; color: $text-secondary; &:hover { color: $primary; } }
   .right-table { flex: 1; overflow: auto; }
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; }

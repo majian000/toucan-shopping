@@ -19,3 +19,8 @@ export function shelves(data) {
 export function flushSearch(data) {
   return request({ url: '/product/productSku/flush/search', method: 'post', data })
 }
+
+// 商品详情
+export function detailProductSku(data) {
+  return request({ url: '/product/productSku/detail', method: 'post', data })
+}

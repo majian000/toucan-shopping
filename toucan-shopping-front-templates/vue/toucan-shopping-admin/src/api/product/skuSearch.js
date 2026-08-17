@@ -24,3 +24,8 @@ export function deleteSearchByIds(data) {
 export function clearSearch() {
   return request({ url: '/product/productSku/search/clear', method: 'post' })
 }
+
+// 商品详情
+export function detailSearchProduct(data) {
+  return request({ url: '/product/productSku/search/detail', method: 'post', data })
+}

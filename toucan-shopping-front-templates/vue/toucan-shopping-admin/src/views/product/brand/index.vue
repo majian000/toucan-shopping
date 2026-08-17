@@ -4,8 +4,14 @@
     <div class="layout-split">
       <div class="left-tree">
         <el-card shadow="never" class="tree-card">
-          <template #header><span>商品分类</span></template>
+          <template #header>
+            <div class="tree-header">
+              <span>商品分类</span>
+              <el-icon class="tree-refresh" title="刷新分类树" @click="handleRefreshTree"><Refresh /></el-icon>
+            </div>
+          </template>
           <el-tree
+            v-loading="treeLoading"
             ref="categoryTreeRef"
             :data="treeData"
             :props="{ children: 'children', label: 'name' }"
@@ -165,7 +171,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, RefreshRight, Plus, Delete, Upload } from '@element-plus/icons-vue'
+import { Search, RefreshRight, Plus, Delete, Upload, Refresh } from '@element-plus/icons-vue'
 import {
   listBrand, queryCategoryTreeForListPage, queryCategoryTree,
   saveBrand, updateBrand, deleteBrand, deleteBrandByIds
@@ -176,12 +182,20 @@ const searchForm = reactive({ categoryId: null, id: '', name: '' })
 // ===== 左侧分类树 (列表过滤) =====
 const categoryTreeRef = ref(null)
 const treeData = ref([])
+const treeLoading = ref(false)
+
+function handleRefreshTree() {
+  loadCategoryTree()
+}
 
 async function loadCategoryTree() {
+  treeLoading.value = true
   try {
     const res = await queryCategoryTreeForListPage()
     treeData.value = res.data || []
-  } catch { }
+  } catch { } finally {
+    treeLoading.value = false
+  }
 }
 
 function onNodeClick(data) {
@@ -361,6 +375,8 @@ loadTableData()
   .left-tree { width: 260px; flex-shrink: 0;
     .tree-card { height: calc(100vh - 130px); :deep(.el-card__body) { overflow-y: auto; height: calc(100% - 50px); } }
   }
+  .tree-header { display: flex; justify-content: space-between; align-items: center; }
+  .tree-refresh { cursor: pointer; color: $text-secondary; &:hover { color: $primary; } }
   .right-table { flex: 1; overflow: auto; }
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; }

@@ -618,4 +618,75 @@ public class ProductSkuController {
     }
 
 
+    /**
+     * 查看商品详情
+     * @param productSkuVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:btn:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(@RequestBody ProductSkuVO productSkuVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(productSkuVO == null || productSkuVO.getId() == null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到商品ID");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkuVO);
+            ResultObjectVO detailResult = productSkuService.queryById(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                ProductSkuVO vo = detailResult.formatData(ProductSkuVO.class);
+                if(vo == null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("商品不存在");
+                    return resultObjectVO;
+                }
+                // 填充主图HTTP路径
+                if(vo.getProductPreviewPath() != null)
+                {
+                    vo.setHttpMainPhoto(imageUploadService.getImageHttpPrefix() + vo.getProductPreviewPath());
+                    vo.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + vo.getProductPreviewPath());
+                }
+                // 填充类别/店铺类别/品牌/店铺名称
+                List<ProductSkuVO> list = new LinkedList<>();
+                list.add(vo);
+                Long[] categoryIds = new Long[1];
+                Long[] shopCategoryIds = new Long[1];
+                List<Long> brandIdList = new LinkedList<>();
+                List<Long> shopIdList = new LinkedList<>();
+                categoryIds[0] = vo.getCategoryId();
+                if(vo.getShopCategoryId() != null) {
+                    shopCategoryIds[0] = vo.getShopCategoryId();
+                }
+                if(vo.getBrandId() != null) {
+                    brandIdList.add(vo.getBrandId());
+                }
+                if(vo.getShopId() != null) {
+                    shopIdList.add(vo.getShopId());
+                }
+                this.queryCategory(list, categoryIds);
+                this.queryShopCategory(list, shopCategoryIds);
+                this.queryBrand(list, brandIdList);
+                this.queryShop(list, shopIdList);
+                resultObjectVO.setData(vo);
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
 }

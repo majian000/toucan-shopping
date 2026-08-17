@@ -201,7 +201,7 @@ public class ProductSkuSearchController {
      * @param productSearchResultVOS
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:search:delete:ids"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:search:toolbar:delete"})
     @RequestMapping(value = "/delete/ids",method = RequestMethod.POST)
     public ResultObjectVO deleteByIds(@RequestBody List<ProductSearchResultVO> productSearchResultVOS)
     {
@@ -233,7 +233,7 @@ public class ProductSkuSearchController {
      * 清空搜索
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:search:clear"})
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:sku:search:toolbar:clear"})
     @RequestMapping(value = "/clear",method = RequestMethod.POST)
     public ResultObjectVO clear()
     {
@@ -245,6 +245,56 @@ public class ProductSkuSearchController {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查看商品详情
+     * @param productSearchResultVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH, verifyType = AdminAuth.VERIFY_TYPE_ANY, permissions = {"toucan:product:search:sku:btn:detail"})
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public ResultObjectVO detail(@RequestBody ProductSearchResultVO productSearchResultVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(productSearchResultVO == null || productSearchResultVO.getSkuId() == null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("没有找到商品ID");
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSearchResultVO.getSkuId());
+            ResultObjectVO detailResult = productSearchService.queryBySkuId(requestJsonVO);
+            if(detailResult.isSuccess())
+            {
+                List<ProductSearchResultVO> list = detailResult.formatDataList(ProductSearchResultVO.class);
+                if(CollectionUtils.isNotEmpty(list))
+                {
+                    ProductSearchResultVO vo = list.get(0);
+                    if(vo.getProductPreviewPath() != null)
+                    {
+                        vo.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + vo.getProductPreviewPath());
+                    }
+                    resultObjectVO.setData(vo);
+                }else
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("商品不存在");
+                }
+            }else
+            {
+                resultObjectVO.setMsg(detailResult.getMsg());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(), e);
         }
         return resultObjectVO;
     }
