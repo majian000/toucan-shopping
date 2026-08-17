@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.category.vo.CategoryVO;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 public interface CategoryService {
 
@@ -45,6 +46,13 @@ public interface CategoryService {
     List<Category> findByParentId(Long parentId);
 
     Long findCountByParentId(Long parentId);
+
+    /**
+     * 批量统计每个父节点下的子节点数量
+     * @param parentIds 父节点ID列表
+     * @return key=父节点ID, value=子节点数量
+     */
+    Map<Long, Long> queryChildCountByParentIds(List<Long> parentIds);
 
     Long queryCount(Category category);
 

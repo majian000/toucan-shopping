@@ -152,6 +152,18 @@
     </select>
 
 
+    <select id="queryChildCountByParentIds" resultType="map">
+        select t.parent_id as parentId, count(*) as childCount
+        from t_category t
+        where t.delete_status = 0
+        and t.parent_id in
+        <foreach collection="parentIds" item="pid" open="(" close=")" separator=",">
+            #{pid}
+        </foreach>
+        group by t.parent_id
+    </select>
+
+
     <select id="findTreeTableByPageInfo" resultMap="categoryVOMap" parameterType="com.toucan.shopping.modules.category.page.CategoryTreeInfo">
 
         select * from t_category t

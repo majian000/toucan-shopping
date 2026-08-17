@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -89,6 +91,26 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Long findCountByParentId(Long parentId) {
         return categoryMapper.findCountByParentId(parentId);
+    }
+
+    @Override
+    public Map<Long, Long> queryChildCountByParentIds(List<Long> parentIds) {
+        Map<Long, Long> countMap = new HashMap<>();
+        if (CollectionUtils.isEmpty(parentIds)) {
+            return countMap;
+        }
+        List<Map<String, Object>> rows = categoryMapper.queryChildCountByParentIds(parentIds);
+        if (rows != null) {
+            for (Map<String, Object> row : rows) {
+                if (row.get("parentId") == null) {
+                    continue;
+                }
+                Long parentId = Long.parseLong(row.get("parentId").toString());
+                Long childCount = row.get("childCount") == null ? 0L : Long.parseLong(row.get("childCount").toString());
+                countMap.put(parentId, childCount);
+            }
+        }
+        return countMap;
     }
 
     @Override

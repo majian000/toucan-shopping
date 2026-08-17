@@ -26,9 +26,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -643,10 +645,18 @@ public class CategoryBusinessService {
             List<Category> categories = categoryService.queryList(queryCategory);
             List<CategoryTreeVO> categoryTreeVOS = new LinkedList<>();
             if (!CollectionUtils.isEmpty(categories)) {
+                // 收集所有父节点ID,一次性批量查询子节点数量,避免循环查询(N+1)
+                List<Long> parentIds = new ArrayList<>(categories.size());
+                for (Category category : categories) {
+                    if (category.getId() != null) {
+                        parentIds.add(category.getId());
+                    }
+                }
+                Map<Long, Long> childCountMap = categoryService.queryChildCountByParentIds(parentIds);
                 for (Category category : categories) {
                     CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
                     BeanUtils.copyProperties(categoryTreeVO, category);
-                    Long categoryChildCount = categoryService.findCountByParentId(categoryTreeVO.getId());
+                    Long categoryChildCount = childCountMap.get(categoryTreeVO.getId());
                     categoryTreeVO.setIsParent(categoryChildCount != null && categoryChildCount > 0);
                     categoryTreeVOS.add(categoryTreeVO);
                 }
