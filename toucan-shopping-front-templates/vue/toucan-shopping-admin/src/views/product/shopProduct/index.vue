@@ -178,7 +178,7 @@ function resolveTreeNodes(children) {
 }
 
 async function loadTreeNodes(node, resolve) {
-  const parentId = node && node.data ? node.data.id : -1
+  const parentId = node && node.data && node.data.id != null ? node.data.id : -1
   treeLoading.value = true
   try {
     const res = await queryCategoryTreeByPid({ parentId })

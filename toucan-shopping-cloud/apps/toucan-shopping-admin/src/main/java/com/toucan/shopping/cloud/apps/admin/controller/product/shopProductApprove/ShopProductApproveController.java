@@ -695,7 +695,7 @@ public class ShopProductApproveController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            query.setParentId(categoryVO.getParentId());
+            query.setParentId(categoryVO.getParentId() != null ? categoryVO.getParentId() : -1L);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = categoryService.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())

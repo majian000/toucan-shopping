@@ -69,9 +69,10 @@
             <el-table-column prop="name" label="商品名称" min-width="280" show-overflow-tooltip />
             <el-table-column prop="categoryPath" label="分类路径" min-width="250" show-overflow-tooltip />
             <el-table-column prop="createDate" label="发布时间" width="170" />
-            <el-table-column label="操作" width="160" fixed="right" align="center">
+            <el-table-column label="操作" width="220" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" v-permission="'toucan:product:approve:list:row:approve'" @click="handleApprove(row)">审核</el-button>
+                <el-button v-if="row.approveStatus === 1 || row.approveStatus === '1'" type="primary" link size="small" v-permission="'toucan:product:approve:list:row:approve'" @click="handleApprove(row)">审核</el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:shopProduct:btn:previewPc'" @click="handlePreviewPc(row)">PC预览</el-button>
                 <el-button type="danger" link size="small" v-permission="'toucan:product:approve:row:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
@@ -92,6 +93,9 @@
       <el-form label-width="90px">
         <el-form-item label="商品名称">
           <span>{{ currentRow?.name }}</span>
+        </el-form-item>
+        <el-form-item label="关联平台商品" required>
+          <el-input v-model="spuName" placeholder="请选择关联平台商品(SPU)" readonly @click="openSpuPicker" />
         </el-form-item>
         <el-form-item label="SKU列表">
           <el-table :data="skuList" border stripe v-loading="skuLoading" row-key="id" style="width:100%">
@@ -115,6 +119,54 @@
         <el-button type="primary" v-permission="'toucan:product:approve:pass'" @click="handlePass">审核通过</el-button>
       </template>
     </el-dialog>
+
+    <!-- SPU选择弹窗 -->
+    <el-dialog v-model="spuPickerVisible" title="选择平台商品" width="1000px" append-to-body>
+      <div class="spu-search">
+        <el-form :model="spuSearchForm" :inline="true">
+          <el-form-item label="商品ID">
+            <el-input v-model="spuSearchForm.id" placeholder="请输入商品ID" clearable style="width:160px" />
+          </el-form-item>
+          <el-form-item label="商品名称">
+            <el-input v-model="spuSearchForm.name" placeholder="请输入商品名称" clearable style="width:160px" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :icon="Search" @click="handleSpuSearch">搜索</el-button>
+            <el-button :icon="RefreshRight" @click="handleSpuReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table :data="spuList" border stripe v-loading="spuLoading" row-key="id" height="400">
+        <el-table-column prop="id" label="商品ID" width="150" />
+        <el-table-column prop="name" label="商品名称" min-width="240" show-overflow-tooltip />
+        <el-table-column prop="uuid" label="商品UUID" width="220" show-overflow-tooltip />
+        <el-table-column prop="categoryPath" label="分类路径" min-width="220" show-overflow-tooltip />
+        <el-table-column prop="brandChineseName" label="品牌" width="140" show-overflow-tooltip />
+        <el-table-column label="上架状态" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 1 || row.status === '1' ? 'success' : 'info'" size="small">
+              {{ row.status === 1 || row.status === '1' ? '已上架' : '未上架' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="80" align="center" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" link size="small" @click="onSelectSpu(row)">选择</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination-wrap" style="margin-top: 12px; display: flex; justify-content: flex-end;">
+        <el-pagination
+          v-model:current-page="spuPagination.page"
+          v-model:page-size="spuPagination.limit"
+          :page-sizes="[15, 30, 100, 200]"
+          layout="total, sizes, prev, pager, next"
+          :total="spuPagination.total"
+          @size-change="handleSpuSizeChange"
+          @current-change="loadSpuList"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -124,7 +176,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Refresh } from '@element-plus/icons-vue'
 import {
   listShopProductApprove, queryCategoryTreeByPid, queryShopProductApproveSkuList,
-  deleteShopProductApprove, rejectShopProductApprove, passShopProductApprove
+  deleteShopProductApprove, rejectShopProductApprove, passShopProductApprove, queryProductSpuList
 } from '@/api/product/shopProductApprove'
 
 const searchForm = reactive({ categoryId: null, id: '', uuid: '', name: '', shopId: '', approveStatus: '' })
@@ -156,7 +208,7 @@ function resolveTreeNodes(children) {
 }
 
 async function loadTreeNodes(node, resolve) {
-  const parentId = node && node.data ? node.data.id : -1
+  const parentId = node && node.data && node.data.id != null ? node.data.id : -1
   treeLoading.value = true
   try {
     const res = await queryCategoryTreeByPid({ parentId })
@@ -208,6 +260,13 @@ function handleDelete(row) {
   }).catch(() => {})
 }
 
+// ===== PC预览 =====
+const pcBasePath = import.meta.env.VITE_PC_BASE_PATH || ''
+
+function handlePreviewPc(row) {
+  window.open(pcBasePath + '/page/product/approve/preview/paid/' + row.id)
+}
+
 // ===== 审核弹窗 =====
 const approveDialogVisible = ref(false)
 const skuLoading = ref(false)
@@ -215,11 +274,17 @@ const skuList = ref([])
 const currentRow = ref(null)
 const showReject = ref(false)
 const approveTextValue = ref('')
+const spuName = ref('')
+const spuProductId = ref(null)
+const spuProductUuid = ref('')
 
 async function handleApprove(row) {
   currentRow.value = row
   showReject.value = false
   approveTextValue.value = ''
+  spuName.value = ''
+  spuProductId.value = row.productId || null
+  spuProductUuid.value = row.productUuid || ''
   approveDialogVisible.value = true
   skuLoading.value = true
   skuList.value = []
@@ -229,12 +294,67 @@ async function handleApprove(row) {
   } catch { } finally { skuLoading.value = false }
 }
 
+// ===== 关联平台商品(SPU) =====
+const spuPickerVisible = ref(false)
+const spuLoading = ref(false)
+const spuList = ref([])
+const spuSearchForm = reactive({ id: '', name: '' })
+const spuPagination = reactive({ page: 1, limit: 15, total: 0 })
+
+function buildSpuParams() {
+  const p = { categoryId: currentRow.value?.categoryId, ...spuSearchForm, page: spuPagination.page, limit: spuPagination.limit }
+  Object.keys(p).forEach(k => { if (p[k] === '' || p[k] === undefined || p[k] === null) delete p[k] })
+  return p
+}
+
+async function loadSpuList() {
+  spuLoading.value = true
+  try {
+    const res = await queryProductSpuList(buildSpuParams())
+    spuList.value = res.data || []
+    spuPagination.total = res.count || 0
+  } catch { } finally { spuLoading.value = false }
+}
+
+function handleSpuSearch() { spuPagination.page = 1; loadSpuList() }
+function handleSpuSizeChange() { spuPagination.page = 1; loadSpuList() }
+function handleSpuReset() {
+  spuSearchForm.id = ''
+  spuSearchForm.name = ''
+  handleSpuSearch()
+}
+
+function openSpuPicker() {
+  if (!currentRow.value || currentRow.value.categoryId == null) {
+    ElMessage.warning('当前商品缺少分类信息')
+    return
+  }
+  spuPickerVisible.value = true
+  spuSearchForm.id = ''
+  spuSearchForm.name = ''
+  spuPagination.page = 1
+  spuPagination.limit = 15
+  spuPagination.total = 0
+  loadSpuList()
+}
+
+function onSelectSpu(row) {
+  spuName.value = row.name
+  spuProductId.value = row.id
+  spuProductUuid.value = row.uuid
+  spuPickerVisible.value = false
+}
+
 async function handlePass() {
   if (!currentRow.value) return
+  if (spuProductId.value == null) { ElMessage.warning('请选择关联平台商品'); return }
   ElMessageBox.confirm('确定审核通过该商品吗？', '审核确认', {
     confirmButtonText: '确定通过', cancelButtonText: '取消', type: 'warning'
   }).then(async () => {
-    try { await passShopProductApprove({ id: currentRow.value.id }); ElMessage.success('审核通过'); approveDialogVisible.value = false; loadTableData() } catch { }
+    try {
+      await passShopProductApprove({ id: currentRow.value.id, productId: spuProductId.value, productUuid: spuProductUuid.value })
+      ElMessage.success('审核通过'); approveDialogVisible.value = false; loadTableData()
+    } catch { }
   }).catch(() => {})
 }
 
@@ -269,6 +389,7 @@ loadTableData()
   .right-table { flex: 1; overflow: auto; }
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
+  .spu-search { margin-bottom: $gap-sm; }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
 }
 </style>
