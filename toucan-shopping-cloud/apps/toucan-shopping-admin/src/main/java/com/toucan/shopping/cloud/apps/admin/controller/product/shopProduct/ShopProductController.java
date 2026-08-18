@@ -734,6 +734,35 @@ public class ShopProductController {
                     this.queryShopCategory(tmpList, shopCategoryIds);
                     this.queryBrand(tmpList, brandIdList);
                     this.queryShop(tmpList, shopIdList);
+                    // 填充预览图HTTP路径
+                    if(CollectionUtils.isNotEmpty(vo.getPreviewPhotoPaths())) {
+                        vo.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath : vo.getPreviewPhotoPaths()) {
+                            vo.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix() + previewPhotoPath);
+                        }
+                    }
+                    // 填充SKU预览图HTTP路径
+                    if(CollectionUtils.isNotEmpty(vo.getProductSkuVOList())) {
+                        vo.setHttpSkuPreviewPhotoPaths(new LinkedList<>());
+                        for(ProductSkuVO productSkuVO : vo.getProductSkuVOList()) {
+                            if(StringUtils.isNotEmpty(productSkuVO.getProductPreviewPath())) {
+                                productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
+                                vo.getHttpSkuPreviewPhotoPaths().add(productSkuVO.getHttpMainPhoto());
+                            }
+                            if(StringUtils.isNotEmpty(productSkuVO.getDescriptionImgFilePath())) {
+                                productSkuVO.setHttpDescriptionImgPath(imageUploadService.getImageHttpPrefix() + productSkuVO.getDescriptionImgFilePath());
+                            }
+                        }
+                    }
+                    // 填充商品介绍图片HTTP路径
+                    if(vo.getShopProductDescriptionVO() != null) {
+                        if(CollectionUtils.isNotEmpty(vo.getShopProductDescriptionVO().getProductDescriptionImgs())) {
+                            for(ShopProductDescriptionImgVO imgVO : vo.getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                imgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix() + imgVO.getFilePath());
+                            }
+                            vo.setShopProductDescriptionJson(JSONObject.toJSONString(vo.getShopProductDescriptionVO()));
+                        }
+                    }
                     resultObjectVO.setData(vo);
                 }else
                 {
