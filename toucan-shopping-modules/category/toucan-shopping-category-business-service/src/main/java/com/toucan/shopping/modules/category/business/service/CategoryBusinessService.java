@@ -514,21 +514,16 @@ public class CategoryBusinessService {
 
             for (CategoryTreeVO categoryTreeVO : categoryMiniTree) {
                 categoryTreeVO.setPid(ROOT_PARENT_ID);
+                categoryTreeVO.setParentId(ROOT_PARENT_ID);
                 categoryTreeVO.setTitle(categoryTreeVO.getName());
                 categoryTreeVO.setText(categoryTreeVO.getName());
-                categoryTreeVO.setPid(categoryTreeVO.getParentId());
                 categoryTreeVO.setPath(categoryTreeVO.getName());
+                if (!CollectionUtils.isEmpty(categoryTreeVO.getChildren())) {
+                    categoryService.complementChildren(categoryTreeVO);
+                }
             }
 
-            CategoryTreeVO rootTreeVO = createRootTreeVO();
-            if (!CollectionUtils.isEmpty(categoryMiniTree)) {
-                rootTreeVO.setChildren(categoryMiniTree);
-            }
-
-            categoryService.complementChildren(rootTreeVO);
-            List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<>();
-            rootCategoryTreeVOS.add(rootTreeVO);
-            return ResultObjectVO.success(rootCategoryTreeVOS);
+            return ResultObjectVO.success(categoryMiniTree);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {

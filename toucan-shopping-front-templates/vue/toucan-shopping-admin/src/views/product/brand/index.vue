@@ -151,15 +151,17 @@
 
     <!-- 分类多选弹窗 -->
     <el-dialog v-model="categoryPickerVisible" title="选择类别" width="420px" append-to-body>
-      <el-tree
-        ref="formCategoryTreeRef"
-        :data="formCategoryTreeData"
-        :props="{ children: 'children', label: 'name' }"
-        node-key="nodeId"
-        show-checkbox
-        check-strictly
-        default-expand-all
-      />
+      <div style="max-height: 420px; overflow-y: auto;">
+        <el-tree
+          v-loading="categoryTreeLoading"
+          ref="formCategoryTreeRef"
+          :data="formCategoryTreeData"
+          :props="{ children: 'children', label: 'name' }"
+          node-key="nodeId"
+          show-checkbox
+          check-strictly
+        />
+      </div>
       <template #footer>
         <el-button @click="categoryPickerVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmCategoryPicker">确定</el-button>
@@ -169,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Plus, Delete, Upload, Refresh } from '@element-plus/icons-vue'
 import {
@@ -266,6 +268,9 @@ const form = reactive({
 function onLogoChange(file) {
   const raw = file.raw
   if (!raw) return
+  // auto-upload=false 时 before-upload 不会触发,这里手动做类型/大小校验
+  if (!raw.type.startsWith('image/')) { ElMessage.error('只能上传图片文件'); return }
+  if (raw.size / 1024 / 1024 > 5) { ElMessage.error('图片大小不能超过5MB'); return }
   const reader = new FileReader()
   reader.onload = (e) => {
     form.logoBase64 = e.target.result
@@ -323,6 +328,7 @@ async function handleSave() {
 const categoryPickerVisible = ref(false)
 const formCategoryTreeRef = ref(null)
 const formCategoryTreeData = ref([])
+const categoryTreeLoading = ref(false)
 
 function collectCheckedNodeIds(nodes, arr) {
   ;(nodes || []).forEach(n => {
@@ -334,13 +340,17 @@ function collectCheckedNodeIds(nodes, arr) {
 async function openCategoryPicker() {
   categoryPickerVisible.value = true
   formCategoryTreeData.value = []
+  categoryTreeLoading.value = true
   try {
     const res = await queryCategoryTree({ brandId: form.id || -1 })
     formCategoryTreeData.value = res.data || []
     const checkedIds = []
     collectCheckedNodeIds(res.data || [], checkedIds)
+    await nextTick()
     formCategoryTreeRef.value && formCategoryTreeRef.value.setCheckedKeys(checkedIds)
-  } catch { }
+  } catch { } finally {
+    categoryTreeLoading.value = false
+  }
 }
 
 function confirmCategoryPicker() {
