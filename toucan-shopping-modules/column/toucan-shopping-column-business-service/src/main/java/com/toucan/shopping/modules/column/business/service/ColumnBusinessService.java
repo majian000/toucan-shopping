@@ -53,7 +53,7 @@ public class ColumnBusinessService {
         try {
             ColumnPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnPageInfo.class);
             PageInfo<ColumnVO> pageInfo = columnService.queryListPage(queryPageInfo);
-            return ResultObjectVO.ok(pageInfo);
+            return ResultObjectVO.success(pageInfo);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -87,7 +87,7 @@ public class ColumnBusinessService {
                     logger.warn("修改栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), columnVO.getId());
                     return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
                 }
-                return ResultObjectVO.ok(columnVO);
+                return ResultObjectVO.success(columnVO);
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
                 return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
@@ -126,7 +126,7 @@ public class ColumnBusinessService {
                     logger.warn("保存栏目失败 requestJson{} id{}", requestJsonVO.getEntityJson(), columnVO.getId());
                     return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
                 }
-                return ResultObjectVO.ok(columnVO);
+                return ResultObjectVO.success(columnVO);
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
                 return ResultObjectVO.fail(ResultVO.FAILD, "请稍后重试");
@@ -168,7 +168,7 @@ public class ColumnBusinessService {
                 columnVoList.forEach(vo -> vo.setPid(-1L));
             }
 
-            return ResultObjectVO.ok(columnVoList);
+            return ResultObjectVO.success(columnVoList);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -192,7 +192,7 @@ public class ColumnBusinessService {
                 columnTreeVO.setIsParent(childrenCount != null && childrenCount > 0);
                 columnTreeVOS.add(columnTreeVO);
             }
-            return ResultObjectVO.ok(columnTreeVOS);
+            return ResultObjectVO.success(columnTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -233,7 +233,7 @@ public class ColumnBusinessService {
             children.add(columnVO);
             List<Long> columnIdList = children.stream().map(ColumnVO::getId).collect(Collectors.toList());
             columnService.deleteByIdList(columnIdList);
-            return ResultObjectVO.ok(columnVO);
+            return ResultObjectVO.success(columnVO);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -255,10 +255,10 @@ public class ColumnBusinessService {
                     children.add(columnVO);
                     List<Long> columnIdList = children.stream().map(ColumnVO::getId).collect(Collectors.toList());
                     columnService.deleteByIdList(columnIdList);
-                    resultList.add(ResultObjectVO.ok(columnVO));
+                    resultList.add(ResultObjectVO.success(columnVO));
                 }
             }
-            return ResultObjectVO.ok(resultList);
+            return ResultObjectVO.success(resultList);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -283,7 +283,7 @@ public class ColumnBusinessService {
                     columnTreeVOS.add(columnTreeVO);
                 }
             }
-            return ResultObjectVO.ok(columnTreeVOS);
+            return ResultObjectVO.success(columnTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {

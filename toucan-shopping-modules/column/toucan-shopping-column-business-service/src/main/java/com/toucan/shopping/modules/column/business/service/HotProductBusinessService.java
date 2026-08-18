@@ -205,7 +205,7 @@ public class HotProductBusinessService {
                     imageUploadService.deleteFile(vo.getImgPath());
                 }
             }
-            return ResultObjectVO.ok();
+            return ResultObjectVO.success();
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {

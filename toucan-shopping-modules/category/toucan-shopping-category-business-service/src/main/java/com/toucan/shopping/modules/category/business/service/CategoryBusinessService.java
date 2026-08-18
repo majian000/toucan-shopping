@@ -26,7 +26,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -189,7 +188,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -230,7 +229,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -262,7 +261,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -295,7 +294,7 @@ public class CategoryBusinessService {
                     }
                 }
             }
-            return ResultObjectVO.ok(resultObjectVOList);
+            return ResultObjectVO.success(resultObjectVOList);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -323,7 +322,7 @@ public class CategoryBusinessService {
                 categoryTreeVO.getIdPath().add(categoryTreeVO.getId());
                 categoryService.setPath(categoryTreeVO, categoryTreeVO.getParentId());
             }
-            return ResultObjectVO.ok(categoryTreeVO);
+            return ResultObjectVO.success(categoryTreeVO);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -346,7 +345,7 @@ public class CategoryBusinessService {
             if (CollectionUtils.isEmpty(categorys)) {
                 return ResultObjectVO.fail(ResultVO.FAILD, MSG_OBJECT_NOT_EXIST);
             }
-            return ResultObjectVO.ok(categorys);
+            return ResultObjectVO.success(categorys);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -377,7 +376,7 @@ public class CategoryBusinessService {
             categoryTreeVO.getIdPath().add(category.getId());
             categoryTreeVO.getNamePaths().add(category.getName());
             categoryService.setIdPath(categoryTreeVO);
-            return ResultObjectVO.ok(categoryTreeVO);
+            return ResultObjectVO.success(categoryTreeVO);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -403,9 +402,9 @@ public class CategoryBusinessService {
                 if (!CollectionUtils.isEmpty(categoryList)) {
                     categoryVOS = buildCategoryVOsWithNamePath(categoryList);
                 }
-                return ResultObjectVO.ok(categoryVOS);
+                return ResultObjectVO.success(categoryVOS);
             }
-            return ResultObjectVO.ok();
+            return ResultObjectVO.success();
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -429,7 +428,7 @@ public class CategoryBusinessService {
                 return ResultObjectVO.fail(ResultVO.FAILD, MSG_CATEGORY_LIST_EMPTY);
             }
             List<CategoryVO> categoryVOS = buildCategoryVOsWithNamePath(categorys);
-            return ResultObjectVO.ok(categoryVOS);
+            return ResultObjectVO.success(categoryVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -445,7 +444,7 @@ public class CategoryBusinessService {
     public ResultObjectVO queryAllList(RequestJsonVO requestJsonVO) {
         try {
             CategoryVO query = new CategoryVO();
-            return ResultObjectVO.ok(categoryService.queryList(query));
+            return ResultObjectVO.success(categoryService.queryList(query));
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -467,14 +466,14 @@ public class CategoryBusinessService {
 
             List<CategoryTreeVO> cachedTree = categoryRedisService.queryFullCategoryTree();
             if (!CollectionUtils.isEmpty(cachedTree)) {
-                return ResultObjectVO.ok(cachedTree);
+                return ResultObjectVO.success(cachedTree);
             }
 
             List<Category> categoryList = categoryService.queryList(query);
             CategoryTreeVO rootTreeVO = createRootTreeVO();
 
+            List<CategoryTreeVO> categoryTreeVOS = new ArrayList<>();
             if (!CollectionUtils.isEmpty(categoryList)) {
-                List<CategoryTreeVO> categoryTreeVOS = new ArrayList<>();
                 for (Category category : categoryList) {
                     if (category.getParentId().longValue() == ROOT_PARENT_ID) {
                         CategoryTreeVO treeVO = toCategoryTreeVO(category);
@@ -488,10 +487,8 @@ public class CategoryBusinessService {
                 rootTreeVO.setChildren(categoryTreeVOS);
             }
 
-            List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<>();
-            rootCategoryTreeVOS.add(rootTreeVO);
-            categoryRedisService.addFullCategoryCache(rootCategoryTreeVOS);
-            return ResultObjectVO.ok(rootCategoryTreeVOS);
+            categoryRedisService.addFullCategoryCache(categoryTreeVOS);
+            return ResultObjectVO.success(categoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -511,7 +508,7 @@ public class CategoryBusinessService {
                 flushWMiniTreeCacheInternal();
                 categoryMiniTree = categoryRedisService.queryCategoryMiniTree();
                 if (CollectionUtils.isEmpty(categoryMiniTree)) {
-                    return ResultObjectVO.ok();
+                    return ResultObjectVO.success();
                 }
             }
 
@@ -531,7 +528,7 @@ public class CategoryBusinessService {
             categoryService.complementChildren(rootTreeVO);
             List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<>();
             rootCategoryTreeVOS.add(rootTreeVO);
-            return ResultObjectVO.ok(rootCategoryTreeVOS);
+            return ResultObjectVO.success(rootCategoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -552,7 +549,7 @@ public class CategoryBusinessService {
             if (!CollectionUtils.isEmpty(categoryList)) {
                 categoryTreeVOS = buildTopLevelTreeVOs(categoryList);
             }
-            return ResultObjectVO.ok(categoryTreeVOS);
+            return ResultObjectVO.success(categoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -575,7 +572,7 @@ public class CategoryBusinessService {
                 setTopLevelParentId(categoryVOS);
             }
 
-            return ResultObjectVO.ok(categoryVOS);
+            return ResultObjectVO.success(categoryVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -626,7 +623,7 @@ public class CategoryBusinessService {
                 }
             }
 
-            return ResultObjectVO.ok(categoryTreeVOS);
+            return ResultObjectVO.success(categoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -661,7 +658,7 @@ public class CategoryBusinessService {
                     categoryTreeVOS.add(categoryTreeVO);
                 }
             }
-            return ResultObjectVO.ok(categoryTreeVOS);
+            return ResultObjectVO.success(categoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -679,7 +676,7 @@ public class CategoryBusinessService {
             CategoryVO queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
             List<Category> childList = new ArrayList<>();
             categoryService.queryChildren(childList, queryCategory);
-            return ResultObjectVO.ok(childList);
+            return ResultObjectVO.success(childList);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -695,7 +692,7 @@ public class CategoryBusinessService {
     public ResultObjectVO queryNextOneLevelChildListByPid(RequestJsonVO requestJsonVO) {
         try {
             CategoryVO queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-            return ResultObjectVO.ok(categoryService.queryList(queryCategory));
+            return ResultObjectVO.success(categoryService.queryList(queryCategory));
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -710,7 +707,7 @@ public class CategoryBusinessService {
     @RequestCheck
     public ResultObjectVO queryCategoryTree(RequestJsonVO requestJsonVO) {
         try {
-            return ResultObjectVO.ok(categoryRedisService.queryMiniTree());
+            return ResultObjectVO.success(categoryRedisService.queryMiniTree());
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -747,7 +744,7 @@ public class CategoryBusinessService {
                 }
             }
 
-            return ResultObjectVO.ok(categoryTreeVOS);
+            return ResultObjectVO.success(categoryTreeVOS);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {
@@ -774,7 +771,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -804,7 +801,7 @@ public class CategoryBusinessService {
             logger.error(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -854,7 +851,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -875,7 +872,7 @@ public class CategoryBusinessService {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, MSG_RETRY_LATER);
         }
-        return ResultObjectVO.ok();
+        return ResultObjectVO.success();
     }
 
     /**
@@ -885,7 +882,7 @@ public class CategoryBusinessService {
     public ResultObjectVO clearWebIndexCache(RequestJsonVO requestVo) {
         try {
             categoryRedisService.clearCaches();
-            return ResultObjectVO.ok(true);
+            return ResultObjectVO.success(true);
         }catch(BusinessValidationException e){
             return ResultObjectVO.fail(e.getCode(), e.getMessage());
         }catch (Exception e) {

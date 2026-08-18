@@ -100,7 +100,7 @@ public class ColumnController {
     @RequestMapping(value = "/query/dict", method = RequestMethod.POST)
     public ResultObjectVO queryDict(HttpServletRequest request) {
         try {
-            return ResultObjectVO.ok(this.getColumnDictMap());
+            return ResultObjectVO.success(this.getColumnDictMap());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             return ResultObjectVO.fail(ResultVO.FAILD, "查询失败");
@@ -328,7 +328,7 @@ public class ColumnController {
                     columnVO.setColumnTypeName(typeVO.getData().getName());
                 }
             }
-            resultObjectVO = ResultObjectVO.ok(columnVO);
+            resultObjectVO = ResultObjectVO.success(columnVO);
         } catch (Exception e) {
             resultObjectVO.setMsg("查询失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -415,7 +415,7 @@ public class ColumnController {
 
             ColumnDetailVO detailVO = new ColumnDetailVO();
             detailVO.setBasicInfo(columnVO);
-            resultObjectVO = ResultObjectVO.ok(detailVO);
+            resultObjectVO = ResultObjectVO.success(detailVO);
         } catch (Exception e) {
             resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);

@@ -45,12 +45,12 @@ public class ResultObjectVO extends ResultVO {
     }
 
     /** 快速构造成功响应 */
-    public static ResultObjectVO ok() {
+    public static ResultObjectVO success() {
         return new ResultObjectVO();
     }
 
     /** 快速构造成功响应（带数据） */
-    public static ResultObjectVO ok(Object data) {
+    public static ResultObjectVO success(Object data) {
         ResultObjectVO vo = new ResultObjectVO();
         vo.setData(data);
         return vo;
