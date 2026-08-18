@@ -151,16 +151,63 @@
     </el-dialog>
 
     <!-- 品牌选择弹窗 -->
-    <el-dialog v-model="brandPickerVisible" title="选择品牌" width="640px" append-to-body>
+    <el-dialog v-model="brandPickerVisible" title="选择品牌" width="1000px" append-to-body>
+      <div class="brand-search">
+        <el-form :model="brandSearchForm" :inline="true">
+          <el-form-item label="品牌ID">
+            <el-input v-model="brandSearchForm.id" placeholder="请输入品牌ID" clearable style="width:160px" />
+          </el-form-item>
+          <el-form-item label="品牌名">
+            <el-input v-model="brandSearchForm.name" placeholder="请输入品牌名" clearable style="width:160px" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :icon="Search" @click="handleBrandSearch">搜索</el-button>
+            <el-button :icon="RefreshRight" @click="handleBrandReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
       <el-table :data="brandList" border stripe v-loading="brandLoading" row-key="id" height="400">
-        <el-table-column prop="chineseName" label="品牌名(中文)" min-width="160" />
-        <el-table-column prop="englishName" label="品牌名(英文)" min-width="160" />
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column prop="id" label="主键" width="150" />
+        <el-table-column label="所属类目" min-width="200" show-overflow-tooltip>
+          <template #default="{ row }">{{ (row.categoryNamePathList || []).join('、') }}</template>
+        </el-table-column>
+        <el-table-column label="商标注册地区" width="170" show-overflow-tooltip>
+          <template #default="{ row }">{{ row.trademarkAreaType === 1 || row.trademarkAreaType === '1' ? '中国大陆地区' : (row.trademarkAreaType === 2 || row.trademarkAreaType === '2' ? '香港、澳门特别行政区，台湾省和境外国家' : '') }}</template>
+        </el-table-column>
+        <el-table-column prop="chineseName" label="品牌名(中文)" width="140" show-overflow-tooltip />
+        <el-table-column prop="englishName" label="品牌名(英文)" width="140" show-overflow-tooltip />
+        <el-table-column label="LOGO" width="80" align="center">
+          <template #default="{ row }">
+            <el-image v-if="row.httpLogoPath" :src="row.httpLogoPath" fit="cover" style="width:40px;height:40px" :preview-src-list="[row.httpLogoPath]" preview-teleported />
+          </template>
+        </el-table-column>
+        <el-table-column prop="registNumber1" label="商标注册号" width="130" show-overflow-tooltip />
+        <el-table-column prop="ownerName" label="品牌所有人" width="120" show-overflow-tooltip />
+        <el-table-column label="状态" width="80" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.enabledStatus === 1 || row.enabledStatus === '1' ? 'success' : 'info'" size="small">
+              {{ row.enabledStatus === 1 || row.enabledStatus === '1' ? '有效' : '无效' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createDate" label="创建时间" width="170" />
+        <el-table-column label="操作" width="80" align="center" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="onSelectBrand(row)">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-wrap" style="margin-top: 12px; display: flex; justify-content: flex-end;">
+        <el-pagination
+          v-model:current-page="brandPagination.page"
+          v-model:page-size="brandPagination.limit"
+          :page-sizes="[15, 30, 100, 200]"
+          layout="total, sizes, prev, pager, next"
+          :total="brandPagination.total"
+          @size-change="handleBrandSizeChange"
+          @current-change="loadBrandList"
+        />
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -304,6 +351,31 @@ function onPickerNodeClick(data) {
 const brandPickerVisible = ref(false)
 const brandLoading = ref(false)
 const brandList = ref([])
+const brandSearchForm = reactive({ id: '', name: '' })
+const brandPagination = reactive({ page: 1, limit: 15, total: 0 })
+
+function buildBrandParams() {
+  const p = { categoryId: form.categoryId, ...brandSearchForm, page: brandPagination.page, limit: brandPagination.limit }
+  Object.keys(p).forEach(k => { if (p[k] === '' || p[k] === undefined || p[k] === null) delete p[k] })
+  return p
+}
+
+async function loadBrandList() {
+  brandLoading.value = true
+  try {
+    const res = await listBrand(buildBrandParams())
+    brandList.value = res.data || []
+    brandPagination.total = res.count || 0
+  } catch { } finally { brandLoading.value = false }
+}
+
+function handleBrandSearch() { brandPagination.page = 1; loadBrandList() }
+function handleBrandSizeChange() { brandPagination.page = 1; loadBrandList() }
+function handleBrandReset() {
+  brandSearchForm.id = ''
+  brandSearchForm.name = ''
+  handleBrandSearch()
+}
 
 async function openBrandPicker() {
   if (form.categoryId == null || form.categoryId === -1) {
@@ -311,12 +383,12 @@ async function openBrandPicker() {
     return
   }
   brandPickerVisible.value = true
-  brandLoading.value = true
-  brandList.value = []
-  try {
-    const res = await listBrand({ categoryId: form.categoryId, page: 1, limit: 100 })
-    brandList.value = res.data || []
-  } catch { } finally { brandLoading.value = false }
+  brandSearchForm.id = ''
+  brandSearchForm.name = ''
+  brandPagination.page = 1
+  brandPagination.limit = 15
+  brandPagination.total = 0
+  loadBrandList()
 }
 
 function onSelectBrand(row) {
@@ -513,6 +585,7 @@ loadTableData()
       font-size: 14px;
     }
   }
+  .brand-search { margin-bottom: $gap-sm; }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
 }
 </style>
