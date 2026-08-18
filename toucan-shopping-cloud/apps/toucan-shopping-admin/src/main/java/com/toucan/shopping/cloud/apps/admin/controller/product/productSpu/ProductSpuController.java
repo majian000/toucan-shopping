@@ -363,7 +363,7 @@ public class ProductSpuController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = new CategoryVO();
-            query.setParentId(categoryVO.getParentId());
+            query.setParentId(categoryVO.getParentId() != null ? categoryVO.getParentId() : -1L);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             resultObjectVO = categoryServiceAPI.queryListByPid(requestJsonVO);
             if(resultObjectVO.isSuccess())

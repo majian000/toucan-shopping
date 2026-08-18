@@ -112,7 +112,7 @@
           <div v-if="form.categoryId == null || form.categoryId === -1" style="min-height:200px">
             <el-empty description="请先在「商品信息」中选择商品分类" />
           </div>
-          <div v-else v-loading="attributeLoading" class="attr-panel">
+          <div v-else v-loading="attributeLoading" class="attr-panel" style="max-height: 420px; overflow-y: auto;">
             <AttributeCheckboxTree
               v-if="attributeTree.length"
               :nodes="attributeTree"
@@ -120,6 +120,11 @@
               @toggle="handleToggleAttribute"
             />
             <el-empty v-else-if="!attributeLoading" description="该分类下暂无公共属性" />
+
+            <div v-if="attributePreviewTree.length" class="attr-preview-panel">
+              <div class="attr-preview-header">属性预览</div>
+              <AttributePreview :nodes="attributePreviewTree" />
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -131,15 +136,18 @@
 
     <!-- 分类选择弹窗 -->
     <el-dialog v-model="categoryPickerVisible" title="选择商品分类" width="360px" append-to-body>
-      <el-tree
-        ref="pickerTreeRef"
-        :data="treeData"
-        :props="{ children: 'children', label: 'name', isLeaf: 'isLeaf' }"
-        node-key="id"
-        lazy
-        :load="loadTreeNodes"
-        @node-click="onPickerNodeClick"
-      />
+      <div style="max-height: 420px; overflow-y: auto;">
+        <el-tree
+          v-loading="treeLoading"
+          ref="pickerTreeRef"
+          :data="treeData"
+          :props="{ children: 'children', label: 'name', isLeaf: 'isLeaf' }"
+          node-key="id"
+          lazy
+          :load="loadTreeNodes"
+          @node-click="onPickerNodeClick"
+        />
+      </div>
     </el-dialog>
 
     <!-- 品牌选择弹窗 -->
@@ -162,6 +170,7 @@ import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Plus, Delete, Refresh } from '@element-plus/icons-vue'
 import AttributeCheckboxTree from './AttributeCheckboxTree.vue'
+import AttributePreview from './AttributePreview.vue'
 import {
   listProductSpu, queryCategoryTreeByPid, listBrand,
   saveProductSpu, updateProductSpu, deleteProductSpu, deleteProductSpuByIds,
@@ -186,7 +195,7 @@ function resolveTreeNodes(children) {
 }
 
 async function loadTreeNodes(node, resolve) {
-  const parentId = node && node.data ? node.data.id : -1
+  const parentId = node && node.data && node.data.id != null ? node.data.id : -1
   treeLoading.value = true
   try {
     const res = await queryCategoryTreeByPid({ parentId })
@@ -327,6 +336,32 @@ const checkedValueIds = computed(() =>
   selectAttributeArray.value.filter(a => a.type === 2).map(a => String(a.attributeValueId))
 )
 
+const attributePreviewTree = computed(() => {
+  const keys = selectAttributeArray.value.filter(a => a.type === 1)
+  const values = selectAttributeArray.value.filter(a => a.type === 2)
+  const bySort = (a, b) => (Number(b.attributeSort) || 0) - (Number(a.attributeSort) || 0)
+
+  function buildNode(key) {
+    return {
+      attributeKeyId: key.attributeKeyId,
+      attributeName: key.attributeName,
+      values: values
+        .filter(v => String(v.attributeKeyId) === String(key.attributeKeyId))
+        .sort(bySort)
+        .map(v => v.attributeValue),
+      children: keys
+        .filter(k => String(k.parentAttributeKeyId) === String(key.attributeKeyId))
+        .sort(bySort)
+        .map(buildNode)
+    }
+  }
+
+  return keys
+    .filter(k => k.parentAttributeKeyId == null || String(k.parentAttributeKeyId) === '-1')
+    .sort(bySort)
+    .map(buildNode)
+})
+
 function indexKeyNodes(nodes) {
   for (const n of nodes) {
     keyNodeMap.set(String(n.id), n)
@@ -465,6 +500,19 @@ loadTableData()
   .search-card { margin-bottom: $gap-md; :deep(.el-card__body) { padding-bottom: 0; } }
   .table-card { .toolbar { margin-bottom: $gap-md; display: flex; gap: 8px; }
     .pagination-wrap { margin-top: $gap-md; display: flex; justify-content: flex-end; } }
+  .attr-preview-panel {
+    margin-top: $gap-md;
+    padding: 12px;
+    border: 1px solid $border-light;
+    border-radius: 6px;
+    background: #fafafa;
+    .attr-preview-header {
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+  }
   :deep(.el-table) { th { background-color: #f5f7fa; color: $text-primary; font-weight: 600; } }
 }
 </style>
