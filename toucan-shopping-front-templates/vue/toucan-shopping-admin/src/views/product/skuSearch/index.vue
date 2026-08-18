@@ -68,7 +68,7 @@
             <el-table-column prop="updateDate" label="修改时间" width="170" />
             <el-table-column label="操作" width="160" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:product:search:sku:btn:detail'" @click="handleDetail(row)">商品详情</el-button>
+                <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:product:sku:search:btn:detail'" @click="handleDetail(row)">商品详情</el-button>
                 <el-button type="danger" link size="small" :icon="Delete" v-permission="'toucan:product:sku:search:row:delete'" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>

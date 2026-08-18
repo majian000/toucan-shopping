@@ -55,7 +55,7 @@
 
         <el-card shadow="never" class="table-card">
           <div class="toolbar">
-            <el-button type="primary" :icon="Refresh" v-permission="'toucan:product:shopProduct:flushSearch'" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索缓存</el-button>
+            <el-button type="primary" :icon="Refresh" v-permission="'toucan:product:shopProduct:toolbar:flushSearch'" :disabled="selectedRows.length === 0" @click="handleFlushSearch">同步搜索</el-button>
           </div>
           <el-table :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
@@ -78,11 +78,13 @@
               </template>
             </el-table-column>
             <el-table-column prop="createDate" label="发布时间" width="170" />
-            <el-table-column label="操作" width="120" fixed="right" align="center">
+            <el-table-column label="操作" width="240" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" v-permission="'toucan:product:shelves'" @click="handleShelves(row)">
+                <el-button type="primary" link size="small" :icon="View" v-permission="'toucan:product:shopProduct:btn:detail'" @click="handleDetail(row)">商品详情</el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:row:shelves'" @click="handleShelves(row)">
                   {{ row.status === 1 || row.status === '1' ? '下架' : '上架' }}
                 </el-button>
+                <el-button type="primary" link size="small" v-permission="'toucan:product:shopProduct:btn:previewPc'" @click="handlePreviewPc(row)">PC预览</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -120,14 +122,44 @@
         <el-button @click="skuDialogVisible = false">关闭</el-button>
       </template>
     </el-dialog>
+
+    <!-- 商品详情弹窗 -->
+    <el-dialog v-model="detailVisible" title="商品详情" width="820px" :close-on-click-modal="false" destroy-on-close>
+      <div v-loading="detailLoading">
+        <el-descriptions v-if="detailInfo" :column="2" border label-width="110px">
+          <el-descriptions-item label="上架状态">
+            <el-tag :type="detailInfo.status === 1 || detailInfo.status === '1' ? 'success' : 'danger'" size="small">
+              {{ detailInfo.status === 1 || detailInfo.status === '1' ? '已上架' : '未上架' }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="店铺商品ID">{{ detailInfo.id }}</el-descriptions-item>
+          <el-descriptions-item label="商品名称">{{ detailInfo.name || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="分类名称">{{ detailInfo.categoryName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="商品主图" :span="2">
+            <el-image v-if="detailInfo.httpMainPhotoFilePath" :src="detailInfo.httpMainPhotoFilePath" :preview-src-list="[detailInfo.httpMainPhotoFilePath]" preview-teleported fit="contain" style="width:200px;height:200px" />
+          </el-descriptions-item>
+          <el-descriptions-item label="分类路径">{{ detailInfo.categoryPath || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="品牌中文名称">{{ detailInfo.brandChineseName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="品牌英文名称">{{ detailInfo.brandEnglishName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺内分类名称">{{ detailInfo.shopCategoryName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺内分类路径">{{ detailInfo.shopCategoryPath || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="店铺ID">{{ detailInfo.shopId }}</el-descriptions-item>
+          <el-descriptions-item label="店铺名称">{{ detailInfo.shopName || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="商家编码">{{ detailInfo.sellerNo || '-' }}</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="detailVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, RefreshRight, Refresh } from '@element-plus/icons-vue'
-import { listShopProduct, queryCategoryTreeByPid, queryShopProductSkuList, shelves, flushSearch } from '@/api/product/shopProduct'
+import { Search, RefreshRight, Refresh, View } from '@element-plus/icons-vue'
+import { listShopProduct, queryCategoryTreeByPid, queryShopProductSkuList, shelves, flushSearch, detailShopProduct } from '@/api/product/shopProduct'
 
 const searchForm = reactive({ categoryId: null, id: '', uuid: '', name: '', status: '', shopId: '' })
 
@@ -228,6 +260,29 @@ async function handleViewSku(row) {
     const res = await queryShopProductSkuList({ shopProductId: row.id, page: 1, limit: 100 })
     skuList.value = res.data || []
   } catch { } finally { skuLoading.value = false }
+}
+
+// ===== PC预览 / 商品详情 =====
+const pcBasePath = import.meta.env.VITE_PC_BASE_PATH || ''
+
+function handlePreviewPc(row) {
+  window.open(pcBasePath + '/page/product/preview/pid/' + row.id)
+}
+
+const detailVisible = ref(false)
+const detailInfo = ref(null)
+const detailLoading = ref(false)
+
+async function handleDetail(row) {
+  detailVisible.value = true
+  detailInfo.value = null
+  detailLoading.value = true
+  try {
+    const res = await detailShopProduct({ id: row.id })
+    detailInfo.value = (res && res.data) || null
+  } catch { } finally {
+    detailLoading.value = false
+  }
 }
 
 loadTableData()

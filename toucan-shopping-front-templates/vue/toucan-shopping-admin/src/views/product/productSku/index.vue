@@ -83,7 +83,7 @@
             <el-table-column prop="createDate" label="发布时间" width="170" />
             <el-table-column label="操作" width="220" fixed="right" align="center">
               <template #default="{ row }">
-                <el-button type="primary" link size="small" v-permission="'toucan:product:shelves'" @click="handleShelves(row)">
+                <el-button type="primary" link size="small" v-permission="'toucan:product:sku:row:shelves'" @click="handleShelves(row)">
                   {{ row.status === 1 || row.status === '1' ? '下架' : '上架' }}
                 </el-button>
                 <el-button type="primary" link size="small" v-permission="'toucan:product:shopProduct:sku:btn:previewPc'" @click="handlePreviewPc(row)">PC预览</el-button>
