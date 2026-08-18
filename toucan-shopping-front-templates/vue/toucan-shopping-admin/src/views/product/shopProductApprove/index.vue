@@ -15,7 +15,7 @@
             :key="treeKey"
             ref="categoryTreeRef"
             :data="treeData"
-            :props="{ children: 'children', label: 'name' }"
+            :props="{ children: 'children', label: 'name', isLeaf: 'isLeaf' }"
             node-key="id"
             lazy
             :load="loadTreeNodes"
@@ -152,7 +152,7 @@ function handleRefreshTree() {
 }
 
 function resolveTreeNodes(children) {
-  return (children || []).map(item => ({ ...item, leaf: !item.haveChild }))
+  return (children || []).map(item => ({ ...item, isLeaf: !(item.isParent === true || item.isParent === 'true') }))
 }
 
 async function loadTreeNodes(node, resolve) {

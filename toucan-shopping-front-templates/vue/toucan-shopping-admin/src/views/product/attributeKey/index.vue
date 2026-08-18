@@ -15,7 +15,7 @@
             :key="treeKey"
             ref="categoryTreeRef"
             :data="treeData"
-            :props="{ children: 'children', label: 'name' }"
+            :props="{ children: 'children', label: 'name', isLeaf: 'isLeaf' }"
             node-key="id"
             lazy
             :load="loadTreeNodes"
@@ -61,11 +61,24 @@
             <el-button type="primary" :icon="Plus" v-permission="'toucan:product:attribute:key:toolbar:save'" @click="handleAdd">添加</el-button>
             <el-button type="danger" :icon="Delete" v-permission="'toucan:product:attributeKey:toolbar:delete'" :disabled="selectedRows.length === 0" @click="handleBatchDelete">批量删除</el-button>
           </div>
-          <el-table :data="tableData" border stripe v-loading="loading" row-key="id" @selection-change="onSelectionChange">
+          <el-table
+            :data="tableData"
+            border
+            stripe
+            v-loading="loading"
+            max-height="calc(100vh - 240px)"
+            row-key="id"
+            lazy
+            :load="loadTreeChildren"
+            :tree-props="{ children: 'children', hasChildren: 'haveChild' }"
+            @selection-change="onSelectionChange"
+          >
             <el-table-column type="selection" width="50" align="center" />
-            <el-table-column prop="attributeName" label="属性名" min-width="180" show-overflow-tooltip />
+            <el-table-column prop="attributeName" label="属性名" min-width="200" show-overflow-tooltip />
+            <el-table-column prop="id" label="主键" width="120" />
             <el-table-column prop="categoryName" label="所属分类" width="140" show-overflow-tooltip />
             <el-table-column prop="categoryPath" label="所属分类路径" min-width="240" show-overflow-tooltip />
+            <el-table-column prop="path" label="属性路径" min-width="240" show-overflow-tooltip />
             <el-table-column prop="attributeType" label="属性类型" width="110" align="center">
               <template #default="{ row }">
                 <el-tag :type="row.attributeType === 1 || row.attributeType === '1' ? '' : 'warning'" size="small">
@@ -80,6 +93,7 @@
                 </el-tag>
               </template>
             </el-table-column>
+            <el-table-column prop="parentName" label="上级属性名" min-width="140" show-overflow-tooltip />
             <el-table-column prop="attributeSort" label="排序" width="80" align="center" />
             <el-table-column prop="showStatus" label="显示状态" width="110" align="center">
               <template #default="{ row }">
@@ -100,13 +114,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="pagination-wrap">
-            <el-pagination
-              v-model:current-page="pagination.page" v-model:page-size="pagination.limit"
-              :page-sizes="[15, 30, 100, 200]" layout="total, sizes, prev, pager, next"
-              :total="pagination.total" @size-change="handleSizeChange" @current-change="loadTableData"
-            />
-          </div>
         </el-card>
       </div>
     </div>
@@ -156,26 +163,31 @@
 
     <!-- 分类选择弹窗 -->
     <el-dialog v-model="categoryPickerVisible" title="选择分类" width="360px" append-to-body>
-      <el-tree
-        ref="pickerTreeRef"
-        :data="treeData"
-        :props="{ children: 'children', label: 'name' }"
-        node-key="id"
-        lazy
-        :load="loadTreeNodes"
-        @node-click="onCategoryPicked"
-      />
+      <div style="max-height: 420px; overflow-y: auto;">
+        <el-tree
+          v-loading="treeLoading"
+          ref="pickerTreeRef"
+          :data="treeData"
+          :props="{ children: 'children', label: 'name', isLeaf: 'isLeaf' }"
+          node-key="id"
+          lazy
+          :load="loadTreeNodes"
+          @node-click="onCategoryPicked"
+        />
+      </div>
     </el-dialog>
 
     <!-- 上级节点选择弹窗 -->
     <el-dialog v-model="parentPickerVisible" title="选择上级节点" width="360px" append-to-body>
-      <el-tree
-        :data="parentTreeData"
-        :props="{ children: 'children', label: 'title' }"
-        node-key="id"
-        default-expand-all
-        @node-click="onParentPicked"
-      />
+      <div style="max-height: 420px; overflow-y: auto;">
+        <el-tree
+          v-loading="parentTreeLoading"
+          :data="parentTreeData"
+          :props="{ children: 'children', label: 'title' }"
+          node-key="id"
+          @node-click="onParentPicked"
+        />
+      </div>
     </el-dialog>
 
     <!-- 属性值管理弹窗 -->
@@ -293,7 +305,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, RefreshRight, Plus, Delete, Refresh } from '@element-plus/icons-vue'
 import {
-  listAttributeKey, queryCategoryTreeByPid, queryTreeByCategoryId,
+  queryTreeTableByPid, queryCategoryTreeByPid, queryTreeByCategoryId,
   saveAttributeKey, updateAttributeKey, deleteAttributeKey, deleteAttributeKeyByIds
 } from '@/api/product/attributeKey'
 import {
@@ -314,7 +326,7 @@ function handleRefreshTree() {
 }
 
 function resolveTreeNodes(children) {
-  return (children || []).map(item => ({ ...item, leaf: !item.haveChild }))
+  return (children || []).map(item => ({ ...item, isLeaf: !(item.isParent === true || item.isParent === 'true') }))
 }
 
 async function loadTreeNodes(node, resolve) {
@@ -335,16 +347,15 @@ function onNodeClick(data) {
   handleSearch()
 }
 
-// ===== 表格 =====
+// ===== 表格(树表格,按上级属性懒加载) =====
 const tableData = ref([])
 const loading = ref(false)
 const selectedRows = ref([])
-const pagination = reactive({ page: 1, limit: 15, total: 0 })
 
 function onSelectionChange(rows) { selectedRows.value = rows }
 
 function buildSearchParams() {
-  const p = { ...searchForm, page: pagination.page, limit: pagination.limit }
+  const p = { ...searchForm }
   Object.keys(p).forEach(k => { if (p[k] === '' || p[k] === undefined || p[k] === null) delete p[k] })
   return p
 }
@@ -352,14 +363,18 @@ function buildSearchParams() {
 async function loadTableData() {
   loading.value = true
   try {
-    const res = await listAttributeKey(buildSearchParams())
+    const res = await queryTreeTableByPid({ parentId: -1, ...buildSearchParams() })
     tableData.value = res.data || []
-    pagination.total = res.count || 0
   } catch { } finally { loading.value = false }
 }
 
-function handleSearch() { pagination.page = 1; loadTableData() }
-function handleSizeChange() { pagination.page = 1; loadTableData() }
+function loadTreeChildren(tree, treeNode, resolve) {
+  queryTreeTableByPid({ parentId: tree.id, ...buildSearchParams() })
+    .then(res => resolve(res.data || []))
+    .catch(() => resolve([]))
+}
+
+function handleSearch() { loadTableData() }
 function handleReset() {
   searchForm.attributeType = ''; searchForm.queryStatus = ''; searchForm.attributeName = ''; searchForm.showStatus = ''; searchForm.categoryId = null
   handleSearch()
@@ -402,6 +417,7 @@ function onCategoryPicked(data) {
 
 const parentPickerVisible = ref(false)
 const parentTreeData = ref([])
+const parentTreeLoading = ref(false)
 
 async function openParentPicker() {
   if (form.categoryId == null || form.categoryId === -1) {
@@ -410,10 +426,13 @@ async function openParentPicker() {
   }
   parentPickerVisible.value = true
   parentTreeData.value = []
+  parentTreeLoading.value = true
   try {
     const res = await queryTreeByCategoryId({ categoryId: form.categoryId, attributeType: form.attributeType })
     parentTreeData.value = res.data || []
-  } catch { }
+  } catch { } finally {
+    parentTreeLoading.value = false
+  }
 }
 
 function onParentPicked(data) {
@@ -561,7 +580,6 @@ async function handleValueSave() {
   } catch { } finally { valueSaving.value = false }
 }
 
-loadTableData()
 </script>
 
 <style lang="scss" scoped>
