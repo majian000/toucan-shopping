@@ -152,9 +152,10 @@
 
 ##### 前端
 
-| 服务名                                                                | 端口号  | 说明                                             |
-|--------------------------------------------------------------------|------| ---------------------------------------------------|
-| toucan-shopping-front-templates/vue/toucan-shopping-admin-auth-web | 8198 | 权限中台界面                                       |
+| 服务名                                                                | 端口号  | 说明      |
+|--------------------------------------------------------------------|------|---------|
+| toucan-shopping-front-templates/vue/toucan-shopping-admin-auth-web | 8198 | 权限中台界面  |
+| toucan-shopping-front-templates/vue/toucan-shopping-admin | 8199 | 商城管理端界面 |
     
 ##### 启动步骤
 
