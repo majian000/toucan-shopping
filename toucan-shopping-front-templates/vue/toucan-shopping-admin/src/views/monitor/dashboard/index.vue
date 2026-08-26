@@ -31,8 +31,8 @@
     <el-card shadow="never" class="table-card">
       <el-table :data="tableData" border stripe v-loading="loading">
         <el-table-column prop="apiUrl" label="接口URL" min-width="300" show-overflow-tooltip />
-        <el-table-column prop="appName" label="应用" width="180" />
-        <el-table-column prop="requestCount" label="请求数(QPS)" width="120" align="center" sortable />
+        <el-table-column prop="appName" label="应用" width="230" />
+        <el-table-column prop="requestCount" label="请求数(QPS)" width="170" align="center" sortable />
         <el-table-column prop="avgMs" label="平均耗时(ms)" width="140" align="center" sortable />
         <el-table-column label="最大耗时(ms)" width="140" align="center" sortable prop="maxMs">
           <template #default="{ row }">
