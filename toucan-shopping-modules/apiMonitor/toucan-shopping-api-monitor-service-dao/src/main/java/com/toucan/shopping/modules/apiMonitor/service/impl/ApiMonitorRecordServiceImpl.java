@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.apiMonitor.service.impl;
 
-import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
+import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorSummaryPO;
 import com.toucan.shopping.modules.apiMonitor.mapper.ApiMonitorRecordMapper;
 import com.toucan.shopping.modules.apiMonitor.service.ApiMonitorRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,6 @@ public class ApiMonitorRecordServiceImpl implements ApiMonitorRecordService {
     }
 
     @Override
-    public int aggregateToMetrics(Date startTime, Date endTime) {
-        return apiMonitorRecordMapper.aggregateToMetrics(startTime, endTime);
-    }
-
-    @Override
-    public List<ApiMonitorMetricsPO> selectAggregated(Date startTime, Date endTime) {
-        return apiMonitorRecordMapper.selectAggregated(startTime, endTime);
-    }
-
-    @Override
     public List<ApiMonitorRecordPO> selectSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, String traceId, Integer offset, Integer limit) {
         return apiMonitorRecordMapper.selectSlowList(apiUrl, appName, minElapsedMs, startTime, endTime, traceId, offset, limit);
     }
@@ -42,5 +32,10 @@ public class ApiMonitorRecordServiceImpl implements ApiMonitorRecordService {
     @Override
     public long countSlowList(String apiUrl, String appName, int minElapsedMs, Date startTime, Date endTime, String traceId) {
         return apiMonitorRecordMapper.countSlowList(apiUrl, appName, minElapsedMs, startTime, endTime, traceId);
+    }
+
+    @Override
+    public List<ApiMonitorSummaryPO> selectSummary(String apiUrl, String appName, Date startTime, Date endTime, Integer minElapsed) {
+        return apiMonitorRecordMapper.selectSummary(apiUrl, appName, startTime, endTime, minElapsed);
     }
 }

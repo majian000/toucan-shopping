@@ -34,9 +34,6 @@ public class CleanupJob {
             // record 保留7天，TRUNCATE 过期表
             truncateDayTable("api_monitor_record", 7);
 
-            // metrics 保留7天，TRUNCATE 过期表
-            truncateDayTable("api_monitor_metrics", 7);
-
         } catch (Exception e) {
             logger.error("清理过期数据失败: {}", e.getMessage());
         }

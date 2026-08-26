@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.apiMonitor.service;
 
-import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
+import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorSummaryPO;
 import com.toucan.shopping.modules.apiMonitor.vo.DashboardQueryVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
@@ -16,9 +16,6 @@ import java.util.List;
 public class DashboardService {
 
     @Autowired
-    private ApiMonitorMetricsService apiMonitorMetricsService;
-
-    @Autowired
     private ApiMonitorRecordService apiMonitorRecordService;
 
     public ResultObjectVO getSummary(DashboardQueryVO query) {
@@ -26,12 +23,12 @@ public class DashboardService {
         try {
             Date start = DateUtils.parse(query.getStartTime(), DateUtils.FORMATTER_SS.get());
             Date end = DateUtils.parse(query.getEndTime(), DateUtils.FORMATTER_SS.get());
-            List<ApiMonitorMetricsPO> list = apiMonitorMetricsService.selectSummary(
+            List<ApiMonitorSummaryPO> list = apiMonitorRecordService.selectSummary(
                     query.getApiUrl(), query.getAppName(), start, end, query.getMinElapsed());
             int total = list.size();
             int from = (query.getPage() - 1) * query.getLimit();
             int to = Math.min(from + query.getLimit(), total);
-            PageInfo<ApiMonitorMetricsPO> pageInfo = new PageInfo<>();
+            PageInfo<ApiMonitorSummaryPO> pageInfo = new PageInfo<>();
             pageInfo.setList(list.subList(Math.min(from, total), to));
             pageInfo.setTotal((long) total);
             result.setData(pageInfo);

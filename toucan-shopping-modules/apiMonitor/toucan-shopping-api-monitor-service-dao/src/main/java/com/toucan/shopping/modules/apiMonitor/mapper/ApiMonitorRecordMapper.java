@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.apiMonitor.mapper;
 
-import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO;
 import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorRecordPO;
+import com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorSummaryPO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -22,11 +22,8 @@ public interface ApiMonitorRecordMapper {
     /** 统计请求总数 */
     long countSlowList(String apiUrl, String appName, Integer minElapsedMs, Date startTime, Date endTime, String traceId);
 
-    /** 聚合到分钟表（已被 Java 侧聚合替代，保留用于兼容） */
-    int aggregateToMetrics(Date startTime, Date endTime);
-
-    /** 从 record 表 GROUP BY 预聚合（单表 SELECT，兼容 ShardingSphere） */
-    List<ApiMonitorMetricsPO> selectAggregated(Date startTime, Date endTime);
+    /** 概要统计（按接口+应用聚合） */
+    List<ApiMonitorSummaryPO> selectSummary(String apiUrl, String appName, Date startTime, Date endTime, Integer minElapsed);
 
     /** 删除过期数据 */
     int deleteByCreateDate(Date beforeDate);

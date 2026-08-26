@@ -16,6 +16,15 @@
         <result column="create_date" property="createDate"/>
     </resultMap>
 
+    <resultMap id="SummaryResultMap" type="com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorSummaryPO">
+        <result column="api_url" property="apiUrl"/>
+        <result column="app_name" property="appName"/>
+        <result column="request_count" property="requestCount"/>
+        <result column="avg_ms" property="avgMs"/>
+        <result column="max_ms" property="maxMs"/>
+        <result column="min_ms" property="minMs"/>
+    </resultMap>
+
     <!-- 批量插入 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO api_monitor_record
@@ -73,51 +82,29 @@
         </if>
     </select>
 
-    <!-- 聚合到分钟表（幂等由唯一索引 uk_api_app_time (api_url, app_name, time_window) 保证） -->
-    <insert id="aggregateToMetrics">
-        INSERT IGNORE INTO api_monitor_metrics
-        (api_url, app_name, time_window, request_count, avg_ms, max_ms, min_ms, sharding_date)
+    <!-- 概要统计（直接对原始记录表按接口+应用聚合） -->
+    <select id="selectSummary" resultMap="SummaryResultMap">
         SELECT
             api_url,
             app_name,
-            FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(request_time) / 60) * 60) AS time_window,
             COUNT(*) AS request_count,
             ROUND(AVG(elapsed_ms), 2) AS avg_ms,
             MAX(elapsed_ms) AS max_ms,
-            MIN(elapsed_ms) AS min_ms,
-            DATE(request_time) AS sharding_date
+            MIN(elapsed_ms) AS min_ms
         FROM api_monitor_record
         WHERE request_time <![CDATA[ >= ]]> #{startTime}
           AND request_time <![CDATA[ < ]]> #{endTime}
-        GROUP BY api_url, app_name, time_window, sharding_date
-    </insert>
-
-    <!-- 从 record 表预聚合（单表 GROUP BY，ShardingSphere 兼容） -->
-    <resultMap id="AggregatedResultMap" type="com.toucan.shopping.modules.apiMonitor.entity.ApiMonitorMetricsPO">
-        <result column="api_url" property="apiUrl"/>
-        <result column="app_name" property="appName"/>
-        <result column="time_window" property="timeWindow"/>
-        <result column="request_count" property="requestCount"/>
-        <result column="avg_ms" property="avgMs"/>
-        <result column="max_ms" property="maxMs"/>
-        <result column="min_ms" property="minMs"/>
-        <result column="sharding_date" property="shardingDate"/>
-    </resultMap>
-
-    <select id="selectAggregated" resultMap="AggregatedResultMap">
-        SELECT
-            api_url,
-            app_name,
-            FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(request_time) / 60) * 60) AS time_window,
-            COUNT(*) AS request_count,
-            ROUND(AVG(elapsed_ms), 2) AS avg_ms,
-            MAX(elapsed_ms) AS max_ms,
-            MIN(elapsed_ms) AS min_ms,
-            MAX(DATE(request_time)) AS sharding_date
-        FROM api_monitor_record
-        WHERE request_time <![CDATA[ >= ]]> #{startTime}
-          AND request_time <![CDATA[ < ]]> #{endTime}
-        GROUP BY api_url, app_name, time_window
+        <if test="apiUrl != null and apiUrl != ''">
+            AND api_url LIKE CONCAT('%', #{apiUrl}, '%')
+        </if>
+        <if test="appName != null and appName != ''">
+            AND app_name LIKE CONCAT('%', #{appName}, '%')
+        </if>
+        GROUP BY api_url, app_name
+        <if test="minElapsed != null and minElapsed > 0">
+            HAVING avg_ms <![CDATA[ >= ]]> #{minElapsed}
+        </if>
+        ORDER BY avg_ms DESC
     </select>
 
     <!-- 删除过期数据 -->
