@@ -55,28 +55,36 @@ public class IndexController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public void index(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            response.sendRedirect("/index/page");
-        } catch (IOException e) {
-            logger.warn(e.getMessage(), e);
-        }
+    @ResponseBody
+    public ResultObjectVO index(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            response.sendRedirect("/index/page");
+//        } catch (IOException e) {
+//            logger.warn(e.getMessage(), e);
+//        }
+        return ResultObjectVO.success();
     }
 
 
     @RequestMapping(value = "/403", method = RequestMethod.GET)
-    public String page403(HttpServletRequest request, HttpServletResponse response) {
-        return "403.html";
+    @ResponseBody
+    public ResultObjectVO page403(HttpServletRequest request, HttpServletResponse response) {
+//        return "403.html";
+        return ResultObjectVO.success();
     }
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)
-    public String page404(HttpServletRequest request, HttpServletResponse response) {
-        return "404.html";
+    @ResponseBody
+    public ResultObjectVO page404(HttpServletRequest request, HttpServletResponse response) {
+//        return "404.html";
+        return ResultObjectVO.success();
     }
 
     @RequestMapping(value = "/500", method = RequestMethod.GET)
-    public String page500(HttpServletRequest request, HttpServletResponse response) {
-        return "500.html";
+    @ResponseBody
+    public ResultObjectVO page500(HttpServletRequest request, HttpServletResponse response) {
+//        return "500.html";
+        return ResultObjectVO.success();
     }
 
 
