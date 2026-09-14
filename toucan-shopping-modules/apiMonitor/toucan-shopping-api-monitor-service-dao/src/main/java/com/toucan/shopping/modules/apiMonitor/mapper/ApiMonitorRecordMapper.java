@@ -25,6 +25,4 @@ public interface ApiMonitorRecordMapper {
     /** 概要统计（按接口+应用聚合） */
     List<ApiMonitorSummaryPO> selectSummary(String apiUrl, String appName, Date startTime, Date endTime, Integer minElapsed);
 
-    /** 删除过期数据 */
-    int deleteByCreateDate(Date beforeDate);
 }

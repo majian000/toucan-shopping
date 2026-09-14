@@ -107,9 +107,5 @@
         ORDER BY avg_ms DESC
     </select>
 
-    <!-- 删除过期数据 -->
-    <delete id="deleteByCreateDate">
-        DELETE FROM api_monitor_record WHERE create_date <![CDATA[ < ]]> #{beforeDate}
-    </delete>
 
 </mapper>
