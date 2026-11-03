@@ -1,12 +1,9 @@
 <template>
-  <div class="home page-scroll">
-    <!-- 顶部搜索入口 + 我的 -->
-    <div class="home-top safe-top">
-      <div class="home-search" @click="$router.push('/search')">
-        <span class="search-icon">🔍</span>
-        <span class="search-text">搜索商品</span>
-      </div>
-      <span class="my-entry" @click="$router.push('/my')">我的</span>
+  <div class="home page-scroll has-tabbar">
+    <!-- 顶部搜索入口 -->
+    <div class="home-search safe-top" @click="$router.push('/search')">
+      <span class="search-icon">🔍</span>
+      <span class="search-text">搜索商品</span>
     </div>
 
     <!-- 轮播图 -->
@@ -46,12 +43,15 @@
     </div>
 
     <div v-if="loading" class="home-loading">加载中...</div>
+
+    <TabBar active="home" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getBanners, getCategorys, getHotProducts } from '@/api/index';
+import TabBar from '@/components/TabBar.vue';
 
 defineOptions({ name: 'Home' });
 
@@ -80,24 +80,11 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .home {
-  .home-top {
+  .home-search {
     display: flex;
     align-items: center;
     gap: $gap-sm;
     margin: $gap-sm $gap-md $gap-md;
-
-    .my-entry {
-      flex-shrink: 0;
-      font-size: 14px;
-      color: $text-primary;
-    }
-  }
-
-  .home-search {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: $gap-sm;
     padding: 10px 14px;
     background: $bg-card;
     border-radius: $radius-lg;

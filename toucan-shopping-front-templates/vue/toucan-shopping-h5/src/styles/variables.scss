@@ -1,12 +1,12 @@
 // ===================== 全局样式变量（由 vite.config.js 自动注入到每个 sass 文件）=====================
 // ⚠️ 这里只放变量，不要写具体选择器：它会被注入到所有 .scss/.vue 的开头。
 
-// 主色（品牌色，可按需调整）
-$primary: #0e5eaa;
-$primary-light: #1269bd;
+// 主色（与 PC 商城端保持同一套品牌橘色）
+$primary: #ff4e00;
+$primary-light: #ff780e;
 $success: #16a34a;
 $warning: #d97706;
-$danger: #dc2626;
+$danger: #ff3600;
 
 // 文字
 $text-primary: #33455e;

@@ -50,11 +50,11 @@ const routes = [
     meta: { title: '搜索', public: true }
   },
   {
-    // 我的（需登录）
+    // 我的（公开：未登录时页面内显示登录引导）
     path: '/my',
     name: 'My',
     component: () => import('@/views/my/index.vue'),
-    meta: { title: '我的' }
+    meta: { title: '我的', public: true }
   },
   {
     // 收藏（需登录）

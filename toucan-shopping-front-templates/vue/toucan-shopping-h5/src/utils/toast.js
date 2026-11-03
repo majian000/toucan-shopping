@@ -62,7 +62,7 @@ export function alertDialog({ title = '提示', message = '', okText = '我知�
 
 function openDialog({ title = '提示', message = '', okText = '确定', cancelText = '取消', showCancel = true, danger = false, modal = true }) {
   return new Promise(resolve => {
-    const themeColor = danger ? '#dc2626' : '#0e5eaa';
+    const themeColor = danger ? '#ff3600' : '#ff4e00';
 
     const mask = document.createElement('div');
     mask.setAttribute('data-h5-dialog', '');

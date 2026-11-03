@@ -1,5 +1,5 @@
 <template>
-  <div class="my page-scroll safe-top">
+  <div class="my page-scroll safe-top has-tabbar">
     <!-- 用户信息 -->
     <div class="user-card">
       <template v-if="isLogin">
@@ -50,6 +50,8 @@
         <span class="menu-arrow">›</span>
       </div>
     </div>
+
+    <TabBar active="my" />
   </div>
 </template>
 
@@ -58,6 +60,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { isLogin, getUid, clearLogin } from '@/utils/auth';
 import { getLoginInfo, logout } from '@/api/user';
+import TabBar from '@/components/TabBar.vue';
 import { toastSuccess } from '@/utils/toast';
 
 defineOptions({ name: 'My' });

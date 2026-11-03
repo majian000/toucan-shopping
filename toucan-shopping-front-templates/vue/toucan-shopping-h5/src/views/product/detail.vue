@@ -234,7 +234,7 @@ async function handleAddCart() {
       }
     }
     .btn-cart {
-      background: #f0a020;
+      background: $primary-light;
     }
     .btn-buy {
       background: $danger;

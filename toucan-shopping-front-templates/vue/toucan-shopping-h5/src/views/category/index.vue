@@ -1,5 +1,5 @@
 <template>
-  <div class="category page-scroll safe-top">
+  <div class="category page-scroll safe-top has-tabbar">
     <div class="category-head">
       <h2 class="category-title">商品分类</h2>
     </div>
@@ -19,12 +19,15 @@
 
     <div v-else-if="!loading" class="category-empty">暂无分类数据</div>
     <div v-if="loading" class="category-loading">加载中...</div>
+
+    <TabBar active="category" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getNavigation } from '@/api/index';
+import TabBar from '@/components/TabBar.vue';
 
 defineOptions({ name: 'Category' });
 

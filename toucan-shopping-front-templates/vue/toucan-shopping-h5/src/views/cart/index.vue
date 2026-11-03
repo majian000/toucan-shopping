@@ -1,5 +1,5 @@
 <template>
-  <div class="cart page-scroll safe-top">
+  <div class="cart page-scroll safe-top has-tabbar">
     <div class="cart-head">
       <h2 class="cart-title">购物车</h2>
       <button v-if="list.length" class="clear-btn" @click="handleClear">清空</button>
@@ -32,12 +32,15 @@
     <div v-if="list.length" class="cart-foot safe-bottom">
       <button class="checkout-btn" @click="$router.push('/checkout')">去结算</button>
     </div>
+
+    <TabBar active="cart" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { cartList, removeCart, clearCart, updateCart } from '@/api/cart';
+import TabBar from '@/components/TabBar.vue';
 import { toastSuccess } from '@/utils/toast';
 import { confirm } from '@/utils/toast';
 
@@ -210,7 +213,7 @@ async function handleClear() {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: calc(52px + #{$safe-bottom});
     padding: $gap-sm $gap-md;
     background: $bg-card;
     border-top: 1px solid $border-color;
