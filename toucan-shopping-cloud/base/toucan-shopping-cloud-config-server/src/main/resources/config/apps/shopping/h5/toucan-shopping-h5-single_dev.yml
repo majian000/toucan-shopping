@@ -68,6 +68,22 @@ toucan:
         socketFactory-fallback: false
       sender: mmdrss@163.com
       sender-authentication-code: IJHWJFZINFUPQIUC
+    userLoginCache:
+      cache-type: redis
+      redis-type: default
+      default-redis:
+        select: single
+        timeout: 10000
+        password: mj_tocan_redis_7612
+        host: 8.140.187.184
+        port: 6379
+        database: 0
+        hosts: 192.168.80.129:6380,192.168.80.129:6381,192.168.80.129:6382
+        maxRedirects: 3
+        maxActive: 50
+        maxWaitMillis: 15
+        maxIdle: 50
+        minIdle: 0
     log:
       param:
         ignore-url-patterns[0]: .*\.js
