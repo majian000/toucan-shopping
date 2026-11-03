@@ -142,6 +142,9 @@
 
         <!--消息Web端 -->
         <module>apps/toucan-shopping-message-web</module>
+
+        <!-- H5端 -->
+        <module>apps/toucan-shopping-h5</module>
         <!-- ===============================================-->
 
 
@@ -176,6 +179,10 @@
         <module>modules/config/scheduler/toucan-shopping-scheduler-cloud-config</module>
         <!--商城定时任务调度单服务配置 -->
         <module>modules/config/scheduler/toucan-shopping-scheduler-single-config</module>
+        <!--H5端微服务配置 -->
+        <module>modules/config/h5/toucan-shopping-h5-cloud-config</module>
+        <!--H5端单服务配置 -->
+        <module>modules/config/h5/toucan-shopping-h5-single-config</module>
 
         <!-- 启动配置公共模块-->
         <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>
@@ -650,6 +657,20 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
                 <artifactId>toucan-shopping-web-single-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-h5-cloud-config</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.apps.config</groupId>
+                <artifactId>toucan-shopping-h5-single-config</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

@@ -21,6 +21,11 @@ public class UserAuth {
     private String loginSalt; //登录token加盐
 
     /**
+     * 登录会话 cookie 名前缀（默认 tss_，PC/卖家/消息共用；H5 端配 h5_ 实现独立会话）
+     */
+    private String cookiePrefix = "tss_";
+
+    /**
      * HTTP权限请求头,默认值为Cookie
      * 后台管理端 Cookie:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
      * 或商城C端 Cookie:userId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d

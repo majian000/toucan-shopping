@@ -1,0 +1,53 @@
+spring:
+  profiles:
+    active: cloud_dev
+  main:
+    allow-bean-definition-overriding: true
+  config:
+    import: configserver:http://${toucan.config.server.ip}:${toucan.config.server.port}
+  cloud:
+    config:
+      username: toucan_sp
+      password: toucan_sp_0987
+      label: master
+  application:
+    name: toucan-shopping-h5
+
+logging:
+  config: classpath:logback-spring.xml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud_prod
+  cloud:
+    config:
+      profile: cloud_prod
+
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud_dev
+  cloud:
+    config:
+      profile: cloud_dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: single_prod
+  cloud:
+    config:
+      profile: single_prod
+
+---
+spring:
+  config:
+    activate:
+      on-profile: single_dev
+  cloud:
+    config:
+      profile: single_dev

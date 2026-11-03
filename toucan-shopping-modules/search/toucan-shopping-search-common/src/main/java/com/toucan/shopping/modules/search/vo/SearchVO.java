@@ -16,7 +16,7 @@ public class SearchVO {
     /**
      * 每页显示数量
      */
-    private int size = 10;
+    private Integer size = 10;
 
 
 

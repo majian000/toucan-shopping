@@ -1,0 +1,62 @@
+// ===================== 全局基础样式 =====================
+// 只在 main.js 引入一次。变量来自 variables.scss（vite.config.js 自动注入）。
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background: $bg-page;
+  color: $text-primary;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+// 安全区工具类（刘海屏上下留白）
+.safe-top {
+  padding-top: $safe-top;
+}
+.safe-bottom {
+  padding-bottom: $safe-bottom;
+}
+
+// 整屏滚动容器：底部预留安全区
+.page-scroll {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: calc(#{$gap-md} + #{$safe-bottom});
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}

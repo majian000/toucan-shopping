@@ -1,0 +1,33 @@
+// ===================== 全局样式变量（由 vite.config.js 自动注入到每个 sass 文件）=====================
+// ⚠️ 这里只放变量，不要写具体选择器：它会被注入到所有 .scss/.vue 的开头。
+
+// 主色（品牌色，可按需调整）
+$primary: #0e5eaa;
+$primary-light: #1269bd;
+$success: #16a34a;
+$warning: #d97706;
+$danger: #dc2626;
+
+// 文字
+$text-primary: #33455e;
+$text-regular: #5a6b82;
+$text-secondary: #8492a6;
+$text-placeholder: #b3bcc9;
+
+// 背景 / 边框
+$bg-page: #f4f6f9;
+$bg-card: #ffffff;
+$border-color: #e5e9f0;
+
+// 圆角 / 间距（H5 用 px）
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$gap-xs: 4px;
+$gap-sm: 8px;
+$gap-md: 16px;
+$gap-lg: 24px;
+
+// 安全区（刘海屏）
+$safe-top: env(safe-area-inset-top, 0px);
+$safe-bottom: env(safe-area-inset-bottom, 0px);

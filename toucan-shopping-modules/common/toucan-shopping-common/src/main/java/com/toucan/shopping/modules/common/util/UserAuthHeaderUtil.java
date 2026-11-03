@@ -8,6 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class UserAuthHeaderUtil {
 
+    /**
+     * 会话 cookie 名前缀（默认 tss_，与 PC/卖家/消息共用；H5 端在启动时置为 h5_ 实现独立会话）
+     */
+    public static String cookiePrefix = "tss_";
 
 
     public static String getUserMainId(String authHeader) throws Exception {
@@ -16,7 +20,7 @@ public class UserAuthHeaderUtil {
             throw new UserHeaderException("请求头参数无效");
         }
 
-        String userId = StringUtils.substringAfter(authHeader,"tss_uid=");
+        String userId = StringUtils.substringAfter(authHeader, cookiePrefix + "uid=");
         if(userId.indexOf(";")!=-1)
         {
             userId=userId.substring(0,userId.indexOf(";"));
@@ -36,7 +40,7 @@ public class UserAuthHeaderUtil {
             throw new UserHeaderException("请求头参数无效");
         }
 
-        String token = StringUtils.substringAfter(authHeader,"tss_lt=");
+        String token = StringUtils.substringAfter(authHeader, cookiePrefix + "lt=");
         if(token.indexOf(";")!=-1)
         {
             token=token.substring(0,token.indexOf(";"));

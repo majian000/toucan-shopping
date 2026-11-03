@@ -45,6 +45,11 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private SpringContextHolder springContextHolder;
 
+    /** 会话 cookie 名前缀（默认 tss_，H5 端配 h5_ 实现独立会话） */
+    private String uidCookieName() { return toucan.getUserAuth().getCookiePrefix() + "uid"; }
+    private String ltCookieName()  { return toucan.getUserAuth().getCookiePrefix() + "lt"; }
+    private String latCookieName() { return toucan.getUserAuth().getCookiePrefix() + "lat"; }
+
     public void responseWrite(HttpServletResponse response, String content) throws IOException {
         response.setContentType("application/json");
         response.getWriter().write(content);
@@ -53,21 +58,21 @@ public class AuthInterceptor implements HandlerInterceptor {
     public void deleteCookies(HttpServletResponse response)
     {
         //UID
-        Cookie uidCookie = new Cookie("tss_uid","-1");
+        Cookie uidCookie = new Cookie(uidCookieName(),"-1");
         uidCookie.setPath("/");
         //立刻清除
         uidCookie.setMaxAge(0);
         response.addCookie(uidCookie);
 
         //TOKEN
-        Cookie ltCookie = new Cookie("tss_lt", "-1");
+        Cookie ltCookie = new Cookie(ltCookieName(), "-1");
         ltCookie.setPath("/");
         //立刻清除
         ltCookie.setMaxAge(0);
         response.addCookie(ltCookie);
 
         //权限 TOKEN
-        Cookie latCookie = new Cookie("tss_lat", "-1");
+        Cookie latCookie = new Cookie(latCookieName(), "-1");
         latCookie.setPath("/");
         //立刻清除
         latCookie.setMaxAge(0);
@@ -77,7 +82,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public void flushAuthToken(String LoginAuthToken,HttpServletResponse response)
     {
         //重新生成权限token 半小时内不再进行权限校验
-        Cookie latCookie = new Cookie( "tss_lat", LoginAuthToken);
+        Cookie latCookie = new Cookie(latCookieName(), LoginAuthToken);
         latCookie.setPath("/");
         latCookie.setMaxAge(UserCenterLoginRedisKey.SUPER_TOKEN_CLIENT_SECOND); //30分钟过期
         response.addCookie(latCookie);
@@ -124,10 +129,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
                                 logger.info(" auth header " + authHeader);
 
-                                if (authHeader.indexOf("tss_lt") == -1) {
-                                    logger.info("tss_lt不能为空 " + jsonBody);
+                                if (authHeader.indexOf(ltCookieName()) == -1) {
+                                    logger.info(ltCookieName() + "不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
-                                    resultVO.setMsg("tss_lt不能为空");
+                                    resultVO.setMsg(ltCookieName() + "不能为空");
                                     //默认登录页面
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
@@ -137,10 +142,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                if (authHeader.indexOf("tss_uid") == -1) {
-                                    logger.info("tss_uid不能为空 " + jsonBody);
+                                if (authHeader.indexOf(uidCookieName()) == -1) {
+                                    logger.info(uidCookieName() + "不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
-                                    resultVO.setMsg("tss_uid不能为空");
+                                    resultVO.setMsg(uidCookieName() + "不能为空");
                                     //默认登录页面
 
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
@@ -155,13 +160,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String lt = "-1";
                                 String lat = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
+                                    if (authHeaderArray[i].indexOf(uidCookieName() + "=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf(ltCookieName() + "=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("tss_lat=") != -1) {
+                                    if (authHeaderArray[i].indexOf(latCookieName() + "=") != -1) {
                                         lat = authHeaderArray[i].split("=")[1];
                                     }
                                 }
@@ -252,13 +257,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String lt = "-1";
                                 String lat = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
+                                    if (authHeaderArray[i].indexOf(uidCookieName() + "=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf(ltCookieName() + "=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("tss_lat=") != -1) {
+                                    if (authHeaderArray[i].indexOf(latCookieName() + "=") != -1) {
                                         lat = authHeaderArray[i].split("=")[1];
                                     }
                                 }

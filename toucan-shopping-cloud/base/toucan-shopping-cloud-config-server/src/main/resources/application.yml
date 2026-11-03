@@ -37,6 +37,7 @@ spring:
                             classpath:/config/apps/scheduler/adminAuth,\
                             classpath:/config/apps/shopping/sellerWeb,\
                             classpath:/config/apps/shopping/messageWeb,\
+                            classpath:/config/apps/shopping/h5,\
                             classpath:/config/apps/shopping/admin"
 
 toucan:
